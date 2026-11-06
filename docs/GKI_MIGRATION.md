@@ -34,3 +34,12 @@ GKI also does not automatically make legacy vendor HALs compatible with a new ke
 - [Generic Kernel Image](https://source.android.com/docs/core/architecture/kernel/generic-kernel-image)
 - [Android Common Kernel source](https://android.googlesource.com/kernel/common/)
 - [Android kernel release branches](https://source.android.com/docs/core/architecture/kernel/gki-release-builds)
+
+
+## Current build baseline
+
+The project now pins the Android 17 GKI 6.18 source tag and the corresponding kernel repo manifest. The authoritative build is the Kleaf ARM64 distribution target //common:kernel_aarch64_dist; the earlier modules_prepare-only NQ-NCI compile is retained only as a C API compatibility smoke test and is not KMI proof.
+
+The pinned GKI arm64 defconfig enables CONFIG_RUST=y. This makes Rust kernel code a viable development direction, but it does not imply that every subsystem has a Rust abstraction or that Rust driver support is production-mature. Use Rust for new driver logic where the pinned source provides safe abstractions; isolate missing APIs behind small C shims and verify every unsafe boundary.
+
+See GKI_618_BUILD.md and RUST_DRIVER_PORTING.md.
