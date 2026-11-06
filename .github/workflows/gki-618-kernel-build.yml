@@ -64,7 +64,7 @@ jobs:
           git -C "$UPSTREAM_DIR" remote add upstream https://android.googlesource.com/kernel/common
           git -C "$UPSTREAM_DIR" fetch --depth=1 upstream "refs/tags/$GKI_REF"
 
-          ACTUAL_UPSTREAM_SHA="$(git -C "$UPSTREAM_DIR" rev-parse FETCH_HEAD)"
+          ACTUAL_UPSTREAM_SHA="$(git -C "$UPSTREAM_DIR" rev-parse 'FETCH_HEAD^{commit}')"
           if [[ "$ACTUAL_UPSTREAM_SHA" != "$GKI_SHA" ]]; then
             echo "Upstream source SHA mismatch: expected $GKI_SHA, got $ACTUAL_UPSTREAM_SHA" >&2
             exit 1
