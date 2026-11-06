@@ -87,3 +87,5 @@ This corrects any assumption that the legacy GPIO names are necessarily unavaila
 The previous smoke module advertises `modversions` in vermagic but has a zero-byte `__versions` ELF section. This is direct evidence that its name-presence result cannot substitute for a versioned strict build.
 
 The same 75 imports also appear in run #8 `abi_symbollist.raw`; every corresponding Module.symvers provider is vmlinux and none declares an export namespace. This narrows the outstanding checks but does not replace the strict module build, protected-export/signature policy or physical tests.
+
+The ELF audit now parses both standard and extended module-version sections and can require strong-import CRC coverage/matches against the full-build Module.symvers. The old smoke artifact is a negative control: `--require-crcs` correctly fails with 75 missing CRCs and zero version entries. Future strict DDK runs invoke this audit automatically. The already-running run uses its original pinned checkout and will be audited locally after artifact download.

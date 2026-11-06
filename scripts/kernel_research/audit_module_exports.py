@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compare AArch64 ELF module imports with an explicit full-build Module.symvers.
 
-This is an export-presence audit, not CRC, signature, KMI-policy or load certification.
+CRC comparison is optional; signature, protected-export policy and loading remain separate.
 """
 import argparse
 import hashlib
@@ -18,6 +18,14 @@ def imports(data):
     if entry_size != 64 or offset+entry_size*count > len(data):
         raise ValueError('invalid or unsupported ELF section table')
     sections = [struct.unpack_from('<IIQQQQIIQQ', data, offset+i*entry_size) for i in range(count)]
+    string_index = struct.unpack_from('<H', data, 62)[0]
+    strings = sections[string_index]
+    section_names = data[strings[4]:strings[4]+strings[5]]
+    content = {}
+    for section in sections:
+        start = section[0]
+        name = section_names[start:section_names.index(b'\0', start)].decode('ascii')
+        content[name] = data[section[4]:section[4]+section[5]]
     result = {}
     for section in sections:
         if section[1] != 2:
@@ -33,7 +41,23 @@ def imports(data):
                 end = names.index(b'\0', name)
                 symbol = names[name:end].decode('ascii')
                 result[symbol] = 'weak' if info >> 4 == 2 else 'global'
-    return result
+    versions = {}
+    if '__version_ext_names' in content:
+        names = content['__version_ext_names'].rstrip(b'\0').split(b'\0')
+        crcs = content.get('__version_ext_crcs', b'')
+        if len(crcs) != 4*len(names):
+            raise ValueError('invalid extended modversion tables')
+        versions = {name.decode('ascii'): crc for name, crc in zip(names, struct.unpack('<'+str(len(names))+'I', crcs))}
+    elif '__versions' in content:
+        table = content['__versions']
+        if len(table) % 64:
+            raise ValueError('invalid AArch64 modversion table')
+        for pos in range(0, len(table), 64):
+            crc = struct.unpack_from('<Q', table, pos)[0]
+            name = table[pos+8:pos+64].split(b'\0', 1)[0].decode('ascii')
+            versions[name] = crc
+    modinfo = [item.decode('utf-8', errors='replace') for item in content.get('.modinfo', b'').split(b'\0') if item]
+    return result, versions, modinfo
 
 
 def main():
@@ -41,8 +65,10 @@ def main():
     p.add_argument('--module', required=True, type=pathlib.Path)
     p.add_argument('--symvers', required=True, type=pathlib.Path)
     p.add_argument('--out', required=True, type=pathlib.Path)
+    p.add_argument('--require-crcs', action='store_true', help='Fail for missing/mismatching strong import CRCs')
+    p.add_argument('--kmi-list', type=pathlib.Path, help='Full distribution abi_symbollist.raw for a separate name audit')
     a = p.parse_args()
-    symbols = imports(a.module.read_bytes())
+    symbols, versions, modinfo = imports(a.module.read_bytes())
     exports = {}
     for line in a.symvers.read_text().splitlines():
         fields = line.split()
@@ -51,15 +77,25 @@ def main():
     if not exports or not symbols:
         raise ValueError('empty export or import table')
     missing = sorted(s for s, binding in symbols.items() if s not in exports and binding != 'weak')
+    missing_crcs = sorted(s for s, binding in symbols.items() if binding != 'weak' and s not in versions)
+    wrong_crcs = {s: dict(module=hex(crc), kernel=exports[s]['crc']) for s, crc in versions.items()
+                  if s in exports and crc != int(exports[s]['crc'], 16)}
     report = dict(module_sha256=hashlib.sha256(a.module.read_bytes()).hexdigest(),
                   symvers_sha256=hashlib.sha256(a.symvers.read_bytes()).hexdigest(),
                   imports={s: dict(binding=b, export=exports.get(s)) for s,b in sorted(symbols.items())},
                   missing_strong_exports=missing,
-                  qualification='Export presence only; CRCs, signatures, KMI policy and device loading not verified.')
+                  modinfo=modinfo, version_entry_count=len(versions), missing_strong_import_crcs=missing_crcs,
+                  mismatching_crcs=wrong_crcs,
+                  qualification='Explicit symbol/CRC comparison only; signatures, protected-export policy and loading remain unverified.')
+    if a.kmi_list:
+        kmi = set(a.kmi_list.read_text().splitlines())
+        report['kmi_list_sha256'] = hashlib.sha256(a.kmi_list.read_bytes()).hexdigest()
+        report['imports_absent_from_kmi_names'] = sorted(set(symbols)-kmi)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
-    print(json.dumps(dict(import_count=len(symbols), missing_strong_exports=missing)))
-    if missing:
+    print(json.dumps(dict(import_count=len(symbols), missing_strong_exports=missing,
+                         version_entry_count=len(versions), missing_crc_count=len(missing_crcs), mismatching_crcs=wrong_crcs)))
+    if missing or (a.require_crcs and (missing_crcs or wrong_crcs)):
         raise SystemExit(1)
 
 

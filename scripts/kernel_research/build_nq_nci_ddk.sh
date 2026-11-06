@@ -21,6 +21,11 @@ while IFS= read -r path; do
   if [[ "$path" == *.ko ]]; then cp "$path" "$ARTIFACT_DIR/"; fi
 done < "$ARTIFACT_DIR/output-files.txt"
 test -s "$ARTIFACT_DIR/nq-nci.ko"
+python3 "$ROOT_DIR/scripts/kernel_research/audit_module_exports.py" \
+  --module "$ARTIFACT_DIR/nq-nci.ko" \
+  --symvers "$ROOT_DIR/artifacts/gki-6.18-kernel-build/dist/kernel_aarch64_Module.symvers" \
+  --kmi-list "$ROOT_DIR/artifacts/gki-6.18-kernel-build/dist/abi_symbollist.raw" \
+  --require-crcs --out "$ARTIFACT_DIR/export-crc-audit.json"
 llvm-nm -u "$ARTIFACT_DIR/nq-nci.ko" > "$ARTIFACT_DIR/undefined-symbols.txt"
 modinfo "$ARTIFACT_DIR/nq-nci.ko" > "$ARTIFACT_DIR/modinfo.txt"
 sha256sum "$ARTIFACT_DIR/nq-nci.ko" > "$ARTIFACT_DIR/SHA256SUMS"
