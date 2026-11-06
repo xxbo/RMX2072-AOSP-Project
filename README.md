@@ -4,9 +4,11 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Device unlocked; stock baseline captured; build experiments beginning.** Stock F.20 Android boots after unlock and original ABL/OCDT restoration. No project-built kernel or Android 17 / 6.18 image has been boot-tested yet.
+> **Project status: Device unlocked; stock baseline captured; generic 6.18 build completed in an experiment branch.** Stock F.20 Android boots after unlock and original ABL/OCDT restoration. No project-built kernel or Android 17 / 6.18 image has been boot-tested on RMX2072 yet.
 
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
+
+Existing experiment results are being consolidated into main: [full Kleaf 6.18 build](docs/GKI_618_BUILD.md), [source snapshot](docs/GKI_618_SOURCE_MIRROR.md), and [NQ-NCI compile/KMI limitations](experiments/nfc_nq/PORTING_LOG.md). The generic GKI distribution [run #8](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42194678844) passed; an NFC compile-smoke `.ko` is not yet a loadable-device certification.
 
 ## Goals
 

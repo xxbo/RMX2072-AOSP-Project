@@ -1,0 +1,132 @@
+name: GKI 6.18 Repository Mirror + Full Kernel Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "experiment/gki-6.18-repo-mirror"
+    paths:
+      - ".github/workflows/gki-618-kernel-build.yml"
+      - "scripts/kernel_research/build_gki_618_kleaf.sh"
+      - "sources/SOURCE_LOCK.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gki-618-repository-mirror-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  mirror-source:
+    name: Mirror pinned GKI 6.18 source into this repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    outputs:
+      commit: ${{ steps.mirror.outputs.commit }}
+    steps:
+      - name: Create or verify repository-owned source snapshot
+        id: mirror
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          GKI_REF="android17-6.18-2026-09_r13"
+          GKI_SHA="ecdaacc9a0ee87eaf9544e1836d86bd9d590312e"
+          MIRROR_BRANCH="mirror/android17-6.18-2026-09_r13"
+          REPO_URL="https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          EXISTING_SHA="$(git ls-remote --heads "$REPO_URL" "refs/heads/$MIRROR_BRANCH" | awk 'NR==1 {print $1}')"
+          if [[ -n "$EXISTING_SHA" ]]; then
+            VERIFY_DIR="$RUNNER_TEMP/verify-gki-mirror"
+            mkdir -p "$VERIFY_DIR"
+            git -C "$VERIFY_DIR" init
+            git -C "$VERIFY_DIR" remote add origin "$REPO_URL"
+            git -C "$VERIFY_DIR" fetch --depth=1 origin "refs/heads/$MIRROR_BRANCH"
+            ACTUAL_SHA="$(git -C "$VERIFY_DIR" rev-parse FETCH_HEAD)"
+            MESSAGE="$(git -C "$VERIFY_DIR" show -s --format=%B FETCH_HEAD)"
+            if [[ "$ACTUAL_SHA" != "$EXISTING_SHA" ]] || ! grep -Fq "Upstream-Commit: $GKI_SHA" <<<"$MESSAGE"; then
+              echo "Existing mirror branch does not match the pinned upstream source." >&2
+              exit 1
+            fi
+            echo "Existing pinned source mirror verified: $ACTUAL_SHA"
+            echo "commit=$ACTUAL_SHA" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          UPSTREAM_DIR="$RUNNER_TEMP/upstream-kernel-common"
+          SNAPSHOT_DIR="$RUNNER_TEMP/gki-618-source-snapshot"
+          mkdir -p "$UPSTREAM_DIR" "$SNAPSHOT_DIR"
+          git -C "$UPSTREAM_DIR" init
+          git -C "$UPSTREAM_DIR" remote add upstream https://android.googlesource.com/kernel/common
+          git -C "$UPSTREAM_DIR" fetch --depth=1 upstream "refs/tags/$GKI_REF"
+
+          ACTUAL_UPSTREAM_SHA="$(git -C "$UPSTREAM_DIR" rev-parse 'FETCH_HEAD^{commit}')"
+          if [[ "$ACTUAL_UPSTREAM_SHA" != "$GKI_SHA" ]]; then
+            echo "Upstream source SHA mismatch: expected $GKI_SHA, got $ACTUAL_UPSTREAM_SHA" >&2
+            exit 1
+          fi
+          git -C "$UPSTREAM_DIR" checkout --detach "$ACTUAL_UPSTREAM_SHA"
+          git -C "$UPSTREAM_DIR" archive "$ACTUAL_UPSTREAM_SHA" | tar -xf - -C "$SNAPSHOT_DIR"
+
+          git -C "$SNAPSHOT_DIR" init --initial-branch="$MIRROR_BRANCH"
+          git -C "$SNAPSHOT_DIR" config user.name "github-actions[bot]"
+          git -C "$SNAPSHOT_DIR" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          UPSTREAM_DATE="$(git -C "$UPSTREAM_DIR" show -s --format=%cI "$ACTUAL_UPSTREAM_SHA")"
+          git -C "$SNAPSHOT_DIR" add --all
+          GIT_AUTHOR_DATE="$UPSTREAM_DATE" GIT_COMMITTER_DATE="$UPSTREAM_DATE" \
+            git -C "$SNAPSHOT_DIR" commit \
+              -m "Mirror Android 17 GKI 6.18 source snapshot" \
+              -m "Upstream-Repository: https://android.googlesource.com/kernel/common" \
+              -m "Upstream-Ref: refs/tags/$GKI_REF" \
+              -m "Upstream-Commit: $GKI_SHA"
+
+          MIRROR_SHA="$(git -C "$SNAPSHOT_DIR" rev-parse HEAD)"
+          git -C "$SNAPSHOT_DIR" remote add origin "$AUTH_URL"
+          git -C "$SNAPSHOT_DIR" push origin "HEAD:refs/heads/$MIRROR_BRANCH"
+
+          echo "UPSTREAM_SHA=$GKI_SHA"
+          echo "MIRROR_BRANCH=$MIRROR_BRANCH"
+          echo "MIRROR_COMMIT=$MIRROR_SHA"
+          du -sh "$SNAPSHOT_DIR"
+          echo "commit=$MIRROR_SHA" >> "$GITHUB_OUTPUT"
+
+  build-gki:
+    name: Build pinned Android 17 GKI 6.18 ARM64 distribution
+    needs: mirror-source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    env:
+      GKI_MIRROR_COMMIT: ${{ needs.mirror-source.outputs.commit }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install host build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bc bison build-essential curl flex git gnupg gperf \
+            libdw-dev libelf-dev libncurses-dev libssl-dev \
+            python3 rsync unzip zip zlib1g-dev
+
+      - name: Sync pinned Android kernel manifest and build GKI from repository mirror
+        run: |
+          chmod +x scripts/kernel_research/build_gki_618_kleaf.sh
+          scripts/kernel_research/build_gki_618_kleaf.sh
+
+      - name: Upload complete GKI distribution and build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rmx2072-gki-618-mirrored-kernel-${{ github.run_number }}
+          path: artifacts/gki-6.18-kernel-build/
+          if-no-files-found: warn
+          retention-days: 14

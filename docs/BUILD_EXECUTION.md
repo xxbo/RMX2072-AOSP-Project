@@ -6,6 +6,8 @@ The execution path is GitHub Actions for kernel/driver builds, a selected offici
 
 `Legacy Kernel Build` is manually triggered. Run `stage=config` first; use `stage=kernel` after configuration validation.
 
+Configuration validation passed in [run 42224170969](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224170969). The first full legacy kernel/modules run has been dispatched; its build result remains pending.
+
 Inputs are fixed by `sources/SOURCE_LOCK.json` and `build/legacy-kernel.json`. The selected community 4.19.325 source has the complete Techpack reference, while the official Q/S trees contain Techpack stubs. This is a candidate build, not a proven F.20 source match. The actual handset runs 4.19.157-perf+.
 
 The build uses `vendor/kona-perf_defconfig`, `vendor/oplus.config` and a small project-owned GT9886 fragment supported by the running F.20 configuration. It verifies required assignments in the generated `.config`. Makefile-injected Techpack flags still need comparison with that generated config; this does not solve all source-pairing gaps.
@@ -15,6 +17,8 @@ Clang r416183b is pinned to an immutable official prebuilt commit and selected b
 The full build requests Image.gz, DTBs and modules. Outputs include Module.symvers and System.map when produced. Modules in this job target the selected 4.19 kernel, not 6.18. No boot.img, automatic flashing or device-ready ZIP is produced. Source revisions and file-level licenses remain authoritative when redistributing any resulting artifact.
 
 ## ACK 6.18 gate
+
+The existing `experiment/gki-6.18-repo-mirror` branch has already passed a complete Kleaf build in [run 42194678844](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42194678844), producing a 687,670,307-byte uploaded artifact. Its workflow, source pins and NFC experiment are now being integrated into the mainline execution path. Preserve this evidence instead of repeating an initial generic-kernel feasibility experiment.
 
 The kernel/common pin already resolves to 6.18.32. Before adding a real ACK build, pin the associated kernel manifest, Kleaf/build tooling, LLVM/Rust prebuilts and all required dependencies. A kernel/common SHA alone is insufficient. The default manifest includes extra device/test projects; evaluate its groups and workspace footprint on the Actions runner rather than downloading everything blindly.
 

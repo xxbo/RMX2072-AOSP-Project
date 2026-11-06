@@ -1,0 +1,9 @@
+# Experimental in-tree integration option. Keep disabled until hardware validation.
+config NFC_NQ
+	tristate "NXP NQ-NCI / SN100 controller support"
+	depends on I2C && GPIOLIB
+	depends on REGULATOR
+	help
+	  Build the Qualcomm NQ-NCI I2C driver used by the RMX2072 SN100 NFC
+	  controller. This experimental port preserves the legacy /dev/nq-nci
+	  userspace interface and requires device-specific GPIO/IRQ configuration.
