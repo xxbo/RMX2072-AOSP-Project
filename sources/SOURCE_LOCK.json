@@ -200,6 +200,44 @@
         "Official Android 17 GKI release tag dated 2026-11-05.",
         "This is a reference kernel baseline, not a device-ready RMX2072 kernel."
       ]
+    },
+    {
+      "id": "qualcomm-linux-kgsl-modern-reference",
+      "category": "modern-kgsl-reference",
+      "repository": "qualcomm-linux/kgsl",
+      "url": "https://github.com/qualcomm-linux/kgsl",
+      "ref_type": "branch",
+      "ref": "gfx-kernel.le.0.0",
+      "commit": "d70a6765a318eda3e400c711587ce373c693c99e",
+      "commit_date": "2026-10-30T13:58:45Z",
+      "kernel_version": "Linux 7.2 external-module reference (via meta-qcom recipe)",
+      "license_evidence": "Repository LICENSE.txt is GNU GPL version 2; meta-qcom kgsl-dlkm_2.0.0.bb declares GPL-2.0-only.",
+      "status": "pinned-modern-driver-reference",
+      "notes": [
+        "Qualcomm Linux KGSL driver maintained as a separate/out-of-tree kernel module.",
+        "Pinned SRCREV is independently referenced by qualcomm-linux/meta-qcom kgsl-dlkm_2.0.0.bb.",
+        "The corresponding meta-qcom layer uses linux-yocto-7.2 build integration; this is not proof of Android GKI 6.18 KMI compatibility.",
+        "Reference for modern KGSL architecture and Adreno 6xx support only; not a drop-in Android vendor driver."
+      ]
+    },
+    {
+      "id": "qualcomm-meta-qcom-kgsl-build-reference",
+      "category": "build-reference",
+      "repository": "qualcomm-linux/meta-qcom",
+      "url": "https://github.com/qualcomm-linux/meta-qcom",
+      "ref_type": "commit",
+      "ref": "13b201a8f78d1e43ad65b420a5485178d3ab752e",
+      "commit": "13b201a8f78d1e43ad65b420a5485178d3ab752e",
+      "commit_date": "2026-11-06T02:47:51Z",
+      "kernel_version": "linux-yocto-7.2",
+      "license_evidence": "meta-qcom recipe declares LICENSE = GPL-2.0-only for kgsl-dlkm.",
+      "status": "pinned-build-integration-reference",
+      "notes": [
+        "kgsl-dlkm_2.0.0.bb pins qualcomm-linux/kgsl SRCREV d70a6765a318eda3e400c711587ce373c693c99e.",
+        "Recipe builds KGSL as a kernel module using the Yocto module class.",
+        "qcom-extra.cfg sets CONFIG_VFIO=m to make INTERVAL_TREE available for KGSL.",
+        "This build reference targets Qualcomm Linux / Yocto, not Android GKI."
+      ]
     }
   ]
 }
