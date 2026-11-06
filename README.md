@@ -39,6 +39,8 @@ The exact partition layout, boot image header version, AVB state, firmware revis
 │   ├── PROJECT_OVERVIEW.md
 │   ├── HARDWARE_INVENTORY.md
 │   ├── KERNEL_PORTING.md
+│   ├── DRIVER_MIGRATION_MATRIX.md
+│   ├── DRIVER_DEPENDENCY_MAP.md
 │   ├── GKI_MIGRATION.md
 │   ├── GSI_BUILD_GUIDE.md
 │   └── COMPATIBILITY_MATRIX.md
@@ -66,6 +68,8 @@ These are upstream references, not copies of their contents:
 - [Automated kernel research pipeline](docs/KERNEL_RESEARCH_PIPELINE.md)
 - [Kernel tree diff findings](docs/KERNEL_TREE_DIFF_FINDINGS.md)
 - [KGSL / Adreno 650 research](docs/KGSL_ADRENO_RESEARCH.md)
+- [Driver migration matrix](docs/DRIVER_MIGRATION_MATRIX.md)
+- [Driver dependency map](docs/DRIVER_DEPENDENCY_MAP.md)
 
 - [Source manifest](sources/SOURCE_MANIFEST.md)
 - [Machine-readable source lock](sources/SOURCE_LOCK.json)
@@ -85,6 +89,7 @@ These are upstream references, not copies of their contents:
 ## Current status
 
 - [x] GitHub repository created.
+- [x] First-pass driver migration matrix and dependency map documented from pinned source evidence.
 - [ ] Confirm exact device model, region and firmware build from the handset.
 - [ ] Capture partition map, boot image metadata and AVB status.
 - [ ] Archive and hash the stock firmware and recovery images locally.
