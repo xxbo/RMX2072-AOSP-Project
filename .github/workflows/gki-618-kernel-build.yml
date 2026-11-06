@@ -1,0 +1,57 @@
+name: GKI 6.18 Full Kernel Build (Kleaf + Rust)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "experiment/gki-6.18-rust-foundation"
+    paths:
+      - ".github/workflows/gki-618-kernel-build.yml"
+      - "scripts/kernel_research/build_gki_618_kleaf.sh"
+      - "sources/SOURCE_LOCK.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gki-618-rust-foundation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-gki:
+    name: Build pinned Android 17 GKI 6.18 ARM64 distribution
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/powershell
+          sudo rm -rf /usr/local/lib/android/sdk
+          df -h
+
+      - name: Install host build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bc bison build-essential curl flex git gnupg gperf \
+            libdw-dev libelf-dev libncurses-dev libssl-dev \
+            python3 rsync unzip zip zlib1g-dev
+
+      - name: Sync pinned Android kernel manifest and build GKI
+        run: |
+          chmod +x scripts/kernel_research/build_gki_618_kleaf.sh
+          scripts/kernel_research/build_gki_618_kleaf.sh
+
+      - name: Upload complete GKI distribution and build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rmx2072-gki-618-kernel-${{ github.run_number }}
+          path: artifacts/gki-6.18-kernel-build/
+          if-no-files-found: warn
+          retention-days: 14
