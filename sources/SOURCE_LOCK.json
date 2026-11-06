@@ -195,11 +195,13 @@
       "tag_object": "910ab23e44c4d44c8c12a767c0d8ee9537c633f2",
       "commit_date": "2026-11-04T11:21:48Z",
       "kernel_version": "6.18",
-      "status": "pinned-official-gki-reference",
+      "status": "pinned-official-gki-reference; repository-snapshot-mirror-pending",
       "notes": [
         "Official Android 17 GKI release tag dated 2026-11-05.",
-        "This is a reference kernel baseline, not a device-ready RMX2072 kernel."
-      ]
+        "This is a reference kernel baseline, not a device-ready RMX2072 kernel.",
+        "A shallow source-only snapshot is planned on the mirror branch in this repository; upstream history is intentionally not duplicated."
+      ],
+      "mirror_branch": "mirror/android17-6.18-2026-09_r13"
     },
     {
       "id": "qualcomm-linux-kgsl-modern-reference",
