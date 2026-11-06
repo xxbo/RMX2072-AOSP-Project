@@ -67,6 +67,18 @@ The weekly schedule runs at 03:17 UTC on Mondays. Scheduled workflows may start 
 
 The first-pass driver matrix is source-reviewed and intentionally conservative. It distinguishes RMX2072-specific manifest evidence from generic SM8250 source references and from the still-unverified ACK/GKI hardware path.
 
+## Experimental driver compile track
+
+The first experimental port is NQ-NCI / NXP SN100, selected because the official RMX2072 20607 DTS identifies the exact I2C address and GPIO lines, and the RMX2072 proprietary manifest includes the SN100 configuration and firmware helper. The source and current compatibility edits are under \`experiments/nfc_nq/\`.
+
+- Branch: [experiment/nq-nci-gki-6.18](https://github.com/xxbo/RMX2072-AOSP-Project/tree/experiment/nq-nci-gki-6.18)
+- Workflow: [NQ-NCI GKI 6.18 Compile Smoke](https://github.com/xxbo/RMX2072-AOSP-Project/actions/workflows/nfc-nq-gki-618-smoke.yml)
+- Build basis: exact Android 17 GKI 6.18 SHA in \`sources/SOURCE_LOCK.json\`
+- First pass: external-module compile against prepared GKI headers; modpost warnings are retained as evidence, not hidden.
+- Next gates: compile errors → symbol/KMI audit with full \`Module.symvers\` → GPIO descriptor/API conversion if needed → DT/module packaging → module load and probe → NFC/eSE functional tests.
+
+This is an intentionally narrow experiment. It does not change the main branch's kernel, device tree or build configuration, and no image is flashed.
+
 ## Next automation stages
 
 ### Stage A — Source structure and configuration
