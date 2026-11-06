@@ -180,7 +180,7 @@ Tasks:
 
 **Progress note (2026-11-06):** The first KGSL/Adreno 650 source-analysis pass is complete. GitHub Actions Run #17 retrieved pinned RMX2072 4.19.81, SM8250-Common 4.19.325, Qualcomm Linux 7.2 KGSL reference and Android 17 GKI 6.18 files. Findings are recorded in `docs/KGSL_ADRENO_RESEARCH.md`. The pinned GKI has DRM/MSM with an Adreno 650 catalog entry, but no legacy KGSL directory/UAPI. Qualcomm's modern KGSL is a Linux 7.2 external-module reference, not a proven GKI 6.18 module. No kernel build or device test has been performed.
 
-**Driver inventory note (2026-11-06):** A first-pass subsystem matrix and dependency graph are now recorded in `docs/DRIVER_MIGRATION_MATRIX.md` and `docs/DRIVER_DEPENDENCY_MAP.md`. The expanded `docs/HARDWARE_INVENTORY.md` distinguishes RMX2072-specific manifest evidence from shared SM8250 source examples. The review identified target clues for AMS678UW01 display calibration, GT9886 touch firmware, Adreno 650 firmware, camera sensor-module candidates, SN100 NFC configuration, Goodix fingerprint firmware, VOOC charging firmware and AW8697 haptic firmware. These are source clues, not physical-device confirmation. The 4.19.325 KONA techpack build injects additional display/camera/audio config fragments; its shared Oplus touch config does not select GT9886 even though the driver exists. The F.15/F.17 vendor provenance mismatch and exact handset component IDs remain open. No driver has been built or tested on RMX2072.
+**Driver inventory note (2026-11-06):** A first-pass subsystem matrix and dependency graph are now recorded in `docs/DRIVER_MIGRATION_MATRIX.md` and `docs/DRIVER_DEPENDENCY_MAP.md`. The expanded `docs/HARDWARE_INVENTORY.md` distinguishes RMX2072-specific manifest evidence from shared SM8250 source examples. The review identified target clues for AMS678UW01 display calibration, GT9886 touch firmware, Adreno 650 firmware, camera sensor-module candidates, SN100 NFC configuration, Goodix fingerprint firmware, VOOC charging firmware and AW8697 haptic firmware. The official 20607 DTS now confirms the NQ-NCI node at I2C 0x28 on QUPv3 SE0, with IRQ 34, VEN 12, FIRM 35 and CLKREQ 31; the RMX2072 manifest also lists `libsn100u_fw.so`. A first NQ-NCI external-module port based on the SN100-aware 4.19.325 implementation is staged on `experiment/nq-nci-gki-6.18`, with current I2C/class API adaptations and a pinned GKI 6.18 compile-smoke workflow. Workflow run #1 is in progress. This is not yet a successful compile, KMI audit, module load or hardware test. The 4.19.325 KONA techpack build injects additional display/camera/audio config fragments; its shared Oplus touch config does not select GT9886 even though the driver exists. The F.15/F.17 vendor provenance mismatch and exact handset component IDs remain open.
 
 Tasks:
 - [ ] Compare official 4.19.81, shared 4.19.157 and community 4.19.x trees by subsystem.
@@ -198,7 +198,10 @@ Tasks:
 - [x] Create the first-pass driver migration matrix from pinned source evidence.
 - [x] Record the dependency order for SoC, memory, graphics, IPC, multimedia and peripheral drivers.
 - [x] Expand the hardware inventory with RMX2072-specific manifest clues and unresolved physical variants.
+- [x] Cross-check the official 20607 NFC DTS node and SN100 vendor-manifest evidence.
+- [x] Stage the first NQ-NCI external-module port and pinned GKI 6.18 compile-smoke workflow.
 - [ ] Classify each subsystem with content-level API/KMI, DTS, firmware and userspace-ABI evidence.
+- [ ] Complete NQ-NCI compile smoke, imported-symbol/KMI audit and userspace ABI review.
 
 **Deliverables:**
 - Driver migration matrix in `docs/DRIVER_MIGRATION_MATRIX.md`
@@ -236,9 +239,13 @@ Tasks:
 
 **Goal:** Evaluate a modern ACK/GKI kernel for RMX2072 without assuming that a successful compile implies device compatibility.
 
+**Progress note (2026-11-06):** The first module experiment is staged on branch `experiment/nq-nci-gki-6.18`: NQ-NCI for the SN100 NFC controller, with a compile-smoke workflow against the pinned Android 17 GKI 6.18 source. The initial workflow is running. This is a module API compile experiment only; KMI, signing, load, probe and NFC functionality remain unverified.
+
 Tasks:
 - [ ] Select a candidate ACK/GKI branch based on the target Android release's official support matrix.
 - [ ] Confirm KMI policy, protected symbol lists, toolchain and build system.
+- [x] Stage the first NQ-NCI external-module compile experiment against the pinned 6.18 source.
+- [ ] Complete the NQ-NCI compile, then audit its imports against the exact GKI KMI/export list.
 - [ ] Audit the handset boot architecture and determine how GKI, DTB/DTBO and vendor modules could be packaged.
 - [ ] Prototype the simplest boot path before porting all hardware drivers.
 - [ ] Port or replace the minimum drivers needed for boot and basic display/input.
@@ -339,7 +346,7 @@ Update the checkboxes and milestone status as work is completed. Record evidence
 | M2 — Treble, Vendor and GSI assessment | Not started |
 | M3 — Android 17 GSI bring-up | Not started |
 | M4 — Own AOSP build and device integration | Not started |
-| M5 — Kernel source and driver asset analysis | In progress — KGSL research plus first-pass driver matrix/dependency map recorded |
+| M5 — Kernel source and driver asset analysis | In progress — first driver matrix, dependency map and SN100 pilot selected |
 | M6 — Legacy kernel reproducibility and modernization | Not started |
-| M7 — ACK/GKI feasibility prototype | Not started |
+| M7 — ACK/GKI feasibility prototype | In progress — first NQ-NCI GKI 6.18 compile-smoke workflow running |
 | M8 — Integrated system and maintenance | Not started |
