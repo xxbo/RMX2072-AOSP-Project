@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: GPL-2.0-only
+load("//build/kernel/kleaf:kernel.bzl", "kernel_build")
+load("//build/kernel/kleaf:constants.bzl", "COMMON_KCFLAGS")
+load("//common:bazel/modules_private.bzl", "get_gki_modules_list", "get_kunit_modules_list")
+load("@rules_pkg//pkg:install.bzl", "pkg_install")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
+
+# A coherent platform compile candidate, not an RMX2072 boot image.
+kernel_build(
+    name = "sm8250_bootstrap",
+    srcs = ["//common:common_kernel_sources"],
+    makefile = "//common:Makefile",
+    arch = "arm64",
+    defconfig = "//common:arch/arm64/configs/gki_defconfig",
+    pre_defconfig_fragments = ["sm8250_defconfig"],
+    check_defconfig = "match",
+    page_size = "4k",
+    outs = ["Image", "Image.gz", "System.map", "vmlinux", "include/config/kernel.release"],
+    module_outs = get_gki_modules_list("arm64") + get_kunit_modules_list("arm64"),
+    make_goals = ["Image", "Image.gz", "modules"],
+    kcflags = COMMON_KCFLAGS,
+    keep_dot_config = True,
+    keep_module_symvers = True,
+    protected_module_names_list = "//common:gki_aarch64_protected_module_names",
+    visibility = ["//visibility:public"],
+)
+
+pkg_files(
+    name = "sm8250_bootstrap_files",
+    srcs = [":sm8250_bootstrap"],
+    strip_prefix = strip_prefix.files_only(),
+)
+
+pkg_install(
+    name = "sm8250_bootstrap_dist",
+    srcs = [":sm8250_bootstrap_files"],
+)

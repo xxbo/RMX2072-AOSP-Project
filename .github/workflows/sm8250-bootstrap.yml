@@ -1,0 +1,29 @@
+name: SM8250 6.18 Platform Bootstrap
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sm8250-bootstrap-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential curl flex git gnupg gperf libdw-dev libelf-dev libncurses-dev libssl-dev python3 rsync unzip zip zlib1g-dev
+      - name: Build SM8250 early-boot platform drivers
+        run: bash scripts/kernel_research/build_sm8250_bootstrap.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sm8250-618-bootstrap-${{ github.run_number }}
+          path: artifacts/sm8250-bootstrap/
+          if-no-files-found: warn
+          retention-days: 14

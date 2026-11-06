@@ -112,6 +112,11 @@ git -C common rev-parse HEAD > "$ARTIFACT_DIR/gki-mirror-commit.txt"
 printf '%s\n' "$GKI_SHA" > "$ARTIFACT_DIR/gki-upstream-source-sha.txt"
 git -C build/kernel rev-parse HEAD > "$ARTIFACT_DIR/kleaf-source-sha.txt"
 
+if [[ "${GKI_SYNC_ONLY:-0}" == 1 ]]; then
+  echo "Locked workspace verified; build delegated to the requested platform target."
+  exit 0
+fi
+
 tools/bazel --output_user_root="$BAZEL_ROOT" run \
   --jobs=2 \
   --local_cpu_resources=2 \

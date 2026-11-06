@@ -47,3 +47,9 @@ The shortened-path full legacy retry is [run 42228243866](https://github.com/xxb
 ## Completed locked GKI + strict NFC milestone
 
 [Run 42226214281](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281) passed: all 58 exact revisions verified, full GKI distribution produced, and NQ-NCI built through strict DDK. The downloaded NFC artifact passed local import/CRC checking against the same run's kernel symvers (75 imports, 76 version entries, no missing/mismatching CRCs). See `experiments/nfc_nq/results/strict-ddk-9.json`. The newer automatic CRC gate was committed after this run started; that same audit was applied locally to its artifacts. Board boot, module loading and physical NFC are still untested.
+
+## SM8250 platform bootstrap
+
+The shortened-path legacy full build [42228243866](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866) passed and produced a 27,314,415-byte artifact. This is build evidence, not a stock-source match or physical boot result.
+
+`SM8250 6.18 Platform Bootstrap` is the next compile gate. It uses the same 58-project dependency lock, a standalone Kleaf kernel target and a checked-in SM8250 pre-defconfig fragment. Pinctrl, clock/RPMh, SPMI/regulators, interconnect, SMMU, UFS/PHY and USB/I2C/UART support are requested built-in to match the boot-v2 early-driver requirement. Kconfig must preserve every requested assignment. This is a custom platform configuration and is not represented as an unchanged GKI-certified kernel. It produces Image/modules/config/symvers, not an RMX2072 boot image; board DTS and display/vendor ABI work remain necessary.
