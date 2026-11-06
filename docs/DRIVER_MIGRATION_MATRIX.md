@@ -130,4 +130,4 @@ The first experimental port is tracked on branch [experiment/nq-nci-gki-6.18](ht
 - The compile workflow prepares the exact pinned Android 17 GKI 6.18 source and attempts an external-module compile. A \`.ko\` produced with \`modules_prepare\` and modpost warnings is compile evidence only, not KMI certification.
 - The module preserves the legacy \`/dev/nq-nci\` name and ioctl numbers. Userspace compatibility must be tested before changing that ABI.
 
-Current status: source imported and first compatibility edits committed; compile workflow is running. No module load, NFC probe, or physical-device test has occurred.
+Current status: first compile reached nq-nci.c after GKI modules_prepare succeeded. It exposed three missing static prototypes and the removed no_llseek symbol; these were fixed in commit a5b4aab. A new compile run is pending. No .ko build, KMI audit, module load, NFC probe, or physical-device test has passed yet. See the [porting log](../experiments/nfc_nq/PORTING_LOG.md).
