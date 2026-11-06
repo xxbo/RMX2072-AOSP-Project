@@ -131,3 +131,12 @@ The first experimental port is tracked on branch [experiment/nq-nci-gki-6.18](ht
 - The module preserves the legacy \`/dev/nq-nci\` name and ioctl numbers. Userspace compatibility must be tested before changing that ABI.
 
 Current status: the pinned GKI 6.18 source prepared successfully and the NQ-NCI source now compiles/links into an AArch64 relocatable nq-nci.ko (workflow run #6). MODPOST warned that Module.symvers was absent because this was a modules_prepare-only smoke build. The artifact is not KMI-certified; no module load, NFC probe, or physical-device test has occurred. See the [porting log](../experiments/nfc_nq/PORTING_LOG.md).
+
+
+## 9. Rust-first implementation policy
+
+The NQ-NCI C port on the earlier experiment branch is retained as a compile/API and behavioral reference. It is not the preferred final implementation.
+
+The new kernel track first builds the full pinned GKI 6.18 distribution through Kleaf and its manifest-supplied Rust toolchain. The next driver milestone is a minimal Rust module, followed by a Rust I2C probe skeleton matching qcom,nq-nci. Only after the exact 6.18 APIs for GPIO, IRQ, regulator, character-device registration and wakeup are verified should the full NFC state machine be ported.
+
+Use a narrow C compatibility layer only for APIs lacking suitable Rust abstractions. Preserve the existing device-tree binding and userspace ABI until functional parity is demonstrated. See RUST_DRIVER_PORTING.md.
