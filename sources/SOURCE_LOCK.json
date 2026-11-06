@@ -10,7 +10,7 @@
     "system_target": "AOSP Android 17",
     "kernel_research_target": "Android Common Kernel / GKI 6.18"
   },
-  "pinning_policy": "Commit SHA is authoritative. Branch names are provenance only. No upstream source tree or proprietary blob is mirrored in this repository.",
+  "pinning_policy": "The exact pinned GKI kernel/common source snapshot is mirrored on a dedicated branch. Full upstream Git history and proprietary blobs are not mirrored; upstream tag and commit SHA remain authoritative.",
   "sources": [
     {
       "id": "realme-player-android-q-kernel",
@@ -195,13 +195,16 @@
       "tag_object": "910ab23e44c4d44c8c12a767c0d8ee9537c633f2",
       "commit_date": "2026-11-04T11:21:48Z",
       "kernel_version": "6.18",
-      "status": "pinned-official-gki-reference; repository-snapshot-mirror-pending",
+      "status": "pinned-official-gki-source-and-repository-snapshot",
       "notes": [
         "Official Android 17 GKI release tag dated 2026-11-05.",
         "This is a reference kernel baseline, not a device-ready RMX2072 kernel.",
-        "A shallow source-only snapshot is planned on the mirror branch in this repository; upstream history is intentionally not duplicated."
+        "Repository-owned source snapshot branch: mirror/android17-6.18-2026-09_r13.",
+        "Snapshot commit cfa72fb3d7f89372c7e449a4de2477551ea4c29c maps to this upstream commit; the mirror is source-only and intentionally omits upstream Git history.",
+        "The official Android kernel manifest, Kleaf, Clang, Rust toolchain and Bazel dependencies remain synced from their pinned upstream repositories."
       ],
-      "mirror_branch": "mirror/android17-6.18-2026-09_r13"
+      "mirror_branch": "mirror/android17-6.18-2026-09_r13",
+      "mirror_commit": "cfa72fb3d7f89372c7e449a4de2477551ea4c29c"
     },
     {
       "id": "qualcomm-linux-kgsl-modern-reference",
