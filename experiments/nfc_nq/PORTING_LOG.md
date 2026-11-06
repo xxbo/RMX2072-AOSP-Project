@@ -68,3 +68,12 @@ A source review found an optional eSE GPIO cleanup defect inherited from the dow
 - The remove path used 'ese_gpio > 0', which mishandles GPIO 0 and does not correctly express the invalid-GPIO sentinel. It also freed optional CLKREQ/FIRM lines without validating them.
 
 The port now frees the eSE line only when the driver's stored GPIO is valid and guards GPIO release with gpio_is_valid(). This is a lifecycle-safety correction before any hardware test; the driver still uses the legacy integer GPIO API pending the GKI KMI audit.
+
+
+## 2026-11-06 — Compile pass after GPIO ownership cleanup
+
+- Workflow: [#11](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42184985092)
+- Artifact: [nfc-nq-gki-618-11](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42184985092/artifacts/13486274740)
+- Result: passed; the GPIO cleanup changes compile and the AArch64 relocatable module is produced.
+- Module SHA-256: 63701348f0d369feb2399ec0b7e8c8569d33c6d7bf92786355af893d4dbff601
+- MODPOST still reports the expected missing-Module.symvers warning from the modules_prepare-only build. The KMI allow-list audit has been added to the next workflow run.
