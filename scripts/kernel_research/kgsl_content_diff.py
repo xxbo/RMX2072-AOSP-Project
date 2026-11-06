@@ -167,6 +167,24 @@ def normalize_struct(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
+def normalize_struct_arm64(text):
+    # Normalize UAPI integer aliases to their arm64 widths for a first-pass
+    # layout comparison. This is not a substitute for sizeof/offsetof tests.
+    value = normalize_struct(text)
+    aliases = [
+        (r"\b(?:uint64_t|__u64|u64|unsigned long long|unsigned long)\b", "U64"),
+        (r"\b(?:uint32_t|__u32|u32|unsigned int)\b", "U32"),
+        (r"\b(?:uint16_t|__u16|u16|unsigned short)\b", "U16"),
+        (r"\b(?:uint8_t|__u8|u8|unsigned char)\b", "U8"),
+        (r"\b(?:int64_t|__s64|s64|long long)\b", "S64"),
+        (r"\b(?:int32_t|__s32|s32|int)\b", "S32"),
+        (r"\b(?:size_t|__kernel_size_t)\b", "KSIZE64"),
+    ]
+    for pattern, replacement in aliases:
+        value = re.sub(pattern, replacement, value)
+    return value
+
+
 def parse_symbols(text):
     return {
         "functions": parse_functions(text),
@@ -272,6 +290,10 @@ def compare_uapi(sources):
             "struct_definitions_changed": sorted(
                 name for name in set(left["structs"]) & set(right["structs"])
                 if normalize_struct(left["structs"][name]) != normalize_struct(right["structs"][name])
+            ),
+            "arm64_layout_candidates": sorted(
+                name for name in set(left["structs"]) & set(right["structs"])
+                if normalize_struct_arm64(left["structs"][name]) != normalize_struct_arm64(right["structs"][name])
             ),
         })
     return result
@@ -482,13 +504,14 @@ def main():
         lines.append("- %s: %s" % (item["path"],
                     ("%s lines; %s detected functions" % (m["lines"], m["function_count"])) if m else "not present"))
     lines.extend(["", "## 5. KGSL userspace ABI inventory", "",
-                  "| Comparison | Left ioctls | Right ioctls | Added | Removed | Changed ioctl definitions | Structs added | Structs removed | Struct layouts changed |",
-                  "|---|---:|---:|---:|---:|---:|---:|---:|---:|"])
+                  "| Comparison | Left ioctls | Right ioctls | Added | Removed | Changed ioctl definitions | Structs added | Structs removed | Text-changed structs | Arm64 layout candidates |",
+                  "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"])
     for item in uapi_comparisons:
-        lines.append("| %s → %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
+        lines.append("| %s → %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
             item["left"], item["right"], item["left_ioctl_count"], item["right_ioctl_count"],
             len(item["ioctls_added"]), len(item["ioctls_removed"]), len(item["ioctl_definitions_changed"]),
-            len(item["structs_added"]), len(item["structs_removed"]), len(item["struct_definitions_changed"])))
+            len(item["structs_added"]), len(item["structs_removed"]),
+            len(item["struct_definitions_changed"]), len(item["arm64_layout_candidates"])))
         if item["ioctls_added"]:
             lines.append("- Added ioctl names: " + ", ".join(item["ioctls_added"]))
         if item["ioctls_removed"]:
@@ -500,7 +523,11 @@ def main():
         if item["structs_removed"]:
             lines.append("- Removed UAPI structs: " + ", ".join(item["structs_removed"]))
         if item["struct_definitions_changed"]:
-            lines.append("- Struct definitions with text/layout changes: " + ", ".join(item["struct_definitions_changed"]))
+            lines.append("- Struct definitions with text changes: " + ", ".join(item["struct_definitions_changed"]))
+        if item["arm64_layout_candidates"]:
+            lines.append("- Structs requiring ABI layout review: " + ", ".join(item["arm64_layout_candidates"]))
+        else:
+            lines.append("- No arm64 field-width/layout differences detected after normalizing standard UAPI integer aliases; compile-time sizeof/offsetof verification is still required.")
         lines.append("")
     lines.extend(["## 6. Android 17 GKI 6.18 graphics architecture", "",
                   "- KGSL drivers/gpu/msm directory present: %s" % gki["kgsl_directory_present"],
