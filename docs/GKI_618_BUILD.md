@@ -10,7 +10,7 @@ The official ARM64 distribution target is:
 tools/bazel run //common:kernel_aarch64_dist -- --destdir=dist
 ~~~
 
-The GitHub Actions workflow reproduces this path on ubuntu-24.04, using the pinned kernel/manifest and the pinned GKI release tag recorded in sources/SOURCE_LOCK.json. Run #5 completed successfully on 2026-11-06. The build used the official Kleaf distribution target, not a modules_prepare-only smoke build.
+The GitHub Actions workflow reproduces this path on ubuntu-24.04, using the pinned kernel/manifest and the pinned GKI release tag recorded in sources/SOURCE_LOCK.json. Run #5 completed successfully on 2026-11-06 using the upstream source checkout. The new `experiment/gki-6.18-repo-mirror` branch stores the exact kernel/common source snapshot in this repository; run #7 is validating the same distribution build using that repository-owned snapshot. Both use the official Kleaf distribution target, not a modules_prepare-only smoke build.
 
 ## Pinned inputs
 
@@ -23,6 +23,10 @@ The GitHub Actions workflow reproduces this path on ubuntu-24.04, using the pinn
 - Rust: CONFIG_RUST=y in the GKI arm64 defconfig; toolchain is synced from the same manifest
 
 Each run archives the resolved repo manifest, kernel and Kleaf source SHAs, build log, Rust configuration evidence, distribution files and SHA-256 checksums. Run #5 completed 1,378 Bazel actions; Bazel reported 1,242.471 seconds elapsed and a successful build. The uploaded artifact contained 158 files and was approximately 688 MB.
+
+## Repository-owned kernel source
+
+The exact `kernel/common` source snapshot is stored on branch `mirror/android17-6.18-2026-09_r13`. Its snapshot commit is `cfa72fb3d7f89372c7e449a4de2477551ea4c29c`, and its commit message records the upstream tag and source commit. The build's local manifest replaces the upstream `common` project with this branch. This is a source-only snapshot without upstream Git history; the official build manifest and toolchain dependencies remain pinned upstream. See [GKI_618_SOURCE_MIRROR.md](GKI_618_SOURCE_MIRROR.md).
 
 ## Why the manifest matters
 
