@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Planning plus first experimental driver port.** The NQ-NCI / SN100 driver now produces an AArch64 relocatable module against the pinned GKI 6.18 source in a compile-smoke workflow. MODPOST/KMI and physical-device validation remain open. No device image has been built or booted by this project.
+> **Project status: Source research plus first kernel build experiments.** A C-based NQ-NCI reference module has passed an initial compile-smoke test. A separate branch now contains a full Android 17 GKI 6.18 Kleaf build workflow with the pinned Rust toolchain and CONFIG_RUST=y; the full build is awaiting CI validation. No RMX2072 device kernel has been booted or hardware-validated.
 
 ## Goals
 
@@ -72,7 +72,10 @@ These are upstream references, not copies of their contents:
 - [KGSL / Adreno 650 research](docs/KGSL_ADRENO_RESEARCH.md)
 - [Driver migration matrix](docs/DRIVER_MIGRATION_MATRIX.md)
 - [Driver dependency map](docs/DRIVER_DEPENDENCY_MAP.md)
-- [NQ-NCI / SN100 experimental port](https://github.com/xxbo/RMX2072-AOSP-Project/tree/experiment/nq-nci-gki-6.18/experiments/nfc_nq)
+- [NQ-NCI / SN100 C reference port](https://github.com/xxbo/RMX2072-AOSP-Project/tree/experiment/nq-nci-gki-6.18/experiments/nfc_nq)
+- [GKI 6.18 Kleaf build workflow](https://github.com/xxbo/RMX2072-AOSP-Project/actions/workflows/gki-618-kernel-build.yml)
+- [Reproducible GKI 6.18 build notes](docs/GKI_618_BUILD.md)
+- [Rust driver porting strategy](docs/RUST_DRIVER_PORTING.md)
 
 - [Source manifest](sources/SOURCE_MANIFEST.md)
 - [Machine-readable source lock](sources/SOURCE_LOCK.json)
@@ -86,6 +89,7 @@ These are upstream references, not copies of their contents:
 2. **Separate system, kernel and vendor work.** AOSP/GSI, GKI and proprietary vendor compatibility are related but distinct tracks.
 3. **Prefer upstream implementations.** Reuse upstream Linux and Android Common Kernel code where suitable; port downstream code only where necessary.
 4. **Do not assume GKI compatibility.** A legacy kernel with module support is not automatically GKI. KMI, module ABI, boot flow and vendor interfaces must be validated.
+5. **Prefer Rust for new driver logic where supported.** Use the exact kernel Rust abstractions first; keep any C compatibility layer narrow, audited and temporary where practical.
 5. **Keep proprietary material out of Git.** Do not commit vendor blobs, firmware, factory images, keys, personal data or other files without clear redistribution rights. Record extraction instructions and hashes instead.
 6. **Document test evidence.** Mark every feature as untested, build-tested, boot-tested or hardware-tested.
 
@@ -94,8 +98,11 @@ These are upstream references, not copies of their contents:
 - [x] GitHub repository created.
 - [x] First-pass driver migration matrix and dependency map documented from pinned source evidence.
 - [x] First NQ-NCI / SN100 experimental module port staged on an isolated branch.
-- [x] Produce first NQ-NCI AArch64 compile-smoke module against pinned GKI 6.18 source.
-- [ ] Complete full-GKI KMI/export audit, module signing/load and NFC hardware validation.
+- [x] Produce first NQ-NCI AArch64 compile-smoke module against pinned GKI 6.18 source (C reference only; not KMI-certified).
+- [x] Pin the official Android 17 GKI 6.18 repo manifest and add the full Kleaf ARM64 build workflow.
+- [ ] Complete the first full GKI 6.18 Kleaf build and archive its distribution artifacts.
+- [ ] Build a minimal Rust kernel module using the exact pinned GKI toolchain.
+- [ ] Complete full-GKI KMI audit, module signing/load and NFC hardware validation.
 - [ ] Confirm exact device model, region and firmware build from the handset.
 - [ ] Capture partition map, boot image metadata and AVB status.
 - [ ] Archive and hash the stock firmware and recovery images locally.
