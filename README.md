@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Planning plus first experimental driver port.** The NQ-NCI / SN100 external-module compile experiment is staged on a dedicated branch; its first GKI 6.18 compile-smoke workflow is running. No device image has been built, booted or hardware-validated by this project yet.
+> **Project status: Planning plus first experimental driver port.** The NQ-NCI / SN100 driver now produces an AArch64 relocatable module against the pinned GKI 6.18 source in a compile-smoke workflow. MODPOST/KMI and physical-device validation remain open. No device image has been built or booted by this project.
 
 ## Goals
 
@@ -94,7 +94,8 @@ These are upstream references, not copies of their contents:
 - [x] GitHub repository created.
 - [x] First-pass driver migration matrix and dependency map documented from pinned source evidence.
 - [x] First NQ-NCI / SN100 experimental module port staged on an isolated branch.
-- [ ] Complete GKI 6.18 compile, KMI audit, module load and NFC hardware validation.
+- [x] Produce first NQ-NCI AArch64 compile-smoke module against pinned GKI 6.18 source.
+- [ ] Complete full-GKI KMI/export audit, module signing/load and NFC hardware validation.
 - [ ] Confirm exact device model, region and firmware build from the handset.
 - [ ] Capture partition map, boot image metadata and AVB status.
 - [ ] Archive and hash the stock firmware and recovery images locally.
