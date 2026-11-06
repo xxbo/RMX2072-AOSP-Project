@@ -58,3 +58,13 @@ This artifact proves that the current driver source compiles and links into an A
 ### Next gate
 
 Build the full pinned GKI kernel to obtain the authoritative Module.symvers, extract the module's undefined imports, compare them against the GKI exported-symbol and protected KMI lists, then rebuild with symbol-version checking. The legacy GPIO API is a likely area to review, but no symbol should be declared unavailable based only on the current modules_prepare MODPOST warnings.
+
+
+## 2026-11-06 — Probe/remove resource cleanup review
+
+A source review found an optional eSE GPIO cleanup defect inherited from the downstream driver:
+
+- The probe error path checked the original DT GPIO number rather than the driver's successfully-requested GPIO state. If the optional eSE GPIO request failed but a later optional clock-request GPIO setup failed, the unwind path could call gpio_free() on a line it did not own.
+- The remove path used 'ese_gpio > 0', which mishandles GPIO 0 and does not correctly express the invalid-GPIO sentinel. It also freed optional CLKREQ/FIRM lines without validating them.
+
+The port now frees the eSE line only when the driver's stored GPIO is valid and guards GPIO release with gpio_is_valid(). This is a lifecycle-safety correction before any hardware test; the driver still uses the legacy integer GPIO API pending the GKI KMI audit.
