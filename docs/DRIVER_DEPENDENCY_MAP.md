@@ -199,3 +199,12 @@ Do not fill these fields from a different SM8250 handset or from a shared common
 - [Hardware and source inventory](./HARDWARE_INVENTORY.md)
 - [KGSL / Adreno 650 research](./KGSL_ADRENO_RESEARCH.md)
 - [Source inventory and provenance](./SOURCE_INVENTORY.md)
+
+
+## 7. Experimental pilot selection
+
+NQ-NCI / SN100 is selected as the first port experiment because the official RMX2072 20607 DTS supplies an unusually concrete hardware contract (I2C address, controller, IRQ and GPIO assignments), the proprietary manifest contains matching SN100 configuration/firmware references, and a downstream implementation already exists. This is a **porting-method pilot**, not a claim that NFC is more important to boot than the P0 platform, display or memory foundations.
+
+The pilot is intentionally isolated as an external module. Its first compile is designed to reveal 6.18 source/API compatibility; the next phase must check the imported-symbol list against the exact GKI KMI, then convert legacy GPIO calls if required. It must preserve the vendor /dev/nq-nci and ioctl ABI until the corresponding userspace contract has been verified.
+
+See [the NQ-NCI experimental port](../experiments/nfc_nq/README.md) and its [userspace ABI inventory](../experiments/nfc_nq/ABI.md).
