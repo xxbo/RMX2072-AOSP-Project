@@ -239,14 +239,17 @@ Tasks:
 
 **Goal:** Evaluate a modern ACK/GKI kernel for RMX2072 without assuming that a successful compile implies device compatibility.
 
-**Progress note (2026-11-06):** The first module experiment is staged on branch `experiment/nq-nci-gki-6.18`: NQ-NCI for the SN100 NFC controller, with a compile-smoke workflow against the pinned Android 17 GKI 6.18 source. The GKI source fetch, defconfig and modules_prepare pass. After fixing three missing static prototypes and replacing no_llseek with noop_llseek, workflow run #6 produced an AArch64 relocatable nq-nci.ko. MODPOST warned that Module.symvers was absent because this is a modules_prepare-only build. KMI/signing/load/probe and NFC functionality remain unverified.
+**Progress note (2026-11-06):** The earlier experiment/nq-nci-gki-6.18 branch produced an AArch64 NQ-NCI C compile-smoke module using modules_prepare only; MODPOST warned that Module.symvers was absent, so it is not KMI-certified. The new experiment/gki-6.18-rust-foundation branch switches the authoritative build path to the official Android kernel repo manifest and Kleaf target //common:kernel_aarch64_dist. The manifest, GKI release tag and Rust toolchain are pinned; the workflow checks CONFIG_RUST=y and is awaiting its first full-build result. No device kernel has been built for RMX2072 or boot-tested.
 
 Tasks:
-- [ ] Select a candidate ACK/GKI branch based on the target Android release's official support matrix.
-- [ ] Confirm KMI policy, protected symbol lists, toolchain and build system.
+- [x] Select Android 17 GKI 6.18 as the research baseline using the official support matrix; retain the caveat that it is not yet a device-ready target.
+- [x] Pin the official kernel repo manifest, GKI source tag and Kleaf/Rust toolchain source.
+- [x] Add a GitHub Actions workflow for the official Kleaf ARM64 distribution target.
+- [ ] Complete the first full GKI build and inspect its dist/KMI artifacts.
 - [x] Stage the first NQ-NCI external-module compile experiment against the pinned 6.18 source.
 - [x] Produce the first AArch64 NQ-NCI compile-smoke module against the pinned GKI 6.18 source.
-- [ ] Build the full GKI kernel, obtain Module.symvers and audit module imports against the exact GKI KMI/export list.
+- [ ] Audit module imports against the full-build GKI KMI/export list and protected-symbol policy.
+- [ ] Build a minimal Rust module and Rust I2C probe skeleton using the exact pinned kernel toolchain.
 - [ ] Audit the handset boot architecture and determine how GKI, DTB/DTBO and vendor modules could be packaged.
 - [ ] Prototype the simplest boot path before porting all hardware drivers.
 - [ ] Port or replace the minimum drivers needed for boot and basic display/input.
@@ -349,5 +352,5 @@ Update the checkboxes and milestone status as work is completed. Record evidence
 | M4 — Own AOSP build and device integration | Not started |
 | M5 — Kernel source and driver asset analysis | In progress — first driver matrix, dependency map and SN100 pilot selected |
 | M6 — Legacy kernel reproducibility and modernization | Not started |
-| M7 — ACK/GKI feasibility prototype | In progress — first NQ-NCI GKI 6.18 compile-smoke workflow running |
+| M7 — ACK/GKI feasibility prototype | In progress — official Kleaf full-build workflow staged; first run pending |
 | M8 — Integrated system and maintenance | Not started |
