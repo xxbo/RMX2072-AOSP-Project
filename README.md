@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Source research plus first kernel build experiments.** A C-based NQ-NCI reference module has passed an initial compile-smoke test. A separate branch now contains a full Android 17 GKI 6.18 Kleaf build workflow with the pinned Rust toolchain and CONFIG_RUST=y; the full build is awaiting CI validation. No RMX2072 device kernel has been booted or hardware-validated.
+> **Project status: Generic GKI build verified.** GitHub Actions run #5 completed the official Android 17 GKI 6.18 ARM64 Kleaf distribution build, producing the kernel images, vmlinux, Module.symvers, system_dlkm images and modules. A separate branch is preparing a repository-owned snapshot of the exact pinned kernel source so subsequent builds consume code from this repository. No RMX2072-specific kernel has been booted or hardware-validated.
 
 ## Goals
 
@@ -45,7 +45,7 @@ The exact partition layout, boot image header version, AVB state, firmware revis
 │   ├── GSI_BUILD_GUIDE.md
 │   └── COMPATIBILITY_MATRIX.md
 ├── device/                 # Project-owned device configuration and patches
-├── kernel/                 # Project-owned kernel work; upstream sources stay external
+├── kernel/                 # Project-owned kernel work and future RMX2072 patches
 ├── experiments/            # Isolated driver-port experiments; not part of a device image
 │   └── nfc_nq/              # First NQ-NCI / SN100 GKI 6.18 module experiment
 ├── vendor/                 # Metadata and extraction notes; do not commit proprietary blobs
