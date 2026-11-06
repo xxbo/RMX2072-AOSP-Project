@@ -83,3 +83,5 @@ The port now frees the eSE line only when the driver's stored GPIO is valid and 
 The run #11 smoke module (SHA-256 `63701348f0d369feb2399ec0b7e8c8569d33c6d7bf92786355af893d4dbff601`) was downloaded and its ELF64 undefined symbols parsed locally. All 75 imported symbol names occur in `kernel_aarch64_Module.symvers` extracted from successful full Kleaf run #8. There are no missing strong exports in this name-presence comparison.
 
 This corrects any assumption that the legacy GPIO names are necessarily unavailable in this pinned kernel. The module was still built by modules_prepare with no authoritative CRCs, so this comparison does not certify symbol versions, namespace imports, protected KMI policy, signatures or loading. The strict DDK build must pass independently. The reusable `scripts/kernel_research/audit_module_exports.py` records module/symvers hashes and export metadata; its report remains local.
+
+The previous smoke module advertises `modversions` in vermagic but has a zero-byte `__versions` ELF section. This is direct evidence that its name-presence result cannot substitute for a versioned strict build.

@@ -19,7 +19,7 @@ def fdt(data, compatible=()):
         raise ValueError('FDT blocks exceed declared size')
     strings = data[off_strings:off_strings+len_strings]
     pos, end, stack, props = off_struct, off_struct+len_struct, [], {}
-    node_props, matches = [], []
+    node_props, matches, fixups, symbols = [], [], {}, {}
     while pos < end:
         token = u32(data, pos)
         pos += 4
@@ -42,9 +42,13 @@ def fdt(data, compatible=()):
             name = strings[nameoff:stop].decode('ascii')
             value = data[pos:pos+length]
             if compatible:
+                if stack[-1] == '__fixups__':
+                    fixups[name] = value.rstrip(b'\0').decode('ascii').split('\0')
+                if stack[-1] == '__symbols__':
+                    symbols[name] = value.rstrip(b'\0').decode('ascii')
                 if name in ('compatible', 'status', 'qcom,clk-src'):
                     node_props[-1][name] = value.rstrip(b'\0').decode('ascii', errors='replace').split('\0')
-                elif name in ('reg', 'interrupts', 'interrupt-parent') or name.startswith('qcom,nq-'):
+                elif name in ('reg', 'interrupts', 'interrupt-parent', 'phandle', 'linux,phandle', '#gpio-cells', '#interrupt-cells') or name.startswith('qcom,nq-'):
                     if length % 4 == 0:
                         node_props[-1][name] = list(struct.unpack('>'+str(length//4)+'I', value))
             if len(stack) == 1 and name in ('model', 'compatible', 'qcom,msm-id', 'qcom,board-id', 'qcom,pmic-id'):
@@ -59,6 +63,14 @@ def fdt(data, compatible=()):
             result = dict(size_bytes=size, sha256=hashlib.sha256(data[:size]).hexdigest(), root=props)
             if compatible:
                 result['matching_nodes'] = matches
+                paths = tuple(m['path']+':' for m in matches)
+                result['matching_overlay_fixups'] = {key: [v for v in values if v.startswith(paths)]
+                    for key, values in fixups.items() if any(v.startswith(paths) for v in values)}
+                result['matching_base_symbols'] = {key: value for key, value in symbols.items()
+                    if value in {m['path'] for m in matches}}
+                fragments = tuple('/'+m['path'].split('/')[1]+':target:' for m in matches if m['path'].startswith('/fragment@'))
+                result['fragment_target_fixups'] = {key: [v for v in values if v.startswith(fragments)]
+                    for key, values in fixups.items() if any(v.startswith(fragments) for v in values)}
             return result
         else:
             raise ValueError('unknown FDT token')

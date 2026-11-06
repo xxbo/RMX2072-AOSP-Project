@@ -84,7 +84,7 @@ The 4.19.325 implementation also recognizes optional eSE power GPIO and optional
 
 ## Selected F.20 overlay evidence
 
-On 2026-11-06, the live phone reported `ro.boot.dtbo_idx=17`. Parsing that entry from the locally backed-up original `dtbo.img` found `/fragment@60/__overlay__/nq@28`, `compatible="qcom,nq-nci"`, and `reg=0x28`. Its GPIO specifier second cells are IRQ=111, VEN=83, FIRM=110, CLKREQ=7. The first cells are unresolved `0xffffffff` overlay fixup placeholders; resolve the provider and its bindings before treating these as Linux GPIO numbers or generating a 6.18 DTS. These differ from the earlier source table above.
+On 2026-11-06, the live phone reported `ro.boot.dtbo_idx=17`. Parsing that entry from the locally backed-up original `dtbo.img` found `/fragment@60/__overlay__/nq@28`, `compatible="qcom,nq-nci"`, and `reg=0x28`. Its GPIO specifier second cells are IRQ=111, VEN=83, FIRM=110, CLKREQ=7. The first cells are `0xffffffff` overlay fixup placeholders. Subsequent inspection resolves their `tlmm` fixup through selected base DTB 12 to `/soc/pinctrl@f000000` (`qcom,kona-pinctrl`, two GPIO cells); the fragment target resolves to `qupv3_se1_i2c`. The line numbers are controller-relative, not Linux global GPIO IDs. Preserve the stock-provider evidence and translate bindings before generating a 6.18 DTS. These differ from the earlier source table above.
 
 The stock system exposes `/dev/nq-nci` as mode 0660 with nfc:nfc ownership. This confirms the selected NQ-NCI userspace device and strengthens the binding evidence; it does not identify exact silicon or demonstrate RF functionality. See `build/device/stock-nfc-binding.json`. No NFC ioctl, GPIO change or module load was performed.
 
