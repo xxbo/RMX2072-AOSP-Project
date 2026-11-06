@@ -74,7 +74,7 @@ The first experimental port is NQ-NCI / NXP SN100, selected because the official
 - Branch: [experiment/nq-nci-gki-6.18](https://github.com/xxbo/RMX2072-AOSP-Project/tree/experiment/nq-nci-gki-6.18)
 - Workflow: [NQ-NCI GKI 6.18 Compile Smoke](https://github.com/xxbo/RMX2072-AOSP-Project/actions/workflows/nfc-nq-gki-618-smoke.yml)
 - Build basis: exact Android 17 GKI 6.18 SHA in \`sources/SOURCE_LOCK.json\`
-- First pass: external-module compile against prepared GKI headers; modpost warnings are retained as evidence, not hidden.
+- First pass: external-module compile against prepared GKI headers; modpost warnings are retained as evidence, not hidden. The first actual driver compile reached nq-nci.c and exposed three missing static prototypes plus the no_llseek-to-noop_llseek API change. The fixes are committed; see the experiment porting log.
 - Next gates: compile errors → symbol/KMI audit with full \`Module.symvers\` → GPIO descriptor/API conversion if needed → DT/module packaging → module load and probe → NFC/eSE functional tests.
 
 This is an intentionally narrow experiment. It does not change the main branch's kernel, device tree or build configuration, and no image is flashed.
