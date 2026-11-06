@@ -12,6 +12,9 @@ import hashlib
 import json
 import os
 import re
+import shutil
+import subprocess
+import tempfile
 import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -260,6 +263,115 @@ def fetch_source_files(lock, source_id, paths, kind):
     return result
 
 
+def parse_struct_field_names(block):
+    body = block[block.find("{") + 1:block.rfind("}")]
+    body = re.sub(r"/\*.*?\*/|//[^\n]*", "", body, flags=re.S)
+    body = re.sub(r"(?m)^\s*#.*$", "", body)
+    if "{" in body or "}" in body:
+        return []
+    fields = []
+    for declaration in body.split(";"):
+        declaration = declaration.strip()
+        if not declaration or "," in declaration:
+            continue
+        match = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^\]]*\])?\s*(?::\s*\d+)?$", declaration)
+        if match:
+            fields.append(match.group(1))
+    return sorted(set(fields))
+
+
+def probe_uapi_layout(source_id, header_text, compiler, workdir):
+    if not compiler:
+        return {"status": "skipped", "reason": "No host C compiler found"}
+    source_dir = os.path.join(workdir, source_id)
+    os.makedirs(source_dir, exist_ok=True)
+    header_path = os.path.join(source_dir, "msm_kgsl.h")
+    source_path = os.path.join(source_dir, "layout_probe.c")
+    binary_path = os.path.join(source_dir, "layout_probe")
+    with open(header_path, "w", encoding="utf-8") as handle:
+        handle.write(header_text)
+
+    structs = parse_struct_blocks(header_text)
+    lines = [
+        "#include <stddef.h>",
+        "#include <stdint.h>",
+        "#include <stdio.h>",
+        "#ifndef __user",
+        "#define __user",
+        "#endif",
+        '#include "msm_kgsl.h"',
+        "int main(void) {",
+    ]
+    for name, block in sorted(structs.items()):
+        lines.append('printf("S|%s|%%zu\\\\n", sizeof(struct %s));' % (name, name))
+        for field in parse_struct_field_names(block):
+            lines.append('printf("F|%s|%s|%%zu\\\\n", offsetof(struct %s, %s));' %
+                         (name, field, name, field))
+    lines.extend(["return 0;", "}"])
+    with open(source_path, "w", encoding="utf-8") as handle:
+        handle.write("\n".join(lines) + "\n")
+
+    command = [compiler, "-m64", "-std=gnu11", "-Wno-unused", "-I", source_dir,
+               source_path, "-o", binary_path]
+    try:
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=60)
+        if compiled.returncode != 0:
+            return {"status": "failed", "compiler": os.path.basename(compiler),
+                    "stderr": compiled.stderr[-3000:], "struct_count": len(structs)}
+        executed = subprocess.run([binary_path], capture_output=True, text=True, timeout=30)
+        if executed.returncode != 0:
+            return {"status": "failed", "compiler": os.path.basename(compiler),
+                    "stderr": executed.stderr[-3000:], "struct_count": len(structs)}
+        sizes, offsets = {}, {}
+        for line in executed.stdout.splitlines():
+            parts = line.split("|")
+            if len(parts) == 3 and parts[0] == "S":
+                sizes[parts[1]] = int(parts[2])
+            elif len(parts) == 4 and parts[0] == "F":
+                offsets.setdefault(parts[1], {})[parts[2]] = int(parts[3])
+        return {
+            "status": "passed",
+            "compiler": os.path.basename(compiler),
+            "data_model": "LP64 host probe (-m64); same standard integer/pointer widths as arm64, not an AArch64 cross-compile",
+            "struct_count": len(sizes),
+            "field_offset_count": sum(len(value) for value in offsets.values()),
+            "sizes": sizes,
+            "offsets": offsets,
+        }
+    except Exception as exc:
+        return {"status": "failed", "compiler": os.path.basename(compiler), "error": str(exc)}
+
+
+def compare_layout_probes(probes):
+    order = ["realme-player-android-q-kernel", "sm8250-common-current-kernel",
+             "qualcomm-linux-kgsl-modern-reference"]
+    available = [key for key in order if probes.get(key, {}).get("status") == "passed"]
+    comparisons = []
+    for i in range(len(available) - 1):
+        left_id, right_id = available[i], available[i + 1]
+        left, right = probes[left_id], probes[right_id]
+        common_structs = set(left["sizes"]) & set(right["sizes"])
+        size_changed = sorted(name for name in common_structs
+                              if left["sizes"][name] != right["sizes"][name])
+        offset_changed = []
+        for name in sorted(common_structs):
+            left_fields = left["offsets"].get(name, {})
+            right_fields = right["offsets"].get(name, {})
+            for field in sorted(set(left_fields) & set(right_fields)):
+                if left_fields[field] != right_fields[field]:
+                    offset_changed.append({
+                        "struct": name, "field": field,
+                        "left": left_fields[field], "right": right_fields[field],
+                    })
+        comparisons.append({
+            "left": left_id, "right": right_id,
+            "common_struct_count": len(common_structs),
+            "size_changed": size_changed,
+            "field_offsets_changed": offset_changed,
+        })
+    return comparisons
+
+
 def compare_uapi(sources):
     ids = ["realme-player-android-q-kernel", "sm8250-common-current-kernel",
            "qualcomm-linux-kgsl-modern-reference"]
@@ -396,6 +508,15 @@ def main():
     }
 
     uapi_comparisons = compare_uapi(sources)
+    compiler = shutil.which("gcc") or shutil.which("clang")
+    uapi_layout_probes = {}
+    with tempfile.TemporaryDirectory(prefix="kgsl-uapi-layout-") as tempdir:
+        for source_id in ids:
+            header = sources[source_id]["files"]["include/uapi/linux/msm_kgsl.h"]["text"]
+            if header is not None:
+                uapi_layout_probes[source_id] = probe_uapi_layout(source_id, header, compiler, tempdir)
+    uapi_layout_comparisons = compare_layout_probes(uapi_layout_probes)
+
     kconfig_text = modern["files"].get("drivers/gpu/msm/Kconfig", {}).get("text") or ""
     modern_kconfig = parse_kconfig(kconfig_text)
     modern_gpu_list = modern["files"].get("adreno-gpulist.h", {}).get("text") or ""
@@ -444,6 +565,11 @@ def main():
         "current_vs_modern": current_vs_modern,
         "modern_extras": modern_extras,
         "uapi_comparisons": uapi_comparisons,
+        "uapi_layout_probes": {
+            key: {k: v for k, v in item.items() if k not in ("sizes", "offsets")}
+            for key, item in uapi_layout_probes.items()
+        },
+        "uapi_layout_comparisons": uapi_layout_comparisons,
         "gki": {
             "repo": gki["repo"], "commit": gki["commit"],
             "files": {p: {"missing": x["missing"], "metrics": x["metrics"]} for p, x in gki["files"].items()},
@@ -529,7 +655,27 @@ def main():
         else:
             lines.append("- No arm64 field-width/layout differences detected after normalizing standard UAPI integer aliases; compile-time sizeof/offsetof verification is still required.")
         lines.append("")
-    lines.extend(["## 6. Android 17 GKI 6.18 graphics architecture", "",
+    lines.extend(["## 6. KGSL UAPI LP64 compile-time layout probe", "",
+                  "The workflow compiles each pinned UAPI header with the runner's host C compiler in 64-bit LP64 mode, then records sizeof and offsetof values for parsed KGSL structs. This is a useful 64-bit ABI cross-check, but it is not an AArch64 cross-compile or a runtime userspace compatibility test.",
+                  "",
+                  "| Source | Probe status | Structs measured | Field offsets measured |",
+                  "|---|---|---:|---:|"])
+    for key, item in report["uapi_layout_probes"].items():
+        lines.append("| %s | %s | %s | %s |" % (
+            key, item["status"], item.get("struct_count", 0), item.get("field_offset_count", 0)))
+    lines.append("")
+    for item in report["uapi_layout_comparisons"]:
+        lines.append("**%s → %s**: %s common structs; %s sizeof changes; %s field-offset changes." % (
+            item["left"], item["right"], item["common_struct_count"],
+            len(item["size_changed"]), len(item["field_offsets_changed"])))
+        if item["size_changed"]:
+            lines.append("- Size changes: " + ", ".join(item["size_changed"]))
+        if item["field_offsets_changed"]:
+            lines.append("- Offset changes: " + "; ".join(
+                "%s.%s: %s → %s" % (x["struct"], x["field"], x["left"], x["right"])
+                for x in item["field_offsets_changed"]))
+        lines.append("")
+    lines.extend(["", "## 7. Android 17 GKI 6.18 graphics architecture", "",
                   "- KGSL drivers/gpu/msm directory present: %s" % gki["kgsl_directory_present"],
                   "- DRM/MSM driver directory present: %s" % gki["drm_msm_directory_present"],
                   "- KGSL UAPI header present: %s" % gki["kgsl_uapi_present"],
@@ -558,6 +704,7 @@ def main():
         "3. The next technical gate is to validate module compile dependencies, exported-symbol requirements, GKI KMI availability, device-tree integration and firmware names against the exact Android 17 GKI build.",
         "4. Ioctl-name inventories do not prove ABI compatibility. Struct layout, ioctl encoding, semantics and vendor userspace expectations require dedicated tests.",
         "", "## 9. Limitations", "",
+        "- The UAPI compile-time layout probe uses the runner's x86_64 LP64 ABI, not a dedicated AArch64 cross-compiler; repeat with the exact Android/AOSP toolchain before treating the result as final.",
         "- Function detection is regex-based, not a full C parser or compiler AST.",
         "- Line additions/removals are text statistics, not semantic change scores.",
         "- No proprietary firmware, vendor libraries or device dumps are downloaded.",
@@ -585,6 +732,7 @@ def main():
             handle.write("- Legacy/current comparisons: %s\n" % len(legacy_vs_current))
             handle.write("- Current/modern KGSL comparisons: %s\n" % len(current_vs_modern))
             handle.write("- UAPI comparisons: %s\n" % len(uapi_comparisons))
+            handle.write("- UAPI layout probes passed: %s\n" % sum(1 for item in uapi_layout_probes.values() if item.get("status") == "passed"))
             handle.write("- GKI KGSL directory present: %s\n" % gki["kgsl_directory_present"])
             handle.write("- GKI DRM/MSM directory present: %s\n" % gki["drm_msm_directory_present"])
             handle.write("- Reports uploaded as workflow artifacts.\n")
