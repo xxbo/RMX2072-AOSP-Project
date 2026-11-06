@@ -65,6 +65,7 @@ These are upstream references, not copies of their contents:
 
 - [Automated kernel research pipeline](docs/KERNEL_RESEARCH_PIPELINE.md)
 - [Kernel tree diff findings](docs/KERNEL_TREE_DIFF_FINDINGS.md)
+- [KGSL / Adreno 650 research](docs/KGSL_ADRENO_RESEARCH.md)
 
 - [Source manifest](sources/SOURCE_MANIFEST.md)
 - [Machine-readable source lock](sources/SOURCE_LOCK.json)
