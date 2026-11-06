@@ -176,11 +176,18 @@ Tasks:
 
 **Goal:** Understand what can be reused, upstreamed, rebuilt or must remain proprietary.
 
+**Progress note (2026-11-06):** The first KGSL/Adreno 650 source-analysis pass is complete. GitHub Actions Run #17 retrieved pinned RMX2072 4.19.81, SM8250-Common 4.19.325, Qualcomm Linux 7.2 KGSL reference and Android 17 GKI 6.18 files. Findings are recorded in `docs/KGSL_ADRENO_RESEARCH.md`. The pinned GKI has DRM/MSM with an Adreno 650 catalog entry, but no legacy KGSL directory/UAPI. Qualcomm's modern KGSL is a Linux 7.2 external-module reference, not a proven GKI 6.18 module. No kernel build or device test has been performed.
+
 Tasks:
 - [ ] Compare official 4.19.81, shared 4.19.157 and community 4.19.x trees by subsystem.
 - [ ] Identify the exact device configuration and downstream patches in each tree.
 - [ ] Map drivers to upstream Linux and ACK implementations.
 - [ ] Inventory exported symbols, private headers, firmware dependencies and userspace ioctl contracts.
+- [x] Complete the first-pass KGSL/Adreno 650 source diff: official RMX2072 4.19.81 vs SM8250-Common 4.19.325.
+- [x] Inventory KGSL ioctl/UAPI changes and run a preliminary host LP64 sizeof/offsetof probe.
+- [x] Confirm that pinned GKI 6.18 contains DRM/MSM A6xx support with an Adreno 650 catalog entry, but not the legacy KGSL path/UAPI.
+- [ ] Repeat KGSL UAPI layout probes with a pinned AArch64 Android LLVM toolchain.
+- [ ] Audit modern KGSL undefined symbols against the exact Android 17 GKI KMI list and exported-symbol set.
 - [ ] Identify drivers already available upstream for the exact hardware.
 - [ ] Identify closed-source kernel modules and userspace components that cannot be rebuilt.
 - [ ] Audit ION, DMA-BUF, DMA-BUF heaps and secure-memory dependencies.
@@ -323,7 +330,7 @@ Update the checkboxes and milestone status as work is completed. Record evidence
 | M2 — Treble, Vendor and GSI assessment | Not started |
 | M3 — Android 17 GSI bring-up | Not started |
 | M4 — Own AOSP build and device integration | Not started |
-| M5 — Kernel source and driver asset analysis | Not started |
+| M5 — Kernel source and driver asset analysis | In progress — KGSL/Adreno first-pass analysis completed |
 | M6 — Legacy kernel reproducibility and modernization | Not started |
 | M7 — ACK/GKI feasibility prototype | Not started |
 | M8 — Integrated system and maintenance | Not started |
