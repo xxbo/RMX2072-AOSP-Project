@@ -76,7 +76,9 @@ def request_bytes(url, headers=None, timeout=90):
 
 
 def github_json(repo, endpoint):
-    url = API_ROOT + "/repos/" + repo + "/" + endpoint.lstrip("/")
+    url = API_ROOT + "/repos/" + repo
+    if endpoint:
+        url += "/" + endpoint.lstrip("/")
     if url not in JSON_CACHE:
         headers = {
             "Accept": "application/vnd.github+json",
@@ -450,10 +452,11 @@ def main():
 
     for source in sources:
         try:
-            if "/" in source.get("repository", ""):
-                result = github_kernel_source(source)
-            else:
+            if (source.get("category") == "official-ack-gki" or
+                    "googlesource.com" in source.get("url", "")):
                 result = gitiles_kernel_source(source)
+            else:
+                result = github_kernel_source(source)
             report_sources.append(result)
             internal_sources.append(result)
             print("[OK] %s %s" % (source["id"], source.get("commit")))
