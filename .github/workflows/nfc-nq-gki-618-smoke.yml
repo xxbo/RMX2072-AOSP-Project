@@ -1,0 +1,52 @@
+name: NQ-NCI GKI 6.18 Compile Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "experiment/nq-nci-gki-6.18"
+    paths:
+      - ".github/workflows/nfc-nq-gki-618-smoke.yml"
+      - "experiments/nfc_nq/**"
+      - "scripts/kernel_research/build_nq_nci_gki.sh"
+      - "sources/SOURCE_LOCK.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nfc-nq-gki-618-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  compile-smoke:
+    name: Build NQ-NCI against pinned ACK 6.18 headers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout experiment
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install kernel build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bc bison build-essential clang clang-format flex git jq \
+            libelf-dev libncurses-dev libssl-dev lld llvm make pahole \
+            perl python3 rsync kmod
+
+      - name: Build experimental module
+        run: |
+          chmod +x scripts/kernel_research/build_nq_nci_gki.sh
+          scripts/kernel_research/build_nq_nci_gki.sh
+
+      - name: Upload compile evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfc-nq-gki-618-${{ github.run_number }}
+          path: artifacts/nfc-nq-gki-smoke/
+          if-no-files-found: warn
+          retention-days: 14
