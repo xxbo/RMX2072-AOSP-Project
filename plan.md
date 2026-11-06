@@ -239,7 +239,7 @@ Tasks:
 
 **Goal:** Evaluate a modern ACK/GKI kernel for RMX2072 without assuming that a successful compile implies device compatibility.
 
-**Progress note (2026-11-06):** The first module experiment is staged on branch `experiment/nq-nci-gki-6.18`: NQ-NCI for the SN100 NFC controller, with a compile-smoke workflow against the pinned Android 17 GKI 6.18 source. The GKI source fetch, defconfig and modules_prepare now pass. The first driver compile exposed three missing static prototypes and the no_llseek API removal; those source fixes are committed and the next compile is pending. This is still only a module API compile experiment; .ko generation, KMI, signing, load, probe and NFC functionality remain unverified.
+**Progress note (2026-11-06):** The first module experiment is staged on branch `experiment/nq-nci-gki-6.18`: NQ-NCI for the SN100 NFC controller, with a compile-smoke workflow against the pinned Android 17 GKI 6.18 source. The GKI source fetch, defconfig and modules_prepare pass. After fixing three missing static prototypes and replacing no_llseek with noop_llseek, workflow run #6 produced an AArch64 relocatable nq-nci.ko. MODPOST warned that Module.symvers was absent because this is a modules_prepare-only build. KMI/signing/load/probe and NFC functionality remain unverified.
 
 Tasks:
 - [ ] Select a candidate ACK/GKI branch based on the target Android release's official support matrix.
