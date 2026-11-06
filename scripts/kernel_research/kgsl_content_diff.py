@@ -59,6 +59,13 @@ GKI_FILES = [
     "drivers/gpu/drm/msm/adreno/a6xx_hfi.c",
     "drivers/gpu/drm/msm/adreno/a6xx_preempt.c",
     "include/uapi/drm/msm_drm.h",
+    "arch/arm64/configs/gki_defconfig",
+    "arch/arm64/Kconfig.platforms",
+    "drivers/soc/qcom/Kconfig",
+    "drivers/firmware/qcom/Kconfig",
+    "drivers/nvmem/qcom/Kconfig",
+    "drivers/vfio/Kconfig",
+    "lib/Kconfig",
 ]
 
 MODERN_PATHS = {
@@ -236,6 +243,18 @@ def compare_text(left, right, left_name, right_name):
         "includes_removed": sorted(set(a["includes"]) - set(b["includes"])),
         "added_samples": added[:8], "removed_samples": removed[:8],
     }
+
+
+def parse_config_values(text):
+    values = {}
+    for line in text.splitlines():
+        enabled = re.match(r"^(CONFIG_[A-Z0-9_]+)=(.*)$", line.strip())
+        disabled = re.match(r"^# (CONFIG_[A-Z0-9_]+) is not set$", line.strip())
+        if enabled:
+            values[enabled.group(1)] = enabled.group(2)
+        elif disabled:
+            values[disabled.group(1)] = "n"
+    return values
 
 
 def source_record(lock, source_id):
@@ -506,6 +525,34 @@ def main():
         "a6xx_gpu_implementation_present": bool(gpu),
         "a6xx_gmu_implementation_present": bool(gmu),
     }
+    gki_defconfig = gki["files"].get("arch/arm64/configs/gki_defconfig", {}).get("text") or ""
+    gki_config_values = parse_config_values(gki_defconfig)
+    kgsl_config_keys = [
+        "CONFIG_ARCH_QCOM", "CONFIG_NVMEM_QCOM_QFPROM", "CONFIG_QCOM_QFPROM",
+        "CONFIG_QCOM_MDT_LOADER", "CONFIG_INTERVAL_TREE", "CONFIG_TRACE_GPU_MEM",
+        "CONFIG_SHMEM", "CONFIG_VFIO", "CONFIG_DRM_MSM", "CONFIG_DRM",
+        "CONFIG_DMA_SHARED_BUFFER", "CONFIG_SYNC_FILE", "CONFIG_IOMMU_SUPPORT",
+    ]
+    gki_config_evidence = {key: gki_config_values.get(key, "not explicit in gki_defconfig")
+                           for key in kgsl_config_keys}
+    gki_kconfig_files = [
+        "arch/arm64/Kconfig.platforms", "drivers/soc/qcom/Kconfig",
+        "drivers/firmware/qcom/Kconfig", "drivers/nvmem/qcom/Kconfig",
+        "drivers/vfio/Kconfig", "lib/Kconfig",
+    ]
+    gki_kconfig_definitions = {}
+    for path in gki_kconfig_files:
+        kconfig_text = gki["files"].get(path, {}).get("text") or ""
+        parsed = parse_kconfig(kconfig_text)
+        for symbol in ("ARCH_QCOM", "NVMEM_QCOM_QFPROM", "QCOM_QFPROM",
+                       "QCOM_MDT_LOADER", "INTERVAL_TREE", "TRACE_GPU_MEM",
+                       "VFIO", "SHMEM"):
+            if symbol in parsed:
+                gki_kconfig_definitions[symbol] = {
+                    "file": path,
+                    "depends_on": parsed[symbol]["depends_on"],
+                    "selects": parsed[symbol]["selects"],
+                }
 
     uapi_comparisons = compare_uapi(sources)
     compiler = shutil.which("gcc") or shutil.which("clang")
@@ -579,6 +626,8 @@ def main():
             "kgsl_uapi_present": gki["kgsl_uapi_present"],
             "drm_uapi_present": gki["drm_uapi_present"],
             "adreno_650_evidence": gki["adreno_650_evidence"],
+            "config_evidence": gki_config_evidence,
+            "kconfig_definitions": gki_kconfig_definitions,
         },
         "modern_kconfig": modern_kconfig,
         "modern_adreno_650_evidence": modern_adreno_650,
@@ -689,6 +738,15 @@ def main():
         m = item["metrics"]
         lines.append("| %s | %s | %s |" % (
             path, m["lines"] if m else "missing", m["function_count"] if m else "—"))
+    lines.extend(["", "### GKI defconfig prerequisites relevant to modern KGSL", "",
+                  "| Config | gki_defconfig value |", "|---|---|"])
+    for key, value in report["gki"]["config_evidence"].items():
+        lines.append("| %s | %s |" % (key, value))
+    lines.extend(["", "Kconfig symbol definitions found in the pinned GKI tree:"])
+    for key, item in report["gki"]["kconfig_definitions"].items():
+        lines.append("- %s (%s): depends on %s; selects %s" % (
+            key, item["file"], ", ".join(item["depends_on"]) or "none",
+            ", ".join(item["selects"]) or "none"))
     lines.extend(["", "### Modern Qualcomm KGSL Adreno 650 support", ""])
     for key, value in modern_adreno_650.items():
         lines.append("- %s: %s" % (key, value))
