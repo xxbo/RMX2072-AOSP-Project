@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Planning / source inventory.** No device image has been built or validated by this project yet. All compatibility claims are provisional until tested on the target hardware.
+> **Project status: Planning plus first experimental driver port.** The NQ-NCI / SN100 external-module compile experiment is staged on a dedicated branch; its first GKI 6.18 compile-smoke workflow is running. No device image has been built, booted or hardware-validated by this project yet.
 
 ## Goals
 
@@ -46,6 +46,8 @@ The exact partition layout, boot image header version, AVB state, firmware revis
 │   └── COMPATIBILITY_MATRIX.md
 ├── device/                 # Project-owned device configuration and patches
 ├── kernel/                 # Project-owned kernel work; upstream sources stay external
+├── experiments/            # Isolated driver-port experiments; not part of a device image
+│   └── nfc_nq/              # First NQ-NCI / SN100 GKI 6.18 module experiment
 ├── vendor/                 # Metadata and extraction notes; do not commit proprietary blobs
 ├── build/                  # Build configuration and manifests
 ├── tools/                  # Reproducible helper scripts
@@ -70,6 +72,7 @@ These are upstream references, not copies of their contents:
 - [KGSL / Adreno 650 research](docs/KGSL_ADRENO_RESEARCH.md)
 - [Driver migration matrix](docs/DRIVER_MIGRATION_MATRIX.md)
 - [Driver dependency map](docs/DRIVER_DEPENDENCY_MAP.md)
+- [NQ-NCI / SN100 experimental port](https://github.com/xxbo/RMX2072-AOSP-Project/tree/experiment/nq-nci-gki-6.18/experiments/nfc_nq)
 
 - [Source manifest](sources/SOURCE_MANIFEST.md)
 - [Machine-readable source lock](sources/SOURCE_LOCK.json)
@@ -90,6 +93,8 @@ These are upstream references, not copies of their contents:
 
 - [x] GitHub repository created.
 - [x] First-pass driver migration matrix and dependency map documented from pinned source evidence.
+- [x] First NQ-NCI / SN100 experimental module port staged on an isolated branch.
+- [ ] Complete GKI 6.18 compile, KMI audit, module load and NFC hardware validation.
 - [ ] Confirm exact device model, region and firmware build from the handset.
 - [ ] Capture partition map, boot image metadata and AVB status.
 - [ ] Archive and hash the stock firmware and recovery images locally.
