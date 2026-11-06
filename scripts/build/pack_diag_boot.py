@@ -11,6 +11,7 @@ import pathlib
 import struct
 import subprocess
 import sys
+from avb_footer import retain_envelope
 
 
 def digest(path):
@@ -61,14 +62,13 @@ def main():
     subprocess.run(command, check=True)
     if boot.stat().st_size > len(stock):
         raise ValueError('Diagnostic boot exceeds stock boot partition capacity')
-    with boot.open('ab') as f:
-        f.truncate(len(stock))
+    packaged, boot_avb = retain_envelope(stock, boot.read_bytes())
+    boot.write_bytes(packaged)
     dtbo = a.output/'dtbo-diag.img'
     if a.dtbo.stat().st_size > a.stock_dtbo.stat().st_size:
         raise ValueError('Diagnostic DTBO exceeds partition capacity')
-    dtbo.write_bytes(a.dtbo.read_bytes())
-    with dtbo.open('ab') as f:
-        f.truncate(a.stock_dtbo.stat().st_size)
+    packaged, dtbo_avb = retain_envelope(a.stock_dtbo.read_bytes(), a.dtbo.read_bytes())
+    dtbo.write_bytes(packaged)
     with boot.open('rb') as f:
         result = f.read(1660)
     for offset in [12, 20, 32, 36, 40, 44]:
@@ -77,6 +77,7 @@ def main():
     report = dict(scope='RAM-only USB diagnostic, not Android desktop', command=command,
                   kernel_sha256=digest(a.kernel), config_sha256=digest(a.config), dtb_sha256=digest(a.dtb),
                   ramdisk_sha256=digest(a.ramdisk), stock_boot_sha256=digest(a.stock_boot),
+                  avb_envelopes=dict(boot=boot_avb, dtbo=dtbo_avb),
                   outputs={q.name: dict(size_bytes=q.stat().st_size, sha256=digest(q)) for q in [boot, dtbo]},
                   bootloader_requirement='Use diagnostic boot and no-op DTBO together; restore both stock partitions afterward',
                   status='packaged-not-boot-tested')

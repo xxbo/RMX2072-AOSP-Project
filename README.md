@@ -12,6 +12,8 @@ Existing experiment results are consolidated into main: [full Kleaf 6.18 build](
 
 Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), [corrected legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), and [downloaded ARM64 + GMS image preflight](docs/GSI_PREFLIGHT_2026-11-06.md). The GSI is hash-verified; partition capacity and FCM/VNDK gaps are still open.
 
+**Current handset state:** the first 6.18 USB-diagnostic package was rejected with the system-files-destroyed message. Recovery to the previously verified stock/debug boot + stock DTBO is pending a working hardware USB entry. The missing-AVB-footer packaging defect has been corrected locally, but the corrected images have not been device-tested. See [execution status](docs/BUILD_EXECUTION.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
+
 ## Goals
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
