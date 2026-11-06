@@ -65,7 +65,12 @@ GKI_FILES = [
     "drivers/firmware/qcom/Kconfig",
     "drivers/nvmem/qcom/Kconfig",
     "drivers/vfio/Kconfig",
+    "drivers/nvmem/Kconfig",
     "lib/Kconfig",
+    "include/trace/hooks/mm.h",
+    "drivers/android/vendor_hooks.c",
+    "include/linux/shmem_fs.h",
+    "android/abi_gki_aarch64",
 ]
 
 MODERN_PATHS = {
@@ -433,7 +438,7 @@ def compare_uapi(sources):
 def parse_kconfig(text):
     result, current = {}, None
     for line in text.splitlines():
-        match = re.match(r"^\s*config\s+([A-Z0-9_]+)", line)
+        match = re.match(r"^\s*(?:menu)?config\s+([A-Z0-9_]+)", line)
         if match:
             current = match.group(1)
             result[current] = {"depends_on": [], "selects": []}
@@ -537,8 +542,9 @@ def main():
                            for key in kgsl_config_keys}
     gki_kconfig_files = [
         "arch/arm64/Kconfig.platforms", "drivers/soc/qcom/Kconfig",
-        "drivers/firmware/qcom/Kconfig", "drivers/nvmem/qcom/Kconfig",
-        "drivers/vfio/Kconfig", "lib/Kconfig",
+        "drivers/firmware/qcom/Kconfig", "drivers/nvmem/Kconfig",
+        "drivers/nvmem/qcom/Kconfig", "drivers/vfio/Kconfig", "lib/Kconfig",
+        "drivers/gpu/drm/msm/Kconfig",
     ]
     gki_kconfig_definitions = {}
     for path in gki_kconfig_files:
@@ -553,6 +559,35 @@ def main():
                     "depends_on": parsed[symbol]["depends_on"],
                     "selects": parsed[symbol]["selects"],
                 }
+
+    hook_header = gki["files"].get("include/trace/hooks/mm.h", {}).get("text") or ""
+    vendor_hooks = gki["files"].get("drivers/android/vendor_hooks.c", {}).get("text") or ""
+    shmem_header = gki["files"].get("include/linux/shmem_fs.h", {}).get("text") or ""
+    abi_symbols = gki["files"].get("android/abi_gki_aarch64", {}).get("text") or ""
+    modern_sharedmem = modern["files"].get("drivers/gpu/msm/kgsl_sharedmem.c", {}).get("text") or ""
+    hook_match = re.search(
+        r"DECLARE_RESTRICTED_HOOK\s*\(\s*android_rvh_shmem_get_folio\s*,\s*TP_PROTO\s*\((.*?)\)\s*,\s*TP_ARGS",
+        hook_header, re.S)
+    hook_proto = re.sub(r"\s+", " ", hook_match.group(1)).strip() if hook_match else None
+    kgsl_callbacks = [
+        re.sub(r"\s+", " ", match.group(1)).strip()
+        for match in re.finditer(r"kgsl_shmem_fill_page\s*\((.*?)\)\s*\{", modern_sharedmem, re.S)
+    ]
+    hook_exported = "EXPORT_TRACEPOINT_SYMBOL_GPL(android_rvh_shmem_get_folio)" in vendor_hooks
+    kmi_hook_symbols = [
+        line.strip() for line in abi_symbols.splitlines()
+        if "shmem_get_folio" in line
+    ]
+    android_shmem_hook_evidence = {
+        "hook_declared_in_gki_mm_hooks": bool(hook_match),
+        "hook_tp_proto": hook_proto,
+        "hook_exported_by_gki_vendor_hooks": hook_exported,
+        "hook_symbol_lines_in_gki_abi_list": kmi_hook_symbols,
+        "hook_symbol_present_in_gki_abi_list": bool(kmi_hook_symbols),
+        "shmem_inode_info_android_vendor_data1_present": "android_vendor_data1" in shmem_header,
+        "modern_kgsl_shmem_callbacks": kgsl_callbacks,
+        "modern_kgsl_uses_android_shmem_hook": "register_trace_android_rvh_shmem_get_folio" in modern_sharedmem,
+    }
 
     uapi_comparisons = compare_uapi(sources)
     compiler = shutil.which("gcc") or shutil.which("clang")
@@ -628,6 +663,7 @@ def main():
             "adreno_650_evidence": gki["adreno_650_evidence"],
             "config_evidence": gki_config_evidence,
             "kconfig_definitions": gki_kconfig_definitions,
+            "android_shmem_hook_evidence": android_shmem_hook_evidence,
         },
         "modern_kconfig": modern_kconfig,
         "modern_adreno_650_evidence": modern_adreno_650,
@@ -747,6 +783,9 @@ def main():
         lines.append("- %s (%s): depends on %s; selects %s" % (
             key, item["file"], ", ".join(item["depends_on"]) or "none",
             ", ".join(item["selects"]) or "none"))
+    lines.extend(["", "### Android shmem vendor-hook compatibility", ""])
+    for key, value in report["gki"]["android_shmem_hook_evidence"].items():
+        lines.append("- %s: %s" % (key, value))
     lines.extend(["", "### Modern Qualcomm KGSL Adreno 650 support", ""])
     for key, value in modern_adreno_650.items():
         lines.append("- %s: %s" % (key, value))
