@@ -1,0 +1,703 @@
+{
+  "module_sha256": "7a4568747941d78335ff68e7ba813ff1247c43554ac7082e96e50fba2cc22f8b",
+  "symvers_sha256": "faf892733865a9c76859608873f3bf347bf7636f4f4f171f828e1388a8201bf8",
+  "imports": {
+    "___ratelimit": {
+      "binding": "global",
+      "export": {
+        "crc": "0x00d6a487",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "__arch_copy_to_user": {
+      "binding": "global",
+      "export": {
+        "crc": "0x1f42c609",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "__check_object_size": {
+      "binding": "global",
+      "export": {
+        "crc": "0x5c76e3f3",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "__init_waitqueue_head": {
+      "binding": "global",
+      "export": {
+        "crc": "0xde463212",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "__kmalloc_cache_noprof": {
+      "binding": "global",
+      "export": {
+        "crc": "0xbeceb207",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "__mutex_init": {
+      "binding": "global",
+      "export": {
+        "crc": "0x230fda70",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "__stack_chk_fail": {
+      "binding": "global",
+      "export": {
+        "crc": "0xd272d446",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "__wake_up": {
+      "binding": "global",
+      "export": {
+        "crc": "0xf7c60e8b",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "_dev_err": {
+      "binding": "global",
+      "export": {
+        "crc": "0x9cf8fcae",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "_dev_warn": {
+      "binding": "global",
+      "export": {
+        "crc": "0x9cf8fcae",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "_raw_spin_lock_irqsave": {
+      "binding": "global",
+      "export": {
+        "crc": "0xaa615763",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "_raw_spin_unlock_irqrestore": {
+      "binding": "global",
+      "export": {
+        "crc": "0x582af1c8",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "alloc_chrdev_region": {
+      "binding": "global",
+      "export": {
+        "crc": "0xa5dac1ce",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "alt_cb_patch_nops": {
+      "binding": "global",
+      "export": {
+        "crc": "0xb8c8345a",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "cdev_add": {
+      "binding": "global",
+      "export": {
+        "crc": "0xc8bef374",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "cdev_del": {
+      "binding": "global",
+      "export": {
+        "crc": "0x15a4a6b0",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "cdev_init": {
+      "binding": "global",
+      "export": {
+        "crc": "0xadfac121",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "class_create": {
+      "binding": "global",
+      "export": {
+        "crc": "0xd36fe8c9",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "class_destroy": {
+      "binding": "global",
+      "export": {
+        "crc": "0xc377c6e2",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "clk_disable": {
+      "binding": "global",
+      "export": {
+        "crc": "0x97ab43c4",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "clk_enable": {
+      "binding": "global",
+      "export": {
+        "crc": "0x6b710bab",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "clk_get": {
+      "binding": "global",
+      "export": {
+        "crc": "0x7f41f5d6",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "clk_prepare": {
+      "binding": "global",
+      "export": {
+        "crc": "0x6b710bab",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "clk_unprepare": {
+      "binding": "global",
+      "export": {
+        "crc": "0x97ab43c4",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "device_create": {
+      "binding": "global",
+      "export": {
+        "crc": "0x372bd9ee",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "device_destroy": {
+      "binding": "global",
+      "export": {
+        "crc": "0x6d74cc19",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "device_set_wakeup_capable": {
+      "binding": "global",
+      "export": {
+        "crc": "0x486cd5e9",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "device_wakeup_enable": {
+      "binding": "global",
+      "export": {
+        "crc": "0xaa4b07c0",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "devm_kfree": {
+      "binding": "global",
+      "export": {
+        "crc": "0x2eb9784f",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "devm_kmalloc": {
+      "binding": "global",
+      "export": {
+        "crc": "0x3c2a1eae",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "disable_irq_nosync": {
+      "binding": "global",
+      "export": {
+        "crc": "0x8e3336dd",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "enable_irq": {
+      "binding": "global",
+      "export": {
+        "crc": "0x8e3336dd",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "finish_wait": {
+      "binding": "global",
+      "export": {
+        "crc": "0x3d03c2e0",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "free_irq": {
+      "binding": "global",
+      "export": {
+        "crc": "0xdd0d6b2a",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "gpio_free": {
+      "binding": "global",
+      "export": {
+        "crc": "0xebe5da4a",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "gpio_request": {
+      "binding": "global",
+      "export": {
+        "crc": "0x69656318",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "gpio_to_desc": {
+      "binding": "global",
+      "export": {
+        "crc": "0xef43257b",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "gpiod_direction_input": {
+      "binding": "global",
+      "export": {
+        "crc": "0xf98bdf72",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "gpiod_direction_output_raw": {
+      "binding": "global",
+      "export": {
+        "crc": "0x26a4eb61",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "gpiod_get_raw_value": {
+      "binding": "global",
+      "export": {
+        "crc": "0x304dd422",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "gpiod_set_raw_value": {
+      "binding": "global",
+      "export": {
+        "crc": "0x26a4eb61",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "gpiod_to_irq": {
+      "binding": "global",
+      "export": {
+        "crc": "0x304dd422",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "i2c_del_driver": {
+      "binding": "global",
+      "export": {
+        "crc": "0x7488dfce",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "i2c_register_driver": {
+      "binding": "global",
+      "export": {
+        "crc": "0x2fb93727",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "i2c_transfer_buffer_flags": {
+      "binding": "global",
+      "export": {
+        "crc": "0xfe68a2de",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "init_wait_entry": {
+      "binding": "global",
+      "export": {
+        "crc": "0x6668f05d",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "irq_set_irq_wake": {
+      "binding": "global",
+      "export": {
+        "crc": "0xfe9be5a6",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "kfree": {
+      "binding": "global",
+      "export": {
+        "crc": "0x31359e90",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "kmalloc_caches": {
+      "binding": "global",
+      "export": {
+        "crc": "0x6b2a08e9",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "mem_alloc_profiling_key": {
+      "binding": "global",
+      "export": {
+        "crc": "0x8ee1928d",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "memdup_user": {
+      "binding": "global",
+      "export": {
+        "crc": "0xf81b4a87",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "memset": {
+      "binding": "global",
+      "export": {
+        "crc": "0x110f4d3a",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "mutex_lock": {
+      "binding": "global",
+      "export": {
+        "crc": "0xd3889ba4",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "mutex_unlock": {
+      "binding": "global",
+      "export": {
+        "crc": "0xd3889ba4",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "noop_llseek": {
+      "binding": "global",
+      "export": {
+        "crc": "0x884124bf",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "of_get_named_gpio": {
+      "binding": "global",
+      "export": {
+        "crc": "0x086f26f6",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "of_get_property": {
+      "binding": "global",
+      "export": {
+        "crc": "0x91690c67",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "of_property_read_string": {
+      "binding": "global",
+      "export": {
+        "crc": "0x7d8b3fe3",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "of_property_read_variable_u32_array": {
+      "binding": "global",
+      "export": {
+        "crc": "0x4ac76bda",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "pm_wakeup_dev_event": {
+      "binding": "global",
+      "export": {
+        "crc": "0xb684e7d9",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "prepare_to_wait_event": {
+      "binding": "global",
+      "export": {
+        "crc": "0xa29be00c",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "register_reboot_notifier": {
+      "binding": "global",
+      "export": {
+        "crc": "0x0a227d4d",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "regulator_disable": {
+      "binding": "global",
+      "export": {
+        "crc": "0xeb2bfea8",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "regulator_enable": {
+      "binding": "global",
+      "export": {
+        "crc": "0xeb2bfea8",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "regulator_get": {
+      "binding": "global",
+      "export": {
+        "crc": "0xf1edb72c",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "regulator_put": {
+      "binding": "global",
+      "export": {
+        "crc": "0xbc68925d",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "regulator_set_load": {
+      "binding": "global",
+      "export": {
+        "crc": "0xab58d5ad",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "regulator_set_voltage": {
+      "binding": "global",
+      "export": {
+        "crc": "0x76975b15",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL_GPL",
+        "namespace": ""
+      }
+    },
+    "request_threaded_irq": {
+      "binding": "global",
+      "export": {
+        "crc": "0xc407eb52",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "schedule": {
+      "binding": "global",
+      "export": {
+        "crc": "0xd272d446",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "schedule_timeout": {
+      "binding": "global",
+      "export": {
+        "crc": "0x0bac81a1",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "unregister_chrdev_region": {
+      "binding": "global",
+      "export": {
+        "crc": "0x0bc5fb0d",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "unregister_reboot_notifier": {
+      "binding": "global",
+      "export": {
+        "crc": "0x0a227d4d",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "usleep_range_state": {
+      "binding": "global",
+      "export": {
+        "crc": "0xfdbae8c6",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    },
+    "validate_usercopy_range": {
+      "binding": "global",
+      "export": {
+        "crc": "0x64afdea6",
+        "provider": "vmlinux",
+        "export": "EXPORT_SYMBOL",
+        "namespace": ""
+      }
+    }
+  },
+  "missing_strong_exports": [],
+  "modinfo": [
+    "built_with=DDK",
+    "description=NFC nqx",
+    "license=GPL v2",
+    "name=nq_nci",
+    "depends=",
+    "alias=of:N*T*Cqcom,nq-nci",
+    "alias=of:N*T*Cqcom,nq-nciC*",
+    "vermagic=6.18.32-android17-5-maybe-dirty-4k SMP preempt mod_unload modversions aarch64"
+  ],
+  "version_entry_count": 76,
+  "missing_strong_import_crcs": [],
+  "mismatching_crcs": {},
+  "qualification": "Explicit symbol/CRC comparison only; signatures, protected-export policy and loading remain unverified.",
+  "kmi_list_sha256": "7c6d01a7d501aa75d9ed87c550d5d59aca985b5debf447548d1de7c96f29f9c7",
+  "imports_absent_from_kmi_names": [],
+  "workflow_run": 42226214281,
+  "workflow_commit": "3cfcea043fe40291d7c91f17e951b44a7847e081",
+  "kernel_artifact_id": 13507606144,
+  "module_artifact_id": 13506214988,
+  "device_status": "not-loaded-not-hardware-tested"
+}

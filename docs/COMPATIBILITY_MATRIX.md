@@ -2,7 +2,7 @@
 
 Status values: **Unknown**, **Source-reviewed**, **Build-tested**, **Boot-tested**, **Hardware-tested**, **Blocked**.
 
-Driver-specific source evidence and proposed migration dispositions are tracked in [DRIVER_MIGRATION_MATRIX.md](./DRIVER_MIGRATION_MATRIX.md); shared prerequisites and sequencing are in [DRIVER_DEPENDENCY_MAP.md](./DRIVER_DEPENDENCY_MAP.md). Most entries remain source-reviewed. NQ-NCI has a compile-smoke artifact; strict DDK validation is running. No project-built 6.18 kernel or driver has been booted/loaded on RMX2072. The stock phone boots normally after unlock; that result is separate from target-system validation.
+Driver-specific source evidence and proposed migration dispositions are tracked in [DRIVER_MIGRATION_MATRIX.md](./DRIVER_MIGRATION_MATRIX.md); shared prerequisites and sequencing are in [DRIVER_DEPENDENCY_MAP.md](./DRIVER_DEPENDENCY_MAP.md). Most entries remain source-reviewed. NQ-NCI has a compile-smoke artifact; strict DDK and CRC validation passed in run 42226214281. No project-built 6.18 kernel or driver has been booted/loaded on RMX2072. The stock phone boots normally after unlock; that result is separate from target-system validation.
 
 ## Platform layers
 

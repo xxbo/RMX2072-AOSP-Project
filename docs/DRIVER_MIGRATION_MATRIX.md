@@ -3,7 +3,7 @@
 > Snapshot: **2026-11-06 UTC**
 > Target: realme X50 Pro Player Edition (RMX2072 / bladerunner_48m), Snapdragon 865 / SM8250 (Kona)
 > Kernel target under investigation: Android 17 ACK / GKI 6.18, pinned at ecdaacc9a0ee87eaf9544e1836d86bd9d590312e
-> Status: **mostly source-reviewed planning**. NQ-NCI has produced a 6.18 compile-smoke module; strict full-kernel DDK validation is now running. No project 6.18 driver has been loaded or hardware-tested on RMX2072.
+> Status: **mostly source-reviewed planning**. NQ-NCI has produced a 6.18 compile-smoke module; strict full-kernel DDK and matching CRC validation passed in run 42226214281. No project 6.18 driver has been loaded or hardware-tested on RMX2072.
 
 ## 1. How to read this matrix
 

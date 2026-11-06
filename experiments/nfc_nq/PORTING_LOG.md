@@ -89,3 +89,11 @@ The previous smoke module advertises `modversions` in vermagic but has a zero-by
 The same 75 imports also appear in run #8 `abi_symbollist.raw`; every corresponding Module.symvers provider is vmlinux and none declares an export namespace. This narrows the outstanding checks but does not replace the strict module build, protected-export/signature policy or physical tests.
 
 The ELF audit now parses both standard and extended module-version sections and can require strong-import CRC coverage/matches against the full-build Module.symvers. The old smoke artifact is a negative control: `--require-crcs` correctly fails with 75 missing CRCs and zero version entries. Future strict DDK runs invoke this audit automatically. The already-running run uses its original pinned checkout and will be audited locally after artifact download.
+
+## 2026-11-06 — Strict full-kernel DDK and CRC gate passed
+
+[Run 42226214281 (#9)](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), checkout `3cfcea043fe40291d7c91f17e951b44a7847e081`, verified all 58 locked project revisions, completed the generic ARM64 GKI distribution, then built NQ-NCI through the same Kleaf kernel target in 16.810 seconds using the cached full build. MODPOST errors were not downgraded. The full GKI artifact is 687,671,480 bytes; NFC artifact is 19,004 bytes.
+
+The downloaded module is 64,456 bytes, SHA-256 `7a4568747941d78335ff68e7ba813ff1247c43554ac7082e96e50fba2cc22f8b`. Local ELF auditing against this same run's authoritative Module.symvers found 75 imports, 76 version entries, zero missing strong exports, zero missing strong-import CRCs and zero CRC mismatches. Every import is present in the full distribution's abi_symbollist.raw. The checked-in report is `results/strict-ddk-9.json`.
+
+The reported vermagic is `6.18.32-android17-5-maybe-dirty-4k SMP preempt mod_unload modversions aarch64`. The source-only mirror's release suffix is retained as actual provenance; no stock-kernel compatibility is claimed. This module must not be loaded into the running 4.19 stock kernel. Signature/protected-export policy, handset module loading, probe behavior, silicon ID and NFC RF operation remain untested.

@@ -22,7 +22,7 @@ The existing `experiment/gki-6.18-repo-mirror` branch has already passed a compl
 
 The kernel/common pin already resolves to 6.18.32. The main workflow now locks all 58 manifest projects using the resolved snapshot from that successful run, verifies every checkout and adds a strict NQ-NCI DDK compilation gate. A kernel/common SHA alone is insufficient. The default manifest includes extra device/test projects; evaluate its groups and workspace footprint on the Actions runner rather than downloading everything blindly.
 
-Then build a generic ACK baseline, add a separate KGSL compile/KMI probe, and introduce the RMX2072 boot/DTS/UFS/USB changes. A generic GKI Image is not an RMX2072 boot image. The existing boot header is v2 with an embedded DTB bundle; vendor_boot/init_boot are absent from the physical GPT.
+The generic ACK baseline is built. Next add a separate KGSL compile/KMI probe and introduce the RMX2072 boot/DTS/UFS/USB changes. A generic GKI Image is not an RMX2072 boot image. The existing boot header is v2 with an embedded DTB bundle; vendor_boot/init_boot are absent from the physical GPT.
 
 ## GSI gate
 
@@ -43,3 +43,7 @@ A read-only local parse of the original F.20 boot/DTBO backups found 25 concaten
 The corrected legacy run [42226376116](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226376116) passed the Goodix compile point, then failed in qcacld with `/bin/sh: Argument list too long`. The codeload root embeds the 40-character commit in every repeated include path. The build now renames that extracted root to a short workspace path before configuring; it keeps Wi-Fi enabled and retains the source/patch hashes. This change needs a new full run.
 
 The shortened-path full legacy retry is [run 42228243866](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), currently pending a final build result. The main locked GKI + strict DDK run is [42226214281](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281).
+
+## Completed locked GKI + strict NFC milestone
+
+[Run 42226214281](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281) passed: all 58 exact revisions verified, full GKI distribution produced, and NQ-NCI built through strict DDK. The downloaded NFC artifact passed local import/CRC checking against the same run's kernel symvers (75 imports, 76 version entries, no missing/mismatching CRCs). See `experiments/nfc_nq/results/strict-ddk-9.json`. The newer automatic CRC gate was committed after this run started; that same audit was applied locally to its artifacts. Board boot, module loading and physical NFC are still untested.
