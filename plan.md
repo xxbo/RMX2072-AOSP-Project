@@ -78,7 +78,7 @@ Tasks:
 
 **Progress note (2026-11-06):** Initial source pins are recorded in sources/SOURCE_LOCK.json and sources/SOURCE_MANIFEST.md. The inventory is source-reviewed only; no kernel has been built or boot-tested by this project. The 4.19.325 SM8250-Common tree is the newest inspected community baseline, while official Android 17 GKI 6.18 is pinned separately as the migration target.
 
-**Automation note (2026-11-06):** GitHub Actions runs #2, #3 and #4 completed successfully. The scanner now verifies six kernel commits, inventories selected source trees, parses defconfig and Oplus config-fragment inputs, and compares selected module Makefiles. Findings are recorded in docs/KERNEL_TREE_DIFF_FINDINGS.md. No kernel has been compiled or boot-tested by this project.
+**Automation note (2026-11-06):** GitHub Actions Run #17 completed both the source-inventory and KGSL/Adreno research jobs successfully. The broad scanner verifies six kernel commits, inventories selected source trees, parses the base defconfig and Oplus config fragment, and compares selected module Makefiles. The follow-up source review found additional Makefile-injected KONA display/camera/audio fragments that the scanner does not yet parse; this gap is recorded in docs/KERNEL_TREE_DIFF_FINDINGS.md and docs/KERNEL_RESEARCH_PIPELINE.md. No kernel has been compiled or boot-tested by this project.
 
 Tasks:
 - [x] Pin the official Android Q RMX2072 kernel source at an immutable commit.
@@ -195,7 +195,9 @@ Tasks:
 - [ ] Identify drivers already available upstream for the exact hardware, including exact 6.18 file/config evidence.
 - [ ] Identify closed-source kernel modules and userspace components that cannot be rebuilt.
 - [ ] Audit ION, DMA-BUF, DMA-BUF heaps, secure buffers and their GPU/camera/audio clients.
-- [x] Record a first-pass dependency order for SoC, memory, graphics, IPC, multimedia and peripheral drivers.
+- [x] Create the first-pass driver migration matrix from pinned source evidence.
+- [x] Record the dependency order for SoC, memory, graphics, IPC, multimedia and peripheral drivers.
+- [x] Expand the hardware inventory with RMX2072-specific manifest clues and unresolved physical variants.
 - [ ] Classify each subsystem with content-level API/KMI, DTS, firmware and userspace-ABI evidence.
 
 **Deliverables:**
