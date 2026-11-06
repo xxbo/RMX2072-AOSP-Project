@@ -64,6 +64,7 @@ These are upstream references, not copies of their contents:
 ## Source inventory and pinned revisions
 
 - [Automated kernel research pipeline](docs/KERNEL_RESEARCH_PIPELINE.md)
+- [Kernel tree diff findings](docs/KERNEL_TREE_DIFF_FINDINGS.md)
 
 - [Source manifest](sources/SOURCE_MANIFEST.md)
 - [Machine-readable source lock](sources/SOURCE_LOCK.json)
