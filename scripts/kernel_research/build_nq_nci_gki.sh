@@ -64,6 +64,39 @@ fi
 
 cp "$MODULE_PATH" "$ARTIFACT_DIR/nq-nci.ko"
 cp "$KERNEL_OUT/.config" "$ARTIFACT_DIR/gki.config"
+
+# Capture the module's unresolved imports and compare them with the checked-in
+# GKI KMI symbol lists. This is a preliminary allow-list audit; Module.symvers
+# and the protected-export policy still need a complete GKI build.
+llvm-nm -u "$ARTIFACT_DIR/nq-nci.ko" > "$ARTIFACT_DIR/module-undefined-symbols.raw"
+awk 'NF { print $NF }' "$ARTIFACT_DIR/module-undefined-symbols.raw" \
+  | sort -u > "$ARTIFACT_DIR/module-undefined-symbols.txt"
+
+mapfile -t KMI_FILES < <(find "$KERNEL_SRC/android" -maxdepth 1 -type f \
+  -name 'abi_gki_aarch64*' ! -name '*.stg' ! -name '*.xml' | sort)
+if (( ${#KMI_FILES[@]} > 0 )); then
+  cat "${KMI_FILES[@]}" \
+    | sed 's/#.*$//' \
+    | awk 'NF { print $1 }' \
+    | sort -u > "$ARTIFACT_DIR/gki-kmi-symbols.txt"
+  comm -12 "$ARTIFACT_DIR/module-undefined-symbols.txt" \
+    "$ARTIFACT_DIR/gki-kmi-symbols.txt" > "$ARTIFACT_DIR/module-imports-in-kmi.txt"
+  comm -23 "$ARTIFACT_DIR/module-undefined-symbols.txt" \
+    "$ARTIFACT_DIR/gki-kmi-symbols.txt" > "$ARTIFACT_DIR/module-imports-not-in-kmi.txt"
+  echo "KMI symbol-list files: ${#KMI_FILES[@]}" >> "$ARTIFACT_DIR/build-metadata.txt"
+  echo "Module undefined imports: $(wc -l < "$ARTIFACT_DIR/module-undefined-symbols.txt")" >> "$ARTIFACT_DIR/build-metadata.txt"
+  echo "Imports present in KMI lists: $(wc -l < "$ARTIFACT_DIR/module-imports-in-kmi.txt")" >> "$ARTIFACT_DIR/build-metadata.txt"
+  echo "Imports absent from KMI lists: $(wc -l < "$ARTIFACT_DIR/module-imports-not-in-kmi.txt")" >> "$ARTIFACT_DIR/build-metadata.txt"
+else
+  echo "KMI symbol list not found in pinned source tree" >> "$ARTIFACT_DIR/build-metadata.txt"
+fi
+
+if [[ -f "$KERNEL_SRC/android/abi_gki_protected_exports" ]]; then
+  sed 's/#.*$//' "$KERNEL_SRC/android/abi_gki_protected_exports" \
+    | awk 'NF { print $1 }' | sort -u > "$ARTIFACT_DIR/gki-protected-exports.txt"
+  comm -12 "$ARTIFACT_DIR/module-undefined-symbols.txt" \
+    "$ARTIFACT_DIR/gki-protected-exports.txt" > "$ARTIFACT_DIR/module-imports-protected.txt"
+fi
 if [[ -f "$KERNEL_OUT/Module.symvers" ]]; then
   cp "$KERNEL_OUT/Module.symvers" "$ARTIFACT_DIR/Module.symvers"
   echo "Module.symvers=present" >> "$ARTIFACT_DIR/build-metadata.txt"
