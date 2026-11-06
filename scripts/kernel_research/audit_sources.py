@@ -3,6 +3,8 @@
 
 import argparse
 import base64
+import difflib
+import hashlib
 import json
 import os
 import re
@@ -21,11 +23,16 @@ DIFF_GROUPS = [
     "arch/arm64/configs",
     "drivers/gpu/msm",
     "drivers/gpu/drm",
+    "drivers/gpu/drm/msm",
+    "drivers/media/platform/msm",
     "drivers/soc/qcom",
     "drivers/clk/qcom",
     "drivers/thermal",
     "drivers/iommu",
     "drivers/input",
+    "drivers/power",
+    "drivers/regulator",
+    "drivers/remoteproc",
     "drivers/net/wireless",
     "drivers/usb",
     "techpack/display",
@@ -126,7 +133,7 @@ def parse_kernel_version(makefile):
         return None
     values = {}
     for key in ("VERSION", "PATCHLEVEL", "SUBLEVEL", "EXTRAVERSION"):
-        match = re.search(r"(?m)^%s\s*=\s*(.*?)\s*$" % key, makefile)
+        match = re.search(r"(?m)^%s[ \t]*=[ \t]*(.*?)[ \t]*$" % key, makefile)
         if match:
             values[key] = match.group(1)
     if "VERSION" not in values or "PATCHLEVEL" not in values:
@@ -147,6 +154,120 @@ def extract_build_config(text):
     )
     return [line.strip() for line in text.splitlines()
             if re.match(patterns, line.strip())]
+
+
+
+CONFIG_GROUPS = {
+    "GPU": r"KGSL|ADRENO|GPU",
+    "DISPLAY": r"DRM|MDSS|DSI|SDE|PANEL|DISPLAY|FBDEV",
+    "CAMERA": r"CAMERA|CAMSS|ISP|V4L2|VIDEO",
+    "AUDIO": r"SND|SOUND|AUDIO|Q6|APR|ADSP|WCD",
+    "MEMORY": r"ION|DMA|CMA|ZRAM|ZSWAP|SLAB|SLUB|MEMORY|PAGE",
+    "POWER_THERMAL": r"THERMAL|CPU_FREQ|CPU_IDLE|POWER|BCL",
+    "WLAN_MODEM": r"WLAN|CNSS|IPA|RMNET|QMI|QRTR|GSI|MODEM",
+}
+DEFCONFIG_TARGETS = [
+    "arch/arm64/configs/vendor/kona-perf_defconfig",
+    "arch/arm64/configs/vendor/kona_defconfig",
+    "arch/arm64/configs/vendor/sm8250_defconfig",
+]
+MAKEFILE_TARGETS = [
+    "drivers/gpu/msm/Makefile",
+    "drivers/soc/qcom/Makefile",
+    "drivers/clk/qcom/Makefile",
+    "drivers/thermal/Makefile",
+    "drivers/iommu/Makefile",
+    "drivers/net/wireless/Makefile",
+    "drivers/usb/Makefile",
+    "techpack/display/Makefile",
+    "techpack/audio/Makefile",
+    "techpack/camera/Makefile",
+    "techpack/video/Makefile",
+]
+
+
+def parse_defconfig(text):
+    options = {}
+    if not text:
+        return options
+    for line in text.splitlines():
+        line = line.strip()
+        disabled = re.match(r"^# (CONFIG_[A-Z0-9_]+) is not set$", line)
+        enabled = re.match(r"^(CONFIG_[A-Z0-9_]+)=(.*)$", line)
+        if disabled:
+            options[disabled.group(1)] = "n"
+        elif enabled:
+            options[enabled.group(1)] = enabled.group(2)
+    return options
+
+
+def config_category_summary(keys):
+    summary = {}
+    for category, pattern in CONFIG_GROUPS.items():
+        summary[category] = sum(
+            1 for key in keys if re.search(pattern, key, re.IGNORECASE)
+        )
+    return summary
+
+
+def compare_defconfigs(baseline, candidate):
+    results = []
+    base_configs = baseline.get("_configs", {})
+    candidate_configs = candidate.get("_configs", {})
+    for path in sorted(set(base_configs) & set(candidate_configs)):
+        left = base_configs[path]
+        right = candidate_configs[path]
+        added = sorted(set(right) - set(left))
+        removed = sorted(set(left) - set(right))
+        changed = sorted(key for key in set(left) & set(right) if left[key] != right[key])
+        results.append({
+            "baseline": baseline["id"],
+            "candidate": candidate["id"],
+            "path": path,
+            "baseline_option_count": len(left),
+            "candidate_option_count": len(right),
+            "added_count": len(added),
+            "removed_count": len(removed),
+            "changed_count": len(changed),
+            "category_summary": config_category_summary(set(added + removed + changed)),
+            "added_sample": added[:25],
+            "removed_sample": removed[:25],
+            "changed_sample": [
+                {"key": key, "baseline": left[key], "candidate": right[key]}
+                for key in changed[:25]
+            ],
+        })
+    return results
+
+
+def compare_makefiles(baseline, candidate):
+    results = []
+    base_files = baseline.get("_makefiles", {})
+    candidate_files = candidate.get("_makefiles", {})
+    for path in sorted(set(base_files) & set(candidate_files)):
+        diff = list(difflib.unified_diff(
+            base_files[path].splitlines(),
+            candidate_files[path].splitlines(),
+            fromfile=baseline["id"] + "/" + path,
+            tofile=candidate["id"] + "/" + path,
+            lineterm="",
+            n=1,
+        ))
+        added = [line[1:] for line in diff
+                 if line.startswith("+") and not line.startswith("+++")]
+        removed = [line[1:] for line in diff
+                   if line.startswith("-") and not line.startswith("---")]
+        if added or removed:
+            results.append({
+                "baseline": baseline["id"],
+                "candidate": candidate["id"],
+                "path": path,
+                "added_count": len(added),
+                "removed_count": len(removed),
+                "added_sample": added[:15],
+                "removed_sample": removed[:15],
+            })
+    return results
 
 
 def github_kernel_source(source):
@@ -200,6 +321,32 @@ def github_kernel_source(source):
             1 for path in files if path.startswith(prefix.rstrip("/") + "/")
         )
 
+
+    config_options = {}
+    defconfig_inventory = {}
+    for path in DEFCONFIG_TARGETS:
+        if path in files:
+            text = github_raw(repo, commit_sha, path)
+            if text is not None:
+                options = parse_defconfig(text)
+                config_options[path] = options
+                defconfig_inventory[path] = {
+                    "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                    "option_count": len(options),
+                }
+
+    makefile_contents = {}
+    makefile_inventory = {}
+    for path in MAKEFILE_TARGETS:
+        if path in files:
+            text = github_raw(repo, commit_sha, path)
+            if text is not None:
+                makefile_contents[path] = text
+                makefile_inventory[path] = {
+                    "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                    "line_count": len(text.splitlines()),
+                }
+
     build_configs = {
         "build.config.common": extract_build_config(common),
         "build.config.gki.aarch64": extract_build_config(gki),
@@ -229,12 +376,16 @@ def github_kernel_source(source):
         "scanned_directory_count": len(dirs),
         "arm64_defconfig_count": len(defconfigs),
         "relevant_arm64_defconfigs": relevant_defconfigs,
+        "defconfig_inventory": defconfig_inventory,
+        "module_makefile_inventory": makefile_inventory,
         "driver_modules": driver_modules,
         "techpack_modules": techpack_modules,
         "module_file_counts": module_counts,
         "build_config_evidence": build_configs,
         "scan_method": "GitHub Git Trees API; selected top-level source trees recursively enumerated",
         "_files": files,
+        "_configs": config_options,
+        "_makefiles": makefile_contents,
     }
 
 
@@ -291,6 +442,8 @@ def gitiles_kernel_source(source):
         "gitiles_directory_inventory": shallow,
         "scan_method": "Gitiles immutable commit lookup; directory-level targeted inventory (not a full recursive file scan)",
         "_files": set(),
+        "_configs": {},
+        "_makefiles": {},
     }
 
 
@@ -387,6 +540,61 @@ def markdown_report(report):
                 else:
                     lines.append("- " + path + ": %s immediate entries" % data["entry_count"])
         lines.append("")
+
+    lines.extend(["## Defconfig option comparisons", ""])
+    if report.get("config_comparisons"):
+        lines.extend([
+            "| Baseline → candidate | Defconfig | Baseline options | Candidate options | Added | Removed | Changed |",
+            "|---|---|---:|---:|---:|---:|---:|",
+        ])
+        for item in report["config_comparisons"]:
+            lines.append("| %s → %s | %s | %s | %s | %s | %s | %s |" % (
+                item["baseline"], item["candidate"], item["path"],
+                item["baseline_option_count"], item["candidate_option_count"],
+                item["added_count"], item["removed_count"], item["changed_count"]))
+        lines.append("")
+        for item in report["config_comparisons"]:
+            lines.append("**%s → %s: %s**" % (
+                item["baseline"], item["candidate"], item["path"]))
+            lines.append("- Changed option categories: " + ", ".join(
+                "%s=%s" % (key, value)
+                for key, value in item["category_summary"].items() if value))
+            if item["changed_sample"]:
+                lines.append("- Changed values: " + "; ".join(
+                    "%s: %s → %s" % (x["key"], x["baseline"], x["candidate"])
+                    for x in item["changed_sample"][:15]))
+            if item["added_sample"]:
+                lines.append("- Added options: " + ", ".join(item["added_sample"][:15]))
+            if item["removed_sample"]:
+                lines.append("- Removed options: " + ", ".join(item["removed_sample"][:15]))
+            lines.append("")
+    else:
+        lines.append("No matching defconfig files were available for comparison.")
+        lines.append("")
+
+    lines.extend(["## Kernel module build-wiring comparisons", ""])
+    if report.get("makefile_comparisons"):
+        lines.extend([
+            "| Baseline → candidate | Makefile | Added lines | Removed lines |",
+            "|---|---|---:|---:|",
+        ])
+        for item in report["makefile_comparisons"]:
+            lines.append("| %s → %s | %s | %s | %s |" % (
+                item["baseline"], item["candidate"], item["path"],
+                item["added_count"], item["removed_count"]))
+        lines.append("")
+        for item in report["makefile_comparisons"]:
+            lines.append("**%s → %s: %s**" % (
+                item["baseline"], item["candidate"], item["path"]))
+            if item["added_sample"]:
+                lines.append("- Added: " + "; ".join(item["added_sample"][:8]))
+            if item["removed_sample"]:
+                lines.append("- Removed: " + "; ".join(item["removed_sample"][:8]))
+            lines.append("")
+    else:
+        lines.append("No matching module Makefiles were available for comparison.")
+        lines.append("")
+
     lines.extend(["## Structural comparison", ""])
     lines.append("File-path additions/removals are compared against the official RMX2072 Android Q 4.19.81 tree. They are structural signals, not proof of source-code behavior changes or driver compatibility.")
     lines.append("")
@@ -468,16 +676,29 @@ def main():
     baseline = next((item for item in internal_sources
                      if item["id"] == "realme-player-android-q-kernel"), None)
     comparisons = []
+    config_comparisons = []
+    makefile_comparisons = []
     if baseline:
         for candidate in internal_sources:
             if candidate is baseline or not candidate.get("_files"):
                 continue
             comparisons.append(compare_sources(baseline, candidate))
+            config_comparisons.extend(compare_defconfigs(baseline, candidate))
+            makefile_comparisons.extend(compare_makefiles(baseline, candidate))
+        elixir = next((item for item in internal_sources
+                       if item["id"] == "project-elixir-sm8250-kernel"), None)
+        current = next((item for item in internal_sources
+                        if item["id"] == "sm8250-common-current-kernel"), None)
+        if elixir and current:
+            config_comparisons.extend(compare_defconfigs(elixir, current))
+            makefile_comparisons.extend(compare_makefiles(elixir, current))
     else:
         errors.append("Official Android Q baseline was not available; structural comparisons were skipped.")
 
     for item in report_sources:
         item.pop("_files", None)
+        item.pop("_configs", None)
+        item.pop("_makefiles", None)
 
     report = {
         "schema_version": 1,
@@ -487,6 +708,8 @@ def main():
         "source_lock_path": args.lock,
         "sources": report_sources,
         "comparisons": comparisons,
+        "config_comparisons": config_comparisons,
+        "makefile_comparisons": makefile_comparisons,
         "errors": errors,
         "workflow_scope": "read-only source inventory and structural path comparison",
     }
