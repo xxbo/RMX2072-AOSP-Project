@@ -170,6 +170,7 @@ DEFCONFIG_TARGETS = [
     "arch/arm64/configs/vendor/kona-perf_defconfig",
     "arch/arm64/configs/vendor/kona_defconfig",
     "arch/arm64/configs/vendor/sm8250_defconfig",
+    "arch/arm64/configs/vendor/oplus.config",
 ]
 MAKEFILE_TARGETS = [
     "drivers/gpu/msm/Makefile",
@@ -516,6 +517,10 @@ def markdown_report(report):
                   (source["scanned_file_count"], source["scanned_directory_count"]),
                 "- ARM64 defconfigs: %s" % source["arm64_defconfig_count"],
                 "- Relevant defconfigs: " + (", ".join(source["relevant_arm64_defconfigs"]) or "none found"),
+                "- Config inputs: " + (", ".join(
+                    "%s (%s options)" % (path, data["option_count"])
+                    for path, data in source.get("defconfig_inventory", {}).items()
+                ) or "none fetched"),
                 "- Driver subsystems: " + (", ".join(source["driver_modules"]) or "none found"),
                 "- Techpack subsystems: " + (", ".join(source["techpack_modules"]) or "none found"),
                 "",
@@ -692,6 +697,11 @@ def main():
         if elixir and current:
             config_comparisons.extend(compare_defconfigs(elixir, current))
             makefile_comparisons.extend(compare_makefiles(elixir, current))
+        aospa = next((item for item in internal_sources
+                      if item["id"] == "aospa-sm8250-kernel"), None)
+        if elixir and aospa:
+            config_comparisons.extend(compare_defconfigs(elixir, aospa))
+            makefile_comparisons.extend(compare_makefiles(elixir, aospa))
     else:
         errors.append("Official Android Q baseline was not available; structural comparisons were skipped.")
 
