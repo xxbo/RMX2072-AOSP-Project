@@ -2,6 +2,8 @@
 
 Status values: **Unknown**, **Source-reviewed**, **Build-tested**, **Boot-tested**, **Hardware-tested**, **Blocked**.
 
+Driver-specific source evidence and proposed migration dispositions are tracked in [DRIVER_MIGRATION_MATRIX.md](./DRIVER_MIGRATION_MATRIX.md); shared prerequisites and sequencing are in [DRIVER_DEPENDENCY_MAP.md](./DRIVER_DEPENDENCY_MAP.md). These documents are source-review artifacts. No GKI 6.18 driver has been built, loaded or hardware-tested on RMX2072.
+
 ## Platform layers
 
 | Layer | Candidate | Status | Evidence required |
