@@ -60,7 +60,7 @@ Do not begin the full camera or audio migration before the memory, IOMMU and Qua
 
 The first driver experiment is NQ-NCI for the RMX2072 SN100 NFC controller. The target's official 20607 DTS node, I2C address and GPIO assignments are now identified, and the newer SM8250-Common source contains SN100-aware driver logic. An external-module port is staged at \`experiments/nfc_nq/\` on branch [experiment/nq-nci-gki-6.18](https://github.com/xxbo/RMX2072-AOSP-Project/tree/experiment/nq-nci-gki-6.18).
 
-The first pass deliberately limits changes to current I2C/class APIs and localizes the vendor NFC UAPI header. Legacy GPIO calls remain for the compile experiment so the exact GKI export/KMI blockers can be observed before deciding whether to convert the driver to descriptor-based GPIO. The compile workflow is not hardware validation.
+The first pass deliberately limits changes to current I2C/class APIs and localizes the vendor NFC UAPI header. Legacy GPIO calls remain for the compile experiment so the exact GKI export/KMI blockers can be observed before deciding whether to convert the driver to descriptor-based GPIO. The first compile-smoke workflow has produced an AArch64 relocatable nq-nci.ko against the pinned 6.18 source. Because the workflow uses modules_prepare without a full kernel build, MODPOST warned that Module.symvers was missing; this is not KMI certification or hardware validation. The next gate is a full GKI symbol/export audit.
 
 ## Current status
 
