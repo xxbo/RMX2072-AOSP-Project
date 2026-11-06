@@ -1,0 +1,53 @@
+name: Kernel Source Research
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/kernel-source-research.yml"
+      - "sources/SOURCE_LOCK.json"
+      - "scripts/kernel_research/**"
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kernel-source-research-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source-inventory:
+    name: Inventory and structural diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout research project
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify pinned sources and scan kernel trees
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/kernel_research/audit_sources.py \
+            --lock sources/SOURCE_LOCK.json \
+            --out reports/kernel-source-research
+
+      - name: Upload research reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-source-research-${{ github.run_number }}
+          path: reports/kernel-source-research/
+          if-no-files-found: warn
+          retention-days: 30
