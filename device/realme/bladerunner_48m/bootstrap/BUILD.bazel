@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 load("//build/kernel/kleaf:kernel.bzl", "kernel_build")
 load("//build/kernel/kleaf:constants.bzl", "COMMON_KCFLAGS")
-load("//common:bazel/modules_private.bzl", "get_gki_modules_list", "get_kunit_modules_list")
+load(":gki_modules.bzl", "GKI_MODULE_OUTS")
 load("@rules_pkg//pkg:install.bzl", "pkg_install")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 
@@ -16,7 +16,7 @@ kernel_build(
     check_defconfig = "match",
     page_size = "4k",
     outs = ["Image", "Image.gz", "System.map", "vmlinux", "include/config/kernel.release"],
-    module_outs = get_gki_modules_list("arm64") + get_kunit_modules_list("arm64"),
+    module_outs = GKI_MODULE_OUTS,
     make_goals = ["Image", "Image.gz", "modules"],
     kcflags = COMMON_KCFLAGS,
     keep_dot_config = True,

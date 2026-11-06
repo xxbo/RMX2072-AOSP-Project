@@ -30,7 +30,7 @@ def fdt(data, compatible=()):
             pos = (stop+4) & ~3
         elif token == 2:
             node = node_props.pop()
-            if compatible and set(node.get('compatible', [])).intersection(compatible):
+            if '**' in compatible or (compatible and ('*' in compatible or set(node.get('compatible', [])).intersection(compatible)) and 'compatible' in node):
                 matches.append(dict(path='/'.join(stack), properties=node))
             stack.pop()
         elif token == 3:
@@ -46,11 +46,12 @@ def fdt(data, compatible=()):
                     fixups[name] = value.rstrip(b'\0').decode('ascii').split('\0')
                 if stack[-1] == '__symbols__':
                     symbols[name] = value.rstrip(b'\0').decode('ascii')
-                if name in ('compatible', 'status', 'qcom,clk-src'):
+                if name in ('compatible', 'status', 'qcom,clk-src') or (value and 33 <= value[0] < 127 and value.endswith(b'\0') and all(c == 0 or 32 <= c < 127 for c in value)):
                     node_props[-1][name] = value.rstrip(b'\0').decode('ascii', errors='replace').split('\0')
-                elif name in ('reg', 'interrupts', 'interrupt-parent', 'phandle', 'linux,phandle', '#gpio-cells', '#interrupt-cells') or name.startswith('qcom,nq-'):
-                    if length % 4 == 0:
-                        node_props[-1][name] = list(struct.unpack('>'+str(length//4)+'I', value))
+                elif length % 4 == 0:
+                    node_props[-1][name] = list(struct.unpack('>'+str(length//4)+'I', value))
+                else:
+                    node_props[-1][name] = dict(hex=value.hex())
             if len(stack) == 1 and name in ('model', 'compatible', 'qcom,msm-id', 'qcom,board-id', 'qcom,pmic-id'):
                 if name in ('model', 'compatible'):
                     props[name] = value.rstrip(b'\0').decode('ascii', errors='replace').split('\0')
@@ -123,8 +124,14 @@ def main():
     p.add_argument('images', nargs='+', type=pathlib.Path)
     p.add_argument('--out', required=True, type=pathlib.Path)
     p.add_argument('--compatible', action='append', default=[], help='Include matching nodes and selected binding properties')
+    p.add_argument('--index', type=int, help='Keep only this container entry in the report')
     args = p.parse_args()
     report = [inspect(path, args.compatible) for path in args.images]
+    if args.index is not None:
+        for item in report:
+            item['trees'] = [tree for tree in item['trees'] if tree['index'] == args.index]
+            if not item['trees']:
+                p.error('selected index is absent from '+item['file'])
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     for item in report:
