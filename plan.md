@@ -245,7 +245,8 @@ Tasks:
 - [ ] Select a candidate ACK/GKI branch based on the target Android release's official support matrix.
 - [ ] Confirm KMI policy, protected symbol lists, toolchain and build system.
 - [x] Stage the first NQ-NCI external-module compile experiment against the pinned 6.18 source.
-- [ ] Complete the NQ-NCI compile, then audit its imports against the exact GKI KMI/export list.
+- [x] Produce the first AArch64 NQ-NCI compile-smoke module against the pinned GKI 6.18 source.
+- [ ] Build the full GKI kernel, obtain Module.symvers and audit module imports against the exact GKI KMI/export list.
 - [ ] Audit the handset boot architecture and determine how GKI, DTB/DTBO and vendor modules could be packaged.
 - [ ] Prototype the simplest boot path before porting all hardware drivers.
 - [ ] Port or replace the minimum drivers needed for boot and basic display/input.
