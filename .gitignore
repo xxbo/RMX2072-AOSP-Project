@@ -26,3 +26,14 @@ backups/
 *.pfx
 *.keystore
 *.jks
+
+
+# External kernel module build outputs
+*.ko
+*.o
+*.mod
+*.mod.c
+*.cmd
+Module.symvers
+modules.order
+.tmp_versions/
