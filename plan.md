@@ -93,7 +93,7 @@ Tasks:
 - [ ] Where feasible, reproduce a known community ROM build without flashing it.
 
 **Deliverables:**
-- Pinned source manifest in `build/`
+- Pinned source manifest and immutable source lock in `sources/`
 - Build environment notes
 - Kernel build log and artifact hashes (artifacts remain outside Git unless licensing permits)
 
