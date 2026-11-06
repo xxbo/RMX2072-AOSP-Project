@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "snapshot_date_utc": "2026-11-06",
+  "project": "RMX2072 AOSP Project",
+  "target": {
+    "model": "RMX2072",
+    "codename": "bladerunner_48m",
+    "soc": "Qualcomm Snapdragon 865",
+    "platform": "SM8250/Kona",
+    "system_target": "AOSP Android 17",
+    "kernel_research_target": "Android Common Kernel / GKI 6.18"
+  },
+  "pinning_policy": "Commit SHA is authoritative. Branch names are provenance only. No upstream source tree or proprietary blob is mirrored in this repository.",
+  "sources": [
+    {
+      "id": "realme-player-android-q-kernel",
+      "category": "official-kernel",
+      "repository": "realme-kernel-opensource/realmeX50Pro-5GPlay_AndroidQ-kernel-source",
+      "url": "https://github.com/realme-kernel-opensource/realmeX50Pro-5GPlay_AndroidQ-kernel-source",
+      "ref_type": "branch",
+      "ref": "master",
+      "commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+      "commit_date": "2020-06-30T09:02:06Z",
+      "kernel_version": "4.19.81",
+      "github_size_kb": 190438,
+      "license_evidence": "Repository API: NOASSERTION. Root COPYING states GPL-2.0 WITH Linux-syscall-note; per-file SPDX identifiers and other licenses may apply.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "Official X50 Pro 5G Play / player-edition kernel source.",
+        "Only master branch was returned by the branches API."
+      ]
+    },
+    {
+      "id": "realme-shared-android-s-kernel",
+      "category": "official-kernel",
+      "repository": "realme-kernel-opensource/realme_GTneo2-X50pro-GTMasterExploratory-AndroidS-kernel-source",
+      "url": "https://github.com/realme-kernel-opensource/realme_GTneo2-X50pro-GTMasterExploratory-AndroidS-kernel-source",
+      "ref_type": "branch",
+      "ref": "master",
+      "commit": "4e5ec4aeeb781851b0fe6c268d9ba69953166fda",
+      "commit_date": "2023-03-17T04:20:49Z",
+      "kernel_version": "4.19.157",
+      "github_size_kb": 189294,
+      "license_evidence": "Repository API: NOASSERTION. Root COPYING states GPL-2.0 WITH Linux-syscall-note; per-file SPDX identifiers and other licenses may apply.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "Shared source named for GT Neo2, X50 Pro and GT Master Explorer.",
+        "build.config.common sets BRANCH=android-4.19-stable and KMI_GENERATION=0. build.config.gki.aarch64 exists, but this remains a legacy 4.19 downstream kernel, not a modern 6.x GKI base."
+      ]
+    },
+    {
+      "id": "project-elixir-sm8250-kernel",
+      "category": "community-kernel",
+      "repository": "ProjectElixir-Devices/android_kernel_realme_sm8250",
+      "url": "https://github.com/ProjectElixir-Devices/android_kernel_realme_sm8250",
+      "ref_type": "branch",
+      "ref": "Kraken-2.0",
+      "commit": "48f37e266a813f808fc4f7a852dacb4a4eef9ec9",
+      "commit_date": "2023-12-19T10:04:28Z",
+      "kernel_version": "4.19.297",
+      "github_size_kb": 2030567,
+      "license_evidence": "Repository API: NOASSERTION. Root COPYING states GPL-2.0 WITH Linux-syscall-note; per-file SPDX identifiers and other licenses may apply.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "Repository description explicitly names Realme X50 Pro 5G and Realme X50 Pro Player.",
+        "Large repository; use targeted/shallow checkout for initial analysis."
+      ]
+    },
+    {
+      "id": "sm8250-common-current-kernel",
+      "category": "community-kernel",
+      "repository": "SM8250-Common/android_kernel_realme_sm8250",
+      "url": "https://github.com/SM8250-Common/android_kernel_realme_sm8250",
+      "ref_type": "branch",
+      "ref": "lineage-24.0",
+      "commit": "b76eb6c93add8152b1aa873da0d8d7f495cccab0",
+      "commit_date": "2026-11-01T12:34:40Z",
+      "kernel_version": "4.19.325",
+      "github_size_kb": 1944989,
+      "license_evidence": "Repository API: NOASSERTION. Root COPYING states GPL-2.0 WITH Linux-syscall-note; per-file SPDX identifiers and other licenses may apply.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "Newest inspected community kernel snapshot in this inventory.",
+        "build.config.common sets BRANCH=android-4.19-stable and KMI_GENERATION=0; despite GKI-named build configs this is not a modern GKI kernel."
+      ]
+    },
+    {
+      "id": "aospa-sm8250-kernel",
+      "category": "community-kernel",
+      "repository": "AOSPA/android_kernel_realme_sm8250",
+      "url": "https://github.com/AOSPA/android_kernel_realme_sm8250",
+      "ref_type": "branch",
+      "ref": "uvite",
+      "commit": "e5ca6a3e0e697e753cbefe54cf22e6819e44d3fb",
+      "kernel_version": "4.19.318",
+      "github_size_kb": 1417684,
+      "license_evidence": "Repository API: NOASSERTION; inspect root COPYING and per-file SPDX before reusing code.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "Alternate community SM8250 downstream kernel for comparison."
+      ]
+    },
+    {
+      "id": "igaganpreet-rmx2072-device-tree",
+      "category": "device-tree",
+      "repository": "IGaganpreetSingh/android_device_realme_bladerunner_48m",
+      "url": "https://github.com/IGaganpreetSingh/android_device_realme_bladerunner_48m",
+      "ref_type": "branch",
+      "ref": "tiramisu-stable",
+      "commit": "08afb1d784dd568fa04ca462684a350b37e2bf4a",
+      "commit_date": "2023-07-26T13:10:33Z",
+      "github_size_kb": 46454,
+      "license_evidence": "Repository API: no declared license. BoardConfig.mk and device.mk contain Apache-2.0 headers; perform file-level review before reuse.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "BoardConfig targets RMX2072CN, bladerunner_48m and inherits device/realme/sm8250-common.",
+        "proprietary-files.txt says its blobs are from RMX2072_11.F.15."
+      ]
+    },
+    {
+      "id": "sreelekshman-rmx2072-device-tree",
+      "category": "device-tree",
+      "repository": "sreelekshman/android_device_realme_bladerunner_48m",
+      "url": "https://github.com/sreelekshman/android_device_realme_bladerunner_48m",
+      "ref_type": "branch",
+      "ref": "typhoon",
+      "commit": "2c524d8e94ffd741811223f307c39a177799a940",
+      "commit_date": "2023-05-19T16:06:16Z",
+      "github_size_kb": 46476,
+      "license_evidence": "Repository API: no declared license. BoardConfig.mk and device.mk contain Apache-2.0 headers; perform file-level review before reuse.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "BoardConfig targets RMX2072CN; device.mk inherits SM8250 common tree and vendor/realme/bladerunner_48m.",
+        "Its proprietary-files list contains 104 mappings and identifies RMX2072_11.F.15 as source firmware."
+      ]
+    },
+    {
+      "id": "aospa-rmx2072-device-tree",
+      "category": "device-tree",
+      "repository": "AOSPA/android_device_realme_bladerunner_48m",
+      "url": "https://github.com/AOSPA/android_device_realme_bladerunner_48m",
+      "ref_type": "branch",
+      "ref": "topaz",
+      "commit": "e0e0c05b6203403aeee3ab4d7d13b52080ac9c7a",
+      "commit_date": "2023-10-04T03:22:47Z",
+      "github_size_kb": 46316,
+      "license_evidence": "Repository API: no declared license; inspect file headers before reuse.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "Historical AOSPA device-specific product tree."
+      ]
+    },
+    {
+      "id": "sm8250-common-device-tree-current",
+      "category": "common-device-tree",
+      "repository": "SM8250-Common/android_device_realme_sm8250-common",
+      "url": "https://github.com/SM8250-Common/android_device_realme_sm8250-common",
+      "ref_type": "branch",
+      "ref": "lineage-24.0",
+      "commit": "681bfa28e36003fddc004bfebef491234505adbc",
+      "commit_date": "2026-11-01T11:54:00Z",
+      "github_size_kb": 2850,
+      "license_evidence": "Repository API: no declared license. BoardConfigCommon.mk contains SPDX-License-Identifier: Apache-2.0; inspect file-level headers before reuse.",
+      "status": "pinned-source-reviewed",
+      "notes": [
+        "Current shared SM8250 configuration reference; pairing with the older RMX2072 device trees remains unverified.",
+        "Its proprietary-files.txt has 1,366 mappings and explicitly says the blobs are from Realme GT Neo 3T RMX3371_14.0.0.2100(EX01); do not use that blob set as an RMX2072 vendor source."
+      ]
+    },
+    {
+      "id": "sreelekshman-rmx2072-vendor-reference",
+      "category": "vendor-reference",
+      "repository": "sreelekshman/android_vendor_realme_bladerunner_48m",
+      "url": "https://github.com/sreelekshman/android_vendor_realme_bladerunner_48m",
+      "ref_type": "branch",
+      "ref": "typhoon",
+      "commit": "6f8c1c21395f3356b7182f576afe3b8e44b7b6c4",
+      "commit_date": "2023-09-23T10:36:22Z",
+      "github_size_kb": 11751,
+      "license_evidence": "Repository API: no declared license; contains proprietary binary blobs. Reference only; no redistribution assumed.",
+      "status": "pinned-reference-only",
+      "notes": [
+        "Commit message says proprietary blobs were updated to RMX2072_11.F.17.",
+        "This differs from the RMX2072_11.F.15 provenance stated in the device-tree proprietary-files.txt; resolve before extraction/build integration."
+      ]
+    },
+    {
+      "id": "android17-gki-618",
+      "category": "official-ack-gki",
+      "repository": "kernel/common",
+      "url": "https://android.googlesource.com/kernel/common",
+      "ref_type": "tag",
+      "ref": "android17-6.18-2026-09_r13",
+      "commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+      "tag_object": "910ab23e44c4d44c8c12a767c0d8ee9537c633f2",
+      "commit_date": "2026-11-04T11:21:48Z",
+      "kernel_version": "6.18",
+      "status": "pinned-official-gki-reference",
+      "notes": [
+        "Official Android 17 GKI release tag dated 2026-11-05.",
+        "This is a reference kernel baseline, not a device-ready RMX2072 kernel."
+      ]
+    }
+  ]
+}
