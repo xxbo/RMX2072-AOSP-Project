@@ -166,3 +166,35 @@ The RMX2072 device-tree proprietary list identifies RMX2072_11.F.15, while the p
 7. **Connectivity and power:** investigate CNSS/WLAN, IPA/RMNET, thermal, charging and battery policy.
 
 The next automation stage should use sparse, commit-pinned checkouts for these selected paths and generate C/header content diffs. Full kernel builds should remain a separate gated workflow.
+
+
+## 9. KONA Techpack build fragments and RMX2072 config mismatch
+
+A follow-up review of the pinned SM8250-Common 4.19.325 tree found that the effective KONA subsystem build inputs are broader than the base defconfig plus vendor Oplus fragment.
+
+The KONA-specific Techpack Makefiles include and export additional configuration fragments:
+
+| Subsystem | Makefile behavior | KONA fragment evidence |
+|---|---|---|
+| Display | techpack/display/Makefile includes the KONA display fragment when CONFIG_ARCH_KONA is enabled | konadisp.conf enables DRM/MSM, SDE, DSI, DP, PLL, rotator and OPlus DRM |
+| Camera | techpack/camera/Makefile includes the KONA camera fragment | konacamera.conf enables CONFIG_SPECTRA_CAMERA |
+| Audio | techpack/audio/Makefile includes the KONA audio fragment | konaauto.conf enables QDSP6/APR, ADSP loader, WCD/WSA, SoundWire and codec options including TFA98xx |
+
+The base vendor/kona-perf_defconfig explicitly enables QCOM KGSL, Qualcomm UFS, DWC3 MSM, CNSS2/QMI, NQ-NCI, ION and selected QTI thermal/BCL components. The vendor/oplus.config enables the SM8250 OPlus charger and Goodix optical fingerprint paths.
+
+### RMX2072-specific touch configuration warning
+
+The same vendor/oplus.config selects Focal FT3658U, Samsung S6SY792 and Synaptics TCM touch variants. It does not select CONFIG_TOUCHPANEL_GOODIX_GT9886.
+
+However:
+- The RMX2072-specific proprietary-file list includes GT9886 Samsung touch firmware.
+- The official RMX2072 4.19.81 tree contains an OPlus/Goodix GT9886 driver.
+- The SM8250-Common 4.19.325 tree also contains the GT9886 driver and its Kconfig symbol.
+
+This is a concrete source-level mismatch. The shared Oplus config is not the RMX2072 final touch config. A device-specific config fragment must select the correct controller only after the physical panel/touch revision is confirmed.
+
+### Scanner coverage gap
+
+The current audit_sources.py parses the base Kona defconfig and vendor/oplus.config but does not yet parse all Makefile-injected Techpack fragments. The generated report must not claim these fragments are part of a verified final merged .config. Add explicit extraction for konadisp.conf, konacamera.conf and konaauto.conf, then validate the real build-system behavior separately.
+
+These findings are source-reviewed only. No final .config has been generated, and no kernel build or device test has been performed.
