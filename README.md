@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Generic GKI build verified.** GitHub Actions run #5 completed the official Android 17 GKI 6.18 ARM64 Kleaf distribution build, producing the kernel images, vmlinux, Module.symvers, system_dlkm images and modules. A separate branch is preparing a repository-owned snapshot of the exact pinned kernel source so subsequent builds consume code from this repository. No RMX2072-specific kernel has been booted or hardware-validated.
+> **Project status: Generic GKI build verified.** GitHub Actions run #5 completed the official Android 17 GKI 6.18 ARM64 Kleaf distribution build, producing the kernel images, vmlinux, Module.symvers, system_dlkm images and modules. The exact pinned kernel source is now stored in the repository-owned `mirror/android17-6.18-2026-09_r13` branch; Actions run #7 is validating the full build from that mirror. No RMX2072-specific kernel has been booted or hardware-validated.
 
 ## Goals
 
@@ -75,6 +75,8 @@ These are upstream references, not copies of their contents:
 - [NQ-NCI / SN100 C reference port](https://github.com/xxbo/RMX2072-AOSP-Project/tree/experiment/nq-nci-gki-6.18/experiments/nfc_nq)
 - [GKI 6.18 Kleaf build workflow](https://github.com/xxbo/RMX2072-AOSP-Project/actions/workflows/gki-618-kernel-build.yml)
 - [Reproducible GKI 6.18 build notes](docs/GKI_618_BUILD.md)
+- [GKI 6.18 source mirror and upstream pin](docs/GKI_618_SOURCE_MIRROR.md)
+- [Browse mirrored Linux 6.18 source](https://github.com/xxbo/RMX2072-AOSP-Project/tree/mirror/android17-6.18-2026-09_r13)
 - [Rust driver porting strategy](docs/RUST_DRIVER_PORTING.md)
 
 - [Source manifest](sources/SOURCE_MANIFEST.md)
