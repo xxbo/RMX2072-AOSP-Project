@@ -71,6 +71,10 @@ GKI_FILES = [
     "drivers/android/vendor_hooks.c",
     "include/linux/shmem_fs.h",
     "android/abi_gki_aarch64",
+    "android/abi_gki_aarch64_oplus",
+    "android/abi_gki_aarch64.stg",
+    "include/linux/android_vendor.h",
+    "init/Kconfig.gki",
 ]
 
 MODERN_PATHS = {
@@ -537,6 +541,7 @@ def main():
         "CONFIG_QCOM_MDT_LOADER", "CONFIG_INTERVAL_TREE", "CONFIG_TRACE_GPU_MEM",
         "CONFIG_SHMEM", "CONFIG_VFIO", "CONFIG_DRM_MSM", "CONFIG_DRM",
         "CONFIG_DMA_SHARED_BUFFER", "CONFIG_SYNC_FILE", "CONFIG_IOMMU_SUPPORT",
+        "CONFIG_ANDROID_VENDOR_OEM_DATA",
     ]
     gki_config_evidence = {key: gki_config_values.get(key, "not explicit in gki_defconfig")
                            for key in kgsl_config_keys}
@@ -564,6 +569,10 @@ def main():
     vendor_hooks = gki["files"].get("drivers/android/vendor_hooks.c", {}).get("text") or ""
     shmem_header = gki["files"].get("include/linux/shmem_fs.h", {}).get("text") or ""
     abi_symbols = gki["files"].get("android/abi_gki_aarch64", {}).get("text") or ""
+    oplus_abi_symbols = gki["files"].get("android/abi_gki_aarch64_oplus", {}).get("text") or ""
+    abi_stg = gki["files"].get("android/abi_gki_aarch64.stg", {}).get("text") or ""
+    android_vendor_header = gki["files"].get("include/linux/android_vendor.h", {}).get("text") or ""
+    gki_kconfig = gki["files"].get("init/Kconfig.gki", {}).get("text") or ""
     modern_sharedmem = modern["files"].get("drivers/gpu/msm/kgsl_sharedmem.c", {}).get("text") or ""
     hook_match = re.search(
         r"DECLARE_RESTRICTED_HOOK\s*\(\s*android_rvh_shmem_get_folio\s*,\s*TP_PROTO\s*\((.*?)\)\s*,\s*TP_ARGS",
@@ -575,16 +584,24 @@ def main():
     ]
     hook_exported = "EXPORT_TRACEPOINT_SYMBOL_GPL(android_rvh_shmem_get_folio)" in vendor_hooks
     kmi_hook_symbols = [
-        line.strip() for line in abi_symbols.splitlines()
+        line.strip() for line in (abi_symbols + "\n" + oplus_abi_symbols).splitlines()
+        if "shmem_get_folio" in line
+    ]
+    stg_hook_symbols = [
+        line.strip() for line in abi_stg.splitlines()
         if "shmem_get_folio" in line
     ]
     android_shmem_hook_evidence = {
         "hook_declared_in_gki_mm_hooks": bool(hook_match),
         "hook_tp_proto": hook_proto,
         "hook_exported_by_gki_vendor_hooks": hook_exported,
-        "hook_symbol_lines_in_gki_abi_list": kmi_hook_symbols,
-        "hook_symbol_present_in_gki_abi_list": bool(kmi_hook_symbols),
-        "shmem_inode_info_android_vendor_data1_present": "android_vendor_data1" in shmem_header,
+        "hook_symbol_lines_in_gki_or_oplus_abi_list": kmi_hook_symbols,
+        "hook_symbol_present_in_gki_or_oplus_abi_list": bool(kmi_hook_symbols),
+        "hook_symbol_lines_in_abi_stg": stg_hook_symbols,
+        "shmem_inode_info_android_vendor_data_slot_present": "ANDROID_VENDOR_DATA(1)" in shmem_header,
+        "android_vendor_data_macro_defined": "ANDROID_VENDOR_DATA" in android_vendor_header,
+        "android_vendor_oem_data_config_default_y": bool(re.search(r"config ANDROID_VENDOR_OEM_DATA[\\s\\S]{0,300}default y", gki_kconfig)),
+        "shmem_inode_info_android_vendor_data1_literal_present": "android_vendor_data1" in shmem_header,
         "modern_kgsl_shmem_callbacks": kgsl_callbacks,
         "modern_kgsl_uses_android_shmem_hook": "register_trace_android_rvh_shmem_get_folio" in modern_sharedmem,
     }
