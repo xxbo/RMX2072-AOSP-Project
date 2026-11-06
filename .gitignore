@@ -1,0 +1,28 @@
+# Android / kernel build outputs
+/out/
+/build/out/
+/kernel/**/out/
+/**/out/
+*.img
+*.zip
+*.tar
+*.tar.gz
+
+# Locally extracted proprietary vendor material
+vendor/**/proprietary/
+vendor/**/firmware/
+vendor/**/odm/
+vendor/**/system/
+vendor/**/product/
+
+# Local device dumps and backups
+device-dumps/
+local/
+backups/
+
+# Signing material and credentials
+*.pem
+*.p12
+*.pfx
+*.keystore
+*.jks
