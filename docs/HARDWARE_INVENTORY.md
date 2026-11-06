@@ -43,7 +43,7 @@ The following entries were found in the RMX2072-specific device-tree proprietary
 | Audio | audio.primary.kona.so, tfa98xx.cnt, mixer and sound-trigger configuration files | Kona vendor audio stack and TFA98xx-related firmware/configuration are referenced | Exact codec/amplifier population, DSP firmware version, speaker routing and calibration |
 | Wi-Fi | odm/etc/wifi/bdwlan.elf | A WLAN board/calibration firmware artifact is listed | WLAN chipset, bus, driver module, firmware interface and MAC/board data behavior |
 | Bluetooth | Bluetooth_cal.acdb | Bluetooth calibration data is listed | Controller, transport, firmware, coexistence and power-control path |
-| NFC | libnfc-mtp-SN100.conf_20607 and libnfc-nci.conf_20607 | Configuration refers to the NXP SN100 family and NCI stack | Exact controller variant, I2C/SPI bus, IRQ/reset/eSE wiring and selected kernel driver |
+| NFC | Manifest lists libnfc-mtp-SN100.conf_20607, libnfc-nci.conf_20607 and libsn100u_fw.so. Official RMX2072 20607 DTS defines qcom,nq-nci at I2C 0x28 on QUPv3 SE0 (1 MHz), IRQ GPIO 34, VEN 12, FIRM 35 and CLKREQ 31. | Strong source-level match for the NQ-NCI / NXP SN100 family; both official 4.19.81 and community 4.19.325 kernels contain the NQ-NCI driver. | Exact SN100 silicon revision, live handset DTB match, optional eSE power GPIO, regulator wiring and current vendor HAL/library build |
 | Sensors | Kona configuration names BMI26x, ICM4x6xx, LSM6DSO, SX933x and CCT-related entries | These sensor families/configuration profiles are referenced | Actual fitted sensors, which are AP-side versus SSC/SLPI-owned, and bus/address mapping |
 | Charging | oplus_vooc_fw_rt5125.bin, oplus_vooc_fw.bin and charging_thermal_config_default.txt | OPlus VOOC/fast-charge firmware and thermal policy files are referenced | Exact charger, charge-pump, fuel-gauge and battery-protection IC population |
 | Fingerprint | goodixfp firmware segments and opluseid firmware segments | Goodix/OPlus secure fingerprint firmware is referenced | Exact sensor revision, SPI wiring, TEE service version and secure enrollment/authentication path |
@@ -111,3 +111,23 @@ Never commit IMEI, serial number, MAC addresses, personal data, signing keys or 
 - [Driver migration matrix](./DRIVER_MIGRATION_MATRIX.md)
 - [Driver dependency map](./DRIVER_DEPENDENCY_MAP.md)
 - [Kernel porting strategy](./KERNEL_PORTING.md)
+
+
+### NFC target DTS cross-check
+
+The official RMX2072 kernel's \`arch/arm64/boot/dts/20607/lito-mtp.dtsi\` defines the NFC controller under \`&qupv3_se0_i2c\`:
+
+~~~dts
+nq@28 {
+    compatible = "qcom,nq-nci";
+    reg = <0x28>;
+    qcom,nq-irq = <&tlmm 34 0x00>;
+    qcom,nq-ven = <&tlmm 12 0x00>;
+    qcom,nq-firm = <&tlmm 35 0x00>;
+    qcom,nq-clkreq = <&tlmm 31 0x00>;
+    interrupt-parent = <&tlmm>;
+    interrupts = <34 0>;
+};
+~~~
+
+The parent I2C controller is configured for 1 MHz. This is source evidence for the 20607 board configuration; confirm the actual handset's DTB/DTBO before applying it to a new kernel.
