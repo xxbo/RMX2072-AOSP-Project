@@ -34,8 +34,9 @@ LEGACY_FILES = [
 ]
 
 MODERN_EXTRA_FILES = [
-    "kgsl_vbo.c", "adreno_a6xx_hwsched.c", "adreno_a6xx_hwsched_hfi.c",
-    "adreno_a6xx_rpmh.c", "adreno_a6xx_coresight.c", "kgsl_bus.c",
+    "kgsl_vbo.c", "adreno_a6xx_hfi.c", "adreno_a6xx_hwsched.c",
+    "adreno_a6xx_hwsched_hfi.c", "adreno_a6xx_rpmh.c",
+    "adreno_a6xx_coresight.c", "adreno-gpulist.h", "kgsl_bus.c",
 ]
 
 GKI_FILES = [
@@ -111,11 +112,12 @@ def modern_path(path):
 
 
 def parse_functions(text):
+    # Approximate C function-definition inventory, not a compiler AST.
     pattern = re.compile(
         r"(?m)^[ \t]*(?:(?:static|inline|extern|const|__init|__exit|"
-        r"__maybe_unused|__always_inline|noinline)[ \t]+)*"
-        r"(?:[A-Za-z_][A-Za-z0-9_]*[ \t\*]+)+"
-        r"([A-Za-z_][A-Za-z0-9_]*)[ \t]*\([^;{}]*\)[ \t]*\{"
+        r"__maybe_unused|__always_inline|noinline)\s+)*"
+        r"(?:[A-Za-z_]\w*(?:\s+|\s*\*\s*))+"
+        r"([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{"
     )
     excluded = {"if", "for", "while", "switch", "return", "sizeof"}
     return sorted({m.group(1) for m in pattern.finditer(text) if m.group(1) not in excluded})
@@ -135,6 +137,34 @@ def parse_ioctl_blocks(text):
         result[name] = "\n".join(block)
         i += 1
     return result
+
+
+def parse_struct_blocks(text):
+    # Brace-balanced extraction of KGSL UAPI struct definitions.
+    clean = re.sub(r"/\*.*?\*/|//[^\n]*",
+                   lambda match: " " * len(match.group()), text, flags=re.S)
+    result = {}
+    for match in re.finditer(r"\bstruct\s+(kgsl_[A-Za-z0-9_]+)\s*\{", clean):
+        name = match.group(1)
+        opening = clean.find("{", match.start())
+        depth = 0
+        for pos in range(opening, len(clean)):
+            if clean[pos] == "{":
+                depth += 1
+            elif clean[pos] == "}":
+                depth -= 1
+                if depth == 0:
+                    end = clean.find(";", pos)
+                    if end < 0:
+                        end = pos
+                    result[name] = text[match.start():end + 1]
+                    break
+    return result
+
+
+def normalize_struct(text):
+    text = re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def parse_symbols(text):
@@ -222,7 +252,7 @@ def compare_uapi(sources):
             text = item["text"]
             available[source_id] = {
                 "ioctls": parse_ioctl_blocks(text),
-                "structs": sorted(set(re.findall(r"\bstruct\s+(kgsl_[A-Za-z0-9_]+)\b", text))),
+                "structs": parse_struct_blocks(text),
             }
     order = [x for x in ids if x in available]
     result = []
@@ -239,6 +269,10 @@ def compare_uapi(sources):
             "left_struct_count": len(left["structs"]), "right_struct_count": len(right["structs"]),
             "structs_added": sorted(set(right["structs"]) - set(left["structs"])),
             "structs_removed": sorted(set(left["structs"]) - set(right["structs"])),
+            "struct_definitions_changed": sorted(
+                name for name in set(left["structs"]) & set(right["structs"])
+                if normalize_struct(left["structs"][name]) != normalize_struct(right["structs"][name])
+            ),
         })
     return result
 
@@ -291,8 +325,17 @@ def main():
             modern["files"][path] = {"actual_path": path, "text": None, "missing": True, "metrics": None}
 
     legacy, current = sources[ids[0]], sources[ids[1]]
-    legacy_vs_current, current_vs_modern = [], []
+    legacy_vs_current, current_vs_modern, file_presence_changes = [], [], []
     for path in LEGACY_FILES:
+        old_present = legacy["files"][path]["text"] is not None
+        current_present = current["files"][path]["text"] is not None
+        if old_present != current_present:
+            file_presence_changes.append({
+                "path": path,
+                "old_present": old_present,
+                "current_present": current_present,
+                "change": "added in community tree" if current_present else "missing in community tree",
+            })
         left = legacy["files"][path]["text"]
         right = current["files"][path]["text"]
         if left is not None and right is not None:
@@ -333,6 +376,12 @@ def main():
     uapi_comparisons = compare_uapi(sources)
     kconfig_text = modern["files"].get("drivers/gpu/msm/Kconfig", {}).get("text") or ""
     modern_kconfig = parse_kconfig(kconfig_text)
+    modern_gpu_list = modern["files"].get("adreno-gpulist.h", {}).get("text") or ""
+    modern_adreno_650 = {
+        "ADRENO_REV_A650 definition present": "ADRENO_REV_A650" in modern_gpu_list,
+        "A650 firmware a650_gmu.bin referenced": "a650_gmu.bin" in modern_gpu_list,
+        "A650 firmware a650_sqe.fw referenced": "a650_sqe.fw" in modern_gpu_list,
+    }
 
     meta = source_record(lock, "qualcomm-meta-qcom-kgsl-build-reference")
     recipe = github_raw(meta["repository"], meta["commit"], "recipes-graphics/kgsl-dlkm/kgsl-dlkm_2.0.0.bb")
@@ -369,6 +418,7 @@ def main():
         "generated_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "sources": {k: compact_source(v) for k, v in sources.items()},
         "legacy_vs_current": legacy_vs_current,
+        "file_presence_changes": file_presence_changes,
         "current_vs_modern": current_vs_modern,
         "modern_extras": modern_extras,
         "uapi_comparisons": uapi_comparisons,
@@ -383,6 +433,7 @@ def main():
             "adreno_650_evidence": gki["adreno_650_evidence"],
         },
         "modern_kconfig": modern_kconfig,
+        "modern_adreno_650_evidence": modern_adreno_650,
         "build_evidence": build_evidence,
     }
 
@@ -411,6 +462,12 @@ def main():
         lines.append("| %s | %s | %s | %s | %s | %s | %s |" % (
             item["path"], item["left_lines"], item["right_lines"], item["added_lines"],
             item["removed_lines"], len(item["functions_added"]), len(item["functions_removed"])))
+    lines.extend(["", "### File presence changes between official Q and community 4.19.325", ""])
+    if file_presence_changes:
+        for item in file_presence_changes:
+            lines.append("- %s: %s" % (item["path"], item["change"]))
+    else:
+        lines.append("- No path presence changes in the selected file set.")
     lines.extend(["", "## 4. Community 4.19.325 versus modern Qualcomm KGSL", "",
                   "The Qualcomm reference is a separate kernel-module repository. Same-name files are compared as architecture references, not as proof of source ancestry or drop-in compatibility.",
                   "", "| Legacy file | Modern file | Legacy lines | Modern lines | Added | Removed |",
@@ -425,18 +482,25 @@ def main():
         lines.append("- %s: %s" % (item["path"],
                     ("%s lines; %s detected functions" % (m["lines"], m["function_count"])) if m else "not present"))
     lines.extend(["", "## 5. KGSL userspace ABI inventory", "",
-                  "| Comparison | Left ioctls | Right ioctls | Added | Removed | Changed definitions |",
-                  "|---|---:|---:|---:|---:|---:|"])
+                  "| Comparison | Left ioctls | Right ioctls | Added | Removed | Changed ioctl definitions | Structs added | Structs removed | Struct layouts changed |",
+                  "|---|---:|---:|---:|---:|---:|---:|---:|---:|"])
     for item in uapi_comparisons:
-        lines.append("| %s → %s | %s | %s | %s | %s | %s |" % (
+        lines.append("| %s → %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
             item["left"], item["right"], item["left_ioctl_count"], item["right_ioctl_count"],
-            len(item["ioctls_added"]), len(item["ioctls_removed"]), len(item["ioctl_definitions_changed"])))
+            len(item["ioctls_added"]), len(item["ioctls_removed"]), len(item["ioctl_definitions_changed"]),
+            len(item["structs_added"]), len(item["structs_removed"]), len(item["struct_definitions_changed"])))
         if item["ioctls_added"]:
             lines.append("- Added ioctl names: " + ", ".join(item["ioctls_added"]))
         if item["ioctls_removed"]:
             lines.append("- Removed ioctl names: " + ", ".join(item["ioctls_removed"]))
         if item["ioctl_definitions_changed"]:
-            lines.append("- Changed definitions: " + ", ".join(item["ioctl_definitions_changed"]))
+            lines.append("- Changed ioctl definitions: " + ", ".join(item["ioctl_definitions_changed"]))
+        if item["structs_added"]:
+            lines.append("- Added UAPI structs: " + ", ".join(item["structs_added"]))
+        if item["structs_removed"]:
+            lines.append("- Removed UAPI structs: " + ", ".join(item["structs_removed"]))
+        if item["struct_definitions_changed"]:
+            lines.append("- Struct definitions with text/layout changes: " + ", ".join(item["struct_definitions_changed"]))
         lines.append("")
     lines.extend(["## 6. Android 17 GKI 6.18 graphics architecture", "",
                   "- KGSL drivers/gpu/msm directory present: %s" % gki["kgsl_directory_present"],
@@ -452,12 +516,15 @@ def main():
         m = item["metrics"]
         lines.append("| %s | %s | %s |" % (
             path, m["lines"] if m else "missing", m["function_count"] if m else "—"))
+    lines.extend(["", "### Modern Qualcomm KGSL Adreno 650 support", ""])
+    for key, value in modern_adreno_650.items():
+        lines.append("- %s: %s" % (key, value))
     lines.extend(["", "## 7. Build and Kconfig evidence", ""])
     lines.extend("- " + item for item in build_evidence)
     for key, item in modern_kconfig.items():
-        if key == "QCOM_KGSL":
-            lines.append("- QCOM_KGSL Kconfig: depends on %s; selects %s" % (
-                ", ".join(item["depends_on"]) or "none", ", ".join(item["selects"]) or "none"))
+        if key in ("QCOM_KGSL", "QCOM_KGSL_USE_SHMEM", "QCOM_KGSL_PROCESS_RECLAIM", "QCOM_KGSL_HIBERNATION"):
+            lines.append("- %s: depends on %s; selects %s" % (
+                key, ", ".join(item["depends_on"]) or "none", ", ".join(item["selects"]) or "none"))
     lines.extend(["", "## 8. Preliminary migration interpretation", "",
         "1. The pinned Android 17 GKI tree is checked for both the legacy KGSL path and the DRM/MSM Adreno path. A6xx catalog support does not establish KGSL userspace compatibility.",
         "2. The separate Qualcomm KGSL repository is a promising newer KGSL reference, but the Yocto/Linux 7.2 recipe does not prove Android GKI 6.18 KMI compatibility.",
