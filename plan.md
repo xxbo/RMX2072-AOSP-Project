@@ -239,14 +239,15 @@ Tasks:
 
 **Goal:** Evaluate a modern ACK/GKI kernel for RMX2072 without assuming that a successful compile implies device compatibility.
 
-**Progress note (2026-11-06):** The earlier experiment/nq-nci-gki-6.18 branch produced an AArch64 NQ-NCI C compile-smoke module using modules_prepare only; MODPOST warned that Module.symvers was absent, so it is not KMI-certified. The new experiment/gki-6.18-rust-foundation branch switches the authoritative build path to the official Android kernel repo manifest and Kleaf target //common:kernel_aarch64_dist. The manifest, GKI release tag and Rust toolchain are pinned. GitHub Actions run #5 completed the full `//common:kernel_aarch64_dist` build successfully: 1,378 Bazel actions, 1,242.471 seconds Bazel elapsed time, 158 distribution files and a ~688 MB uploaded artifact. The output includes Image/Image.gz/Image.lz4, vmlinux, Module.symvers, system_dlkm images and modules. A new branch `experiment/gki-6.18-repo-mirror` is adding a repository-owned snapshot of the exact upstream `kernel/common` commit; the first attempt exposed an annotated-tag dereference issue, now corrected for the next run. No RMX2072 device kernel has been booted or hardware-validated.
+**Progress note (2026-11-06):** The earlier experiment/nq-nci-gki-6.18 branch produced an AArch64 NQ-NCI C compile-smoke module using modules_prepare only; MODPOST warned that Module.symvers was absent, so it is not KMI-certified. The new experiment/gki-6.18-rust-foundation branch switches the authoritative build path to the official Android kernel repo manifest and Kleaf target //common:kernel_aarch64_dist. The manifest, GKI release tag and Rust toolchain are pinned. GitHub Actions run #5 completed the full `//common:kernel_aarch64_dist` build successfully: 1,378 Bazel actions, 1,242.471 seconds Bazel elapsed time, 158 distribution files and a ~688 MB uploaded artifact. The output includes Image/Image.gz/Image.lz4, vmlinux, Module.symvers, system_dlkm images and modules. A repository-owned source snapshot is now present on `mirror/android17-6.18-2026-09_r13` (snapshot commit `cfa72fb3d7f89372c7e449a4de2477551ea4c29c`, mapped to upstream commit `ecdaacc9a0ee87eaf9544e1836d86bd9d590312e`). The mirror job passed in Actions run #7; its dependent full Kleaf build is currently validating that `common/` is sourced from this repository branch. No RMX2072 device kernel has been booted or hardware-validated.
 
 Tasks:
 - [x] Select Android 17 GKI 6.18 as the research baseline using the official support matrix; retain the caveat that it is not yet a device-ready target.
 - [x] Pin the official kernel repo manifest, GKI source tag and Kleaf/Rust toolchain source.
 - [x] Add a GitHub Actions workflow for the official Kleaf ARM64 distribution target.
 - [x] Complete full GKI 6.18 ARM64 Kleaf distribution build and archive its dist/KMI artifacts.
-- [ ] Complete the repository-owned source mirror and rebuild using that mirror rather than fetching `kernel/common` directly from upstream.
+- [x] Create a repository-owned snapshot of the exact pinned `kernel/common` source commit.
+- [ ] Complete the full Kleaf distribution build using the repository-owned source mirror.
 - [x] Stage the first NQ-NCI external-module compile experiment against the pinned 6.18 source.
 - [x] Produce the first AArch64 NQ-NCI compile-smoke module against the pinned GKI 6.18 source.
 - [ ] Audit module imports against the full-build GKI KMI/export list and protected-symbol policy.
