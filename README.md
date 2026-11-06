@@ -61,6 +61,14 @@ These are upstream references, not copies of their contents:
 - [Android Common Kernel documentation](https://source.android.com/docs/core/architecture/kernel)
 - [Generic Kernel Image overview](https://source.android.com/docs/core/architecture/kernel/generic-kernel-image)
 
+## Source inventory and pinned revisions
+
+- [Source manifest](sources/SOURCE_MANIFEST.md)
+- [Machine-readable source lock](sources/SOURCE_LOCK.json)
+- [Kernel source inventory](docs/SOURCE_INVENTORY.md)
+- [Source license audit](docs/SOURCE_LICENSE_AUDIT.md)
+- [Development plan](plan.md)
+
 ## Engineering principles
 
 1. **Bootable milestones first.** Keep a recoverable stock baseline and validate each change independently.
