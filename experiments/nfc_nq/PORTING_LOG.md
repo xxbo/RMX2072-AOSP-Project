@@ -36,3 +36,25 @@ These three functions are only called inside this translation unit, so they are 
 - .ko generation, modpost, KMI audit, module load, probe and hardware tests: not yet passed or attempted.
 
 The first compile is useful evidence, but it is not a successful module build. Continue to record each compile failure separately from host build-environment failures.
+
+
+## 2026-11-06 — First AArch64 module artifact produced
+
+### Build result
+
+- Source revision: branch commit a5b4aab928ad2df2a4ad93e50fa247522067a353
+- Workflow: [#6](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42184161348)
+- Artifact: [nfc-nq-gki-618-6](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42184161348/artifacts/13486438423)
+- Result: compile-smoke workflow passed; an AArch64 relocatable module nq-nci.ko was produced.
+- Module SHA-256: 66813df1b9c05a5abf7f514e325a420f42141e694331e8522920fbac953398a4
+- GKI config SHA-256: c435bb4dfeeed7c1870f166c28162e76b8df8aa942cef3ea4c5c54fb7b590e6b
+
+### Important qualification
+
+The module build used modules_prepare rather than a complete GKI kernel build. MODPOST explicitly warned that the output Module.symvers was missing and therefore emitted unresolved-symbol warnings. KBUILD_MODPOST_WARN=1 allowed the .ko to be produced so the C/API compile could be tested. BTF generation was skipped because vmlinux was unavailable.
+
+This artifact proves that the current driver source compiles and links into an ARM64 relocatable module against the prepared pinned 6.18 source headers. It does **not** prove that the module imports only exported/protected GKI symbols, has valid symbol CRCs, can be loaded, or works on the handset.
+
+### Next gate
+
+Build the full pinned GKI kernel to obtain the authoritative Module.symvers, extract the module's undefined imports, compare them against the GKI exported-symbol and protected KMI lists, then rebuild with symbol-version checking. The legacy GPIO API is a likely area to review, but no symbol should be declared unavailable based only on the current modules_prepare MODPOST warnings.
