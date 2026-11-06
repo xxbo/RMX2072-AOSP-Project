@@ -7,7 +7,11 @@ on:
       - "experiment/nq-nci-gki-6.18"
     paths:
       - ".github/workflows/nfc-nq-gki-618-smoke.yml"
-      - "experiments/nfc_nq/**"
+      - "experiments/nfc_nq/*.c"
+      - "experiments/nfc_nq/*.h"
+      - "experiments/nfc_nq/Makefile"
+      - "experiments/nfc_nq/Kconfig"
+      - "experiments/nfc_nq/include/**"
       - "scripts/kernel_research/build_nq_nci_gki.sh"
       - "sources/SOURCE_LOCK.json"
 
