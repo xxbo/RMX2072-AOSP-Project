@@ -238,6 +238,22 @@
         "qcom-extra.cfg sets CONFIG_VFIO=m to make INTERVAL_TREE available for KGSL.",
         "This build reference targets Qualcomm Linux / Yocto, not Android GKI."
       ]
+    },
+    {
+      "id": "android-kernel-manifest",
+      "category": "build-manifest",
+      "repository": "kernel/manifest",
+      "url": "https://android.googlesource.com/kernel/manifest",
+      "ref_type": "branch",
+      "ref": "common-android17-6.18",
+      "commit": "46a1a5274ff0b40419952c861a8958bba5f28cfc",
+      "manifest_blob": "36a7fcc4482efec1c8b326d17601b22639b9d5a2",
+      "status": "pinned-kernel-build-manifest",
+      "notes": [
+        "Official Android kernel repo manifest for the common-android17-6.18 build environment.",
+        "Pins Kleaf build/kernel, Clang, Rust toolchain, kernel build tools and Bazel module dependencies.",
+        "The resolved repo manifest is also archived with every CI build."
+      ]
     }
   ]
 }
