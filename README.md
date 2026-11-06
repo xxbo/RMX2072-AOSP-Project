@@ -96,11 +96,11 @@ These are upstream references, not copies of their contents:
 - [x] First-pass driver migration matrix and dependency map documented from pinned source evidence.
 - [x] Confirm exact device model and F.20 firmware build from the handset; stock boot after unlock verified.
 - [x] Capture partition map, boot image metadata and AVB status.
-- [ ] Archive and hash the stock firmware and recovery images locally.
+- [x] Archive and hash local boot/recovery/firmware and calibration backups (userdata excluded; complete restore still untested).
 - [ ] Complete source and proprietary-component inventory.
 - [ ] Reproduce an existing community ROM/device-tree build.
 - [ ] Boot an Android 17 GSI on a compatible baseline.
-- [ ] Evaluate modern ACK/GKI kernel migration.
+- [x] Build a generic Android 17 GKI 6.18 distribution; RMX2072 board bring-up remains open.
 - [ ] Validate hardware features and recovery/OTA strategy.
 
 ## Safety

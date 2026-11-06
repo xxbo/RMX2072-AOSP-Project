@@ -1,0 +1,25 @@
+{
+  "partitions_bytes": {
+    "system": 622247936,
+    "vendor": 412540928,
+    "product": 13807616,
+    "my_region": 2760704,
+    "my_manifest": 475136,
+    "my_preload": 11866112,
+    "my_stock": 1601294336,
+    "my_carrier": 348160,
+    "my_product": 350564352,
+    "system_ext": 916135936,
+    "odm": 946008064,
+    "my_company": 348160,
+    "my_engineering": 348160,
+    "my_heytap": 1112301568,
+    "my_bigball": 636137472
+  },
+  "group_maximum_bytes": 8862564352,
+  "allocated_bytes": 6627184640,
+  "free_group_bytes": 2235379712,
+  "gsi_system_bytes": 3953213440,
+  "system_growth_bytes": 3330965504,
+  "shortfall_without_other_changes_bytes": 1095585792
+}

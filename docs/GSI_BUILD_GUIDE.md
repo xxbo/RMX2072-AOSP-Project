@@ -27,3 +27,7 @@ The proposed execution environment is GitHub Actions for kernel/module builds an
 6. Test display, touch, telephony, Wi-Fi, Bluetooth, audio, camera, sensors, charging and encryption separately.
 
 This is a planning checklist, not a verified RMX2072 flashing recipe. Exact commands require the handset partition map, bootloader state and firmware revision.
+
+## Selected package and measured preflight
+
+The chosen package is now Android 17 QPR1 ARM64 + GMS CP3A.260905.010. It has been downloaded locally and hash-verified. Read [the actual image and partition findings](GSI_PREFLIGHT_2026-11-06.md) before planning a flash; FCM/VNDK and capacity gaps remain unresolved.

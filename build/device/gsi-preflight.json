@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-06",
+  "build": "CP3A.260905.010",
+  "package_sha256": "d55d64aaebc71b2a895d792c152cfc408841bfde38565b082f495b850a2ae3e1",
+  "images": {
+    "system.img": {
+      "size_bytes": 3953213440,
+      "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "format": "ext4",
+      "expanded_size_bytes": 3953213440
+    },
+    "vbmeta.img": {
+      "size_bytes": 4096,
+      "sha256": "b3281c527ecf2a6a743b37f5b9e118f492d2038e0a82e6777d292d1c5b42601a",
+      "format": "avb-vbmeta"
+    }
+  },
+  "framework_matrices": [
+    {
+      "name": "compatibility_matrix.202404.xml",
+      "level": "202404",
+      "kernel_versions": [
+        "6.6.0"
+      ],
+      "sha256": "cff153e45015e57e115c0f8fa48a777d360db356a4cca5f79c9956dd1dc265d8"
+    },
+    {
+      "name": "compatibility_matrix.202504.xml",
+      "level": "202504",
+      "kernel_versions": [
+        "6.12.0"
+      ],
+      "sha256": "a21eba5d7ccf35458f3ca2e8205ea0be5105c4206537b4c95eb32ec4ca10d3c8"
+    },
+    {
+      "name": "compatibility_matrix.202604.xml",
+      "level": "202604",
+      "kernel_versions": [
+        "6.18.0"
+      ],
+      "sha256": "2ce785af96e3a04b7b06f74c5a8461618a01dae15588d84db47119fccd67fb13"
+    },
+    {
+      "name": "compatibility_matrix.7.xml",
+      "level": "7",
+      "kernel_versions": [
+        "5.10.107",
+        "5.15.41"
+      ],
+      "sha256": "babef838fb06c27ba575670cf9065187b1d2f81a2abb723c2b20f23e21e85780"
+    },
+    {
+      "name": "compatibility_matrix.8.xml",
+      "level": "8",
+      "kernel_versions": [
+        "5.15.0",
+        "6.1.0"
+      ],
+      "sha256": "81effff226fab476871a04623d3286351c9f055e0ace004f13d3bc30fd68aba0"
+    },
+    {
+      "name": "compatibility_matrix.device.xml",
+      "level": null,
+      "kernel_versions": [],
+      "sha256": "0e337ca5df61fd2d9044c61a17ad7d2da49453002a51105197246ba1405fd9ee"
+    }
+  ],
+  "bundled_vndk_apex_versions": [
+    31,
+    32,
+    33,
+    34
+  ],
+  "stock_vendor": {
+    "fcm": 5,
+    "vndk": 30,
+    "kernel": "4.19.157-perf+",
+    "stock_system_ext_contains_vndk30": true
+  },
+  "status": "preflight-gaps-found-not-flashed",
+  "checkvintf_result": "not-run-tool-unavailable",
+  "avb_footer": {
+    "magic": "AVBf",
+    "version": "1.0",
+    "original_image_size": 3890753536,
+    "vbmeta_offset": 3952402432,
+    "vbmeta_size": 2432
+  }
+}

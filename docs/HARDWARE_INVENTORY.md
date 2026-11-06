@@ -16,7 +16,7 @@
 | Legacy kernel | Linux 4.19.x | Official source trees |
 | Research target | Android 17 ACK / GKI 6.18 | Pinned official reference; not device-ready |
 
-Exact regional SKU, RAM/storage variant, panel/touch vendor, camera module revisions, firmware build and partition layout remain to be captured from the handset.
+The linked device baseline now records the regional firmware and partition layout. Exact panel/touch hardware revisions and camera module variants still require runtime confirmation. Selected stock DTB/DTBO and NFC binding evidence are in `build/device/`; these take precedence over mismatching earlier source wiring.
 
 ## Source repositories
 
