@@ -71,3 +71,12 @@ The first pass deliberately limits changes to current I2C/class APIs and localiz
 - Physical handset/boot/partition/AVB capture: not recorded.
 - Legacy kernel build reproduction: not completed.
 - ACK/GKI 6.18 build, module load and hardware validation: not started.
+
+
+## Official GKI build and Rust-first driver policy
+
+The authoritative Android 17 GKI 6.18 build path is the official kernel repo manifest plus Kleaf/Bazel, not the earlier direct make/modules_prepare smoke test. The new workflow and pinned inputs are documented in GKI_618_BUILD.md.
+
+New driver logic should prefer Rust when the exact pinned kernel source provides suitable safe abstractions. Keep the old C driver as a behavioral and ABI reference. Do not mechanically translate it: first map hardware behavior, device-tree properties, userspace ABI, KMI imports and resource lifetimes. Where the Rust API is missing, use a small reviewed C shim rather than spreading raw FFI through the Rust driver.
+
+See RUST_DRIVER_PORTING.md for the Rust validation ladder and NQ-NCI migration inventory.
