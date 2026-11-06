@@ -90,7 +90,9 @@ Tasks:
 - [x] Add a read-only GitHub Actions workflow for pinned-source verification, tree inventory and structural path comparison.
 - [x] Complete green end-to-end Actions runs and review the generated reports.
 - [x] Add defconfig/config-fragment parsing and selected kernel module Makefile content diffs.
-- [ ] Add C/header content diffs for KGSL, display, camera, audio, memory, connectivity and power/thermal subsystems.
+- [x] Complete the first-pass driver migration matrix and subsystem dependency map from pinned source evidence.
+- [ ] Add C/header content diffs for display, camera, audio, memory, connectivity, power/thermal and peripheral subsystems.
+- [ ] Extend the config scanner to parse Makefile-injected KONA display, camera and audio fragments.
 - [ ] Complete file-level license and redistribution review for every source we may reuse.
 - [ ] Resolve the RMX2072 device-tree / vendor-blob firmware-version mismatch.
 - [ ] Verify which common device-tree branch is actually paired with each device-specific tree.
@@ -178,6 +180,8 @@ Tasks:
 
 **Progress note (2026-11-06):** The first KGSL/Adreno 650 source-analysis pass is complete. GitHub Actions Run #17 retrieved pinned RMX2072 4.19.81, SM8250-Common 4.19.325, Qualcomm Linux 7.2 KGSL reference and Android 17 GKI 6.18 files. Findings are recorded in `docs/KGSL_ADRENO_RESEARCH.md`. The pinned GKI has DRM/MSM with an Adreno 650 catalog entry, but no legacy KGSL directory/UAPI. Qualcomm's modern KGSL is a Linux 7.2 external-module reference, not a proven GKI 6.18 module. No kernel build or device test has been performed.
 
+**Driver inventory note (2026-11-06):** A first-pass subsystem matrix and dependency graph are now recorded in `docs/DRIVER_MIGRATION_MATRIX.md` and `docs/DRIVER_DEPENDENCY_MAP.md`. The expanded `docs/HARDWARE_INVENTORY.md` distinguishes RMX2072-specific manifest evidence from shared SM8250 source examples. The review identified target clues for AMS678UW01 display calibration, GT9886 touch firmware, Adreno 650 firmware, camera sensor-module candidates, SN100 NFC configuration, Goodix fingerprint firmware, VOOC charging firmware and AW8697 haptic firmware. These are source clues, not physical-device confirmation. The 4.19.325 KONA techpack build injects additional display/camera/audio config fragments; its shared Oplus touch config does not select GT9886 even though the driver exists. The F.15/F.17 vendor provenance mismatch and exact handset component IDs remain open. No driver has been built or tested on RMX2072.
+
 Tasks:
 - [ ] Compare official 4.19.81, shared 4.19.157 and community 4.19.x trees by subsystem.
 - [ ] Identify the exact device configuration and downstream patches in each tree.
@@ -188,13 +192,16 @@ Tasks:
 - [x] Confirm that pinned GKI 6.18 contains DRM/MSM A6xx support with an Adreno 650 catalog entry, but not the legacy KGSL path/UAPI.
 - [ ] Repeat KGSL UAPI layout probes with a pinned AArch64 Android LLVM toolchain.
 - [ ] Audit modern KGSL undefined symbols against the exact Android 17 GKI KMI list and exported-symbol set.
-- [ ] Identify drivers already available upstream for the exact hardware.
+- [ ] Identify drivers already available upstream for the exact hardware, including exact 6.18 file/config evidence.
 - [ ] Identify closed-source kernel modules and userspace components that cannot be rebuilt.
-- [ ] Audit ION, DMA-BUF, DMA-BUF heaps and secure-memory dependencies.
-- [ ] Classify migration risk for display, GPU, camera/ISP, memory, WLAN, audio, storage, power, sensors and NFC.
+- [ ] Audit ION, DMA-BUF, DMA-BUF heaps, secure buffers and their GPU/camera/audio clients.
+- [x] Record a first-pass dependency order for SoC, memory, graphics, IPC, multimedia and peripheral drivers.
+- [ ] Classify each subsystem with content-level API/KMI, DTS, firmware and userspace-ABI evidence.
 
 **Deliverables:**
-- Driver migration table in `docs/KERNEL_PORTING.md`
+- Driver migration matrix in `docs/DRIVER_MIGRATION_MATRIX.md`
+- Driver dependency map in `docs/DRIVER_DEPENDENCY_MAP.md`
+- Kernel porting strategy in `docs/KERNEL_PORTING.md`
 - Source comparison notes and pinned commit references
 - Proprietary dependency inventory without redistributing blobs
 
@@ -330,7 +337,7 @@ Update the checkboxes and milestone status as work is completed. Record evidence
 | M2 — Treble, Vendor and GSI assessment | Not started |
 | M3 — Android 17 GSI bring-up | Not started |
 | M4 — Own AOSP build and device integration | Not started |
-| M5 — Kernel source and driver asset analysis | In progress — KGSL/Adreno first-pass analysis completed |
+| M5 — Kernel source and driver asset analysis | In progress — KGSL research plus first-pass driver matrix/dependency map recorded |
 | M6 — Legacy kernel reproducibility and modernization | Not started |
 | M7 — ACK/GKI feasibility prototype | Not started |
 | M8 — Integrated system and maintenance | Not started |
