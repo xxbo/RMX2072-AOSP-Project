@@ -239,13 +239,13 @@ Tasks:
 
 **Goal:** Evaluate a modern ACK/GKI kernel for RMX2072 without assuming that a successful compile implies device compatibility.
 
-**Progress note (2026-11-06):** The earlier experiment/nq-nci-gki-6.18 branch produced an AArch64 NQ-NCI C compile-smoke module using modules_prepare only; MODPOST warned that Module.symvers was absent, so it is not KMI-certified. The new experiment/gki-6.18-rust-foundation branch switches the authoritative build path to the official Android kernel repo manifest and Kleaf target //common:kernel_aarch64_dist. The manifest, GKI release tag and Rust toolchain are pinned; the workflow checks CONFIG_RUST=y and is awaiting its first full-build result. No device kernel has been built for RMX2072 or boot-tested.
+**Progress note (2026-11-06):** The earlier experiment/nq-nci-gki-6.18 branch produced an AArch64 NQ-NCI C compile-smoke module using modules_prepare only; MODPOST warned that Module.symvers was absent, so it is not KMI-certified. The new experiment/gki-6.18-rust-foundation branch switches the authoritative build path to the official Android kernel repo manifest and Kleaf target //common:kernel_aarch64_dist. The manifest, GKI release tag and Rust toolchain are pinned; workflow run #5 is currently executing the full Kleaf build after the first Repo CLI option mismatch was corrected. No full-build success has been claimed yet, and no device kernel has been built for RMX2072 or boot-tested.
 
 Tasks:
 - [x] Select Android 17 GKI 6.18 as the research baseline using the official support matrix; retain the caveat that it is not yet a device-ready target.
 - [x] Pin the official kernel repo manifest, GKI source tag and Kleaf/Rust toolchain source.
 - [x] Add a GitHub Actions workflow for the official Kleaf ARM64 distribution target.
-- [ ] Complete the first full GKI build and inspect its dist/KMI artifacts.
+- [ ] Complete workflow run #5, then inspect its full GKI dist/KMI artifacts.
 - [x] Stage the first NQ-NCI external-module compile experiment against the pinned 6.18 source.
 - [x] Produce the first AArch64 NQ-NCI compile-smoke module against the pinned GKI 6.18 source.
 - [ ] Audit module imports against the full-build GKI KMI/export list and protected-symbol policy.
