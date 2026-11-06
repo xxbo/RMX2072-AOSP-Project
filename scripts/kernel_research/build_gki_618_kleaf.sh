@@ -11,19 +11,31 @@ BAZEL_ROOT="${RUNNER_TEMP:-/tmp}/bazel-output-root"
 
 GKI_REF="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["ref"] for s in d["sources"] if s["id"]=="android17-gki-618"))' "$LOCK_FILE")"
 GKI_SHA="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["commit"] for s in d["sources"] if s["id"]=="android17-gki-618"))' "$LOCK_FILE")"
+MIRROR_BRANCH="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["mirror_branch"] for s in d["sources"] if s["id"]=="android17-gki-618"))' "$LOCK_FILE")"
 MANIFEST_REF="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["ref"] for s in d["sources"] if s["id"]=="android-kernel-manifest"))' "$LOCK_FILE")"
 MANIFEST_SHA="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["commit"] for s in d["sources"] if s["id"]=="android-kernel-manifest"))' "$LOCK_FILE")"
+GKI_MIRROR_COMMIT="${GKI_MIRROR_COMMIT:?GKI_MIRROR_COMMIT must be supplied by the mirror-source job}"
 
 mkdir -p "$WORKSPACE" "$ARTIFACT_DIR" "$DIST_DIR"
 
 {
   echo "BUILD_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "GKI_REF=$GKI_REF"
-  echo "GKI_SHA=$GKI_SHA"
+  echo "GKI_UPSTREAM_SHA=$GKI_SHA"
+  echo "GKI_MIRROR_BRANCH=$MIRROR_BRANCH"
+  echo "GKI_MIRROR_COMMIT=$GKI_MIRROR_COMMIT"
   echo "MANIFEST_REF=$MANIFEST_REF"
   echo "MANIFEST_SHA=$MANIFEST_SHA"
   echo "HOST=$(uname -a)"
+  echo "CPU_COUNT=$(nproc)"
   echo
+  echo "=== CPU ==="
+  lscpu | grep -E '^(Architecture|CPU\\(s\\)|Model name|Thread\\(s\\) per core|Core\\(s\\) per socket|Socket\\(s\\)):' || true
+  echo
+  echo "=== MEMORY ==="
+  free -h
+  echo
+  echo "=== STORAGE ==="
   df -h
 } | tee "$ARTIFACT_DIR/build-metadata.txt"
 
@@ -40,11 +52,26 @@ if [[ "$ACTUAL_MANIFEST_SHA" != "$MANIFEST_SHA" ]]; then
   echo "Kernel manifest SHA mismatch: expected $MANIFEST_SHA, got $ACTUAL_MANIFEST_SHA" >&2
   exit 1
 fi
-
 echo "Verified manifest: $ACTUAL_MANIFEST_SHA" | tee -a "$ARTIFACT_DIR/build-metadata.txt"
 
-# The ddk groups contain Kleaf, the pinned Clang/Rust toolchains, build tools
-# and bzlmod dependencies. The default group contains common/.
+# Replace only kernel/common with the repository-owned pinned source snapshot.
+# Kleaf, toolchains, build utilities and Bazel dependencies remain pinned by
+# Google's official kernel/manifest repository.
+mkdir -p .repo/local_manifests
+cat > .repo/local_manifests/99-rmx2072-gki-mirror.xml <<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="rmx2072-github" fetch="https://github.com/xxbo" />
+  <remove-project path="common" />
+  <project
+    name="RMX2072-AOSP-Project"
+    path="common"
+    remote="rmx2072-github"
+    revision="$MIRROR_BRANCH"
+    groups="default,ddk,ddk-external" />
+</manifest>
+XML
+
 repo sync -c -j4 --fail-fast --groups=default,ddk,ddk-external
 
 if [[ ! -d common/.git || ! -x tools/bazel ]]; then
@@ -52,16 +79,27 @@ if [[ ! -d common/.git || ! -x tools/bazel ]]; then
   exit 1
 fi
 
-git -C common fetch --depth=1 aosp \
-  "refs/tags/$GKI_REF:refs/tags/$GKI_REF"
-git -C common checkout --detach "refs/tags/$GKI_REF"
-ACTUAL_GKI_SHA="$(git -C common rev-parse HEAD)"
-if [[ "$ACTUAL_GKI_SHA" != "$GKI_SHA" ]]; then
-  echo "Pinned GKI SHA mismatch: expected $GKI_SHA, got $ACTUAL_GKI_SHA" >&2
+ACTUAL_MIRROR_COMMIT="$(git -C common rev-parse HEAD)"
+if [[ "$ACTUAL_MIRROR_COMMIT" != "$GKI_MIRROR_COMMIT" ]]; then
+  echo "GKI mirror commit mismatch: expected $GKI_MIRROR_COMMIT, got $ACTUAL_MIRROR_COMMIT" >&2
   exit 1
 fi
 
-echo "Verified GKI source: $ACTUAL_GKI_SHA" | tee -a "$ARTIFACT_DIR/build-metadata.txt"
+MIRRORED_UPSTREAM_SHA="$(git -C common log -1 --format=%B | sed -n 's/^Upstream-Commit: //p' | head -n 1)"
+if [[ "$MIRRORED_UPSTREAM_SHA" != "$GKI_SHA" ]]; then
+  echo "GKI mirror upstream SHA mismatch: expected $GKI_SHA, got $MIRRORED_UPSTREAM_SHA" >&2
+  exit 1
+fi
+
+if ! grep -q '^VERSION = 6$' common/Makefile || ! grep -q '^PATCHLEVEL = 18$' common/Makefile; then
+  echo "Repository-owned source snapshot is not Linux 6.18" >&2
+  exit 1
+fi
+
+{
+  echo "Verified GKI mirror commit: $ACTUAL_MIRROR_COMMIT"
+  echo "Verified upstream GKI source: $MIRRORED_UPSTREAM_SHA"
+} | tee -a "$ARTIFACT_DIR/build-metadata.txt"
 
 if ! grep -q '^CONFIG_RUST=y$' common/arch/arm64/configs/gki_defconfig; then
   echo "Pinned GKI defconfig does not enable CONFIG_RUST=y" >&2
@@ -80,7 +118,8 @@ find prebuilts/rust-toolchain/linux-x86 -maxdepth 4 \
   | tee "$ARTIFACT_DIR/rust-toolchain-files.txt"
 
 repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
-git -C common rev-parse HEAD > "$ARTIFACT_DIR/gki-source-sha.txt"
+git -C common rev-parse HEAD > "$ARTIFACT_DIR/gki-mirror-commit.txt"
+printf '%s\n' "$GKI_SHA" > "$ARTIFACT_DIR/gki-upstream-source-sha.txt"
 git -C build/kernel rev-parse HEAD > "$ARTIFACT_DIR/kleaf-source-sha.txt"
 
 tools/bazel --output_user_root="$BAZEL_ROOT" run \
@@ -119,4 +158,4 @@ find "$DIST_DIR" -type f -print0 \
   | xargs -0 -r sha256sum \
   > "$ARTIFACT_DIR/DIST_SHA256SUMS"
 
-echo "Full Kleaf GKI 6.18 ARM64 distribution build completed."
+echo "Full Kleaf GKI 6.18 ARM64 distribution build completed from repository-owned kernel source."
