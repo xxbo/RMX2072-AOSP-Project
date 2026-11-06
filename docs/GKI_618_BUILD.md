@@ -10,7 +10,7 @@ The official ARM64 distribution target is:
 tools/bazel run //common:kernel_aarch64_dist -- --destdir=dist
 ~~~
 
-The new GitHub Actions workflow reproduces this path on ubuntu-24.04, using the pinned kernel/manifest and the pinned GKI release tag recorded in sources/SOURCE_LOCK.json.
+The GitHub Actions workflow reproduces this path on ubuntu-24.04, using the pinned kernel/manifest and the pinned GKI release tag recorded in sources/SOURCE_LOCK.json. Run #5 completed successfully on 2026-11-06. The build used the official Kleaf distribution target, not a modules_prepare-only smoke build.
 
 ## Pinned inputs
 
@@ -22,7 +22,7 @@ The new GitHub Actions workflow reproduces this path on ubuntu-24.04, using the 
 - Build system: Kleaf through tools/bazel
 - Rust: CONFIG_RUST=y in the GKI arm64 defconfig; toolchain is synced from the same manifest
 
-Each run archives the resolved repo manifest, kernel and Kleaf source SHAs, build log, Rust configuration evidence, distribution files and SHA-256 checksums.
+Each run archives the resolved repo manifest, kernel and Kleaf source SHAs, build log, Rust configuration evidence, distribution files and SHA-256 checksums. Run #5 completed 1,378 Bazel actions; Bazel reported 1,242.471 seconds elapsed and a successful build. The uploaded artifact contained 158 files and was approximately 688 MB.
 
 ## Why the manifest matters
 
@@ -32,11 +32,11 @@ The manifest synchronizes more than kernel/common. It also pins the Kleaf build 
 
 The workflow uploads the complete kernel_aarch64_dist output under the artifact rmx2072-gki-618-kernel-N. It also records vmlinux, Module.symvers and module files when provided by the distribution target.
 
-A successful distribution build proves that the generic Android 17 GKI 6.18 ARM64 kernel can be built from the pinned source/toolchain. It does not prove RMX2072 board compatibility, device-tree correctness, vendor module compatibility, bootability or hardware operation.
+Run #5 produced `Image` (43.5 MB), `Image.gz` (17.7 MB), `Image.lz4` (20.8 MB), `vmlinux` (224.4 MB), `kernel_aarch64_Module.symvers`, `system_dlkm.erofs.img`, `system_dlkm.ext4.img` and the in-tree kernel modules. This proves the generic Android 17 GKI 6.18 ARM64 distribution can be built from the pinned source/toolchain. It does not prove RMX2072 board compatibility, device-tree correctness, vendor module compatibility, bootability or hardware operation.
 
 ## Next stages
 
-1. Complete the full Kleaf build.
+1. Mirror the exact pinned `kernel/common` source snapshot into a repository branch and build from that mirror.
 2. Inspect the actual GKI config and KMI artifacts.
 3. Build a minimal Rust module using the exact kernel Rust toolchain.
 4. Add RMX2072 device-specific configuration and platform support.
