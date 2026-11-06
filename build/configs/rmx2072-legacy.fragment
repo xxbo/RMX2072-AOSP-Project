@@ -1,0 +1,6 @@
+# RMX2072 F.20 running config evidence: DEVICE_BASELINE_2026-11-06.md.
+# Adds the missing GT9886 selection to the upstream shared config.
+# This fragment is a build candidate, not a complete device configuration.
+CONFIG_TOUCHPANEL_OPLUS=y
+CONFIG_TOUCHPANEL_GOODIX=y
+CONFIG_TOUCHPANEL_GOODIX_GT9886=y

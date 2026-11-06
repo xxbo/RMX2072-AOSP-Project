@@ -1,0 +1,52 @@
+name: Legacy Kernel Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Configuration validation or full kernel/modules build
+        required: true
+        default: config
+        type: choice
+        options:
+          - config
+          - kernel
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legacy-kernel-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bc bison flex build-essential libssl-dev libelf-dev libncurses-dev libtinfo5 binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi gcc-arm-linux-gnueabi device-tree-compiler cpio lz4
+          df -h
+          free -h
+      - name: Build pinned RMX2072 candidate
+        run: |
+          python scripts/build/legacy_kernel.py \
+            --stage '${{ inputs.stage }}' \
+            --work "$RUNNER_TEMP/rmx2072-kernel" \
+            --artifacts reports/legacy-kernel --jobs 4
+      - name: Upload build evidence and candidate outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legacy-kernel-${{ inputs.stage }}-${{ github.run_number }}
+          path: reports/legacy-kernel/
+          if-no-files-found: error
+          retention-days: 14

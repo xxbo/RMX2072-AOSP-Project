@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "profile": "rmx2072-legacy-candidate",
+  "kernel_source_id": "sm8250-common-current-kernel",
+  "defconfig": "vendor/kona-perf_defconfig",
+  "source_fragments": ["vendor/oplus.config"],
+  "device_fragment": "build/configs/rmx2072-legacy.fragment",
+  "clang": {
+    "repository": "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86",
+    "commit": "3f17560d9bd078537f29294c2bcf80b591821a09",
+    "directory": "clang-r416183b",
+    "provenance": "The selected kernel build.config.common names clang-r416183b."
+  },
+  "required_config": {
+    "CONFIG_ARCH_KONA": "y",
+    "CONFIG_TOUCHPANEL_GOODIX_GT9886": "y",
+    "CONFIG_QCOM_KGSL": "y",
+    "CONFIG_OPLUS_SM8250_CHARGER": "y",
+    "CONFIG_ION": "y"
+  },
+  "status": "unbuilt-candidate-not-flashable"
+}

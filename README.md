@@ -4,7 +4,9 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Planning / source inventory.** No device image has been built or validated by this project yet. All compatibility claims are provisional until tested on the target hardware.
+> **Project status: Device unlocked; stock baseline captured; build experiments beginning.** Stock F.20 Android boots after unlock and original ABL/OCDT restoration. No project-built kernel or Android 17 / 6.18 image has been boot-tested yet.
+
+Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
 ## Goals
 
@@ -90,8 +92,8 @@ These are upstream references, not copies of their contents:
 
 - [x] GitHub repository created.
 - [x] First-pass driver migration matrix and dependency map documented from pinned source evidence.
-- [ ] Confirm exact device model, region and firmware build from the handset.
-- [ ] Capture partition map, boot image metadata and AVB status.
+- [x] Confirm exact device model and F.20 firmware build from the handset; stock boot after unlock verified.
+- [x] Capture partition map, boot image metadata and AVB status.
 - [ ] Archive and hash the stock firmware and recovery images locally.
 - [ ] Complete source and proprietary-component inventory.
 - [ ] Reproduce an existing community ROM/device-tree build.
