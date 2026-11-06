@@ -819,7 +819,7 @@ static int nfc_close(struct inode *inode, struct file *filp)
  *
  * Return: -ENOIOCTLCMD if arg is not supported, 0 in any other case
  */
-int nfc_ioctl_power_states(struct file *filp, unsigned long arg)
+static int nfc_ioctl_power_states(struct file *filp, unsigned long arg)
 {
 	int r = 0;
 	struct nqx_dev *nqx_dev = filp->private_data;
@@ -975,7 +975,7 @@ static long nfc_compat_ioctl(struct file *pfile, unsigned int cmd,
  *
  * Return: the value of variable core_reset_ntf
  */
-int nfc_ioctl_core_reset_ntf(struct file *filp)
+static int nfc_ioctl_core_reset_ntf(struct file *filp)
 {
 	struct nqx_dev *nqx_dev = filp->private_data;
 
@@ -991,7 +991,7 @@ int nfc_ioctl_core_reset_ntf(struct file *filp)
  *
  * Check the NQ Chipset and firmware version details
  */
-unsigned int nfc_ioctl_nfcc_info(struct file *filp, unsigned long arg)
+static unsigned int nfc_ioctl_nfcc_info(struct file *filp, unsigned long arg)
 {
 	unsigned int r = 0;
 	struct nqx_dev *nqx_dev = filp->private_data;
@@ -1048,7 +1048,7 @@ static long nfc_ioctl(struct file *pfile, unsigned int cmd,
 
 static const struct file_operations nfc_dev_fops = {
 	.owner = THIS_MODULE,
-	.llseek = no_llseek,
+	.llseek = noop_llseek,
 	.read  = nfc_read,
 	.write = nfc_write,
 	.open = nfc_open,
