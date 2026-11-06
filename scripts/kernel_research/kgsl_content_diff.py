@@ -313,10 +313,9 @@ def main():
                      for p in MODERN_EXTRA_FILES]
 
     gki = fetch_source_files(lock, "android17-gki-618", GKI_FILES, "gitiles")
-    gpu_dir = gitiles_json(gki["commit"], "drivers/gpu")
-    gpu_names = {x.get("name") for x in (gpu_dir or {}).get("entries", [])}
+    drm_msm_dir = gitiles_json(gki["commit"], "drivers/gpu/drm/msm")
     kgsl_dir = gitiles_json(gki["commit"], "drivers/gpu/msm")
-    gki["drm_msm_directory_present"] = "drm" in gpu_names
+    gki["drm_msm_directory_present"] = drm_msm_dir is not None
     gki["kgsl_directory_present"] = kgsl_dir is not None
     gki["kgsl_uapi_present"] = gitiles_raw(gki["commit"], "include/uapi/linux/msm_kgsl.h") is not None
     gki["drm_uapi_present"] = gki["files"].get("include/uapi/drm/msm_drm.h", {}).get("text") is not None
