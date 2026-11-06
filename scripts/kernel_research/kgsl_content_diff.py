@@ -75,6 +75,8 @@ GKI_FILES = [
     "android/abi_gki_aarch64.stg",
     "include/linux/android_vendor.h",
     "init/Kconfig.gki",
+    "init/Kconfig",
+    "drivers/android/Kconfig",
 ]
 
 MODERN_PATHS = {
@@ -591,7 +593,13 @@ def main():
         line.strip() for line in abi_stg.splitlines()
         if "shmem_get_folio" in line
     ]
+    android_dir = gitiles_json(gki["commit"], "android")
+    android_abi_paths = sorted(
+        entry.get("name", "") for entry in (android_dir or {}).get("entries", [])
+        if "abi" in entry.get("name", "").lower() or "symbol" in entry.get("name", "").lower()
+    )
     android_shmem_hook_evidence = {
+        "android_directory_abi_related_entries": android_abi_paths,
         "hook_declared_in_gki_mm_hooks": bool(hook_match),
         "hook_tp_proto": hook_proto,
         "hook_exported_by_gki_vendor_hooks": hook_exported,
@@ -600,7 +608,12 @@ def main():
         "hook_symbol_lines_in_abi_stg": stg_hook_symbols,
         "shmem_inode_info_android_vendor_data_slot_present": "ANDROID_VENDOR_DATA(1)" in shmem_header,
         "android_vendor_data_macro_defined": "ANDROID_VENDOR_DATA" in android_vendor_header,
-        "android_vendor_oem_data_config_default_y": bool(re.search(r"config ANDROID_VENDOR_OEM_DATA[\\s\\S]{0,300}default y", gki_kconfig)),
+        "android_vendor_data_macro_definition_lines": [
+            line.strip() for line in android_vendor_header.splitlines()
+            if "ANDROID_VENDOR_DATA" in line
+        ],
+        "android_vendor_oem_data_config_default_y": bool(re.search(
+            r"config ANDROID_VENDOR_OEM_DATA[\s\S]{0,1000}default y", gki_kconfig)),
         "shmem_inode_info_android_vendor_data1_literal_present": "android_vendor_data1" in shmem_header,
         "modern_kgsl_shmem_callbacks": kgsl_callbacks,
         "modern_kgsl_uses_android_shmem_hook": "register_trace_android_rvh_shmem_get_folio" in modern_sharedmem,
