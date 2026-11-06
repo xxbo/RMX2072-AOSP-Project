@@ -1,0 +1,72 @@
+{
+  "evidence": "F.20 stock DTBO entry 17, selected by live ro.boot.dtbo_idx; /dev/nq-nci exists with nfc:nfc ownership and mode 0660",
+  "entry": {
+    "index": 17,
+    "offset": 6420349,
+    "id": 0,
+    "rev": 0,
+    "custom": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "size_bytes": 359110,
+    "sha256": "03f920608f4fbf46aaface2b2641711b3194081fe4a588b42232b7e60e07db9d",
+    "root": {
+      "model": [
+        "Qualcomm Technologies, Inc. kona MTP"
+      ],
+      "compatible": [
+        "qcom,kona-mtp",
+        "qcom,kona",
+        "qcom,mtp"
+      ],
+      "qcom,board-id": [
+        65544,
+        0
+      ]
+    },
+    "matching_nodes": [
+      {
+        "path": "/fragment@60/__overlay__/nq@28",
+        "properties": {
+          "compatible": [
+            "qcom,nq-nci"
+          ],
+          "reg": [
+            40
+          ],
+          "qcom,nq-irq": [
+            4294967295,
+            111,
+            0
+          ],
+          "qcom,nq-ven": [
+            4294967295,
+            83,
+            0
+          ],
+          "qcom,nq-firm": [
+            4294967295,
+            110,
+            0
+          ],
+          "qcom,nq-clkreq": [
+            4294967295,
+            7,
+            0
+          ],
+          "interrupt-parent": [
+            4294967295
+          ],
+          "interrupts": [
+            111,
+            0
+          ]
+        }
+      }
+    ]
+  },
+  "qualification": "Overlay phandles are unresolved 0xffffffff fixup placeholders. GPIO second cells are not validated Linux global GPIO numbers. Controller silicon ID and RF operation remain untested."
+}

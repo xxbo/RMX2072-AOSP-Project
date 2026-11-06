@@ -71,7 +71,7 @@ The driver recognizes SN100_A (0xa3) and SN100_B (0xa4) and uses that detection 
 
 ## Hardware control contract
 
-The official RMX2072 20607 DTS maps the controller to I2C address 0x28 and the following signals:
+The earlier official-source 20607 DTS inspection maps I2C address 0x28 and the signals below. **These source values differ from the selected F.20 stock overlay and must not be used as the live handset wiring.**
 
 | Signal | GPIO | Role |
 |---|---:|---|
@@ -81,6 +81,12 @@ The official RMX2072 20607 DTS maps the controller to I2C address 0x28 and the f
 | CLKREQ | 31 | Clock request |
 
 The 4.19.325 implementation also recognizes optional eSE power GPIO and optional VDDIO regulator properties. The official RMX2072 DTS node inspected so far does not declare those optional properties. Preserve the optional behavior, but do not invent GPIO or regulator mappings.
+
+## Selected F.20 overlay evidence
+
+On 2026-11-06, the live phone reported `ro.boot.dtbo_idx=17`. Parsing that entry from the locally backed-up original `dtbo.img` found `/fragment@60/__overlay__/nq@28`, `compatible="qcom,nq-nci"`, and `reg=0x28`. Its GPIO specifier second cells are IRQ=111, VEN=83, FIRM=110, CLKREQ=7. The first cells are unresolved `0xffffffff` overlay fixup placeholders; resolve the provider and its bindings before treating these as Linux GPIO numbers or generating a 6.18 DTS. These differ from the earlier source table above.
+
+The stock system exposes `/dev/nq-nci` as mode 0660 with nfc:nfc ownership. This confirms the selected NQ-NCI userspace device and strengthens the binding evidence; it does not identify exact silicon or demonstrate RF functionality. See `build/device/stock-nfc-binding.json`. No NFC ioctl, GPIO change or module load was performed.
 
 ## Required ABI regression checks
 

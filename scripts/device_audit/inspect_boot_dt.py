@@ -11,7 +11,7 @@ def u32(data, offset):
     return struct.unpack_from('>I', data, offset)[0]
 
 
-def fdt(data):
+def fdt(data, compatible=()):
     magic, size, off_struct, off_strings, _, _, _, _, len_strings, len_struct = struct.unpack_from('>10I', data)
     if magic != 0xd00dfeed or size > len(data):
         raise ValueError('invalid FDT header')
@@ -19,14 +19,19 @@ def fdt(data):
         raise ValueError('FDT blocks exceed declared size')
     strings = data[off_strings:off_strings+len_strings]
     pos, end, stack, props = off_struct, off_struct+len_struct, [], {}
+    node_props, matches = [], []
     while pos < end:
         token = u32(data, pos)
         pos += 4
         if token == 1:
             stop = data.index(b'\0', pos, end)
             stack.append(data[pos:stop].decode('ascii', errors='replace'))
+            node_props.append({})
             pos = (stop+4) & ~3
         elif token == 2:
+            node = node_props.pop()
+            if compatible and set(node.get('compatible', [])).intersection(compatible):
+                matches.append(dict(path='/'.join(stack), properties=node))
             stack.pop()
         elif token == 3:
             length, nameoff = struct.unpack_from('>2I', data, pos)
@@ -35,8 +40,14 @@ def fdt(data):
                 raise ValueError('truncated FDT property')
             stop = strings.index(b'\0', nameoff)
             name = strings[nameoff:stop].decode('ascii')
+            value = data[pos:pos+length]
+            if compatible:
+                if name in ('compatible', 'status', 'qcom,clk-src'):
+                    node_props[-1][name] = value.rstrip(b'\0').decode('ascii', errors='replace').split('\0')
+                elif name in ('reg', 'interrupts', 'interrupt-parent') or name.startswith('qcom,nq-'):
+                    if length % 4 == 0:
+                        node_props[-1][name] = list(struct.unpack('>'+str(length//4)+'I', value))
             if len(stack) == 1 and name in ('model', 'compatible', 'qcom,msm-id', 'qcom,board-id', 'qcom,pmic-id'):
-                value = data[pos:pos+length]
                 if name in ('model', 'compatible'):
                     props[name] = value.rstrip(b'\0').decode('ascii', errors='replace').split('\0')
                 elif length % 4 == 0:
@@ -45,13 +56,16 @@ def fdt(data):
         elif token == 4:
             pass
         elif token == 9:
-            return dict(size_bytes=size, sha256=hashlib.sha256(data[:size]).hexdigest(), root=props)
+            result = dict(size_bytes=size, sha256=hashlib.sha256(data[:size]).hexdigest(), root=props)
+            if compatible:
+                result['matching_nodes'] = matches
+            return result
         else:
             raise ValueError('unknown FDT token')
     raise ValueError('missing FDT end token')
 
 
-def inspect(path):
+def inspect(path, compatible=()):
     data = path.read_bytes()
     result = dict(file=path.name, size_bytes=len(data), sha256=hashlib.sha256(data).hexdigest(), trees=[])
     if data[:8] == b'ANDROID!':
@@ -73,7 +87,7 @@ def inspect(path):
                 if not any(data[pos:end]):
                     break
                 raise ValueError('unexpected data between concatenated DTBs')
-            entry = fdt(data[pos:end])
+            entry = fdt(data[pos:end], compatible)
             result['trees'].append(dict(index=len(result['trees']), offset=pos, **entry))
             pos += entry['size_bytes']
     elif u32(data, 0) == 0xd7b7ab1e:
@@ -85,7 +99,7 @@ def inspect(path):
             size, offset, ident, rev, *custom = struct.unpack_from('>8I', data, entries+i*entry_size)
             if offset+size > total:
                 raise ValueError('DTBO entry exceeds table')
-            entry = fdt(data[offset:offset+size])
+            entry = fdt(data[offset:offset+size], compatible)
             result['trees'].append(dict(index=i, offset=offset, id=ident, rev=rev, custom=custom, **entry))
     else:
         raise ValueError('unsupported container')
@@ -96,8 +110,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('images', nargs='+', type=pathlib.Path)
     p.add_argument('--out', required=True, type=pathlib.Path)
+    p.add_argument('--compatible', action='append', default=[], help='Include matching nodes and selected binding properties')
     args = p.parse_args()
-    report = [inspect(path) for path in args.images]
+    report = [inspect(path, args.compatible) for path in args.images]
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     for item in report:
