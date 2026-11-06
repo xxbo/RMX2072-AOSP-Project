@@ -26,3 +26,7 @@ backups/
 *.pfx
 *.keystore
 *.jks
+
+# Python helper caches
+__pycache__/
+*.pyc

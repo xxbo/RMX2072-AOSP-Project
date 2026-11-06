@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// RMX2072 F.20 / project 20607 hardware 50: USB diagnostic bring-up candidate.
+// This describes the captured 8 GiB handset; not a supported generic MTP board.
+/dts-v1/;
+#include "sm8250.dtsi"
+
+/ {
+    model = "realme X50 Pro Player RMX2072 USB diagnostic";
+    compatible = "realme,rmx2072", "qcom,sm8250";
+    qcom,msm-id = <356 0x20001>;
+    qcom,board-id = <0 0>;
+    aliases { serial0 = &uart12; };
+    chosen { stdout-path = "serial0:115200n8"; };
+
+    memory@80000000 {
+        // From live bootloader-populated FDT, not a guessed RAM size.
+        reg = <0x0 0x80000000 0x0 0x3bb00000 0x1 0x80000000 0x1 0x0 0x0 0xc0000000 0x0 0xc0000000>;
+    };
+
+    reserved-memory {
+        bootloader-log@9fe00000 { reg = <0 0x9fe00000 0 0x200000>; no-map; };
+        splash@9c000000 { reg = <0 0x9c000000 0 0x2300000>; no-map; };
+        dfps@9e300000 { reg = <0 0x9e300000 0 0x100000>; no-map; };
+        ramoops@b0000000 {
+            compatible = "ramoops";
+            reg = <0 0xb0000000 0 0x400000>;
+            record-size = <0x40000>;
+            console-size = <0x40000>;
+            ftrace-size = <0x40000>;
+            pmsg-size = <0x200000>;
+            ecc-size = <0>;
+        };
+    };
+};
+
+// Preserve the occupied firmware ranges while retaining upstream labels.
+&removed_mem { reg = <0x0 0x80b00000 0x0 0xcd00000>; };
+&camera_mem { reg = <0x0 0x8dc00000 0x0 0x500000>; };
+&wlan_mem { reg = <0x0 0x8e100000 0x0 0x100000>; };
+&ipa_fw_mem { reg = <0x0 0x8e200000 0x0 0x10000>; };
+&ipa_gsi_mem { reg = <0x0 0x8e210000 0x0 0xa000>; };
+&gpu_mem { reg = <0x0 0x8e21a000 0x0 0x2000>; };
+&npu_mem { reg = <0x0 0x8e300000 0x0 0x500000>; };
+&video_mem { reg = <0x0 0x8e800000 0x0 0x500000>; };
+&cvp_mem { reg = <0x0 0x8ed00000 0x0 0x500000>; };
+&cdsp_mem { reg = <0x0 0x8f200000 0x0 0x1400000>; };
+&slpi_mem { reg = <0x0 0x90600000 0x0 0x1500000>; };
+&adsp_mem { reg = <0x0 0x91b00000 0x0 0x2500000>; };
+&spss_mem { reg = <0x0 0x94000000 0x0 0x100000>; };
+&cdsp_secure_heap { reg = <0x0 0x94100000 0x0 0x4600000>; };
+
+&apps_rsc {
+    regulators {
+        compatible = "qcom,pm8150-rpmh-regulators";
+        qcom,pmic-id = "a";
+        // USB-HS PHY rails observed in the running stock FDT.
+        vreg_l2a: ldo2 {
+            regulator-name = "pm8150_l2";
+            regulator-min-microvolt = <3072000>;
+            regulator-max-microvolt = <3072000>;
+        };
+        vreg_l5a: ldo5 {
+            regulator-name = "pm8150_l5";
+            regulator-min-microvolt = <880000>;
+            regulator-max-microvolt = <880000>;
+        };
+        vreg_l12a: ldo12 {
+            regulator-name = "pm8150_l12";
+            regulator-min-microvolt = <1800000>;
+            regulator-max-microvolt = <1800000>;
+        };
+    };
+};
+
+&qupv3_id_1 { status = "okay"; };
+&uart12 { status = "okay"; };
+
+&usb_1 { status = "okay"; };
+&usb_1_dwc3 {
+    dr_mode = "peripheral";
+    maximum-speed = "high-speed";
+    phys = <&usb_1_hsphy>;
+    phy-names = "usb2-phy";
+};
+&usb_1_hsphy {
+    status = "okay";
+    vdda-pll-supply = <&vreg_l5a>;
+    vdda18-supply = <&vreg_l12a>;
+    vdda33-supply = <&vreg_l2a>;
+};
+// Storage and remote processors remain disabled in this diagnostic DT.
+// Its initramfs must not mount or write handset filesystems.
