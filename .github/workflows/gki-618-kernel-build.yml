@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: gki-618-rust-foundation-${{ github.ref }}
+  group: gki-618-rust-foundation-v2-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -27,12 +27,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-
-      - name: Free runner disk space
-        run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/powershell
-          sudo rm -rf /usr/local/lib/android/sdk
-          df -h
 
       - name: Install host build dependencies
         run: |
