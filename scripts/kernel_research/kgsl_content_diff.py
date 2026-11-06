@@ -303,7 +303,7 @@ def probe_uapi_layout(source_id, header_text, compiler, workdir):
         "int main(void) {",
     ]
     for name, block in sorted(structs.items()):
-        lines.append('printf("S|%s|%%zu\\\\n", sizeof(struct %s));' % (name, name))
+        lines.append('printf("S|%s|%%zu\\n", sizeof(struct %s));' % (name, name))
         for field in parse_struct_field_names(block):
             lines.append('printf("F|%s|%s|%%zu\\\\n", offsetof(struct %s, %s));' %
                          (name, field, name, field))
