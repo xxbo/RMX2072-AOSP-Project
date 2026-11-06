@@ -1,0 +1,9 @@
+{
+  "upstream": "https://github.com/topjohnwu/Magisk/releases/tag/v31.1",
+  "apk_url": "https://github.com/topjohnwu/Magisk/releases/download/v31.1/Magisk-v31.1.apk",
+  "apk_sha256": "89cefac0a318afa39fb3880c45c87b036c05bc1ebf02a7a715b7f8d7c26ac6e7",
+  "busybox_member": "lib/arm64-v8a/libbusybox.so",
+  "busybox_sha256": "4d60ab3f5a59ebb2ca863f2f514e6924401b581e9b64f602665c008177626651",
+  "source": "https://github.com/topjohnwu/Magisk/tree/v31.1",
+  "usage": "Static BusyBox for local diagnostic initramfs; no Magisk daemon in the 6.18 diagnostic ramdisk"
+}

@@ -1,0 +1,49 @@
+#!/bin/busybox sh
+# SPDX-License-Identifier: GPL-2.0-only
+export PATH=/bin:/sbin
+/bin/busybox --install -s /bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev || mount -t tmpfs tmpfs /dev
+mkdir -p /dev/pts /run /sys/kernel/config
+[ -c /dev/console ] || mknod /dev/console c 5 1
+[ -c /dev/null ] || mknod /dev/null c 1 3
+[ -c /dev/kmsg ] || mknod /dev/kmsg c 1 11
+mount -t devpts devpts /dev/pts
+echo '<6>RMX2072 diagnostic initramfs reached PID 1' > /dev/kmsg
+uname -a > /run/kernel.txt
+dmesg > /run/boot-dmesg.txt
+# No block filesystem is mounted. No firmware is written or updated.
+mount -t configfs configfs /sys/kernel/config
+mkdir -p /sys/kernel/config/usb_gadget/rmxdiag
+cd /sys/kernel/config/usb_gadget/rmxdiag || exec sh
+echo 0x1d6b > idVendor
+echo 0x0104 > idProduct
+echo 0x0200 > bcdUSB
+mkdir -p strings/0x409 configs/c.1/strings/0x409 functions/acm.usb0
+echo RMX2072-DIAG > strings/0x409/serialnumber
+echo 'RMX2072 Project' > strings/0x409/manufacturer
+echo 'Linux 6.18 USB diagnostic' > strings/0x409/product
+echo 'Diagnostic serial console' > configs/c.1/strings/0x409/configuration
+echo 100 > configs/c.1/MaxPower
+ln -s functions/acm.usb0 configs/c.1/acm.usb0
+count=0
+while [ -z "$(ls /sys/class/udc 2>/dev/null)" ] && [ "$count" -lt 60 ]; do
+    sleep 1
+    count=$((count + 1))
+done
+controller="$(ls /sys/class/udc 2>/dev/null | head -n 1)"
+if [ -n "$controller" ]; then
+    echo "$controller" > UDC
+    if [ ! -c /dev/ttyGS0 ] && [ -r /sys/class/tty/ttyGS0/dev ]; then
+        device="$(cat /sys/class/tty/ttyGS0/dev)"
+        mknod /dev/ttyGS0 c "${device%:*}" "${device#*:}"
+    fi
+    echo '<6>RMX2072 USB diagnostic ACM console configured' > /dev/kmsg
+    while :; do
+        setsid sh -c 'exec < /dev/ttyGS0 > /dev/ttyGS0 2>&1; echo; echo RMX2072-DIAG; uname -a; echo "RAM-only diagnostic: no handset filesystems mounted"; exec sh -i'
+        sleep 1
+    done
+fi
+echo '<3>RMX2072 diagnostic: no USB controller registered; inspect ramoops after recovery' > /dev/kmsg
+while :; do sleep 10; done
