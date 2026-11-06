@@ -78,6 +78,8 @@ Tasks:
 
 **Progress note (2026-11-06):** Initial source pins are recorded in sources/SOURCE_LOCK.json and sources/SOURCE_MANIFEST.md. The inventory is source-reviewed only; no kernel has been built or boot-tested by this project. The 4.19.325 SM8250-Common tree is the newest inspected community baseline, while official Android 17 GKI 6.18 is pinned separately as the migration target.
 
+**Automation note (2026-11-06):** A read-only GitHub Actions source-research workflow and Python scanner have been committed. The first run exposed API adapter defects; the scanner has been patched and the next run is being validated. No successful automated inventory is claimed until the job finishes green.
+
 Tasks:
 - [x] Pin the official Android Q RMX2072 kernel source at an immutable commit.
 - [x] Pin the shared Android S 4.19 kernel source and record its legacy 4.19 build configuration.
@@ -85,6 +87,9 @@ Tasks:
 - [x] Pin RMX2072-specific device-tree candidates and the current SM8250 common device-tree reference.
 - [x] Pin an RMX2072-specific vendor blob reference and record its firmware provenance.
 - [x] Pin the official Android 17 GKI 6.18 release tag for comparison.
+- [x] Add a read-only GitHub Actions workflow for pinned-source verification, tree inventory and structural path comparison.
+- [ ] Complete a green end-to-end Actions run and review the generated report.
+- [ ] Add content-aware diffs for selected Qualcomm driver subsystems.
 - [ ] Complete file-level license and redistribution review for every source we may reuse.
 - [ ] Resolve the RMX2072 device-tree / vendor-blob firmware-version mismatch.
 - [ ] Verify which common device-tree branch is actually paired with each device-specific tree.
