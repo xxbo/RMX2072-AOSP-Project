@@ -40,6 +40,7 @@ Only compatibility changes required to reach a first GKI compile are made initia
 3. \`class_create()\` changed to the current one-argument API.
 4. The vendor \`linux/nfcinfo.h\` header is supplied locally so the old userspace ioctl ABI can be preserved without adding a global kernel header.
 5. Legacy GPIO calls are intentionally retained in this first pass to expose whether the pinned GKI build exports the required compatibility symbols. A follow-up should migrate to descriptor-based GPIO APIs if the GKI KMI does not expose the legacy calls.
+6. Optional eSE/CLKREQ/FIRM GPIO cleanup was corrected so the error/remove paths only free GPIOs that the driver successfully owns and that are valid for the board.
 
 The existing \`/dev/nq-nci\` character-device name and ioctl numbers are preserved. Do not change them without auditing the matching vendor NFC HAL/library.
 
