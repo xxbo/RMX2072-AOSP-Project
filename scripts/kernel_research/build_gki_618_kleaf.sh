@@ -45,7 +45,7 @@ echo "Verified manifest: $ACTUAL_MANIFEST_SHA" | tee -a "$ARTIFACT_DIR/build-met
 
 # The ddk groups contain Kleaf, the pinned Clang/Rust toolchains, build tools
 # and bzlmod dependencies. The default group contains common/.
-repo sync -c --depth=1 -j4 --fail-fast --groups=default,ddk,ddk-external
+repo sync -c -j4 --fail-fast --groups=default,ddk,ddk-external
 
 if [[ ! -d common/.git || ! -x tools/bazel ]]; then
   echo "Kleaf workspace is incomplete: expected common/ and tools/bazel" >&2
