@@ -7,16 +7,19 @@ The Kernel Source Research workflow provides a repeatable, read-only first pass 
 ## Workflow
 
 - Workflow file: .github/workflows/kernel-source-research.yml
-- Scanner: scripts/kernel_research/audit_sources.py
+- Source inventory scanner: scripts/kernel_research/audit_sources.py
+- KGSL content scanner: scripts/kernel_research/kgsl_content_diff.py
 - Trigger: manual workflow_dispatch, relevant source-lock/scanner/workflow pushes, and a weekly Monday schedule
 - Runner: GitHub-hosted ubuntu-latest
 - Runtime: Python 3.12; standard library only
 - Permissions: contents:read
-- Outputs: Markdown and JSON reports uploaded as a 30-day workflow artifact
+- Outputs: source inventory and KGSL Markdown/JSON reports uploaded as 30-day workflow artifacts
 
 The workflow does not push commits, open pull requests, modify upstream repositories, download vendor binaries, build a kernel, or flash a device.
 
 ## Research steps
+
+The workflow currently runs two independent jobs: a broad source inventory and a targeted KGSL/Adreno 650 analysis. Both jobs are read-only and run on GitHub-hosted runners.
 
 1. Read the pinned source lock.
 2. Verify each GitHub kernel commit through the GitHub API.
@@ -27,6 +30,9 @@ The workflow does not push commits, open pull requests, modify upstream reposito
 7. Inventory ARM64 defconfigs, Qualcomm-related config names, driver subsystem directories and techpack modules.
 8. Compare file paths in selected subsystems against the official RMX2072 Android Q 4.19.81 baseline.
 9. Emit JSON for further analysis and Markdown for human review.
+10. Retrieve selected KGSL/UAPI/GKI files at immutable commits; compare 4.19.81, 4.19.325 and a separately pinned Qualcomm Linux 7.2 KGSL reference.
+11. Inventory KGSL ioctl names and UAPI structs; run preliminary host LP64 sizeof/offsetof probes.
+12. Inspect the pinned Android 17 GKI 6.18 tree for DRM/MSM, A6xx/Adreno 650 catalog support, KGSL absence, Kconfig and shmem vendor-hook evidence.
 
 ## Run manually
 
@@ -55,7 +61,9 @@ Current scope: commit verification, directory inventory, defconfig and vendor co
 
 ### Stage B — Content-aware subsystem diffs
 
-Add sparse, commit-pinned source retrieval for KGSL/Adreno, DRM/display, camera/ISP, DMA-BUF/ION, IPA/WLAN, thermal and power. Generate C/header content diffs and function-level change summaries. The current workflow already compares defconfig options and selected module Makefiles.
+**KGSL/Adreno first pass completed.** The current workflow retrieves selected immutable source files, compares the official RMX2072 4.19.81 and SM8250-Common 4.19.325 KGSL implementations, compares them with a separately pinned Qualcomm Linux 7.2 KGSL reference, inventories UAPI ioctl/struct changes, runs preliminary host LP64 layout probes, and inspects GKI 6.18 DRM/MSM and Adreno 650 evidence. Findings: docs/KGSL_ADRENO_RESEARCH.md.
+
+Remaining: validate UAPI layouts with AArch64 Android LLVM; audit exact GKI KMI dependencies; then add equivalent targeted research for display, camera, audio, memory, connectivity and power/thermal.
 
 ### Stage C — Reproducible build experiments
 
