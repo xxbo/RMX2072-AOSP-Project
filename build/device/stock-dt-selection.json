@@ -1,0 +1,60 @@
+{
+  "captured_date": "2026-11-06",
+  "selection_evidence": "read-only ro.boot.dtb_idx=12 and ro.boot.dtbo_idx=17 on stock F.20",
+  "boot": {
+    "tree_count": 25,
+    "selected": {
+      "index": 12,
+      "offset": 53919920,
+      "size_bytes": 525386,
+      "sha256": "70cb047ab636ebdbc4a88ac4d3450bd6eb2f4b9458cb178843fe6b79757c8ea6",
+      "root": {
+        "model": [
+          "Qualcomm Technologies, Inc. kona v2.1 SoC"
+        ],
+        "compatible": [
+          "qcom,kona"
+        ],
+        "qcom,msm-id": [
+          356,
+          131073
+        ],
+        "qcom,board-id": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "dtbo": {
+    "tree_count": 18,
+    "selected": {
+      "index": 17,
+      "offset": 6420349,
+      "id": 0,
+      "rev": 0,
+      "custom": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "size_bytes": 359110,
+      "sha256": "03f920608f4fbf46aaface2b2641711b3194081fe4a588b42232b7e60e07db9d",
+      "root": {
+        "model": [
+          "Qualcomm Technologies, Inc. kona MTP"
+        ],
+        "compatible": [
+          "qcom,kona-mtp",
+          "qcom,kona",
+          "qcom,mtp"
+        ],
+        "qcom,board-id": [
+          65544,
+          0
+        ]
+      }
+    }
+  }
+}

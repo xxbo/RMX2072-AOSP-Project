@@ -12,3 +12,4 @@
 Makefile text eol=lf
 Kconfig text eol=lf
 *.bazel text eol=lf
+*.patch text eol=lf whitespace=-blank-at-eol

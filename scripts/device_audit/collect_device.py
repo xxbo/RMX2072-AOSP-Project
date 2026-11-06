@@ -20,7 +20,7 @@ PROPERTIES = (
     'ro.product.cpu.abilist', 'ro.boot.flash.locked', 'ro.boot.vbmeta.device_state',
     'ro.boot.verifiedbootstate', 'ro.boot.veritymode', 'ro.boot.slot_suffix',
     'ro.boot.dynamic_partitions', 'ro.boot.super_partition', 'ro.build.ab_update',
-    'ro.virtual_ab.enabled', 'ro.boot.prjname', 'ro.boot.hw_version',
+    'ro.virtual_ab.enabled', 'ro.boot.prjname', 'ro.boot.hw_version', 'ro.boot.dtb_idx', 'ro.boot.dtbo_idx',
     'sys.boot_completed',
 )
 PULL_PATHS = (

@@ -26,7 +26,7 @@ Then build a generic ACK baseline, add a separate KGSL compile/KMI probe, and in
 
 ## GSI gate
 
-Select an official ARM64 GSI without GMS for the initial experiment, record its exact build/download/hash, and inspect its actual VINTF matrices, VNDK/linker support, sparse/raw size and system partition fit. Stock F.20 declares vendor FCM 5, while the inspected Android 17 source's default matrix list begins at FCM 7. Resolve this gap with image evidence and a compatibility test, not by arbitrarily changing the declared vendor target level.
+The user selected and authorized downloading the official Android 17 QPR1 ARM64 + GMS package CP3A.260905.010 after accepting its license. `build/gsi.json` records the official URL and SHA-256. Inspect its actual VINTF matrices, VNDK/linker support, sparse/raw size and system partition fit. Stock F.20 declares vendor FCM 5, while the inspected Android 17 source's default matrix list begins at FCM 7. Resolve this gap with image evidence and a compatibility test, not by arbitrarily changing the declared vendor target level.
 
 First test the system layer against the compatible stock kernel/vendor. Test a new 6.18 kernel separately so failures can be isolated. Keep the existing local backups; full-system recovery from them is not yet exercised.
 
@@ -35,3 +35,7 @@ First test the system layer against the compatible stock kernel/vendor. Test a n
 Commit project-authored code/configuration, source pins and redacted findings promptly. Keep full images, proprietary vendor files, calibration/secure data, device identifiers and raw captures local. Public CI artifacts contain build products/provenance only; private handset backups must never be added to Actions artifacts.
 
 Record build-tested, boot-tested and hardware-tested independently. Update this document and the compatibility matrix after each actual run.
+
+## Selected device trees
+
+A read-only local parse of the original F.20 boot/DTBO backups found 25 concatenated boot DTBs and 18 DTBO entries. The live phone reports `ro.boot.dtb_idx=12` and `ro.boot.dtbo_idx=17`; selected root selectors and blob hashes are in `build/device/stock-dt-selection.json`. Boot entry 12 identifies Kona v2.1 (SoC 356, revision 0x20001); overlay 17 identifies Kona MTP with board ID 0x10008. These indices identify the stock selection; they do not establish 6.18 bindings or driver compatibility. Direct live DT filesystem reads remain denied.
