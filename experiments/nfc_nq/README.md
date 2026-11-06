@@ -1,6 +1,6 @@
 # RMX2072 NQ-NCI / SN100 experimental port
 
-**Status: first-pass GKI 6.18 compile experiment. Not hardware-ready.**
+**Status: first AArch64 GKI 6.18 compile-smoke artifact produced. Not KMI-certified or hardware-ready.**
 
 This directory carries a target-focused port of the Qualcomm NQ-NCI driver used by the RMX2072 NFC controller. The immediate goal is to compile the existing driver against the pinned Android 17 ACK/GKI 6.18 headers, identify API/KMI blockers, and then validate the module on a recoverable test device.
 
