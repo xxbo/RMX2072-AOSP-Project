@@ -110,7 +110,7 @@ For each subsystem, report source presence, active build wiring, device-tree bin
 
 ### Stage C — Reproducible build experiments
 
-Only after the correct source/device-tree/vendor pairing is established, add a separate build workflow. Build jobs must use pinned toolchains and source SHAs, preserve logs and artifact hashes, and keep proprietary blobs and signing material outside the public repository.
+The first full build workflow is now staged on experiment/gki-6.18-rust-foundation. It uses the pinned Android kernel repo manifest, the pinned GKI 6.18 tag and the official Kleaf ARM64 distribution target. The manifest syncs the matching Clang/Rust toolchains and Bazel dependencies. Build jobs preserve the resolved manifest, source SHAs, logs and artifact hashes; proprietary blobs and signing material remain outside the public repository.
 
 ### Stage D — GKI compatibility analysis
 
