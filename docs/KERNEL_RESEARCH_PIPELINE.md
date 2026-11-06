@@ -51,11 +51,11 @@ The weekly schedule runs at 03:17 UTC on Mondays. Scheduled workflows may start 
 
 ### Stage A — Source structure and configuration
 
-Current scope: commit verification, directory inventory, defconfig discovery, build-config extraction and path-level comparison.
+Current scope: commit verification, directory inventory, defconfig and vendor config-fragment parsing, module Makefile content diffs, and path-level comparison. Findings are recorded in docs/KERNEL_TREE_DIFF_FINDINGS.md.
 
 ### Stage B — Content-aware subsystem diffs
 
-Add targeted source retrieval for KGSL/Adreno, DRM/display, camera/ISP, DMA-BUF/ION, IPA/WLAN, thermal and power. Generate function-level and Kconfig/Makefile diffs without cloning every source tree.
+Add sparse, commit-pinned source retrieval for KGSL/Adreno, DRM/display, camera/ISP, DMA-BUF/ION, IPA/WLAN, thermal and power. Generate C/header content diffs and function-level change summaries. The current workflow already compares defconfig options and selected module Makefiles.
 
 ### Stage C — Reproducible build experiments
 
