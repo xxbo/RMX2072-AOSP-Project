@@ -43,6 +43,10 @@ Only compatibility changes required to reach a first GKI compile are made initia
 
 The existing \`/dev/nq-nci\` character-device name and ioctl numbers are preserved. Do not change them without auditing the matching vendor NFC HAL/library.
 
+## Porting log
+
+See [PORTING_LOG.md](./PORTING_LOG.md) for each GKI compile attempt, environment issue, compiler finding and corrective patch.
+
 ## Userspace ABI
 
 See [ABI.md](./ABI.md) for the current character-device, ioctl, power-state, buffer and 32-bit compatibility inventory. The native and compat ioctl paths are not identical in the source; this must be resolved against the target vendor userspace before declaring compatibility.
