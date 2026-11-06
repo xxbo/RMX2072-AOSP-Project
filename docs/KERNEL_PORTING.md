@@ -1,34 +1,67 @@
 # Kernel Porting Strategy
 
 ## Starting point
-Use the official RMX2072 Android Q 4.19 source as the device-specific baseline. Compare it with the later shared Realme Android S 4.19 tree and community SM8250 kernel. Do not assume the shared tree is a drop-in replacement until its device configuration and history are checked.
+
+Use the official RMX2072 Android Q 4.19.81 source as the device-specific legacy baseline. Compare it with the later shared Realme Android S 4.19.157 tree and the SM8250-Common 4.19.325 community tree.
+
+The 4.19.325 tree is the newest inspected community reference, not a proven RMX2072 build. Its current shared device-tree proprietary-file list is sourced from RMX3371. Its KONA/Oplus configuration is useful for understanding downstream implementation and build wiring, but must not be copied as the final RMX2072 configuration.
+
+The modern target is the pinned Android 17 ACK/GKI 6.18 reference. It is a research baseline, not a device-ready kernel.
 
 ## Staged approach
-1. Reproduce the stock/community kernel build before modifying it.
-2. Diff source trees by subsystem and identify Realme/OPlus downstream changes.
-3. Map each driver to upstream Linux, Android Common Kernel or vendor-only implementations.
-4. Record dependencies on private headers, exported symbols, firmware, device-tree bindings and userspace ioctls.
-5. Port a small, independently testable subsystem at a time.
-6. Build, boot and hardware-test each increment with a known-good rollback image.
 
-## Driver migration inventory
+1. Reproduce a known-compatible kernel/device build before changing architecture.
+2. Capture exact RMX2072 firmware, DTB/DTBO, partition/boot metadata and recovery facts.
+3. Compare official and community source trees by subsystem; trace Kconfig, Makefiles, DTS bindings, firmware and userspace contracts.
+4. Map each driver to upstream Linux/ACK implementations and classify it as reuse, DTS/config adaptation, vendor-delta port, ABI bridge or userspace/firmware integration.
+5. Resolve shared foundations (clock, regulator, pinctrl, interconnect, SMMU/IOMMU, DMA-BUF, firmware loading and Qualcomm IPC) before porting upper-level drivers.
+6. Port one independently testable subsystem at a time.
+7. Build against the exact 6.18 toolchain/config, audit KMI and module dependencies, then load and hardware-test on the target device.
+8. Keep a known-good rollback image and record evidence for every milestone.
 
-| Area | Main investigation | Risk |
-| --- | --- | --- |
-| Display | DRM/MDSS, DSI, panel, backlight, DSC | High |
-| GPU | KGSL or upstream DRM path; userspace driver compatibility | Very high |
-| Camera | sensors, CSIPHY/CSID, ISP interfaces | Very high |
-| Memory | ION dependencies, DMA-BUF heaps, secure heaps | Very high |
-| WLAN | CNSS and WLAN driver/firmware interface | High |
-| Audio | ASoC, DSP, codec and vendor userspace interface | High |
-| Touch/input | controller driver, firmware loading, gestures | Medium |
-| Storage | UFS, PHY, regulators and device tree | Medium |
-| Power/thermal | cpufreq, devfreq, thermal zones, charger | High |
-| Sensors/NFC | bus drivers, firmware and HAL expectations | Medium/High |
+## Canonical driver planning documents
+
+- [Driver migration matrix](./DRIVER_MIGRATION_MATRIX.md) — per-subsystem evidence, migration disposition, priority and acceptance criteria.
+- [Driver dependency map](./DRIVER_DEPENDENCY_MAP.md) — shared foundations and the recommended dependency order.
+- [Hardware and source inventory](./HARDWARE_INVENTORY.md) — RMX2072-specific firmware/configuration evidence and unresolved physical variants.
+- [KGSL / Adreno 650 research](./KGSL_ADRENO_RESEARCH.md) — the first content-aware source comparison and GKI KMI investigation.
+- [Kernel tree diff findings](./KERNEL_TREE_DIFF_FINDINGS.md) — structural source and config findings.
+- [GKI migration research](./GKI_MIGRATION.md) — ACK/GKI architecture and KMI constraints.
+
+## First-pass migration order
+
+| Wave | Scope | Exit condition |
+|---|---|---|
+| 0 — Device facts | Exact firmware, component IDs, DTB/DTBO, partition/boot metadata and recovery baseline | No unresolved board/vendor pairing assumptions |
+| 1 — Platform base | Kona DTS, clocks/resets, PMIC/regulators, pinctrl, interconnect, LLCC, SMMU, UFS, USB/ADB | Stable boot, storage, ADB and clean critical probe logs |
+| 2 — Memory, display and touch | DMA-BUF/secure heaps, DRM/MSM, panel and GT9886 | Visible UI, brightness, touch and suspend/resume |
+| 3 — GPU | KGSL-vs-DRM decision, A650 firmware/GMU, KMI and memory path | GPU submission and graphics userspace pass |
+| 4 — Qualcomm IPC and connectivity | SMEM/GLINK/QRTR/QMI/remoteproc/IPA, modem, WLAN and Bluetooth | Calls/data/Wi-Fi/BT and subsystem recovery |
+| 5 — Power, thermal and audio | Charger/VOOC, fuel gauge, TSENS/BCL/LMH, Q6/ASoC | Safe charging, thermal control and audio route tests |
+| 6 — Camera and remaining peripherals | Spectra, sensors, fingerprint, NFC, haptics and secure services | Per-component hardware tests with retained logs |
+
+Do not begin the full camera or audio migration before the memory, IOMMU and Qualcomm IPC foundations are understood.
 
 ## Rules
-- Prefer upstream drivers where they cover the exact hardware.
-- Treat vendor kernel modules and proprietary userspace libraries as separate compatibility surfaces.
+
+- Prefer upstream drivers where they cover the exact hardware and required Android interfaces.
+- Do not equate an upstream directory or Kconfig symbol with device support.
+- Do not copy a complete 4.19 downstream subsystem into GKI without tracing its dependencies and API/KMI surface.
+- Treat vendor kernel modules, proprietary userspace libraries, firmware and HALs as separate compatibility surfaces.
+- Keep the existing KGSL userspace ABI in view: upstream DRM/MSM with Adreno 650 support is not a drop-in replacement for a vendor stack expecting KGSL nodes/ioctls.
+- Treat ION-to-DMA-BUF as a cross-subsystem ABI migration affecting GPU, camera, audio and video.
+- Treat camera Spectra, Q6 audio, modem/IPA, secure memory and OPlus charging as integrated stacks, not single C files.
+- Do not import RMX3371 proprietary blobs or assume the shared SM8250 config is the RMX2072 final config.
 - Compiling a driver does not prove runtime correctness.
-- Track required symbols and module dependencies.
+- Track source SHA, file-level license, Kconfig, DTS bindings, firmware, exported symbols, KMI, module signing and module load order.
 - Keep stock boot/vendor images and a tested recovery route available.
+
+## Current status
+
+- Source inventory and immutable source pins: recorded.
+- KGSL/Adreno 650 first-pass content research: completed; no GKI module build or device test.
+- First-pass driver migration matrix and dependency map: recorded; non-GPU subsystem content diffs remain open.
+- Exact RMX2072 device/vendor F.15/F.17 pairing: unresolved.
+- Physical handset/boot/partition/AVB capture: not recorded.
+- Legacy kernel build reproduction: not completed.
+- ACK/GKI 6.18 build, module load and hardware validation: not started.
