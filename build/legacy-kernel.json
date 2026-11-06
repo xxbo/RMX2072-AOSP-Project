@@ -3,7 +3,9 @@
   "profile": "rmx2072-legacy-candidate",
   "kernel_source_id": "sm8250-common-current-kernel",
   "defconfig": "vendor/kona-perf_defconfig",
-  "source_fragments": ["vendor/oplus.config"],
+  "source_fragments": [
+    "vendor/oplus.config"
+  ],
   "device_fragment": "build/configs/rmx2072-legacy.fragment",
   "clang": {
     "repository": "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86",
@@ -18,5 +20,8 @@
     "CONFIG_OPLUS_SM8250_CHARGER": "y",
     "CONFIG_ION": "y"
   },
-  "status": "unbuilt-candidate-not-flashable"
+  "status": "unbuilt-candidate-not-flashable",
+  "patches": [
+    "build/patches/legacy/0001-goodix-fix-misleading-indentation.patch"
+  ]
 }

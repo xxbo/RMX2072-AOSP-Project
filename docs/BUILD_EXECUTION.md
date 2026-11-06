@@ -6,7 +6,7 @@ The execution path is GitHub Actions for kernel/driver builds, a selected offici
 
 `Legacy Kernel Build` is manually triggered. Run `stage=config` first; use `stage=kernel` after configuration validation.
 
-Configuration validation passed in [run 42224170969](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224170969). The first full legacy kernel/modules run has been dispatched; its build result remains pending.
+Configuration validation passed in [run 42224170969](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224170969). The first full build ([run 42224859055](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224859055)) failed on one Clang `-Werror,-Wmisleading-indentation` diagnostic in `goodix_common.c:277`. A minimal whitespace-only patch aligns the unconditional statement; warnings remain enabled. The build applies the checked-in patch with `git apply --check` and records its SHA-256. A corrected full run is required before claiming success.
 
 Inputs are fixed by `sources/SOURCE_LOCK.json` and `build/legacy-kernel.json`. The selected community 4.19.325 source has the complete Techpack reference, while the official Q/S trees contain Techpack stubs. This is a candidate build, not a proven F.20 source match. The actual handset runs 4.19.157-perf+.
 

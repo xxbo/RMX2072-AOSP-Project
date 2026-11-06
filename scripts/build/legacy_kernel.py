@@ -97,6 +97,12 @@ def main():
         kernel = unpack(kernel_archive, work/'kernel', strip_root=True)
         # Avoid retaining compressed and unpacked copies in the constrained runner.
         kernel_archive.unlink()
+        report['patches'] = {}
+        for name in profile.get('patches', []):
+            patch = project/name
+            run(['git', 'apply', '--check', str(patch)], cwd=kernel)
+            run(['git', 'apply', str(patch)], cwd=kernel)
+            report['patches'][name] = sha256(patch)
         download(f"{clang['repository']}/+archive/{clang['commit']}/{clang['directory']}.tar.gz", clang_archive)
         report['clang_archive_sha256'] = sha256(clang_archive)
         toolchain = unpack(clang_archive, work/'clang')
