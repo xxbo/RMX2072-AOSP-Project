@@ -12,6 +12,12 @@ Linux Rust support was merged in v6.1, but the kernel's Rust documentation still
 
 For every driver, inspect the exact pinned source tree under common/rust/kernel/ and its Kconfig/build integration. Do not infer availability from the latest rust.docs.kernel.org pages alone.
 
+## Rust subsystem API outlook
+
+The Android Common Kernel source line has Rust abstractions for I2C driver registration, regulator state management and miscdevice registration/file operations in its Rust kernel crate. These are promising building blocks for NQ-NCI: I2C transport, optional regulator control and the existing /dev/nq-nci userspace endpoint may be implementable mostly in Rust.
+
+The exact pinned release tag remains the authority. The first Kleaf build should archive an inventory of the modules exported by common/rust/kernel/lib.rs and the corresponding source files before the Rust driver skeleton is written. In particular, GPIO consumer access and the required IRQ/wakeup model need an exact-source check; a small C shim may be the safest initial bridge for GPIO lines and IRQ plumbing.
+
 ## Expected architecture
 
 - Rust owns the driver state machine, device state, data parsing, sequencing policy, retry policy and resource lifetime wherever safe kernel abstractions exist.
