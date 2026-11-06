@@ -39,3 +39,5 @@ Record build-tested, boot-tested and hardware-tested independently. Update this 
 ## Selected device trees
 
 A read-only local parse of the original F.20 boot/DTBO backups found 25 concatenated boot DTBs and 18 DTBO entries. The live phone reports `ro.boot.dtb_idx=12` and `ro.boot.dtbo_idx=17`; selected root selectors and blob hashes are in `build/device/stock-dt-selection.json`. Boot entry 12 identifies Kona v2.1 (SoC 356, revision 0x20001); overlay 17 identifies Kona MTP with board ID 0x10008. These indices identify the stock selection; they do not establish 6.18 bindings or driver compatibility. Direct live DT filesystem reads remain denied.
+
+The corrected legacy run [42226376116](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226376116) passed the Goodix compile point, then failed in qcacld with `/bin/sh: Argument list too long`. The codeload root embeds the 40-character commit in every repeated include path. The build now renames that extracted root to a short workspace path before configuring; it keeps Wi-Fi enabled and retains the source/patch hashes. This change needs a new full run.

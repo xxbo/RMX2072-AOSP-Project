@@ -94,7 +94,11 @@ def main():
         kernel_archive, clang_archive = work/'kernel.tar.gz', work/'clang.tar.gz'
         download(f"https://codeload.github.com/{source['repository']}/tar.gz/{source['commit']}", kernel_archive)
         report['kernel_archive_sha256'] = sha256(kernel_archive)
-        kernel = unpack(kernel_archive, work/'kernel', strip_root=True)
+        extracted = unpack(kernel_archive, work/'kernel', strip_root=True)
+        # qcacld repeats source paths in its flags; long archive roots exceed
+        # Linux's per-argument limit when make passes the recipe to /bin/sh.
+        kernel = work/'k'
+        extracted.rename(kernel)
         # Avoid retaining compressed and unpacked copies in the constrained runner.
         kernel_archive.unlink()
         report['patches'] = {}
