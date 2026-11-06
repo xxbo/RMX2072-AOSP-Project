@@ -85,3 +85,5 @@ The run #11 smoke module (SHA-256 `63701348f0d369feb2399ec0b7e8c8569d33c6d7bf927
 This corrects any assumption that the legacy GPIO names are necessarily unavailable in this pinned kernel. The module was still built by modules_prepare with no authoritative CRCs, so this comparison does not certify symbol versions, namespace imports, protected KMI policy, signatures or loading. The strict DDK build must pass independently. The reusable `scripts/kernel_research/audit_module_exports.py` records module/symvers hashes and export metadata; its report remains local.
 
 The previous smoke module advertises `modversions` in vermagic but has a zero-byte `__versions` ELF section. This is direct evidence that its name-presence result cannot substitute for a versioned strict build.
+
+The same 75 imports also appear in run #8 `abi_symbollist.raw`; every corresponding Module.symvers provider is vmlinux and none declares an export namespace. This narrows the outstanding checks but does not replace the strict module build, protected-export/signature policy or physical tests.

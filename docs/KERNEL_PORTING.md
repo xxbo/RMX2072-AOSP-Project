@@ -61,7 +61,15 @@ Do not begin the full camera or audio migration before the memory, IOMMU and Qua
 - Source inventory and immutable source pins: recorded.
 - KGSL/Adreno 650 first-pass content research: completed; no GKI module build or device test.
 - First-pass driver migration matrix and dependency map: recorded; non-GPU subsystem content diffs remain open.
-- Exact RMX2072 device/vendor F.15/F.17 pairing: unresolved.
-- Physical handset/boot/partition/AVB capture: not recorded.
-- Legacy kernel build reproduction: not completed.
-- ACK/GKI 6.18 build, module load and hardware validation: not started.
+- The connected handset runs F.20; captured stock vendor and boot metadata are the current baseline. Historical F.15/F.17 trees remain references.
+- Physical handset/boot/partition/AVB capture: completed; bootloader unlocked and stock Android boot verified. Actual DTB 12 / DTBO 17 selection and NFC provider fixups recorded.
+- Legacy kernel build: config validation passed; full builds exposed Goodix indentation and qcacld path-length errors, with fixes committed and a retry running.
+- Generic ACK/GKI 6.18 distribution: full build passed in run 42194678844. Main now freezes all manifest dependencies and runs a strict NFC DDK build. Module loading, RMX2072 kernel boot and hardware validation remain untested.
+
+## Measured generic-kernel platform gap
+
+The completed run #8 configuration is not a Kona board configuration: it disables PINCTRL_MSM, COMMON_CLK_QCOM, QCOM_RPMH, QCOM_SMEM, SCSI_UFS_QCOM, ARM_SMMU, PHY_QCOM_QMP and DRM_MSM. Enabling USB_DWC3_QCOM and ARCH_QCOM alone does not supply those dependencies. The exact selected values and config hash are in `build/device/gki-platform-gaps.json`.
+
+The pinned ACK source does provide `sm8250.dtsi` and HDK/MTP board examples, but its qcom DTS directory has no RMX2072/Realme board file. Those reference bindings need comparison with the selected stock DTB 12 / DTBO 17. The stock embedded DTB bundle is not automatically compatible with upstream 6.18 bindings.
+
+Before a handset boot attempt, build a coherent SM8250 platform configuration and early-boot driver set (pinctrl, clocks/RPMh, regulators, interconnect, SMMU, UFS/PHY and USB), choose built-in versus ramdisk-loaded modules for the actual boot-v2 layout, and verify all required firmware and init behavior. Do not mix 4.19 modules into the 6.18 build. A full generic distribution can pass while all these board requirements remain unresolved.

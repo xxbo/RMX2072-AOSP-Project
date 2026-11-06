@@ -1,0 +1,19 @@
+{
+  "evidence_run": 42194678844,
+  "kernel_config_sha256": "960d58ad6c14bc87b99c647a10dd6fa2d1e69019a2f4bcbeae3c0f33ac0a52ac",
+  "selected_config": {
+    "CONFIG_PINCTRL_MSM": "n",
+    "CONFIG_COMMON_CLK_QCOM": "n",
+    "CONFIG_QCOM_RPMH": "n",
+    "CONFIG_QCOM_SMEM": "n",
+    "CONFIG_SCSI_UFS_QCOM": "n",
+    "CONFIG_ARM_SMMU": "n",
+    "CONFIG_PHY_QCOM_QMP": "n",
+    "CONFIG_DRM_MSM": "n",
+    "CONFIG_USB_DWC3_QCOM": "y",
+    "CONFIG_ARCH_QCOM": "y",
+    "CONFIG_MODULE_SIG_PROTECT": "y",
+    "CONFIG_EXTENDED_MODVERSIONS": "y"
+  },
+  "qualification": "Generic GKI distribution only. Disabled platform options require a coherent SM8250 kernel/module configuration and device tree; this report is not a ready-to-apply fragment."
+}

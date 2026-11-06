@@ -179,7 +179,7 @@ This order is for the GKI research track. It does not replace the safer project-
 
 The following items block a device-exact dependency graph:
 
-- Actual RMX2072 firmware build and a matched F.15/F.17 vendor extraction set.
+- A complete matched-source pairing for the captured F.20 firmware/vendor baseline. Historical F.15/F.17 extraction references do not establish that pairing.
 - Actual DTB/DTBO and kernel command line from the handset.
 - Panel ID, touch controller ID and touch bus/address.
 - Camera sensor enumeration and module/EEPROM IDs.

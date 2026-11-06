@@ -75,7 +75,7 @@ These config observations are source evidence only. The final merged .config mus
 
 ## 4. First implementation order
 
-1. **Freeze the hardware and vendor baseline:** resolve RMX2072 firmware F.15/F.17 provenance, capture actual DTS/DTBO and component IDs, and establish a recoverable stock baseline.
+1. **Freeze the hardware and vendor baseline:** use the captured F.20 handset baseline and selected DTB/DTBO; complete remaining component identification and demonstrate a full recovery before replacing the boot stack.
 2. **Create the 6.18 platform base:** Kona DTS, clocks/resets, PMIC/regulators, pinctrl, SMMU/IOMMU, LLCC/interconnect, UFS and USB/ADB.
 3. **Bring up display and touch:** DRM/MSM + exact Samsung panel sequence + GT9886 driver/config.
 4. **Resolve memory and GPU together:** ION client inventory → DMA-BUF/secure heap plan → KGSL-vs-DRM decision → A650 GMU/KMI prototype.
