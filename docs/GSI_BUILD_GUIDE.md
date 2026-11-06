@@ -3,6 +3,8 @@
 ## Strategy
 Treat GSI bring-up and kernel modernization as separate tracks. First test a suitable Android 17 GSI with a known-compatible device kernel/vendor stack. This isolates framework and Treble compatibility from kernel migration.
 
+The proposed execution environment is GitHub Actions for kernel/module builds and an official ARM64 Android 17 GSI for the system layer; local USB remains the hardware-test interface. See the [captured F.20 baseline](DEVICE_BASELINE_2026-11-06.md) for boot header v2, single boot/recovery layout, vendor FCM 5 and unresolved Android 17 compatibility gates. The GSI is a candidate until its exact image contents and device boot are checked.
+
 ## Preflight
 - Confirm exact RMX2072 model and region.
 - Confirm bootloader unlock capability and understand the data wipe.
