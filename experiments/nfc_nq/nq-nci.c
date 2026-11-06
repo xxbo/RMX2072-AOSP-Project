@@ -1806,9 +1806,9 @@ err_char_dev_register:
 err_clkreq_gpio:
 	gpio_free(platform_data->clkreq_gpio);
 err_ese_gpio:
-	/* optional gpio, not sure was configured in probe */
-	if (gpio_is_valid(platform_data->ese_gpio))
-		gpio_free(platform_data->ese_gpio);
+	/* Free only when the optional eSE GPIO request actually succeeded. */
+	if (gpio_is_valid(nqx_dev->ese_gpio))
+		gpio_free(nqx_dev->ese_gpio);
 err_firm_gpio:
 	gpio_free(platform_data->firm_gpio);
 err_irq_gpio:
@@ -1859,13 +1859,17 @@ static void nqx_remove(struct i2c_client *client)
 	unregister_chrdev_region(nqx_dev->devno, DEV_COUNT);
 	mutex_destroy(&nqx_dev->read_mutex);
 	mutex_destroy(&nqx_dev->dev_ref_mutex);
-	gpio_free(nqx_dev->clkreq_gpio);
-	/* Optional GPIO; it may not have been requested. */
-	if (nqx_dev->ese_gpio > 0)
+	/* Optional lines may be absent on a board variant. */
+	if (gpio_is_valid(nqx_dev->clkreq_gpio))
+		gpio_free(nqx_dev->clkreq_gpio);
+	if (gpio_is_valid(nqx_dev->ese_gpio))
 		gpio_free(nqx_dev->ese_gpio);
-	gpio_free(nqx_dev->firm_gpio);
-	gpio_free(nqx_dev->irq_gpio);
-	gpio_free(nqx_dev->en_gpio);
+	if (gpio_is_valid(nqx_dev->firm_gpio))
+		gpio_free(nqx_dev->firm_gpio);
+	if (gpio_is_valid(nqx_dev->irq_gpio))
+		gpio_free(nqx_dev->irq_gpio);
+	if (gpio_is_valid(nqx_dev->en_gpio))
+		gpio_free(nqx_dev->en_gpio);
 	kfree(nqx_dev->kbuf);
 	if (client->dev.of_node)
 		devm_kfree(&client->dev, nqx_dev->pdata);
