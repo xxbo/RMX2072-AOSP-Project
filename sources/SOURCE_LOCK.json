@@ -258,7 +258,19 @@
         "Official Android kernel repo manifest for the common-android17-6.18 build environment.",
         "Pins Kleaf build/kernel, Clang, Rust toolchain, kernel build tools and Bazel module dependencies.",
         "The resolved repo manifest is also archived with every CI build."
-      ]
+      ],
+      "resolved_dependency_lock": "build/gki-resolved-manifest.xml",
+      "resolved_from_run": 42194678844
+    },
+    {
+      "id": "android-git-repo",
+      "category": "build-tool",
+      "repository": "git-repo",
+      "url": "https://gerrit.googlesource.com/git-repo",
+      "ref_type": "commit",
+      "ref": "365629015667e04739f59070e745548a728549c8",
+      "commit": "365629015667e04739f59070e745548a728549c8",
+      "status": "pinned-launcher-and-repo-runtime"
     }
   ]
 }

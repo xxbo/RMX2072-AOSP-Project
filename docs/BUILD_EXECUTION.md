@@ -20,7 +20,7 @@ The full build requests Image.gz, DTBs and modules. Outputs include Module.symve
 
 The existing `experiment/gki-6.18-repo-mirror` branch has already passed a complete Kleaf build in [run 42194678844](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42194678844), producing a 687,670,307-byte uploaded artifact. Its workflow, source pins and NFC experiment are now being integrated into the mainline execution path. Preserve this evidence instead of repeating an initial generic-kernel feasibility experiment.
 
-The kernel/common pin already resolves to 6.18.32. Before adding a real ACK build, pin the associated kernel manifest, Kleaf/build tooling, LLVM/Rust prebuilts and all required dependencies. A kernel/common SHA alone is insufficient. The default manifest includes extra device/test projects; evaluate its groups and workspace footprint on the Actions runner rather than downloading everything blindly.
+The kernel/common pin already resolves to 6.18.32. The main workflow now locks all 58 manifest projects using the resolved snapshot from that successful run, verifies every checkout and adds a strict NQ-NCI DDK compilation gate. A kernel/common SHA alone is insufficient. The default manifest includes extra device/test projects; evaluate its groups and workspace footprint on the Actions runner rather than downloading everything blindly.
 
 Then build a generic ACK baseline, add a separate KGSL compile/KMI probe, and introduce the RMX2072 boot/DTS/UFS/USB changes. A generic GKI Image is not an RMX2072 boot image. The existing boot header is v2 with an embedded DTB bundle; vendor_boot/init_boot are absent from the physical GPT.
 

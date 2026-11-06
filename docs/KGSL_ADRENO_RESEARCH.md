@@ -1,9 +1,9 @@
 # KGSL / Adreno 650 — Automated Source Research
 
-> Research snapshot: 2026-11-06 UTC  
-> GitHub Actions: [Kernel Source Research #17](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42176677695)  
-> Target: Realme X50 Pro Player Edition (RMX2072), Snapdragon 865 / SM8250, Adreno 650  
-> Scope: immutable source retrieval, static comparison, UAPI inventory and host LP64 layout probes  
+> Research snapshot: 2026-11-06 UTC
+> GitHub Actions: [Kernel Source Research #17](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42176677695)
+> Target: Realme X50 Pro Player Edition (RMX2072), Snapdragon 865 / SM8250, Adreno 650
+> Scope: immutable source retrieval, static comparison, UAPI inventory and host LP64 layout probes
 > Status: first-pass source research complete; no kernel build, module load, device boot or hardware test has been performed.
 
 ## 1. Executive summary

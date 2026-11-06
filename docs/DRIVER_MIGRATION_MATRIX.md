@@ -1,8 +1,8 @@
 # RMX2072 Driver Migration Matrix — First Pass
 
-> Snapshot: **2026-11-06 UTC**  
-> Target: realme X50 Pro Player Edition (RMX2072 / bladerunner_48m), Snapdragon 865 / SM8250 (Kona)  
-> Kernel target under investigation: Android 17 ACK / GKI 6.18, pinned at ecdaacc9a0ee87eaf9544e1836d86bd9d590312e  
+> Snapshot: **2026-11-06 UTC**
+> Target: realme X50 Pro Player Edition (RMX2072 / bladerunner_48m), Snapdragon 865 / SM8250 (Kona)
+> Kernel target under investigation: Android 17 ACK / GKI 6.18, pinned at ecdaacc9a0ee87eaf9544e1836d86bd9d590312e
 > Status: **source-reviewed planning matrix only**. No driver in this matrix has been built against GKI 6.18, loaded, booted or hardware-tested on RMX2072.
 
 ## 1. How to read this matrix

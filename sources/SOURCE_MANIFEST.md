@@ -1,7 +1,7 @@
 # Source Manifest
 
-> Snapshot date: **2026-11-06 UTC**  
-> Repository: [xxbo/RMX2072-AOSP-Project](https://github.com/xxbo/RMX2072-AOSP-Project)  
+> Snapshot date: **2026-11-06 UTC**
+> Repository: [xxbo/RMX2072-AOSP-Project](https://github.com/xxbo/RMX2072-AOSP-Project)
 > Target: realme X50 Pro Player Edition — RMX2072 / bladerunner_48m / Snapdragon 865 (SM8250/Kona)
 
 This file is the human-readable index of the immutable source pins in [SOURCE_LOCK.json](./SOURCE_LOCK.json). The commit SHA is authoritative; branch names are retained only to show where the pin was found.

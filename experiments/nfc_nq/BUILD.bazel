@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: GPL-2.0-only
+load("//build/kernel/kleaf:kernel.bzl", "ddk_module")
+
+ddk_module(
+    name = "nq_nci",
+    srcs = [
+        "nq-nci.c",
+        "nq-nci.h",
+        "include/linux/nfcinfo.h",
+        "include/uapi/linux/nfc/nfcinfo.h",
+    ],
+    out = "nq-nci.ko",
+    includes = ["include"],
+    kernel_build = "//common:kernel_aarch64",
+)

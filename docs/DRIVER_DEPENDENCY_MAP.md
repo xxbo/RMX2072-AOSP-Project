@@ -1,7 +1,7 @@
 # RMX2072 Driver Dependency Map — First Pass
 
-> Snapshot: **2026-11-06 UTC**  
-> Basis: pinned RMX2072 4.19.81 source, SM8250 4.19.325 reference, RMX2072-specific device-tree/vendor manifests and the pinned Android 17 GKI 6.18 reference.  
+> Snapshot: **2026-11-06 UTC**
+> Basis: pinned RMX2072 4.19.81 source, SM8250 4.19.325 reference, RMX2072-specific device-tree/vendor manifests and the pinned Android 17 GKI 6.18 reference.
 > Status: architecture map for planning; exact DTS bindings, module symbols and physical component revisions remain to be verified.
 
 ## 1. Why dependency order matters

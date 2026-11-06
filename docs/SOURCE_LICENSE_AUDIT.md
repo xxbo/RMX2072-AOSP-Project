@@ -1,6 +1,6 @@
 # Source License and Redistribution Audit
 
-> Snapshot date: 2026-11-06 UTC  
+> Snapshot date: 2026-11-06 UTC
 > This is an initial source-level audit, not legal advice or a complete file-by-file license review.
 
 ## Summary

@@ -10,7 +10,7 @@ The official ARM64 distribution target is:
 tools/bazel run //common:kernel_aarch64_dist -- --destdir=dist
 ~~~
 
-The GitHub Actions workflow reproduces this path on ubuntu-24.04, using the pinned kernel/manifest and the pinned GKI release tag recorded in sources/SOURCE_LOCK.json. Run #5 completed successfully on 2026-11-06 using the upstream source checkout. The new `experiment/gki-6.18-repo-mirror` branch stores the exact kernel/common source snapshot in this repository; run #7 is validating the same distribution build using that repository-owned snapshot. Both use the official Kleaf distribution target, not a modules_prepare-only smoke build.
+The GitHub Actions workflow reproduces this path on ubuntu-24.04, using the pinned kernel/manifest and the pinned GKI release tag recorded in sources/SOURCE_LOCK.json. Run #5 completed successfully on 2026-11-06 using the upstream source checkout. The new `experiment/gki-6.18-repo-mirror` branch stores the exact kernel/common source snapshot in this repository; run #8 passed the same distribution build using that repository-owned snapshot ([evidence](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42194678844)). Both use the official Kleaf distribution target, not a modules_prepare-only smoke build.
 
 ## Pinned inputs
 
@@ -30,7 +30,7 @@ The exact `kernel/common` source snapshot is stored on branch `mirror/android17-
 
 ## Why the manifest matters
 
-The manifest synchronizes more than kernel/common. It also pins the Kleaf build repository, Clang, Rust toolchain, build tools and Bazel module dependencies. Building only the kernel/common Git repository with arbitrary host compilers is not equivalent to the official GKI build.
+The manifest synchronizes more than kernel/common. Its original project revisions include moving branches: a manifest commit alone does not freeze the dependencies. `build/gki-resolved-manifest.xml`, extracted from successful run #8, now fixes all 58 projects to exact commits, including Kleaf, Clang, Rust and build tools. `lock_gki_workspace.py` applies this overlay before sync and verifies every checkout afterward. The repo launcher/runtime is also pinned in SOURCE_LOCK.json. Bazel external dependencies retain the upstream build definitions and checksums. Building only the kernel/common Git repository with arbitrary host compilers is not equivalent to the official GKI build.
 
 ## Build output
 
@@ -40,9 +40,15 @@ Run #5 produced `Image` (43.5 MB), `Image.gz` (17.7 MB), `Image.lz4` (20.8 MB), 
 
 ## Next stages
 
-1. Mirror the exact pinned `kernel/common` source snapshot into a repository branch and build from that mirror.
+1. Completed: repository-owned kernel snapshot and full Kleaf distribution build.
 2. Inspect the actual GKI config and KMI artifacts.
 3. Build a minimal Rust module using the exact kernel Rust toolchain.
 4. Add RMX2072 device-specific configuration and platform support.
 5. Port drivers one at a time and validate their KMI dependencies.
 6. Integrate the resulting kernel, DTB/DTBO and vendor modules only after the board-level dependencies are understood.
+
+## Strict driver gate on main
+
+The main workflow is manual and read-only. It reuses the existing source mirror without creating or updating branches. With `nfc_probe=true`, it builds the NQ-NCI experiment through `ddk_module` against the same `//common:kernel_aarch64` target after the full distribution build. This consumes the real kernel symbols and generated headers. It does not set `KBUILD_MODPOST_WARN` or suppress failed commands. Failure logs are uploaded even when compilation fails.
+
+The earlier modules_prepare-only smoke result remains separate evidence. Neither a successful compile nor a generated .ko proves KMI policy compliance, device-tree binding, module loading or physical NFC operation. Generic 6.18 build products must not be flashed as RMX2072 boot images.

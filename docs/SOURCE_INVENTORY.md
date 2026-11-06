@@ -1,7 +1,7 @@
 # Kernel Source Inventory — Phase 01
 
-> Snapshot date: **2026-11-06 UTC**  
-> Scope: public source repositories relevant to realme X50 Pro Player Edition (RMX2072 / bladerunner_48m) and Snapdragon 865 (SM8250/Kona).  
+> Snapshot date: **2026-11-06 UTC**
+> Scope: public source repositories relevant to realme X50 Pro Player Edition (RMX2072 / bladerunner_48m) and Snapdragon 865 (SM8250/Kona).
 > Immutable pins: [sources/SOURCE_LOCK.json](../sources/SOURCE_LOCK.json) · [Human-readable manifest](../sources/SOURCE_MANIFEST.md)
 
 ## 1. Executive findings

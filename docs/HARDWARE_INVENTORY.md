@@ -1,6 +1,6 @@
 # Hardware and Source Inventory
 
-> Snapshot: 2026-11-06 UTC  
+> Snapshot: 2026-11-06 UTC
 > Evidence status: source inventory plus [physical-device baseline captured after unlock](DEVICE_BASELINE_2026-11-06.md). Hardware entries below retain their original source-evidence scope unless explicitly confirmed by that baseline.
 
 ## Target identity

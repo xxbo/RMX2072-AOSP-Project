@@ -1,7 +1,7 @@
 # Kernel Tree Diff Findings — Phase 01
 
-> Snapshot: 2026-11-06 UTC  
-> Automated run: [GitHub Actions #4](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42163188475)  
+> Snapshot: 2026-11-06 UTC
+> Automated run: [GitHub Actions #4](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42163188475)
 > Artifact: [kernel-source-research-4](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42163188475/artifacts/13478280146)
 
 ## 1. Scope and confidence

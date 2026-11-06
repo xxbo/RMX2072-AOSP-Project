@@ -1,9 +1,9 @@
 # RMX2072 AOSP Project — Development Plan
 
-> Target device: realme X50 Pro Player Edition (RMX2072 / `bladerunner_48m`), Qualcomm Snapdragon 865 (SM8250/Kona)  
-> System target: AOSP-based Android 17  
-> Kernel research target: Android Common Kernel (ACK) / GKI, with 6.18 as a candidate to evaluate  
-> Plan status: **Initial plan — pending device audit**  
+> Target device: realme X50 Pro Player Edition (RMX2072 / `bladerunner_48m`), Qualcomm Snapdragon 865 (SM8250/Kona)
+> System target: AOSP-based Android 17
+> Kernel research target: Android Common Kernel (ACK) / GKI, with 6.18 as a candidate to evaluate
+> Plan status: **Initial plan — pending device audit**
 > Last updated: 2026-11-06
 
 This document is the project execution plan and source of truth for milestone order, acceptance criteria, dependencies and current status. Update it as evidence is collected. A milestone is complete only when its acceptance criteria are met and the evidence is recorded in the repository.

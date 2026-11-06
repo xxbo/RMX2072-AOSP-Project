@@ -14,7 +14,8 @@ GKI_SHA="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(ne
 MIRROR_BRANCH="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["mirror_branch"] for s in d["sources"] if s["id"]=="android17-gki-618"))' "$LOCK_FILE")"
 MANIFEST_REF="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["ref"] for s in d["sources"] if s["id"]=="android-kernel-manifest"))' "$LOCK_FILE")"
 MANIFEST_SHA="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["commit"] for s in d["sources"] if s["id"]=="android-kernel-manifest"))' "$LOCK_FILE")"
-GKI_MIRROR_COMMIT="${GKI_MIRROR_COMMIT:?GKI_MIRROR_COMMIT must be supplied by the mirror-source job}"
+GKI_MIRROR_COMMIT="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["mirror_commit"] for s in d["sources"] if s["id"]=="android17-gki-618"))' "$LOCK_FILE")"
+REPO_SHA="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(next(s["commit"] for s in d["sources"] if s["id"]=="android-git-repo"))' "$LOCK_FILE")"
 
 mkdir -p "$WORKSPACE" "$ARTIFACT_DIR" "$DIST_DIR"
 
@@ -40,12 +41,13 @@ mkdir -p "$WORKSPACE" "$ARTIFACT_DIR" "$DIST_DIR"
 } | tee "$ARTIFACT_DIR/build-metadata.txt"
 
 mkdir -p "$HOME/.bin"
-curl -fsSL https://storage.googleapis.com/git-repo-downloads/repo -o "$HOME/.bin/repo"
+curl -fsSL "https://gerrit.googlesource.com/git-repo/+/$REPO_SHA/repo?format=TEXT" | base64 -d > "$HOME/.bin/repo"
 chmod a+x "$HOME/.bin/repo"
 export PATH="$HOME/.bin:$PATH"
 
 cd "$WORKSPACE"
-repo init -u https://android.googlesource.com/kernel/manifest -b "$MANIFEST_REF"
+repo init -u https://android.googlesource.com/kernel/manifest -b "$MANIFEST_SHA" \
+  --repo-url=https://gerrit.googlesource.com/git-repo --repo-rev="$REPO_SHA"
 
 ACTUAL_MANIFEST_SHA="$(git -C .repo/manifests rev-parse HEAD)"
 if [[ "$ACTUAL_MANIFEST_SHA" != "$MANIFEST_SHA" ]]; then
@@ -54,25 +56,13 @@ if [[ "$ACTUAL_MANIFEST_SHA" != "$MANIFEST_SHA" ]]; then
 fi
 echo "Verified manifest: $ACTUAL_MANIFEST_SHA" | tee -a "$ARTIFACT_DIR/build-metadata.txt"
 
-# Replace only kernel/common with the repository-owned pinned source snapshot.
-# Kleaf, toolchains, build utilities and Bazel dependencies remain pinned by
-# Google's official kernel/manifest repository.
-mkdir -p .repo/local_manifests
-cat > .repo/local_manifests/99-rmx2072-gki-mirror.xml <<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <remote name="rmx2072-github" fetch="https://github.com/xxbo" />
-  <remove-project path="common" />
-  <project
-    name="RMX2072-AOSP-Project"
-    path="common"
-    remote="rmx2072-github"
-    revision="$MIRROR_BRANCH"
-    groups="default,ddk,ddk-external" />
-</manifest>
-XML
+# Freeze every project using the resolved manifest from successful run #8.
+python3 "$ROOT_DIR/scripts/build/lock_gki_workspace.py" overlay \
+  --manifest "$ROOT_DIR/build/gki-resolved-manifest.xml" --workspace "$WORKSPACE"
 
 repo sync -c -j4 --fail-fast --groups=default,ddk,ddk-external
+python3 "$ROOT_DIR/scripts/build/lock_gki_workspace.py" verify \
+  --manifest "$ROOT_DIR/build/gki-resolved-manifest.xml" --workspace "$WORKSPACE"
 
 if [[ ! -d common/.git || ! -x tools/bazel ]]; then
   echo "Kleaf workspace is incomplete: expected common/ and tools/bazel" >&2
