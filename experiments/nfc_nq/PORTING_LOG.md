@@ -77,3 +77,9 @@ The port now frees the eSE line only when the driver's stored GPIO is valid and 
 - Result: passed; the GPIO cleanup changes compile and the AArch64 relocatable module is produced.
 - Module SHA-256: 63701348f0d369feb2399ec0b7e8c8569d33c6d7bf92786355af893d4dbff601
 - MODPOST still reports the expected missing-Module.symvers warning from the modules_prepare-only build. The KMI allow-list audit has been added to the next workflow run.
+
+## 2026-11-06 — Compare previous smoke imports to real kernel exports
+
+The run #11 smoke module (SHA-256 `63701348f0d369feb2399ec0b7e8c8569d33c6d7bf92786355af893d4dbff601`) was downloaded and its ELF64 undefined symbols parsed locally. All 75 imported symbol names occur in `kernel_aarch64_Module.symvers` extracted from successful full Kleaf run #8. There are no missing strong exports in this name-presence comparison.
+
+This corrects any assumption that the legacy GPIO names are necessarily unavailable in this pinned kernel. The module was still built by modules_prepare with no authoritative CRCs, so this comparison does not certify symbol versions, namespace imports, protected KMI policy, signatures or loading. The strict DDK build must pass independently. The reusable `scripts/kernel_research/audit_module_exports.py` records module/symvers hashes and export metadata; its report remains local.

@@ -24,16 +24,16 @@ This is a pinned source snapshot, not a full-history Git fork:
 
 ## Build workspace
 
-The GitHub Actions build still initializes the official Android `kernel/manifest` branch `common-android17-6.18`. A local manifest removes the upstream `kernel/common` project and replaces it with this repository's mirror branch.
+The main GitHub Actions build initializes the exact official `kernel/manifest` commit from SOURCE_LOCK.json. A local manifest replaces upstream kernel/common with the exact mirror snapshot commit and locks all other projects using `build/gki-resolved-manifest.xml` from successful run #8.
 
 Kleaf, Clang, Rust, Bazel, build tools and their dependencies remain synchronized from the pinned official Android kernel manifest. Only the kernel/common source tree is mirrored into this project; mirroring every build-tool repository is unnecessary for a reproducible kernel build.
 
 The build script verifies both:
-1. The checked-out mirror commit equals the commit produced by the mirror job.
+1. The checked-out mirror commit equals the immutable mirror_commit in SOURCE_LOCK.json; the build has no mirror-writing job.
 2. The mirror commit message's `Upstream-Commit` equals the pinned official GKI source SHA.
 
 This prevents a moving branch or unrelated kernel source from silently entering the build.
 
 ## Validation
 
-The first full upstream-source build succeeded in Actions run #5. Actions run #7 creates this repository-owned source snapshot and then builds the GKI distribution using the mirror. Its final build result is tracked in the workflow run linked from the project README.
+The first upstream-source build succeeded in run #5. The repository-mirror full distribution build passed in [run #8](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42194678844). Main now uses the full resolved dependency lock and adds a strict NQ-NCI DDK build; see BUILD_EXECUTION.md for current runs.
