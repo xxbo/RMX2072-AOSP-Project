@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Device unlocked; stock baseline captured; locked generic 6.18 and strict NFC builds passed.** Stock F.20 Android boots after unlock and original ABL/OCDT restoration. No project-built kernel or Android 17 / 6.18 image has been boot-tested on RMX2072 yet.
+> **Project status: Device unlocked; stock baseline captured; locked generic 6.18 and strict NFC builds passed.** Stock F.20 Android boots after unlock and original ABL/OCDT restoration. No successful physical boot of a project-built kernel or Android 17 / 6.18 image has been established on RMX2072.
 
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
@@ -12,7 +12,7 @@ Existing experiment results are consolidated into main: [full Kleaf 6.18 build](
 
 Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), [corrected legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), and [downloaded ARM64 + GMS image preflight](docs/GSI_PREFLIGHT_2026-11-06.md). The GSI is hash-verified; partition capacity and FCM/VNDK gaps are still open.
 
-**Current handset state:** the second 6.18 diagnostic trial is in progress after verified recovery to stock F.20 Android. The corrected AVB-envelope boot and DTBO were written and fully readback-verified on November 7, then reset for USB monitoring. Physical 6.18 execution is not yet established. The earlier recovery verified completed Android boot, Launcher, stock `4.19.157-perf+` kernel and unlocked/orange state. See [execution status](docs/BUILD_EXECUTION.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
+**Current handset state:** the second 6.18 diagnostic trial caused repeated restarts at the realme logo, with no diagnostic USB enumeration. Holding both volume buttons across an automatic restart recovered 9008 without another shorting operation. The known-working stock-kernel debug boot and original DTBO were restored with complete readback verification; Android startup and crash-log collection are being checked. Physical 6.18 execution is still unproven. See [execution status](docs/BUILD_EXECUTION.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
 
 ## Goals
 

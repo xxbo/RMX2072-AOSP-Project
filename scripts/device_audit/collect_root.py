@@ -6,6 +6,8 @@ import json
 import pathlib
 import shlex
 import subprocess
+import io
+import tarfile
 
 
 CAPTURES = {
@@ -13,6 +15,7 @@ CAPTURES = {
     'cmdline.txt': 'cat /proc/cmdline',
     'dmesg.txt': 'dmesg',
     'pstore-list.txt': 'ls -l /sys/fs/pstore',
+    'pstore.tar': 'tar -C /sys/fs/pstore -cf - .',
     'kernel-release.txt': 'uname -r',
     'logical-partitions.txt': 'lpdump',
     'panel-info.txt': 'cat /sys/kernel/oplus_display/dump_info',
@@ -43,9 +46,14 @@ def main():
     for name, command in CAPTURES.items():
         result = run(command)
         (out/name).write_bytes(result.stdout)
-        report[name] = dict(adb_returncode=result.returncode, read_error=result.stdout.startswith((b'cat:', b'ls:', b'sh:')), size_bytes=len(result.stdout),
+        report[name] = dict(adb_returncode=result.returncode, read_error=result.stdout.startswith((b'cat:', b'ls:', b'sh:', b'tar:')), size_bytes=len(result.stdout),
                             sha256=hashlib.sha256(result.stdout).hexdigest(),
                             stderr=result.stderr.decode('utf-8', errors='replace').strip())
+    try:
+        with tarfile.open(fileobj=io.BytesIO((out/'pstore.tar').read_bytes())) as archive:
+            report['pstore.tar']['members'] = [member.name for member in archive.getmembers()]
+    except tarfile.TarError:
+        report['pstore.tar']['read_error'] = True
     if (out/'live-fdt.dtb').read_bytes()[:4] != b'\xd0\x0d\xfe\xed':
         report['fdt_validation'] = 'missing-or-invalid-header'
     else:
