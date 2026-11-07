@@ -1,5 +1,7 @@
 # RMX2072 Driver Migration Matrix — First Pass
 
+For the current compiled configuration, captured board facts and post-trial priorities, see the [November 7 adaptation review](ADAPTATION_REVIEW_2026-11-07.md). This older first-pass matrix includes identification tasks that have since been partially resolved by handset captures.
+
 > Snapshot: **2026-11-06 UTC**
 > Target: realme X50 Pro Player Edition (RMX2072 / bladerunner_48m), Snapdragon 865 / SM8250 (Kona)
 > Kernel target under investigation: Android 17 ACK / GKI 6.18, pinned at ecdaacc9a0ee87eaf9544e1836d86bd9d590312e
