@@ -12,6 +12,18 @@ import struct
 import subprocess
 import sys
 from avb_footer import retain_envelope
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
+from inspect_boot_dt import fdt
+
+
+def validate_pstore_layout(data):
+    nodes = fdt(data, ('ramoops',))['matching_nodes']
+    expected = {'reg': [0, 0xb0000000, 0, 0x400000], 'record-size': [0x40000],
+                'console-size': [0x40000], 'pmsg-size': [0x200000],
+                'ftrace-size': [0], 'ecc-size': [16]}
+    if len(nodes) != 1 or any(nodes[0]['properties'].get(k) != v for k, v in expected.items()):
+        raise ValueError('Diagnostic DT must match the validated ECC console/pmsg reader layout')
+    return expected
 
 
 def digest(path):
@@ -35,7 +47,11 @@ def main():
     if stock[:8] != b'ANDROID!' or word(40) != 2 or word(36) != 4096 or word(24) != 0 or word(1632) != 0:
         raise ValueError('Expected captured boot-v2 geometry without second/recovery payload')
     config = set(a.config.read_text().splitlines())
-    for key in ['ARM64_4K_PAGES', 'PINCTRL_SM8250', 'SM_GCC_8250', 'USB_DWC3_QCOM', 'PHY_QCOM_USB_SNPS_FEMTO_V2', 'USB_CONFIGFS_ACM', 'PSTORE_RAM']:
+    for key in ['ARM64_4K_PAGES', 'PINCTRL_SM8250', 'SM_GCC_8250', 'USB_DWC3_QCOM',
+                'PHY_QCOM_USB_SNPS_FEMTO_V2', 'USB_CONFIGFS_ACM', 'PSTORE_RAM',
+                'HWSPINLOCK_QCOM', 'QCOM_SMEM', 'QCOM_SCM', 'QCOM_WDT',
+                'PSTORE_CONSOLE', 'PSTORE_PMSG', 'REED_SOLOMON_ENC8', 'REED_SOLOMON_DEC8',
+                'PROC_FS', 'SYSFS', 'TMPFS', 'BINFMT_ELF', 'BINFMT_SCRIPT', 'RD_GZIP']:
         if 'CONFIG_'+key+'=y' not in config:
             raise ValueError('Required built-in option absent: '+key)
     with a.kernel.open('rb') as f:
@@ -46,6 +62,7 @@ def main():
         raise ValueError('Expected gzip newc initramfs')
     if a.dtb.read_bytes()[:4] != b'\xd0\x0d\xfe\xed' or a.dtbo.read_bytes()[:4] != b'\xd7\xb7\xab\x1e':
         raise ValueError('Invalid DTB/DTBO container magic')
+    pstore_layout = validate_pstore_layout(a.dtb.read_bytes())
     version = word(44) >> 11
     patch = word(44) & 0x7ff
     os_version = f'{(version>>14)&127}.{(version>>7)&127}.{version&127}'
@@ -78,6 +95,7 @@ def main():
                   kernel_sha256=digest(a.kernel), config_sha256=digest(a.config), dtb_sha256=digest(a.dtb),
                   ramdisk_sha256=digest(a.ramdisk), stock_boot_sha256=digest(a.stock_boot),
                   avb_envelopes=dict(boot=boot_avb, dtbo=dtbo_avb),
+                  pstore_layout=pstore_layout,
                   outputs={q.name: dict(size_bytes=q.stat().st_size, sha256=digest(q)) for q in [boot, dtbo]},
                   bootloader_requirement='Use diagnostic boot and no-op DTBO together; restore both stock partitions afterward',
                   status='packaged-not-boot-tested')

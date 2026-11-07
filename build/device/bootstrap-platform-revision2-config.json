@@ -1,0 +1,33 @@
+{
+  "scope": "Selected compiled configuration values, not a boot-failure diagnosis",
+  "config_sha256": "ab9daf7a8ee10421d94f1fa4641e8b977955f1a34ef6b94f8309fe15118c1bbc",
+  "configuration": {
+    "CONFIG_HWSPINLOCK": "y",
+    "CONFIG_HWSPINLOCK_QCOM": "y",
+    "CONFIG_QCOM_SMEM": "y",
+    "CONFIG_QCOM_SCM": "y",
+    "CONFIG_QCOM_LLCC": "n",
+    "CONFIG_WATCHDOG": "y",
+    "CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED": "y",
+    "CONFIG_WATCHDOG_OPEN_TIMEOUT": "0",
+    "CONFIG_QCOM_WDT": "y",
+    "CONFIG_DEVTMPFS": "n",
+    "CONFIG_SCSI_UFS_QCOM": "y",
+    "CONFIG_PHY_QCOM_QMP_UFS": "y",
+    "CONFIG_QCOM_INLINE_CRYPTO_ENGINE": "y",
+    "CONFIG_USB_DWC3_QCOM": "y",
+    "CONFIG_USB_CONFIGFS_ACM": "y",
+    "CONFIG_DRM_MSM": "n",
+    "CONFIG_DMABUF_HEAPS": "y",
+    "CONFIG_DMABUF_HEAPS_SYSTEM": "n",
+    "CONFIG_DMABUF_HEAPS_CMA": "n",
+    "CONFIG_ANDROID_BINDER_IPC": "y",
+    "CONFIG_ANDROID_BINDERFS": "y",
+    "CONFIG_DM_DEFAULT_KEY": "y",
+    "CONFIG_DM_VERITY": "y",
+    "CONFIG_FS_ENCRYPTION": "y",
+    "CONFIG_QCOM_Q6V5_ADSP": "n",
+    "CONFIG_QCOM_Q6V5_MSS": "n",
+    "CONFIG_QCOM_Q6V5_PAS": "n"
+  }
+}

@@ -1,8 +1,9 @@
 #!/bin/busybox sh
 # SPDX-License-Identifier: GPL-2.0-only
 export PATH=/bin:/sbin
+# Do not depend on /proc/self/exe during BusyBox applet installation.
+/bin/busybox mount -t proc proc /proc
 /bin/busybox --install -s /bin
-mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev || mount -t tmpfs tmpfs /dev
 mkdir -p /dev/pts /run /sys/kernel/config

@@ -1,0 +1,46 @@
+{
+  "status": "packaged-not-flashed",
+  "kernel_run": 42326221558,
+  "kernel_project_commit": "126778e44ef84c8065c032b077137341fafa7bba",
+  "device_tree_run": 42328624543,
+  "device_tree_project_commit": "f760e513e0338ed278707516ef6c0ddd28178951",
+  "kernel_sha256": "3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33",
+  "config_sha256": "ab9daf7a8ee10421d94f1fa4641e8b977955f1a34ef6b94f8309fe15118c1bbc",
+  "dtb_sha256": "118bb1e3476de516b14dd8336e52ab433934129a66e3ebc061e101f993d0c542",
+  "ramdisk_sha256": "1238c85f6b8696e36700513bced8b375227d68206034d39b7c1b2ed0b87a2b1e",
+  "pstore_layout": {
+    "reg": [
+      0,
+      2952790016,
+      0,
+      4194304
+    ],
+    "record-size": [
+      262144
+    ],
+    "console-size": [
+      262144
+    ],
+    "pmsg-size": [
+      2097152
+    ],
+    "ftrace-size": [
+      0
+    ],
+    "ecc-size": [
+      16
+    ]
+  },
+  "outputs": {
+    "boot-diag.img": {
+      "size_bytes": 100663296,
+      "sha256": "8af332e7fd63a8523cbf55f33a8e8c21a58eb69955145e61d1ed1512c70db969"
+    },
+    "dtbo-diag.img": {
+      "size_bytes": 25165824,
+      "sha256": "513e851e3540370b9e263d72e904861b102f16b3c5a1bea2e059b00cc1344589"
+    }
+  },
+  "reader_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+  "reader_control": "Full console token preserved across stock-reader EDL/read/reset; 6.18 cross-kernel capture pending"
+}
