@@ -91,3 +91,11 @@ Before writing, full reads of boot and DTBO matched the failed diagnostic image 
 At this checkpoint reset is held until the user confirms the shorting tool is removed, buttons released and battery connected. Android startup is not yet verified; restored bytes alone do not establish a successful boot. The corrected experimental 6.18 packages remain unflashed.
 
 After that physical-state confirmation, Firehose reset completed successfully. ADB reconnected and confirmed `sys.boot_completed=1`, firmware `RMX2072_11_F.20`, kernel `4.19.157-perf+`, `ro.boot.flash.locked=0`, vbmeta device state `unlocked` and verified boot state `orange`. The resumed activity is `com.android.launcher/.Launcher`. Stock Android startup is therefore verified after recovery; this is not evidence of 6.18 execution. A brief USB disconnect during startup resolved without another write or reset. No data formatting was performed. Local verification is saved with the recovery kit. Hardware functions beyond boot/ADB/Launcher have not been revalidated.
+
+## Second physical diagnostic trial: retained AVB envelope
+
+The user authorized continuing physical experiments after successful recovery. Preflight confirmed unlocked state, 97% battery, matching prepared image hashes, all four AVB format tests passing, and byte-for-byte reconstruction of the previously booted Magisk image using the same envelope-retention procedure.
+
+ADB software reboot into EDL succeeded without another hardware shorting operation. Full pre-write boot and DTBO reads matched the restored original images. The corrected diagnostic boot (`a9fa28ecdb081ba59cfeb06eadec2ce86737b61012b1cdf8e7f7d73c91267dcb`) and DTBO (`513e851e3540370b9e263d72e904861b102f16b3c5a1bea2e059b00cc1344589`) were then written; both complete post-write readbacks matched those hashes. Firehose reset completed. USB diagnostic enumeration and the user's screen observation are pending at this checkpoint. No other partition was written.
+
+This trial tests whether the retained AVB envelope permits bootloader progression. It does not assume the missing footer was the only cause, and the stock signed hashes still do not authenticate the modified payloads. Keep recovery to original boot and DTBO available; do not infer kernel execution from a black display alone.

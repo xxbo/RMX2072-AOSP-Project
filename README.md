@@ -12,7 +12,7 @@ Existing experiment results are consolidated into main: [full Kleaf 6.18 build](
 
 Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), [corrected legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), and [downloaded ARM64 + GMS image preflight](docs/GSI_PREFLIGHT_2026-11-06.md). The GSI is hash-verified; partition capacity and FCM/VNDK gaps are still open.
 
-**Current handset state:** recovered to stock F.20 Android on November 7. Original boot and DTBO were restored with full readback SHA-256 matching both backups; ADB confirms completed boot, Launcher in the foreground, stock `4.19.157-perf+` kernel and unlocked/orange state. The first 6.18 USB-diagnostic package was rejected; its missing-AVB-footer packaging defect has been corrected locally, but corrected images remain unflashed. See [execution status](docs/BUILD_EXECUTION.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
+**Current handset state:** the second 6.18 diagnostic trial is in progress after verified recovery to stock F.20 Android. The corrected AVB-envelope boot and DTBO were written and fully readback-verified on November 7, then reset for USB monitoring. Physical 6.18 execution is not yet established. The earlier recovery verified completed Android boot, Launcher, stock `4.19.157-perf+` kernel and unlocked/orange state. See [execution status](docs/BUILD_EXECUTION.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
 
 ## Goals
 
