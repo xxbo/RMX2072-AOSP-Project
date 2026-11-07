@@ -13,8 +13,9 @@ def tree(value=0x1000):
         return struct.pack('>I', 1) + data + bytes(-len(data) % 4)
     data = begin('') + begin('reserved-memory') + begin('ramoops@0xB0000000')
     data += struct.pack('>IIII', 3, 4, 0, value)
+    data += struct.pack('>IIII', 3, 4, len(b'devinfo-size\0'), 0)
     data += struct.pack('>IIII', 2, 2, 2, 9)
-    strings = b'devinfo-size\0'
+    strings = b'devinfo-size\0ecc-size\0'
     total = 40 + len(data) + len(strings)
     return struct.pack('>10I', 0xd00dfeed, total, 40, 40 + len(data), 0,
                        17, 16, 0, len(strings), len(data)) + data + strings
@@ -35,6 +36,11 @@ class PstoreReaderPatchTest(unittest.TestCase):
     def test_unexpected_original_size_is_rejected(self):
         with self.assertRaises(ValueError):
             patch_tree(bytearray(tree(0x2000)), 0)
+
+    def test_optional_ecc_patch_at_unaligned_offset(self):
+        image = bytearray(b'abc' + tree())
+        _, changed = patch_tree(image, 3, ecc_size=16)
+        self.assertEqual([struct.unpack_from('>I', image, offset)[0] for offset in changed], [0, 16])
 
 
 if __name__ == '__main__':

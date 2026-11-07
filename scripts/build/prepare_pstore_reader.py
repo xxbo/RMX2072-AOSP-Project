@@ -14,7 +14,7 @@ from avb_footer import parse_footer
 KNOWN_DEBUG = '9593e11ba8cd2fabe162fe821b951035efd328b2b2cbf5b9c57c1a7b5c0969ad'
 
 
-def patch_tree(image, base):
+def patch_tree(image, base, ecc_size=0):
     header = struct.unpack_from('>10I', image, base)
     magic, size, structure, strings = header[:4]
     if magic != 0xd00dfeed or base + size > len(image):
@@ -39,6 +39,11 @@ def patch_tree(image, base):
                 if length != 4 or struct.unpack_from('>I', image, cursor)[0] != 0x1000:
                     raise ValueError('Unexpected original ramoops device-info size')
                 struct.pack_into('>I', image, cursor, 0)
+                changed.append(cursor)
+            if name == 'ecc-size' and stack[-1] == 'ramoops@0xB0000000' and ecc_size:
+                if length != 4 or struct.unpack_from('>I', image, cursor)[0] != 0:
+                    raise ValueError('Unexpected original ramoops ECC size')
+                struct.pack_into('>I', image, cursor, ecc_size)
                 changed.append(cursor)
             cursor = base + ((cursor - base + length + 3) & ~3)
         elif token == 4:
@@ -65,6 +70,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=pathlib.Path)
     parser.add_argument('--output', required=True, type=pathlib.Path)
+    parser.add_argument('--ecc-size', type=int, choices=[0, 16], default=0)
     args = parser.parse_args()
     repo = pathlib.Path(__file__).resolve().parents[2]
     output = args.output.resolve()
@@ -83,11 +89,13 @@ def main():
     dtb_end = dtb_start + word(1648)
     result, cursor, trees, offsets = bytearray(original), dtb_start, [], []
     while cursor < dtb_end:
-        size, changes = patch_tree(result, cursor)
+        size, changes = patch_tree(result, cursor, args.ecc_size)
         trees.append(dict(index=len(trees), changed_properties=len(changes)))
         offsets.extend(changes)
         cursor += size
-    if cursor != dtb_end or len(trees) != 25 or len(offsets) != 21 or trees[12]['changed_properties'] != 1:
+    expected_per_tree = 2 if args.ecc_size else 1
+    if (cursor != dtb_end or len(trees) != 25 or len(offsets) != 21 * expected_per_tree
+            or trees[12]['changed_properties'] != expected_per_tree):
         raise ValueError('Unexpected DTB patch coverage')
     result[576:608] = image_id(result)
     allowed = set(range(576, 608)) | {position + byte for position in offsets for byte in range(4)}
@@ -101,7 +109,8 @@ def main():
     report = dict(source_sha256=KNOWN_DEBUG, output_sha256=hashlib.sha256(result).hexdigest(),
                   size_bytes=len(result), changed_byte_count=len(changes), patched_trees=trees,
                   source_derived_console_address='0xb0180000',
-                  scope='Stock kernel/ramdisk unchanged; only ramoops devinfo-size 0x1000 to 0 and boot ID',
+                  ecc_size=args.ecc_size,
+                  scope='Stock kernel/ramdisk unchanged; ramoops devinfo-size, optional ECC and boot ID only',
                   qualification='Candidate reader; actual F.20 layout and cross-kernel retention require runtime tests',
                   status='prepared-not-device-tested')
     output.with_suffix('.json').write_text(json.dumps(report, indent=2) + '\n')
