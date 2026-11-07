@@ -47,6 +47,7 @@ def main():
         add(name, 0o40755)
     add('dev/console', 0o20600, major=5, minor=1)
     add('dev/null', 0o20666, major=1, minor=3)
+    add('dev/kmsg', 0o20600, major=1, minor=11)
     add('bin/busybox', 0o100755, binary)
     helper_hash = None
     if a.reboot_helper:
@@ -62,7 +63,9 @@ def main():
     if a.return_to_edl_after is not None:
         add('control-return-seconds', 0o100600, (str(a.return_to_edl_after)+'\n').encode())
     init = root/'device/realme/bladerunner_48m/bootstrap/diag-init.sh'
-    add('init', 0o100755, init.read_bytes().replace(b'\r\n', b'\n'))
+    supervisor = root/'device/realme/bladerunner_48m/bootstrap/diag-supervisor.sh'
+    add('init', 0o100755, supervisor.read_bytes().replace(b'\r\n', b'\n'))
+    add('diag-init.sh', 0o100755, init.read_bytes().replace(b'\r\n', b'\n'))
     add('TRAILER!!!', 0)
     data = io.BytesIO()
     with gzip.GzipFile(fileobj=data, mode='wb', mtime=0, filename='') as stream:
@@ -73,6 +76,7 @@ def main():
     report = dict(busybox_sha256=actual, reboot_helper_sha256=helper_hash,
                   control_return_seconds=a.return_to_edl_after,
                   init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
+                  supervisor_sha256=hashlib.sha256(supervisor.read_bytes()).hexdigest(),
                   cpio_sha256=hashlib.sha256(archive).hexdigest(),
                   gzip_sha256=hashlib.sha256(data.getvalue()).hexdigest(),
                   scope='USB serial shell in RAM; no block mounts or handset writes')
