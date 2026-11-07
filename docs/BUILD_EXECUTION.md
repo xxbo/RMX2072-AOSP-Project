@@ -81,3 +81,11 @@ Inspection found a concrete packaging defect: the freshly generated images lacke
 The retention procedure reconstructs the previously booted Magisk image byte-for-byte from stock metadata and its patched payload. Four synthetic format/bounds regression tests pass; the two failed no-footer packages are rejected by the new validator. Corrected images were prepared locally but have NOT been written to the phone.
 
 Recovery is the immediate priority. The original and tested debug boot images plus original DTBO, exact UFS XML ranges and hashes are collected locally under outputs/phone-recovery-kit. Only boot and DTBO were changed by the diagnostic attempt. The previous 9008 route depended on ADB reboot edl; repeated physical-key attempts from the error screen have not enumerated 9008 or a stable fastboot USB interface. Windows records no phone USB arrival after the diagnostic reset. The user reports key-held screen flickering, but a static error screen with all keys released and USB unplugged. The phone is NOT currently verified restored or operational.
+
+## November 7: original boot and DTBO restored
+
+After the user reported a hardware shorting attempt, Windows enumerated Qualcomm HS-USB QDLoader 9008. The previously tested programmer completed Sahara successfully. This is evidence of successful hardware entry, not a verified public test-point recipe: exact contacts and power sequencing have not been independently established.
+
+Before writing, full reads of boot and DTBO matched the failed diagnostic image hashes recorded above. The two original stock backup images were then written to their existing LUN 4 ranges. Full post-write reads matched SHA-256 `28bb76fe226a3cf859873e870f3bee89093cc0248f841c1ad793701f35a34a7c` (boot) and `61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef` (DTBO). No other partition was written. Logs and raw reads remain local.
+
+At this checkpoint reset is held until the user confirms the shorting tool is removed, buttons released and battery connected. Android startup is not yet verified; restored bytes alone do not establish a successful boot. The corrected experimental 6.18 packages remain unflashed.
