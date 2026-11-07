@@ -18,5 +18,8 @@ test -s "$ARTIFACT_DIR/dist/Image.gz"
 python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
   --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
   --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_defconfig"
+python3 "$ROOT_DIR/scripts/device_audit/audit_bootstrap_config.py" \
+  --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
+  --output "$ARTIFACT_DIR/platform-config-audit.json"
 find "$ARTIFACT_DIR/dist" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DIR/SHA256SUMS"
-printf '%s\n' 'Platform compile candidate only; device DTS, boot packaging and physical boot remain untested.' > "$ARTIFACT_DIR/STATUS.txt"
+printf '%s\n' 'Platform compile candidate: Qualcomm hardware mutex and APSS watchdog required built-in. Physical kernel execution is not established by this build.' > "$ARTIFACT_DIR/STATUS.txt"
