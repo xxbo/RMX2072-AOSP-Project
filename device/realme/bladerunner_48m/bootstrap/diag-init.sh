@@ -10,7 +10,17 @@ mkdir -p /dev/pts /run /sys/kernel/config
 [ -c /dev/null ] || mknod /dev/null c 1 3
 [ -c /dev/kmsg ] || mknod /dev/kmsg c 1 11
 mount -t devpts devpts /dev/pts
-echo '<6>RMX2072 diagnostic initramfs reached PID 1' > /dev/kmsg
+if [ ! -c /dev/pmsg0 ] && [ -r /sys/class/pmsg/pmsg0/dev ]; then
+    device="$(cat /sys/class/pmsg/pmsg0/dev)"
+    mknod /dev/pmsg0 c "${device%:*}" "${device#*:}"
+fi
+log_phase() {
+    message="RMX2072-DIAG kernel=$(uname -r) phase=$1"
+    echo "<6>$message" > /dev/kmsg
+    # pmsg is reserved RAM; this does not write any handset filesystem.
+    [ ! -c /dev/pmsg0 ] || printf '%s\n' "$message" > /dev/pmsg0
+}
+log_phase init
 uname -a > /run/kernel.txt
 dmesg > /run/boot-dmesg.txt
 # No block filesystem is mounted. No firmware is written or updated.
@@ -34,16 +44,21 @@ while [ -z "$(ls /sys/class/udc 2>/dev/null)" ] && [ "$count" -lt 60 ]; do
 done
 controller="$(ls /sys/class/udc 2>/dev/null | head -n 1)"
 if [ -n "$controller" ]; then
-    echo "$controller" > UDC
+    log_phase udc-present
+    if echo "$controller" > UDC; then
+        log_phase udc-bound
+    else
+        log_phase udc-bind-failed
+    fi
     if [ ! -c /dev/ttyGS0 ] && [ -r /sys/class/tty/ttyGS0/dev ]; then
         device="$(cat /sys/class/tty/ttyGS0/dev)"
         mknod /dev/ttyGS0 c "${device%:*}" "${device#*:}"
     fi
-    echo '<6>RMX2072 USB diagnostic ACM console configured' > /dev/kmsg
+    log_phase acm-shell-ready
     while :; do
         setsid sh -c 'exec < /dev/ttyGS0 > /dev/ttyGS0 2>&1; echo; echo RMX2072-DIAG; uname -a; echo "RAM-only diagnostic: no handset filesystems mounted"; exec sh -i'
         sleep 1
     done
 fi
-echo '<3>RMX2072 diagnostic: no USB controller registered; inspect ramoops after recovery' > /dev/kmsg
+log_phase no-udc
 while :; do sleep 10; done

@@ -14,8 +14,9 @@ def tree(value=0x1000):
     data = begin('') + begin('reserved-memory') + begin('ramoops@0xB0000000')
     data += struct.pack('>IIII', 3, 4, 0, value)
     data += struct.pack('>IIII', 3, 4, len(b'devinfo-size\0'), 0)
+    data += struct.pack('>IIII', 3, 4, len(b'devinfo-size\0ecc-size\0'), 0x40000)
     data += struct.pack('>IIII', 2, 2, 2, 9)
-    strings = b'devinfo-size\0ecc-size\0'
+    strings = b'devinfo-size\0ecc-size\0ftrace-size\0'
     total = 40 + len(data) + len(strings)
     return struct.pack('>10I', 0xd00dfeed, total, 40, 40 + len(data), 0,
                        17, 16, 0, len(strings), len(data)) + data + strings
@@ -41,6 +42,11 @@ class PstoreReaderPatchTest(unittest.TestCase):
         image = bytearray(b'abc' + tree())
         _, changed = patch_tree(image, 3, ecc_size=16)
         self.assertEqual([struct.unpack_from('>I', image, offset)[0] for offset in changed], [0, 16])
+
+    def test_shared_console_pmsg_layout(self):
+        image = bytearray(b'abc' + tree())
+        _, changed = patch_tree(image, 3, ecc_size=16, no_ftrace=True)
+        self.assertEqual([struct.unpack_from('>I', image, offset)[0] for offset in changed], [0, 16, 0])
 
 
 if __name__ == '__main__':

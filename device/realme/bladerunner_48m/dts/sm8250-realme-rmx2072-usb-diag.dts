@@ -26,7 +26,8 @@
             reg = <0 0xb0000000 0 0x400000>;
             record-size = <0x40000>;
             console-size = <0x40000>;
-            ftrace-size = <0x40000>;
+            // No ftrace region: OEM/ACK order console and pmsg identically now.
+            ftrace-size = <0>;
             pmsg-size = <0x200000>;
             // Match the stock-kernel reader's 16-byte Reed-Solomon parity.
             ecc-size = <16>;
