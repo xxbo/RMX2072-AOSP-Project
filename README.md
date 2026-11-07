@@ -18,6 +18,8 @@ Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxb
 
 Current board/kernel work beyond logging is detailed in the [November 7 adaptation review](docs/ADAPTATION_REVIEW_2026-11-07.md), including actual configuration gaps and the Android desktop critical path.
 
+The active phase is [independent 6.18 kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md): hardware mutex/watchdog dependencies, a verified early log path and stable RAM-only USB diagnostics. GSI integration is deferred.
+
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.
 - Inventory the official Realme kernel sources, community device trees, proprietary vendor components and firmware dependencies.
