@@ -22,6 +22,14 @@ log_phase() {
     [ ! -c /dev/pmsg0 ] || printf '%s\n' "$message" > /dev/pmsg0
 }
 log_phase init
+if [ -r /control-return-seconds ]; then
+    (
+        sleep "$(cat /control-return-seconds)"
+        log_phase control-return-edl
+        /bin/reboot-edl edl
+        log_phase control-return-failed
+    ) &
+fi
 uname -a > /run/kernel.txt
 dmesg > /run/boot-dmesg.txt
 # No block filesystem is mounted. No firmware is written or updated.

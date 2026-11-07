@@ -13,7 +13,12 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--busybox', required=True, type=pathlib.Path)
     p.add_argument('--output', required=True, type=pathlib.Path)
+    p.add_argument('--reboot-helper', type=pathlib.Path)
+    p.add_argument('--return-to-edl-after', type=int)
     a = p.parse_args()
+    if a.return_to_edl_after is not None and (
+            not a.reboot_helper or not 45 <= a.return_to_edl_after <= 300):
+        p.error('A 45..300 second control return requires a static reboot helper')
     root = pathlib.Path(__file__).resolve().parents[2]
     if root == a.output.resolve() or root in a.output.resolve().parents:
         p.error('Generated boot material must remain outside checkout')
@@ -43,6 +48,19 @@ def main():
     add('dev/console', 0o20600, major=5, minor=1)
     add('dev/null', 0o20666, major=1, minor=3)
     add('bin/busybox', 0o100755, binary)
+    helper_hash = None
+    if a.reboot_helper:
+        helper = a.reboot_helper.read_bytes()
+        if helper[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', helper, 18)[0] != 183:
+            raise ValueError('Expected ARM64 ELF reboot helper')
+        phoff = struct.unpack_from('<Q', helper, 32)[0]
+        phsize, phcount = struct.unpack_from('<HH', helper, 54)
+        if any(struct.unpack_from('<I', helper, phoff+i*phsize)[0] == 3 for i in range(phcount)):
+            raise ValueError('Reboot helper must have no dynamic interpreter')
+        add('bin/reboot-edl', 0o100755, helper)
+        helper_hash = hashlib.sha256(helper).hexdigest()
+    if a.return_to_edl_after is not None:
+        add('control-return-seconds', 0o100600, (str(a.return_to_edl_after)+'\n').encode())
     init = root/'device/realme/bladerunner_48m/bootstrap/diag-init.sh'
     add('init', 0o100755, init.read_bytes().replace(b'\r\n', b'\n'))
     add('TRAILER!!!', 0)
@@ -52,7 +70,9 @@ def main():
     a.output.mkdir(parents=True, exist_ok=True)
     (a.output/'ramdisk.cpio').write_bytes(archive)
     (a.output/'ramdisk.cpio.gz').write_bytes(data.getvalue())
-    report = dict(busybox_sha256=actual, init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
+    report = dict(busybox_sha256=actual, reboot_helper_sha256=helper_hash,
+                  control_return_seconds=a.return_to_edl_after,
+                  init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
                   cpio_sha256=hashlib.sha256(archive).hexdigest(),
                   gzip_sha256=hashlib.sha256(data.getvalue()).hexdigest(),
                   scope='USB serial shell in RAM; no block mounts or handset writes')

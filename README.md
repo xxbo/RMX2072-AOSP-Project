@@ -12,7 +12,7 @@ Existing experiment results are consolidated into main: [full Kleaf 6.18 build](
 
 Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), [corrected legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), and [downloaded ARM64 + GMS image preflight](docs/GSI_PREFLIGHT_2026-11-06.md). The GSI is hash-verified; partition capacity and FCM/VNDK gaps are still open.
 
-**Current handset state:** recovered and verified back on stock-kernel debug Android after the second 6.18 diagnostic trial looped at the realme logo. ADB confirms completed boot, root UID 0 and Launcher. Holding both volume buttons across an automatic restart recovered 9008 without another shorting operation; restoring the debug boot and original DTBO passed full readback verification. Captured pstore has no console/panic log, so physical 6.18 execution remains unproven. See [execution status](docs/BUILD_EXECUTION.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
+**Current handset state:** recovered to stock-kernel logging-reader Android after the third 6.18 diagnostic trial also looped at the realme logo. The hardware-mutex/watchdog build passed, but no new 6.18/PID1 record or diagnostic USB was observed. Boot and DTBO recovery passed full readback verification and stock boot completion was confirmed. A stock-kernel diagnostic-ramdisk control is being prepared to isolate the early handoff/init boundary. See [independent kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
 
 ## Goals
 

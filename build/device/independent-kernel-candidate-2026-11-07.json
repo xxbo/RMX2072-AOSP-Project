@@ -1,5 +1,5 @@
 {
-  "status": "packaged-not-flashed",
+  "status": "third-trial-restart-loop-stock-reader-recovered",
   "kernel_run": 42326221558,
   "kernel_project_commit": "126778e44ef84c8065c032b077137341fafa7bba",
   "device_tree_run": 42328624543,
@@ -42,5 +42,6 @@
     }
   },
   "reader_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
-  "reader_control": "Full console token preserved across stock-reader EDL/read/reset; 6.18 cross-kernel capture pending"
+  "reader_control": "Full console token preserved across stock-reader EDL/read/reset; 6.18 cross-kernel capture pending",
+  "runtime_evidence": "No diagnostic USB or new 6.18/PID1 record; stock boot completed after verified paired recovery"
 }
