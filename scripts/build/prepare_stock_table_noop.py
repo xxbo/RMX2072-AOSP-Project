@@ -59,6 +59,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for key in ('stock-dtbo', 'overlay', 'libfdt', 'output'):
         p.add_argument('--'+key, required=True, type=pathlib.Path)
+    p.add_argument('--empty-fragment', action='store_true', help='Also remove the diagnostic model override')
     a = p.parse_args()
     repo = pathlib.Path(__file__).resolve().parents[2]
     if a.output.resolve() == repo or repo in a.output.resolve().parents:
@@ -77,6 +78,7 @@ def main():
     library.fdt_delprop.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_char_p]
     library.fdt_add_subnode.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_char_p]
     library.fdt_pack.argtypes = [ctypes.c_void_p]
+    library.fdt_path_offset.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
     buffer = ctypes.create_string_buffer(4096)
     require(library.fdt_open_into(ctypes.create_string_buffer(overlay), buffer, len(buffer)) == 0,
             'libfdt could not open overlay')
@@ -90,6 +92,10 @@ def main():
                 'Could not copy original selector')
     # Some vendor overlay implementations expect a fixups node even if empty.
     require(library.fdt_add_subnode(buffer, 0, b'__fixups__') >= 0, 'Could not add empty fixups node')
+    if a.empty_fragment:
+        fragment = library.fdt_path_offset(buffer, b'/fragment@0/__overlay__')
+        require(fragment >= 0, 'Missing diagnostic fragment')
+        require(library.fdt_delprop(buffer, fragment, b'model') == 0, 'Could not clear model override')
     require(library.fdt_pack(buffer) == 0, 'Could not pack overlay')
     new = buffer.raw[:struct.unpack_from('>I', buffer.raw, 4)[0]]
     new_root = next(n['properties'] for n in fdt(new, ('**',))['matching_nodes'] if n['path']=='')
@@ -102,6 +108,7 @@ def main():
                   original_entries=18, selected_index=17, selected_slot=list(slot),
                   original_root=root, root_properties_identical=True,
                   all_other_entries_and_avb_metadata_identical=True,
+                  empty_fragment=a.empty_fragment,
                   libfdt_sha256=hashlib.sha256(a.libfdt.read_bytes()).hexdigest(),
                   overlay_sha256=hashlib.sha256(new).hexdigest(),
                   dtbo_sha256=hashlib.sha256(result).hexdigest(),
