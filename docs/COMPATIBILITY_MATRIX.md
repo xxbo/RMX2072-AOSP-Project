@@ -2,7 +2,7 @@
 
 Status values: **Unknown**, **Source-reviewed**, **Build-tested**, **Boot-tested**, **Hardware-tested**, **Blocked**.
 
-Driver-specific source evidence and proposed migration dispositions are tracked in [DRIVER_MIGRATION_MATRIX.md](./DRIVER_MIGRATION_MATRIX.md); shared prerequisites and sequencing are in [DRIVER_DEPENDENCY_MAP.md](./DRIVER_DEPENDENCY_MAP.md). Most entries remain source-reviewed. NQ-NCI has a compile-smoke artifact; strict DDK and CRC validation passed in run 42226214281. No project-built 6.18 kernel or driver has been booted/loaded on RMX2072. The stock phone boots normally after unlock; that result is separate from target-system validation.
+Driver-specific source evidence and proposed migration dispositions are tracked in [DRIVER_MIGRATION_MATRIX.md](./DRIVER_MIGRATION_MATRIX.md); shared prerequisites and sequencing are in [DRIVER_DEPENDENCY_MAP.md](./DRIVER_DEPENDENCY_MAP.md). Most entries remain source-reviewed. NQ-NCI strict DDK and CRC validation passed in run 42226214281; module loading remains untested. The project-built 6.18 kernel has now reached RAM-only diagnostic userspace using the stock DTB bundle/original DTBO. This partial boot does not establish upstream board support or Android compatibility. See [the runtime record](../build/device/handoff-runtime-2026-11-08.json).
 
 ## Platform layers
 
@@ -14,6 +14,7 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Legacy kernel | Realme 4.19.x | Source-reviewed (provisional) | Reproducible build and device boot |
 | Community kernel | SM8250 4.19.x | Source-reviewed (provisional) | Exact branch support and reproducible boot |
 | ACK/GKI | Android 17 6.18.32 generic ARM64 | Generic distribution build-tested | Run 42194678844 passed; board/module/boot tests remain |
+| Platform kernel handoff | 6.18.32 + stock DTB bundle/original DTBO | Boot-tested (diagnostic userspace only) | Eight CPUs activated; init and timed EDL restart at 90.74s; no UDC; ten-minute stability pending |
 | Device tree | bladerunner_48m | Source-reviewed (provisional) | Exact device match and build product |
 | Vendor modules | Device-specific | Unknown | Module load logs and subsystem tests |
 
@@ -21,10 +22,10 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 
 | Feature | Status | Test evidence / notes |
 | --- | --- | --- |
-| Boot / reboot | Unknown | |
+| Boot / reboot | Boot-tested (partial diagnostic path) | 6.18 RAM-only supervisor reached; explicit EDL restart captured. Upstream board DTS still loops; sustained runtime untested. |
 | Display / brightness / refresh rate | Unknown | |
 | Touch / gestures | Unknown | |
-| USB / ADB / MTP | Unknown | |
+| USB / ADB / MTP | Blocked on 6.18 handoff probe | No UDC after 60-second wait with legacy DT bindings; no diagnostic terminal observed. Stock ADB works after recovery. |
 | UFS / encryption | Unknown | |
 | SIM / calls / SMS / mobile data | Unknown | |
 | Wi-Fi | Unknown | |

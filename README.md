@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Device unlocked; stock baseline captured; locked generic 6.18 and strict NFC builds passed.** Stock F.20 Android boots after unlock and original ABL/OCDT restoration. No successful physical boot of a project-built kernel or Android 17 / 6.18 image has been established on RMX2072.
+> **Project status: Physical 6.18 diagnostic userspace reached on RMX2072.** A controlled handoff using the stock DTB bundle and original DTBO reached the RAM-only supervisor and executed its EDL return at kernel uptime 90.74 seconds. USB, sustained stability and Android 17 boot remain unvalidated.
 
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
@@ -12,7 +12,7 @@ Existing experiment results are consolidated into main: [full Kleaf 6.18 build](
 
 Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), [corrected legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), and [downloaded ARM64 + GMS image preflight](docs/GSI_PREFLIGHT_2026-11-06.md). The GSI is hash-verified; partition capacity and FCM/VNDK gaps are still open.
 
-**Current handset state:** recovered to stock-kernel logging-reader Android after the third 6.18 diagnostic trial also looped at the realme logo. The hardware-mutex/watchdog build passed, but no new 6.18/PID1 record or diagnostic USB was observed. Boot and DTBO recovery passed full readback verification and stock boot completion was confirmed. A stock-kernel diagnostic-ramdisk control is being prepared to isolate the early handoff/init boundary. See [independent kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md). Generic/platform kernel build success must not be reported as a physical 6.18 boot.
+**Current handset state:** restored to stock-kernel logging-reader Android after the successful 6.18 handoff probe; full boot/DTBO readback hashes and stock boot completion passed. The 6.18 log records eight CPUs activated, diagnostic init, no USB UDC, and an explicit EDL restart. This probe retains downstream board descriptions and does not validate the project's upstream USB DTS, which still loops. See [independent kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md) and the [runtime record](build/device/handoff-runtime-2026-11-08.json). GSI work remains deferred until independent kernel stability and hardware dependencies are resolved.
 
 ## Goals
 

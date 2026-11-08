@@ -64,8 +64,10 @@ def main():
         add('control-return-seconds', 0o100600, (str(a.return_to_edl_after)+'\n').encode())
     init = root/'device/realme/bladerunner_48m/bootstrap/diag-init.sh'
     supervisor = root/'device/realme/bladerunner_48m/bootstrap/diag-supervisor.sh'
+    snapshot = root/'device/realme/bladerunner_48m/bootstrap/diag-snapshot.sh'
     add('init', 0o100755, supervisor.read_bytes().replace(b'\r\n', b'\n'))
     add('diag-init.sh', 0o100755, init.read_bytes().replace(b'\r\n', b'\n'))
+    add('diag-snapshot.sh', 0o100755, snapshot.read_bytes().replace(b'\r\n', b'\n'))
     add('TRAILER!!!', 0)
     data = io.BytesIO()
     with gzip.GzipFile(fileobj=data, mode='wb', mtime=0, filename='') as stream:
@@ -77,6 +79,7 @@ def main():
                   control_return_seconds=a.return_to_edl_after,
                   init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
                   supervisor_sha256=hashlib.sha256(supervisor.read_bytes()).hexdigest(),
+                  snapshot_sha256=hashlib.sha256(snapshot.read_bytes()).hexdigest(),
                   cpio_sha256=hashlib.sha256(archive).hexdigest(),
                   gzip_sha256=hashlib.sha256(data.getvalue()).hexdigest(),
                   scope='USB serial shell in RAM; no block mounts or handset writes')

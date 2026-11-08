@@ -2,6 +2,8 @@
 
 The execution path is GitHub Actions for kernel/driver builds, a selected official Google Android 17 ARM64 GSI for the system layer, and the locally connected RMX2072 for flashing and hardware tests. A local full AOSP build host is not required for this phase.
 
+**November 8 runtime milestone:** Actions-built 6.18.32 reached diagnostic userspace with the logging-adjusted stock DTB bundle and original DTBO. The recovered console records eight CPUs activated, diagnostic init, no UDC, and an explicit EDL restart at 90.74 seconds. Stock reader recovery and Android boot completion passed afterwards. This is a partial kernel boot, not Android/GSI support or ten-minute stability. Current evidence and remaining gates are in [independent kernel bring-up](INDEPENDENT_KERNEL_BRINGUP.md) and the [runtime record](../build/device/handoff-runtime-2026-11-08.json). GSI adaptation is deferred.
+
 ## Legacy build gate
 
 `Legacy Kernel Build` is manually triggered. Run `stage=config` first; use `stage=kernel` after configuration validation.

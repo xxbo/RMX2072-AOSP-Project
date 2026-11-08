@@ -1,0 +1,39 @@
+{
+  "status": "physical-618-diagnostic-userspace-reached-stock-reader-restored",
+  "date": "2026-11-08",
+  "kernel_release": "6.18.32-android17-5-maybe-dirty-4k",
+  "kernel_run": 42326221558,
+  "kernel_project_commit": "126778e44ef84c8065c032b077137341fafa7bba",
+  "kernel_sha256": "3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33",
+  "config_sha256": "ab9daf7a8ee10421d94f1fa4641e8b977955f1a34ef6b94f8309fe15118c1bbc",
+  "dtb_bundle_sha256": "eb7a0551f67ea30a0b3a594cd7d87f6a190f09ea0c35db77e4231357f6d414d6",
+  "dt_scope": "25 stock DTBs with shared logging-layout adjustments; original stock DTBO; upstream board DTS not validated",
+  "ramdisk_sha256": "b22d0285c94dc70803ebdcbc398f92cb1379fc2a79e175dc91acc5456644ac2a",
+  "boot_sha256": "e61a93e1fcf989bb261426a726632f27eb21889abe8d8e48b79796204642f516",
+  "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+  "intact_console_records": [
+    "SMP: Total of 8 processors activated.",
+    "RMX2072-DIAG kernel=6.18.32-android17-5-maybe-dirty-4k phase=init",
+    "[   61.155234][  T122] RMX2072-DIAG kernel=6.18.32-android17-5-maybe-dirty-4k phase=no-udc",
+    "[   90.730961][  T121] RMX2072-SUPERVISOR kernel=6.18.32-android17-5-maybe-dirty-4k phase=control-return-edl",
+    "[   90.740609][  T216] reboot: Restarting system with command 'edl'"
+  ],
+  "console": {"bytes": 114749, "corrected_bytes": 1692, "unrecoverable_blocks": 490},
+  "pmsg": {"bytes": 336, "corrected_bytes": 8, "unrecoverable_blocks": 2},
+  "limitations": [
+    "No diagnostic UDC or USB terminal",
+    "No ten-minute stability or stress validation",
+    "Host wall time versus kernel uptime unresolved",
+    "Individual platform driver binding not established",
+    "No Android/GSI boot; no new-kernel storage, display or peripheral qualification"
+  ],
+  "recovery": {
+    "full_pre_restore_readback_match": true,
+    "full_post_restore_readback_match": true,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "original_dtbo_restored": true,
+    "android_boot_completed": true,
+    "root_capture_completed": true,
+    "user_report": "Volume keys only; no power key, battery disconnection or shorting"
+  }
+}

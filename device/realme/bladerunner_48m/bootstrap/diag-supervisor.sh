@@ -22,6 +22,14 @@ if [ -r /control-return-seconds ]; then
         record phase=control-return-failed
     ) &
 fi
+# Keep provider snapshots separate from both the gadget child and return timer.
+# Missing USB must not prevent collecting driver binding / deferred-probe state.
+(
+    for delay in 15 30 30; do
+        /bin/busybox sleep "$delay"
+        /bin/busybox sh /diag-snapshot.sh < /dev/null > /dev/kmsg 2>&1
+    done
+) &
 while :; do
     # Redirection failure affects this child, never replaces/exits PID 1.
     /bin/busybox sh -x /diag-init.sh < /dev/null > /dev/kmsg 2>&1

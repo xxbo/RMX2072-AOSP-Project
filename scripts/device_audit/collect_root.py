@@ -13,6 +13,8 @@ import tarfile
 CAPTURES = {
     'live-fdt.dtb': 'cat /sys/firmware/fdt',
     'cmdline.txt': 'cat /proc/cmdline',
+    'iomem.txt': 'cat /proc/iomem',
+    'boot-reason.txt': 'getprop ro.boot.bootreason',
     'dmesg.txt': 'dmesg',
     'pstore-list.txt': 'ls -l /sys/fs/pstore',
     'pstore.tar': 'tar -C /sys/fs/pstore -cf - .',
