@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Resolve the observed arm-smmu "qcom_scm not ready" probe dependency.
+#include "rmx2072-legacy-usb-iommu.dts"
+
+/ {
+    fragment@9 {
+        target-path = "/";
+        __overlay__ {
+            firmware {
+                scm {
+                    compatible = "qcom,scm-sm8250", "qcom,scm";
+                    #reset-cells = <1>;
+                    // No optional download-mode register write is requested.
+                };
+            };
+        };
+    };
+};

@@ -44,7 +44,8 @@ def main():
     commands = []
     with (output/'compile.log').open('w') as log:
         for name in ['sm8250-realme-rmx2072-usb-diag', 'rmx2072-noop-overlay',
-                     'rmx2072-legacy-usb-bridge', 'rmx2072-legacy-usb-iommu']:
+                     'rmx2072-legacy-usb-bridge', 'rmx2072-legacy-usb-iommu',
+                     'rmx2072-legacy-usb-scm']:
             expanded = output/(name+'.expanded.dts')
             cmd = ['gcc', '-E', '-P', '-x', 'assembler-with-cpp', '-nostdinc', '-undef', '-D__DTS__',
                    '-I'+str(src/'include'), '-I'+str(src/'arch/arm64/boot/dts/qcom'), str(dts/(name+'.dts'))]
