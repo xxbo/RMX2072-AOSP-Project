@@ -11,17 +11,19 @@ import sys
 from avb_footer import retain_envelope
 from prepare_stock_table_noop import replace_entry
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
-from inspect_boot_dt import inspect
+from inspect_boot_dt import inspect, fdt
 
 BOOT = '5b5cb9a15c174211a82c6b567d276caa6e6acd4ddf00d6e2faf68ed9ac0f5e58'
 STOCK = '61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef'
 EMPTY = '697fcba8c2214d736b246cb991969f9248fc736029b59be49db7ab93fc7282e5'
+CORE = '1bf3ffe9e252132928cc4b73e473809a43385d1581469ea6196b152fa4881970'
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     for key in ('control-boot', 'stock-dtbo', 'empty-dtbo', 'libfdt', 'mkbootimg', 'output'):
         p.add_argument('--'+key, required=True, type=pathlib.Path)
+    p.add_argument('--core-dtb', type=pathlib.Path, help='Pinned diagnostic-only upstream DTB override')
     a = p.parse_args()
     repo = pathlib.Path(__file__).resolve().parents[2]
     if a.output.resolve() == repo or repo in a.output.resolve().parents:
@@ -52,6 +54,14 @@ def main():
             raise ValueError('libfdt merge/pack failed')
         return target.raw[:struct.unpack_from('>I', target.raw, 4)[0]]
     merged = merge(blobs[12], selected(dtbo))
+    if a.core_dtb:
+        core = a.core_dtb.read_bytes()
+        if hashlib.sha256(core).hexdigest() != CORE:
+            raise ValueError('Core override hash mismatch')
+        properties = next(n['properties'] for n in fdt(core, ('**',))['matching_nodes'] if n['path']=='')
+        if properties.get('rmx2072,diagnostic-profile') != ['core-only']:
+            raise ValueError('Missing core-only marker')
+        merged = core
     if merge(merged, selected(empty)) != merged:
         raise ValueError('Empty overlay changes effective merged hardware description')
     blobs[12] = merged
@@ -66,6 +76,10 @@ def main():
     version, patch = word(44)>>11, word(44)&0x7ff
     # The exact source command line is known for this hash-guarded positive control.
     cmdline = source[64:576].split(b'\0')[0].decode()+source[608:1632].split(b'\0')[0].decode()
+    if a.core_dtb:
+        cmdline = ('rdinit=/init console=ttynull loglevel=8 ignore_loglevel printk.devkmsg=on '
+                   'clk_ignore_unused pd_ignore_unused fw_devlink=permissive panic=30 '
+                   'androidboot.hardware=qcom maxcpus=1 cpuidle.off=1')
     image = a.output/'boot-diag.img'
     command = [sys.executable, str(a.mkbootimg), '--header_version', '2', '--pagesize', '4096',
                '--base', '0', '--kernel_offset', hex(word(12)), '--ramdisk_offset', hex(word(20)),
@@ -86,9 +100,11 @@ def main():
             raise ValueError('Repackaged DTB bytes changed')
     if result[4096:4096+len(kernel)] != kernel or result[ramdisk_start:ramdisk_start+len(ramdisk)] != ramdisk:
         raise ValueError('Kernel/ramdisk changed')
-    report = dict(scope='Premerged legacy hardware description; no new hardware support claim',
+    report = dict(scope=('Core-only upstream DTB handoff; no peripheral support claim' if a.core_dtb else
+                         'Premerged legacy hardware description; no new hardware support claim'),
                   source_boot_sha256=BOOT, stock_dtbo_sha256=STOCK, paired_dtbo_sha256=EMPTY,
-                  premerged_base_index=12, preapplied_overlay_index=17,
+                  replaced_base_index=12, preapplied_overlay_index=None if a.core_dtb else 17,
+                  core_only=bool(a.core_dtb),
                   all_other_24_base_trees_identical=True,
                   merged_dt_sha256=hashlib.sha256(merged).hexdigest(),
                   empty_overlay_reapplication_byte_identical=True,

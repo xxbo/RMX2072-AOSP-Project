@@ -74,7 +74,28 @@
     "avb_metadata_and_footer_identical": true,
     "libfdt_sha256": "f5cfc89c258fee56229290d331c29e98ae230312ff063bfa0a5377750c6cdda5",
     "qualification": "Payload digest changes; original signed metadata no longer authenticates it; unlocked only",
-    "status": "flashed-readback-verified-user-observed-stable-display-runtime-and-recovery-pending"
+    "status": "618-userspace-and-return-command-observed-reader-restored",
+    "intact_runtime_records": [
+      "RMX2072-DIAG kernel=6.18.32-android17-5-maybe-dirty-4k phase=no-udc",
+      "RMX2072-SUPERVISOR kernel=6.18.32-android17-5-maybe-dirty-4k phase=control-return-edl",
+      "reboot: Restarting system with command 'edl'"
+    ],
+    "last_restart_kernel_seconds": 120.795545,
+    "full_trial_and_restore_readbacks_matched": true,
+    "android_boot_completed": true,
+    "root_capture_completed": true,
+    "console": {
+      "bytes": 156767,
+      "corrected_bytes": 2171,
+      "unrecoverable_blocks": 755
+    },
+    "pmsg": {
+      "bytes": 33970,
+      "corrected_bytes": 460,
+      "unrecoverable_blocks": 171
+    },
+    "interpretation": "Tested payload hash mismatch did not prevent 6.18 execution; generic hash-rejection alone does not explain no-op failures",
+    "edl_entry": "Observed after requesting volume-key operation; exact user action not confirmed"
   },
   "premerged_control": {
     "scope": "Premerged legacy hardware description; no new hardware support claim",
@@ -97,7 +118,8 @@
       "retained_metadata_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
       "qualification": "Stock metadata retained; its signed hash does not match modified payload; unlocked-device experiment only"
     },
-    "status": "prepared-not-device-tested"
+    "status": "flashed-readback-verified-stalled-at-realme-no-runtime-proof-cold-recovery-pending",
+    "user_report": "Realme logo; two minutes holding both volume keys did not enter EDL; power key broken"
   },
   "avb_audit": {
     "official_tool_sha256": "1aa6f2b462aa67aa3fdf488bee83ab517de8ad9d8228c7b45c35267ab2cf6781",
