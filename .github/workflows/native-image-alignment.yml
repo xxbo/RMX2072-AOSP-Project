@@ -21,6 +21,19 @@ jobs:
           run-id: '42326221558'
           github-token: ${{ github.token }}
           path: kernel-artifact
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '13618399220'
+          run-id: '42485687616'
+          github-token: ${{ github.token }}
+          path: device-tree
+      - name: Assemble reviewed early-entry probe
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y binutils-aarch64-linux-gnu
+          mkdir -p reports
+          aarch64-linux-gnu-as device/realme/bladerunner_48m/bootstrap/native-entry-probe.S -o "$RUNNER_TEMP/native-entry.o"
+          aarch64-linux-gnu-objcopy -O binary --only-section=.text "$RUNNER_TEMP/native-entry.o" reports/native-entry-probe.bin
       - name: Verify kernel and prepare native wrapper
         shell: bash
         run: |
@@ -32,9 +45,17 @@ jobs:
             --kernel "${images[0]}" \
             --expected-kernel-sha256 3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33 \
             --output reports/native-alignment
+          mapfile -t layouts < <(find device-tree -type f -name sm8250-realme-rmx2072-core-only.dtb)
+          test "${#layouts[@]}" -eq 1
+          python scripts/build/wrap_native_image.py \
+            --kernel "${images[0]}" \
+            --expected-kernel-sha256 3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33 \
+            --entry-probe reports/native-entry-probe.bin \
+            --layout-fdt "${layouts[0]}" \
+            --output reports/native-entry
       - uses: actions/upload-artifact@v4
         with:
           name: native-alignment-control-${{ github.run_number }}
-          path: reports/native-alignment/
+          path: reports/
           if-no-files-found: error
           retention-days: 14

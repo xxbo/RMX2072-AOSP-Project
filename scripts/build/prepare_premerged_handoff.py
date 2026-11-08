@@ -14,6 +14,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit
 from inspect_boot_dt import inspect, fdt
 
 BOOT = '5b5cb9a15c174211a82c6b567d276caa6e6acd4ddf00d6e2faf68ed9ac0f5e58'
+ALIGNED_BOOT = '6bf6eb2abc9b237630a45452c3d0ba1969de7bbc77eaf3fbf7978ad21086233c'
 STOCK = '61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef'
 EMPTY = '697fcba8c2214d736b246cb991969f9248fc736029b59be49db7ab93fc7282e5'
 CORE = '1bf3ffe9e252132928cc4b73e473809a43385d1581469ea6196b152fa4881970'
@@ -29,7 +30,10 @@ def main():
     if a.output.resolve() == repo or repo in a.output.resolve().parents:
         p.error('Private outputs must remain outside checkout')
     source, dtbo, empty = a.control_boot.read_bytes(), a.stock_dtbo.read_bytes(), a.empty_dtbo.read_bytes()
-    for blob, expected in ((source, BOOT), (dtbo, STOCK), (empty, EMPTY)):
+    source_hash = hashlib.sha256(source).hexdigest()
+    if source_hash not in (BOOT, ALIGNED_BOOT):
+        raise ValueError('Unexpected source control boot')
+    for blob, expected in ((dtbo, STOCK), (empty, EMPTY)):
         if hashlib.sha256(blob).hexdigest() != expected:
             raise ValueError('Unexpected control source hash')
     def selected(blob):
@@ -102,7 +106,7 @@ def main():
         raise ValueError('Kernel/ramdisk changed')
     report = dict(scope=('Core-only upstream DTB handoff; no peripheral support claim' if a.core_dtb else
                          'Premerged legacy hardware description; no new hardware support claim'),
-                  source_boot_sha256=BOOT, stock_dtbo_sha256=STOCK, paired_dtbo_sha256=EMPTY,
+                  source_boot_sha256=source_hash, stock_dtbo_sha256=STOCK, paired_dtbo_sha256=EMPTY,
                   replaced_base_index=12, preapplied_overlay_index=None if a.core_dtb else 17,
                   core_only=bool(a.core_dtb),
                   all_other_24_base_trees_identical=True,

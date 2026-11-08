@@ -21,12 +21,16 @@ capture() {
 /bin/busybox mkdir -p /sys/kernel/debug
 /bin/busybox mount -t debugfs debugfs /sys/kernel/debug
 emit phase=snapshot-begin
-for path in /proc/uptime /sys/devices/system/cpu/online /proc/mounts \
+for path in /proc/uptime /proc/sys/kernel/random/boot_id /sys/devices/system/cpu/online /proc/mounts \
+    /sys/devices/system/clocksource/clocksource0/current_clocksource \
     /sys/kernel/debug/devices_deferred \
     /sys/class/watchdog/watchdog*/identity \
     /sys/class/watchdog/watchdog*/state \
     /sys/class/udc/*/state; do
     capture "$path"
+done
+/bin/busybox grep -E 'Kernel code|Kernel data' /proc/iomem | while IFS= read -r value; do
+    emit "iomem=$value"
 done
 for pattern in /sys/bus/platform/devices/*scm* /sys/bus/platform/devices/*smem* \
     /sys/bus/platform/devices/*hwlock* /sys/bus/platform/devices/*watchdog* \

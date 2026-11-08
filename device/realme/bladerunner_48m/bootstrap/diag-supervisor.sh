@@ -9,7 +9,7 @@ if [ -r /sys/class/pmsg/pmsg0/dev ]; then
     /bin/busybox mknod /dev/pmsg0 c "${device%:*}" "${device#*:}"
 fi
 record() {
-    message="RMX2072-SUPERVISOR kernel=$(/bin/busybox uname -r) $*"
+    message="RMX2072-SUPERVISOR kernel=$(/bin/busybox uname -r) $* trial=$(/bin/busybox cat /trial-id 2>/dev/null) boot_id=$(/bin/busybox cat /proc/sys/kernel/random/boot_id)"
     printf '<0>%s\n' "$message" > /dev/kmsg
     [ ! -c /dev/pmsg0 ] || printf '%s\n' "$message" > /dev/pmsg0
 }
@@ -21,6 +21,12 @@ if [ -r /control-return-seconds ]; then
         /bin/reboot-edl edl > /dev/kmsg 2>&1
         record phase=control-return-failed
     ) &
+fi
+if [ -x /bin/entry-carry ]; then
+    /bin/busybox mkdir -p /sys/fs/pstore
+    /bin/busybox mount -t pstore pstore /sys/fs/pstore
+    /bin/entry-carry --capture > /dev/kmsg 2>&1
+    record "phase=entry-carry status=$?"
 fi
 # Keep provider snapshots separate from both the gadget child and return timer.
 # Missing USB must not prevent collecting driver binding / deferred-probe state.

@@ -6,6 +6,7 @@ import hashlib
 import io
 import json
 import pathlib
+import re
 import struct
 
 
@@ -14,8 +15,12 @@ def main():
     p.add_argument('--busybox', required=True, type=pathlib.Path)
     p.add_argument('--output', required=True, type=pathlib.Path)
     p.add_argument('--reboot-helper', type=pathlib.Path)
+    p.add_argument('--entry-carrier', type=pathlib.Path)
+    p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
     a = p.parse_args()
+    if a.trial_id and not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', a.trial_id):
+        p.error('Invalid trial ID')
     if a.return_to_edl_after is not None and (
             not a.reboot_helper or not 45 <= a.return_to_edl_after <= 300):
         p.error('A 45..300 second control return requires a static reboot helper')
@@ -50,6 +55,19 @@ def main():
     add('dev/kmsg', 0o20600, major=1, minor=11)
     add('bin/busybox', 0o100755, binary)
     helper_hash = None
+    carrier_hash = None
+    if a.entry_carrier:
+        carrier = a.entry_carrier.read_bytes()
+        if carrier[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', carrier, 18)[0] != 183:
+            raise ValueError('Expected static ARM64 entry carrier')
+        off = struct.unpack_from('<Q', carrier, 32)[0]
+        width, count = struct.unpack_from('<HH', carrier, 54)
+        if any(struct.unpack_from('<I', carrier, off+i*width)[0] == 3 for i in range(count)):
+            raise ValueError('Entry carrier must have no dynamic interpreter')
+        add('bin/entry-carry', 0o100755, carrier)
+        carrier_hash = hashlib.sha256(carrier).hexdigest()
+    if a.trial_id:
+        add('trial-id', 0o100600, (a.trial_id+'\n').encode())
     if a.reboot_helper:
         helper = a.reboot_helper.read_bytes()
         if helper[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', helper, 18)[0] != 183:
@@ -76,6 +94,7 @@ def main():
     (a.output/'ramdisk.cpio').write_bytes(archive)
     (a.output/'ramdisk.cpio.gz').write_bytes(data.getvalue())
     report = dict(busybox_sha256=actual, reboot_helper_sha256=helper_hash,
+                  entry_carrier_sha256=carrier_hash, trial_id=a.trial_id,
                   control_return_seconds=a.return_to_edl_after,
                   init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
                   supervisor_sha256=hashlib.sha256(supervisor.read_bytes()).hexdigest(),
