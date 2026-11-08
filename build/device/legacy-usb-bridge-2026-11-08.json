@@ -16,7 +16,7 @@
     "retained_metadata_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
     "qualification": "Stock metadata retained; its signed hash does not match modified payload; unlocked-device experiment only"
   },
-  "status": "flashed-full-readbacks-verified-runtime-evidence-pending",
+  "status": "UDC-registered-and-gadget-bound-restart-loop-recovered",
   "ci_run": 42494096986,
   "ci_artifact": 13621669919,
   "ci_commit": "a4a8b55926dd6e2e923fcc0fd6bfd497782f3554",
@@ -28,5 +28,22 @@
     "IOMMU domain integration",
     "Type-C role/orientation",
     "UFS/display/Android userspace"
-  ]
+  ],
+  "user_observation": "Restart interval increased from about 2 seconds to over 10 seconds, then Recovery",
+  "console_bytes": 81601,
+  "pmsg_recovered": false,
+  "evidence": {
+    "udc_name": "a600000.usb",
+    "udc_present_uptime": 0.947473,
+    "udc_bound_trace_uptime": 1.007673,
+    "supervisor_entry_carrier_exit_status": 0,
+    "gcc_warning": "clk_branch_toggle via gcc_sm8250_probe; boot continues afterward",
+    "exact_reset_cause": "not established"
+  },
+  "restoration": {
+    "full_trial_and_restore_readbacks": true,
+    "stock_boot_completed": true,
+    "root_capture_completed": true
+  },
+  "recovery_screen": "Same February 2 init SIGABRT timestamps and PIDs as earlier capture; not accepted as fresh 6.18 panic evidence"
 }

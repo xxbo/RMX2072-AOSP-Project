@@ -49,6 +49,10 @@ done
 controller="$(ls /sys/class/udc 2>/dev/null | head -n 1)"
 if [ -n "$controller" ]; then
     log_phase udc-present
+    if [ -e /defer-gadget-bind ]; then
+        log_phase udc-bind-deferred
+        while :; do sleep 10; done
+    fi
     if echo "$controller" > UDC; then
         log_phase udc-bound
     else

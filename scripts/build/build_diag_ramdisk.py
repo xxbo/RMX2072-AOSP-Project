@@ -18,6 +18,8 @@ def main():
     p.add_argument('--entry-carrier', type=pathlib.Path)
     p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
+    p.add_argument('--defer-gadget-bind', action='store_true',
+                   help='Register UDC but do not start gadget/DMA; isolates post-bind failure')
     a = p.parse_args()
     if a.trial_id and not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', a.trial_id):
         p.error('Invalid trial ID')
@@ -68,6 +70,8 @@ def main():
         carrier_hash = hashlib.sha256(carrier).hexdigest()
     if a.trial_id:
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
+    if a.defer_gadget_bind:
+        add('defer-gadget-bind', 0o100600, b'1\n')
     if a.reboot_helper:
         helper = a.reboot_helper.read_bytes()
         if helper[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', helper, 18)[0] != 183:
@@ -96,6 +100,7 @@ def main():
     report = dict(busybox_sha256=actual, reboot_helper_sha256=helper_hash,
                   entry_carrier_sha256=carrier_hash, trial_id=a.trial_id,
                   control_return_seconds=a.return_to_edl_after,
+                  defer_gadget_bind=a.defer_gadget_bind,
                   init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
                   supervisor_sha256=hashlib.sha256(supervisor.read_bytes()).hexdigest(),
                   snapshot_sha256=hashlib.sha256(snapshot.read_bytes()).hexdigest(),
