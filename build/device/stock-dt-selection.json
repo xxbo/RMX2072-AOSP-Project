@@ -45,6 +45,7 @@
         "model": [
           "Qualcomm Technologies, Inc. kona MTP"
         ],
+        "oplus,dtsi_no": [20607],
         "compatible": [
           "qcom,kona-mtp",
           "qcom,kona",

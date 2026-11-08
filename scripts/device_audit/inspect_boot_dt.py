@@ -52,7 +52,7 @@ def fdt(data, compatible=()):
                     node_props[-1][name] = list(struct.unpack('>'+str(length//4)+'I', value))
                 else:
                     node_props[-1][name] = dict(hex=value.hex())
-            if len(stack) == 1 and name in ('model', 'compatible', 'qcom,msm-id', 'qcom,board-id', 'qcom,pmic-id'):
+            if len(stack) == 1 and name in ('model', 'compatible', 'qcom,msm-id', 'qcom,board-id', 'qcom,pmic-id', 'oplus,dtsi_no'):
                 if name in ('model', 'compatible'):
                     props[name] = value.rstrip(b'\0').decode('ascii', errors='replace').split('\0')
                 elif length % 4 == 0:

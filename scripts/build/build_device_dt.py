@@ -7,8 +7,12 @@ import pathlib
 import shutil
 import struct
 import subprocess
+import sys
 import tarfile
 import urllib.request
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
+from inspect_boot_dt import fdt
 
 
 def main():
@@ -50,6 +54,11 @@ def main():
             commands.append(cmd)
             subprocess.run(cmd, stdout=log, stderr=log, check=True)
     overlay = (output/'rmx2072-noop-overlay.dtb').read_bytes()
+    selectors = fdt(overlay)['root']
+    stock_selectors = json.loads((project/'build/device/stock-dt-selection.json').read_text())['dtbo']['selected']['root']
+    for selector in ('qcom,board-id', 'oplus,dtsi_no'):
+        if selectors.get(selector) != stock_selectors[selector]:
+            raise ValueError('Compiled overlay selector differs from captured stock entry: '+selector)
     page = 4096
     size = page+(len(overlay)+page-1)//page*page
     image = bytearray(size)
@@ -61,6 +70,7 @@ def main():
     subprocess.run(['fdtoverlay', '-i', str(output/'sm8250-realme-rmx2072-usb-diag.dtb'),
                     '-o', str(output/'merged-diag.dtb'), str(output/'rmx2072-noop-overlay.dtb')], check=True)
     report = dict(upstream_commit=source['commit'], mirror_commit=source['mirror_commit'],
+                  overlay_selectors=selectors,
                   archive_sha256=archive_hash, commands=commands,
                   status='compiled-and-overlay-applied-not-device-tested',
                   scope='USB diagnostic only; UFS, display and Android system are not enabled by this DT',

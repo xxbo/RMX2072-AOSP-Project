@@ -4,6 +4,8 @@
 / {
     qcom,msm-id = <356 0x20001>;
     qcom,board-id = <0x10008 0>;
+    // Exact OEM selector in captured stock DTBO entry 17; not an upstream binding.
+    oplus,dtsi_no = <20607>;
     fragment@0 {
         target-path = "/";
         __overlay__ { model = "realme RMX2072 diagnostic overlay"; };
