@@ -118,8 +118,15 @@
       "retained_metadata_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
       "qualification": "Stock metadata retained; its signed hash does not match modified payload; unlocked-device experiment only"
     },
-    "status": "flashed-readback-verified-stalled-at-realme-no-runtime-proof-cold-recovery-pending",
-    "user_report": "Realme logo; two minutes holding both volume keys did not enter EDL; power key broken"
+    "status": "stalled-at-realme-no-runtime-proof-cold-recovered-reader-restored",
+    "user_report": "Realme logo; two minutes holding both volume keys did not enter EDL; power key broken",
+    "recovery": {
+      "method": "Battery disconnection then both volume keys and USB insertion",
+      "ram_continuity_lost": true,
+      "complete_trial_and_restore_readbacks_matched": true,
+      "android_boot_completed": true,
+      "root_capture_completed": true
+    }
   },
   "avb_audit": {
     "official_tool_sha256": "1aa6f2b462aa67aa3fdf488bee83ab517de8ad9d8228c7b45c35267ab2cf6781",

@@ -1,0 +1,22 @@
+{
+  "scope": "Native entry alignment control, not EFI or runtime qualification",
+  "original_kernel_sha256": "3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33",
+  "original_kernel_bytes": 44976640,
+  "wrapped_sha256": "995e243a52efff56ffa2811c28971fc2d6e7560b363edec149fc6babf2d2f855",
+  "wrapped_bytes": 46549504,
+  "wrapper_text_offset": 524288,
+  "embedded_image_file_offset": 1572864,
+  "original_image_size": 45678592,
+  "wrapper_image_size": 47251456,
+  "branch_instruction_hex": "0x14060000",
+  "original_image_byte_identical": true,
+  "entry_registers_unchanged": true,
+  "qualification": "Requires native loader honoring or using 0x80000 offset; does not identify prior reset cause",
+  "status": "flashed-readback-verified-user-observed-stable-runtime-and-recovery-pending",
+  "ci_run": 42487342470,
+  "ci_commit": "b9eaf806ba2b8eec138dabafcd1ad0167599da18",
+  "ci_local_bytes_identical": true,
+  "assembler_disassembler_verified_entry": true,
+  "boot_sha256": "6bf6eb2abc9b237630a45452c3d0ba1969de7bbc77eaf3fbf7978ad21086233c",
+  "paired_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+}

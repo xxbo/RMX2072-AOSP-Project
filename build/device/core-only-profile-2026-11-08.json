@@ -291,11 +291,19 @@
     "cpuidle.off=1",
     "console=ttynull"
   ],
-  "status": "built-and-packaged-not-device-tested",
+  "status": "physical-restart-loop-no-new-runtime-proof-reader-restored",
   "ci_run": 42485687616,
   "ci_commit": "c253ed3380dcba018149008d7d2866f197426869",
   "linux_windows_generation_byte_identical": true,
   "packaged_boot_sha256": "dea88115712517e473b5063aa11e86586869508d3ce975e34221c4751654f6be",
   "paired_dtbo_sha256": "697fcba8c2214d736b246cb991969f9248fc736029b59be49db7ab93fc7282e5",
-  "kernel_run": 42326221558
+  "kernel_run": 42326221558,
+  "physical_result": {
+    "full_trial_restore_readbacks_matched": true,
+    "android_boot_completed": true,
+    "root_capture_completed": true,
+    "pmsg_bytes": 235,
+    "console_bytes": 233029,
+    "new_618_phase_found": false
+  }
 }
