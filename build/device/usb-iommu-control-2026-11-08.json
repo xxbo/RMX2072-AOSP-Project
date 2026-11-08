@@ -16,7 +16,7 @@
     "retained_metadata_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
     "qualification": "Stock metadata retained; its signed hash does not match modified payload; unlocked-device experiment only"
   },
-  "status": "physical-trial-running-runtime-unvalidated",
+  "status": "restart-loop-recovered-SCM-dependency-identified",
   "ci_run": 42495823932,
   "ci_artifact": 13623800120,
   "ci_commit": "54e488791aa52592ac869031b5815ecf56761099",
@@ -24,5 +24,14 @@
   "downloaded_plugin_hash_matches": true,
   "smmu_register_resource_and_all_98_irqs_match_pinned_upstream": true,
   "final_oem_overlay_preserves_modern_smmu_and_usb_stream": true,
-  "qualification": "IOMMU migration hypothesis; no captured translation fault yet"
+  "qualification": "IOMMU migration hypothesis; no captured translation fault yet",
+  "user_observation": "Reset interval nearly 30 seconds",
+  "console_bytes": 89937,
+  "pmsg_recovered": false,
+  "observed_dependency": "platform 15000000.apps-smmu: deferred probe pending: arm-smmu: qcom_scm not ready",
+  "usb_probe_result": "dwc3-qcom a600000.usb: deferred probe timeout, ignoring dependency",
+  "full_trial_restore_hashes_matched": true,
+  "stock_boot_completed": true,
+  "root_capture_completed": true,
+  "next_change": "Add missing /firmware/scm matching qcom,scm-sm8250 and qcom,scm; enabled driver is already built"
 }
