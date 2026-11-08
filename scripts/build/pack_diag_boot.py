@@ -38,6 +38,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ['stock-boot', 'stock-dtbo', 'kernel', 'config', 'dtb', 'dtbo', 'ramdisk', 'mkbootimg', 'output']:
         p.add_argument('--'+name, required=True, type=pathlib.Path)
+    p.add_argument('--disable-cpuidle', action='store_true',
+                   help='Isolate upstream PSCI idle-domain entry; diagnostic experiment only')
     a = p.parse_args()
     root = pathlib.Path(__file__).resolve().parents[2]
     if root == a.output.resolve() or root in a.output.resolve().parents:
@@ -70,6 +72,8 @@ def main():
     a.output.mkdir(parents=True, exist_ok=True)
     boot = a.output/'boot-diag.img'
     cmdline = 'rdinit=/init earlycon console=ttyMSM0,115200n8 loglevel=8 ignore_loglevel printk.devkmsg=on clk_ignore_unused pd_ignore_unused fw_devlink=permissive panic=30 androidboot.hardware=qcom'
+    if a.disable_cpuidle:
+        cmdline += ' cpuidle.off=1'
     command = [sys.executable, str(a.mkbootimg), '--header_version', '2', '--pagesize', '4096',
                '--base', '0', '--kernel_offset', hex(word(12)), '--ramdisk_offset', hex(word(20)),
                '--tags_offset', hex(word(32)), '--dtb_offset', hex(struct.unpack_from('<Q', stock, 1652)[0]),
@@ -96,6 +100,7 @@ def main():
                   ramdisk_sha256=digest(a.ramdisk), stock_boot_sha256=digest(a.stock_boot),
                   avb_envelopes=dict(boot=boot_avb, dtbo=dtbo_avb),
                   pstore_layout=pstore_layout,
+                  cpuidle_disabled=a.disable_cpuidle,
                   outputs={q.name: dict(size_bytes=q.stat().st_size, sha256=digest(q)) for q in [boot, dtbo]},
                   bootloader_requirement='Use diagnostic boot and no-op DTBO together; restore both stock partitions afterward',
                   status='packaged-not-boot-tested')
