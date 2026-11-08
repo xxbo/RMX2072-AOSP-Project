@@ -17,6 +17,11 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y gcc device-tree-compiler
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree
+      - name: Prepare core-only handoff profile
+        run: >-
+          python scripts/build/prepare_core_only_dt.py
+          --input reports/device-tree/sm8250-realme-rmx2072-usb-diag.dtb
+          --output reports/device-tree/sm8250-realme-rmx2072-core-only.dtb
       - uses: actions/upload-artifact@v4
         if: always()
         with:
