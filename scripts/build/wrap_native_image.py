@@ -14,7 +14,7 @@ import struct
 ALIGNMENT = 0x200000
 TEXT_OFFSET = 0x80000
 PADDING = ALIGNMENT-TEXT_OFFSET
-ENTRY_PROBE_SHA = '73965498862c12e89aa1fd42be4b8c828386fba1ceeac481086e7368997b8006'
+ENTRY_PROBE_SHA = '0484b246c561fde26f07a5eb40ed2f6bea0683a83607a5157ed7bd00ea11e8b6'
 
 
 def wrap(image, probe=None):
@@ -67,7 +67,8 @@ def main():
                   branch_instruction_hex=hex(struct.unpack_from('<I', wrapped)[0]),
                   original_image_byte_identical=True, entry_registers_unchanged=not bool(a.entry_probe),
                   boot_argument_registers_x0_x3_unchanged=True,
-                  scratch_registers=['x9', 'x10', 'x11', 'x12', 'x13', 'x14', 'NZCV'] if a.entry_probe else [],
+                  scratch_registers=['x9', 'x10', 'x11', 'x12', 'x13', 'x14', 'x15', 'x16', 'NZCV'] if a.entry_probe else [],
+                  probe_cleans_written_ram_to_poc=bool(a.entry_probe),
                   entry_probe=bool(a.entry_probe),
                   probe_sha256=ENTRY_PROBE_SHA if a.entry_probe else None,
                   probe_ram_range=['0xb0200010', '0xb0201010'] if a.entry_probe else None,
