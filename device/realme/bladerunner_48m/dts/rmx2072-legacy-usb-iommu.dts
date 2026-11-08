@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// USB bridge plus one IOMMU handoff hypothesis. No runtime success implied.
+#include "rmx2072-legacy-usb-bridge.dts"
+
+/ {
+    fragment@7 {
+        target-path = "/soc/apps-smmu@15000000";
+        __overlay__ {
+            // Original first reg resource and full IRQ list match upstream.
+            // Legacy qcom,qsmmu-v500 has no matching enabled modern driver.
+            compatible = "qcom,sm8250-smmu-500", "qcom,smmu-500", "arm,mmu-500";
+            dma-coherent;
+        };
+    };
+    fragment@8 {
+        target-path = "/soc/usb@a600000";
+        __overlay__ {
+            // SM8250 primary USB stream, from the pinned upstream board DTSI.
+            iommus = <&apps_smmu 0x740 0>;
+        };
+    };
+};
