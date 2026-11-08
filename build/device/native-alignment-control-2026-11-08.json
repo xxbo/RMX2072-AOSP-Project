@@ -12,11 +12,20 @@
   "original_image_byte_identical": true,
   "entry_registers_unchanged": true,
   "qualification": "Requires native loader honoring or using 0x80000 offset; does not identify prior reset cause",
-  "status": "flashed-readback-verified-user-observed-stable-runtime-and-recovery-pending",
+  "status": "6.18-userspace-recovered-restoration-and-stock-boot-verified",
   "ci_run": 42487342470,
   "ci_commit": "b9eaf806ba2b8eec138dabafcd1ad0167599da18",
   "ci_local_bytes_identical": true,
   "assembler_disassembler_verified_entry": true,
   "boot_sha256": "6bf6eb2abc9b237630a45452c3d0ba1969de7bbc77eaf3fbf7978ad21086233c",
-  "paired_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  "paired_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+  "subsequent_entry_probe": {
+    "wrapper_physical": "0xa0080000",
+    "kernel_physical": "0xa0200000",
+    "dtb_physical": "0xafb61000",
+    "current_el": 1,
+    "consistent_records": 31,
+    "fresh_seed_found": true,
+    "ci_run": 42490590910
+  }
 }
