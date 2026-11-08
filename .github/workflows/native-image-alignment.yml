@@ -1,0 +1,40 @@
+name: Native Kernel Alignment Control
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  wrap:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '13555443403'
+          run-id: '42326221558'
+          github-token: ${{ github.token }}
+          path: kernel-artifact
+      - name: Verify kernel and prepare native wrapper
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find kernel-artifact -type f -name Image)
+          test "${#images[@]}" -eq 1
+          python -m unittest discover -s tests
+          python scripts/build/wrap_native_image.py \
+            --kernel "${images[0]}" \
+            --expected-kernel-sha256 3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33 \
+            --output reports/native-alignment
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-alignment-control-${{ github.run_number }}
+          path: reports/native-alignment/
+          if-no-files-found: error
+          retention-days: 14
