@@ -1,0 +1,27 @@
+{
+  "scope": "Legacy-tree incremental patch; original DTBO unchanged",
+  "source_boot_sha256": "ddf65a75d5abc34f69517b6eea9769a516ba170b658a24e5ae2fbb04bc9b107b",
+  "boot_sha256": "0ebaae06324091bae27253d997ebbafde13a57eabca71e325e60ac08d0b92246",
+  "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+  "selected_base_index": 12,
+  "other_24_trees_identical": true,
+  "selected_base_sha256": "3b5343d5001f12d0f9720e543a74354d0a688e5f62d4edd1e8d7d6b681d95be1",
+  "overlay_sha256": "05f01a9a4f53a859e104287b9a4975f590631553f4e7bcfcae0cb96c7c38ced0",
+  "root_selectors_and_pstore_unchanged": true,
+  "original_overlay_application_passed": true,
+  "avb_envelope": {
+    "payload_size": 61915136,
+    "vbmeta_offset": 61915136,
+    "vbmeta_size": 2432,
+    "retained_metadata_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
+    "qualification": "Stock metadata retained; its signed hash does not match modified payload; unlocked-device experiment only"
+  },
+  "status": "physical-trial-running-runtime-unvalidated",
+  "ci_run": 42496412472,
+  "ci_artifact": 13623528245,
+  "ci_commit": "9e77316d376f9f74d5b8018001d23eb1ddffd165",
+  "ci_status": "success",
+  "downloaded_plugin_hash_matches": true,
+  "final_oem_overlay_preserves_scm_node": true,
+  "qualification": "Resolve captured SCM-not-ready dependency; USB enumeration remains unvalidated"
+}
