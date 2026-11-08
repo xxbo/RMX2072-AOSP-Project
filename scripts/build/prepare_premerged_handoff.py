@@ -15,6 +15,7 @@ from inspect_boot_dt import inspect, fdt
 
 BOOT = '5b5cb9a15c174211a82c6b567d276caa6e6acd4ddf00d6e2faf68ed9ac0f5e58'
 ALIGNED_BOOT = '6bf6eb2abc9b237630a45452c3d0ba1969de7bbc77eaf3fbf7978ad21086233c'
+ENTRY_BOOT = 'ddf65a75d5abc34f69517b6eea9769a516ba170b658a24e5ae2fbb04bc9b107b'
 STOCK = '61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef'
 EMPTY = '697fcba8c2214d736b246cb991969f9248fc736029b59be49db7ab93fc7282e5'
 CORE = '1bf3ffe9e252132928cc4b73e473809a43385d1581469ea6196b152fa4881970'
@@ -31,7 +32,7 @@ def main():
         p.error('Private outputs must remain outside checkout')
     source, dtbo, empty = a.control_boot.read_bytes(), a.stock_dtbo.read_bytes(), a.empty_dtbo.read_bytes()
     source_hash = hashlib.sha256(source).hexdigest()
-    if source_hash not in (BOOT, ALIGNED_BOOT):
+    if source_hash not in (BOOT, ALIGNED_BOOT, ENTRY_BOOT):
         raise ValueError('Unexpected source control boot')
     for blob, expected in ((dtbo, STOCK), (empty, EMPTY)):
         if hashlib.sha256(blob).hexdigest() != expected:

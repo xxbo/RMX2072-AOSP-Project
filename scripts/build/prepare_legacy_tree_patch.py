@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+"""Patch only base DTB 12 in a proven boot; always keep original stock DTBO."""
+import argparse
+import ctypes
+import hashlib
+import json
+import pathlib
+import struct
+import sys
+from avb_footer import retain_envelope
+from prepare_pstore_reader import image_id
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
+from inspect_boot_dt import fdt, inspect
+
+BOOT = 'ddf65a75d5abc34f69517b6eea9769a516ba170b658a24e5ae2fbb04bc9b107b'
+DTBO = '61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef'
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    for name in ('control-boot', 'stock-dtbo', 'libfdt', 'output'):
+        p.add_argument('--'+name, required=True, type=pathlib.Path)
+    p.add_argument('--overlay', type=pathlib.Path)
+    p.add_argument('--expected-overlay-sha256')
+    a = p.parse_args()
+    if bool(a.overlay) != bool(a.expected_overlay_sha256):
+        p.error('Overlay requires its expected hash')
+    repo = pathlib.Path(__file__).resolve().parents[2]
+    if a.output.resolve() == repo or repo in a.output.resolve().parents:
+        p.error('Private outputs stay outside checkout')
+    source, dtbo = a.control_boot.read_bytes(), a.stock_dtbo.read_bytes()
+    if hashlib.sha256(source).hexdigest() != BOOT or hashlib.sha256(dtbo).hexdigest() != DTBO:
+        raise ValueError('Requires exact executed entry-control boot and original DTBO')
+    if image_id(source) != source[576:608]:
+        raise ValueError('Source boot ID does not match parsed components')
+    trees = inspect(a.control_boot)['trees']
+    if len(trees) != 25:
+        raise ValueError('Expected original 25-DTB bundle')
+    blobs = [source[t['offset']:t['offset']+t['size_bytes']] for t in trees]
+    library = ctypes.CDLL(str(a.libfdt.resolve()))
+    library.fdt_open_into.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int]
+    library.fdt_setprop.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_void_p, ctypes.c_int]
+    library.fdt_overlay_apply.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+    library.fdt_pack.argtypes = [ctypes.c_void_p]
+    buffer = ctypes.create_string_buffer(2*1024*1024)
+    if library.fdt_open_into(ctypes.create_string_buffer(blobs[12]), buffer, len(buffer)):
+        raise ValueError('Cannot open selected base')
+    if a.overlay:
+        overlay = a.overlay.read_bytes()
+        if hashlib.sha256(overlay).hexdigest() != a.expected_overlay_sha256:
+            raise ValueError('Overlay hash mismatch')
+        if library.fdt_overlay_apply(buffer, ctypes.create_string_buffer(overlay)):
+            raise ValueError('Project overlay cannot apply to captured base')
+    else:
+        if library.fdt_setprop(buffer, 0, b'rmx2072,diagnostic-stage', b'legacy-marker\0', 14):
+            raise ValueError('Cannot add benign marker')
+    if library.fdt_pack(buffer):
+        raise ValueError('Cannot pack base')
+    changed = buffer.raw[:int.from_bytes(buffer.raw[4:8], 'big')]
+    original_root, patched_root = fdt(blobs[12])['root'], fdt(changed)['root']
+    if original_root != patched_root:
+        raise ValueError('Original root selection metadata changed')
+    if fdt(blobs[12], ('ramoops',))['matching_nodes'] != fdt(changed, ('ramoops',))['matching_nodes']:
+        raise ValueError('pstore layout changed')
+    # The unchanged original overlay must still resolve its complete symbol set.
+    entries = struct.unpack_from('>I', dtbo, 20)[0]
+    size, offset = struct.unpack_from('>2I', dtbo, entries+17*32)
+    merged = ctypes.create_string_buffer(2*1024*1024)
+    if library.fdt_open_into(ctypes.create_string_buffer(changed), merged, len(merged)):
+        raise ValueError('Cannot validate final merged tree')
+    if library.fdt_overlay_apply(merged, ctypes.create_string_buffer(dtbo[offset:offset+size])):
+        raise ValueError('Original overlay no longer applies')
+    blobs[12] = changed
+    start = trees[0]['offset']
+    raw = bytearray(source[:start])+b''.join(blobs)
+    struct.pack_into('<I', raw, 1648, sum(map(len, blobs)))
+    raw[576:608] = image_id(raw)
+    raw.extend(bytes(-len(raw)%4096))
+    result, envelope = retain_envelope(source, raw)
+    if result[608:1648] != source[608:1648] or result[1652:start] != source[1652:start]:
+        raise ValueError('Non-DT component/header changed')
+    a.output.mkdir(exist_ok=False, parents=True)
+    (a.output/'boot-diag.img').write_bytes(result)
+    (a.output/'dtbo-diag.img').write_bytes(dtbo)
+    packaged = inspect(a.output/'boot-diag.img')['trees']
+    if len(packaged) != 25 or any(result[t['offset']:t['offset']+t['size_bytes']] != blobs[i]
+                                   for i, t in enumerate(packaged)):
+        raise ValueError('Repackaged DTB mismatch')
+    report = dict(scope='Legacy-tree incremental patch; original DTBO unchanged', source_boot_sha256=BOOT,
+                  boot_sha256=hashlib.sha256(result).hexdigest(), dtbo_sha256=DTBO,
+                  selected_base_index=12, other_24_trees_identical=True,
+                  selected_base_sha256=hashlib.sha256(changed).hexdigest(),
+                  overlay_sha256=a.expected_overlay_sha256,
+                  root_selectors_and_pstore_unchanged=True, original_overlay_application_passed=True,
+                  avb_envelope=envelope, status='prepared-not-device-tested')
+    (a.output/'control.json').write_text(json.dumps(report, indent=2)+'\n')
+    print(json.dumps(report))
+
+
+if __name__ == '__main__':
+    main()

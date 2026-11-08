@@ -15,9 +15,8 @@ def inspect_trace(data, trial_id):
     while offset >= 0:
         if offset+64 <= len(data):
             w = struct.unpack_from('<8Q', data, offset)
-            if (data[offset+48:offset+64] == MAGIC*2 and w[1]&0x1fffff == 0x80000 and
-                    w[4] == w[1]+0x180000 and not w[2]&7 and
-                    0x80000000 <= w[2] < 0x280000000 and w[3] in (4, 8) and 1 <= w[5] <= 64):
+            if (data[offset+48:offset+64] == MAGIC*2 and not w[1]&3 and
+                    w[4] == w[1]+0x180000 and w[3] in (0, 4, 8, 12) and 1 <= w[5] <= 64):
                 records.append((w[1], w[2], w[3], w[4], w[5]))
         offset = data.find(MAGIC, offset+1)
     groups = collections.Counter(record[:4] for record in records)
@@ -32,6 +31,10 @@ def inspect_trace(data, trial_id):
                 dtb_physical=hex(winner[1]) if winner else None,
                 current_el=winner[2]//4 if winner else None,
                 kernel_physical=hex(winner[3]) if winner else None,
+                kernel_2m_aligned=not bool(winner[3]&0x1fffff) if winner else None,
+                dtb_8byte_aligned=not bool(winner[1]&7) if winner else None,
+                dtb_in_captured_dram_range=0x80000000 <= winner[1] < 0x280000000 if winner else None,
+                el_matches_boot_protocol=winner[2] in (4, 8) if winner else None,
                 qualification='Absence is inconclusive; RAM continuity and positive controls are required')
 
 

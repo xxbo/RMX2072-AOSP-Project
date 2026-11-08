@@ -1,0 +1,128 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Applied to captured downstream base 12 BEFORE the unchanged OEM DTBO.
+// RAM-only USB-HS diagnostic: no storage, display, Type-C or suspend support.
+/dts-v1/;
+/plugin/;
+#include <dt-bindings/clock/qcom,gcc-sm8250.h>
+#include <dt-bindings/clock/qcom,rpmh.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+/ {
+    fragment@0 {
+        target-path = "/";
+        __overlay__ {
+            diag_xo: diag-xo-clock {
+                compatible = "fixed-clock";
+                #clock-cells = <0>;
+                clock-frequency = <19200000>;
+            };
+            diag_sleep: diag-sleep-clock {
+                compatible = "fixed-clock";
+                #clock-cells = <0>;
+                clock-frequency = <32764>;
+            };
+        };
+    };
+    // Keep OEM paths/symbols available for the original overlay's fixups.
+    fragment@1 { target-path = "/soc/qcom,gcc@100000";
+        __overlay__ { status = "disabled"; }; };
+    fragment@2 { target-path = "/soc/ssusb@a600000";
+        __overlay__ { status = "disabled"; }; };
+    fragment@3 { target-path = "/soc/hsphy@88e3000";
+        __overlay__ { status = "disabled"; }; };
+    fragment@4 { target-path = "/soc/ssphy@88e8000";
+        __overlay__ { status = "disabled"; }; };
+    fragment@5 {
+        target-path = "/soc/rsc@18200000";
+        __overlay__ {
+            diag_rpmhcc: diag-clock-controller {
+                compatible = "qcom,sm8250-rpmh-clk";
+                #clock-cells = <1>;
+                clocks = <&diag_xo>;
+                clock-names = "xo";
+            };
+            diag-regulators {
+                compatible = "qcom,pm8150-rpmh-regulators";
+                qcom,pmic-id = "a";
+                // Voltages captured from this handset's stock running FDT.
+                diag_l2: ldo2 {
+                    regulator-name = "diag_pm8150_l2";
+                    regulator-min-microvolt = <3072000>;
+                    regulator-max-microvolt = <3072000>;
+                };
+                diag_l5: ldo5 {
+                    regulator-name = "diag_pm8150_l5";
+                    regulator-min-microvolt = <880000>;
+                    regulator-max-microvolt = <880000>;
+                };
+                diag_l12: ldo12 {
+                    regulator-name = "diag_pm8150_l12";
+                    regulator-min-microvolt = <1800000>;
+                    regulator-max-microvolt = <1800000>;
+                };
+            };
+        };
+    };
+    fragment@6 {
+        target-path = "/soc";
+        __overlay__ {
+            // Downstream /soc uses ONE address cell and ONE size cell.
+            #address-cells = <1>;
+            #size-cells = <1>;
+            diag_gcc: clock-controller@100000 {
+                compatible = "qcom,gcc-sm8250";
+                reg = <0x00100000 0x1f0000>;
+                #clock-cells = <1>;
+                #reset-cells = <1>;
+                #power-domain-cells = <1>;
+                clocks = <&diag_rpmhcc RPMH_CXO_CLK>,
+                         <&diag_rpmhcc RPMH_CXO_CLK_A>, <&diag_sleep>;
+                clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+            };
+            diag_hsphy: phy@88e3000 {
+                compatible = "qcom,sm8250-usb-hs-phy", "qcom,usb-snps-hs-7nm-phy";
+                reg = <0x088e3000 0x400>;
+                #phy-cells = <0>;
+                clocks = <&diag_rpmhcc RPMH_CXO_CLK>;
+                clock-names = "ref";
+                resets = <&diag_gcc GCC_QUSB2PHY_PRIM_BCR>;
+                vdda-pll-supply = <&diag_l5>;
+                vdda18-supply = <&diag_l12>;
+                vdda33-supply = <&diag_l2>;
+            };
+            usb@a600000 {
+                // Current pinned 6.18 driver calls dwc3_core_probe itself.
+                // No nested snps,dwc3 child: all properties are on this node.
+                compatible = "qcom,sm8250-dwc3", "qcom,snps-dwc3";
+                reg = <0x0a600000 0x100000>;
+                clocks = <&diag_gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+                         <&diag_gcc GCC_USB30_PRIM_MASTER_CLK>,
+                         <&diag_gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+                         <&diag_gcc GCC_USB30_PRIM_SLEEP_CLK>,
+                         <&diag_gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+                         <&diag_gcc GCC_USB3_SEC_CLKREF_EN>;
+                clock-names = "cfg_noc", "core", "iface", "sleep", "mock_utmi", "xo";
+                assigned-clocks = <&diag_gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+                                  <&diag_gcc GCC_USB30_PRIM_MASTER_CLK>;
+                assigned-clock-rates = <19200000>, <200000000>;
+                resets = <&diag_gcc GCC_USB30_PRIM_BCR>;
+                power-domains = <&diag_gcc USB30_PRIM_GDSC>;
+                interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
+                             <GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
+                             <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+                interrupt-names = "dwc_usb3", "pwr_event", "hs_phy_irq";
+                // Optional PDC wake IRQs deliberately omitted: no suspend test.
+                dr_mode = "peripheral";
+                maximum-speed = "high-speed";
+                phys = <&diag_hsphy>;
+                phy-names = "usb2-phy";
+                qcom,select-utmi-as-pipe-clk;
+                snps,dis_u2_susphy_quirk;
+                snps,dis_enblslpm_quirk;
+                snps,dis-u1-entry-quirk;
+                snps,dis-u2-entry-quirk;
+                // No new ICC/IOMMU graph yet: retain firmware's bus setup.
+            };
+        };
+    };
+};

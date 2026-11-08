@@ -43,7 +43,8 @@ def main():
     dts = project/'device/realme/bladerunner_48m/dts'
     commands = []
     with (output/'compile.log').open('w') as log:
-        for name in ['sm8250-realme-rmx2072-usb-diag', 'rmx2072-noop-overlay']:
+        for name in ['sm8250-realme-rmx2072-usb-diag', 'rmx2072-noop-overlay',
+                     'rmx2072-legacy-usb-bridge']:
             expanded = output/(name+'.expanded.dts')
             cmd = ['gcc', '-E', '-P', '-x', 'assembler-with-cpp', '-nostdinc', '-undef', '-D__DTS__',
                    '-I'+str(src/'include'), '-I'+str(src/'arch/arm64/boot/dts/qcom'), str(dts/(name+'.dts'))]
@@ -71,6 +72,7 @@ def main():
                     '-o', str(output/'merged-diag.dtb'), str(output/'rmx2072-noop-overlay.dtb')], check=True)
     report = dict(upstream_commit=source['commit'], mirror_commit=source['mirror_commit'],
                   overlay_selectors=selectors,
+                  legacy_usb_bridge='compile only; private downstream base required for application',
                   archive_sha256=archive_hash, commands=commands,
                   status='compiled-and-overlay-applied-not-device-tested',
                   scope='USB diagnostic only; UFS, display and Android system are not enabled by this DT',

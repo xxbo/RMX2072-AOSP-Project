@@ -28,3 +28,14 @@ class EntryTraceTest(unittest.TestCase):
 
     def test_duplicates_do_not_replace_distinct_counter_evidence(self):
         self.assertIsNone(inspect_trace(b'RMX2072-SEED trial=test\n'+record(1)*4, 'test')['entry_reached'])
+
+    def test_invalid_handoff_pointer_is_reported_not_hidden(self):
+        data = bytearray(b'RMX2072-SEED trial=test\n')
+        for counter in range(1, 5):
+            row = bytearray(record(counter))
+            struct.pack_into('<Q', row, 16, 0)
+            data.extend(row)
+        report = inspect_trace(data, 'test')
+        self.assertTrue(report['entry_reached'])
+        self.assertEqual(report['dtb_physical'], '0x0')
+        self.assertFalse(report['dtb_in_captured_dram_range'])
