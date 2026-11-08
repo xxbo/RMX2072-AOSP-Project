@@ -20,7 +20,7 @@ Current board/kernel work beyond logging is detailed in the [November 7 adaptati
 
 The active phase is [independent 6.18 kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md): hardware mutex/watchdog dependencies, a verified early log path and stable RAM-only USB diagnostics. GSI integration is deferred.
 
-Latest follow-up: pre-MMU records directly confirm the native kernel at aligned physical address `0xa0200000`, entering at EL1 with the original DTBO. The failing core-only profile retained its fresh RAM seed but no entry records, shifting investigation toward handoff. The next diagnostic preserves original DTBO and migrates USB to the pinned driver's flat `qcom,snps-dwc3` binding, together with modern clock/PHY/regulator dependencies. USB bridge runtime validation remains pending; see [bring-up evidence](docs/INDEPENDENT_KERNEL_BRINGUP.md).
+Latest follow-up: pre-MMU records confirm the aligned kernel at `0xa0200000`, entering at EL1. Preserving original DTBO while migrating the USB/clock/PHY/regulator graph reaches UDC registration and gadget binding, but binding-enabled boots reset. An otherwise identical deferred-bind control reaches its 90-second return with those drivers bound. Investigation now targets USB communication start, including the missing modern IOMMU mapping; host USB communication and sustained stability remain unvalidated. See [bring-up evidence](docs/INDEPENDENT_KERNEL_BRINGUP.md).
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.
