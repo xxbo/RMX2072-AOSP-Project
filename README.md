@@ -20,6 +20,8 @@ Current board/kernel work beyond logging is detailed in the [November 7 adaptati
 
 The active phase is [independent 6.18 kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md): hardware mutex/watchdog dependencies, a verified early log path and stable RAM-only USB diagnostics. GSI integration is deferred.
 
+Latest follow-up: [runtime snapshots](build/device/runtime-snapshots-2026-11-08.json) confirm CPUs `0-7` online and hardware-lock/RPMh driver binding with the legacy DT. USB wrapper/HS PHY remain unbound. [Disabling CPU idle](build/device/cpuidle-isolation-result-2026-11-08.json) did not resolve the upstream-DTS restart loop. The handset has been restored and stock Android boot completion verified again.
+
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.
 - Inventory the official Realme kernel sources, community device trees, proprietary vendor components and firmware dependencies.

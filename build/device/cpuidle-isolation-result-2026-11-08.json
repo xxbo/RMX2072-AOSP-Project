@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-08",
+  "status": "upstream-dts-cpuidle-off-restart-loop-reader-restored",
+  "hypothesis": "PSCI idle-domain entry contributes to early reset; disabling idle alone was insufficient",
+  "cmdline": "rdinit=/init earlycon console=ttyMSM0,115200n8 loglevel=8 ignore_loglevel printk.devkmsg=on clk_ignore_unused pd_ignore_unused fw_devlink=permissive panic=30 androidboot.hardware=qcom cpuidle.off=1",
+  "hashes": {
+    "kernel_sha256": "3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33",
+    "config_sha256": "ab9daf7a8ee10421d94f1fa4641e8b977955f1a34ef6b94f8309fe15118c1bbc",
+    "dtb_sha256": "118bb1e3476de516b14dd8336e52ab433934129a66e3ebc061e101f993d0c542",
+    "ramdisk_sha256": "b99478263b73bb244a8d2511bed7547fcb42db190b72d2ba238d684008e8657e"
+  },
+  "outputs": {
+    "boot-diag.img": {
+      "size_bytes": 100663296,
+      "sha256": "75288f42d222785c67e4a0f96c81312df73f5c5d4e8aa219c719df647d4573be"
+    },
+    "dtbo-diag.img": {
+      "size_bytes": 25165824,
+      "sha256": "513e851e3540370b9e263d72e904861b102f16b3c5a1bea2e059b00cc1344589"
+    }
+  },
+  "baseline": {
+    "boot_sha256": "457b32f18faa385a76342161d29608cbb6afd144fd13458fe22cede378a84ce5",
+    "status": "packaged-not-device-tested",
+    "comparison": "Same kernel/config/DTB/DTBO/ramdisk; only cpuidle.off=1 differs in command line"
+  },
+  "observations": {
+    "user_report": "Restart loop",
+    "diagnostic_usb": false,
+    "new_kernel_phase_records": false,
+    "new_kernel_panic_identified": false,
+    "pmsg_bytes": 235,
+    "console_bytes": 233029
+  },
+  "recovery": {
+    "method": "Both volume keys across restart, no battery disconnection",
+    "full_pre_restore_readback_match": true,
+    "full_post_restore_readback_match": true,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "original_dtbo_restored": true,
+    "android_boot_completed": true,
+    "root_capture_completed": true
+  },
+  "qualification": "No new 6.18 execution proof for this own-DTS trial; does not invalidate legacy-DT execution proof"
+}

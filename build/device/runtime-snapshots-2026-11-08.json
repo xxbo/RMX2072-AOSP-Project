@@ -1,0 +1,58 @@
+{
+  "status": "physical-618-runtime-snapshots-captured-stock-reader-restored",
+  "date": "2026-11-08",
+  "kernel_release": "6.18.32-android17-5-maybe-dirty-4k",
+  "kernel_run": 42326221558,
+  "kernel_project_commit": "126778e44ef84c8065c032b077137341fafa7bba",
+  "kernel_sha256": "3b437ded9bb2de1870f5933d85918f11a6ca6d982eb2cb0b36a70e021f588e33",
+  "config_sha256": "ab9daf7a8ee10421d94f1fa4641e8b977955f1a34ef6b94f8309fe15118c1bbc",
+  "dtb_bundle_sha256": "eb7a0551f67ea30a0b3a594cd7d87f6a190f09ea0c35db77e4231357f6d414d6",
+  "dt_scope": "25 stock DTBs with shared logging-layout adjustments; original stock DTBO; upstream board DTS not validated",
+  "ramdisk_sha256": "b99478263b73bb244a8d2511bed7547fcb42db190b72d2ba238d684008e8657e",
+  "boot_sha256": "5b5cb9a15c174211a82c6b567d276caa6e6acd4ddf00d6e2faf68ed9ac0f5e58",
+  "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+  "console": {
+    "bytes": 156625,
+    "corrected_bytes": 2180,
+    "unrecoverable_blocks": 768
+  },
+  "pmsg": {
+    "bytes": 33970,
+    "corrected_bytes": 429,
+    "unrecoverable_blocks": 175
+  },
+  "limitations": [
+    "No diagnostic UDC or USB terminal",
+    "No ten-minute stability or stress validation",
+    "Host wall time versus kernel uptime unresolved",
+    "Hardware-lock and RPMh driver binding observed; full functionality and other providers unvalidated",
+    "No Android/GSI boot; no new-kernel storage, display or peripheral qualification"
+  ],
+  "recovery": {
+    "full_pre_restore_readback_match": true,
+    "full_post_restore_readback_match": true,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "original_dtbo_restored": true,
+    "android_boot_completed": true,
+    "root_capture_completed": true,
+    "user_report": "Both volume keys used; no battery disconnection"
+  },
+  "intact_console_or_pmsg_records": [
+    "RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k value=15.84 124.84",
+    "RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k value=77.14 613.43",
+    "RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k value=0-7",
+    "RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k device=soc:hwlock driver=../../../../bus/platform/drivers/qcom_hwspinlock",
+    "RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k device=18200000.rsc driver=../../../../bus/platform/drivers/rpmh",
+    "RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k device=a600000.ssusb driver=unbound",
+    "RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k device=88e3000.hsphy driver=unbound",
+    "reboot: Restarting system with command 'edl'"
+  ],
+  "timer": {
+    "configured_seconds": 120,
+    "return_line_near_kernel_seconds": 120.85,
+    "timestamp_damaged": true,
+    "host_reset_to_edl_with_programmer_seconds": 627.331,
+    "autonomous_entry_isolated": false,
+    "note": "User held volume keys without battery disconnection; clock-rate ratio not established"
+  }
+}
