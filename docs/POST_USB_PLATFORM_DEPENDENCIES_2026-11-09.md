@@ -30,6 +30,8 @@ Captured regulator constraints are below. They are DT constraints/initial values
 
 The kernel already builds `SCSI_UFS_QCOM`, `PHY_QCOM_QMP_UFS`, `SCSI_UFS_CRYPTO` and `QCOM_INLINE_CRYPTO_ENGINE`. Built drivers do not remove the provider/binding/firmware dependencies above. Keep the first storage validation to controller/PHY probe, device identification and read-only block inspection; Android mounting and encryption remain later gates.
 
+The subsequent [UFS PHY handset test](UFS_PHY_BRINGUP.md#physical-result-on-rmx2072) registered the native provider and completed its PCS-ready poll twice. The UFS host stayed excluded, leaving device reset, link startup and LUN identification to the next stage.
+
 ### RMX2072 UFS device reset
 
 The [follow-up handset trials](RMX2072_EDL_AND_UFS.md#why-the-gpio-mask-matters) registered the isolated TLMM provider with GPIO 180 as its only valid line. The chip and line-info queries completed with USB still configured. The unmasked probe rebooted. Neither trial drove the reset pad.

@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// The OEM fragments keep addressing the original host and downstream PHY.
+// Populate the independent native provider only after the diagnostic bus bind.
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/qcom,gcc-sm8250.h>
+#include <dt-bindings/clock/qcom,rpmh.h>
+
+&{/soc/rsc@18200000/diag-regulators} {
+    diag_ufs_l9: ldo9 {
+        regulator-name = "diag_pm8150_l9";
+        regulator-min-microvolt = <1200000>;
+        regulator-max-microvolt = <1200000>;
+    };
+};
+
+&{/soc} {
+    #address-cells = <1>;
+    #size-cells = <1>;
+    ufs-phy-lab {
+        compatible = "realme,rmx2072-diag-ufs-phy-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
+        diag_ufs_phy: phy@1d87000 {
+            compatible = "qcom,sm8250-qmp-ufs-phy";
+            reg = <0x01d87000 0x1000>;
+            #phy-cells = <0>;
+            clocks = <&diag_rpmhcc RPMH_CXO_CLK>, <&diag_gcc GCC_UFS_PHY_PHY_AUX_CLK>,
+                     <&diag_gcc GCC_UFS_1X_CLKREF_EN>;
+            clock-names = "ref", "ref_aux", "qref";
+            power-domains = <&diag_gcc UFS_PHY_GDSC>;
+            vdda-phy-supply = <&diag_l5>;
+            vdda-pll-supply = <&diag_ufs_l9>;
+        };
+        ufs-phy-exercise {
+            compatible = "realme,rmx2072-diag-ufs-phy-test";
+            phys = <&diag_ufs_phy>;
+            phy-names = "ufsphy";
+            power-domains = <&diag_gcc UFS_PHY_GDSC>;
+            resets = <&diag_gcc GCC_UFS_PHY_BCR>;
+            reset-names = "rst";
+        };
+    };
+};

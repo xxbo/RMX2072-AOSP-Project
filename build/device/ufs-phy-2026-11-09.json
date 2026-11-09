@@ -1,0 +1,221 @@
+{
+  "model": "RMX2072",
+  "stock_reference": {
+    "rails": [
+      "pm8150_l5 880000 enabled",
+      "pm8150_l9 1200000 enabled"
+    ],
+    "phy_driver": "ufs_qcom_phy_qmp_v4",
+    "stock_build": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "host_driver": "ufshcd-qcom"
+  },
+  "kernel_ci": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42631413970",
+  "kernel_artifact_digest": "sha256:9d41725734351ddf49062e3b21b17639dc581065955333003f06162fb596a45c",
+  "raw_image_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+  "device_tree_ci": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42634524009",
+  "overlay_sha256": "c6b3bdb546d5052e1cc7909d575d749a62c4fb4add6cb1f1f34ca81f52546f96",
+  "oem_checks": {
+    "pre_oem": {
+      "provider": "/soc/ufs-phy-lab/phy@1d87000",
+      "consumer": "/soc/ufs-phy-lab/ufs-phy-exercise",
+      "supply_microvolts": [
+        880000,
+        1200000
+      ],
+      "original_nodes_preserved": 3285,
+      "relocated_reference_cells": 0,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "post_oem": {
+      "provider": "/soc/ufs-phy-lab/phy@1d87000",
+      "consumer": "/soc/ufs-phy-lab/ufs-phy-exercise",
+      "supply_microvolts": [
+        880000,
+        1200000
+      ],
+      "original_nodes_preserved": 4196,
+      "relocated_reference_cells": 556,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    }
+  },
+  "calibration_profile": "native sm8250 QMP, internal HS-B/G3 calibration, storage host excluded",
+  "physical_trials": {
+    "ufs-phy-supply-01": {
+      "boot_sha256": "242f2d073a8a343f1b040141f20227f62d9bcaed61763ecf749d959737c45439",
+      "readback_sha256": {
+        "before": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "candidate": {
+          "boot": "242f2d073a8a343f1b040141f20227f62d9bcaed61763ecf749d959737c45439",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "return-read": {
+          "boot": "242f2d073a8a343f1b040141f20227f62d9bcaed61763ecf749d959737c45439",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "restored": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        }
+      },
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "boot_id_sha256": "d8203c0859bfa4a8921a9265933791e9d9c8271961d5f1889a62b493a5ea9a64",
+      "first_uptime": 23.93,
+      "final_uptime": 25.71,
+      "udc": "configured",
+      "same_boot": true,
+      "regulator_observations": [
+        "diag_pm8150_l5 voltage=880000 state=enabled",
+        "diag_pm8150_l9 voltage=1200000 state=unknown"
+      ],
+      "host_unbound": true,
+      "keyless_return_seconds": 6.734
+    },
+    "ufs-phy-01": {
+      "boot_sha256": "0f7969a507d6165d3409780d156059df0efc1386508cd711344edd8a70dfcc0c",
+      "readback_sha256": {
+        "before": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "candidate": {
+          "boot": "0f7969a507d6165d3409780d156059df0efc1386508cd711344edd8a70dfcc0c",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "return-read": {
+          "boot": "0f7969a507d6165d3409780d156059df0efc1386508cd711344edd8a70dfcc0c",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "restored": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        }
+      },
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "boot_id_sha256": "b12b6fb353a899850a5dd6bf47a2b9ff72e6cabd64acef8d0d9d64ebe522c5c4",
+      "first_uptime": 24.08,
+      "final_uptime": 30.03,
+      "udc": "configured",
+      "same_boot": true,
+      "regulator_observations": [
+        "diag_pm8150_l5 voltage=880000 state=enabled",
+        "diag_pm8150_l9 voltage=1200000 state=unknown"
+      ],
+      "host_unbound": true,
+      "keyless_return_seconds": 6.844
+    }
+  },
+  "live_dt": {
+    "phy": {
+      "reg": [
+        30961664,
+        4096
+      ],
+      "clocks": [
+        1572,
+        0,
+        1574,
+        166,
+        1574,
+        148
+      ],
+      "power-domains": [
+        1574,
+        4
+      ],
+      "vdda-phy-supply": [
+        1575
+      ],
+      "vdda-pll-supply": [
+        1579
+      ],
+      "phandle": [
+        1580
+      ]
+    },
+    "supplier_phandles": {
+      "clock-controller@100000": [
+        1574
+      ],
+      "diag-clock-controller": [
+        1572
+      ],
+      "ldo5": [
+        1575
+      ],
+      "ldo9": [
+        1579
+      ]
+    },
+    "consumer": {
+      "phys": [
+        1580
+      ],
+      "resets": [
+        1574,
+        33
+      ],
+      "power-domains": [
+        1574,
+        4
+      ]
+    }
+  },
+  "phy_operation": {
+    "native_driver": "qcom-qmp-ufs-phy",
+    "completed_cycle_uptimes": [
+      26.23,
+      27.5
+    ],
+    "pcs_ready_successes": 2,
+    "mode": "PHY_MODE_UFS_HS_B",
+    "submode": 3,
+    "cycles_cleaned_up": 2,
+    "driver_log": [
+      "[   26.235750][  T744] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: begin GCC reset",
+      "[   26.237258][  T744] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: init passed",
+      "[   26.237510][  T744] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: power_on passed, calibrating HS-B G3",
+      "[   26.239537][  T744] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: PCS_READY passed",
+      "[   26.239645][  T744] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: power_off and exit passed",
+      "[   27.506457][  T760] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: begin GCC reset",
+      "[   27.507969][  T760] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: init passed",
+      "[   27.508218][  T760] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: power_on passed, calibrating HS-B G3",
+      "[   27.510277][  T760] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: PCS_READY passed",
+      "[   27.510385][  T760] rmx2072-ufs-phy-test soc:ufs-phy-lab:ufs-phy-exercise: PHY trial: power_off and exit passed"
+    ],
+    "native_calibration_kretprobe_returns": 2,
+    "native_calibration_trace": [
+      "   ufs-phy-cycle-744     [001] d..1.    26.239530: calibrated: (phy_calibrate+0x58/0x84 <- qmp_ufs_phy_calibrate) rc=0",
+      "   ufs-phy-cycle-760     [001] d..1.    27.510271: calibrated: (phy_calibrate+0x58/0x84 <- qmp_ufs_phy_calibrate) rc=0"
+    ],
+    "pll_supply_trace": [
+      "   kworker/u32:3-89      [006] .....    26.237420: regulator_enable: name=diag_pm8150_l9",
+      "   ufs-phy-cycle-744     [001] .....    26.239632: regulator_disable: name=diag_pm8150_l9",
+      "   kworker/u32:2-88      [005] .....    27.508143: regulator_enable: name=diag_pm8150_l9",
+      "   ufs-phy-cycle-760     [001] .....    27.510372: regulator_disable: name=diag_pm8150_l9"
+    ],
+    "reference_gate_trace": [
+      "   ufs-phy-cycle-744     [001] d..1.    26.237496: clk_enable: gcc_ufs_1x_clkref_en",
+      "   ufs-phy-cycle-744     [001] d..1.    26.239620: clk_disable: gcc_ufs_1x_clkref_en",
+      "   ufs-phy-cycle-760     [001] d..1.    27.508201: clk_enable: gcc_ufs_1x_clkref_en",
+      "   ufs-phy-cycle-760     [001] d..1.    27.510360: clk_disable: gcc_ufs_1x_clkref_en"
+    ],
+    "scope": "No UFS link, gear negotiation, LUN enumeration or GPIO reset pulse"
+  },
+  "final_android": {
+    "firmware": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "boot_completed": "1",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  }
+}
