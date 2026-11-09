@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **On RMX2072, Linux 6.18 runs the USB diagnostic shell and calibrates the native UFS PHY.** With USB SID 0, one boot completed 606.17 seconds of verified responses and 7.25 MiB of checked payloads. Two UFS PHY cycles reached PCS ready on the handset. Uncapped USB bursts still have short transfers. UFS link startup, display and Android 17 boot remain open.
+> **Linux 6.18 starts the UniPro link and reads all six UFS LUNs on RMX2072.** The native host negotiated two lanes at HS-G1 Rate B and returned the same UFS 3.0 descriptor and disk sizes as F.20. With USB SID 0, a separate diagnostic boot completed 606.17 seconds of verified responses and 7.25 MiB of checked payloads. HS-G3 read access, display and Android 17 boot remain open.
 
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
@@ -24,9 +24,9 @@ Latest follow-up: a physical SID-only comparison keeps kernel, ramdisk, command 
 
 The [paced stability record](build/device/usb-soak-2026-11-09.json) contains all 29 validated responses and the separate failed burst probes. A subsequent RMX2072 trial registered the APSS watchdog on 6.18, traced a successful start, four keepalives and a stop, and recovered F.20 after a final same-boot USB sample at 524.64 s. See the [physical trial](docs/INDEPENDENT_KERNEL_BRINGUP.md#apss-watchdog-on-the-paced-sid0-profile) and [UFS reset, PHY and supply dependencies](docs/POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md).
 
-The 6.18 debug kernel now returns to Qualcomm 9008 from either the ramdisk timer or a live ACM command on this handset. A staged TLMM test bound the driver and queried GPIO 180 with all other lines reserved. UFS identification and electrical reset remain open. The [EDL and UFS bring-up record](docs/RMX2072_EDL_AND_UFS.md) includes the physical controls, the reboot-loop exception and the commands for hands-free recovery.
+The 6.18 debug kernel now returns to Qualcomm 9008 from either the ramdisk timer or a live ACM command on this handset. A staged TLMM test bound the driver and queried GPIO 180 with all other lines reserved. Electrical device reset remains untested. See the [EDL and UFS bring-up record](docs/RMX2072_EDL_AND_UFS.md).
 
-The [native UFS PHY](docs/UFS_PHY_BRINGUP.md) now passes two HS-B/G3 internal calibration cycles on RMX2072. Both native driver returns were zero after the PCS-ready poll, and tracing confirmed the L9 and GCC reference-gate votes. The next storage milestone is Qualcomm host binding and UniPro link startup, followed by read-only device identification.
+The native QMP PHY passed two internal HS-B/G3 calibration cycles. With the Qualcomm host attached, the UIC completion for `DME_LINKSTARTUP` returned zero. The G1 profile read 4 KiB from each of six read-only disks. Both G3 trials generated repeated UIC errors before disk enumeration. See the [PHY test](docs/UFS_PHY_BRINGUP.md) and [UniPro bring-up record](docs/UFS_HOST_BRINGUP.md).
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.
