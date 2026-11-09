@@ -46,8 +46,16 @@ preflight)
     echo "host_unbound=1 udc=$(cat /sys/class/udc/*/state)"
     ;;
 probe)
-    bind "$bus" rmx2072-ufs-phy-bus
-    phy=$(device .phy "$base/phy@1d87000")
+    if [ ! -L "$bus/driver" ]; then
+        bind "$bus" rmx2072-ufs-phy-bus
+    fi
+    [ "$(basename "$(readlink "$bus/driver")")" = rmx2072-ufs-phy-bus ]
+    for delay in 1 2 3 4 5; do
+        phy=$(device .phy "$base/phy@1d87000") || phy=
+        [ -n "$phy" ] && [ -L "$phy/driver" ] && break
+        sleep 1
+    done
+    [ -n "$phy" ] && [ -L "$phy/driver" ] || { echo 'UFS PHY provider did not bind'; exit 1; }
     [ "$(basename "$(readlink "$phy/driver")")" = qcom-qmp-ufs-phy ]
     echo "provider=${phy##*/} driver=qcom-qmp-ufs-phy"
     ;;

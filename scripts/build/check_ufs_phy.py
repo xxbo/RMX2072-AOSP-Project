@@ -25,17 +25,14 @@ def phandles(tree):
     return result
 
 
-def check_ufs_phy(before, after):
-    old, new = nodes(before), nodes(after)
-    additions = {LAB, PHY, TEST, L9}
-    if old.keys() & additions or new.keys() != old.keys() | additions:
-        raise ValueError('Unexpected PHY control node changes')
+def verify_original_properties(old, new):
     old_ids, new_ids = phandles(old), phandles(new)
     renumbered = 0
     for path, original in old.items():
         props = new[path]
         if path == '/__symbols__':
-            if props != {**original, 'diag_ufs_phy': [PHY], 'diag_ufs_l9': [L9]}:
+            labels = {'diag_ufs_phy': [PHY], 'diag_ufs_l9': [L9]}
+            if original.keys() & labels.keys() or props != {**original, **labels}:
                 raise ValueError('OEM symbol target changed')
             continue
         if props.keys() != original.keys():
@@ -45,13 +42,24 @@ def check_ufs_phy(before, after):
             if left == right:
                 continue
             # libfdt relocates OEM-local phandles above the new base maximum.
-            if not isinstance(left, list) or not isinstance(right, list) or len(left) != len(right):
+            if (key in ('reg', 'ranges', 'interrupts', 'clock-frequency', 'qcom,msm-id', 'qcom,board-id')
+                    or key.startswith('#') or not isinstance(left, list)
+                    or not isinstance(right, list) or len(left) != len(right)):
                 raise ValueError(f'Original property changed: {path}/{key}')
             for a, b in zip(left, right):
                 if a != b:
                     if a not in old_ids or old_ids[a] != new_ids.get(b):
                         raise ValueError(f'Original cell changed: {path}/{key} {a} -> {b}')
                     renumbered += 1
+    return renumbered
+
+
+def check_ufs_phy(before, after):
+    old, new = nodes(before), nodes(after)
+    additions = {LAB, PHY, TEST, L9}
+    if old.keys() & additions or new.keys() != old.keys() | additions:
+        raise ValueError('Unexpected PHY control node changes')
+    renumbered = verify_original_properties(old, new)
 
     def ph(path):
         props = new[path]
@@ -60,6 +68,14 @@ def check_ufs_phy(before, after):
         return props['phandle'][0]
 
     phy, test = new[PHY], new[TEST]
+    for path in (LAB, PHY, TEST, REGULATORS, GCC, RPMHCC):
+        if new[path].get('status', ['okay']) not in (['okay'], ['ok']):
+            raise ValueError(f'Disabled provider or consumer: {path}')
+    if (new[REGULATORS].get('compatible') != ['qcom,pm8150-rpmh-regulators']
+            or new[REGULATORS].get('qcom,pmic-id') != ['a']
+            or new[GCC].get('compatible') != ['qcom,gcc-sm8250']
+            or new[RPMHCC].get('compatible') != ['qcom,sm8250-rpmh-clk']):
+        raise ValueError('Unexpected regulator or clock provider binding')
     if (new[LAB].get('compatible') != ['realme,rmx2072-diag-ufs-phy-bus']
             or new[LAB].get('ranges') != [] or new[LAB].get('#address-cells') != [1]
             or new[LAB].get('#size-cells') != [1] or phy.get('reg') != [0x1d87000, 0x1000]
