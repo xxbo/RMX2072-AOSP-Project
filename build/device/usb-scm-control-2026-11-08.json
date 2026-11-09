@@ -84,8 +84,8 @@
   "root_capture_completed": true,
   "resume_notes": [
     "Keep original DTBO and logging reader recovery baseline",
-    "Compare USB stream binding with running stock FDT: stock USB SID 0; upstream profile SID 0x740; meaning not yet resolved",
-    "Shared IOMMU group log needs validation; do not assume legacy second-cell flags without checking source",
+    "November 9 source review: running stock comparison reports SID 0; pinned ACK primary USB uses SID 0/mask 0. This trial used the experimental SID 0x740/mask 0.",
+    "ACK and shared Realme Android S arm_smmu_of_xlate encode the second cell as a mask. Group membership and successful hardware DMA require separate observations.",
     "Consider deferred-bind SCM/SMMU control and interrupt/DMA/bus-vote telemetry before further changes"
   ],
   "user_paused": true

@@ -2,7 +2,7 @@
 
 The current goal is a stable, RAM-only 6.18 diagnostic environment on RMX2072. GSI, Android framework/vendor integration, super resizing and user-data mounts are deferred.
 
-**Latest verified result (November 8): 6.18 reached diagnostic userspace with the stock hardware descriptions.** The project's upstream USB DTS still loops. The handoff isolation below establishes real kernel execution and a software EDL-return path; it does not close the ten-minute stability or USB gate.
+**Latest handset result (November 8).** The legacy-base SCM trial reached 6.18 diagnostic userspace, SMMU probe and gadget binding. The phone reset before host enumeration was observed and was restored to the stock logging reader. The [November 9 source review and next comparison](#2026-11-09-review--primary-usb-stream-and-the-next-comparison) correct the USB SID attribution. The following entries are chronological checkpoints.
 
 ## Platform revision
 
@@ -200,7 +200,7 @@ A subsequent benign base-DTB marker control kept the original DTBO. It recovered
 
 ## Preserve OEM DTBO; migrate the USB dependency graph
 
-Inspection of the exact pinned `drivers/usb/dwc3/dwc3-qcom.c` exposes a concrete mismatch: the enabled QCOM driver matches `qcom,snps-dwc3` and directly probes DWC3 on the same node, whereas both the legacy board tree and the existing upstream-style nested USB tree lack that binding. Likewise the legacy GCC, RPMh-clock and HS-PHY compatible strings do not match their enabled modern drivers.
+The flat driver in `drivers/usb/dwc3/dwc3-qcom.c` matches `qcom,snps-dwc3` and probes DWC3 on that node. The bridge selects this path on the legacy base and migrates GCC, RPMh-clock and HS-PHY bindings. The pinned upstream nested USB tree uses a different supported glue driver, `dwc3-qcom-legacy.c`.
 
 `rmx2072-legacy-usb-bridge.dts` preserves the OEM skeleton and all original overlay symbols, disables the old USB/PHY/GCC nodes, and adds the modern flat DWC3 node with its SM8250 GCC, RPMh clock and PM8150 regulator dependencies. Captured PHY voltages are retained. It uses the downstream `/soc` one-cell address/size format, separate zero-cell fixed clocks, and only USB2 peripheral mode. Optional PDC wake IRQs, ICC/IOMMU migration, Type-C, storage and display are deferred; this is a diagnostic profile rather than full schema/platform qualification. Firmware bus settings are retained for this first probe.
 
@@ -222,7 +222,7 @@ The deferred-bind image `dc98bad37716abef5c54a7a160239dfbb8e6c96ed3ec4f05452605e
 
 This bounded run is substantially different from the ten-plus-second loop with binding enabled. It narrows the failure toward communication start/DMA/interrupt handling; it does not prove a specific IOMMU fault. The earlier GCC warnings remain present in this running control and cannot alone explain the short reset loop. See [deferred-bind evidence](../build/device/usb-bind-deferred-2026-11-08.json).
 
-The next authored overlay `rmx2072-legacy-usb-iommu.dts` adds the primary USB stream `0x740` and changes the legacy apps-SMMU compatible strings to the pinned modern SM8250 driver binding. The existing first register resource and full interrupt list match upstream; coherent table walks are enabled as upstream specifies. The built kernel already includes ARM_SMMU and ARM_SMMU_QCOM. This migration is a hypothesis under compilation, not a diagnosed reset fix or successful USB result.
+The historical overlay `rmx2072-legacy-usb-iommu.dts` tests USB stream `0x740` and changes the legacy apps-SMMU compatible strings to the pinned modern SM8250 driver binding. The existing first register resource and full interrupt list match upstream; coherent table walks are enabled as upstream specifies. The built kernel already includes ARM_SMMU and ARM_SMMU_QCOM. This migration is a hypothesis under compilation, not a diagnosed reset fix or successful USB result.
 
 ## SMMU control identifies a missing SCM provider
 
@@ -238,6 +238,29 @@ The captured effective legacy tree contains no SCM-compatible node, although `CO
 
 Warm recovery retained 86,605 console and 8,818 pmsg bytes. The fresh seed and 31 consistent entry records prove native entry. Logs now show SCM's Arm64 SMC convention, apps-SMMU hardware discovery (74 context banks, 36-bit stage-1), USB IOMMU group attachment, `udc-bound` and `acm-shell-ready`. The previous SCM-not-ready dependency has been crossed. The exact subsequent fault remains uncaptured. A shared-group log requires validation before attributing a cause; do not assume the downstream second IOMMU cell is a flag rather than a mask without inspecting its implementation.
 
-The stock running FDT still specifies USB IOMMU SID 0 while the upstream-derived bridge uses `0x740`. This discrepancy is an investigation item, not evidence that either value should be substituted blindly. On resumption, consider the same deferred-bind control with SCM/SMMU enabled, then gather DMA/IRQ/interconnect evidence and reconcile the stream bindings.
+The stock running FDT specifies USB SID 0 while this experimental bridge uses `0x740`. The November 9 review below verifies the pinned ACK also uses SID 0. On resumption, consider the same deferred-bind control with SCM/SMMU enabled, then gather DMA/IRQ/interconnect evidence and reconcile the stream bindings.
 
 **User requested pause.** Complete trial/restore partition hashes, stock Android boot completion and root capture passed. A final ADB check reports `sys.boot_completed=1`; the device is back on the trusted stock-kernel logging reader with original DTBO. No GSI or additional partition was flashed. All experiment runners have completed; do not start another trial until the user resumes. See [SCM trial record](../build/device/usb-scm-control-2026-11-08.json).
+
+## 2026-11-09 review — primary USB stream and the next comparison
+
+The archived SCM image reached the flat DWC3 controller, bound a gadget and then reset. The 90-second deferred-bind result came from the earlier bridge **without the SCM/SMMU changes**. The two runs establish different milestones. They do not isolate the effect of binding on the SCM configuration. Group membership establishes that Linux associated the device with an IOMMU group. It does not measure which stream the hardware issued, successful DMA, host enumeration or the cause of the reset.
+
+| Input | Primary USB master | SID | Mask | Evidence |
+| --- | --- | --- | --- | --- |
+| F.20 running tree | Stock USB | 0 | Not published in the trial record | [Sanitized stock comparison](../build/device/usb-scm-control-2026-11-08.json) |
+| Pinned ACK SM8250 | `usb_1_dwc3` at `0xa600000` under the `0xa6f8800` wrapper | 0 | 0 | [Exact source](https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/arch/arm64/boot/dts/qcom/sm8250.dtsi#L4210-L4216) and the compiled reference DTB in [Actions #9](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42496412472) |
+| Archived IOMMU/SCM experiments | Flat `/soc/usb@a600000` | 0x740 | 0 | SCM plugin SHA-256 `05f01a9a4f53a859e104287b9a4975f590631553f4e7bcfcae0cb96c7c38ced0` |
+| New SCM control | Same flat master, same apps SMMU | 0 | 0 | `rmx2072-legacy-usb-scm-sid0.dtb`, build/fixture tested, handset result pending |
+
+The pinned ACK and Realme's shared Android S sources both encode cell 1 as the stream ID and cell 2 as the stream-match mask. A zero mask requires an exact SID match. The Realme source establishes the meaning in that implementation; the private F.20 kernel binary has separate provenance. Both upstream DWC3 layouts have driver support in this ACK. `CONFIG_USB_DWC3_QCOM` builds the flat driver for `qcom,snps-dwc3` and the legacy glue for `qcom,dwc3` with a `snps,dwc3` child. Keep the flat layout that reached UDC registration for this comparison. The earlier whole-tree handoff failed before a driver-level attribution was possible. [ACK mask translation](https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/iommu/arm/arm-smmu/arm-smmu.c#L1587-L1601) · [Realme mask translation](https://github.com/realme-kernel-opensource/realme_GTneo2-X50pro-GTMasterExploratory-AndroidS-kernel-source/blob/4e5ec4aeeb781851b0fe6c268d9ba69953166fda/drivers/iommu/arm-smmu.c#L4498-L4511) · [DWC3 build rules](https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/usb/dwc3/Makefile#L54-L55)
+
+The locally reproduced historical SCM plugin matches the Actions #9 SHA-256 above. The SID0 plugin hashes to `1005264c3bc6a07c753e99088358f0465e49b2621243a426e51a0f975ff030e4`. Comparing the compiled plugins found exactly two changed bytes, the nonzero bytes of the old SID. The mask, other properties and overlay fixups are byte-identical.
+
+**Reproduce the build.** Run the Device Tree workflow or invoke `scripts/build/build_device_dt.py` with Python 3.12, GCC, dtc and fdtoverlay. Its provenance records the resolved SID and mask on both the compiled ACK reference and the new plugin applied to a synthetic base. The fixture exercises overlay fixups; the handset's selected base and OEM overlay are private. When packaging the SID0 candidate with `prepare_legacy_tree_patch.py`, supply the new plugin, its SHA-256 from CI and `--check-usb-sid0`. The script checks the actual DMA master, enabled apps SMMU phandle and two cells **after** applying OEM overlay 17, before emitting the boot image. Keep all 25 base entries, original DTBO, entry probe, command line and recovery baseline as in the SCM trial. Neither a public fixture nor a prepared private image is a physical trial.
+
+**Order for a future handset session.** Use the same revised diagnostic scripts, kernel, helper binaries, command line, return timeout and host cable/port across the comparisons. Use distinct trial IDs for log attribution. The original device checkpoint is the restored stock logging reader.
+
+1. On the historical SCM tree (`0x740`), use `build_diag_ramdisk.py --defer-gadget-bind` with the usual BusyBox, trial ID, helper and 90-second return. Start from the hashed SCM boot with `prepare_ramdisk_control.py`. Look for the fresh trial ID, group members, UDC registered, deferred-bind phase and timed return. If this already resets, investigate the SCM/SMMU baseline before blaming traffic.
+2. On the SID0 SCM tree, repeat deferred binding with the same return settings. Then compare the SID0 deferred and enabled runs, changing the bind flag. For a direct SID comparison under load, use the same instrumented bind-enabled ramdisk on both SCM trees (individual IDs may differ). Compare the first divergence in UDC state/speed, DWC3/SMMU IRQ counts and any translation fault. An absent log after reset is inconclusive.
+3. `udc-bound` now requires the controller name to read back from configfs. `acm-tty-present` means that the local character device exists. Host enumeration needs a host-side USB observation. End-to-end ACM requires a completed `scripts/device_audit/usb_diag_console.py` capture with the expected 6.18 uname. If SID0 still resets, use the earliest fault/IRQ and the USB-DDR/apps-USB interconnect votes to choose the next change. Keep the ten-minute stability and Android/GSI gates separate.

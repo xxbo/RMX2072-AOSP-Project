@@ -3,8 +3,8 @@
 > Target device: realme X50 Pro Player Edition (RMX2072 / `bladerunner_48m`), Qualcomm Snapdragon 865 (SM8250/Kona)
 > System target: AOSP-based Android 17
 > Kernel research target: Android Common Kernel (ACK) / GKI, with 6.18 as a candidate to evaluate
-> Plan status: **Initial plan — pending device audit**
-> Last updated: 2026-11-06
+> Plan status: **Independent 6.18 RAM-only bring-up; SCM/SMMU and USB controls**
+> Last updated: 2026-11-09
 
 This document is the project execution plan and source of truth for milestone order, acceptance criteria, dependencies and current status. Update it as evidence is collected. A milestone is complete only when its acceptance criteria are met and the evidence is recorded in the repository.
 
@@ -30,13 +30,13 @@ Investigate and, if technically viable, migrate the device from its legacy Qualc
 
 ## 2. Workstreams and dependency order
 
-The work is divided into four tracks. Track A is the first priority. Track B can proceed in parallel after source revisions are pinned. Track C should not become a device-flashing dependency until its prototype is independently validated. Track D records integration and maintenance.
+The handset baseline and GSI preflight are recorded. The active experiment is Track C on the stock boot-v2 hardware description. Track A resumes Android integration once the independent kernel and platform gates permit it.
 
 | Track | Scope | Priority | Dependency |
 | --- | --- | --- | --- |
-| A — Device baseline and Android bring-up | Identify handset, preserve stock state, audit Treble/VINTF/partitions, test Android 17 GSI | Highest | Physical handset and stock firmware |
+| A — Device baseline and Android bring-up | Identify handset, preserve stock state, audit Treble/VINTF/partitions, test Android 17 GSI | Baseline captured; GSI deferred | Physical handset and stock firmware |
 | B — Source and driver inventory | Compare official/community kernels, device trees, proprietary dependencies and upstream driver status | High; parallel with A | Pinned source revisions |
-| C — Kernel modernization | Rebuild legacy kernel, assess ACK/GKI branch, port modules and validate KMI | Long-term research | Track B inventory and boot/recovery knowledge |
+| C — Kernel modernization | Rebuild legacy kernel, assess ACK/GKI branch, port modules and validate KMI | Active RAM-only prototype | Track B inventory and verified boot/DTBO recovery |
 | D — Integration and maintenance | Reproducible builds, test matrix, packaging, OTA/recovery strategy and documentation | Continuous | Evidence from A–C |
 
 ### Critical sequencing rule
@@ -53,11 +53,11 @@ Tasks:
 - [ ] Confirm model, region/SKU, RAM/storage variant and full firmware build number.
 - [ ] Record Android version, vendor build, baseband and security patch level.
 - [ ] Record bootloader lock state, AVB state and whether official unlock is available.
-- [ ] Capture read-only device properties and kernel release.
-- [ ] Capture partition names, sizes, slot arrangement and dynamic-partition status.
-- [ ] Identify boot image header version and the presence or absence of `boot`, `vendor_boot`, `init_boot`, `vendor_dlkm`, `dtbo` and `vbmeta` partitions.
+- [x] Capture read-only device properties and kernel release.
+- [x] Capture partition names, sizes, slot arrangement and dynamic-partition status.
+- [x] Identify boot image header version and the presence or absence of `boot`, `vendor_boot`, `init_boot`, `vendor_dlkm`, `dtbo` and `vbmeta` partitions.
 - [ ] Obtain the exact stock firmware package and document a verified restore/EDL/service recovery path.
-- [ ] Hash locally stored stock images and record hashes (not the images themselves) in the project notes.
+- [x] Hash locally stored stock images and record hashes (not the images themselves) in the project notes.
 - [ ] Confirm whether the bootloader can be unlocked without relying on an unverified method.
 
 **Deliverables:**
@@ -76,9 +76,9 @@ Tasks:
 
 **Goal:** Establish trustworthy source revisions and reproduce an existing kernel/device build before changing architecture.
 
-**Progress note (2026-11-06):** Initial source pins are recorded in sources/SOURCE_LOCK.json and sources/SOURCE_MANIFEST.md. The inventory is source-reviewed only; no kernel has been built or boot-tested by this project. The 4.19.325 SM8250-Common tree is the newest inspected community baseline, while official Android 17 GKI 6.18 is pinned separately as the migration target.
+**Progress note (2026-11-06):** Initial source pins are recorded in sources/SOURCE_LOCK.json and sources/SOURCE_MANIFEST.md. At this source-inventory checkpoint no project-built kernel had been tested. Subsequent build and boot evidence is recorded in sections 4–6. The 4.19.325 SM8250-Common tree is the newest inspected community baseline, while official Android 17 GKI 6.18 is pinned separately as the migration target.
 
-**Automation note (2026-11-06):** GitHub Actions Run #17 completed both the source-inventory and KGSL/Adreno research jobs successfully. The broad scanner verifies six kernel commits, inventories selected source trees, parses the base defconfig and Oplus config fragment, and compares selected module Makefiles. The follow-up source review found additional Makefile-injected KONA display/camera/audio fragments that the scanner does not yet parse; this gap is recorded in docs/KERNEL_TREE_DIFF_FINDINGS.md and docs/KERNEL_RESEARCH_PIPELINE.md. No kernel has been compiled or boot-tested by this project.
+**Automation note (2026-11-06):** GitHub Actions Run #17 completed both the source-inventory and KGSL/Adreno research jobs successfully. The broad scanner verifies six kernel commits, inventories selected source trees, parses the base defconfig and Oplus config fragment, and compares selected module Makefiles. The follow-up source review found additional Makefile-injected KONA display/camera/audio fragments that the scanner does not yet parse; this gap is recorded in docs/KERNEL_TREE_DIFF_FINDINGS.md and docs/KERNEL_RESEARCH_PIPELINE.md. Builds were outside that inventory run.
 
 Tasks:
 - [x] Pin the official Android Q RMX2072 kernel source at an immutable commit.
@@ -96,8 +96,8 @@ Tasks:
 - [ ] Complete file-level license and redistribution review for every source we may reuse.
 - [ ] Resolve the RMX2072 device-tree / vendor-blob firmware-version mismatch.
 - [ ] Verify which common device-tree branch is actually paired with each device-specific tree.
-- [ ] Set up a Linux build environment and record toolchain versions.
-- [ ] Reproduce a kernel build from a selected source tree, or document the exact blocker.
+- [x] Set up a Linux build environment and record toolchain versions.
+- [x] Reproduce a kernel build from a selected source tree, or document the exact blocker.
 - [ ] Where feasible, reproduce a known community ROM build without flashing it.
 
 **Deliverables:**
@@ -114,14 +114,14 @@ Tasks:
 **Goal:** Determine whether a generic Android 17 system image can work with the handset's existing vendor and kernel stack.
 
 Tasks:
-- [ ] Check `ro.treble.enabled`, CPU ABI and VNDK/vendor API properties.
-- [ ] Inspect VINTF manifests and compatibility matrices from the actual device.
+- [x] Check `ro.treble.enabled`, CPU ABI and VNDK/vendor API properties.
+- [x] Inspect VINTF manifests and compatibility matrices from the actual device.
 - [ ] Check linker namespace isolation and relevant vendor interface constraints.
 - [ ] Determine system-as-root, dynamic partition and A/B details.
 - [ ] Check GSI architecture, binder ABI, image size and release requirements.
-- [ ] Compare the Android 17 GSI requirements with the actual vendor implementation.
+- [x] Compare the Android 17 GSI requirements with the actual vendor implementation.
 - [ ] Identify required overlays, properties, init changes and compatibility workarounds.
-- [ ] Select a suitable prebuilt GSI for the first experiment; record its exact source, build ID and SHA-256.
+- [x] Select a suitable prebuilt GSI for the first experiment; record its exact source, build ID and SHA-256.
 
 **Deliverables:**
 - Compatibility findings in `docs/COMPATIBILITY_MATRIX.md`
@@ -136,7 +136,7 @@ Tasks:
 **Goal:** Boot Android 17 while keeping the known-compatible kernel and vendor stack unchanged wherever possible.
 
 Tasks:
-- [ ] Verify the bootloader unlock and restore procedure.
+- [x] Verify the bootloader unlock and restore procedure.
 - [ ] Make and verify required backups.
 - [ ] Follow device-specific instructions for the actual partition layout and fastboot mode.
 - [ ] Flash only the minimum required system-layer changes.
@@ -178,9 +178,9 @@ Tasks:
 
 **Goal:** Understand what can be reused, upstreamed, rebuilt or must remain proprietary.
 
-**Progress note (2026-11-06):** The first KGSL/Adreno 650 source-analysis pass is complete. GitHub Actions Run #17 retrieved pinned RMX2072 4.19.81, SM8250-Common 4.19.325, Qualcomm Linux 7.2 KGSL reference and Android 17 GKI 6.18 files. Findings are recorded in `docs/KGSL_ADRENO_RESEARCH.md`. The pinned GKI has DRM/MSM with an Adreno 650 catalog entry, but no legacy KGSL directory/UAPI. Qualcomm's modern KGSL is a Linux 7.2 external-module reference, not a proven GKI 6.18 module. No kernel build or device test has been performed.
+**Progress note (2026-11-06):** The first KGSL/Adreno 650 source-analysis pass is complete. GitHub Actions Run #17 retrieved pinned RMX2072 4.19.81, SM8250-Common 4.19.325, Qualcomm Linux 7.2 KGSL reference and Android 17 GKI 6.18 files. Findings are recorded in `docs/KGSL_ADRENO_RESEARCH.md`. The pinned GKI has DRM/MSM with an Adreno 650 catalog entry, but no legacy KGSL directory/UAPI. Qualcomm's modern KGSL is a Linux 7.2 external-module reference, not a proven GKI 6.18 module. This KGSL research run did not compile or load KGSL.
 
-**Driver inventory note (2026-11-06):** A first-pass subsystem matrix and dependency graph are now recorded in `docs/DRIVER_MIGRATION_MATRIX.md` and `docs/DRIVER_DEPENDENCY_MAP.md`. The expanded `docs/HARDWARE_INVENTORY.md` distinguishes RMX2072-specific manifest evidence from shared SM8250 source examples. The review identified target clues for AMS678UW01 display calibration, GT9886 touch firmware, Adreno 650 firmware, camera sensor-module candidates, SN100 NFC configuration, Goodix fingerprint firmware, VOOC charging firmware and AW8697 haptic firmware. These are source clues, not physical-device confirmation. The 4.19.325 KONA techpack build injects additional display/camera/audio config fragments; its shared Oplus touch config does not select GT9886 even though the driver exists. The F.15/F.17 vendor provenance mismatch and exact handset component IDs remain open. No driver has been built or tested on RMX2072.
+**Driver inventory note (2026-11-06):** A first-pass subsystem matrix and dependency graph are now recorded in `docs/DRIVER_MIGRATION_MATRIX.md` and `docs/DRIVER_DEPENDENCY_MAP.md`. The expanded `docs/HARDWARE_INVENTORY.md` distinguishes RMX2072-specific manifest evidence from shared SM8250 source examples. The review identified target clues for AMS678UW01 display calibration, GT9886 touch firmware, Adreno 650 firmware, camera sensor-module candidates, SN100 NFC configuration, Goodix fingerprint firmware, VOOC charging firmware and AW8697 haptic firmware. These are source clues, not physical-device confirmation. The 4.19.325 KONA techpack build injects additional display/camera/audio config fragments; its shared Oplus touch config does not select GT9886 even though the driver exists. The F.15/F.17 vendor provenance mismatch and exact handset component IDs remain open. This source inventory did not test those drivers on RMX2072.
 
 Tasks:
 - [ ] Compare official 4.19.81, shared 4.19.157 and community 4.19.x trees by subsystem.
@@ -216,7 +216,7 @@ Tasks:
 **Goal:** Build a reliable device kernel baseline and reduce downstream technical debt before attempting a major kernel jump.
 
 Tasks:
-- [ ] Rebuild the selected legacy kernel with a documented toolchain/config.
+- [x] Rebuild the selected legacy kernel with a documented toolchain/config.
 - [ ] Verify the resulting image on the device using a safe test/rollback process.
 - [ ] Compare the 4.19 source trees and select the best-maintained device-compatible baseline.
 - [ ] Backport security and correctness fixes where feasible.
@@ -237,10 +237,10 @@ Tasks:
 **Goal:** Evaluate a modern ACK/GKI kernel for RMX2072 without assuming that a successful compile implies device compatibility.
 
 Tasks:
-- [ ] Select a candidate ACK/GKI branch based on the target Android release's official support matrix.
+- [x] Select a candidate ACK/GKI branch based on the target Android release's official support matrix.
 - [ ] Confirm KMI policy, protected symbol lists, toolchain and build system.
-- [ ] Audit the handset boot architecture and determine how GKI, DTB/DTBO and vendor modules could be packaged.
-- [ ] Prototype the simplest boot path before porting all hardware drivers.
+- [x] Audit the handset boot architecture and determine how GKI, DTB/DTBO and vendor modules could be packaged.
+- [x] Prototype the simplest boot path before porting all hardware drivers.
 - [ ] Port or replace the minimum drivers needed for boot and basic display/input.
 - [ ] Build vendor modules against the exact target KMI.
 - [ ] Resolve module signing, symbol versioning, module load order and SELinux constraints.
@@ -286,35 +286,9 @@ Tasks:
 
 ## 4. Immediate next actions
 
-The next work session should focus on M0, not kernel porting or flashing.
-
-1. Obtain the handset's exact model and firmware build.
-2. Run read-only ADB property and partition inventory commands.
-3. Record the bootloader and AVB state.
-4. Locate the exact stock firmware package and establish a restore route.
-5. Add the resulting non-sensitive facts to `docs/HARDWARE_INVENTORY.md`.
-6. Pin the official and community source revisions for M1.
-
-Suggested read-only ADB collection (review output and redact identifiers before sharing):
-
-```bash
-adb shell getprop ro.product.model
-adb shell getprop ro.product.device
-adb shell getprop ro.build.fingerprint
-adb shell getprop ro.build.version.release
-adb shell getprop ro.vendor.build.version.release
-adb shell getprop ro.treble.enabled
-adb shell getprop ro.product.cpu.abi
-adb shell getprop ro.vndk.version
-adb shell getprop ro.boot.slot_suffix
-adb shell getprop ro.boot.dynamic_partitions
-adb shell getprop ro.boot.verifiedbootstate
-adb shell uname -a
-adb shell cat /proc/partitions
-adb shell ls -l /dev/block/by-name
-```
-
-Do not publish raw serial numbers, IMEI, MAC addresses, account identifiers or other personal identifiers. Fastboot output should be reviewed and redacted before being added to this repository.
+1. Keep the F.20 logging reader and original DTBO as the recovery baseline. Stock boot and DTBO restoration are verified; full-system restore is still open. See the [device audit](docs/DEVICE_BASELINE_2026-11-06.md).
+2. Use the [primary USB stream comparison](docs/INDEPENDENT_KERNEL_BRINGUP.md#2026-11-09-review--primary-usb-stream-and-the-next-comparison). Preserve the archived SCM image with SID `0x740`. Check the SID0 candidate on the selected private base plus OEM overlay 17 before handset testing.
+3. Compare deferred and enabled gadget binding on matched SCM trees. Track first diverging uptime, IRQ counters, UDC state and the host ACM transcript. Require the ten-minute stability gate before expanding to UFS; leave Android 17 integration at the [GSI preflight](docs/GSI_PREFLIGHT_2026-11-06.md).
 
 ## 5. Definition of done
 
@@ -334,12 +308,12 @@ Update the checkboxes and milestone status as work is completed. Record evidence
 
 | Milestone | Status |
 | --- | --- |
-| M0 — Device audit and safety baseline | Not started |
-| M1 — Source pinning and reproducible legacy baseline | In progress — initial source pins recorded |
-| M2 — Treble, Vendor and GSI assessment | Not started |
+| M0 — Device audit and safety baseline | F.20 device, GPT, boot-v2, backups and boot/DTBO restore verified; factory package and full-system restore open |
+| M1 — Source pinning and reproducible legacy baseline | Sources and Linux CI pinned; legacy community kernel built; community ROM reproduction open |
+| M2 — Treble, Vendor and GSI assessment | ARM64 GMS image inspected; FCM, VNDK and partition capacity gaps recorded |
 | M3 — Android 17 GSI bring-up | Not started |
 | M4 — Own AOSP build and device integration | Not started |
 | M5 — Kernel source and driver asset analysis | In progress — KGSL research plus first-pass driver matrix/dependency map recorded |
-| M6 — Legacy kernel reproducibility and modernization | Not started |
-| M7 — ACK/GKI feasibility prototype | Not started |
+| M6 — Legacy kernel reproducibility and modernization | Selected 4.19.325 candidate build passed; rebuilt kernel device boot pending |
+| M7 — ACK/GKI feasibility prototype | SM8250 6.18 reached RAM-only userspace; UDC/SCM milestones recorded, host USB and sustained stability open |
 | M8 — Integrated system and maintenance | Not started |

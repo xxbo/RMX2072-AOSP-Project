@@ -26,8 +26,22 @@ for path in /proc/uptime /proc/sys/kernel/random/boot_id /sys/devices/system/cpu
     /sys/kernel/debug/devices_deferred \
     /sys/class/watchdog/watchdog*/identity \
     /sys/class/watchdog/watchdog*/state \
-    /sys/class/udc/*/state; do
+    /sys/class/udc/*/state /sys/class/udc/*/current_speed; do
     capture "$path"
+done
+usb=/sys/bus/platform/devices/a600000.usb
+group=$(/bin/busybox readlink -f "$usb/iommu_group")
+if [ -d "$usb/iommu_group/devices" ]; then
+    emit "usb-iommu-group=${group##*/}"
+    for member in "$usb/iommu_group/devices/"*; do
+        [ ! -e "$member" ] || emit "group-member=${member##*/}"
+    done
+else
+    emit usb-iommu-group=unavailable
+fi
+for irq_pattern in 'dwc3|dwc_usb3|a600000|pwr_event|hs_phy_irq' smmu; do
+    /bin/busybox grep -iE "$irq_pattern" /proc/interrupts | /bin/busybox head -n 8 |
+        while IFS= read -r value; do emit "irq=$value"; done
 done
 /bin/busybox grep -E 'Kernel code|Kernel data' /proc/iomem | while IFS= read -r value; do
     emit "iomem=$value"
@@ -35,7 +49,8 @@ done
 for pattern in /sys/bus/platform/devices/*scm* /sys/bus/platform/devices/*smem* \
     /sys/bus/platform/devices/*hwlock* /sys/bus/platform/devices/*watchdog* \
     /sys/bus/platform/devices/*rsc* /sys/bus/platform/devices/*clock-controller* \
-    /sys/bus/platform/devices/*usb* /sys/bus/platform/devices/*phy*; do
+    /sys/bus/platform/devices/*usb* /sys/bus/platform/devices/*phy* \
+    /sys/bus/platform/devices/*smmu*; do
     [ -d "$pattern" ] || continue
     driver=$(/bin/busybox readlink "$pattern/driver")
     emit "device=${pattern##*/} driver=${driver:-unbound}"

@@ -8,6 +8,7 @@ import pathlib
 import struct
 import sys
 from avb_footer import retain_envelope
+from check_usb_stream import primary_usb_stream, require_sid0
 from prepare_pstore_reader import image_id
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
 from inspect_boot_dt import fdt, inspect
@@ -22,9 +23,13 @@ def main():
         p.add_argument('--'+name, required=True, type=pathlib.Path)
     p.add_argument('--overlay', type=pathlib.Path)
     p.add_argument('--expected-overlay-sha256')
+    p.add_argument('--check-usb-sid0', action='store_true',
+                   help='Require SID 0/mask 0 on the apps SMMU after the original OEM overlay')
     a = p.parse_args()
     if bool(a.overlay) != bool(a.expected_overlay_sha256):
         p.error('Overlay requires its expected hash')
+    if a.check_usb_sid0 and not a.overlay:
+        p.error('--check-usb-sid0 requires a project overlay')
     repo = pathlib.Path(__file__).resolve().parents[2]
     if a.output.resolve() == repo or repo in a.output.resolve().parents:
         p.error('Private outputs stay outside checkout')
@@ -70,6 +75,14 @@ def main():
         raise ValueError('Cannot validate final merged tree')
     if library.fdt_overlay_apply(merged, ctypes.create_string_buffer(dtbo[offset:offset+size])):
         raise ValueError('Original overlay no longer applies')
+    project_stream = primary_usb_stream(changed, legacy_base=True, allow_unmapped=True)
+    final_usb_stream = None
+    if a.check_usb_sid0:
+        final_usb_stream = require_sid0(merged.raw, legacy_base=True)
+    elif project_stream is not None:
+        final_usb_stream = primary_usb_stream(merged.raw, legacy_base=True)
+    if final_usb_stream != project_stream:
+        raise ValueError(f'OEM overlay changed primary USB mapping: {project_stream} -> {final_usb_stream}')
     blobs[12] = changed
     start = trees[0]['offset']
     raw = bytearray(source[:start])+b''.join(blobs)
@@ -93,6 +106,8 @@ def main():
                   overlay_sha256=a.expected_overlay_sha256,
                   root_selectors_and_pstore_unchanged=True, original_overlay_application_passed=True,
                   avb_envelope=envelope, status='prepared-not-device-tested')
+    if final_usb_stream is not None:
+        report['final_oem_primary_usb_sid_mask'] = final_usb_stream
     (a.output/'control.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 

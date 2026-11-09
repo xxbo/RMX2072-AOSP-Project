@@ -1,6 +1,16 @@
 name: RMX2072 6.18 Device Tree
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/rmx2072-device-tree.yml'
+      - 'device/realme/bladerunner_48m/dts/**'
+      - 'device/realme/bladerunner_48m/bootstrap/diag-*.sh'
+      - 'scripts/build/**'
+      - 'scripts/device_audit/inspect_boot_dt.py'
+      - 'sources/SOURCE_LOCK.json'
+      - 'tests/**'
 permissions:
   contents: read
 jobs:
@@ -15,6 +25,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: sudo apt-get update && sudo apt-get install -y gcc device-tree-compiler
+      - name: Check diagnostic scripts and host regressions
+        run: |
+          for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh; do sh -n "$script"; done
+          python -m unittest discover -s tests
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree
       - name: Prepare core-only handoff profile
@@ -23,9 +37,15 @@ jobs:
           --input reports/device-tree/sm8250-realme-rmx2072-usb-diag.dtb
           --output reports/device-tree/sm8250-realme-rmx2072-core-only.dtb
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: rmx2072-618-device-tree-${{ github.run_number }}
           path: reports/device-tree/
-          if-no-files-found: warn
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: rmx2072-618-dt-compile-log-${{ github.run_number }}
+          path: reports/device-tree/compile.log
+          if-no-files-found: ignore
           retention-days: 14

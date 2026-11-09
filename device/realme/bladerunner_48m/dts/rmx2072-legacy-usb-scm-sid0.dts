@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SCM trial control: change only primary USB's stream ID to match sm8250.dtsi.
+#include "rmx2072-legacy-usb-scm.dts"
+
+/ {
+    fragment@8 {
+        __overlay__ { iommus = <&apps_smmu 0 0>; };
+    };
+};

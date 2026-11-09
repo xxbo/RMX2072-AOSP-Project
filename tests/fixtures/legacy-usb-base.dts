@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Synthetic overlay targets only. Contains no handset data.
+/dts-v1/;
+/ {
+    #address-cells = <1>;
+    #size-cells = <1>;
+    soc {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+        qcom,gcc@100000 { reg = <0x100000 1>; };
+        ssusb@a600000 { reg = <0xa600000 1>; };
+        hsphy@88e3000 { reg = <0x88e3000 1>; };
+        ssphy@88e8000 { reg = <0x88e8000 1>; };
+        rsc@18200000 { reg = <0x18200000 1>; };
+        apps_smmu: apps-smmu@15000000 {
+            reg = <0x15000000 1>;
+            #iommu-cells = <2>;
+        };
+    };
+};
