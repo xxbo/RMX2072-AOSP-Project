@@ -25,13 +25,14 @@ def phandles(tree):
     return result
 
 
-def verify_original_properties(old, new):
+def verify_original_properties(old, new, labels=None):
+    if labels is None:
+        labels = {'diag_ufs_phy': [PHY], 'diag_ufs_l9': [L9]}
     old_ids, new_ids = phandles(old), phandles(new)
     renumbered = 0
     for path, original in old.items():
         props = new[path]
         if path == '/__symbols__':
-            labels = {'diag_ufs_phy': [PHY], 'diag_ufs_l9': [L9]}
             if original.keys() & labels.keys() or props != {**original, **labels}:
                 raise ValueError('OEM symbol target changed')
             continue
