@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Physical 6.18 diagnostic userspace reached on RMX2072.** A controlled handoff using the stock DTB bundle and original DTBO reached the RAM-only supervisor and executed its EDL return at kernel uptime 90.74 seconds. USB, sustained stability and Android 17 boot remain unvalidated.
+> **Project status: Physical 6.18 USB diagnostic shell verified on RMX2072.** Correcting the primary USB IOMMU SID to 0 enables host enumeration, a configured UDC and completed ACM commands with the expected 6.18 uname. A ten-minute transfer/uptime test is in progress. Display, UFS and Android 17 boot remain unvalidated.
 
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
@@ -20,7 +20,7 @@ Current board/kernel work beyond logging is detailed in the [November 7 adaptati
 
 The active phase is [independent 6.18 kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md): hardware mutex/watchdog dependencies, a verified early log path and stable RAM-only USB diagnostics. GSI integration is deferred.
 
-Latest follow-up: pre-MMU records confirm the aligned kernel at `0xa0200000`, entering at EL1. Preserving original DTBO while migrating the USB/clock/PHY/regulator graph reaches UDC registration and gadget binding, but binding-enabled boots reset. An otherwise identical deferred-bind control reaches its 90-second return with those drivers bound. The subsequent SCM trial probed the apps SMMU and attached USB to an IOMMU group, then reset before host enumeration was observed. Its plugin used SID `0x740`; the pinned SM8250 primary USB master uses SID `0`, mask `0`. A separate SID0 control preserves the archived trial and validates the mapping in CI. Physical comparison is pending. See the [source review and trial sequence](docs/INDEPENDENT_KERNEL_BRINGUP.md#2026-11-09-review--primary-usb-stream-and-the-next-comparison).
+Latest follow-up: a physical SID-only comparison keeps kernel, ramdisk, command line, original DTBO and 24 other base trees byte-identical. SID `0x740` stops after communication start; SID `0`, mask `0`, yields a configured USB device and a completed 130,524-byte diagnostic transcript. SCM, apps SMMU, GCC, RPMh clocks/regulators and HS PHY are active on this RAM-only profile. See the [comparison evidence](build/device/usb-staged-sid-comparison-2026-11-09.json) and [bring-up journal](docs/INDEPENDENT_KERNEL_BRINGUP.md).
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.

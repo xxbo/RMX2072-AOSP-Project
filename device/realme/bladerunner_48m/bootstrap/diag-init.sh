@@ -9,6 +9,7 @@ mount -t devtmpfs devtmpfs /dev || mount -t tmpfs tmpfs /dev
 mkdir -p /dev/pts /run /sys/kernel/config
 [ -c /dev/console ] || mknod /dev/console c 5 1
 [ -c /dev/null ] || mknod /dev/null c 1 3
+[ -c /dev/zero ] || mknod /dev/zero c 1 5
 [ -c /dev/kmsg ] || mknod /dev/kmsg c 1 11
 mount -t devpts devpts /dev/pts
 if [ ! -c /dev/pmsg0 ] && [ -r /sys/class/pmsg/pmsg0/dev ]; then

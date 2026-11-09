@@ -27,8 +27,8 @@ def main():
     if a.trial_id and not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', a.trial_id):
         p.error('Invalid trial ID')
     if a.return_to_edl_after is not None and (
-            not a.reboot_helper or not 45 <= a.return_to_edl_after <= 300):
-        p.error('A 45..300 second control return requires a static reboot helper')
+            not a.reboot_helper or not 45 <= a.return_to_edl_after <= 900):
+        p.error('A 45..900 second control return requires a static reboot helper')
     if a.gadget_bind_delay is not None and (
             a.defer_gadget_bind or not 1 <= a.gadget_bind_delay <= 120 or
             (a.return_to_edl_after and a.gadget_bind_delay >= a.return_to_edl_after)):
