@@ -9,13 +9,22 @@ import re
 import time
 
 
-def command(index, size):
+def command(index, size, chunk_delay=0.02):
     # Split literal marker text so echoed input cannot impersonate a response.
     def marker(name):
         return "printf '\\nSOAK_''"+name+'_'+str(index)+"\\n'"
+    if chunk_delay:
+        full, tail = divmod(size, 4096)
+        generator = '(i=0; while [ "$i" -lt '+str(full)+' ]; do head -c 4096 /dev/zero; '
+        generator += 'i=$((i + 1)); sleep '+format(chunk_delay, '.3f')+'; done'
+        if tail:
+            generator += '; head -c '+str(tail)+' /dev/zero'
+        generator += ') | base64'
+    else:
+        generator = 'head -c '+str(size)+' /dev/zero | base64'
     return '; '.join([marker('BEGIN'), 'uname -r', 'cat /proc/uptime',
                      'cat /proc/sys/kernel/random/boot_id', 'cat /sys/class/udc/*/state',
-                     marker('DATA'), 'head -c '+str(size)+' /dev/zero | base64',
+                     marker('DATA'), generator,
                      marker('DATA_END'), marker('END')])+'\n'
 
 
@@ -34,7 +43,8 @@ def parse_sample(data, index, size):
     uptime = float(header[1].split()[0])
     decoded = base64.b64decode(''.join(body[ds+1:de]), validate=True)
     if len(decoded) != size or any(decoded):
-        raise ValueError('RAM transfer length/content mismatch')
+        raise ValueError('RAM transfer mismatch: expected %d bytes, received %d, nonzero %d' %
+                         (size, len(decoded), sum(v != 0 for v in decoded)))
     return dict(kernel=header[0], uptime_seconds=uptime,
                 boot_id_sha256=hashlib.sha256(header[2].encode()).hexdigest(),
                 udc_state=header[3], transfer_bytes=len(decoded),
@@ -50,9 +60,13 @@ def main():
     p.add_argument('--duration', type=int, default=600)
     p.add_argument('--interval', type=int, default=30)
     p.add_argument('--bytes-per-sample', type=int, default=65536)
+    p.add_argument('--chunk-delay', type=float, default=0.02,
+                   help='Seconds between 4 KiB source chunks; zero tests uncapped bursts')
     a = p.parse_args()
     if not 30 <= a.duration <= 900 or not 5 <= a.interval <= 60 or not 1 <= a.bytes_per_sample <= 1048576:
         p.error('Duration 30..900, interval 5..60, transfer 1..1048576 bytes required')
+    if not 0 <= a.chunk_delay <= 0.2:
+        p.error('Chunk delay must be 0..0.2 seconds')
     repo = pathlib.Path(__file__).resolve().parents[2]
     if a.output.resolve() == repo or repo in a.output.resolve().parents:
         p.error('Raw runtime data must remain outside checkout')
@@ -65,12 +79,18 @@ def main():
     a.output.mkdir(parents=True, exist_ok=False)
     samples, status, error = [], 'running', None
     started = time.monotonic()
+    requested_rx_buffer = 0
     try:
         with serial.Serial(port, 115200, timeout=0.2, write_timeout=5) as console:
+            # A Windows CDC driver's small default queue can overrun between
+            # reads during USB bulk bursts. This changes only host buffering.
+            if hasattr(console, 'set_buffer_size'):
+                console.set_buffer_size(rx_size=4*1024*1024, tx_size=65536)
+                requested_rx_buffer = 4*1024*1024
             index = 0
             console.write(b'\n')
             while time.monotonic()-started < a.duration+60:
-                console.write(command(index, a.bytes_per_sample).encode())
+                console.write(command(index, a.bytes_per_sample, a.chunk_delay).encode())
                 data, deadline = bytearray(), time.monotonic()+25
                 marker = ('\nSOAK_END_'+str(index)+'\n').encode()
                 with (a.output/('sample-%03d.txt' % index)).open('xb') as raw:
@@ -100,6 +120,9 @@ def main():
     except Exception as exc:
         status, error = 'failed', str(exc)
     report = dict(status=status, error=error, samples=len(samples), requested_seconds=a.duration,
+                  host_rx_buffer_requested_bytes=requested_rx_buffer,
+                  source_chunk_bytes=4096 if a.chunk_delay else None,
+                  source_chunk_delay_seconds=a.chunk_delay,
                   live_kernel_span_seconds=(samples[-1]['uptime_seconds']-samples[0]['uptime_seconds']) if samples else 0,
                   verified_transfer_bytes=sum(s['transfer_bytes'] for s in samples),
                   boot_id_constant=bool(samples) and len({s['boot_id_sha256'] for s in samples}) == 1,

@@ -1,0 +1,70 @@
+{
+  "scope": "Diagnostic USB bulk-over-ACM qualification, not Android/GSI or unrestricted throughput",
+  "first_soak": {
+    "boot_sha256": "06517b6a9facb8c2521b03cc5c3657924509aebf9470ef6b8b12212f219f3cd4",
+    "return_seconds": 720,
+    "zero_node_initially_missing": true,
+    "zero_node_added_in_tmpfs": {
+      "major": 1,
+      "minor": 5
+    },
+    "uncapped_report": {
+      "status": "failed",
+      "error": "RAM transfer length/content mismatch",
+      "samples": 3,
+      "requested_seconds": 600,
+      "live_kernel_span_seconds": 40.53,
+      "verified_transfer_bytes": 786432,
+      "boot_id_constant": true,
+      "scope": "Read-only serial commands; data generated from /dev/zero; no block filesystems"
+    },
+    "larger_host_queue_report": {
+      "status": "failed",
+      "error": "RAM transfer length/content mismatch",
+      "samples": 2,
+      "requested_seconds": 30,
+      "host_rx_buffer_requested_bytes": 4194304,
+      "live_kernel_span_seconds": 5.259999999999991,
+      "verified_transfer_bytes": 524288,
+      "boot_id_constant": true,
+      "scope": "Read-only serial commands; data generated from /dev/zero; no block filesystems"
+    },
+    "paced_short_report": {
+      "status": "passed",
+      "error": null,
+      "samples": 6,
+      "requested_seconds": 30,
+      "host_rx_buffer_requested_bytes": 4194304,
+      "source_chunk_bytes": 4096,
+      "source_chunk_delay_seconds": 0.02,
+      "live_kernel_span_seconds": 33.26999999999998,
+      "verified_transfer_bytes": 1572864,
+      "boot_id_constant": true,
+      "scope": "Read-only serial commands; data generated from /dev/zero; no block filesystems"
+    },
+    "largest_directly_verified_uptime_seconds": 443.2,
+    "serial_reboot_sent_twice_after_user_button_slip": true,
+    "full_trial_restore_hashes_matched": true,
+    "stock_boot_completed": true
+  },
+  "new_paced_soak": {
+    "status": "running",
+    "boot_sha256": "df2c4e3b054e0a62a0a0e02a7b1dc797bc6f8b0c386132c5721fff4602049c72",
+    "ramdisk_sha256": "ded7b846396ddbaa03531d8cf0b894347ab79dbc4292cb9f13719e2f8761680d",
+    "kernel_dtb_and_command_line_unchanged": true,
+    "zero_node_in_ramdisk": true,
+    "return_seconds": 720,
+    "requested_span_seconds": 600,
+    "bytes_per_sample": 262144,
+    "source_chunk_bytes": 4096,
+    "source_chunk_delay_seconds": 0.02
+  },
+  "qualification": "Uncapped bursts lost bytes without reboot; requesting a larger Windows queue did not eliminate loss. Exact host/device cause remains unresolved. Paced test is a separate gate.",
+  "ci_run": 42613848101,
+  "ci_status": "success",
+  "host_tests": {
+    "total": 28,
+    "local_passed": 26,
+    "local_skipped_for_missing_dtc": 2
+  }
+}

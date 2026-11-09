@@ -287,8 +287,8 @@ Tasks:
 ## 4. Immediate next actions
 
 1. Keep the F.20 logging reader and original DTBO as the recovery baseline. Stock boot and DTBO restoration are verified; full-system restore is still open. See the [device audit](docs/DEVICE_BASELINE_2026-11-06.md).
-2. Use the [primary USB stream comparison](docs/INDEPENDENT_KERNEL_BRINGUP.md#2026-11-09-review--primary-usb-stream-and-the-next-comparison). Preserve the archived SCM image with SID `0x740`. Check the SID0 candidate on the selected private base plus OEM overlay 17 before handset testing.
-3. Compare deferred and enabled gadget binding on matched SCM trees. Track first diverging uptime, IRQ counters, UDC state and the host ACM transcript. Require the ten-minute stability gate before expanding to UFS; leave Android 17 integration at the [GSI preflight](docs/GSI_PREFLIGHT_2026-11-06.md).
+2. Preserve the archived SID `0x740` failure and the [physical SID0 host-ACM success](build/device/usb-staged-sid-comparison-2026-11-09.json). Reuse SID0 with the post-OEM-overlay validator; keep stock DTBO unchanged.
+3. Finish the [600-second paced USB gate](build/device/usb-soak-2026-11-09.json). Track the uncapped burst short-transfer issue separately; a larger Windows queue alone did not resolve it. After the kernel/USB gate, audit modern watchdog, UFS/PHY clock/regulator dependencies and production clock/power handling. Leave Android 17 integration at the [GSI preflight](docs/GSI_PREFLIGHT_2026-11-06.md).
 
 ## 5. Definition of done
 
