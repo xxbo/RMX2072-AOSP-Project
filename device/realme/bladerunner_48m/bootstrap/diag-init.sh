@@ -53,6 +53,13 @@ if [ -n "$controller" ]; then
         log_phase udc-bind-deferred
         while :; do sleep 10; done
     fi
+    if [ -r /gadget-bind-delay ]; then
+        log_phase udc-bind-delay-begin
+        sleep "$(cat /gadget-bind-delay)"
+        log_phase udc-bind-delay-end
+        /bin/busybox sh /diag-snapshot.sh
+    fi
+    log_phase udc-bind-start
     if echo "$controller" > UDC; then
         log_phase udc-bound
     else

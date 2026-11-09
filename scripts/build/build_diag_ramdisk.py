@@ -20,12 +20,27 @@ def main():
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
                    help='Register UDC but do not start gadget/DMA; isolates post-bind failure')
+    p.add_argument('--gadget-bind-delay', type=int,
+                   help='Wait 1..120 seconds after UDC discovery before binding')
+    p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
     if a.trial_id and not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', a.trial_id):
         p.error('Invalid trial ID')
     if a.return_to_edl_after is not None and (
             not a.reboot_helper or not 45 <= a.return_to_edl_after <= 300):
         p.error('A 45..300 second control return requires a static reboot helper')
+    if a.gadget_bind_delay is not None and (
+            a.defer_gadget_bind or not 1 <= a.gadget_bind_delay <= 120 or
+            (a.return_to_edl_after and a.gadget_bind_delay >= a.return_to_edl_after)):
+        p.error('Bind delay must be 1..120 seconds, before return, and cannot be deferred')
+    delays = None
+    if a.snapshot_delays:
+        try:
+            delays = [int(value) for value in a.snapshot_delays.split(',')]
+        except ValueError:
+            p.error('Snapshot intervals must be integers')
+        if not 1 <= len(delays) <= 8 or any(not 1 <= d <= 60 for d in delays) or sum(delays) > 180:
+            p.error('Snapshot intervals must be 1..60 seconds, at most 8, total <=180')
     root = pathlib.Path(__file__).resolve().parents[2]
     if root == a.output.resolve() or root in a.output.resolve().parents:
         p.error('Generated boot material must remain outside checkout')
@@ -72,6 +87,10 @@ def main():
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
     if a.defer_gadget_bind:
         add('defer-gadget-bind', 0o100600, b'1\n')
+    if a.gadget_bind_delay is not None:
+        add('gadget-bind-delay', 0o100600, (str(a.gadget_bind_delay)+'\n').encode())
+    if delays:
+        add('snapshot-delays', 0o100600, (' '.join(map(str, delays))+'\n').encode())
     if a.reboot_helper:
         helper = a.reboot_helper.read_bytes()
         if helper[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', helper, 18)[0] != 183:
@@ -101,6 +120,8 @@ def main():
                   entry_carrier_sha256=carrier_hash, trial_id=a.trial_id,
                   control_return_seconds=a.return_to_edl_after,
                   defer_gadget_bind=a.defer_gadget_bind,
+                  gadget_bind_delay_seconds=a.gadget_bind_delay,
+                  snapshot_intervals_seconds=delays or [15, 30, 30],
                   init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
                   supervisor_sha256=hashlib.sha256(supervisor.read_bytes()).hexdigest(),
                   snapshot_sha256=hashlib.sha256(snapshot.read_bytes()).hexdigest(),
