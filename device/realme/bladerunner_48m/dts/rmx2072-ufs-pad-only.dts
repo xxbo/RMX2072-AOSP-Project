@@ -15,6 +15,9 @@
         interrupts = <0 208 4>;
         gpio-controller;
         #gpio-cells = <2>;
+        // gpiolib reads get_direction on each valid GPIO during registration.
+        // Limit this diagnostic instance to the dedicated UFS pad at offset 180.
+        gpio-reserved-ranges = <0 180>;
         interrupt-controller;
         #interrupt-cells = <2>;
         // With no gpio-ranges, this driver adds a linear pin range itself.

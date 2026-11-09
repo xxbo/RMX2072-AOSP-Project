@@ -10,16 +10,18 @@ def check_isolated_pad(before, after):
     path = '/soc/pinctrl@f100000'
     old, new = ({n['path']: n['properties'] for n in fdt(blob, ('**',))['matching_nodes']}
                 for blob in (before, after))
-    if path in old or new.keys() != old.keys() | {path} or any(new[k] != v for k,v in old.items()):
+    if path in old or new.keys() != old.keys() | {path} or any(new[k] != v for k, v in old.items()):
         raise ValueError('Isolated TLMM control must preserve every original node and property')
     node = new[path]
     if (node.get('compatible') != ['realme,rmx2072-diag-tlmm'] or node.get('reg') != BANKS
-            or node.get('reg-names') != ['west', 'south', 'north'] or node.get('interrupts') != [0,208,4]
+            or node.get('reg-names') != ['west', 'south', 'north'] or node.get('interrupts') != [0, 208, 4]
             or node.get('#gpio-cells') != [2] or node.get('#interrupt-cells') != [2]
+            or node.get('gpio-reserved-ranges') != [0, 180]
             or 'gpio-controller' not in node or 'interrupt-controller' not in node
             or 'phandle' in node or 'wakeup-parent' in node or 'gpio-ranges' in node):
         raise ValueError('Unexpected resources, references or wake parent on the diagnostic TLMM node')
     return dict(added_path=path, original_nodes_identical=True, all_oem_consumers_preserved=True,
+                valid_gpio_offsets=[180],
                 primary_usb_sid_mask=require_sid0(after, legacy_base=True))
 
 
