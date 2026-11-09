@@ -15,6 +15,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit
 from inspect_boot_dt import fdt
 from check_usb_stream import require_sid0
 from check_watchdog import check_watchdog_control
+from check_ufs_pinctrl import check_ufs_pinctrl
 
 
 def main():
@@ -48,7 +49,7 @@ def main():
         for name in ['sm8250-realme-rmx2072-usb-diag', 'rmx2072-noop-overlay',
                      'rmx2072-legacy-usb-bridge', 'rmx2072-legacy-usb-iommu',
                      'rmx2072-legacy-usb-scm', 'rmx2072-legacy-usb-scm-sid0',
-                     'rmx2072-sid0-watchdog']:
+                     'rmx2072-sid0-watchdog', 'rmx2072-ufs-pinctrl']:
             expanded = output/(name+'.expanded.dts')
             cmd = ['gcc', '-E', '-P', '-x', 'assembler-with-cpp', '-nostdinc', '-undef', '-D__DTS__',
                    '-I'+str(src/'include'), '-I'+str(src/'arch/arm64/boot/dts/qcom'), str(dts/(name+'.dts'))]
@@ -86,9 +87,14 @@ def main():
     subprocess.run(['fdtoverlay', '-i', str(applied), '-o', str(watchdog),
                     str(output/'rmx2072-sid0-watchdog.dtb')], check=True)
     watchdog_control = check_watchdog_control(applied.read_bytes(), watchdog.read_bytes())
+    pinctrl = work/'legacy-ufs-pinctrl-applied.dtb'
+    subprocess.run(['fdtoverlay', '-i', str(watchdog), '-o', str(pinctrl),
+                    str(output/'rmx2072-ufs-pinctrl.dtb')], check=True)
+    pinctrl_control = check_ufs_pinctrl(watchdog.read_bytes(), pinctrl.read_bytes())
     report = dict(upstream_commit=source['commit'], mirror_commit=source['mirror_commit'],
                   overlay_selectors=selectors,
                   watchdog_on_sid0_fixture=watchdog_control,
+                  ufs_pinctrl_on_watchdog_fixture=pinctrl_control,
                   primary_usb_sid_mask=dict(pinned_reference=reference, sid0_on_fixture=candidate),
                   legacy_usb_bridge='SID0 applied to synthetic targets; handset requires private OEM merge',
                   archive_sha256=archive_hash, commands=commands,
