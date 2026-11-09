@@ -288,7 +288,7 @@ Tasks:
 
 1. Keep the F.20 logging reader and original DTBO as the recovery baseline. Stock boot and DTBO restoration are verified; full-system restore is still open. See the [device audit](docs/DEVICE_BASELINE_2026-11-06.md).
 2. Preserve the archived SID `0x740` failure and the [physical SID0 host-ACM success](build/device/usb-staged-sid-comparison-2026-11-09.json). Reuse SID0 with the post-OEM-overlay validator; keep stock DTBO unchanged.
-3. Finish the [600-second paced USB gate](build/device/usb-soak-2026-11-09.json). Track the uncapped burst short-transfer issue separately; a larger Windows queue alone did not resolve it. After the kernel/USB gate, audit modern watchdog, UFS/PHY clock/regulator dependencies and production clock/power handling. Leave Android 17 integration at the [GSI preflight](docs/GSI_PREFLIGHT_2026-11-06.md).
+3. Reuse the [passed 606-second paced USB baseline](build/device/usb-soak-2026-11-09.json). Trace the separate uncapped burst short-transfer issue; a larger Windows queue alone did not resolve it, and the Windows error observer reported no flags. Follow the [watchdog/UFS/PHY/TLMM dependency audit](docs/POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md) for isolated next controls and production clock/power work. Leave Android 17 integration at the [GSI preflight](docs/GSI_PREFLIGHT_2026-11-06.md).
 
 ## 5. Definition of done
 

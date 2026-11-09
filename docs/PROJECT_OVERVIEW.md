@@ -11,7 +11,7 @@ Maintain an independent AOSP platform for the realme X50 Pro Player Edition (RMX
 - Hardware validation and recovery procedures
 
 ## Milestones
-The [development plan](../plan.md) tracks M0–M8. The team has captured the F.20 baseline (M0), built the community 4.19 kernel (M1/M6), and inspected the official GSI (M2). The active M7 prototype now supports a verified 6.18 host ACM shell with primary USB SID0. Sustained transfer testing is in progress; display, UFS and Android userspace remain separate gates. See the [bring-up journal](INDEPENDENT_KERNEL_BRINGUP.md).
+The [development plan](../plan.md) tracks M0–M8. The team has captured the F.20 baseline (M0), built the community 4.19 kernel (M1/M6), and inspected the official GSI (M2). The active M7 prototype now supports a verified 6.18 host ACM shell with primary USB SID0 and a passed 606-second paced-data test. Uncapped burst loss, display, UFS and Android userspace remain separate work. See the [bring-up journal](INDEPENDENT_KERNEL_BRINGUP.md).
 
 ## Evidence labels
 - Source-confirmed: visible in a named source repository or official documentation.

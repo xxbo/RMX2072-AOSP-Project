@@ -32,7 +32,7 @@ The kernel already builds `SCSI_UFS_QCOM`, `PHY_QCOM_QMP_UFS`, `SCSI_UFS_CRYPTO`
 
 ## Order of follow-up controls
 
-1. Finish and archive the USB same-boot/transfer test, including burst limitations and stock recovery hashes.
+1. Preserve the passed 606-second USB same-boot/transfer baseline, its burst limitations and verified stock recovery hashes.
 2. Add the modern watchdog description as an isolated control; retain live USB logging and verify that firmware-started watchdog handling and recovery remain usable.
 3. Prepare UFS host/PHY/RPMh supply mappings on the same OEM-preserving tree. Validate provider graph and IRQ/register boundaries in CI before physical probing.
 4. Address production clock/power handling and the distinct three-bank TLMM provider. Do not infer suspend, thermal management or Android readiness from RAM-only USB operation.

@@ -25,7 +25,7 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Boot / reboot | Boot-tested (partial diagnostic path) | 6.18 RAM-only supervisor reached; explicit EDL restart captured. Upstream board DTS still loops; sustained runtime untested. |
 | Display / brightness / refresh rate | Unknown | |
 | Touch / gestures | Unknown | |
-| USB / ADB / MTP | Host ACM shell verified with SID0; sustained test running | Primary USB SID-only comparison enables configured UDC and completed 6.18 serial commands. ADB/MTP are not supplied by the diagnostic ramdisk. [Physical comparison](../build/device/usb-staged-sid-comparison-2026-11-09.json). |
+| USB / ADB / MTP | SID0 ACM shell and 606-second paced test passed | 29 responses / 7.25 MiB verified, same boot, configured high-speed UDC. Uncapped bursts still return short data; ADB/MTP are not supplied by the diagnostic ramdisk. [Soak evidence](../build/device/usb-soak-2026-11-09.json). |
 | UFS / encryption | Unknown | |
 | SIM / calls / SMS / mobile data | Unknown | |
 | Wi-Fi | Unknown | |

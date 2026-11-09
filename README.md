@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Project status: Physical 6.18 USB diagnostic shell verified on RMX2072.** Correcting the primary USB IOMMU SID to 0 enables host enumeration, a configured UDC and completed ACM commands with the expected 6.18 uname. A ten-minute transfer/uptime test is in progress. Display, UFS and Android 17 boot remain unvalidated.
+> **Project status: Physical 6.18 USB diagnostic shell and ten-minute paced transfer test passed on RMX2072.** Correcting the primary USB IOMMU SID to 0 enables host enumeration and end-to-end ACM commands. One boot completed 606.17 seconds of verified responses and 7.25 MiB of checked payloads. Uncapped bursts still have short transfers; display, UFS and Android 17 boot remain unvalidated.
 
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
@@ -12,7 +12,7 @@ Existing experiment results are consolidated into main: [full Kleaf 6.18 build](
 
 Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), [corrected legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), and [downloaded ARM64 + GMS image preflight](docs/GSI_PREFLIGHT_2026-11-06.md). The GSI is hash-verified; partition capacity and FCM/VNDK gaps are still open.
 
-**Verified recovery baseline:** stock-kernel logging-reader Android has repeatedly been restored with full boot/DTBO readback hashes and stock boot completion. The 6.18 log records eight CPUs activated, diagnostic init, no USB UDC, and an explicit restart request. A one-byte modified original DTBO also reached diagnostic userspace; no-op overlay controls have not established runtime support. See [independent kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md) for completed/active trial checkpoints and the [DTBO comparison](build/device/dtbo-isolation-2026-11-08.json). GSI remains deferred until independent kernel stability and platform dependencies are resolved.
+**Verified recovery baseline:** stock-kernel logging-reader Android has repeatedly been restored with full boot/DTBO readback hashes and stock boot completion, including after the ten-minute USB test. The latest 6.18 profile records CPUs `0-7` online, a configured high-speed USB UDC and a working RAM-only diagnostic shell. Original DTBO remains unchanged. See [independent kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md) for historical comparisons and current qualifications. GSI remains deferred while platform dependencies are adapted.
 
 ## Goals
 
@@ -21,6 +21,8 @@ Current board/kernel work beyond logging is detailed in the [November 7 adaptati
 The active phase is [independent 6.18 kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md): hardware mutex/watchdog dependencies, a verified early log path and stable RAM-only USB diagnostics. GSI integration is deferred.
 
 Latest follow-up: a physical SID-only comparison keeps kernel, ramdisk, command line, original DTBO and 24 other base trees byte-identical. SID `0x740` stops after communication start; SID `0`, mask `0`, yields a configured USB device and a completed 130,524-byte diagnostic transcript. SCM, apps SMMU, GCC, RPMh clocks/regulators and HS PHY are active on this RAM-only profile. See the [comparison evidence](build/device/usb-staged-sid-comparison-2026-11-09.json) and [bring-up journal](docs/INDEPENDENT_KERNEL_BRINGUP.md).
+
+The [paced stability record](build/device/usb-soak-2026-11-09.json) contains all 29 validated responses, the final kernel-state summary and the separate failed burst probes. Next work is [watchdog, UFS/PHY and TLMM dependencies](docs/POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md), alongside the unresolved burst-transfer limit. This is a diagnostic baseline, not Android or production power-management qualification.
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.

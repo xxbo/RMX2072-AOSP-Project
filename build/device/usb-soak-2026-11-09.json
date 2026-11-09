@@ -48,7 +48,7 @@
     "stock_boot_completed": true
   },
   "new_paced_soak": {
-    "status": "running",
+    "status": "600-second-paced-verification-passed-stock-reader-restored",
     "boot_sha256": "df2c4e3b054e0a62a0a0e02a7b1dc797bc6f8b0c386132c5721fff4602049c72",
     "ramdisk_sha256": "ded7b846396ddbaa03531d8cf0b894347ab79dbc4292cb9f13719e2f8761680d",
     "kernel_dtb_and_command_line_unchanged": true,
@@ -57,7 +57,303 @@
     "requested_span_seconds": 600,
     "bytes_per_sample": 262144,
     "source_chunk_bytes": 4096,
-    "source_chunk_delay_seconds": 0.02
+    "source_chunk_delay_seconds": 0.02,
+    "host_report": {
+      "status": "passed",
+      "error": null,
+      "samples": 29,
+      "requested_seconds": 600,
+      "host_rx_buffer_requested_bytes": 4194304,
+      "source_chunk_bytes": 4096,
+      "source_chunk_delay_seconds": 0.02,
+      "live_kernel_span_seconds": 606.17,
+      "verified_transfer_bytes": 7602176,
+      "boot_id_constant": true,
+      "scope": "Read-only serial commands; data generated from /dev/zero; no block filesystems"
+    },
+    "host_report_sha256": "239139c816faa1494d75d0438fcd83e87233bd9ef27a332e8df447d0564abd04",
+    "final_state": {
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "uptime_seconds": 667.47,
+      "boot_id_matches_soak": true,
+      "cpus_online": "0-7",
+      "udc_state": "configured",
+      "usb_speed": "high-speed",
+      "iommu_group": "0",
+      "irq_line": "116:      57147          0          0          0          0          0          0          0    GICv3 165 Level     dwc3",
+      "fatal_scan_matches": 0,
+      "known_warnings": [
+        "gcc_gpu_memnoc_gfx_clk stuck off",
+        "gcc_gpu_snoc_dvm_gfx_clk stuck off"
+      ]
+    },
+    "post_soak_burst_probe": {
+      "valid_samples": [
+        {
+          "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+          "uptime_seconds": 642.46,
+          "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+          "udc_state": "configured",
+          "transfer_bytes": 64,
+          "transfer_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+          "uptime_seconds": 642.9,
+          "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+          "udc_state": "configured",
+          "transfer_bytes": 64,
+          "transfer_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        }
+      ],
+      "failures": [
+        {
+          "sample": 1,
+          "error": "RAM transfer mismatch: expected 262144 bytes, received 261021, nonzero 0"
+        }
+      ],
+      "windows_error_events": [],
+      "host_rx_overflow_reported": false,
+      "qualification": "Missing flags do not exclude host loss; no exact cause inferred from short data alone"
+    },
+    "full_trial_restore_hashes_matched": true,
+    "stock_boot_completed": true,
+    "root_capture_completed": true,
+    "return_method": "User-assisted volume keys plus live ACM reboot; returned before 720-second fallback timer",
+    "validated_samples": [
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 24.21,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 45.85,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 67.53,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 89.17,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 110.83,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 132.5,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 154.15,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 175.8,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 197.47,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 219.13,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 240.79,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 262.44,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 284.09,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 305.73,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 327.38,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 349.01,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 370.65,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 392.3,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 413.96,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 435.61,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 457.24,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 478.88,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 500.53,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 522.18,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 543.83,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 565.47,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 587.11,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 608.74,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      },
+      {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "uptime_seconds": 630.38,
+        "boot_id_sha256": "9cb69795a25c23668180b2fac73a5ff10fccb14c8021798a0db301a91f68ee6d",
+        "udc_state": "configured",
+        "transfer_bytes": 262144,
+        "transfer_sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+      }
+    ]
   },
   "qualification": "Uncapped bursts lost bytes without reboot; requesting a larger Windows queue did not eliminate loss. Exact host/device cause remains unresolved. Paced test is a separate gate.",
   "ci_run": 42613848101,
@@ -66,5 +362,8 @@
     "total": 28,
     "local_passed": 26,
     "local_skipped_for_missing_dtc": 2
-  }
+  },
+  "latest_ci_run": 42615360279,
+  "latest_ci_status": "success",
+  "final_device_state": "Trusted stock-kernel logging reader 9ae2f907... with original DTBO 61d9b3ac...; Android boot completed"
 }
