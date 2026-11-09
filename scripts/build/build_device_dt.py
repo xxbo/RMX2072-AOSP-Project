@@ -13,6 +13,7 @@ import urllib.request
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
 from inspect_boot_dt import fdt
+from check_usb_stream import require_sid0
 
 
 def main():
@@ -45,7 +46,7 @@ def main():
     with (output/'compile.log').open('w') as log:
         for name in ['sm8250-realme-rmx2072-usb-diag', 'rmx2072-noop-overlay',
                      'rmx2072-legacy-usb-bridge', 'rmx2072-legacy-usb-iommu',
-                     'rmx2072-legacy-usb-scm']:
+                     'rmx2072-legacy-usb-scm', 'rmx2072-legacy-usb-scm-sid0']:
             expanded = output/(name+'.expanded.dts')
             cmd = ['gcc', '-E', '-P', '-x', 'assembler-with-cpp', '-nostdinc', '-undef', '-D__DTS__',
                    '-I'+str(src/'include'), '-I'+str(src/'arch/arm64/boot/dts/qcom'), str(dts/(name+'.dts'))]
@@ -71,9 +72,18 @@ def main():
     # Exercise libfdt's actual overlay application, not just syntax compilation.
     subprocess.run(['fdtoverlay', '-i', str(output/'sm8250-realme-rmx2072-usb-diag.dtb'),
                     '-o', str(output/'merged-diag.dtb'), str(output/'rmx2072-noop-overlay.dtb')], check=True)
+    reference = require_sid0((output/'merged-diag.dtb').read_bytes(), legacy_base=False)
+    fixture = work/'legacy-usb-base.dtb'
+    applied = work/'legacy-usb-applied.dtb'
+    subprocess.run(['dtc', '-@', '-I', 'dts', '-O', 'dtb', '-o', str(fixture),
+                    str(project/'tests/fixtures/legacy-usb-base.dts')], check=True)
+    subprocess.run(['fdtoverlay', '-i', str(fixture), '-o', str(applied),
+                    str(output/'rmx2072-legacy-usb-scm-sid0.dtb')], check=True)
+    candidate = require_sid0(applied.read_bytes(), legacy_base=True)
     report = dict(upstream_commit=source['commit'], mirror_commit=source['mirror_commit'],
                   overlay_selectors=selectors,
-                  legacy_usb_bridge='compile only; private downstream base required for application',
+                  primary_usb_sid_mask=dict(pinned_reference=reference, sid0_on_fixture=candidate),
+                  legacy_usb_bridge='SID0 applied to synthetic targets; handset requires private OEM merge',
                   archive_sha256=archive_hash, commands=commands,
                   status='compiled-and-overlay-applied-not-device-tested',
                   scope='USB diagnostic only; UFS, display and Android system are not enabled by this DT',

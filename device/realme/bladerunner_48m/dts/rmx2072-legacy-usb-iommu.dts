@@ -15,7 +15,7 @@
     fragment@8 {
         target-path = "/soc/usb@a600000";
         __overlay__ {
-            // SM8250 primary USB stream, from the pinned upstream board DTSI.
+            // Historical IOMMU/SCM trial value. The pinned primary USB SID is 0.
             iommus = <&apps_smmu 0x740 0>;
         };
     };

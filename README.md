@@ -20,7 +20,7 @@ Current board/kernel work beyond logging is detailed in the [November 7 adaptati
 
 The active phase is [independent 6.18 kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md): hardware mutex/watchdog dependencies, a verified early log path and stable RAM-only USB diagnostics. GSI integration is deferred.
 
-Latest follow-up: pre-MMU records confirm the aligned kernel at `0xa0200000`, entering at EL1. Preserving original DTBO while migrating the USB/clock/PHY/regulator graph reaches UDC registration and gadget binding, but binding-enabled boots reset. An otherwise identical deferred-bind control reaches its 90-second return with those drivers bound. Investigation now targets USB communication start, including the missing modern IOMMU mapping; host USB communication and sustained stability remain unvalidated. See [bring-up evidence](docs/INDEPENDENT_KERNEL_BRINGUP.md).
+Latest follow-up: pre-MMU records confirm the aligned kernel at `0xa0200000`, entering at EL1. Preserving original DTBO while migrating the USB/clock/PHY/regulator graph reaches UDC registration and gadget binding, but binding-enabled boots reset. An otherwise identical deferred-bind control reaches its 90-second return with those drivers bound. The subsequent SCM trial probed the apps SMMU and attached USB to an IOMMU group, then reset before host enumeration was observed. Its plugin used SID `0x740`; the pinned SM8250 primary USB master uses SID `0`, mask `0`. A separate SID0 control preserves the archived trial and validates the mapping in CI. Physical comparison is pending. See the [source review and trial sequence](docs/INDEPENDENT_KERNEL_BRINGUP.md#2026-11-09-review--primary-usb-stream-and-the-next-comparison).
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.
@@ -42,7 +42,7 @@ Latest follow-up: pre-MMU records confirm the aligned kernel at `0xa0200000`, en
 | Kernel research target | GKI / ACK 6.18 |
 | Known legacy kernel lineage | Linux 4.19.x |
 
-The exact partition layout, boot image header version, AVB state, firmware revision and hardware component variants must be verified on the physical device before flashing.
+The F.20 handset has a boot-v2 image, 4 KiB pages, a single boot partition and an unlocked bootloader. Firmware and partition details are recorded in the [captured baseline](docs/DEVICE_BASELINE_2026-11-06.md).
 
 ## Repository layout
 
