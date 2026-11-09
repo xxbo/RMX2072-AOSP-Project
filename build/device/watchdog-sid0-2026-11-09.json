@@ -1,0 +1,197 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-09",
+  "stage": "APSS watchdog on paced SID0",
+  "ci": {
+    "run_url": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42619346774",
+    "artifact_sha256": "98d9128abfccef3ca4a98af0fa1dab716fcfaac63d5845099a1e7e069d826b57",
+    "candidate_plugin_sha256": "4bd8ef4974d2160f2ba230259e7058bf50beecd9698e382ed7d464ac2bb40e7a"
+  },
+  "baseline_boot_sha256": "df2c4e3b054e0a62a0a0e02a7b1dc797bc6f8b0c386132c5721fff4602049c72",
+  "candidate_boot_sha256": "4fac7189f711bb130fcc64b451eabbb822d9cc2e1a1a41a4d7b499f31d2b8d35",
+  "original_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+  "selected_base_index": 12,
+  "other_24_trees_identical": true,
+  "pre_and_post_oem_validation": {
+    "pre_oem": {
+      "path": "/soc/qcom,wdt@17c10000",
+      "reg": [
+        398524416,
+        4096
+      ],
+      "interrupts": [
+        0,
+        0,
+        1
+      ],
+      "gic": "/soc/interrupt-controller@17a00000",
+      "sleep_clock_hz": 32764,
+      "changed_properties": [
+        "clocks",
+        "compatible",
+        "interrupts"
+      ],
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "post_oem": {
+      "path": "/soc/qcom,wdt@17c10000",
+      "reg": [
+        398524416,
+        4096
+      ],
+      "interrupts": [
+        0,
+        0,
+        1
+      ],
+      "gic": "/soc/interrupt-controller@17a00000",
+      "sleep_clock_hz": 32764,
+      "changed_properties": [
+        "clocks",
+        "compatible",
+        "interrupts"
+      ],
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    }
+  },
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "acm_samples": [
+    {
+      "uptime": 23.81,
+      "driver": "qcom_wdt",
+      "udc": "configured",
+      "cpus": "0-7"
+    },
+    {
+      "uptime": 60.12,
+      "driver": "qcom_wdt",
+      "udc": "configured",
+      "cpus": "0-7"
+    },
+    {
+      "uptime": 96.44,
+      "driver": "qcom_wdt",
+      "udc": "configured",
+      "cpus": "0-7"
+    }
+  ],
+  "boot_id_sha256": "0ff2361a00e9fcbb0fdf82c8f902f4de02b7b8a623c558c3e9981cdb0c883894",
+  "watchdog_device": "240:0",
+  "btf": {
+    "fields": {
+      "device": {
+        "driver_data": 152,
+        "devt": 776
+      },
+      "watchdog_device": {
+        "id": 0,
+        "info": 24,
+        "bootstatus": 48,
+        "timeout": 52,
+        "pretimeout": 56,
+        "status": 168
+      }
+    },
+    "btf_sha256": "d2745f0cbf9243760ad83b084fbe45e1b61aaa5410c2d608ad6ed3e158961c42",
+    "btf_bytes": 7426348
+  },
+  "core_fields": {
+    "before_userspace_open": {
+      "at": 308.908739,
+      "id": 0,
+      "timeout_seconds": 30,
+      "pretimeout_seconds": 1,
+      "status": 0,
+      "bootstatus": 0
+    },
+    "after_magic_close": {
+      "at": 489.452524,
+      "id": 0,
+      "timeout_seconds": 30,
+      "pretimeout_seconds": 1,
+      "status": 0,
+      "bootstatus": 0
+    }
+  },
+  "manual_test_sha256": "2b6f4a677a404f57d942106316fb5c54e864c0c1cb06a3ee074d060777a07a5c",
+  "events": [
+    {
+      "uptime": 472.56069,
+      "operation": "start",
+      "error": 0
+    },
+    {
+      "uptime": 472.560828,
+      "operation": "ping",
+      "error": 0
+    },
+    {
+      "uptime": 474.560939,
+      "operation": "ping",
+      "error": 0
+    },
+    {
+      "uptime": 476.561039,
+      "operation": "ping",
+      "error": 0
+    },
+    {
+      "uptime": 478.561143,
+      "operation": "ping",
+      "error": 0
+    },
+    {
+      "uptime": 478.561164,
+      "operation": "stop",
+      "error": 0
+    }
+  ],
+  "final_sample": {
+    "uptime": 524.64,
+    "seconds_after_stop": 46.08,
+    "udc": "configured",
+    "cpus": "0-7",
+    "same_boot_id": true,
+    "bark_irq": "113:          0          0          0          0          0          0          0          0    GICv3  32 Edge      wdt_bark",
+    "handset_block_mounts": []
+  },
+  "recovery": {
+    "entry": "ACM reboot with both volume keys held",
+    "write_partitions": [
+      "boot"
+    ],
+    "full_partition_sha256": {
+      "pre-read": {
+        "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+      },
+      "post-read": {
+        "boot": "4fac7189f711bb130fcc64b451eabbb822d9cc2e1a1a41a4d7b499f31d2b8d35",
+        "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+      },
+      "restore-pre-read": {
+        "boot": "4fac7189f711bb130fcc64b451eabbb822d9cc2e1a1a41a4d7b499f31d2b8d35",
+        "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+      },
+      "restore-post-read": {
+        "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+      }
+    },
+    "firmware": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "sys_boot_completed": "1"
+  },
+  "open_items": [
+    "adoption of a watchdog already running at firmware handoff",
+    "deliberate expiration and bark/bite",
+    "suspend and resume",
+    "UFS on 6.18"
+  ]
+}

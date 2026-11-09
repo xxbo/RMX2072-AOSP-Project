@@ -4,10 +4,23 @@
 / {
     #address-cells = <1>;
     #size-cells = <1>;
+    interrupt-parent = <&intc>;
     soc {
         #address-cells = <1>;
         #size-cells = <1>;
         ranges;
+        intc: interrupt-controller@17a00000 {
+            compatible = "arm,gic-v3";
+            reg = <0x17a00000 0x10000>;
+            #interrupt-cells = <3>;
+            #address-cells = <0>;
+            interrupt-controller;
+        };
+        wdog: qcom,wdt@17c10000 {
+            compatible = "qcom,msm-watchdog";
+            reg = <0x17c10000 0x1000>;
+            interrupts = <0 0 4>, <0 1 4>;
+        };
         qcom,gcc@100000 { reg = <0x100000 1>; };
         ssusb@a600000 { reg = <0xa600000 1>; };
         hsphy@88e3000 { reg = <0x88e3000 1>; };
