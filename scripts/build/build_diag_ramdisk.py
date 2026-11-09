@@ -121,7 +121,7 @@ def main():
                   control_return_seconds=a.return_to_edl_after,
                   defer_gadget_bind=a.defer_gadget_bind,
                   gadget_bind_delay_seconds=a.gadget_bind_delay,
-                  snapshot_intervals_seconds=delays or [15, 30, 30],
+                  snapshot_intervals_seconds=delays or [2, 13, 30, 30],
                   init_sha256=hashlib.sha256(init.read_bytes()).hexdigest(),
                   supervisor_sha256=hashlib.sha256(supervisor.read_bytes()).hexdigest(),
                   snapshot_sha256=hashlib.sha256(snapshot.read_bytes()).hexdigest(),

@@ -11,8 +11,8 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Android framework | AOSP Android 17 | Unknown | Successful build and physical boot |
 | System image | Google Android 17 QPR1 ARM64 + GMS | Image inspected, not boot-tested | ZIP hash verified; actual FCM/VNDK and capacity gaps in GSI_PREFLIGHT_2026-11-06.md |
 | Vendor image | RMX2072 F.20 stock vendor | Stock boot-tested; Android 17 compatibility unresolved | FCM 5, VNDK 30; target HAL tests pending |
-| Legacy kernel | Realme 4.19.x | Source-reviewed (provisional) | Reproducible build and device boot |
-| Community kernel | SM8250 4.19.x | Source-reviewed (provisional) | Exact branch support and reproducible boot |
+| Legacy kernel | Realme F.20 4.19.157 | Stock boot-tested | Logging-reader Android restored and booted; backup limits in DEVICE_BASELINE_2026-11-06.md |
+| Community kernel | SM8250-Common 4.19.325 | Build-tested | [Legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866); boot of the rebuilt community image pending |
 | ACK/GKI | Android 17 6.18.32 generic ARM64 | Generic distribution build-tested | Run 42194678844 passed; board/module/boot tests remain |
 | Platform kernel handoff | 6.18.32 + stock DTB bundle/original DTBO | Boot-tested (diagnostic userspace only) | Eight CPUs activated; init and timed EDL restart at 90.74s; no UDC; ten-minute stability pending |
 | Device tree | bladerunner_48m | Source-reviewed (provisional) | Exact device match and build product |
@@ -25,7 +25,7 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Boot / reboot | Boot-tested (partial diagnostic path) | 6.18 RAM-only supervisor reached; explicit EDL restart captured. Upstream board DTS still loops; sustained runtime untested. |
 | Display / brightness / refresh rate | Unknown | |
 | Touch / gestures | Unknown | |
-| USB / ADB / MTP | Blocked on 6.18 handoff probe | No UDC after 60-second wait with legacy DT bindings; no diagnostic terminal observed. Stock ADB works after recovery. |
+| USB / ADB / MTP | UDC and gadget bind observed; host enumeration pending | Initial legacy tree had no UDC. The bridge deferred binding through 90 s. The later SCM-enabled bind trial reset; no host ACM shell, ADB or MTP result on 6.18. [SCM trial](../build/device/usb-scm-control-2026-11-08.json). |
 | UFS / encryption | Unknown | |
 | SIM / calls / SMS / mobile data | Unknown | |
 | Wi-Fi | Unknown | |

@@ -63,8 +63,8 @@ Do not begin the full camera or audio migration before the memory, IOMMU and Qua
 - First-pass driver migration matrix and dependency map: recorded; non-GPU subsystem content diffs remain open.
 - The connected handset runs F.20; captured stock vendor and boot metadata are the current baseline. Historical F.15/F.17 trees remain references.
 - Physical handset/boot/partition/AVB capture: completed; bootloader unlocked and stock Android boot verified. Actual DTB 12 / DTBO 17 selection and NFC provider fixups recorded.
-- Legacy kernel build: config validation passed; full builds exposed Goodix indentation and qcacld path-length errors, with fixes committed and a retry running.
-- Generic ACK/GKI 6.18 distribution: full build passed in run 42194678844. Main now freezes all manifest dependencies and runs a strict NFC DDK build. Module loading, RMX2072 kernel boot and hardware validation remain untested.
+- Legacy community build: the Goodix and qcacld build fixes passed in [run #4](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866). Physical boot of that rebuilt image is pending.
+- Generic ACK/GKI 6.18 distribution: full build passed in run 42194678844. Main now freezes all manifest dependencies and runs a strict NFC DDK build. Strict NFC module loading remains untested. The separate SM8250 platform build reached diagnostic userspace on RMX2072. See the [board bring-up record](INDEPENDENT_KERNEL_BRINGUP.md).
 
 ## Measured generic-kernel platform gap
 
@@ -72,4 +72,4 @@ The completed run #8 configuration is not a Kona board configuration: it disable
 
 The pinned ACK source does provide `sm8250.dtsi` and HDK/MTP board examples, but its qcom DTS directory has no RMX2072/Realme board file. Those reference bindings need comparison with the selected stock DTB 12 / DTBO 17. The stock embedded DTB bundle is not automatically compatible with upstream 6.18 bindings.
 
-Before a handset boot attempt, build a coherent SM8250 platform configuration and early-boot driver set (pinctrl, clocks/RPMh, regulators, interconnect, SMMU, UFS/PHY and USB), choose built-in versus ramdisk-loaded modules for the actual boot-v2 layout, and verify all required firmware and init behavior. Do not mix 4.19 modules into the 6.18 build. A full generic distribution can pass while all these board requirements remain unresolved.
+The SM8250 bootstrap now supplies an early-boot platform configuration for RAM-only diagnostics. Its current board work concerns the USB DMA path and host enumeration. UFS/PHY, firmware dependencies and later module loading still need individual validation. Do not mix 4.19 modules into the 6.18 build. A full generic distribution can pass while all these board requirements remain unresolved.

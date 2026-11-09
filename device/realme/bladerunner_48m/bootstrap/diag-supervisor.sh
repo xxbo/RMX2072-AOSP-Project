@@ -31,7 +31,7 @@ fi
 # Keep provider snapshots separate from both the gadget child and return timer.
 # Missing USB must not prevent collecting driver binding / deferred-probe state.
 (
-    delays="15 30 30"
+    delays="2 13 30 30"
     [ ! -r /snapshot-delays ] || delays="$(/bin/busybox cat /snapshot-delays)"
     for delay in $delays; do
         /bin/busybox sleep "$delay"
