@@ -22,7 +22,7 @@ The active phase is [independent 6.18 kernel bring-up](docs/INDEPENDENT_KERNEL_B
 
 Latest follow-up: a physical SID-only comparison keeps kernel, ramdisk, command line, original DTBO and 24 other base trees byte-identical. SID `0x740` stops after communication start; SID `0`, mask `0`, yields a configured USB device and a completed 130,524-byte diagnostic transcript. SCM, apps SMMU, GCC, RPMh clocks/regulators and HS PHY are active on this RAM-only profile. See the [comparison evidence](build/device/usb-staged-sid-comparison-2026-11-09.json) and [bring-up journal](docs/INDEPENDENT_KERNEL_BRINGUP.md).
 
-The [paced stability record](build/device/usb-soak-2026-11-09.json) contains all 29 validated responses, the final kernel-state summary and the separate failed burst probes. Next work is [watchdog, UFS/PHY and TLMM dependencies](docs/POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md), alongside the unresolved burst-transfer limit. This is a diagnostic baseline, not Android or production power-management qualification.
+The [paced stability record](build/device/usb-soak-2026-11-09.json) contains all 29 validated responses and the separate failed burst probes. A subsequent RMX2072 trial registered the APSS watchdog on 6.18, traced a successful start, four keepalives and a stop, and recovered F.20 after a final same-boot USB sample at 524.64 s. See the [physical trial](docs/INDEPENDENT_KERNEL_BRINGUP.md#apss-watchdog-on-the-paced-sid0-profile) and [UFS reset, PHY and supply dependencies](docs/POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md).
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.
