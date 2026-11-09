@@ -24,7 +24,7 @@
             interrupts = <0 208 4>;
             wakeup-parent = <&pdc>;
         };
-        ufshc_mem: ufshc@1d84000 { reg = <0x1d84000 0x3000>; };
+        ufshc_mem: ufshc@1d84000 { compatible = "qcom,ufshc"; reg = <0x1d84000 0x3000>; };
         ufsphy_mem: ufsphy_mem@1d87000 { reg = <0x1d87000 0xe00>; };
         intc: interrupt-controller@17a00000 {
             compatible = "arm,gic-v3";

@@ -17,6 +17,7 @@ from check_usb_stream import require_sid0
 from check_watchdog import check_watchdog_control
 from check_ufs_pinctrl import check_ufs_pinctrl, check_isolated_pad
 from check_ufs_phy import check_ufs_phy
+from check_ufs_host import check_ufs_host
 
 
 def main():
@@ -51,7 +52,7 @@ def main():
                      'rmx2072-legacy-usb-bridge', 'rmx2072-legacy-usb-iommu',
                      'rmx2072-legacy-usb-scm', 'rmx2072-legacy-usb-scm-sid0',
                      'rmx2072-sid0-watchdog', 'rmx2072-ufs-pinctrl', 'rmx2072-ufs-pad-only',
-                     'rmx2072-ufs-phy']:
+                     'rmx2072-ufs-phy', 'rmx2072-ufs-host']:
             expanded = output/(name+'.expanded.dts')
             cmd = ['gcc', '-E', '-P', '-x', 'assembler-with-cpp', '-nostdinc', '-undef', '-D__DTS__',
                    '-I'+str(src/'include'), '-I'+str(src/'arch/arm64/boot/dts/qcom'), str(dts/(name+'.dts'))]
@@ -101,17 +102,22 @@ def main():
     subprocess.run(['fdtoverlay', '-i', str(watchdog), '-o', str(phy),
                     str(output/'rmx2072-ufs-phy.dtb')], check=True)
     phy_control = check_ufs_phy(watchdog.read_bytes(), phy.read_bytes())
+    host = work/'legacy-ufs-host-applied.dtb'
+    subprocess.run(['fdtoverlay', '-i', str(watchdog), '-o', str(host),
+                    str(output/'rmx2072-ufs-host.dtb')], check=True)
+    host_control = check_ufs_host(watchdog.read_bytes(), host.read_bytes())
     report = dict(upstream_commit=source['commit'], mirror_commit=source['mirror_commit'],
                   overlay_selectors=selectors,
                   watchdog_on_sid0_fixture=watchdog_control,
                   ufs_pinctrl_on_watchdog_fixture=pinctrl_control,
                   isolated_ufs_pad_on_watchdog_fixture=pad_control,
                   ufs_phy_on_watchdog_fixture=phy_control,
+                  ufs_host_on_watchdog_fixture=host_control,
                   primary_usb_sid_mask=dict(pinned_reference=reference, sid0_on_fixture=candidate),
                   legacy_usb_bridge='SID0 applied to synthetic targets; handset requires private OEM merge',
                   archive_sha256=archive_hash, commands=commands,
                   status='compiled-and-overlay-applied-not-device-tested',
-                  scope='USB diagnostic only; UFS, display and Android system are not enabled by this DT',
+                  scope='Independent USB, watchdog and UFS diagnostic overlays',
                   files={f.name: dict(size_bytes=f.stat().st_size, sha256=hashlib.sha256(f.read_bytes()).hexdigest())
                          for f in output.iterdir() if f.is_file()})
     (output/'provenance.json').write_text(json.dumps(report, indent=2)+'\n')

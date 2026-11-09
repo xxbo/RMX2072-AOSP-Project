@@ -12,6 +12,7 @@ from check_usb_stream import primary_usb_stream, require_sid0
 from check_watchdog import check_watchdog_control
 from check_ufs_pinctrl import check_ufs_pinctrl, check_isolated_pad, UFS_INITCALLS
 from check_ufs_phy import check_ufs_phy
+from check_ufs_host import check_ufs_host
 from prepare_pstore_reader import image_id
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
 from inspect_boot_dt import fdt, inspect
@@ -39,8 +40,10 @@ def main():
                           help='Add an isolated TLMM with the OEM consumers and PDC untouched')
     profiles.add_argument('--ufs-phy-control', action='store_true',
                           help='Add a staged QMP UFS PHY while excluding the storage host driver')
+    profiles.add_argument('--ufs-host-control', action='store_true',
+                          help='Stage the native UFS host, PHY and interconnect providers')
     a = p.parse_args()
-    storage_control = a.ufs_pinctrl_control or a.ufs_pad_only_control or a.ufs_phy_control
+    storage_control = a.ufs_pinctrl_control or a.ufs_pad_only_control or a.ufs_phy_control or a.ufs_host_control
     if bool(a.overlay) != bool(a.expected_overlay_sha256):
         p.error('Overlay requires its expected hash')
     if (a.check_usb_sid0 or a.watchdog_control or storage_control) and not a.overlay:
@@ -109,6 +112,8 @@ def main():
             name, check = 'ufs_pad_only_control', check_isolated_pad
         if a.ufs_phy_control:
             name, check = 'ufs_phy_control', check_ufs_phy
+        if a.ufs_host_control:
+            name, check = 'ufs_host_control', check_ufs_host
         checks[name] = {
             'pre_oem': check(blobs[12], changed),
             'post_oem': check(with_oem_overlay(blobs[12]), merged),
@@ -125,7 +130,7 @@ def main():
     start = trees[0]['offset']
     raw = bytearray(source[:start])+b''.join(blobs)
     struct.pack_into('<I', raw, 1648, sum(map(len, blobs)))
-    if storage_control:
+    if storage_control and not a.ufs_host_control:
         # OEM fragments 61/62 re-enable both stock nodes. Scope the exclusion
         # to this debug boot, leaving their DT properties and overlays intact.
         current = source[64:576].rstrip(b'\0')

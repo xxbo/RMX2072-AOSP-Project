@@ -35,6 +35,7 @@
             vdda-phy-supply = <&diag_l5>;
             vdda-pll-supply = <&diag_ufs_l9>;
         };
+#ifndef RMX2072_UFS_HOST_CONTROL
         ufs-phy-exercise {
             compatible = "realme,rmx2072-diag-ufs-phy-test";
             phys = <&diag_ufs_phy>;
@@ -43,5 +44,6 @@
             resets = <&diag_gcc GCC_UFS_PHY_BCR>;
             reset-names = "rst";
         };
+#endif
     };
 };
