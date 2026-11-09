@@ -24,6 +24,8 @@ Latest follow-up: a physical SID-only comparison keeps kernel, ramdisk, command 
 
 The [paced stability record](build/device/usb-soak-2026-11-09.json) contains all 29 validated responses and the separate failed burst probes. A subsequent RMX2072 trial registered the APSS watchdog on 6.18, traced a successful start, four keepalives and a stop, and recovered F.20 after a final same-boot USB sample at 524.64 s. See the [physical trial](docs/INDEPENDENT_KERNEL_BRINGUP.md#apss-watchdog-on-the-paced-sid0-profile) and [UFS reset, PHY and supply dependencies](docs/POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md).
 
+The 6.18 debug kernel now returns to Qualcomm 9008 from either the ramdisk timer or a live ACM command on this handset. A staged TLMM test bound the driver and queried GPIO 180 with all other lines reserved. UFS identification and electrical reset remain open. The [EDL and UFS bring-up record](docs/RMX2072_EDL_AND_UFS.md) includes the physical controls, the reboot-loop exception and the commands for hands-free recovery.
+
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.
 - Inventory the official Realme kernel sources, community device trees, proprietary vendor components and firmware dependencies.

@@ -17,9 +17,29 @@ Timer mode identifies the board and waits for the ramdisk deadline. Command mode
 
 The platform bootstrap applies the tracked SCM patch to the pinned ACK checkout and publishes its digest with the kernel artifact. Verify the artifact and `dist/Image` against the build manifest. Use `build_diag_ramdisk.py --return-to-edl-after SECONDS` to set the timer, `prepare_ramdisk_control.py` to insert that ramdisk in a known boot image, then `prepare_kernel_control.py` with the verified Image and the reviewed entry probe. The kernel packager retains the template's complete DTB bundle, ramdisk and command line. Both trial images use original F.20 DTBO.
 
+### Physical results on November 9
+
+| Trial | Observed on RMX2072 |
+| --- | --- |
+| Watchdog baseline, 75 s timer | The host identified the diagnostic shell, sent no reboot command, then observed a new 9008 port. Sahara completed. After recovery, pmsg contained the timer's `control-return-edl` marker for this trial. |
+| Same image, explicit command | At uptime 24.44 s, the host sent the ACM reboot command. The 9008 port appeared 6.83 s later, well before the 75 s timer. Sahara succeeded and both partition hashes matched. |
+| In-place PDC and TLMM conversion | The operator saw a reboot loop. Neither ACM nor a timed 9008 return appeared. Volume-key entry recovered the handset. The saved early console had ECC damage and did not identify the failing instruction. |
+| Independent TLMM, manually bound after ACM | With the original PDC and GPIO consumers intact, ACM worked before binding. The unrestricted bind was followed by a disconnect and a different boot ID. On reconnect the host requested 9008 and observed it 7.03 s later without key assistance. |
+| Same independent TLMM, only GPIO 180 valid | The driver bound, USB stayed configured and the line-info ioctl on offset 180 succeeded. The subsequent ACM request reached 9008 in 6.83 s. F.20 boot and original DTBO passed full readback and Android completed boot. |
+
+The 6.18 kernel came from [platform bootstrap run 4](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42621296489). The [trial record](../build/device/edl-ufs-pad-2026-11-09.json) contains the build and image hashes, full partition readbacks and sanitized ACM results.
+
 ## UFS dependencies on this board
 
 1. **Reset pad.** Preserve the original OEM pin states and phandles. Migrate the interrupt wake supplier to the SM8250 PDC binding and the TLMM provider to its west, south and north register banks. The upstream pinctrl driver assigns GPIO group 180 to the UFS reset pad. Its candidate consumer polarity is active-low. The read-only probe calls the GPIO chip-info and line-info ioctls. It never requests a line or sets a GPIO level.
 2. **Power and clocks.** The F.20 regulator sysfs reported L5 at 880,000 µV, L6 and L9 at 1,200,000 µV, L17 at 2,504,000 µV and S4 at 1,800,000 µV. These samples describe one stock boot. Reconcile the host/PHY supply phandles, GCC UFS clocks, shared `UFS_PHY_GDSC`, host reset and PHY reset provider against the ACK binding.
 3. **Controller and PHY.** OEM overlay entry 17 fragment 61 restores the downstream PHY compatible, L5, L9 and status. Fragment 62 restores the host's supply references and status. The TLMM-only control checks that both UFS nodes remain identical to their respective baselines before and after OEM application. It excludes `ufs_qcom_pltform_init` and `qmp_ufs_driver_init` only for this boot. A storage-capable profile must resolve those OEM fixups, the two DMA streams and both interconnect paths before attempting enumeration. The first storage test should identify the device and inspect block metadata with filesystems unmounted.
 4. **Android and peripherals.** After reproducible storage access, progress through display and touch, Android first-stage mounts, AVB/device-mapper and file-based encryption compatibility. Charging, thermal management, suspend/resume, GPU, remote processors, audio, radios and camera require their own board and firmware checks. The RAM-only shell does not validate these paths.
+
+### Why the GPIO mask matters
+
+The isolated profile adds a single provider node at `/soc/pinctrl@f100000`; every original property and node compares equal before and after applying OEM overlay 17. Its diagnostic compatible defers binding until the USB shell can set `driver_override` to `sm8250-pinctrl` and bind the device. The in-place variant in the table above remains a failed control.
+
+The unmasked and masked isolated images differ by one device-tree property, `gpio-reserved-ranges = <0 180>`. The kernel, ramdisk, command line, original DTBO and 24 other base trees are byte-identical. During registration, gpiolib reads the direction of each valid GPIO and the MSM driver reads the group's TLMM control register. The mask limits that pass to GPIO 180. The successful run does not identify which unmasked access caused the reset. [Pinned gpiolib](https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/gpio/gpiolib.c#L1156-L1177) · [MSM get_direction](https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/pinctrl/qcom/pinctrl-msm.c#L588-L599)
+
+The chip reported 181 GPIO offsets and line-info returned offset 180 with an empty name and consumer. The pinctrl debug listing associated group `ufs_reset` with `pin 180 (SDC2_CLK)`; the pinned descriptor table separately labels pin 183 `UFS_RESET`. The GPIO group, its south-tile register and the stock active-low states are the basis for the candidate mapping. The test did not drive the line, observe an electrical reset or enumerate UFS. Keep that distinction when implementing the host and PHY supplies, clocks, resets, interconnect and IOMMU mappings.

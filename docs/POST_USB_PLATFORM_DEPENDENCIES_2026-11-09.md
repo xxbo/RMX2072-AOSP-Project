@@ -32,6 +32,8 @@ The kernel already builds `SCSI_UFS_QCOM`, `PHY_QCOM_QMP_UFS`, `SCSI_UFS_CRYPTO`
 
 ### RMX2072 UFS device reset
 
+The [follow-up handset trials](RMX2072_EDL_AND_UFS.md#why-the-gpio-mask-matters) registered the isolated TLMM provider with GPIO 180 as its only valid line. The chip and line-info queries completed with USB still configured. The unmasked probe rebooted. Neither trial drove the reset pad.
+
 The restored F.20 live tree maps `dev-reset-assert` and `dev-reset-deassert` on the UFS host to two TLMM pin states for `ufs_reset`. Both specify pull-down and 8 mA drive. Assert drives the pad low and deassert drives it high. Stock bound `ufshcd-qcom` at `1d84000.ufshc` and `ufs_qcom_phy_qmp_v4` at `1d87000.ufsphy_mem`.
 
 The pinned ACK UFS driver acquires an optional GPIO named `reset` and toggles it with logical assert/deassert values. The SM8250 pinctrl driver assigns the dedicated reset **GPIO group 180** to the south tile, control offset `0xb8000`. This gives a candidate mapping of `reset-gpios = <&tlmm 180 GPIO_ACTIVE_LOW>` once the modern TLMM provider is functional. Verify that mapping with the original OEM overlay before enabling the host. The host's GCC block reset and the PHY reset supplied by the host have separate purposes. [UFS driver](https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/ufs/host/ufs-qcom.c) · [SM8250 pinctrl](https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/pinctrl/qcom/pinctrl-sm8250.c)
