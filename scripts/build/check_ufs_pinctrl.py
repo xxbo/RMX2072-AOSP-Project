@@ -3,6 +3,24 @@ from check_usb_stream import require_sid0
 from inspect_boot_dt import fdt
 
 UFS_INITCALLS = ('ufs_qcom_pltform_init', 'qmp_ufs_driver_init')
+BANKS = [0xf100000, 0x300000, 0xf500000, 0x300000, 0xf900000, 0x300000]
+
+
+def check_isolated_pad(before, after):
+    path = '/soc/pinctrl@f100000'
+    old, new = ({n['path']: n['properties'] for n in fdt(blob, ('**',))['matching_nodes']}
+                for blob in (before, after))
+    if path in old or new.keys() != old.keys() | {path} or any(new[k] != v for k,v in old.items()):
+        raise ValueError('Isolated TLMM control must preserve every original node and property')
+    node = new[path]
+    if (node.get('compatible') != ['realme,rmx2072-diag-tlmm'] or node.get('reg') != BANKS
+            or node.get('reg-names') != ['west', 'south', 'north'] or node.get('interrupts') != [0,208,4]
+            or node.get('#gpio-cells') != [2] or node.get('#interrupt-cells') != [2]
+            or 'gpio-controller' not in node or 'interrupt-controller' not in node
+            or 'phandle' in node or 'wakeup-parent' in node or 'gpio-ranges' in node):
+        raise ValueError('Unexpected resources, references or wake parent on the diagnostic TLMM node')
+    return dict(added_path=path, original_nodes_identical=True, all_oem_consumers_preserved=True,
+                primary_usb_sid_mask=require_sid0(after, legacy_base=True))
 
 
 def check_ufs_pinctrl(before, after):
@@ -21,12 +39,11 @@ def check_ufs_pinctrl(before, after):
         if changed - allowed.get(path, set()):
             raise ValueError(f'Unexpected property change at {path}: {changed}')
     gpio, wake = new[tlmm], new[pdc]
-    banks = [0xf100000, 0x300000, 0xf500000, 0x300000, 0xf900000, 0x300000]
     ranges = [0, 480, 94, 94, 609, 31, 125, 63, 1, 126, 716, 12]
     if (old[tlmm].get('compatible') != ['qcom,kona-pinctrl']
             or old[pdc].get('compatible') != ['qcom,kona-pdc']
             or new['/soc'].get('#address-cells') != [1] or new['/soc'].get('#size-cells') != [1]
-            or gpio.get('compatible') != ['qcom,sm8250-pinctrl'] or gpio.get('reg') != banks
+            or gpio.get('compatible') != ['qcom,sm8250-pinctrl'] or gpio.get('reg') != BANKS
             or gpio.get('reg-names') != ['west', 'south', 'north']
             or gpio.get('interrupts') != [0, 208, 4] or not gpio.get('phandle')
             or gpio.get('gpio-ranges') != gpio['phandle'] + [0, 0, 181]):

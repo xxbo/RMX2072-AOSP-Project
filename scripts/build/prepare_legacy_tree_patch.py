@@ -10,7 +10,7 @@ import sys
 from avb_footer import retain_envelope
 from check_usb_stream import primary_usb_stream, require_sid0
 from check_watchdog import check_watchdog_control
-from check_ufs_pinctrl import check_ufs_pinctrl, UFS_INITCALLS
+from check_ufs_pinctrl import check_ufs_pinctrl, check_isolated_pad, UFS_INITCALLS
 from prepare_pstore_reader import image_id
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
 from inspect_boot_dt import fdt, inspect
@@ -34,17 +34,20 @@ def main():
                    help='Apply the isolated watchdog overlay to the physically tested paced SID0 boot')
     profiles.add_argument('--ufs-pinctrl-control', action='store_true',
                           help='Migrate PDC/TLMM on the tested watchdog boot with storage disabled')
+    profiles.add_argument('--ufs-pad-only-control', action='store_true',
+                          help='Add an isolated TLMM with the OEM consumers and PDC untouched')
     a = p.parse_args()
+    storage_control = a.ufs_pinctrl_control or a.ufs_pad_only_control
     if bool(a.overlay) != bool(a.expected_overlay_sha256):
         p.error('Overlay requires its expected hash')
-    if (a.check_usb_sid0 or a.watchdog_control or a.ufs_pinctrl_control) and not a.overlay:
+    if (a.check_usb_sid0 or a.watchdog_control or storage_control) and not a.overlay:
         p.error('The selected control requires a project overlay')
     repo = pathlib.Path(__file__).resolve().parents[2]
     if a.output.resolve() == repo or repo in a.output.resolve().parents:
         p.error('Private outputs stay outside checkout')
     source, dtbo = a.control_boot.read_bytes(), a.stock_dtbo.read_bytes()
     expected_boot = SID0_PACED_BOOT if a.watchdog_control else BOOT
-    if a.ufs_pinctrl_control:
+    if storage_control:
         expected_boot = WATCHDOG_BOOT
     if hashlib.sha256(source).hexdigest() != expected_boot or hashlib.sha256(dtbo).hexdigest() != DTBO:
         raise ValueError('Requires the exact baseline boot for this control and original DTBO')
@@ -97,10 +100,11 @@ def main():
             'pre_oem': check_watchdog_control(blobs[12], changed),
             'post_oem': check_watchdog_control(with_oem_overlay(blobs[12]), merged),
         }
-    if a.ufs_pinctrl_control:
-        checks['ufs_pinctrl_control'] = {
-            'pre_oem': check_ufs_pinctrl(blobs[12], changed),
-            'post_oem': check_ufs_pinctrl(with_oem_overlay(blobs[12]), merged),
+    if storage_control:
+        check = check_isolated_pad if a.ufs_pad_only_control else check_ufs_pinctrl
+        checks['ufs_pad_only_control' if a.ufs_pad_only_control else 'ufs_pinctrl_control'] = {
+            'pre_oem': check(blobs[12], changed),
+            'post_oem': check(with_oem_overlay(blobs[12]), merged),
         }
     project_stream = primary_usb_stream(changed, legacy_base=True, allow_unmapped=True)
     final_usb_stream = None
@@ -114,7 +118,7 @@ def main():
     start = trees[0]['offset']
     raw = bytearray(source[:start])+b''.join(blobs)
     struct.pack_into('<I', raw, 1648, sum(map(len, blobs)))
-    if a.ufs_pinctrl_control:
+    if storage_control:
         # OEM fragments 61/62 re-enable both stock nodes. Scope the exclusion
         # to this debug boot, leaving their DT properties and overlays intact.
         current = source[64:576].rstrip(b'\0')

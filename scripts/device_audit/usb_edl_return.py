@@ -54,16 +54,21 @@ def observe(args, report):
         report['identity'] = identity = parse_identity(data)
         if args.trial and identity['trial'] != args.trial:
             raise ValueError(f"Expected trial {args.trial}, received {identity['trial']}")
+        start = time.monotonic()
         if args.mode == 'command':
             if identity['timer_seconds'] - identity['uptime_seconds'] <= 10:
                 raise ValueError('Too close to the timer deadline for an independent command test')
             console.write(b'/bin/reboot-edl edl\n')
             report['command_sent'] = True
+            try:
+                console.flush()
+            except serial.SerialException as exc:
+                # A device can disconnect during flush. Still require USB evidence.
+                report['flush_error'] = str(exc)
 
     timeout = args.timeout
     if timeout is None:
         timeout = 90 if args.mode == 'command' else max(0, identity['timer_seconds'] - identity['uptime_seconds']) + 90
-    start = time.monotonic()
     while time.monotonic() - start < timeout:
         ports = list(list_ports.comports())
         edl = ports_with_id(ports, EDL)
@@ -72,6 +77,9 @@ def observe(args, report):
         if edl and not ports_with_id(ports, ACM):
             report.update(edl_port=edl[0].device, edl_vid_pid='05c6:9008',
                           host_wait_seconds=round(time.monotonic() - start, 3))
+            if args.mode == 'command':
+                report['before_timer_deadline'] = (identity['uptime_seconds'] + report['host_wait_seconds']
+                                                   < identity['timer_seconds'])
             return
         time.sleep(0.25)
     raise TimeoutError('Diagnostic ACM did not transition to Qualcomm 9008 within the timeout')
