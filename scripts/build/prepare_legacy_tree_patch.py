@@ -11,6 +11,7 @@ from avb_footer import retain_envelope
 from check_usb_stream import primary_usb_stream, require_sid0
 from check_watchdog import check_watchdog_control
 from check_ufs_pinctrl import check_ufs_pinctrl, check_isolated_pad, UFS_INITCALLS
+from check_ufs_phy import check_ufs_phy
 from prepare_pstore_reader import image_id
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]/'device_audit'))
 from inspect_boot_dt import fdt, inspect
@@ -36,8 +37,10 @@ def main():
                           help='Migrate PDC/TLMM on the tested watchdog boot with storage disabled')
     profiles.add_argument('--ufs-pad-only-control', action='store_true',
                           help='Add an isolated TLMM with the OEM consumers and PDC untouched')
+    profiles.add_argument('--ufs-phy-control', action='store_true',
+                          help='Add a staged QMP UFS PHY while excluding the storage host driver')
     a = p.parse_args()
-    storage_control = a.ufs_pinctrl_control or a.ufs_pad_only_control
+    storage_control = a.ufs_pinctrl_control or a.ufs_pad_only_control or a.ufs_phy_control
     if bool(a.overlay) != bool(a.expected_overlay_sha256):
         p.error('Overlay requires its expected hash')
     if (a.check_usb_sid0 or a.watchdog_control or storage_control) and not a.overlay:
@@ -101,8 +104,12 @@ def main():
             'post_oem': check_watchdog_control(with_oem_overlay(blobs[12]), merged),
         }
     if storage_control:
-        check = check_isolated_pad if a.ufs_pad_only_control else check_ufs_pinctrl
-        checks['ufs_pad_only_control' if a.ufs_pad_only_control else 'ufs_pinctrl_control'] = {
+        name, check = 'ufs_pinctrl_control', check_ufs_pinctrl
+        if a.ufs_pad_only_control:
+            name, check = 'ufs_pad_only_control', check_isolated_pad
+        if a.ufs_phy_control:
+            name, check = 'ufs_phy_control', check_ufs_phy
+        checks[name] = {
             'pre_oem': check(blobs[12], changed),
             'post_oem': check(with_oem_overlay(blobs[12]), merged),
         }
@@ -124,11 +131,12 @@ def main():
         current = source[64:576].rstrip(b'\0')
         if any(source[608:1632]) or b'initcall_blacklist=' in current:
             raise ValueError('Unexpected baseline boot command line')
-        cmdline = current + b' initcall_blacklist=' + ','.join(UFS_INITCALLS).encode()
+        blocked = ['ufs_qcom_pltform_init'] if a.ufs_phy_control else list(UFS_INITCALLS)
+        cmdline = current + b' initcall_blacklist=' + ','.join(blocked).encode()
         if len(cmdline) >= 512:
             raise ValueError('Storage isolation options exceed the boot-v2 command line')
         raw[64:576] = cmdline.ljust(512, b'\0')
-        checks['ufs_initcall_blacklist'] = list(UFS_INITCALLS)
+        checks['ufs_initcall_blacklist'] = blocked
     raw[576:608] = image_id(raw)
     raw.extend(bytes(-len(raw)%4096))
     result, envelope = retain_envelope(source, raw)

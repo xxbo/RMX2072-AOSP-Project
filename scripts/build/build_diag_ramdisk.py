@@ -31,6 +31,8 @@ def main():
     p.add_argument('--entry-carrier', type=pathlib.Path)
     p.add_argument('--ufs-reset-info', type=pathlib.Path,
                    help='Static ARM64 read-only TLMM line-info tool')
+    p.add_argument('--ufs-phy-cycle', action='store_true',
+                   help='Include the staged SM8250 UFS PHY diagnostic shell commands')
     p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
@@ -89,6 +91,9 @@ def main():
     if a.ufs_reset_info:
         line_info = read_static_arm64(a.ufs_reset_info)
         add('bin/ufs-reset-info', 0o100755, line_info)
+    if a.ufs_phy_cycle:
+        cycle = (root/'scripts/device_audit/ufs_phy_cycle.sh').read_bytes().replace(b'\r\n', b'\n')
+        add('bin/ufs-phy-cycle', 0o100755, cycle)
     if a.trial_id:
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
     if a.defer_gadget_bind:
@@ -130,6 +135,8 @@ def main():
                   scope='USB serial shell in RAM; no block mounts or handset writes')
     if a.ufs_reset_info:
         report['ufs_reset_info_sha256'] = hashlib.sha256(line_info).hexdigest()
+    if a.ufs_phy_cycle:
+        report['ufs_phy_cycle_sha256'] = hashlib.sha256(cycle).hexdigest()
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 
