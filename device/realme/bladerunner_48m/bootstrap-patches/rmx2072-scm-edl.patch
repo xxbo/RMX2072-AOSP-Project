@@ -1,0 +1,103 @@
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -26,6 +26,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
++#include <linux/reboot.h>
+ #include <linux/reset-controller.h>
+ #include <linux/sizes.h>
+ #include <linux/types.h>
+@@ -49,6 +50,8 @@
+ 	int scm_vote_count;
+ 
+ 	u64 dload_mode_addr;
++	struct notifier_block edl_reboot;
++	bool edl_requested;
+ 
+ 	struct qcom_tzmem_pool *mempool;
+ };
+@@ -2329,10 +2332,54 @@
+ module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
+ MODULE_PARM_DESC(download_mode, "download mode: off/0/N for no dump mode, full/on/1/Y for full dump mode, mini for minidump mode and full,mini for both full and minidump mode together are acceptable values");
+ 
++/* Only the RMX2072 F.20 diagnostic tree uses this downstream EDL convention. */
++static int rmx2072_edl_reboot(struct notifier_block *nb, unsigned long action,
++			      void *cmd)
++{
++	struct qcom_scm *scm = container_of(nb, struct qcom_scm, edl_reboot);
++
++	scm->edl_requested = action == SYS_RESTART && cmd && !strcmp(cmd, "edl");
++	if (scm->edl_requested)
++		reboot_mode = REBOOT_WARM;
++
++	return NOTIFY_DONE;
++}
++
++static int rmx2072_request_edl(struct device *dev)
++{
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_BOOT,
++		.cmd = QCOM_SCM_BOOT_SET_DLOAD_MODE,
++		.arginfo = QCOM_SCM_ARGS(2),
++		.args = { BIT(0), 0 }, /* downstream SCM_EDLOAD_MODE */
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
++	struct device_node *np;
++	struct resource res;
++	int idx, ret;
++
++	if (__qcom_scm_is_call_available(dev, desc.svc, desc.cmd))
++		return qcom_scm_call_atomic(dev, &desc, NULL);
++
++	/* F.20 falls back to a secure write to this named PS_HOLD resource. */
++	np = of_find_compatible_node(NULL, NULL, "qcom,pshold");
++	if (!np)
++		return -ENODEV;
++	idx = of_property_match_string(np, "reg-names", "tcsr-boot-misc-detect");
++	ret = idx < 0 ? idx : of_address_to_resource(np, idx, &res);
++	of_node_put(np);
++	if (ret)
++		return ret;
++	if (res.start != 0x1fd3000 || resource_size(&res) != sizeof(u32))
++		return -EINVAL;
++	return qcom_scm_io_writel(res.start, BIT(0));
++}
++
+ static int qcom_scm_probe(struct platform_device *pdev)
+ {
+ 	struct qcom_tzmem_pool_config pool_config;
+ 	struct qcom_scm *scm;
++	u32 board;
+ 	int irq, ret;
+ 
+ 	scm = devm_kzalloc(&pdev->dev, sizeof(*scm), GFP_KERNEL);
+@@ -2408,6 +2455,14 @@
+ 					     "Failed to request qcom-scm irq\n");
+ 	}
+ 
++	if (of_machine_is_compatible("qcom,kona-mtp") &&
++	    !of_property_read_u32(of_root, "oplus,dtsi_no", &board) && board == 20607 &&
++	    of_device_is_compatible(pdev->dev.of_node, "qcom,scm-sm8250")) {
++		scm->edl_reboot.notifier_call = rmx2072_edl_reboot;
++		ret = devm_register_reboot_notifier(scm->dev, &scm->edl_reboot);
++		if (ret)
++			return ret;
++	}
+ 	/*
+ 	 * Paired with smp_load_acquire() in qcom_scm_is_available().
+ 	 *
+@@ -2453,6 +2508,13 @@
+ 
+ static void qcom_scm_shutdown(struct platform_device *pdev)
+ {
++	if (__scm->edl_requested) {
++		int ret = rmx2072_request_edl(&pdev->dev);
++
++		dev_emerg(&pdev->dev, "RMX2072 explicit EDL request: %d\n", ret);
++		if (!ret)
++			return;
++	}
+ 	/* Clean shutdown, disable download mode to allow normal restart */
+ 	qcom_scm_set_download_mode(QCOM_DLOAD_NODUMP);
+ }

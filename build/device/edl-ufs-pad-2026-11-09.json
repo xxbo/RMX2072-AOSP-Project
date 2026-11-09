@@ -1,0 +1,234 @@
+{
+  "model": "RMX2072",
+  "stock_control": {
+    "command": "adb reboot edl",
+    "enumeration": "05c6:9008",
+    "sahara": "passed",
+    "full_boot_and_dtbo_readbacks_matched": true,
+    "partition_writes": false
+  },
+  "kernel_ci": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42621296489",
+  "kernel_ci_artifact_sha256": "bf749cae827749dd06d2e3af0fa0d0b2288337f80e128bf5bb58406c70205f3b",
+  "image_sha256": "c0b83301c49c91cb0faf4e5e3c9f595090577f60c94f33c7de7b3685faeb7791",
+  "masked_dt_ci": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42629524990",
+  "masked_overlay_sha256": "48bc9e30c59a5bb0131bdd0150a8e2afd848ef67547d23a94e5c49a68838f9aa",
+  "trials": {
+    "edl-timer-01": {
+      "candidate_boot_sha256": "c02ed1811fd399d90927a84367a03e1da33cc4c58c6f7e2a4af87aa556cc8b94",
+      "full_partition_readbacks": {
+        "before": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "candidate": {
+          "boot": "c02ed1811fd399d90927a84367a03e1da33cc4c58c6f7e2a4af87aa556cc8b94",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "return-read": {
+          "boot": "c02ed1811fd399d90927a84367a03e1da33cc4c58c6f7e2a4af87aa556cc8b94",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "restored": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        }
+      },
+      "host": {
+        "mode": "timer",
+        "command_sent": false,
+        "status": "enumerated",
+        "identity": {
+          "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+          "trial": "edl-timer-01",
+          "udc": "configured",
+          "uptime_seconds": 24.13,
+          "timer_seconds": 75
+        },
+        "edl_vid_pid": "05c6:9008",
+        "host_wait_seconds": 59.703
+      },
+      "supervisor_timer_marker_in_reserved_ram": true
+    },
+    "ufs-pinctrl-01": {
+      "candidate_boot_sha256": "6f563bad7c5f5ec747e28ec61bc385cf283143128aa4f620076454b7ef5dca0c",
+      "full_partition_readbacks": {
+        "before": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "candidate": {
+          "boot": "6f563bad7c5f5ec747e28ec61bc385cf283143128aa4f620076454b7ef5dca0c",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "return-read": {
+          "boot": "6f563bad7c5f5ec747e28ec61bc385cf283143128aa4f620076454b7ef5dca0c",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "restored": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        }
+      },
+      "host_acm_seen": false,
+      "operator_observed": "repeated restarts",
+      "recovery": "operator held volume keys",
+      "fault_location": "unresolved; early kernel records have ECC damage"
+    },
+    "edl-command-01": {
+      "candidate_boot_sha256": "c02ed1811fd399d90927a84367a03e1da33cc4c58c6f7e2a4af87aa556cc8b94",
+      "full_partition_readbacks": {
+        "before": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "candidate": {
+          "boot": "c02ed1811fd399d90927a84367a03e1da33cc4c58c6f7e2a4af87aa556cc8b94",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "return-read": {
+          "boot": "c02ed1811fd399d90927a84367a03e1da33cc4c58c6f7e2a4af87aa556cc8b94",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        }
+      },
+      "host": {
+        "mode": "command",
+        "command_sent": true,
+        "status": "enumerated",
+        "identity": {
+          "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+          "trial": "edl-timer-01",
+          "udc": "configured",
+          "uptime_seconds": 24.44,
+          "timer_seconds": 75
+        },
+        "edl_vid_pid": "05c6:9008",
+        "host_wait_seconds": 6.829,
+        "before_timer_deadline": true
+      },
+      "next_boot": "ufs-pad-01 staged in the same EDL session"
+    },
+    "ufs-pad-01": {
+      "candidate_boot_sha256": "332b4a064927592b27a830d9084c8fe67b69b2d30e8f90aed0487e08dc72122f",
+      "full_partition_readbacks": {
+        "candidate": {
+          "boot": "332b4a064927592b27a830d9084c8fe67b69b2d30e8f90aed0487e08dc72122f",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "return-read": {
+          "boot": "332b4a064927592b27a830d9084c8fe67b69b2d30e8f90aed0487e08dc72122f",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "restored": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        }
+      },
+      "pdc": "OEM unchanged",
+      "bind": "ACM lost before bind returned",
+      "first_boot_id_sha256": "18080b3ada3b0082c2db6ba513082f837bd0fb9b01ab419b23b9f5644737f8eb",
+      "reconnected_boot_id_sha256": "ef2090fc9696c920fcd43396eb0756f263cfa5efba11e257daa175eb3af57c2d",
+      "host": {
+        "mode": "command",
+        "command_sent": true,
+        "status": "enumerated",
+        "identity": {
+          "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+          "trial": "ufs-pad-01",
+          "udc": "configured",
+          "uptime_seconds": 41.01,
+          "timer_seconds": 160
+        },
+        "edl_vid_pid": "05c6:9008",
+        "host_wait_seconds": 7.031,
+        "before_timer_deadline": true
+      }
+    },
+    "ufs-pad-180": {
+      "candidate_boot_sha256": "8104f2f4636bea0e3876d659531028588caed63eed48e769b4da0570e92f921e",
+      "full_partition_readbacks": {
+        "before": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "candidate": {
+          "boot": "8104f2f4636bea0e3876d659531028588caed63eed48e769b4da0570e92f921e",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "return-read": {
+          "boot": "8104f2f4636bea0e3876d659531028588caed63eed48e769b4da0570e92f921e",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "restored": {
+          "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        }
+      },
+      "host": {
+        "mode": "command",
+        "command_sent": true,
+        "status": "enumerated",
+        "identity": {
+          "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+          "trial": "ufs-pad-01",
+          "udc": "configured",
+          "uptime_seconds": 25.95,
+          "timer_seconds": 160
+        },
+        "edl_vid_pid": "05c6:9008",
+        "host_wait_seconds": 6.828,
+        "before_timer_deadline": true
+      },
+      "pad_controller": "f100000.pinctrl",
+      "bind_driver": "sm8250-pinctrl",
+      "chip_lines": 181,
+      "valid_offset": 180,
+      "line_info_ioctl_rc": 0,
+      "line_info_output": "chip=f100000.pinctrl lines=181 offset=180 name= consumer= flags=0x4",
+      "pinctrl_group": "ufs_reset",
+      "group_pin_descriptor": "pin 180 (SDC2_CLK)",
+      "requested_line": false,
+      "changed_output_level": false,
+      "host_and_phy_initcalls_excluded": true,
+      "comparison": "Same kernel, ramdisk, command line, original DTBO and 24 other base trees as ufs-pad-01; only gpio-reserved-ranges at /soc/pinctrl@f100000 changed"
+    }
+  },
+  "stock_ufs_reference": {
+    "firmware": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "host_driver": "ufshcd-qcom",
+    "phy_driver": "ufs_qcom_phy_qmp_v4",
+    "rails": {
+      "pm8150_l5": {
+        "reported_uV": 880000,
+        "state": "enabled"
+      },
+      "pm8150_l6": {
+        "reported_uV": 1200000,
+        "state": "enabled"
+      },
+      "pm8150_l9": {
+        "reported_uV": 1200000,
+        "state": "enabled"
+      },
+      "pm8150_l17": {
+        "reported_uV": 2504000,
+        "state": "enabled"
+      },
+      "pm8150a_s8": {
+        "reported_uV": 1200000,
+        "state": "enabled"
+      },
+      "pm8150_s4": {
+        "reported_uV": 1800000,
+        "state": "enabled"
+      }
+    }
+  },
+  "final_android": {
+    "firmware": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "boot_completed": "1",
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "original_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  }
+}

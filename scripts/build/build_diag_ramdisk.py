@@ -10,12 +10,27 @@ import re
 import struct
 
 
+def read_static_arm64(path):
+    binary = path.read_bytes()
+    if len(binary) < 64 or binary[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', binary, 18)[0] != 183:
+        raise ValueError(f'{path.name}: expected an AArch64 ELF64 binary')
+    off = struct.unpack_from('<Q', binary, 32)[0]
+    width, count = struct.unpack_from('<HH', binary, 54)
+    if width < 56 or count == 0 or off + width * count > len(binary):
+        raise ValueError(f'{path.name}: invalid ELF program headers')
+    if any(struct.unpack_from('<I', binary, off+i*width)[0] == 3 for i in range(count)):
+        raise ValueError(f'{path.name}: diagnostic binaries must have no dynamic interpreter')
+    return binary
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--busybox', required=True, type=pathlib.Path)
     p.add_argument('--output', required=True, type=pathlib.Path)
     p.add_argument('--reboot-helper', type=pathlib.Path)
     p.add_argument('--entry-carrier', type=pathlib.Path)
+    p.add_argument('--ufs-reset-info', type=pathlib.Path,
+                   help='Static ARM64 read-only TLMM line-info tool')
     p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
@@ -45,16 +60,10 @@ def main():
     if root == a.output.resolve() or root in a.output.resolve().parents:
         p.error('Generated boot material must remain outside checkout')
     lock = json.loads((root/'build/diagnostic-tools.json').read_text())
-    binary = a.busybox.read_bytes()
+    binary = read_static_arm64(a.busybox)
     actual = hashlib.sha256(binary).hexdigest()
     if actual != lock['busybox_sha256']:
         raise ValueError('BusyBox hash mismatch')
-    if binary[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', binary, 18)[0] != 183:
-        raise ValueError('Expected AArch64 ELF64')
-    offset = struct.unpack_from('<Q', binary, 32)[0]
-    size, count = struct.unpack_from('<HH', binary, 54)
-    if any(struct.unpack_from('<I', binary, offset+i*size)[0] == 3 for i in range(count)):
-        raise ValueError('Diagnostic BusyBox must have no dynamic interpreter')
     archive, inode = bytearray(), 0
     def add(name, mode, content=b'', major=0, minor=0):
         nonlocal inode
@@ -74,15 +83,12 @@ def main():
     helper_hash = None
     carrier_hash = None
     if a.entry_carrier:
-        carrier = a.entry_carrier.read_bytes()
-        if carrier[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', carrier, 18)[0] != 183:
-            raise ValueError('Expected static ARM64 entry carrier')
-        off = struct.unpack_from('<Q', carrier, 32)[0]
-        width, count = struct.unpack_from('<HH', carrier, 54)
-        if any(struct.unpack_from('<I', carrier, off+i*width)[0] == 3 for i in range(count)):
-            raise ValueError('Entry carrier must have no dynamic interpreter')
+        carrier = read_static_arm64(a.entry_carrier)
         add('bin/entry-carry', 0o100755, carrier)
         carrier_hash = hashlib.sha256(carrier).hexdigest()
+    if a.ufs_reset_info:
+        line_info = read_static_arm64(a.ufs_reset_info)
+        add('bin/ufs-reset-info', 0o100755, line_info)
     if a.trial_id:
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
     if a.defer_gadget_bind:
@@ -92,13 +98,7 @@ def main():
     if delays:
         add('snapshot-delays', 0o100600, (' '.join(map(str, delays))+'\n').encode())
     if a.reboot_helper:
-        helper = a.reboot_helper.read_bytes()
-        if helper[:6] != b'\x7fELF\x02\x01' or struct.unpack_from('<H', helper, 18)[0] != 183:
-            raise ValueError('Expected ARM64 ELF reboot helper')
-        phoff = struct.unpack_from('<Q', helper, 32)[0]
-        phsize, phcount = struct.unpack_from('<HH', helper, 54)
-        if any(struct.unpack_from('<I', helper, phoff+i*phsize)[0] == 3 for i in range(phcount)):
-            raise ValueError('Reboot helper must have no dynamic interpreter')
+        helper = read_static_arm64(a.reboot_helper)
         add('bin/reboot-edl', 0o100755, helper)
         helper_hash = hashlib.sha256(helper).hexdigest()
     if a.return_to_edl_after is not None:
@@ -128,6 +128,8 @@ def main():
                   cpio_sha256=hashlib.sha256(archive).hexdigest(),
                   gzip_sha256=hashlib.sha256(data.getvalue()).hexdigest(),
                   scope='USB serial shell in RAM; no block mounts or handset writes')
+    if a.ufs_reset_info:
+        report['ufs_reset_info_sha256'] = hashlib.sha256(line_info).hexdigest()
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 
