@@ -12,6 +12,7 @@ on:
       - 'scripts/device_audit/watchdog_smoke.sh'
       - 'scripts/device_audit/ufs_phy_cycle.sh'
       - 'scripts/device_audit/ufs_host_trial.sh'
+      - 'scripts/device_audit/ufs_g3_test.sh'
       - 'sources/SOURCE_LOCK.json'
       - 'tests/**'
 permissions:
@@ -30,7 +31,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y gcc device-tree-compiler
       - name: Check diagnostic scripts and host regressions
         run: |
-          for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh; do sh -n "$script"; done
+          for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree

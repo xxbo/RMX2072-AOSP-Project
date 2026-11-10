@@ -4,7 +4,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
-> **Linux 6.18 starts the UniPro link and reads all six UFS LUNs on RMX2072.** The native host negotiated two lanes at HS-G1 Rate B and returned the same UFS 3.0 descriptor and disk sizes as F.20. With USB SID 0, a separate diagnostic boot completed 606.17 seconds of verified responses and 7.25 MiB of checked payloads. HS-G3 read access, display and Android 17 boot remain open.
+> **Linux 6.18 reads all six UFS LUNs on RMX2072 at two-lane HS-G3 Rate B.** Two warm diagnostic boots completed 76 MiB of direct reads each with the AXI and UniPro core clocks at 300 MHz. The second boot also verified the complete diagnostic boot image and stock DTBO through their GPT partitions. Display and Android 17 boot remain open. See the [G3 evidence](build/device/ufs-g3-2026-11-10.json).
 
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
@@ -26,7 +26,7 @@ The [paced stability record](build/device/usb-soak-2026-11-09.json) contains all
 
 The 6.18 debug kernel now returns to Qualcomm 9008 from either the ramdisk timer or a live ACM command on this handset. A staged TLMM test bound the driver and queried GPIO 180 with all other lines reserved. Electrical device reset remains untested. See the [EDL and UFS bring-up record](docs/RMX2072_EDL_AND_UFS.md).
 
-The native QMP PHY passed two internal HS-B/G3 calibration cycles. With the Qualcomm host attached, the UIC completion for `DME_LINKSTARTUP` returned zero. The G1 profile read 4 KiB from each of six read-only disks. Both G3 trials generated repeated UIC errors before disk enumeration. See the [PHY test](docs/UFS_PHY_BRINGUP.md) and [UniPro bring-up record](docs/UFS_HOST_BRINGUP.md).
+The native QMP PHY passed two internal HS-B/G3 calibration cycles. The original G1 host profile provides a fallback with both core clocks fixed at 37.5 MHz. The G3 profile uses the F.20 clock range of 37.5 to 300 MHz and retains the same 19.2 MHz reference. See the [PHY test](docs/UFS_PHY_BRINGUP.md) and [UniPro bring-up record](docs/UFS_HOST_BRINGUP.md).
 
 - Build and boot an AOSP-based Android 17 system on RMX2072.
 - First establish a known-good baseline using the existing device tree, vendor components and a compatible kernel.

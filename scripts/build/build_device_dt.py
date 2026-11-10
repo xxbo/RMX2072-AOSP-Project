@@ -52,7 +52,7 @@ def main():
                      'rmx2072-legacy-usb-bridge', 'rmx2072-legacy-usb-iommu',
                      'rmx2072-legacy-usb-scm', 'rmx2072-legacy-usb-scm-sid0',
                      'rmx2072-sid0-watchdog', 'rmx2072-ufs-pinctrl', 'rmx2072-ufs-pad-only',
-                     'rmx2072-ufs-phy', 'rmx2072-ufs-host']:
+                     'rmx2072-ufs-phy', 'rmx2072-ufs-host', 'rmx2072-ufs-host-g3']:
             expanded = output/(name+'.expanded.dts')
             cmd = ['gcc', '-E', '-P', '-x', 'assembler-with-cpp', '-nostdinc', '-undef', '-D__DTS__',
                    '-I'+str(src/'include'), '-I'+str(src/'arch/arm64/boot/dts/qcom'), str(dts/(name+'.dts'))]
@@ -106,6 +106,10 @@ def main():
     subprocess.run(['fdtoverlay', '-i', str(watchdog), '-o', str(host),
                     str(output/'rmx2072-ufs-host.dtb')], check=True)
     host_control = check_ufs_host(watchdog.read_bytes(), host.read_bytes())
+    g3 = work/'legacy-ufs-g3-applied.dtb'
+    subprocess.run(['fdtoverlay', '-i', str(watchdog), '-o', str(g3),
+                    str(output/'rmx2072-ufs-host-g3.dtb')], check=True)
+    g3_control = check_ufs_host(watchdog.read_bytes(), g3.read_bytes(), g3=True)
     report = dict(upstream_commit=source['commit'], mirror_commit=source['mirror_commit'],
                   overlay_selectors=selectors,
                   watchdog_on_sid0_fixture=watchdog_control,
@@ -113,6 +117,7 @@ def main():
                   isolated_ufs_pad_on_watchdog_fixture=pad_control,
                   ufs_phy_on_watchdog_fixture=phy_control,
                   ufs_host_on_watchdog_fixture=host_control,
+                  ufs_g3_on_watchdog_fixture=g3_control,
                   primary_usb_sid_mask=dict(pinned_reference=reference, sid0_on_fixture=candidate),
                   legacy_usb_bridge='SID0 applied to synthetic targets; handset requires private OEM merge',
                   archive_sha256=archive_hash, commands=commands,

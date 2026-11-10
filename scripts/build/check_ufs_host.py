@@ -3,7 +3,7 @@ from check_usb_stream import require_sid0
 from check_ufs_phy import GCC, LAB, L5, L9, PHY, REGULATORS, RPMHCC, nodes, verify_original_properties
 
 
-def check_ufs_host(before, after):
+def check_ufs_host(before, after, *, g3=False):
     old, new = nodes(before), nodes(after)
     soc = '/soc'
     host_bus, fabric = soc+'/ufs-host-lab', soc+'/ufs-fabric-lab'
@@ -66,6 +66,7 @@ def check_ufs_host(before, after):
         return ph(new['/__symbols__'][label][0])
 
     smmu = resolve('apps_smmu')
+    high = 300000000 if g3 else 37500000
     check(host, compatible=['qcom,sm8250-ufshc', 'qcom,ufshc', 'jedec,ufs-2.0'],
           reg=[0x1d84000, 0x3000], phys=[ph(PHY)], resets=[gcc, 33],
           interrupts=[0, 265, 4], iommus=[smmu, 0xe0, 0, smmu, 0x4e0, 0],
@@ -75,7 +76,8 @@ def check_ufs_host(before, after):
           **{'interrupt-parent': [resolve('intc')], 'power-domains': [gcc, 4], '#reset-cells': [1],
              'interconnect-names': ['ufs-ddr', 'cpu-ufs'], 'phy-names': ['ufsphy'], 'reset-names': ['rst'],
              'vcc-supply': [resolve('diag_ufs_l17')], 'vccq-supply': [resolve('diag_ufs_l6')],
-             'vccq2-supply': [resolve('diag_ufs_s4')], 'lanes-per-direction': [2], 'limit-hs-gear': [1]})
-    return dict(host=host, parked=legacy, phy=PHY, board_xo_hz=38400000, interconnect_providers=len(noc),
+             'vccq2-supply': [resolve('diag_ufs_s4')], 'lanes-per-direction': [2], 'limit-hs-gear': [3 if g3 else 1],
+             'freq-table-hz': [37500000, high, 0, 0, 0, 0, 37500000, high, 0, 0, 0, 0, 0, 0, 0, 0]})
+    return dict(host=host, parked=legacy, phy=PHY, board_xo_hz=38400000, max_core_hz=high, interconnect_providers=len(noc),
                 smmu_stream_ids=[0xe0, 0x4e0], relocated_reference_cells=moved,
                 primary_usb_sid_mask=require_sid0(after, legacy_base=True))

@@ -35,6 +35,8 @@ def main():
                    help='Include the staged SM8250 UFS PHY diagnostic shell commands')
     p.add_argument('--ufs-host-test', action='store_true',
                    help='Include the staged UFS host and read-only LUN diagnostic')
+    p.add_argument('--ufs-host-g3-test', action='store_true',
+                   help='Include the staged host commands and HS-G3 read, wake and GPT controls')
     p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
@@ -96,9 +98,12 @@ def main():
     if a.ufs_phy_cycle:
         cycle = (root/'scripts/device_audit/ufs_phy_cycle.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/ufs-phy-cycle', 0o100755, cycle)
-    if a.ufs_host_test:
+    if a.ufs_host_test or a.ufs_host_g3_test:
         host = (root/'scripts/device_audit/ufs_host_trial.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/ufs-host-test', 0o100755, host)
+    if a.ufs_host_g3_test:
+        g3 = (root/'scripts/device_audit/ufs_g3_test.sh').read_bytes().replace(b'\r\n', b'\n')
+        add('bin/ufs-g3-test', 0o100755, g3)
     if a.trial_id:
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
     if a.defer_gadget_bind:
@@ -142,8 +147,10 @@ def main():
         report['ufs_reset_info_sha256'] = hashlib.sha256(line_info).hexdigest()
     if a.ufs_phy_cycle:
         report['ufs_phy_cycle_sha256'] = hashlib.sha256(cycle).hexdigest()
-    if a.ufs_host_test:
+    if a.ufs_host_test or a.ufs_host_g3_test:
         report['ufs_host_test_sha256'] = hashlib.sha256(host).hexdigest()
+    if a.ufs_host_g3_test:
+        report['ufs_g3_test_sha256'] = hashlib.sha256(g3).hexdigest()
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 
