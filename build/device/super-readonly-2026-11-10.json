@@ -1,0 +1,104 @@
+{
+  "device": "RMX2072",
+  "firmware": "RMX2072_11_F.20",
+  "date": "2026-11-10",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "trial": "ufs-host-g3-super-01",
+  "boot_sha256": "e88f146abdead9ee3ad8e649b677ef604c951487d61b831426e74ad148d797b7",
+  "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+  "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+  "same_kernel_and_dtb_as_ufs_g3_02": true,
+  "super_partition": "sda10",
+  "super_bytes": 8866758656,
+  "metadata_version": "10.0",
+  "protected_prefix_bytes": 274432,
+  "prefix_sha256": "9964c0dd6eb2a361455d84aa8fe67ef454e2fa6d85ade7b34b9b2d876a085e57",
+  "geometry_primary_backup_match": true,
+  "selected_slot_by_f20_live_linear_tables": 0,
+  "slots": [
+    {
+      "slot": 0,
+      "partitions": 15,
+      "linear_extents": 79,
+      "primary_backup_equal": true,
+      "header_and_tables_sha256_verified": true,
+      "header_and_tables_bytes_sha256": "9567e7eaef074618d0870c327dabe50e831ab618db448856dcd2474651e01528"
+    },
+    {
+      "slot": 1,
+      "partitions": 9,
+      "linear_extents": 9,
+      "primary_backup_equal": true,
+      "header_and_tables_sha256_verified": true,
+      "header_and_tables_bytes_sha256": "833ec51c53a1ad7d8e15524e634cee500a774869ee49c519825b1699561d6c88"
+    }
+  ],
+  "all_slot_extents_equal_f20_lpdump": true,
+  "linear_devices": {
+    "system": {
+      "extents": 1,
+      "bytes": 622247936,
+      "sha256": "04739e77e523644b8c836eced8d4e93077db47cbe27bb4d62eb353f265f2329d",
+      "linear_sectors_logical_start_length_super_start": [
+        [
+          0,
+          1215328,
+          3008
+        ]
+      ]
+    },
+    "vendor": {
+      "extents": 2,
+      "bytes": 412540928,
+      "sha256": "6ce6fd7565ee107c76a86575b0cbaf049ab30c182c8485ea25611ac566aeece0",
+      "linear_sectors_logical_start_length_super_start": [
+        [
+          0,
+          803840,
+          1924032
+        ],
+        [
+          803840,
+          1904,
+          1464256
+        ]
+      ]
+    },
+    "product": {
+      "extents": 3,
+      "bytes": 13807616,
+      "sha256": "64927a0f20d3a51a3b0de26ff48e64e5f7b9feb57177349903bea85a9560a142",
+      "linear_sectors_logical_start_length_super_start": [
+        [
+          0,
+          8192,
+          3222464
+        ],
+        [
+          8192,
+          18432,
+          1248192
+        ],
+        [
+          26624,
+          344,
+          1272768
+        ]
+      ]
+    }
+  },
+  "full_logical_bytes_hashed": 1048596480,
+  "hashes_equal_f20_live_logical_devices": true,
+  "temporary_dm_readonly": true,
+  "temporary_maps_removed": true,
+  "no_filesystem_mount": true,
+  "edl_without_keys_seconds": 6.985,
+  "firehose_readbacks_verified": true,
+  "final_android": {
+    "release": "4.19.157-perf+",
+    "sys_boot_completed": 1,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "stock_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  },
+  "restored_f20_metadata_and_logical_hashes_equal_pretrial": true
+}

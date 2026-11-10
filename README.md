@@ -6,6 +6,8 @@ The long-term goal is to bring a current AOSP-based Android release to the devic
 
 > **Linux 6.18 reads all six UFS LUNs on RMX2072 at two-lane HS-G3 Rate B.** Two warm diagnostic boots completed 76 MiB of direct reads each with the AXI and UniPro core clocks at 300 MHz. The second boot also verified the complete diagnostic boot image and stock DTBO through their GPT partitions. Display and Android 17 boot remain open. See the [G3 evidence](build/device/ufs-g3-2026-11-10.json).
 
+Linux 6.18 also parsed both F.20 `super` metadata slots and created read-only dm-linear mappings for `system`, `vendor` and `product`. All three full-device SHA-256 hashes matched the running F.20 logical devices. See the [dynamic partition test](docs/SUPER_READONLY.md).
+
 Execution path: **GitHub Actions kernel/driver builds + official Android 17 ARM64 GSI + local USB hardware validation**. See [build execution](docs/BUILD_EXECUTION.md), the [captured device baseline](docs/DEVICE_BASELINE_2026-11-06.md), and the manually triggered [Legacy Kernel Build](.github/workflows/legacy-kernel-build.yml).
 
 Existing experiment results are consolidated into main: [full Kleaf 6.18 build](docs/GKI_618_BUILD.md), [source snapshot](docs/GKI_618_SOURCE_MIRROR.md), and [NQ-NCI compile/KMI limitations](experiments/nfc_nq/PORTING_LOG.md). The locked generic GKI + strict NFC [run #9](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281) passed; the downloaded NFC module also passed matching-kernel CRC checks. Module loading and device hardware tests remain unperformed.
