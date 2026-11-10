@@ -8,6 +8,7 @@ import json
 import pathlib
 import re
 import struct
+from super_tools import read_tools
 
 
 def read_static_arm64(path):
@@ -37,6 +38,8 @@ def main():
                    help='Include the staged UFS host and read-only LUN diagnostic')
     p.add_argument('--ufs-host-g3-test', action='store_true',
                    help='Include the staged host commands and HS-G3 read, wake and GPT controls')
+    p.add_argument('--super-tools-apks', type=pathlib.Path,
+                   help='Verified APK cache for the read-only dynamic partition diagnostic')
     p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
@@ -45,6 +48,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.super_tools_apks and not a.ufs_host_g3_test:
+        p.error('--super-tools-apks requires --ufs-host-g3-test')
     if a.trial_id and not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', a.trial_id):
         p.error('Invalid trial ID')
     if a.return_to_edl_after is not None and (
@@ -104,6 +109,13 @@ def main():
     if a.ufs_host_g3_test:
         g3 = (root/'scripts/device_audit/ufs_g3_test.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/ufs-g3-test', 0o100755, g3)
+    if a.super_tools_apks:
+        binaries = read_tools(a.super_tools_apks)
+        add('bin/lp', 0o40755)
+        for name, elf in sorted(binaries.items()):
+            add('bin/lp/'+name, 0o100755, elf)
+        super_test = (root/'scripts/device_audit/super_readonly.sh').read_bytes().replace(b'\r\n', b'\n')
+        add('bin/super-readonly', 0o100755, super_test)
     if a.trial_id:
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
     if a.defer_gadget_bind:
@@ -151,6 +163,9 @@ def main():
         report['ufs_host_test_sha256'] = hashlib.sha256(host).hexdigest()
     if a.ufs_host_g3_test:
         report['ufs_g3_test_sha256'] = hashlib.sha256(g3).hexdigest()
+    if a.super_tools_apks:
+        report['super_tools_files'] = len(binaries)
+        report['super_test_sha256'] = hashlib.sha256(super_test).hexdigest()
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 

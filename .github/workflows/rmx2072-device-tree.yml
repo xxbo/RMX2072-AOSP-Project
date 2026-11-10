@@ -1,6 +1,11 @@
 name: RMX2072 6.18 Device Tree
 on:
   workflow_dispatch:
+    inputs:
+      verify_super_tools:
+        description: Fetch and verify the pinned aarch64 liblp and device-mapper runtime
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
     paths:
@@ -13,6 +18,9 @@ on:
       - 'scripts/device_audit/ufs_phy_cycle.sh'
       - 'scripts/device_audit/ufs_host_trial.sh'
       - 'scripts/device_audit/ufs_g3_test.sh'
+      - 'scripts/device_audit/super_readonly.sh'
+      - 'scripts/device_audit/check_super.py'
+      - 'build/super-readonly-apks.json'
       - 'sources/SOURCE_LOCK.json'
       - 'tests/**'
 permissions:
@@ -31,10 +39,13 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y gcc device-tree-compiler
       - name: Check diagnostic scripts and host regressions
         run: |
-          for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh; do sh -n "$script"; done
+          for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree
+      - name: Verify the read-only super diagnostic runtime
+        if: inputs.verify_super_tools
+        run: python scripts/build/super_tools.py --cache "$RUNNER_TEMP/rmx-super-apks"
       - name: Prepare core-only handoff profile
         run: >-
           python scripts/build/prepare_core_only_dt.py
