@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-only
+#include "rmx2072-ufs-host.dts"
+
+&diag_ufs_host {
+    limit-hs-gear = <3>;
+    // The F.20 host uses the same endpoints for AXI and UniPro.
+    freq-table-hz = <37500000 300000000>, <0 0>, <0 0>, <37500000 300000000>,
+                    <0 0>, <0 0>, <0 0>, <0 0>;
+};

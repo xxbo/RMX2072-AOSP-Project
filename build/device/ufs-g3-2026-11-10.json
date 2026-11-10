@@ -1,0 +1,123 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-10",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "firmware": "RMX2072_11_F.20",
+  "control": "ufs-host-04 (2026-11-09): HS-G3 B, 19.2 MHz reference, both core clocks fixed at 37.5 MHz, no disks",
+  "effective_base_dtb_changed_properties": [
+    "/soc/ufs-host-lab/ufs@1d84000/freq-table-hz"
+  ],
+  "max_rates_changed_hz": [
+    37500000,
+    300000000
+  ],
+  "f20_devfreq_available_hz": [
+    37500000,
+    300000000
+  ],
+  "f20_phy_and_device_supplies_uV": {
+    "l5": 880000,
+    "l6": 1200000,
+    "l9": 1200000,
+    "l17": 2504000,
+    "s4": 1800000
+  },
+  "shipped_trial": "ufs-host-g3-02",
+  "trials": [
+    {
+      "trial": "ufs-host-g3-01",
+      "boot_sha256": "80a081fce0c0258d353349a3692c6cc17267daf31586f4ce3b83056e0ca89808",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "overlay_sha256": "5937aeb644b5784dc20e354e9f3a8b87eaf4cf30e8ab3e3a1680394f25e5ea59",
+      "linkstartup_ms": 20.72,
+      "uic_result": 0,
+      "link_startup_return": 0,
+      "ufs_version": "3.0",
+      "lun_count": 6,
+      "lun_sizes_match_f20": true,
+      "hs_gear": 3,
+      "hs_rate": "B",
+      "lanes": 2,
+      "core_and_unipro_read_hz": 300000000,
+      "clock_down_and_up_observed": true,
+      "direct_read_MiB_per_lun_per_pass": 1,
+      "passes_on_six_luns": 2,
+      "sda_extra_direct_read_MiB": 64,
+      "sda_extra_seconds": 0.154754,
+      "block_sector_deltas_match": true,
+      "ufs_event_hist_calls_in_trace_window": 0,
+      "edl_without_keys_seconds": 7.031,
+      "full_firehose_readbacks_verified": true,
+      "restored_f20_boot_completed": true
+    },
+    {
+      "trial": "ufs-host-g3-02",
+      "boot_sha256": "9b2f58c8fe5389546fa22ef186de9fb933833536452f84141705d76d178d49eb",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "overlay_sha256": "5937aeb644b5784dc20e354e9f3a8b87eaf4cf30e8ab3e3a1680394f25e5ea59",
+      "linkstartup_ms": 20.721,
+      "uic_result": 0,
+      "link_startup_return": 0,
+      "ufs_version": "3.0",
+      "lun_count": 6,
+      "lun_sizes_match_f20": true,
+      "hs_gear": 3,
+      "hs_rate": "B",
+      "lanes": 2,
+      "core_and_unipro_read_hz": 300000000,
+      "clock_down_and_up_observed": true,
+      "direct_read_MiB_per_lun_per_pass": 1,
+      "passes_on_six_luns": 2,
+      "sda_extra_direct_read_MiB": 64,
+      "sda_extra_seconds": 0.154712,
+      "block_sector_deltas_match": true,
+      "ufs_event_hist_calls_in_trace_window": 0,
+      "edl_without_keys_seconds": 7.296,
+      "full_firehose_readbacks_verified": true,
+      "restored_f20_boot_completed": true,
+      "hibern8_before_direct_read_count": 3,
+      "repeated_read_content_matches": true,
+      "runtime_pm_suspend_resume_rc0": true,
+      "gpt_match_f20": {
+        "boot": {
+          "node": "sde11",
+          "start_sector_512": 634928,
+          "size_sectors_512": 196608
+        },
+        "dtbo": {
+          "node": "sde19",
+          "start_sector_512": 834384,
+          "size_sectors_512": 49152
+        },
+        "metadata": {
+          "node": "sda7",
+          "start_sector_512": 987200,
+          "size_sectors_512": 32768
+        },
+        "super": {
+          "node": "sda10",
+          "start_sector_512": 1544256,
+          "size_sectors_512": 17317888
+        },
+        "userdata": {
+          "node": "sda11",
+          "start_sector_512": 18862144,
+          "size_sectors_512": 225374104
+        }
+      },
+      "linux_gpt_full_boot_sha256": "9b2f58c8fe5389546fa22ef186de9fb933833536452f84141705d76d178d49eb",
+      "linux_gpt_full_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+    }
+  ],
+  "final_android": {
+    "release": "4.19.157-perf+",
+    "sys_boot_completed": 1,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "stock_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  },
+  "limits": [
+    "Warm diagnostic boots and read-only storage",
+    "Per-clock causality and RPMh voltage scaling under load were not isolated",
+    "Cold device reset, filesystem mounts and inline encryption remain untested"
+  ]
+}

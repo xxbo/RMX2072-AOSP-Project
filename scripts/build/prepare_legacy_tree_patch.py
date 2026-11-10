@@ -2,6 +2,7 @@
 """Patch only base DTB 12 in a proven boot; always keep original stock DTBO."""
 import argparse
 import ctypes
+from functools import partial
 import hashlib
 import json
 import pathlib
@@ -42,8 +43,11 @@ def main():
                           help='Add a staged QMP UFS PHY while excluding the storage host driver')
     profiles.add_argument('--ufs-host-control', action='store_true',
                           help='Stage the native UFS host, PHY and interconnect providers')
+    profiles.add_argument('--ufs-host-g3-control', action='store_true',
+                          help='Stage the G3 host with the F.20 AXI and UniPro frequency range')
     a = p.parse_args()
-    storage_control = a.ufs_pinctrl_control or a.ufs_pad_only_control or a.ufs_phy_control or a.ufs_host_control
+    host_control = a.ufs_host_control or a.ufs_host_g3_control
+    storage_control = a.ufs_pinctrl_control or a.ufs_pad_only_control or a.ufs_phy_control or host_control
     if bool(a.overlay) != bool(a.expected_overlay_sha256):
         p.error('Overlay requires its expected hash')
     if (a.check_usb_sid0 or a.watchdog_control or storage_control) and not a.overlay:
@@ -112,8 +116,9 @@ def main():
             name, check = 'ufs_pad_only_control', check_isolated_pad
         if a.ufs_phy_control:
             name, check = 'ufs_phy_control', check_ufs_phy
-        if a.ufs_host_control:
-            name, check = 'ufs_host_control', check_ufs_host
+        if host_control:
+            name = 'ufs_host_g3_control' if a.ufs_host_g3_control else 'ufs_host_control'
+            check = partial(check_ufs_host, g3=a.ufs_host_g3_control)
         checks[name] = {
             'pre_oem': check(blobs[12], changed),
             'post_oem': check(with_oem_overlay(blobs[12]), merged),
@@ -130,7 +135,7 @@ def main():
     start = trees[0]['offset']
     raw = bytearray(source[:start])+b''.join(blobs)
     struct.pack_into('<I', raw, 1648, sum(map(len, blobs)))
-    if storage_control and not a.ufs_host_control:
+    if storage_control and not host_control:
         # OEM fragments 61/62 re-enable both stock nodes. Scope the exclusion
         # to this debug boot, leaving their DT properties and overlays intact.
         current = source[64:576].rstrip(b'\0')
