@@ -42,6 +42,8 @@ def main():
                    help='Verified APK cache for the read-only dynamic partition diagnostic')
     p.add_argument('--f20-verity', action='store_true',
                    help='Include the signed F.20 hashtree reference and read-only mount trial')
+    p.add_argument('--gsi-usb-reader', type=pathlib.Path,
+                   help='Static ARM64 dm-user reader for the read-only Android 17 GSI trial')
     p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
@@ -54,6 +56,8 @@ def main():
         p.error('--super-tools-apks requires --ufs-host-g3-test')
     if a.f20_verity and not a.super_tools_apks:
         p.error('--f20-verity requires --super-tools-apks')
+    if a.gsi_usb_reader and not a.super_tools_apks:
+        p.error('--gsi-usb-reader requires the verified dmsetup runtime from --super-tools-apks')
     if a.trial_id and not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', a.trial_id):
         p.error('Invalid trial ID')
     if a.return_to_edl_after is not None and (
@@ -120,6 +124,17 @@ def main():
             add('bin/lp/'+name, 0o100755, elf)
         super_test = (root/'scripts/device_audit/super_readonly.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/super-readonly', 0o100755, super_test)
+    if a.gsi_usb_reader:
+        reader = read_static_arm64(a.gsi_usb_reader)
+        add('bin/gsi-usb-reader', 0o100755, reader)
+        script = (root/'scripts/device_audit/gsi17_mount.sh').read_bytes().replace(b'\r\n', b'\n')
+        add('bin/gsi17-mount', 0o100755, script)
+        ref = json.loads((root/'build/device/gsi17-mount-reference.json').read_text())
+        t = ref['hashtree']
+        args = [ref['image_bytes'], t['image_bytes'], t['data_block_bytes'],
+                t['tree_offset']//t['hash_block_bytes'], t['root_digest'], t['salt']]
+        add('gsi17-table', 0o100444, (' '.join(map(str, args))+'\n').encode())
+        add('gsi17-files', 0o100444, ''.join(f"{v['sha256']} {p}\n" for p,v in ref['files'].items()).encode())
     if a.f20_verity:
         ref = json.loads((root/'build/device/f20-verity-reference.json').read_text())
         add('verity-profile', 0o40755)
@@ -188,6 +203,9 @@ def main():
         report['super_test_sha256'] = hashlib.sha256(super_test).hexdigest()
     if a.f20_verity:
         report['verity_test_sha256'] = hashlib.sha256(verity_test).hexdigest()
+    if a.gsi_usb_reader:
+        report['gsi_reader_sha256'] = hashlib.sha256(reader).hexdigest()
+        report['gsi_mount_script_sha256'] = hashlib.sha256(script).hexdigest()
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 

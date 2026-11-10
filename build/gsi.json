@@ -7,5 +7,5 @@
   "release_page": "https://developer.android.com/topic/generic-system-image/releases",
   "url": "https://dl.google.com/developers/android/cinnamonbun/images/gsi/gsi_gms_arm64-exp-CP3A.260905.010-16176746-d55d64aa.zip",
   "sha256": "d55d64aaebc71b2a895d792c152cfc408841bfde38565b082f495b850a2ae3e1",
-  "status": "selected-download-authorized-not-device-tested"
+  "status": "mounted-read-only-on-rmx2072-linux-6.18-android-userspace-command-tested"
 }

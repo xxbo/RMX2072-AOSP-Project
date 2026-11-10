@@ -1,0 +1,37 @@
+{
+  "build": "CP3A.260905.010",
+  "android_release": 17,
+  "sdk": 37,
+  "image_bytes": 3953213440,
+  "image_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+  "hashtree": {
+    "version": 1,
+    "image_bytes": 3890753536,
+    "tree_offset": 3890753536,
+    "tree_bytes": 30642176,
+    "data_block_bytes": 4096,
+    "hash_block_bytes": 4096,
+    "fec_roots": 2,
+    "fec_offset": 3921395712,
+    "fec_bytes": 31006720,
+    "algorithm": "sha256",
+    "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+    "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+    "flags": 0
+  },
+  "files": {
+    "system/build.prop": {
+      "size": 5675,
+      "sha256": "23cf4821cec316d24566981143555a7e15d12d6ce48a472cc3e2ab04a25387f5"
+    },
+    "system/etc/init/hw/init.rc": {
+      "size": 56913,
+      "sha256": "165d0bfac10c8d6715260f1214b55858dcd1284775ce13fd7b900a9936f82937"
+    },
+    "system/system_ext/etc/build.prop": {
+      "size": 1547,
+      "sha256": "8b0d97c7ee718d578166fef81b94cfc061089ce60ddeed984541cb3090a65f9f"
+    }
+  }
+}

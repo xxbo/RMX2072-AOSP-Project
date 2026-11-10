@@ -1,0 +1,153 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-10",
+  "firmware": "RMX2072_11_F.20",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "official_archive_sha256": "d55d64aaebc71b2a895d792c152cfc408841bfde38565b082f495b850a2ae3e1",
+  "full_gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "full_gsi_bytes": 3953213440,
+  "embedded_vbmeta_rsa_verified": true,
+  "gsi_signer_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+  "gsi_hashtree_root": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+  "last_4096_bytes_sha256": "62243764641576fdd73e9ca12f4d7abc212cbe187a7fc3342e8c692c8fbf6b62",
+  "physical_tests": [
+    {
+      "trial": "ufs-host-g3-gsi17-01",
+      "boot_sha256": "c2c187ad806c13667a93334875328df71d435001438c8fa744434348412292a9",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "source": "read-only dm-user over USB ACM",
+      "full_source_sectors": 7721120,
+      "verified_sectors": 7599128,
+      "mount": "ext4 ro,noload,nodev,nosuid,noexec",
+      "verity_status": "V",
+      "usb": {
+        "requests": 85,
+        "bytes": 348160,
+        "data_bytes": 278528,
+        "tree_bytes": 65536
+      },
+      "files_with_matching_sha256": {
+        "system/build.prop": {
+          "size": 5675,
+          "sha256": "23cf4821cec316d24566981143555a7e15d12d6ce48a472cc3e2ab04a25387f5"
+        },
+        "system/etc/init/hw/init.rc": {
+          "size": 56913,
+          "sha256": "165d0bfac10c8d6715260f1214b55858dcd1284775ce13fd7b900a9936f82937"
+        },
+        "system/system_ext/etc/build.prop": {
+          "size": 1547,
+          "sha256": "8b0d97c7ee718d578166fef81b94cfc061089ce60ddeed984541cb3090a65f9f"
+        }
+      },
+      "release": "17",
+      "sdk": 37,
+      "build": "CP3A.260905.010",
+      "fingerprint": "google/generic_system_google/generic:17/CP3A.260905.010/16176746:user/release-keys",
+      "unmounted_and_maps_removed": true,
+      "software_edl_seconds": 6.953,
+      "reader_boot_and_stock_dtbo_restored": true
+    },
+    {
+      "trial": "ufs-host-g3-gsi17-02",
+      "boot_sha256": "2370733044131432deef8ab49a20e2d62223516c8549e2e0d9909ef9ad701704",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "source": "read-only dm-user over USB ACM",
+      "full_source_sectors": 7721120,
+      "verified_sectors": 7599128,
+      "mount": "ext4 ro,noload,nodev,nosuid",
+      "verity_status": "V",
+      "usb": {
+        "requests": 1011,
+        "bytes": 4141056,
+        "data_bytes": 3743744,
+        "tree_bytes": 393216
+      },
+      "files_with_matching_sha256": {
+        "system/build.prop": {
+          "size": 5675,
+          "sha256": "23cf4821cec316d24566981143555a7e15d12d6ce48a472cc3e2ab04a25387f5"
+        },
+        "system/etc/init/hw/init.rc": {
+          "size": 56913,
+          "sha256": "165d0bfac10c8d6715260f1214b55858dcd1284775ce13fd7b900a9936f82937"
+        },
+        "system/system_ext/etc/build.prop": {
+          "size": 1547,
+          "sha256": "8b0d97c7ee718d578166fef81b94cfc061089ce60ddeed984541cb3090a65f9f"
+        }
+      },
+      "release": "17",
+      "sdk": 37,
+      "build": "CP3A.260905.010",
+      "fingerprint": "google/generic_system_google/generic:17/CP3A.260905.010/16176746:user/release-keys",
+      "unmounted_and_maps_removed": true,
+      "software_edl_seconds": 6.937,
+      "reader_boot_and_stock_dtbo_restored": true,
+      "userspace": {
+        "chroot": true,
+        "linker": "/system/bin/bootstrap/linker64",
+        "explicit_library_path": "/system/lib64/bootstrap:/system/lib64",
+        "toybox_uname_r": "6.18.32-android17-5-maybe-dirty-4k",
+        "android_toybox_read_build_prop_match": true,
+        "init_linker_list_rc": 0,
+        "listed_system_libraries": {
+          "libbase.so": "/system/lib64/libbase.so",
+          "libcutils.so": "/system/lib64/libcutils.so",
+          "libext4_utils.so": "/system/lib64/libext4_utils.so",
+          "libfs_mgr.so": "/system/lib64/libfs_mgr.so",
+          "libgsi.so": "/system/lib64/libgsi.so",
+          "liblog.so": "/system/lib64/liblog.so",
+          "liblogwrap.so": "/system/lib64/liblogwrap.so",
+          "liblp.so": "/system/lib64/liblp.so",
+          "libprocessgroup.so": "/system/lib64/libprocessgroup.so",
+          "libprocessgroup_setup.so": "/system/lib64/libprocessgroup_setup.so",
+          "libselinux.so": "/system/lib64/libselinux.so",
+          "libunwindstack.so": "/system/lib64/libunwindstack.so",
+          "libutils.so": "/system/lib64/libutils.so",
+          "libvendorsupport.so": "/system/lib64/libvendorsupport.so",
+          "libc++.so": "/system/lib64/libc++.so",
+          "libc.so": "/system/lib64/bootstrap/libc.so",
+          "libm.so": "/system/lib64/bootstrap/libm.so",
+          "libdl.so": "/system/lib64/bootstrap/libdl.so",
+          "libz.so": "/system/lib64/libz.so",
+          "libext2_uuid.so": "/system/lib64/libext2_uuid.so",
+          "libcrypto.so": "/system/lib64/libcrypto.so",
+          "libcrypto_utils.so": "/system/lib64/libcrypto_utils.so",
+          "libfec.so": "/system/lib64/libfec.so",
+          "libsparse.so": "/system/lib64/libsparse.so",
+          "libjsoncpp.so": "/system/lib64/libjsoncpp.so",
+          "libpcre2.so": "/system/lib64/libpcre2.so",
+          "libpackagelistparser.so": "/system/lib64/libpackagelistparser.so",
+          "liblzma.so": "/system/lib64/liblzma.so",
+          "libvndksupport.so": "/system/lib64/libvndksupport.so",
+          "libfec_rs.so": "/system/lib64/libfec_rs.so",
+          "libdl_android.so": "/system/lib64/bootstrap/libdl_android.so"
+        },
+        "generated_ld_config_present": false,
+        "android_init_executed": false
+      }
+    }
+  ],
+  "accepted_trial": "ufs-host-g3-gsi17-02",
+  "stock_ramdisk_fstab_gsi_key_sha256": {
+    "avb/q-gsi.avbpubkey": "07b37325316fd483765d474aafcaca908b4de4773e16ed87aed415c15f71fb98",
+    "avb/r-gsi.avbpubkey": "4706b8d2ffd46c5759d9431b8bf95f5c0544f4f6c87bbe35ff591325eb1783f5",
+    "avb/s-gsi.avbpubkey": "ec60e13d92331e2c2d5d1372a5d7f2131861dc602815fd87c0637d14790b4538"
+  },
+  "any_listed_f20_key_matches_embedded_gsi_signer": false,
+  "final_android": {
+    "release": "4.19.157-perf+",
+    "sys_boot_completed": 1,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "stock_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  },
+  "post_recovery_f20_lp_metadata_and_three_full_logical_hashes_equal_baseline": true,
+  "limits": [
+    "USB-backed diagnostic only",
+    "dm-verity checked requested blocks, the host hashed the entire original image",
+    "No Android PID 1, generated linker namespaces, vendor HALs, Android framework or display in these trials"
+  ]
+}

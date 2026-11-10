@@ -22,6 +22,10 @@ on:
       - 'scripts/device_audit/check_super.py'
       - 'scripts/device_audit/check_verity.py'
       - 'scripts/device_audit/verity_readonly.sh'
+      - 'scripts/device_audit/gsi17_mount.sh'
+      - 'scripts/device_audit/gsi_usb_reader.c'
+      - 'scripts/device_audit/serve_gsi_usb.py'
+      - 'build/device/gsi17-mount-reference.json'
       - 'build/device/f20-verity-reference.json'
       - 'build/super-readonly-apks.json'
       - 'sources/SOURCE_LOCK.json'
@@ -43,8 +47,16 @@ jobs:
       - name: Check diagnostic scripts and host regressions
         run: |
           python -m pip install cryptography
+          sh -n scripts/device_audit/gsi17_mount.sh
           for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh scripts/device_audit/verity_readonly.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
+      - name: Cross-compile the static Android 17 dm-user reader
+        run: |
+          ndk="${ANDROID_NDK_HOME:-}"
+          if [ ! -d "$ndk/toolchains/llvm/prebuilt" ]; then
+            ndk=$(find "$ANDROID_HOME/ndk" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
+          fi
+          python scripts/build/build_gsi_usb_reader.py --ndk "$ndk" --output "$RUNNER_TEMP/gsi-usb-reader"
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree
       - name: Verify the read-only super diagnostic runtime
