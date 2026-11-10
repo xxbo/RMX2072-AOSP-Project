@@ -32,3 +32,5 @@ Do not remove OEM logical partitions until their boot dependencies and a complet
 4. Only then create device-specific flashing commands and collect first-boot logs. Keep the stock kernel for the first system-layer trial; 6.18 board bring-up remains a separate test.
 
 No system partition, logical partition size, AVB setting or boot image was changed during this preflight.
+
+On November 10 the same system image was mounted read-only on the handset via USB-backed dm-user and dm-verity. The later experiment verified the embedded vbmeta signature, read Android 17 build properties and ran the image's own toybox. See the [physical GSI test](ANDROID17_USB_MOUNT.md).

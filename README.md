@@ -4,6 +4,8 @@ Independent Android platform research and porting project for the **realme X50 P
 
 The long-term goal is to bring a current AOSP-based Android release to the device and investigate a maintainable modern kernel path, including Android Generic Kernel Image (GKI).
 
+**RMX2072 has mounted the official Android 17 QPR1 ARM64 + GMS image under Linux 6.18.32.** USB supplied the image's requested blocks to a read-only dm-user target. The kernel mounted ext4 through the GSI's signed dm-verity root. A second boot ran the GSI's own toybox in a chroot and resolved the dependencies of its init executable with explicit bootstrap library paths. Starting Android as PID 1 and reaching the framework remain open. See the [GSI experiment and replay instructions](docs/ANDROID17_USB_MOUNT.md).
+
 > **Linux 6.18 reads all six UFS LUNs on RMX2072 at two-lane HS-G3 Rate B.** Two warm diagnostic boots completed 76 MiB of direct reads each with the AXI and UniPro core clocks at 300 MHz. The second boot also verified the complete diagnostic boot image and stock DTBO through their GPT partitions. Display and Android 17 boot remain open. See the [G3 evidence](build/device/ufs-g3-2026-11-10.json).
 
 Linux 6.18 also parsed both F.20 `super` metadata slots and created read-only dm-linear mappings for `system`, `vendor` and `product`. All three full-device SHA-256 hashes matched the running F.20 logical devices. See the [dynamic partition test](docs/SUPER_READONLY.md).
@@ -16,7 +18,7 @@ Existing experiment results are consolidated into main: [full Kleaf 6.18 build](
 
 Current execution evidence: [locked GKI + strict NFC run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281), [corrected legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), and [downloaded ARM64 + GMS image preflight](docs/GSI_PREFLIGHT_2026-11-06.md). The GSI is hash-verified; partition capacity and FCM/VNDK gaps are still open.
 
-**Verified recovery baseline:** stock-kernel logging-reader Android has repeatedly been restored with full boot/DTBO readback hashes and stock boot completion, including after the ten-minute USB test. The latest 6.18 profile records CPUs `0-7` online, a configured high-speed USB UDC and a working RAM-only diagnostic shell. Original DTBO remains unchanged. See [independent kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md) for historical comparisons and current qualifications. GSI remains deferred while platform dependencies are adapted.
+**Verified recovery baseline:** stock-kernel logging-reader Android has repeatedly been restored with full boot/DTBO readback hashes and stock boot completion, including after the USB-backed Android 17 mount. The USB diagnostic has recorded CPUs `0-7` online, a configured high-speed USB UDC and a working RAM-only shell. See [independent kernel bring-up](docs/INDEPENDENT_KERNEL_BRINGUP.md) for historical comparisons and current qualifications.
 
 ## Goals
 
