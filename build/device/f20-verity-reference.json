@@ -1,0 +1,116 @@
+{
+  "normal_vbmeta_sha256": "c7e079f263ab8df3bf215863dbdbdc928fd7e6ec04bd53dae451148a89d7b6dc",
+  "normal_vbmeta_bytes": 17536,
+  "root_key_sha256": "2605744918d80c93a084ea53794358fe064c43fb8121793afc39cf8b731c2855",
+  "metadata": {
+    "vbmeta": {
+      "structure_sha256": "2e5bdf962d50ee777dce6504f7754c968d1f1a886a55d29ea1b27a0bdde918b1",
+      "pubkey_sha256": "2605744918d80c93a084ea53794358fe064c43fb8121793afc39cf8b731c2855",
+      "bytes": 7232
+    },
+    "boot": {
+      "structure_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
+      "pubkey_sha256": "2605744918d80c93a084ea53794358fe064c43fb8121793afc39cf8b731c2855",
+      "bytes": 2432
+    },
+    "dtbo": {
+      "structure_sha256": "7b063e49e90eb298fc3fbfa27bf522b68cf3a0dc35169709551e8019fa11b01c",
+      "pubkey_sha256": "2605744918d80c93a084ea53794358fe064c43fb8121793afc39cf8b731c2855",
+      "bytes": 2240
+    },
+    "vbmeta_system": {
+      "structure_sha256": "a73c403b4a1b0b184e9170114cad83780582f7274a6acee9a427f666284c580b",
+      "pubkey_sha256": "a7aa49c961485deb80356b3d5a2d4b7b60ebdb775009bf7245eedca658eb9e45",
+      "bytes": 3712
+    },
+    "vbmeta_vendor": {
+      "structure_sha256": "8ce9359e573ad32ddb18d86ad4bd1438d4643a6298858646add1b15cf020f16f",
+      "pubkey_sha256": "a7aa49c961485deb80356b3d5a2d4b7b60ebdb775009bf7245eedca658eb9e45",
+      "bytes": 1920
+    },
+    "recovery": {
+      "structure_sha256": "71474f1a637aefdef806c84b72fc485423309140b0de7490eb005acfb4b070fb",
+      "pubkey_sha256": "2605744918d80c93a084ea53794358fe064c43fb8121793afc39cf8b731c2855",
+      "bytes": 2496
+    }
+  },
+  "gpt_vbmeta_sha256": {
+    "vbmeta": "8447d073b8852aab3eb032a0f1e153fd2d5e925b4ecb32625061df75fe1b682c",
+    "vbmeta_system": "18c6ed9a1e4f612c3602b74cdf8b99e3e92648db42d1d1176fc47badb23d97c2",
+    "vbmeta_vendor": "d02768d5b1f84b3c032924a551035af35c7680155e748ce6f5065363f2e9f0b0"
+  },
+  "partitions": {
+    "system": {
+      "parent": "vbmeta_system",
+      "filesystem": "erofs",
+      "descriptor": {
+        "version": 1,
+        "image_bytes": 610508800,
+        "tree_offset": 610508800,
+        "tree_bytes": 4816896,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 2,
+        "fec_offset": 615325696,
+        "fec_bytes": 4866048,
+        "algorithm": "sha256",
+        "salt": "d0e26e5333903da7c7f81459d64876c8",
+        "root_digest": "7daafdf06d07d71d300ce6eac61ec3ac160752b923ad916d3a80cd55b349345d",
+        "flags": 0
+      },
+      "verified_data_sha256": "e617367d6d4281ce4585b73d25e3b20ada89d7a3c8483d64f84055ce16ec818e",
+      "files": {
+        "system/bin/init": "a21a5925a78a060829934bad7cdbe1c68186e45e51c5d6182fb5dc9c09b56b1c",
+        "system/build.prop": "17fe8e768f588a07b8d8e158b4e4000c1e5b3be3fea5e96a53c25a74bfba12c8"
+      }
+    },
+    "vendor": {
+      "parent": "vbmeta_vendor",
+      "filesystem": "erofs",
+      "descriptor": {
+        "version": 1,
+        "image_bytes": 404725760,
+        "tree_offset": 404725760,
+        "tree_bytes": 3194880,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 2,
+        "fec_offset": 407920640,
+        "fec_bytes": 3227648,
+        "algorithm": "sha1",
+        "salt": "90e12ea7bacbe4bfbba62b507f319211",
+        "root_digest": "4f2da1cff77949681c36358b9701743c8aa81ae9",
+        "flags": 0
+      },
+      "verified_data_sha256": "61f5c484ac6ff2eead3ef17cd8900108b6f0332f4126640e2218ede0310d5a67",
+      "files": {
+        "build.prop": "7aab451c2f1c17719c6345325612f27e90e89343899a0e84c91e8d68af3da42d",
+        "etc/fstab.qcom": "eb8c0823da51e78c652323c8d6de7fc2a86e9e11802840e218afbdffb2a09741"
+      }
+    },
+    "product": {
+      "parent": "vbmeta_system",
+      "filesystem": "ext4",
+      "descriptor": {
+        "version": 1,
+        "image_bytes": 13504512,
+        "tree_offset": 13504512,
+        "tree_bytes": 110592,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 2,
+        "fec_offset": 13615104,
+        "fec_bytes": 114688,
+        "algorithm": "sha256",
+        "salt": "68f7ceedc6e37fe16fae17543c880116e81b3f29e9005946388d84aaaf88605a",
+        "root_digest": "8c4d5a74a3cf5ef1d73430f7ca830dbcc05831f3e09e584acf378a0aef57a02e",
+        "flags": 0
+      },
+      "verified_data_sha256": "bfd90f5ce3a821a78f422204779177395e95856ae191e15ac38c237db39d7cbc",
+      "files": {
+        "etc/build.prop": "0728c1f0073e32576a2db7c5062342a15f3aa843e4a1def932cf4874c38a90bd",
+        "etc/apns-conf.xml": "f09e98958731813113cbc5abc1c3e621bec665d60dd9387c6a6d6828b9ccec61"
+      }
+    }
+  }
+}

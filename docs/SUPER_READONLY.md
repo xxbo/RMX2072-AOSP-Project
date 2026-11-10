@@ -25,4 +25,4 @@ The last vendor extent and the last two product extents are physically below the
 4. Run `/bin/super-readonly metadata` on ACM and save stdout to `metadata.txt`. On the workstation run `python scripts/device_audit/check_super.py verify --reference reference.json --metadata metadata.txt`. This must succeed before creating maps.
 5. Run `/bin/super-readonly map` on ACM and save stdout to `maps.txt`. Repeat the workstation verification with `--maps maps.txt`. Confirm the three full hashes and cleanup status. Use the normal ACM-to-EDL procedure, restore the reader boot and repeat the capture on F.20.
 
-This test used plain read-only dm-linear targets over the stock F.20 image. Verifying the AVB chain, attaching dm-verity and mounting filesystems in Android first-stage init are separate boot milestones.
+This test used plain read-only dm-linear targets over the stock F.20 image. A subsequent diagnostic boot verified the stock AVB metadata and mounted all three filesystems through dm-verity. Android first-stage init remains the next integration step. See the [verified mount trial](AVB_VERITY_MOUNTS.md).

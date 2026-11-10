@@ -1,0 +1,108 @@
+{
+  "device": "RMX2072",
+  "firmware": "RMX2072_11_F.20",
+  "date": "2026-11-10",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "normal_boot_vbmeta_sha256": "c7e079f263ab8df3bf215863dbdbdc928fd7e6ec04bd53dae451148a89d7b6dc",
+  "normal_boot_vbmeta_bytes": 17536,
+  "root_key_pin": "2605744918d80c93a084ea53794358fe064c43fb8121793afc39cf8b731c2855",
+  "rsa_verified_metadata": [
+    "vbmeta",
+    "boot",
+    "dtbo",
+    "vbmeta_system",
+    "vbmeta_vendor",
+    "recovery"
+  ],
+  "live_6_18_gpt_vbmeta_sha256": {
+    "vbmeta": "8447d073b8852aab3eb032a0f1e153fd2d5e925b4ecb32625061df75fe1b682c",
+    "vbmeta_system": "18c6ed9a1e4f612c3602b74cdf8b99e3e92648db42d1d1176fc47badb23d97c2",
+    "vbmeta_vendor": "d02768d5b1f84b3c032924a551035af35c7680155e748ce6f5065363f2e9f0b0"
+  },
+  "normal_digest_omits_recovery": true,
+  "logical_slots_matched_f20": [
+    {
+      "slot": 0,
+      "partitions": 15,
+      "linear_extents": 79
+    },
+    {
+      "slot": 1,
+      "partitions": 9,
+      "linear_extents": 9
+    }
+  ],
+  "fec_roots": 2,
+  "ext4_journal_replay": false,
+  "positive_verified_bytes_per_boot": 1028739072,
+  "trials": [
+    {
+      "trial": "ufs-host-g3-super-verity-01",
+      "boot_sha256": "a526d7454ae82620ebb4e13bb7c33df12dce0899619de41d28646bf6789a88a6",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "all_three_full_verified_data_hashes_match": true,
+      "six_files_matched": true,
+      "software_edl_seconds": 7.156,
+      "full_firehose_boot_and_dtbo_hashes_verified": true,
+      "restored_android_boot_completed": true,
+      "negative_control": "Kernel reported a corrupt hash block and the read returned an I/O error. BusyBox grep missed the log text. This first harness did not record the negative target status."
+    },
+    {
+      "trial": "ufs-host-g3-super-verity-02",
+      "boot_sha256": "e2aa3f60e2d39f85ef6a91f09d08366a93e03d0f030a5dc4420ddcae9acf5a28",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "all_three_full_verified_data_hashes_match": true,
+      "six_files_matched": true,
+      "software_edl_seconds": 7.079,
+      "full_firehose_boot_and_dtbo_hashes_verified": true,
+      "restored_android_boot_completed": true,
+      "verified_devices": {
+        "system": {
+          "filesystem": "erofs",
+          "algorithm": "sha256",
+          "verified_bytes": 610508800,
+          "whole_device_sha256": "e617367d6d4281ce4585b73d25e3b20ada89d7a3c8483d64f84055ce16ec818e",
+          "files_matched": [
+            "system/bin/init",
+            "system/build.prop"
+          ]
+        },
+        "vendor": {
+          "filesystem": "erofs",
+          "algorithm": "sha1",
+          "verified_bytes": 404725760,
+          "whole_device_sha256": "61f5c484ac6ff2eead3ef17cd8900108b6f0332f4126640e2218ede0310d5a67",
+          "files_matched": [
+            "build.prop",
+            "etc/fstab.qcom"
+          ]
+        },
+        "product": {
+          "filesystem": "ext4",
+          "algorithm": "sha256",
+          "verified_bytes": 13504512,
+          "whole_device_sha256": "bfd90f5ce3a821a78f422204779177395e95856ae191e15ac38c237db39d7cbc",
+          "files_matched": [
+            "etc/build.prop",
+            "etc/apns-conf.xml"
+          ]
+        }
+      },
+      "negative_control": "Wrong root on a fresh read-only product target returned EIO and dm-verity status C",
+      "positive_status": "V 0 on all three devices",
+      "all_mounts_and_mappings_cleaned": true
+    }
+  ],
+  "accepted_trial": "ufs-host-g3-super-verity-02",
+  "diagnostic_policy": "error on corruption, all blocks checked, FEC enabled for positive targets",
+  "qualification": "Unlocked diagnostic boots. Signed stock filesystem trees were tested. The modified diagnostic boot payload and hardware rollback enforcement were outside this test.",
+  "final_android": {
+    "release": "4.19.157-perf+",
+    "sys_boot_completed": 1,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "stock_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  },
+  "post_restoration_avb_lp_verified_devices_and_files_equal_pretrial": true
+}

@@ -20,6 +20,9 @@ on:
       - 'scripts/device_audit/ufs_g3_test.sh'
       - 'scripts/device_audit/super_readonly.sh'
       - 'scripts/device_audit/check_super.py'
+      - 'scripts/device_audit/check_verity.py'
+      - 'scripts/device_audit/verity_readonly.sh'
+      - 'build/device/f20-verity-reference.json'
       - 'build/super-readonly-apks.json'
       - 'sources/SOURCE_LOCK.json'
       - 'tests/**'
@@ -39,7 +42,8 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y gcc device-tree-compiler
       - name: Check diagnostic scripts and host regressions
         run: |
-          for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh; do sh -n "$script"; done
+          python -m pip install cryptography
+          for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh scripts/device_audit/verity_readonly.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree

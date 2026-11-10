@@ -40,6 +40,8 @@ def main():
                    help='Include the staged host commands and HS-G3 read, wake and GPT controls')
     p.add_argument('--super-tools-apks', type=pathlib.Path,
                    help='Verified APK cache for the read-only dynamic partition diagnostic')
+    p.add_argument('--f20-verity', action='store_true',
+                   help='Include the signed F.20 hashtree reference and read-only mount trial')
     p.add_argument('--trial-id')
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
@@ -50,6 +52,8 @@ def main():
     a = p.parse_args()
     if a.super_tools_apks and not a.ufs_host_g3_test:
         p.error('--super-tools-apks requires --ufs-host-g3-test')
+    if a.f20_verity and not a.super_tools_apks:
+        p.error('--f20-verity requires --super-tools-apks')
     if a.trial_id and not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', a.trial_id):
         p.error('Invalid trial ID')
     if a.return_to_edl_after is not None and (
@@ -116,6 +120,22 @@ def main():
             add('bin/lp/'+name, 0o100755, elf)
         super_test = (root/'scripts/device_audit/super_readonly.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/super-readonly', 0o100755, super_test)
+    if a.f20_verity:
+        ref = json.loads((root/'build/device/f20-verity-reference.json').read_text())
+        add('verity-profile', 0o40755)
+        hashes = ''.join(f'{name} {digest}\n' for name,digest in ref['gpt_vbmeta_sha256'].items())
+        add('verity-profile/vbmeta-hashes', 0o100444, hashes.encode())
+        for name, part in ref['partitions'].items():
+            tree = part['descriptor']
+            fields = [tree['image_bytes']//512, tree['data_block_bytes'], tree['hash_block_bytes'],
+                      tree['image_bytes']//tree['data_block_bytes'], tree['tree_offset']//tree['hash_block_bytes'],
+                      tree['algorithm'], tree['root_digest'], tree['salt'], tree['fec_offset']//tree['data_block_bytes'],
+                      tree['fec_roots'], part['filesystem'], part['verified_data_sha256']]
+            add('verity-profile/'+name, 0o100444, (' '.join(map(str, fields))+'\n').encode())
+            files = ''.join(f'{digest} {path}\n' for path,digest in part['files'].items())
+            add('verity-profile/'+name+'.files', 0o100444, files.encode())
+        verity_test = (root/'scripts/device_audit/verity_readonly.sh').read_bytes().replace(b'\r\n', b'\n')
+        add('bin/verity-readonly', 0o100755, verity_test)
     if a.trial_id:
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
     if a.defer_gadget_bind:
@@ -166,6 +186,8 @@ def main():
     if a.super_tools_apks:
         report['super_tools_files'] = len(binaries)
         report['super_test_sha256'] = hashlib.sha256(super_test).hexdigest()
+    if a.f20_verity:
+        report['verity_test_sha256'] = hashlib.sha256(verity_test).hexdigest()
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 

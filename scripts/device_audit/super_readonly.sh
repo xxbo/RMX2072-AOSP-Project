@@ -59,7 +59,7 @@ metadata)
         cat "$base/table-$slot"
     done
     ;;
-map)
+map|verity)
     # The F.20 reference must select slot 0 before this stage is invoked.
     [ -s "$base/table-0" ]
     [ -r /sys/class/misc/device-mapper/dev ]
@@ -108,7 +108,11 @@ map)
         node="$base/read-$n"
         [ ! -e "$node" ] || rm -f "$node"
         mknod "$node" b "${nums%:*}" "${nums#*:}"
-        sha256sum "$node"
+        if [ "$1" = verity ]; then
+            /bin/verity-readonly "$n" "$node" "$nums"
+        else
+            sha256sum "$node"
+        fi
         rm -f "$node"
     done
     ;;
