@@ -56,6 +56,7 @@ jobs:
       - name: Build the device tree compiler and overlay tool
         run: |
           make -C .ci-dtc -j2 STATIC_BUILD=1 NO_YAML=1 NO_PYTHON=1 dtc fdtoverlay
+          make -C .ci-dtc -j2 NO_YAML=1 NO_PYTHON=1 libfdt
           echo "$GITHUB_WORKSPACE/.ci-dtc" >> "$GITHUB_PATH"
       - name: Check diagnostic scripts and host regressions
         run: |
@@ -80,6 +81,7 @@ jobs:
       - name: Prepare core-only handoff profile
         run: >-
           python scripts/build/prepare_core_only_dt.py
+          --libfdt .ci-dtc/libfdt/libfdt.so.1
           --input reports/device-tree/sm8250-realme-rmx2072-usb-diag.dtb
           --output reports/device-tree/sm8250-realme-rmx2072-core-only.dtb
       - uses: actions/upload-artifact@v4
