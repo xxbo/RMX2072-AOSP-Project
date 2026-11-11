@@ -190,6 +190,44 @@ def verify_trial(ref, metadata, transcript):
     return results
 
 
+def verify_odm(serial, ref):
+    """Authenticate the footer F.20 actually selects with its vendor fstab key."""
+    def read(command):
+        return subprocess.check_output(['adb','-s',serial,'exec-out',"su -c '"+command+"'"], timeout=150)
+
+    base = '/dev/block/mapper/odm'
+    require(read('getprop ro.build.display.id').strip() == b'RMX2072_11_F.20', 'Expected F.20')
+    size = int(read('blockdev --getsize64 '+base))
+    require(size == ref['logical_bytes'] and size % 4096 == 0, 'Unexpected ODM size')
+
+    def block(index):
+        data = read(f'dd if={base} bs=4096 skip={index} count=1 2>/dev/null')
+        require(len(data) == 4096, 'Incomplete ODM block')
+        return data
+
+    last = block(size//4096-1)
+    require(last[-64:-60] == b'AVBf' and sha(last) == ref['footer_block_sha256'], 'ODM footer mismatch')
+    offset, length = struct.unpack_from('>QQ', last, len(last)-44)
+    require(offset == 4096*ref['vbmeta_block'] and 256 <= length <= 4096 and offset+length <= size-64,
+            'Unexpected ODM vbmeta range')
+    page = block(offset//4096)
+    structure, key, _, trees = verified_vbmeta(page[:length])
+    require(sha(page) == ref['vbmeta_block_sha256'] and sha(structure) == ref['vbmeta_sha256'],
+            'ODM vbmeta hash mismatch')
+    require(sha(key) == ref['key_sha256'] and key == read('cat /vendor/etc/oplus_avb.pubkey'),
+            'ODM signature does not match the vendor key')
+    require(trees == {'odm':ref['descriptor']}, 'ODM signed descriptor mismatch')
+    tree = trees['odm']
+    dev = read('cat /sys/class/block/$(basename $(readlink -f '+base+'))/dev').decode().strip()
+    args = verity_args(tree,dev,size)
+    fec = str(tree['fec_offset']//tree['data_block_bytes'])
+    table = read('dmctl table odm-verity').decode().splitlines()[-1].split()
+    require(table == [f"0-{tree['image_bytes']//512}:",'verity,']+args+['10','restart_on_corruption',
+            'ignore_zero_blocks','use_fec_from_device',dev,'fec_blocks',fec,'fec_start',fec,'fec_roots','2'],
+            'F.20 kernel ODM table differs from its signed footer')
+    return dict(signed_vbmeta_sha256=sha(structure), active_root=tree['root_digest'], vendor_key_sha256=sha(key))
+
+
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     modes = p.add_subparsers(dest='mode', required=True)
@@ -197,11 +235,16 @@ if __name__ == '__main__':
     cap.add_argument('--serial', required=True)
     cap.add_argument('--output', required=True, type=Path)
     verify = modes.add_parser('verify')
+    odm = modes.add_parser('verify-odm')
+    odm.add_argument('--serial', required=True)
+    odm.add_argument('--reference', required=True, type=Path)
     for name in ('reference','metadata','transcript'):
         verify.add_argument('--'+name, required=True, type=Path)
     args = p.parse_args()
     if args.mode == 'capture':
         args.output.write_text(json.dumps(capture(args.serial),indent=2)+'\n',encoding='utf-8')
+    elif args.mode == 'verify-odm':
+        print(json.dumps(verify_odm(args.serial, json.loads(args.reference.read_text())), indent=2))
     else:
         result = verify_trial(json.loads(args.reference.read_text()), args.metadata.read_text(), args.transcript.read_text())
         print(json.dumps(result, indent=2))

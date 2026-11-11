@@ -45,6 +45,8 @@ def main():
     p.add_argument('--gsi-usb-reader', type=pathlib.Path,
                    help='Static ARM64 dm-user reader for the read-only Android 17 GSI trial')
     p.add_argument('--trial-id')
+    p.add_argument('--gsi-init-probe', type=pathlib.Path,
+                   help='Include the Android 17 and F.20 combined policy diagnostic')
     p.add_argument('--return-to-edl-after', type=int)
     p.add_argument('--defer-gadget-bind', action='store_true',
                    help='Register UDC but do not start gadget/DMA; isolates post-bind failure')
@@ -52,6 +54,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.gsi_init_probe and not (a.gsi_usb_reader and a.f20_verity):
+        p.error('--gsi-init-probe requires --gsi-usb-reader and --f20-verity')
     if a.super_tools_apks and not a.ufs_host_g3_test:
         p.error('--super-tools-apks requires --ufs-host-g3-test')
     if a.f20_verity and not a.super_tools_apks:
@@ -140,6 +144,18 @@ def main():
         add('verity-profile', 0o40755)
         hashes = ''.join(f'{name} {digest}\n' for name,digest in ref['gpt_vbmeta_sha256'].items())
         add('verity-profile/vbmeta-hashes', 0o100444, hashes.encode())
+        if a.gsi_init_probe:
+            launcher = read_static_arm64(a.gsi_init_probe)
+            add('bin/gsi-init-probe', 0o100755, launcher)
+            probe = (root/'scripts/device_audit/gsi17_policy.sh').read_bytes().replace(b'\r\n', b'\n')
+            add('bin/gsi17-policy', 0o100755, probe)
+            odm = json.loads((root/'build/device/f20-odm-verity-reference.json').read_text())
+            ref['partitions']['odm'] = odm
+            fields = [odm['logical_bytes'], odm['footer_block_sha256'], odm['vbmeta_block'],
+                      odm['vbmeta_block_sha256'], odm['key_sha256']]
+            add('verity-profile/odm-source', 0o100444, (' '.join(map(str, fields))+'\n').encode())
+            lp = json.loads((root/'build/device/super-readonly-2026-11-10.json').read_text())
+            add('verity-profile/lp-prefix', 0o100444, (lp['prefix_sha256']+'\n').encode())
         for name, part in ref['partitions'].items():
             tree = part['descriptor']
             fields = [tree['image_bytes']//512, tree['data_block_bytes'], tree['hash_block_bytes'],
@@ -206,6 +222,10 @@ def main():
     if a.gsi_usb_reader:
         report['gsi_reader_sha256'] = hashlib.sha256(reader).hexdigest()
         report['gsi_mount_script_sha256'] = hashlib.sha256(script).hexdigest()
+    if a.gsi_init_probe:
+        report.update(scope='Verified read-only Android 17 and F.20 mounts with RAM-only SELinux probes',
+                      init_launcher_sha256=hashlib.sha256(launcher).hexdigest(),
+                      policy_probe_sha256=hashlib.sha256(probe).hexdigest())
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 

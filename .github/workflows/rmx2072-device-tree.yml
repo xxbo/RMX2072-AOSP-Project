@@ -23,6 +23,9 @@ on:
       - 'scripts/device_audit/check_verity.py'
       - 'scripts/device_audit/verity_readonly.sh'
       - 'scripts/device_audit/gsi17_mount.sh'
+      - 'scripts/device_audit/gsi17_policy.sh'
+      - 'scripts/device_audit/gsi_init_probe.c'
+      - 'build/device/f20-odm-verity-reference.json'
       - 'scripts/device_audit/gsi_usb_reader.c'
       - 'scripts/device_audit/serve_gsi_usb.py'
       - 'build/device/gsi17-mount-reference.json'
@@ -43,11 +46,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: sudo apt-get update && sudo apt-get install -y gcc device-tree-compiler
+      - name: Check out upstream dtc 1.7.2
+        uses: actions/checkout@v4
+        with:
+          repository: dgibson/dtc
+          ref: 2d10aa2afe35527728db30b35ec491ecb6959e5c
+          path: .ci-dtc
+          persist-credentials: false
+      - name: Build the device tree compiler and overlay tool
+        run: |
+          make -C .ci-dtc -j2 STATIC_BUILD=1 NO_YAML=1 NO_PYTHON=1 dtc fdtoverlay
+          make -C .ci-dtc -j2 NO_YAML=1 NO_PYTHON=1 libfdt
+          echo "$GITHUB_WORKSPACE/.ci-dtc" >> "$GITHUB_PATH"
       - name: Check diagnostic scripts and host regressions
         run: |
           python -m pip install cryptography
           sh -n scripts/device_audit/gsi17_mount.sh
+          sh -n scripts/device_audit/gsi17_policy.sh
           for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh scripts/device_audit/verity_readonly.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
       - name: Cross-compile the static Android 17 dm-user reader
@@ -57,6 +72,7 @@ jobs:
             ndk=$(find "$ANDROID_HOME/ndk" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
           fi
           python scripts/build/build_gsi_usb_reader.py --ndk "$ndk" --output "$RUNNER_TEMP/gsi-usb-reader"
+          python scripts/build/build_gsi_usb_reader.py --ndk "$ndk" --init-probe --output "$RUNNER_TEMP/gsi-init-probe"
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree
       - name: Verify the read-only super diagnostic runtime
@@ -65,6 +81,7 @@ jobs:
       - name: Prepare core-only handoff profile
         run: >-
           python scripts/build/prepare_core_only_dt.py
+          --libfdt .ci-dtc/libfdt/libfdt.so.1
           --input reports/device-tree/sm8250-realme-rmx2072-usb-diag.dtb
           --output reports/device-tree/sm8250-realme-rmx2072-core-only.dtb
       - uses: actions/upload-artifact@v4
