@@ -1,0 +1,2 @@
+/dev/block/loop0 0600 root root
+/dev/block/dm-*  0600 root root
