@@ -96,7 +96,7 @@ echo "comparison_compiler_rc=$rc"
 # Large raw CIL expressions add little to the diagnostic console transcript.
 awk '
     /^neverallow check failed at / {where=$NF; count++; next}
-    where && /^    allow at / {print "conflict="where" allow="$4" source="$NF; where=""}
+    where && /^    allow at / {print "conflict="where" allow="$3" source="$NF; where=""}
     END {print "neverallow_reports="count+0}
 ' "$base/comparison-compiler"
 if ! grep -q '^neverallow check failed at ' "$base/comparison-compiler"; then

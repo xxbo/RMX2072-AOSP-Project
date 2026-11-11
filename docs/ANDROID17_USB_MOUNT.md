@@ -49,4 +49,6 @@ The independent compile exited 255 with 299 neverallow reports across 262 distin
 
 The first trial identified the root-only compiler permission. The next isolated a missing file_contexts output sink in the test environment. A third trial reached policy loading, but its truncated console excerpt ran into the cleanup marker. The accepted fourth trial supplied a private null character device for file_contexts, recorded a compact conflict index and verified the complete USB transcript against its on-device SHA-256. All four boots returned to 9008 by software and restored the full F.20 logging boot and original DTBO. Android completed startup after each recovery.
 
+Commit `e8f276a` contains the ramdisk sources used for the accepted image. Its published index records the first conflicting allow's source location. Later ramdisks also print the generated CIL location for that allow.
+
 The diagnostic mounted the filesystems before running init. Init also logged missing mapper control for `system_ext` and `product`. The experiment used the GSI's bundled system_ext and product contents. Actual first-stage discovery of F.20 partitions, loading and enforcing the combined policy on the kernel, second-stage init, APEX and framework startup still require separate evidence.
