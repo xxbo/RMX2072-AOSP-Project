@@ -9,12 +9,13 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Layer | Candidate | Status | Evidence required |
 | --- | --- | --- | --- |
 | Android framework | AOSP Android 17 | Unknown | Successful build and physical boot |
-| System image | Google Android 17 QPR1 ARM64 + GMS | Image inspected, not boot-tested | ZIP hash verified; actual FCM/VNDK and capacity gaps in GSI_PREFLIGHT_2026-11-06.md |
+| System image | Google Android 17 QPR1 ARM64 + GMS | Hardware-tested through switch-root and PID 1 policy setup | USB-backed verified ext4; internal UFS cold boot pending. [Physical trials](../build/device/gsi17-project-vendor-2026-11-11.json) |
+| Vendor image | Project-built M1 ext4 image | Hardware-tested through first-stage mount and split-policy compilation | RAM-backed read-only mount; 202604 genfs selection and strict compile passed. Kernel policy installation and full VINTF compatibility remain open. [Evidence](ANDROID17_USB_MOUNT.md#project-vendor-and-pid-1-policy-setup) |
 | Vendor image | RMX2072 F.20 stock vendor | Stock boot-tested; Android 17 compatibility unresolved | FCM 5, VNDK 30; target HAL tests pending |
 | Legacy kernel | Realme F.20 4.19.157 | Stock boot-tested | Logging-reader Android restored and booted; backup limits in DEVICE_BASELINE_2026-11-06.md |
 | Community kernel | SM8250-Common 4.19.325 | Build-tested | [Legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866); boot of the rebuilt community image pending |
 | ACK/GKI | Android 17 6.18.32 generic ARM64 | Generic distribution build-tested | Run 42194678844 passed; board/module/boot tests remain |
-| Platform kernel handoff | 6.18.32 + stock DTB bundle/original DTBO | Boot-tested (diagnostic userspace only) | Eight CPUs activated; init and timed EDL restart at 90.74s; no UDC; ten-minute stability pending |
+| Platform kernel handoff | 6.18.32 + stock-derived G3 DT bundle/original DTBO | Boot-tested through Android first-stage PID 1 | GSI root and project vendor mounted; software EDL return and F.20 boot/DTBO readbacks verified. [Trial and recovery timelines](../build/device/gsi17-project-vendor-2026-11-11.json) |
 | Device tree | bladerunner_48m | Source-reviewed (provisional) | Exact device match and build product |
 | Vendor modules | Device-specific | Unknown | Module load logs and subsystem tests |
 

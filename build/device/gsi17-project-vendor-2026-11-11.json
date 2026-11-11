@@ -106,7 +106,49 @@
         "readbacks": {
           "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
           "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
-        }
+        },
+        "host_local_events": [
+          {
+            "at": "2026-11-11T23:01:38.131668",
+            "event": "enter: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:01:41.280165",
+            "event": "before: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:01:46.852457",
+            "event": "candidate: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:01:46.854461",
+            "event": "candidate reset"
+          },
+          {
+            "at": "2026-11-11T23:02:51.949646",
+            "event": "return: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:02:55.066406",
+            "event": "return-read: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:03:00.636825",
+            "event": "restored: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:03:00.775530",
+            "event": "original reader reset"
+          },
+          {
+            "at": "2026-11-11T23:03:29.294990",
+            "event": "stock Android boot completed"
+          },
+          {
+            "at": "2026-11-11T23:03:32.845517",
+            "event": "stock root evidence saved"
+          }
+        ]
       }
     },
     {
@@ -212,8 +254,61 @@
         "readbacks": {
           "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
           "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
-        }
+        },
+        "host_local_events": [
+          {
+            "at": "2026-11-11T23:07:54.622126",
+            "event": "enter: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:07:57.720906",
+            "event": "before: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:08:03.282730",
+            "event": "candidate: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:08:03.282730",
+            "event": "candidate reset"
+          },
+          {
+            "at": "2026-11-11T23:09:54.403594",
+            "event": "return: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:09:57.502813",
+            "event": "return-read: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:10:03.112476",
+            "event": "restored: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:10:03.261849",
+            "event": "original reader reset"
+          },
+          {
+            "at": "2026-11-11T23:10:31.737547",
+            "event": "stock Android boot completed"
+          },
+          {
+            "at": "2026-11-11T23:10:35.483401",
+            "event": "stock root evidence saved"
+          }
+        ]
       }
     }
-  ]
+  ],
+  "host_event_timezone": "Asia/Shanghai",
+  "reproduction": {
+    "trial": "ufs-host-g3-gsi17-firststage-vendor-02",
+    "verified_ci_commit": "a485b698e582cbfa729e870707bf2cbedc96fb44",
+    "ci_run": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43045844770",
+    "ci_result": "success",
+    "artifact_id": 13866488665,
+    "artifact_zip_digest": "sha256:e489f792fa6e970685fd720a41f93cd433ca0983fcf445fbf447bcdfe3aa3dca",
+    "ci_vendor_matches_handset_image_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+    "offline_rebuilt_boot_sha256": "afbb119e162333dfbf40f27dccb76c48f830c5e25184ac3382a4dfedfe8060d6"
+  }
 }

@@ -10,6 +10,22 @@ The [vendor source](../device/realme/bladerunner_48m/m1-vendor) contains the USB
 
 On Linux, `python scripts/build/build_m1_vendor.py --output PRIVATE/vendor` uses e2fsprogs to create the filesystem, check it and read back its files and SELinux labels. Set `PRIVATE` to a directory outside the checkout. CI compares two builds byte-for-byte. Add `--project-vendor PRIVATE/vendor` to the first-stage ramdisk build described below and run the host with `--project-vendor-report PRIVATE/vendor/vendor.json` in place of `--first-stage`.
 
+### Host package and record replay
+
+The Windows packaging helper accepts the two private input-cache roots used for these trials. The current work cache supplies the G3 headers, DT runtime DLLs, watchdog control boot, 6.18 Image and provenance, APK cache, USB reader, first-stage init and observer. The prior cache supplies libfdt/dtc, static control tools and the entry probe; the F.20 DTBO comes from its sibling recovery kit. Supply a new private output directory. Replaying vendor trial 02 with its inputs reproduced the full boot partition image SHA-256 `afbb119e162333dfbf40f27dccb76c48f830c5e25184ac3382a4dfedfe8060d6`. The final CI vendor image also matched the 2 MiB image used on that handset boot. [CI run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43045844770)
+
+```powershell
+$trial = 'ufs-host-g3-gsi17-firststage-vendor-02'
+./scripts/build/build_m1_trial.ps1 -Trial $trial -WorkDirectory $workCache -PriorWorkDirectory $priorCache -NdkDirectory $ndk -ProjectVendor $vendorDir -OutputDirectory $newPrivateOutput
+```
+
+During a scheduled handset trial, `observe_gsi17.py` runs the GSI server, writes the USB transcript and requests software EDL for the local restore harness. For an offline replay after restoration, `record_m1_vendor.py` checks the saved transcript, vendor image, software-return report and full boot/DTBO readbacks at four points. It reads the F.20 display ID, completion flag and boot ID from a three-line capture and writes one trial entry to a new JSON file. Review the entry for the milestone record. The two archived timelines use the workstation's Asia/Shanghai clock.
+
+```powershell
+python scripts/device_audit/observe_gsi17.py --image $gsi --trial $trial --project-vendor-report "$vendorDir/vendor.json" --output "$workCache/$trial-live"
+python scripts/device_audit/record_m1_vendor.py --work $workCache --trial $trial --vendor-dir $vendorDir --restored $restoredText --image-build-run 43044877414 --output $newTrialJson
+```
+
 ## M1 first-stage handoff on November 11
 
 On the physical RMX2072, Android 17 first-stage `/init` ran as global PID 1 on Linux 6.18.32. Its first mount was a tmpfs on `/dev`. Its first partition mount attached the USB-backed CP3A.260905.010 GSI to `/system`. Both syscalls returned zero. The observer stopped PID 1 on return from the partition mount and read its executable and mount table through the diagnostic namespace. See the [trial evidence, hashes and separate F.20 recovery](../build/device/gsi17-first-stage-2026-11-11.json).

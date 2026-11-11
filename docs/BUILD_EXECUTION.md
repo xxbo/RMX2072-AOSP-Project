@@ -38,6 +38,8 @@ Commit project-authored code/configuration, source pins and redacted findings pr
 
 Record build-tested, boot-tested and hardware-tested independently. Update this document and the compatibility matrix after each actual run.
 
+Push the code, process notes and reviewed result to the active PR branch when each trial finishes, including a failed trial that changes the next step. Keep the trial ID, boot ID, image hashes, first unmet step, available CI run and restoration outcome together. Verify the remote commit and include the PR or commit link in the handoff. For M1, see the [handset records](../build/device/gsi17-project-vendor-2026-11-11.json) and [host replay procedure](ANDROID17_USB_MOUNT.md#host-package-and-record-replay).
+
 ## Selected device trees
 
 A read-only local parse of the original F.20 boot/DTBO backups found 25 concatenated boot DTBs and 18 DTBO entries. The live phone reports `ro.boot.dtb_idx=12` and `ro.boot.dtbo_idx=17`; selected root selectors and blob hashes are in `build/device/stock-dt-selection.json`. Boot entry 12 identifies Kona v2.1 (SoC 356, revision 0x20001); overlay 17 identifies Kona MTP with board ID 0x10008. These indices identify the stock selection; they do not establish 6.18 bindings or driver compatibility. Direct live DT filesystem reads remain denied.
