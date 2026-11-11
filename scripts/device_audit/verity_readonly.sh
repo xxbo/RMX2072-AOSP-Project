@@ -1,7 +1,7 @@
 #!/bin/busybox sh
 # Live F.20 vbmeta identity, dm-verity, read-only mounts and a wrong-root control.
 set -eu
-case "$(uname -r):$(cat /trial-id)" in 6.18.*:ufs-host-g3-super-verity-*) ;; *) exit 2 ;; esac
+case "$(uname -r):$(cat /trial-id)" in 6.18.*:ufs-host-g3-super-verity-*|6.18.*:ufs-host-g3-gsi17-*) ;; *) exit 2 ;; esac
 [ "$(cat /sys/class/udc/*/state)" = configured ]
 [ "$(od -An -tx1 /sys/firmware/devicetree/base/oplus,dtsi_no | xargs)" = '00 00 50 7f' ]
 base=/run/rmx-super
@@ -41,11 +41,23 @@ if [ "$1" = metadata ]; then
 fi
 
 name=$1
-case "$name" in system|vendor|product) ;; *) exit 2 ;; esac
+case "$name" in system|vendor|product|odm) ;; *) exit 2 ;; esac
 [ "$(cat "$base/vbmeta-checked")" = verified ]
 lp=$(device "rmx-lp-$name")
 [ "$(cat "$lp/ro")" = 1 ] && [ "$(cat "$lp/dev")" = "$3" ] && [ -b "$2" ]
 backing=$3
+if [ "$name" = odm ]; then
+    read -r size footer page page_hash key < "$profile/odm-source"
+    [ "$(cat "$lp/size")" -eq "$((size/512))" ]
+    hash=$(sha256sum "$base/mnt-vendor/etc/oplus_avb.pubkey")
+    [ "${hash%% *}" = "$key" ]
+    for block in "$((size/4096-1)):$footer" "$page:$page_hash"; do
+        dd if="$2" of="$base/odm-page" bs=4096 count=1 skip="${block%:*}"
+        hash=$(sha256sum "$base/odm-page")
+        [ "${hash%% *}" = "${block#*:}" ]
+    done
+    echo "odm_signer=$key"
+fi
 read -r sectors db hb blocks start alg root salt fec roots fs expected < "$profile/$name"
 target=rmx-verity-$name
 bad=rmx-verity-reject-$name
@@ -93,6 +105,14 @@ while read -r wanted rel; do
     [ "${actual%% *}" = "$wanted" ]
     echo "file=$name/$rel sha256=$wanted"
 done < "$profile/$name.files"
+if [ "${4:-}" = combined ]; then
+    case "$name" in
+    vendor) /bin/verity-readonly odm "$base/read-odm" "$(cat "$(device rmx-lp-odm)/dev")" combined ;;
+    odm) /bin/verity-readonly system "$base/read-system" "$(cat "$(device rmx-lp-system)/dev")" combined ;;
+    system) /bin/gsi17-policy ;;
+    *) exit 2 ;;
+    esac
+fi
 umount "$mnt"
 health=$(dm status "$target")
 [ "$(echo "$health" | awk '{print $4}')" = V ]

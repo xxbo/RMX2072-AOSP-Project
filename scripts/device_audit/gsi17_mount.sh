@@ -23,7 +23,7 @@ make_node() {
 
 read -r image_bytes data_bytes block_size tree_start root_hash salt < /gsi17-table
 mode=${1:-mount}
-case "$mode" in mount|userspace) ;; *) exit 2 ;; esac
+case "$mode" in mount|userspace|combined) ;; *) exit 2 ;; esac
 mkdir -p /dev/mapper "$base"
 [ -c /dev/mapper/control ] || make_node /sys/class/misc/device-mapper/dev /dev/mapper/control c
 for n in "$raw" "$verified"; do if device "$n" >/dev/null; then exit 1; fi; done
@@ -82,7 +82,7 @@ make_node "$d/dev" "$base/verified" b
 echo "source_table=$(dm table "$raw")"
 echo "verity_table=$(dm table "$verified")"
 opts=ro,noload,nodev,nosuid
-[ "$mode" = userspace ] || opts="$opts,noexec"
+[ "$mode" != mount ] || opts="$opts,noexec"
 mount -t ext4 -o "$opts" "$base/verified" "$base/mnt"
 awk -v m="$base/mnt" -v dev="$(cat "$d/dev")" '$5==m && $3==dev && $6 ~ /^ro(,|$)/ {
     for (i=7;i<NF;i++) if ($i=="-" && $(i+1)=="ext4") {print "mounted="m" fs=ext4 options="$6; found=1}
@@ -99,7 +99,15 @@ for value in ro.system.build.version.release=17 ro.system.build.version.sdk=37 r
     grep -Fx "$value" "$prop"
 done
 grep '^ro.system.build.fingerprint=' "$prop"
-if [ "$mode" = userspace ]; then
+if [ "$mode" = combined ]; then
+    for step in preflight fabric phy arm start; do /bin/ufs-host-test "$step"; done
+    for attempt in 1 2 3 4 5 6 7 8 9 10; do [ -e /sys/class/block/sdf ] && break; sleep 1; done
+    [ -e /sys/class/block/sdf ]
+    /bin/ufs-host-test disks
+    /bin/super-readonly metadata > "$base/lp.log"
+    /bin/verity-readonly metadata
+    /bin/super-readonly combined
+elif [ "$mode" = userspace ]; then
     # Bionic's bootstrap linker uses /proc/self/exe. Binder, Android properties,
     # vendor and writable storage are outside this isolated root.
     mount -t proc -o ro,nodev,nosuid,noexec proc "$base/mnt/proc"

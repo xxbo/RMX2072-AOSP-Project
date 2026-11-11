@@ -1,0 +1,1351 @@
+{
+  "date": "2026-11-11",
+  "device": "RMX2072",
+  "firmware": "RMX2072_11_F.20",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+  "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+  "gsi_build": "CP3A.260905.010",
+  "gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "physical_trials": [
+    {
+      "trial": "ufs-host-g3-gsi17-03",
+      "boot_sha256": "dc9b944a6b32cfd5095f207de12510fc6a8069810714db594861009bbd931a4e",
+      "usb": {
+        "requests": 2373,
+        "bytes": 9719808,
+        "data_bytes": 9252864,
+        "tree_bytes": 462848
+      },
+      "recovered_F20": true,
+      "host_transcript_check": "verified",
+      "software_edl_seconds": 7.109,
+      "init_return_codes": {
+        "init_selinux_setup": "134"
+      },
+      "compiler_return_codes": {
+        "secilc": "255"
+      },
+      "messages": [
+        "<2>init: Unable to open SELinux policy",
+        "<3>init: /system/bin/secilc: libc: failed to connect to tombstoned: No such file or directory",
+        "<2>init: Unable to open SELinux policy",
+        "Could not open file: /system/etc/selinux/mapping/30.0.cil"
+      ]
+    },
+    {
+      "trial": "ufs-host-g3-gsi17-04",
+      "boot_sha256": "e89e9c9931b3388b66c9f3c5138d161cd0247ba00825dd695a195b66f6dcc77b",
+      "usb": {
+        "requests": 2870,
+        "bytes": 11755520,
+        "data_bytes": 11264000,
+        "tree_bytes": 487424
+      },
+      "recovered_F20": true,
+      "host_transcript_check": "verified",
+      "software_edl_seconds": 7.109,
+      "init_return_codes": {
+        "init_selinux_setup": "134",
+        "init_with_f20_mapping": "134"
+      },
+      "compiler_return_codes": {
+        "secilc": "255"
+      },
+      "messages": [
+        "<3>init: /system/bin/secilc: Could not open file: /system/etc/selinux/mapping/30.0.cil",
+        "<2>init: Unable to open SELinux policy",
+        "Could not open file: /system/etc/selinux/mapping/30.0.cil",
+        "<3>init: /system/bin/secilc: Failed to open file_contexts file",
+        "<2>init: Unable to open SELinux policy"
+      ]
+    },
+    {
+      "trial": "ufs-host-g3-gsi17-05",
+      "boot_sha256": "72441483fafd6f4bbff37035fa90fbe2f487b5c46e839df27beead546447a789",
+      "usb": {
+        "requests": 2873,
+        "bytes": 11767808,
+        "data_bytes": 11276288,
+        "tree_bytes": 487424
+      },
+      "recovered_F20": true,
+      "host_transcript_check": "failed",
+      "software_edl_seconds": 7.078,
+      "init_return_codes": {
+        "init_selinux_setup": "134",
+        "init_with_f20_mapping": "134"
+      },
+      "compiler_return_codes": {
+        "secilc": "255",
+        "comparison_compiler": "255"
+      },
+      "messages": [
+        "<3>init: /system/bin/secilc: Could not open file: /system/etc/selinux/mapping/30.0.cil",
+        "<2>init: Unable to open SELinux policy",
+        "Could not open file: /system/etc/selinux/mapping/30.0.cil",
+        "<2>init: SELinux:  Could not load policy: No such file or directory"
+      ]
+    },
+    {
+      "trial": "ufs-host-g3-gsi17-06",
+      "boot_sha256": "3d261386419ac61d61347124273a1440166c8be5050499113ad4572332db0ae6",
+      "usb": {
+        "requests": 2873,
+        "bytes": 11767808,
+        "data_bytes": 11276288,
+        "tree_bytes": 487424
+      },
+      "recovered_F20": true,
+      "host_transcript_check": "verified",
+      "software_edl_seconds": 7.078,
+      "init_return_codes": {
+        "init_selinux_setup": "134",
+        "init_with_f20_mapping": "134"
+      },
+      "compiler_return_codes": {
+        "secilc": "255",
+        "comparison_compiler": "255"
+      },
+      "messages": [
+        "<3>init: /system/bin/secilc: Could not open file: /system/etc/selinux/mapping/30.0.cil",
+        "<2>init: Unable to open SELinux policy",
+        "Could not open file: /system/etc/selinux/mapping/30.0.cil",
+        "<2>init: SELinux:  Could not load policy: No such file or directory"
+      ]
+    }
+  ],
+  "accepted_trial": "ufs-host-g3-gsi17-06",
+  "init_executable_sha256": "779a5071836fe419ae1d3ab3ca79d7f861ed24c75fef25e173bcfe73c4daefa4",
+  "compiler_sha256": "ace5b9b5b26f28e0c81a070ac2be0106269f6a9f3912c80ea48663706444fac1",
+  "recovery": {
+    "release": "4.19.157-perf+",
+    "sys_boot_completed": 1,
+    "reader_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "stock_dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+  },
+  "post_recovery_lp_equal_baseline": true,
+  "android_pid1": false,
+  "policy_loaded": false,
+  "verified_partitions": {
+    "vendor": "61f5c484ac6ff2eead3ef17cd8900108b6f0332f4126640e2218ede0310d5a67",
+    "odm": "9c8afff20c5c08f1af8da340a8c0ed2a0595942083795293bd44294820dcde37",
+    "system": "e617367d6d4281ce4585b73d25e3b20ada89d7a3c8483d64f84055ce16ec818e"
+  },
+  "policy_ids": {
+    "system/etc/selinux/plat_sepolicy_and_mapping.sha256": "f533a9872b525cfc95e81a78037da8a9cbcf92b58c018de6f5b8dbb65a6156ee",
+    "odm/etc/selinux/precompiled_sepolicy.plat_sepolicy_and_mapping.sha256": "f56ca990a954f94f8f4588e60a9342b1d152b65367643d0eaaf8f3d729ad4c0a"
+  },
+  "control_mapping_files": {
+    "30.0.cil": "ffb035e7484a855a9baa84c461175c11f7cd77fbd577ab4ea942c2aa26ba13b7",
+    "30.0.compat.cil": "760a5aa8f81926445d48f52fb52edc124f6f51c4c4085d9e6f2ccaecebd38cbb"
+  },
+  "mapping_control_init_reached_loading": true,
+  "diagnostic_load_limit": "No global SELinux filesystem exposed to the restricted init child",
+  "neverallow_report_count": 299,
+  "neverallow_first_allow_matches": [
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:10827",
+      "first_allow_source": "system/sepolicy/private/vold.te:57"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:10826",
+      "first_allow_source": "system/sepolicy/private/gsid.te:14"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:10817",
+      "first_allow_source": "system/sepolicy/private/apexd.te:145"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:10813",
+      "first_allow_source": "system/sepolicy/private/apexd.te:145"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:10808",
+      "first_allow_source": "system/sepolicy/private/apexd.te:144"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:10552",
+      "first_allow_source": "system/sepolicy/private/domain.te:584"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9919",
+      "first_allow_source": "system/sepolicy/private/shell.te:172"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9501",
+      "first_allow_source": "system/sepolicy/private/adbd_common.te:20"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9493",
+      "first_allow_source": "system/sepolicy/private/charger_type.te:4"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9492",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:6702"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9482",
+      "first_allow_source": "system/sepolicy/private/charger_type.te:3"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9467",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:7070"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9427",
+      "first_allow_source": "system/sepolicy/private/init_dev_config.te:5"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9412",
+      "first_allow_source": "system/sepolicy/private/init_dev_config.te:6"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9356",
+      "first_allow_source": "system/sepolicy/public/property.te:134"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9306",
+      "first_allow_source": "system/sepolicy/private/bpfdomain.te:29"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9287",
+      "first_allow_source": "system/sepolicy/private/domain.te:500"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9286",
+      "first_allow_source": "system/sepolicy/private/domain.te:499"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:9283",
+      "first_allow_source": "system/sepolicy/private/domain.te:400"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8559",
+      "first_allow_source": "system/sepolicy/private/atrace.te:41"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8554",
+      "first_allow_source": "system/sepolicy/private/init.te:418"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8553",
+      "first_allow_source": "system/sepolicy/private/init.te:418"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8552",
+      "first_allow_source": "system/sepolicy/private/init.te:444"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8551",
+      "first_allow_source": "system/sepolicy/private/init.te:387"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8549",
+      "first_allow_source": "system/sepolicy/private/init.te:359"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8254",
+      "first_allow_source": "system/sepolicy/private/casefolding_remover.te:17"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:8252",
+      "first_allow_source": "system/sepolicy/private/domain.te:462"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:7400",
+      "first_allow_source": "system/sepolicy/private/domain.te:616"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:7146",
+      "first_allow_source": "system/sepolicy/private/evsmanagerd.te:38"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:7020",
+      "first_allow_source": "system/sepolicy/private/domain.te:584"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6064",
+      "first_allow_source": "system/sepolicy/private/apexd.te:117"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6048",
+      "first_allow_source": "system/sepolicy/private/kcmdlinemodprobe.te:13"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6047",
+      "first_allow_source": "system/sepolicy/private/artd.te:144"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6044",
+      "first_allow_source": "system/sepolicy/private/domain.te:218"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6039",
+      "first_allow_source": "system/sepolicy/private/artd.te:104"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6038",
+      "first_allow_source": "system/sepolicy/private/artd.te:103"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6037",
+      "first_allow_source": "system/sepolicy/private/artd.te:103"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6035",
+      "first_allow_source": "system/sepolicy/private/artd.te:109"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:6033",
+      "first_allow_source": "system/sepolicy/private/native_app_zygote.te:12"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5998",
+      "first_allow_source": "system/sepolicy/private/artd.te:103"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5997",
+      "first_allow_source": "system/sepolicy/private/artd.te:104"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5993",
+      "first_allow_source": "system/sepolicy/private/dexopt_chroot_setup.te:83"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5966",
+      "first_allow_source": "system/sepolicy/private/domain.te:474"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5965",
+      "first_allow_source": "system/sepolicy/private/aconfigd.te:24"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5962",
+      "first_allow_source": "system/sepolicy/private/domain.te:616"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5953",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8464"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5951",
+      "first_allow_source": "system/sepolicy/private/domain.te:258"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5950",
+      "first_allow_source": "system/sepolicy/private/domain.te:258"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5938",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8466"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5937",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8494"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5936",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7161"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5930",
+      "first_allow_source": "system/sepolicy/private/crosvm.te:56"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5926",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10853"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5924",
+      "first_allow_source": "system/sepolicy/private/domain.te:436"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5804",
+      "first_allow_source": "system/sepolicy/private/app.te:188"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5803",
+      "first_allow_source": "system/sepolicy/private/hal_audio.te:6"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5794",
+      "first_allow_source": "system/sepolicy/private/kcmdlinectrl.te:14"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5789",
+      "first_allow_source": "system/sepolicy/private/adbd_common.te:24"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5782",
+      "first_allow_source": "system/sepolicy/private/init_dev_config.te:6"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5777",
+      "first_allow_source": "system/sepolicy/public/property.te:134"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5774",
+      "first_allow_source": "system/sepolicy/private/shell.te:268"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5748",
+      "first_allow_source": "system/sepolicy/private/dexopt_chroot_setup.te:83"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5741",
+      "first_allow_source": "system/sepolicy/private/dexopt_chroot_setup.te:83"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5677",
+      "first_allow_source": "system/sepolicy/private/system_server_startup.te:14"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5658",
+      "first_allow_source": "system/sepolicy/private/prng_seeder.te:16"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5652",
+      "first_allow_source": "system/sepolicy/private/system_server.te:155"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5651",
+      "first_allow_source": "system/sepolicy/private/system_server.te:155"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5647",
+      "first_allow_source": "system/sepolicy/private/apexd.te:222"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5646",
+      "first_allow_source": "system/sepolicy/private/apexd.te:222"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5123",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:123"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5051",
+      "first_allow_source": "system/sepolicy/private/app.te:123"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5050",
+      "first_allow_source": "system/sepolicy/private/app.te:123"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5049",
+      "first_allow_source": "system/sepolicy/private/app.te:123"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5048",
+      "first_allow_source": "system/sepolicy/private/app.te:123"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5047",
+      "first_allow_source": "system/sepolicy/private/app.te:123"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:5046",
+      "first_allow_source": "system/sepolicy/private/app.te:123"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4987",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:11"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4986",
+      "first_allow_source": "system/sepolicy/private/isolated_app_all.te:37"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4980",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:11"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4979",
+      "first_allow_source": "system/sepolicy/private/isolated_app_all.te:37"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4924",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:11"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4923",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:12"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4910",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:11"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4909",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:12"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4872",
+      "first_allow_source": "system/sepolicy/private/platform_app_all.te:135"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4864",
+      "first_allow_source": "system/sepolicy/private/network_stack.te:29"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4851",
+      "first_allow_source": "system/sepolicy/private/device_as_webcam.te:21"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4846",
+      "first_allow_source": "system/sepolicy/private/priv_app_all.te:187"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4845",
+      "first_allow_source": "system/sepolicy/private/nfc.te:41"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4843",
+      "first_allow_source": "system/sepolicy/private/nfc.te:41"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4636",
+      "first_allow_source": "system/sepolicy/private/keystore.te:73"
+    },
+    {
+      "neverallow": "/vendor/etc/selinux/plat_pub_versioned.cil:4635",
+      "first_allow_source": "system/sepolicy/private/keystore.te:72"
+    },
+    {
+      "neverallow": "system/sepolicy/private/vold.te:493",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10772"
+    },
+    {
+      "neverallow": "system/sepolicy/private/vold.te:417",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8040"
+    },
+    {
+      "neverallow": "system/sepolicy/private/vold.te:417",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8040"
+    },
+    {
+      "neverallow": "system/sepolicy/private/vold.te:417",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8040"
+    },
+    {
+      "neverallow": "system/sepolicy/private/virtualizationservice.te:168",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/system_suspend_internal_server.te:12",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/system_server.te:1893",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10303"
+    },
+    {
+      "neverallow": "system/sepolicy/private/system_server.te:1766",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5242"
+    },
+    {
+      "neverallow": "system/sepolicy/private/shell.te:559",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/shell.te:559",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/shell.te:559",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/shell.te:559",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/shell.te:559",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/shell.te:559",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/shell.te:559",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:143",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9050"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:77",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4649"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:75",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4740"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:74",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4748"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:71",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4663"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:70",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4661"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:66",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4716"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:62",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4748"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:62",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4746"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:61",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4749"
+    },
+    {
+      "neverallow": "system/sepolicy/private/sdk_sandbox_all.te:61",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4747"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:794",
+      "first_allow_source": "system/sepolicy/private/domain.te:510"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:687",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10400"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:661",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5242"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:661",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5242"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:643",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5238"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:636",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5238"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:596",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5238"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:305",
+      "first_allow_source": "system/sepolicy/private/hal_audio.te:43"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:305",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:6702"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:247",
+      "first_allow_source": "system/sepolicy/public/property.te:134"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:178",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:7070"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:178",
+      "first_allow_source": "system/sepolicy/private/dumpstate.te:520"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:81",
+      "first_allow_source": "system/sepolicy/private/domain.te:510"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:80",
+      "first_allow_source": "system/sepolicy/private/domain.te:510"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:66",
+      "first_allow_source": "system/sepolicy/private/domain.te:510"
+    },
+    {
+      "neverallow": "system/sepolicy/private/property.te:40",
+      "first_allow_source": "system/sepolicy/private/domain.te:510"
+    },
+    {
+      "neverallow": "system/sepolicy/private/priv_app_all.te:310",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9044"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:378",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4750"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:378",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4751"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:372",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4695"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:371",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4694"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:368",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4734"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:365",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9035"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:365",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9034"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:365",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9033"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:362",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9036"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:361",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9032"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:358",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4659"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:354",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4749"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:353",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4748"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:346",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4664"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:346",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4663"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:341",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4662"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:341",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4661"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:334",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4716"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:330",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4708"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:326",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4746"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:326",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4746"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:325",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4747"
+    },
+    {
+      "neverallow": "system/sepolicy/private/pcc_component.te:325",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4747"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:131",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:130",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8078"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:126",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:125",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8078"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:120",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:119",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8078"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:115",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:114",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8078"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:111",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/network_stack.te:110",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8078"
+    },
+    {
+      "neverallow": "system/sepolicy/private/netd.te:202",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9851"
+    },
+    {
+      "neverallow": "system/sepolicy/private/mlstrustedsubject.te:49",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4662"
+    },
+    {
+      "neverallow": "system/sepolicy/private/mlstrustedsubject.te:49",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4661"
+    },
+    {
+      "neverallow": "system/sepolicy/private/mlstrustedsubject.te:25",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4662"
+    },
+    {
+      "neverallow": "system/sepolicy/private/mlstrustedsubject.te:25",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4661"
+    },
+    {
+      "neverallow": "system/sepolicy/private/mlstrustedsubject.te:15",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4664"
+    },
+    {
+      "neverallow": "system/sepolicy/private/mlstrustedsubject.te:15",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4663"
+    },
+    {
+      "neverallow": "system/sepolicy/private/mediaextractor.te:83",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5436"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:104",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4750"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:104",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4751"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:101",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4747"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:101",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4747"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:99",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4743"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:99",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4745"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:98",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4742"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:98",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4744"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:98",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4746"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:98",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4746"
+    },
+    {
+      "neverallow": "system/sepolicy/private/isolated_app_all.te:59",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4663"
+    },
+    {
+      "neverallow": "system/sepolicy/private/init.te:875",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9410"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_wifi_supplicant.te:6",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_wifi_hostapd.te:6",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_uwb.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_usb_gadget.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_usb.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_tv_tuner.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_tv_input.te:6",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_tv_hdmi_earc.te:7",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_tv_hdmi_connection.te:7",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_tv_hdmi_cec.te:7",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_threadnetwork.te:4",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_tetheroffload.te:6",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_telephony.te:6",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_secure_element.te:6",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_remotelyprovisionedcomponent_avf.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_remoteaccess.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_npu_scheduling.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_nlinterceptor.te:3",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_mediaquality.te:4",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_macsec.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_ivn.te:4",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_ir.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_health_storage.te:8",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_gatekeeper.te:4",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_fastboot.te:4",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_confirmationui.te:5",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_configstore.te:45",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5436"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_configstore.te:4",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:4710"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_cas.te:8",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_can.te:12",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_can.te:9",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:3533"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_bootctl.te:10",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/hal_bluetooth_lpp.te:6",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6294"
+    },
+    {
+      "neverallow": "system/sepolicy/private/gsid.te:188",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10805"
+    },
+    {
+      "neverallow": "system/sepolicy/private/early_virtmgr.te:82",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8041"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2435",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:7511"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2434",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8027"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2379",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8462"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2339",
+      "first_allow_source": "system/sepolicy/private/apexd.te:117"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2332",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10317"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2290",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:5044"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2273",
+      "first_allow_source": "system/sepolicy/private/domain.te:22"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2129",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8027"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:2107",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8425"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1945",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8459"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1930",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8458"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1884",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8502"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1884",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8496"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1818",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8444"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1818",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8432"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1651",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7871"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1311",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8457"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1237",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8544"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1189",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8464"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1157",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5438"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1157",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5438"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1133",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5436"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1133",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8466"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1133",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5436"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1116",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7161"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1090",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7160"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:1036",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10853"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:748",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6534"
+    },
+    {
+      "neverallow": "system/sepolicy/private/domain.te:703",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8084"
+    },
+    {
+      "neverallow": "system/sepolicy/private/crosvm.te:16",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8094"
+    },
+    {
+      "neverallow": "system/sepolicy/private/crosvm.te:9",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8094"
+    },
+    {
+      "neverallow": "system/sepolicy/private/coredomain.te:270",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7092"
+    },
+    {
+      "neverallow": "system/sepolicy/private/coredomain.te:147",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7874"
+    },
+    {
+      "neverallow": "system/sepolicy/private/coredomain.te:147",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:6208"
+    },
+    {
+      "neverallow": "system/sepolicy/private/coredomain.te:147",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7091"
+    },
+    {
+      "neverallow": "system/sepolicy/private/charger_type.te:76",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5387"
+    },
+    {
+      "neverallow": "system/sepolicy/private/charger_type.te:64",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:7888"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:83",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:78",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:74",
+      "first_allow_source": "system/sepolicy/private/hal_health.te:33"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:67",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:66",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:65",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:64",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:63",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:62",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:61",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:59",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:59",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:58",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:57",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:56",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:55",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:54",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8077"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfloader.te:51",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8078"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfdomain.te:16",
+      "first_allow_source": "system/sepolicy/private/hal_health.te:32"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfdomain.te:14",
+      "first_allow_source": "system/sepolicy/private/hal_health.te:31"
+    },
+    {
+      "neverallow": "system/sepolicy/private/bpfdomain.te:13",
+      "first_allow_source": "system/sepolicy/private/hal_health.te:33"
+    },
+    {
+      "neverallow": "system/sepolicy/private/artd.te:214",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:5344"
+    },
+    {
+      "neverallow": "system/sepolicy/private/app_neverallows.te:335",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9050"
+    },
+    {
+      "neverallow": "system/sepolicy/private/app_neverallows.te:327",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9049"
+    },
+    {
+      "neverallow": "system/sepolicy/private/app_neverallows.te:193",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4714"
+    },
+    {
+      "neverallow": "system/sepolicy/private/app.te:888",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:7480"
+    },
+    {
+      "neverallow": "system/sepolicy/private/app.te:864",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4757"
+    },
+    {
+      "neverallow": "system/sepolicy/private/app.te:856",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:4756"
+    },
+    {
+      "neverallow": "system/sepolicy/private/apexd.te:247",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:8041"
+    },
+    {
+      "neverallow": "system/sepolicy/private/aconfigd.te:80",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10303"
+    },
+    {
+      "neverallow": "system/sepolicy/private/aconfigd.te:74",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10297"
+    },
+    {
+      "neverallow": "system/sepolicy/private/aconfigd.te:64",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10303"
+    },
+    {
+      "neverallow": "system/sepolicy/private/aconfigd.te:58",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10297"
+    },
+    {
+      "neverallow": "system/sepolicy/public/property.te:354",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:7070"
+    },
+    {
+      "neverallow": "system/sepolicy/public/property.te:273",
+      "first_allow_source": "system/sepolicy/private/domain.te:510"
+    },
+    {
+      "neverallow": "system/sepolicy/public/property.te:195",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:10707"
+    },
+    {
+      "neverallow": "system/sepolicy/public/property.te:106",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9410"
+    },
+    {
+      "neverallow": "system/sepolicy/public/property.te:65",
+      "first_allow_source": "/vendor/etc/selinux/plat_pub_versioned.cil:9405"
+    },
+    {
+      "neverallow": "system/sepolicy/public/property.te:61",
+      "first_allow_source": "/vendor/etc/selinux/vendor_sepolicy.cil:8019"
+    }
+  ],
+  "number_of_indexed_reports": 299,
+  "early_run_limits": {
+    "03": "Root-only compiler was denied execution by the restricted init child",
+    "04": "Missing file_contexts output sink in the diagnostic root",
+    "05": "Large USB console excerpt ended mid-line; the host rejected the cleanup marker"
+  },
+  "accepted_transcript_sha256": "f112a292847259f136244e4a9c57305133e3dc4d2fcc08e93d6c1c5d50bbe67b"
+}

@@ -1,0 +1,29 @@
+{
+  "filesystem": "erofs",
+  "descriptor": {
+    "version": 1,
+    "image_bytes": 928215040,
+    "tree_offset": 928215040,
+    "tree_bytes": 7315456,
+    "data_block_bytes": 4096,
+    "hash_block_bytes": 4096,
+    "fec_roots": 2,
+    "fec_offset": 935530496,
+    "fec_bytes": 7397376,
+    "algorithm": "sha1",
+    "salt": "cb384edb328fc782b23abad49b2b81ca",
+    "root_digest": "b3fb9fb6c0433f1eb18cca65e3ff6c9c5aaefe6f",
+    "flags": 0
+  },
+  "logical_bytes": 946008064,
+  "footer_block_sha256": "78de6be8f8531fc594916d070644ddd8285b18db98fba524c80ea78532a08a6d",
+  "vbmeta_block": 230207,
+  "vbmeta_block_sha256": "96b79545d357f44b49f586704db2d14c879643bbaa490275e5a02122518fa275",
+  "vbmeta_sha256": "d386da02f069fdf82e40aa5bb69ca888cfe391a8fc292109063428e0c89db4d6",
+  "key_sha256": "313de220889896ec424dae370821549631af28ec37ae1f2836825a50f58e6b3e",
+  "verified_data_sha256": "9c8afff20c5c08f1af8da340a8c0ed2a0595942083795293bd44294820dcde37",
+  "files": {
+    "build.prop": "0b77497d0b42ee162026c4be3c98112d5517050eb22c84d6027f8e1941e4afd5",
+    "etc/selinux/precompiled_sepolicy.plat_sepolicy_and_mapping.sha256": "d778c4f9e4097bd2e391068810bec8156db4df618ad3f4988f4a2218ca0a06f4"
+  }
+}

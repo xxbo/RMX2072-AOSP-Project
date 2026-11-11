@@ -1,7 +1,7 @@
 #!/bin/busybox sh
 # RMX2072 F.20 single-super read-only diagnostic, run from the G3 RAM shell.
 set -eu
-case "$(uname -r):$(cat /trial-id)" in 6.18.*:ufs-host-g3-super-*) ;; *) exit 2 ;; esac
+case "$(uname -r):$(cat /trial-id)" in 6.18.*:ufs-host-g3-super-*|6.18.*:ufs-host-g3-gsi17-*) ;; *) exit 2 ;; esac
 [ "$(cat /sys/class/udc/*/state)" = configured ]
 [ "$(od -An -tx1 /sys/firmware/devicetree/base/oplus,dtsi_no | xargs)" = '00 00 50 7f' ]
 bin=/bin/lp
@@ -59,7 +59,7 @@ metadata)
         cat "$base/table-$slot"
     done
     ;;
-map|verity)
+map|verity|combined)
     # The F.20 reference must select slot 0 before this stage is invoked.
     [ -s "$base/table-0" ]
     [ -r /sys/class/misc/device-mapper/dev ]
@@ -68,6 +68,11 @@ map|verity)
     [ -c /dev/mapper/control ] || mknod /dev/mapper/control c "${ctl%:*}" "${ctl#*:}"
     dm version
     names='system vendor product'
+    if [ "$1" = combined ]; then
+        names='vendor odm system'
+        digest=$(sha256sum "$base/prefix")
+        [ "${digest%% *}" = "$(cat /verity-profile/lp-prefix)" ]
+    fi
     device() {
         for d in /sys/class/block/dm-*; do
             [ -f "$d/dm/name" ] || continue
@@ -108,6 +113,7 @@ map|verity)
         node="$base/read-$n"
         [ ! -e "$node" ] || rm -f "$node"
         mknod "$node" b "${nums%:*}" "${nums#*:}"
+        if [ "$1" = combined ]; then continue; fi
         if [ "$1" = verity ]; then
             /bin/verity-readonly "$n" "$node" "$nums"
         else
@@ -115,6 +121,10 @@ map|verity)
         fi
         rm -f "$node"
     done
+    if [ "$1" = combined ]; then
+        /bin/verity-readonly vendor "$base/read-vendor" "$(cat "$(device vendor)/dev")" combined
+        rm -f "$base/read-vendor" "$base/read-odm" "$base/read-system"
+    fi
     ;;
 *) exit 2 ;;
 esac

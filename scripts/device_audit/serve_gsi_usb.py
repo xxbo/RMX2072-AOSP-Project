@@ -1,5 +1,6 @@
 """Serve one hash-pinned Android 17 image read-only to the RMX2072 diagnostic ACM."""
 import argparse
+import base64
 import hashlib
 import json
 from pathlib import Path
@@ -8,7 +9,7 @@ import struct
 import time
 import zlib
 
-from check_verity import verified_vbmeta
+from check_verity import verified_vbmeta, verity_args
 from usb_edl_return import ACM, END, QUERY, parse_identity
 
 REFERENCE = Path(__file__).resolve().parents[2]/'build/device/gsi17-mount-reference.json'
@@ -58,14 +59,29 @@ def read_until_line(console, end, timeout):
 
 
 def transcript(console):
-    console.write(b"\nprintf '\\nMOUNT_''BEGIN\\n'; cat /run/gsi17-run.log; "
-                  b"cat /run/gsi17/backend.log 2>/dev/null; dmesg | grep -Ei 'dm-user|EXT4-fs|verity:|corrupted' | tail -12; "
-                  b"printf '\\nMOUNT_''END\\n'\n")
-    rows = read_until_line(console,b'MOUNT_END',20).replace(b'\r',b'').splitlines()
-    return b'\n'.join(rows[rows.index(b'MOUNT_BEGIN')+1:rows.index(b'MOUNT_END')]).decode(errors='replace')
+    def query(cmd):
+        console.write(b"\nprintf '\\nMOUNT_''BEGIN\\n'; "+cmd+b"; printf '\\nMOUNT_''END\\n'\n")
+        rows = read_until_line(console,b'MOUNT_END',8).replace(b'\r',b'').splitlines()
+        return b''.join(rows[rows.index(b'MOUNT_BEGIN')+1:rows.index(b'MOUNT_END')])
+
+    path = b'/run/gsi17-transcript'
+    meta = query(b"{ cat /run/gsi17-run.log; cat /run/gsi17/backend.log 2>/dev/null; "
+                 b"dmesg | grep -Ei 'dm-user|EXT4-fs|verity:|corrupted' | tail -12; } > "+path+
+                 b"; printf '%s %s' \"$(wc -c < "+path+b")\" \"$(sha256sum "+path+b" | cut -d' ' -f1)\"")
+    size, digest = meta.split()
+    size = int(size)
+    if not 0 < size <= 256*1024 or not re.fullmatch(b'[0-9a-f]{64}',digest):
+        raise ValueError('Unexpected diagnostic transcript metadata')
+    data = bytearray()
+    for pos in range(0,size,384):
+        cmd = b'dd if='+path+f' bs=384 skip={pos//384} count=1 2>/dev/null | base64'.encode()
+        data.extend(base64.b64decode(query(cmd),validate=True))
+    if len(data) != size or hashlib.sha256(data).hexdigest().encode() != digest:
+        raise ValueError('Incomplete USB transcript')
+    return data.decode(errors='replace')
 
 
-def verify_mount(log, ref, footer_digest, userspace=False):
+def verify_mount(log, ref, footer_digest, userspace=False, *, combined=False):
     lines = log.splitlines()
     tree = ref['hashtree']
     size = ref['image_bytes']//512
@@ -82,8 +98,9 @@ def verify_mount(log, ref, footer_digest, userspace=False):
               'ro.system.build.version.sdk=37','ro.system.build.id='+ref['build']]
     checks += [f"file={p} sha256={v['sha256']}" for p,v in ref['files'].items()]
     m = re.search(r'^mounted=/run/gsi17/mnt fs=ext4 options=(\S+)$',log,re.M)
-    required = {'ro','nodev','nosuid'} if userspace else {'ro','nodev','nosuid','noexec'}
+    required = {'ro','nodev','nosuid'} if userspace or combined else {'ro','nodev','nosuid','noexec'}
     if (not m or not required <= set(m[1].split(',')) or
+            ((userspace or combined) and 'noexec' in m[1].split(',')) or
             not re.search(r'^verity_status=0 '+str(blocks*8)+r' verity V(?: -)?$',log,re.M)):
         raise ValueError('No healthy read-only ext4/verity mount')
     for check in checks:
@@ -92,10 +109,67 @@ def verify_mount(log, ref, footer_digest, userspace=False):
     if userspace and ('android_toybox_read=match' not in lines or
                       not re.search(r'^android_toybox_uname=6\.18\.[^\n]+$',log,re.M)):
         raise ValueError('Android userspace execution was not observed')
+    if combined:
+        return verify_policy_probe(log)
 
 
-def serve(console, image, ref, deadline, stats, userspace=False):
-    mode = b'userspace' if userspace else b'mount'
+def init_policy_observations(log):
+    # Each rc is printed before its captured kmsg. Direct secilc diagnostics
+    # must never be attributed to init's compiler child.
+    stages = {}
+    for start, end in [('init_selinux_setup', 'secilc_rc'), ('init_with_f20_mapping', 'comparison_compiler_rc')]:
+        capture = re.search(r'^'+start+r'_rc=(\d+)\n(.*?)^'+end+r'=\d+$', log, re.M | re.S)
+        if not capture:
+            raise ValueError('Missing init capture: '+start)
+        lines = capture[2].splitlines()
+        if '<6>init: Compiling SELinux policy' not in lines:
+            raise ValueError('Init did not reach policy compilation: '+start)
+        if ('<6>init: Loading SELinux policy' not in lines and
+                not any(s.startswith('<3>init: /system/bin/secilc:') for s in lines)):
+            raise ValueError('No compiler child output in init log: '+start)
+        stages[start] = int(capture[1])
+    return stages
+
+
+def verify_policy_probe(log):
+    stock = json.loads((REFERENCE.parent/'f20-verity-reference.json').read_text())
+    odm = json.loads((REFERENCE.parent/'f20-odm-verity-reference.json').read_text())
+    rows = set(log.splitlines())
+    required = {'odm_signer='+odm['key_sha256'], 'android_read_vendor_odm=match',
+                'vendor_policy_version=30.0', 'policy_cleanup=0', 'cleanup_status=0',
+                '<6>init: Opening SELinux policy', '<6>init: Compiling SELinux policy'}
+    required.update(f'vbmeta={n} sha256={h}' for n,h in stock['gpt_vbmeta_sha256'].items())
+    for name, part in [('vendor', stock['partitions']['vendor']), ('odm', odm),
+                       ('system', stock['partitions']['system'])]:
+        tree = part['descriptor']
+        sectors = tree['image_bytes']//512
+        required.update({f'verified={name} sectors={sectors} sha256='+part['verified_data_sha256'],
+                         f'health={name} 0 {sectors} verity V 0', f'verity_cleanup={name} rc=0'})
+        table = re.search(r'^verity_table='+name+r' 0 (\d+) verity 1 (\d+:\d+) (.*)$', log, re.M)
+        linear = re.search(r'^mapped='+name+r' sectors=(\d+) ro=1$', log, re.M)
+        if not table or not linear or int(table[1]) != sectors:
+            raise ValueError(f'Missing {name} verity table')
+        dev = table[2]
+        fec = str(tree['fec_offset']//tree['data_block_bytes'])
+        args = verity_args(tree,dev,int(linear[1])*512)
+        if ['1',dev]+table[3].split() != args+['8','use_fec_from_device',dev,'fec_blocks',fec,'fec_start',fec,'fec_roots','2']:
+            raise ValueError(f'{name} verity descriptor mismatch')
+        required.update(f'file={name}/{p} sha256={h}' for p,h in part['files'].items())
+        if name == 'system':
+            continue  # The stock system supplies the comparison CIL outside the GSI root.
+        mount = re.search(r'^combined_mount=/run/gsi17/mnt/'+name+r' fs=erofs options=(\S+)$',log,re.M)
+        if not mount or not {'ro','nodev','nosuid','noexec'} <= set(mount[1].split(',')):
+            raise ValueError(f'Missing combined {name} mount')
+    if required-rows:
+        raise ValueError('Missing combined results: '+', '.join(sorted(required-rows)))
+    count = re.search(r'^neverallow_reports=(\d+)$',log,re.M)
+    conflicts = re.findall(r'^conflict=(\S+) allow=\S* source=(\S+)$',log,re.M)
+    if not count or len(conflicts) != int(count[1]):
+        raise ValueError('Incomplete neverallow conflict index')
+    return init_policy_observations(log)
+
+
+def serve(console, image, ref, deadline, stats, mode):
     console.write(b"\n/bin/gsi17-mount "+mode+b" >/run/gsi17-run.log 2>&1; rc=$?; printf '\\nGSI17_''EXIT %s\\n' \"$rc\"\n")
     pending = bytearray()
     traces = []
@@ -140,7 +214,9 @@ def main():
     p.add_argument('--image',type=Path,required=True)
     p.add_argument('--trial',required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--userspace',action='store_true',help='Run the GSI toybox with its bootstrap linker inside the verified root')
+    modes = p.add_mutually_exclusive_group()
+    modes.add_argument('--userspace',action='store_true',help='Run the GSI toybox with its bootstrap linker inside the verified root')
+    modes.add_argument('--combined',action='store_true',help='Mount F.20 vendor and odm and collect the Android policy probe')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-[A-Za-z0-9-]+',a.trial):
         p.error('Unexpected trial id')
@@ -167,12 +243,17 @@ def main():
                     raise ValueError('Unexpected live trial')
                 report['identity'] = ident
                 until = time.monotonic()+ident['timer_seconds']-ident['uptime_seconds']-30
-                rc, report['first_requests'] = serve(console,image,ref,until,stats,a.userspace)
+                mode = b'combined' if a.combined else b'userspace' if a.userspace else b'mount'
+                rc, report['first_requests'] = serve(console,image,ref,until,stats,mode)
                 log = transcript(console)
-                (a.output/'mount.txt').write_text(log+'\n',encoding='utf-8')
+                captured = log.encode('utf-8')
+                (a.output/'mount.txt').write_bytes(captured)
+                report['transcript_sha256'] = hashlib.sha256(captured).hexdigest()
                 if rc or not stats['tree_bytes'] or not stats['data_bytes']:
                     raise ValueError(f'Mount failed rc={rc}, served {stats}')
-                verify_mount(log,ref,footer,a.userspace)
+                observation = verify_mount(log,ref,footer,a.userspace,combined=a.combined)
+                if a.combined:
+                    report['init_exit_codes'] = observation
                 report.update(status='verified',last_block_sha256=footer)
     finally:
         (a.output/'result.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')

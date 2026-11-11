@@ -1,3 +1,5 @@
+import base64
+import hashlib
 import io
 import json
 from pathlib import Path
@@ -7,10 +9,48 @@ import unittest
 import zlib
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
-from serve_gsi_usb import REFERENCE, read_packet, verify_image, verify_mount
+from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, transcript, verify_image, verify_mount
 
 
 class GsiUsbTests(unittest.TestCase):
+    def test_transcript_matches_device_digest_across_usb_chunks(self):
+        data = b'line with diagnostic output\n'*50
+
+        class Console:
+            def __init__(self, corrupt=False):
+                self.corrupt = corrupt
+                self.chunk = 0
+
+            def write(self, cmd):
+                if b'bs=384' in cmd:
+                    if f'skip={self.chunk} '.encode() not in cmd:
+                        raise AssertionError('unexpected chunk index')
+                    start = self.chunk*384
+                    block = data[start:start+384]
+                    if self.corrupt and self.chunk == 1:
+                        block = bytes(len(block))
+                    payload = base64.encodebytes(block)
+                    self.chunk += 1
+                else:
+                    payload = f'{len(data)} {hashlib.sha256(data).hexdigest()}'.encode()
+                self.response = iter((b'MOUNT_BEGIN\n'+payload+b'\nMOUNT_END\n').splitlines(keepends=True))
+
+            def read_until(self, delimiter):
+                return next(self.response)
+
+        self.assertEqual(transcript(Console()), data.decode())
+        with self.assertRaisesRegex(ValueError, 'Incomplete USB transcript'):
+            transcript(Console(corrupt=True))
+
+    def test_direct_compiler_output_cannot_stand_in_for_init_child(self):
+        child = '<6>init: Compiling SELinux policy\n<3>init: /system/bin/secilc: test error\n'
+        log = ('init_selinux_setup_rc=134\n'+child+'secilc_rc=255\n'+child+
+               'init_with_f20_mapping_rc=134\n'+child+'comparison_compiler_rc=255\n')
+        self.assertEqual(init_policy_observations(log),
+                         {'init_selinux_setup':134, 'init_with_f20_mapping':134})
+        with self.assertRaisesRegex(ValueError, 'compiler child'):
+            init_policy_observations(log.replace('<3>init: /system/bin/secilc: test error\n', '', 1))
+
     def test_random_read_including_final_sector(self):
         data = bytes(range(251))*16 + bytes(80)
         stream = io.BytesIO(data)
