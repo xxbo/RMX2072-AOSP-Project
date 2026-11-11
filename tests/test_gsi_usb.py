@@ -9,10 +9,25 @@ import unittest
 import zlib
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
-from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, transcript, verify_image, verify_mount
+from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, transcript, verify_first_stage, verify_image, verify_mount
 
 
 class GsiUsbTests(unittest.TestCase):
+    def test_first_stage_mount_matches_pid1_and_verity_device(self):
+        evidence = json.loads((REFERENCE.parent/'gsi17-first-stage-2026-11-11.json').read_text())
+        log = '\n'.join(evidence['observations'])
+        ref = json.loads(REFERENCE.read_text())
+        footer = next(row.split('=')[1] for row in evidence['observations'] if row.startswith('last_block_sha256='))
+        observed = verify_first_stage(log, ref, footer)
+        self.assertEqual(observed['boot_id'], evidence['boot_id'])
+        self.assertIn('target=/dev ', observed['first_mount'])
+        self.assertEqual(len(observed['partition_mounts']), 1)
+        self.assertTrue(observed['partition_mounts'][0].endswith('rc=0'))
+        with self.assertRaisesRegex(ValueError, 'PID 1'):
+            verify_first_stage(log.replace('exec_pid=1 ', 'exec_pid=42 '), ref, footer)
+        with self.assertRaisesRegex(ValueError, 'mountinfo'):
+            verify_first_stage(log.replace('254:1 / /system', '254:0 / /system'), ref, footer)
+
     def test_transcript_matches_device_digest_across_usb_chunks(self):
         data = b'line with diagnostic output\n'*50
 

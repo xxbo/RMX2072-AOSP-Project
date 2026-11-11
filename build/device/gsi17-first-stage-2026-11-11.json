@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-11",
+  "trial": "ufs-host-g3-gsi17-firststage-01",
+  "boot_id": "3340a813-b11c-4595-ac74-365e198ddbc1",
+  "device": "RMX2072",
+  "profile": "USB-backed GSI, operator-armed first-stage handoff",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "artifacts": {
+    "boot_sha256": "d38bbe4cba0b11b5a7403782534a50320def9e5d85a6606706f89fcb1025e614",
+    "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+    "ramdisk_sha256": "2b86538cc1035ac044041ba86943afda7cdf79622d32fc979172653b32b03717",
+    "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758"
+  },
+  "first_stage_source": "android17-first-stage-source.json",
+  "first_stage_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+  "observer_sha256": "25e2e685990d5b502181dfad798ab4c90a22155ee2a73d58d5c49a696ecb5538",
+  "gsi_build": "CP3A.260905.010",
+  "gsi_image_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "transcript_sha256": "a79de615e48ede3098a480bf4c8b6dac9db5c18771a258c74ffa6b871cdac4ff",
+  "usb": {
+    "requests": 18,
+    "bytes": 73728,
+    "data_bytes": 57344,
+    "tree_bytes": 12288
+  },
+  "observations": [
+    "last_block_sha256=62243764641576fdd73e9ca12f4d7abc212cbe187a7fc3342e8c692c8fbf6b62",
+    "source_table=0 7721120 user ",
+    "verity_table=0 7599128 verity 1 254:0 254:0 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+    "boot_id=3340a813-b11c-4595-ac74-365e198ddbc1",
+    "init_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+    "gsi_device=dm-1 dev=254:1",
+    "disk=sda scsi=0:0:0:0 sectors=244236288 ro=1",
+    "disk=sdb scsi=0:0:0:1 sectors=16384 ro=1",
+    "disk=sdc scsi=0:0:0:2 sectors=16384 ro=1",
+    "disk=sdd scsi=0:0:0:3 sectors=262144 ro=1",
+    "disk=sde scsi=0:0:0:4 sectors=4390912 ro=1",
+    "disk=sdf scsi=0:0:0:5 sectors=983040 ro=1",
+    "exec_pid=1 path=/init staged_inode_match=1",
+    "mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0",
+    "mount_pid=1 source=devpts target=/dev/pts fs=devpts flags=0 rc=0",
+    "mount_pid=1 source=proc target=/proc fs=proc flags=0 rc=0",
+    "mount_pid=1 source=sysfs target=/sys fs=sysfs flags=0 rc=0",
+    "mount_pid=1 source=selinuxfs target=/sys/fs/selinux fs=selinuxfs flags=0 rc=0",
+    "mount_pid=1 source=tmpfs target=/mnt fs=tmpfs flags=0xe rc=0",
+    "mount_pid=1 source=tmpfs target=/debug_ramdisk fs=tmpfs flags=0xe rc=0",
+    "mount_pid=1 source=tmpfs target=/second_stage_resources fs=tmpfs flags=0xe rc=0",
+    "mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0",
+    "trial_stop=partition-mount",
+    "pid1_exe=/init",
+    "pid1_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+    "pid1_mountinfo=39 38 0:26 / /dev rw,nosuid,relatime - tmpfs tmpfs rw,mode=755",
+    "pid1_mountinfo=47 38 254:1 / /system ro,relatime - ext4 /dev/block/dm-1 ro,norecovery",
+    "verity_status=0 7599128 verity V -"
+  ],
+  "kernel_log": [
+    "[   26.542355][    T1] init: init first stage started!",
+    "[   26.543444][    T1] init: Unable to open /lib/modules, skipping module loading.",
+    "[   26.544911][    T1] init: [libfstab] Using Android DT directory /proc/device-tree/firmware/android/",
+    "[   27.918194][    T1] init: DSU not detected, proceeding with normal boot",
+    "[   27.949806][    T1] init: [libfs_mgr] superblock s_max_mnt_count:65535,/dev/block/dm-1",
+    "[   28.051672][    T1] EXT4-fs (dm-1): mounted filesystem b1fa65f1-3963-5190-bec1-b6bc7057dc78 ro without journal. Quota mode: none."
+  ],
+  "results": {
+    "global_pid1_first_stage": "PASS",
+    "first_mount": "PASS",
+    "gsi_ext4_system_read_only": "PASS",
+    "first_failed_step": null,
+    "stop": "Observer paused PID 1 at the return from the /system mount syscall.",
+    "second_stage_init": "NOT RUN",
+    "project_vendor": "NOT RUN",
+    "ufs_cold_boot": "NOT RUN",
+    "android17_adb": "NOT RUN"
+  },
+  "recovery": {
+    "status": "PASS",
+    "method": "ACM software EDL",
+    "edl_wait_seconds": 7.219,
+    "boot_id": "7d462c33-88ae-469c-93a5-811f808670fe",
+    "build": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "sys_boot_completed": 1,
+    "restored_readbacks": {
+      "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+    }
+  }
+}

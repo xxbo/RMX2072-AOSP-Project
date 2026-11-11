@@ -38,6 +38,12 @@ fi
         /bin/busybox sh /diag-snapshot.sh < /dev/null > /dev/kmsg 2>&1
     done
 ) &
+if [ -x /bin/first-stage-witness ]; then
+    /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
+    while [ ! -f /run/m1/go ]; do /bin/busybox sleep 1; done
+    record phase=android-first-stage-handoff
+    exec /bin/first-stage-witness handoff < /dev/null > /dev/kmsg 2>&1
+fi
 while :; do
     # Redirection failure affects this child, never replaces/exits PID 1.
     /bin/busybox sh -x /diag-init.sh < /dev/null > /dev/kmsg 2>&1

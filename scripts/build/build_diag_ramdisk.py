@@ -45,6 +45,8 @@ def main():
     p.add_argument('--gsi-usb-reader', type=pathlib.Path,
                    help='Static ARM64 dm-user reader for the read-only Android 17 GSI trial')
     p.add_argument('--trial-id')
+    p.add_argument('--android-first-stage', type=pathlib.Path, help='Pinned API 37 generic ramdisk /init')
+    p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
     p.add_argument('--gsi-init-probe', type=pathlib.Path,
                    help='Include the Android 17 and F.20 combined policy diagnostic')
     p.add_argument('--return-to-edl-after', type=int)
@@ -54,6 +56,9 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if bool(a.android_first_stage) != bool(a.first_stage_witness) or (a.android_first_stage and
+            not (a.gsi_usb_reader and a.return_to_edl_after and (a.trial_id or '').startswith('ufs-host-g3-gsi17-firststage-'))):
+        p.error('First-stage requires the init, observer, GSI reader, recovery timer and firststage trial ID')
     if a.gsi_init_probe and not (a.gsi_usb_reader and a.f20_verity):
         p.error('--gsi-init-probe requires --gsi-usb-reader and --f20-verity')
     if a.super_tools_apks and not a.ufs_host_g3_test:
@@ -130,6 +135,17 @@ def main():
         add('bin/super-readonly', 0o100755, super_test)
     if a.gsi_usb_reader:
         reader = read_static_arm64(a.gsi_usb_reader)
+        if a.android_first_stage:
+            first = read_static_arm64(a.android_first_stage)
+            first_hash = hashlib.sha256(first).hexdigest()
+            source = json.loads((root/'build/device/android17-first-stage-source.json').read_text())
+            if first_hash != source['init_sha256']:
+                raise ValueError('Unexpected API 37 first-stage init')
+            add('android-first-stage', 0o100755, first)
+            witness = read_static_arm64(a.first_stage_witness)
+            add('bin/first-stage-witness', 0o100755, witness)
+            stage_script = (root/'scripts/device_audit/first_stage_mount.sh').read_bytes().replace(b'\r\n', b'\n')
+            add('bin/first-stage-mount', 0o100755, stage_script)
         add('bin/gsi-usb-reader', 0o100755, reader)
         script = (root/'scripts/device_audit/gsi17_mount.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/gsi17-mount', 0o100755, script)
@@ -226,6 +242,9 @@ def main():
         report.update(scope='Verified read-only Android 17 and F.20 mounts with RAM-only SELinux probes',
                       init_launcher_sha256=hashlib.sha256(launcher).hexdigest(),
                       policy_probe_sha256=hashlib.sha256(probe).hexdigest())
+    if a.android_first_stage:
+        report.update(scope='Android API 37 first-stage init as global PID 1 with read-only USB-backed GSI',
+                      first_stage_init_sha256=first_hash, witness_sha256=hashlib.sha256(witness).hexdigest())
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 

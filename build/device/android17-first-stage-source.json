@@ -1,0 +1,13 @@
+{
+  "source": "Google Android SDK system image",
+  "package": "system-images;android-37.0;google_apis;arm64-v8a",
+  "revision": 8,
+  "build": "CE2A.260420.051.A3",
+  "sdk": 37,
+  "package_index": "https://dl.google.com/android/repository/sys-img/google_apis/sys-img2-3.xml",
+  "archive_url": "https://dl.google.com/android/repository/sys-img/google_apis/arm64-v8a-37.0_r08.zip",
+  "archive_sha1_from_index": "7a8bfff584798fe87caa4d4883f6ade4658a185b",
+  "member": "arm64-v8a/ramdisk.img",
+  "ramdisk_sha256": "341b6f447e88c2aff4fe70a5479b19a9ac71972edb75710aedcdc479eb33781e",
+  "init_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957"
+}
