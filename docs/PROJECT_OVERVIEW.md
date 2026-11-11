@@ -1,19 +1,11 @@
-# Project Overview
+# Project overview
 
-## Mission
-Maintain an independent AOSP platform for the realme X50 Pro Player Edition (RMX2072 / bladerunner_48m), powered by Snapdragon 865 / SM8250. The active milestone is a stable 6.18 RAM-only diagnostic environment. Android 17 vendor/system integration follows its own preflight and compatibility gates.
+RMX2072 targets a project-built ACK 6.18 kernel, an Android 17 ARM64 GSI and a source-built device layer for the Snapdragon 865 board. The release goal is to boot from UFS and operate the hardware independently of realme Android images, closed Android HALs and factory device trees. The [development plan](../plan.md) defines the milestones and how to record dependencies below Android.
 
-## Scope
-- Device identification and stock-firmware preservation
-- AOSP/GSI build and boot validation
-- Device-tree and vendor compatibility
-- Kernel source inventory and migration research
-- Hardware validation and recovery procedures
-
-## Milestones
-The [development plan](../plan.md) tracks M0–M8. The team has captured the F.20 baseline (M0), built the community 4.19 kernel (M1/M6), and inspected the official GSI (M2). The active M7 prototype now supports a verified 6.18 host ACM shell with primary USB SID0 and a passed 606-second paced-data test. Uncapped burst loss, display, UFS and Android userspace remain separate work. See the [bring-up journal](INDEPENDENT_KERNEL_BRINGUP.md).
+The handset has already run the GSI's toybox on 6.18 using a read-only USB-backed image. The next milestone is a headless cold boot from UFS with Android init as PID 1 and a usable ADB shell. Project-built device trees can be validated in parallel. Interactive graphics and touch follow, then daily-use hardware and update/recovery qualification. [Physical GSI record](https://github.com/xxbo/RMX2072-AOSP-Project/blob/f2f6385af354d1c157b319030d5d458134a66acf/build/device/gsi17-usb-mount-2026-11-10.json)
 
 ## Evidence labels
+
 - Source-confirmed: visible in a named source repository or official documentation.
 - Device-confirmed: captured from the actual handset.
 - Build-tested: compiled successfully with recorded toolchain/configuration.

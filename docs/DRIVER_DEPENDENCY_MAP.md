@@ -173,7 +173,7 @@ These are lower in the first boot sequence but still depend on common foundation
 | 5 — Power + thermal + audio | Charger/VOOC, fuel gauge, TSENS/BCL/LMH, Q6/ASoC | Power safety and DSP dependencies need platform/IPC foundations | Safe charging, thermal control and full audio route tests |
 | 6 — Camera + remaining peripherals | Spectra, sensors, fingerprint, NFC, haptics, secure services | These depend on stable memory, IPC, power and secure-world foundations | Per-component hardware tests and logs |
 
-This order is for the GKI research track. It does not replace the safer project-level rule: first reproduce a known-compatible legacy kernel/vendor baseline, and do not combine the first Android 17 GSI experiment with an unvalidated 6.x kernel.
+Use this subsystem order alongside the [RMX2072 milestones](../plan.md#milestones-and-acceptance). The verified 6.18 diagnostic is the control for driver changes. Recheck USB and storage when changing board bindings, and exercise each Android service against the project-built vendor.
 
 ## 5. Evidence still required
 

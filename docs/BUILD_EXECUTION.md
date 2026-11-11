@@ -2,7 +2,7 @@
 
 The execution path is GitHub Actions for kernel/driver builds, a selected official Google Android 17 ARM64 GSI for the system layer, and the locally connected RMX2072 for flashing and hardware tests. A local full AOSP build host is not required for this phase.
 
-**November 8 runtime milestone:** Actions-built 6.18.32 reached diagnostic userspace with the logging-adjusted stock DTB bundle and original DTBO. The recovered console records eight CPUs activated, diagnostic init, no UDC, and an explicit EDL restart at 90.74 seconds. Stock reader recovery and Android boot completion passed afterwards. This is a partial kernel boot, not Android/GSI support or ten-minute stability. Current evidence and remaining gates are in [independent kernel bring-up](INDEPENDENT_KERNEL_BRINGUP.md) and the [runtime record](../build/device/handoff-runtime-2026-11-08.json). GSI adaptation is deferred.
+**November 8 runtime milestone:** Actions-built 6.18.32 reached diagnostic userspace with the logging-adjusted stock DTB bundle and original DTBO. The recovered console records eight CPUs activated, diagnostic init, no UDC, and an explicit EDL restart at 90.74 seconds. Stock reader recovery and Android boot completion passed afterwards. This is a partial kernel boot, not Android/GSI support or ten-minute stability. Current evidence and remaining gates are in [independent kernel bring-up](INDEPENDENT_KERNEL_BRINGUP.md) and the [runtime record](../build/device/handoff-runtime-2026-11-08.json). The [development plan](../plan.md) tracks the later GSI trials and current acceptance criteria.
 
 ## Legacy build gate
 
@@ -28,9 +28,7 @@ The generic ACK baseline is built. Next add a separate KGSL compile/KMI probe an
 
 ## GSI gate
 
-The user selected and authorized downloading the official Android 17 QPR1 ARM64 + GMS package CP3A.260905.010 after accepting its license. `build/gsi.json` records the official URL and SHA-256. Inspect its actual VINTF matrices, VNDK/linker support, sparse/raw size and system partition fit. Stock F.20 declares vendor FCM 5, while the inspected Android 17 source's default matrix list begins at FCM 7. Resolve this gap with image evidence and a compatibility test, not by arbitrarily changing the declared vendor target level.
-
-First test the system layer against the compatible stock kernel/vendor. Test a new 6.18 kernel separately so failures can be isolated. Keep the existing local backups; full-system recovery from them is not yet exercised.
+The system target is the official Android 17 QPR1 ARM64 + GMS image CP3A.260905.010 in [the GSI lock](../build/gsi.json). Use the 6.18 kernel and a project-built vendor for M1. Build a compatible boot-v2 ramdisk, capture the Android init handoff and validate the UFS-backed system. The [GSI bring-up guide](GSI_BUILD_GUIDE.md) covers the sequence and measured capacity constraint.
 
 ## Evidence and synchronization
 

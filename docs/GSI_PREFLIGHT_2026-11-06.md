@@ -24,7 +24,9 @@ Read-only `lpdump` on the connected handset reports qti_dynamic_partitions maxim
 
 Do not remove OEM logical partitions until their boot dependencies and a complete super recovery method are understood. The existing full super backup is local and hashed, but a complete super restore has not been exercised.
 
-## Next execution gates
+## November 6 stock-vendor experiment design
+
+These steps document the F.20 compatibility investigation. The [current roadmap](../plan.md) targets a source-built vendor on ACK 6.18. The partition measurements above remain relevant to any layout that preserves the same logical partitions.
 
 1. Obtain a host libvintf checker matching this Android release and run it with explicit GSI system plus captured stock vendor/odm mappings and recorded boot properties.
 2. Resolve VNDK 30 availability and system_ext mounting behavior using the actual boot path.
