@@ -23,7 +23,7 @@ make_node() {
 
 read -r image_bytes data_bytes block_size tree_start root_hash salt < /gsi17-table
 mode=${1:-mount}
-case "$mode" in mount|userspace|combined) ;; *) exit 2 ;; esac
+case "$mode" in mount|userspace|combined) ;; firststage) [ -x /bin/first-stage-mount ] ;; *) exit 2 ;; esac
 mkdir -p /dev/mapper "$base"
 [ -c /dev/mapper/control ] || make_node /sys/class/misc/device-mapper/dev /dev/mapper/control c
 for n in "$raw" "$verified"; do if device "$n" >/dev/null; then exit 1; fi; done
@@ -81,6 +81,18 @@ echo 0 > "$d/queue/read_ahead_kb"
 make_node "$d/dev" "$base/verified" b
 echo "source_table=$(dm table "$raw")"
 echo "verity_table=$(dm table "$verified")"
+if [ "$mode" = firststage ]; then
+    # Android owns any resulting mount. Leave the verified map pinned until EDL.
+    /bin/first-stage-mount "$d" || result=$?
+    status=$(dm status "$verified")
+    echo "verity_status=$status"
+    if [ -f /run/m1/go ]; then
+        trap - EXIT
+        kill "$backend" 2>/dev/null || :
+        stty "$saved" < "$tty"
+    fi
+    exit "${result:-0}"
+fi
 opts=ro,noload,nodev,nosuid
 [ "$mode" != mount ] || opts="$opts,noexec"
 mount -t ext4 -o "$opts" "$base/verified" "$base/mnt"

@@ -24,6 +24,9 @@ on:
       - 'scripts/device_audit/verity_readonly.sh'
       - 'scripts/device_audit/gsi17_mount.sh'
       - 'scripts/device_audit/gsi17_policy.sh'
+      - 'scripts/device_audit/first_stage_mount.sh'
+      - 'scripts/device_audit/first_stage_witness.c'
+      - 'build/device/android17-first-stage-source.json'
       - 'scripts/device_audit/gsi_init_probe.c'
       - 'build/device/f20-odm-verity-reference.json'
       - 'scripts/device_audit/gsi_usb_reader.c'
@@ -63,6 +66,7 @@ jobs:
           python -m pip install cryptography
           sh -n scripts/device_audit/gsi17_mount.sh
           sh -n scripts/device_audit/gsi17_policy.sh
+          sh -n scripts/device_audit/first_stage_mount.sh
           for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh scripts/device_audit/verity_readonly.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
       - name: Cross-compile the static Android 17 dm-user reader
@@ -73,6 +77,7 @@ jobs:
           fi
           python scripts/build/build_gsi_usb_reader.py --ndk "$ndk" --output "$RUNNER_TEMP/gsi-usb-reader"
           python scripts/build/build_gsi_usb_reader.py --ndk "$ndk" --init-probe --output "$RUNNER_TEMP/gsi-init-probe"
+          python scripts/build/build_gsi_usb_reader.py --ndk "$ndk" --first-stage-witness --output "$RUNNER_TEMP/first-stage-witness"
       - name: Compile and apply board overlay
         run: python scripts/build/build_device_dt.py --work "$RUNNER_TEMP/rmx-dt" --output reports/device-tree
       - name: Verify the read-only super diagnostic runtime

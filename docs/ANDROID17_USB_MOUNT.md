@@ -1,5 +1,22 @@
 # Android 17 over USB on RMX2072
 
+## M1 first-stage handoff on November 11
+
+On the physical RMX2072, Android 17 first-stage `/init` ran as global PID 1 on Linux 6.18.32. Its first mount was a tmpfs on `/dev`. Its first partition mount attached the USB-backed CP3A.260905.010 GSI to `/system`. Both syscalls returned zero. The observer stopped PID 1 on return from the partition mount and read its executable and mount table through the diagnostic namespace. See the [trial evidence, hashes and separate F.20 recovery](../build/device/gsi17-first-stage-2026-11-11.json).
+
+```text
+exec_pid=1 path=/init staged_inode_match=1
+mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0
+mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0
+pid1_mountinfo=47 38 254:1 / /system ro,relatime - ext4 /dev/block/dm-1 ro,norecovery
+```
+
+The static first-stage executable came from the first cpio archive in Google's API 37 ARM64 emulator ramdisk, build CE2A.260420.051.A3. The SDK package and GSI have separate build identities. The host verified the GSI signature, signer and hashtree descriptor before serving it. The diagnostic created the dm-verity target and supplied its block device to the board fstab. Android created its own device nodes and issued the mount. All six internal UFS LUNs and their partitions were read-only. This checkpoint used the stock-derived G3 device tree and a USB host. Project vendor, second-stage init and a disconnected UFS boot remain open.
+
+To reproduce, extract `init` from the first legacy-LZ4 cpio in `arm64-v8a/ramdisk.img` and verify the [pinned ramdisk and ELF](../build/device/android17-first-stage-source.json). Compile the observer with `scripts/build/build_gsi_usb_reader.py --ndk <ndk> --first-stage-witness --output <observer>`. Add `--android-first-stage <init> --first-stage-witness <observer>` to the G3 USB reader ramdisk build, select a `ufs-host-g3-gsi17-firststage-*` trial ID and enable the EDL timer. Use `serve_gsi_usb.py --first-stage` with the pinned GSI. After the transcript is saved, the existing `usb_edl_return.py --mode command` procedure returns the phone to the restore harness.
+
+## Earlier USB mount trials
+
 Linux 6.18.32 mounted Google's CP3A.260905.010 ARM64 + GMS system image twice on the handset. The mounted build properties identified Android 17, API 37 and build 16176746. The handset computed SHA-256 hashes of `system/build.prop`, `system/etc/init/hw/init.rc` and `system/system_ext/etc/build.prop`. All matched files independently extracted from the original image. The GSI stayed on the workstation. See the [reference](../build/device/gsi17-mount-reference.json) and [hardware results](../build/device/gsi17-usb-mount-2026-11-10.json).
 
 ## Data path and observed limits
