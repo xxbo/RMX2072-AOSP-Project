@@ -36,6 +36,7 @@ def build(output):
                        check=True, env=env)
         commands = []
         hashes = {}
+        labels = {}
         for index, path in enumerate([SOURCE, *paths]):
             name = '/'+path.relative_to(SOURCE).as_posix() if path != SOURCE else '/'
             if not re.fullmatch(r'/[a-zA-Z0-9/_.-]*', name) or path.is_symlink():
@@ -56,6 +57,7 @@ def build(output):
             label = next(label for pattern, label in reversed(contexts) if pattern.fullmatch(device_path))
             local = 'label-'+str(index)
             (stage/local).write_bytes(label.encode()+b'\0')
+            labels[name] = (label+'\0').encode()
             commands.append(f'ea_set -f {local} {name} security.selinux')
         (stage/'commands').write_text('\n'.join(commands)+'\n', encoding='ascii')
         result = subprocess.run(['debugfs','-w','-f','commands','vendor.img'], cwd=stage,
@@ -63,6 +65,13 @@ def build(output):
         if any('debugfs ' not in line for line in result.stderr.splitlines()):
             raise RuntimeError(result.stderr)
         subprocess.run(['e2fsck', '-fn', image], check=True, env=env)
+        for name, expected in labels.items():
+            label_file = stage/'read-label'
+            label_file.unlink(missing_ok=True)
+            subprocess.run(['debugfs','-R',f'ea_get -f read-label {name} security.selinux',image],
+                           cwd=stage, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+            if label_file.read_bytes() != expected:
+                raise ValueError('Image SELinux xattr differs at '+name)
         for name, digest in hashes.items():
             data = subprocess.check_output(['debugfs','-R','cat '+name,image], stderr=subprocess.DEVNULL)
             if hashlib.sha256(data).hexdigest() != digest:

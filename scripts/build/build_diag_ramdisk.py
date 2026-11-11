@@ -47,6 +47,7 @@ def main():
     p.add_argument('--trial-id')
     p.add_argument('--android-first-stage', type=pathlib.Path, help='Pinned API 37 generic ramdisk /init')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
+    p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
     p.add_argument('--gsi-init-probe', type=pathlib.Path,
                    help='Include the Android 17 and F.20 combined policy diagnostic')
     p.add_argument('--return-to-edl-after', type=int)
@@ -56,6 +57,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.project_vendor and not a.android_first_stage:
+        p.error('The project vendor requires the Android first-stage profile')
     if bool(a.android_first_stage) != bool(a.first_stage_witness) or (a.android_first_stage and
             not (a.gsi_usb_reader and a.return_to_edl_after and (a.trial_id or '').startswith('ufs-host-g3-gsi17-firststage-'))):
         p.error('First-stage requires the init, observer, GSI reader, recovery timer and firststage trial ID')
@@ -146,6 +149,19 @@ def main():
             add('bin/first-stage-witness', 0o100755, witness)
             stage_script = (root/'scripts/device_audit/first_stage_mount.sh').read_bytes().replace(b'\r\n', b'\n')
             add('bin/first-stage-mount', 0o100755, stage_script)
+            if a.project_vendor:
+                info = json.loads((a.project_vendor/'vendor.json').read_text())
+                vendor = (a.project_vendor/'vendor.img').read_bytes()
+                vendor_hash = hashlib.sha256(vendor).hexdigest()
+                source_dir = root/'device/realme/bladerunner_48m/m1-vendor'
+                files = {('/'+path.relative_to(source_dir).as_posix()):
+                         hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+                         for path in source_dir.rglob('*') if path.is_file()}
+                if len(vendor) != 2*1024*1024 or vendor_hash != info['sha256'] or files != info['files']:
+                    raise ValueError('Vendor image or source inventory differs from build report')
+                add('project-vendor.img', 0o100444, vendor)
+                add('project-vendor.sha256', 0o100444, (vendor_hash+'\n').encode())
+                add('project-vendor.fstab', 0o100444, (source_dir/'etc/fstab.qcom').read_bytes().replace(b'\r\n', b'\n'))
         add('bin/gsi-usb-reader', 0o100755, reader)
         script = (root/'scripts/device_audit/gsi17_mount.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/gsi17-mount', 0o100755, script)
@@ -245,6 +261,8 @@ def main():
     if a.android_first_stage:
         report.update(scope='Android API 37 first-stage init as global PID 1 with read-only USB-backed GSI',
                       first_stage_init_sha256=first_hash, witness_sha256=hashlib.sha256(witness).hexdigest())
+    if a.project_vendor:
+        report['project_vendor_sha256'] = vendor_hash
     (a.output/'ramdisk-provenance.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))
 

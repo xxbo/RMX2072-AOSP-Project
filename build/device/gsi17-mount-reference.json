@@ -2,6 +2,7 @@
   "build": "CP3A.260905.010",
   "android_release": 17,
   "sdk": 37,
+  "init_sha256": "779a5071836fe419ae1d3ab3ca79d7f861ed24c75fef25e173bcfe73c4daefa4",
   "image_bytes": 3953213440,
   "image_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
   "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
