@@ -1,5 +1,15 @@
 # Android 17 over USB on RMX2072
 
+## Project vendor and PID 1 policy setup
+
+Two physical boots on 6.18.32 switched the root to the CP3A.260905.010 GSI and mounted the project vendor at `/vendor`. First-stage init issued both read-only ext4 mounts. The observed `MS_MOVE` from `/system` to `/` returned zero. PID 1 then executed the GSI's `/system/bin/init selinux_setup`; its SHA-256 matched the executable extracted from the pinned GSI. Its mount table showed `254:1` (USB-backed dm-verity) at `/` and `7:0` (RAM-backed loop0) at `/vendor`. The mounted vendor fstab matched the ramdisk copy. See the [two handset records and F.20 recovery readbacks](../build/device/gsi17-project-vendor-2026-11-11.json).
+
+The first run exposed a missing vendor genfs version. Init selected 202404 and skipped that optional CIL. The revised vendor selects 202604, which the GSI supplies, and uses the same version spelling in its VINTF manifest. On the second run init logged `Opening SELinux policy` at 36.944 s, selected `plat_sepolicy_genfs_202604.cil` at 37.463 s and logged `Loading SELinux policy` at 47.711 s. The observer stopped the process at the opening of the kernel load interface. A separate invocation of the GSI's compiler read the mounted policy inputs with neverallow checking enabled, returned zero and produced the policy digest in the hardware record. Kernel installation, enforcing mode, second-stage init, VINTF compatibility and Android ADB remain untested.
+
+The [vendor source](../device/realme/bladerunner_48m/m1-vendor) contains the USB fixture fstab, board init and ueventd configuration, a device manifest and split SELinux inputs. It declares no HAL instances. The 2 MiB image is identified by content hash and embedded in the test ramdisk. It has no vendor AVB signature. The GSI uses the existing pinned signer and dm-verity path.
+
+On Linux, `python scripts/build/build_m1_vendor.py --output PRIVATE/vendor` uses e2fsprogs to create the filesystem, check it and read back its files and SELinux labels. Set `PRIVATE` to a directory outside the checkout. CI compares two builds byte-for-byte. Add `--project-vendor PRIVATE/vendor` to the first-stage ramdisk build described below and run the host with `--project-vendor-report PRIVATE/vendor/vendor.json` in place of `--first-stage`.
+
 ## M1 first-stage handoff on November 11
 
 On the physical RMX2072, Android 17 first-stage `/init` ran as global PID 1 on Linux 6.18.32. Its first mount was a tmpfs on `/dev`. Its first partition mount attached the USB-backed CP3A.260905.010 GSI to `/system`. Both syscalls returned zero. The observer stopped PID 1 on return from the partition mount and read its executable and mount table through the diagnostic namespace. See the [trial evidence, hashes and separate F.20 recovery](../build/device/gsi17-first-stage-2026-11-11.json).

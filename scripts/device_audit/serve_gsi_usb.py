@@ -148,7 +148,9 @@ def verify_first_stage(log, ref, footer, vendor_hash=None, check_genfs=False):
                                     r' fs=ext4 flags=0x[0-9a-f]+ rc=0', m) for m in mounts):
                 raise ValueError('Missing successful Android mount at '+target)
         if (policy_exec not in rows or 'mounted_vendor_fstab=match' not in rows or
-                'mounted_vendor_policy_version=202604' not in rows):
+                'mounted_vendor_policy_version=202604' not in rows or
+                'mount_pid=1 source=/system target=/ fs=(null) flags=0x2000 rc=0' not in rows or
+                not re.search(r'^pid1_cmdline=/system/bin/init selinux_setup *$', log, re.M)):
             raise ValueError('Project vendor or SELinux exec did not reach the checkpoint')
         messages = [row for row in log.splitlines() if re.search(r'\[\s*T1\] init: .*SELinux policy',row)]
         if not messages:

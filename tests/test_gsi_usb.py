@@ -13,6 +13,20 @@ from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, tran
 
 
 class GsiUsbTests(unittest.TestCase):
+    def test_vendor_replay_requires_switch_root_new_init_and_strict_policy(self):
+        trial = json.loads((REFERENCE.parent/'gsi17-project-vendor-2026-11-11.json').read_text())['trials'][-1]
+        log = '\n'.join(trial['observations'])
+        ref = json.loads(REFERENCE.read_text())
+        footer = next(line.split('=')[1] for line in trial['observations'] if line.startswith('last_block_sha256='))
+        def check(text):
+            return verify_first_stage(text, ref, footer, trial['vendor_image_sha256'], True)
+        self.assertEqual(check(log)['stop'], 'policy-load-open')
+        for before, after in [('254:1 / / ro', '254:2 / / ro'), ('7:0 / /vendor ro','7:1 / /vendor ro'),
+                              ('flags=0x2000 rc=0','flags=0x2000 rc=-1'),
+                              ('arg=selinux_setup','arg=second_stage'), ('strict_compile_rc=0','strict_compile_rc=1')]:
+            with self.subTest(before=before), self.assertRaises(ValueError):
+                check(log.replace(before, after))
+
     def test_first_stage_mount_matches_pid1_and_verity_device(self):
         evidence = json.loads((REFERENCE.parent/'gsi17-first-stage-2026-11-11.json').read_text())
         log = '\n'.join(evidence['observations'])
