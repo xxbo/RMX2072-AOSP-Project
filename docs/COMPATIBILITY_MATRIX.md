@@ -9,12 +9,13 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Layer | Candidate | Status | Evidence required |
 | --- | --- | --- | --- |
 | Android framework | Android 17 | Open | Same-boot init, launcher, physical input and boot-completion evidence. |
-| System image | Android 17 QPR1 ARM64 + GMS | Hardware-tested in USB-backed chroot | GSI toybox executed. Android init and internal boot remain open. [Trial](https://github.com/xxbo/RMX2072-AOSP-Project/blob/f2f6385af354d1c157b319030d5d458134a66acf/build/device/gsi17-usb-mount-2026-11-10.json) |
-| Vendor image | Source-built RMX2072 device layer | Open | Build manifest, VINTF result, actual vendor mount and service logs from M1. |
+| System image | Android 17 QPR1 ARM64 + GMS | Hardware-tested on USB-backed dm-verity | Android PID 1 switched root and executed GSI `selinux_setup`. Second-stage init, Android ADB and a disconnected UFS cold boot remain open. [Physical trials](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) |
+| Vendor image | Source-built 2 MiB RMX2072 ext4 | Mounted read-only from RAM | Trial 02 selected genfs `202604` and passed a separate strict compile. Kernel policy installation, enforcing mode, VINTF and vendor AVB remain open. The fixture declares no HAL instances. [Trial](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/docs/ANDROID17_USB_MOUNT.md#project-vendor-and-pid-1-policy-setup) |
+| Stock vendor/ODM comparison | F.20 | Diagnostic comparison | Strict compile with the GSI reported 299 neverallow conflicts across 262 locations. Target vendor acceptance uses the project image. [Comparison](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-init-policy-2026-11-11.json) |
 | Legacy control | Realme F.20 4.19.157 | Stock boot-tested | Logging-reader Android restored and booted. [Recovery scope](DEVICE_BASELINE_2026-11-06.md) |
 | Community kernel | SM8250-Common 4.19.325 | Build-tested | [Legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866) |
 | ACK/GKI | Android 17 6.18.32 generic ARM64 | Generic distribution build-tested | [Kleaf build](GKI_618_BUILD.md) |
-| Platform kernel | 6.18.32 with factory-derived DTB and original DTBO | Diagnostic boot-tested | Eight CPUs, paced USB and warm UFS reads exercised. [UFS evidence](https://github.com/xxbo/RMX2072-AOSP-Project/blob/f2f6385af354d1c157b319030d5d458134a66acf/build/device/ufs-g3-2026-11-10.json) |
+| Platform kernel | 6.18.32 with factory-derived G3 DTB and original DTBO | Boot-tested through Android PID 1 policy setup | Eight CPUs, paced USB, warm UFS reads and first-stage mounts exercised. [UFS](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/ufs-g3-2026-11-10.json) · [Handoff](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) |
 | Board DTB/DTBO | Source-built RMX2072 trees | Open | Repeat cold boot, USB, UFS, recovery and headless Android tests. |
 | Device-specific modules | Built for the project kernel | Per driver | Record module load and hardware results by subsystem. |
 

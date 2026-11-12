@@ -2,7 +2,7 @@
 
 RMX2072 targets a project-built ACK 6.18 kernel, an Android 17 ARM64 GSI and a source-built device layer for the Snapdragon 865 board. The release goal is to boot from UFS and operate the hardware independently of realme Android images, closed Android HALs and factory device trees. The [development plan](../plan.md) defines the milestones and how to record dependencies below Android.
 
-The handset has already run the GSI's toybox on 6.18 using a read-only USB-backed image. The next milestone is a headless cold boot from UFS with Android init as PID 1 and a usable ADB shell. Project-built device trees can be validated in parallel. Interactive graphics and touch follow, then daily-use hardware and update/recovery qualification. [Physical GSI record](https://github.com/xxbo/RMX2072-AOSP-Project/blob/f2f6385af354d1c157b319030d5d458134a66acf/build/device/gsi17-usb-mount-2026-11-10.json)
+On 6.18.32, first-stage init ran as PID 1 and mounted the USB-backed Android 17 GSI and RAM-backed project vendor. The observer reached `selinux_setup`. Trial 02 passed a separate strict compile and stopped before kernel policy installation. M1 still requires policy installation, second-stage init and a disconnected UFS cold boot with same-boot ADB. M2 board-tree and ramdisk work can proceed in parallel. [Handset record](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) · [Milestone acceptance](../plan.md#milestones-and-acceptance)
 
 ## Evidence labels
 

@@ -26,7 +26,7 @@ flowchart TD
     PM --> CHG["Charger / fuel gauge / VOOC"]
     PM --> THERM["TSENS / BCL / LMH / thermal policy"]
 
-    MEM --> GPU["Adreno 650 / KGSL or DRM-MSM"]
+    MEM --> GPU["Adreno 650 / DRM-MSM"]
     MEM --> DISP
     MEM --> CAM["Spectra camera / ISP / camera buffers"]
     MEM --> AUDIO["Audio DSP / PCM buffers"]
@@ -88,9 +88,9 @@ Audit at least:
 **Two related but distinct paths.**
 
 - Display path: DRM/MSM → DPU/SDE → DSI host/PHY → panel → backlight/brightness.
-- GPU path: KGSL or DRM/MSM Adreno → GMU/HFI and A650 firmware → IOMMU/DMA-BUF → userspace graphics driver.
+- Project GPU path: DRM/MSM Adreno → GMU/HFI and A650 firmware → IOMMU/DMA-BUF → userspace graphics driver.
 
-The existing RMX2072 vendor stack has a KGSL-oriented userspace contract. GKI 6.18 contains DRM/MSM and an Adreno 650 catalog entry but not the legacy KGSL device/UAPI path. Therefore, the GPU decision must be made separately from display bring-up.
+The F.20 graphics libraries use KGSL. M3 pairs the upstream DRM/MSM Adreno 650 driver with source-built graphics userspace, allocator and composer. Validate panel scanout and GPU submission independently before exercising the launcher.
 
 **Gate:** stable boot animation/UI, correct panel mode and brightness, GPU submission, suspend/resume, and no IOMMU faults. A DRM/MSM source tree existing is not proof that the old KGSL userspace can use it.
 
@@ -168,7 +168,7 @@ These are lower in the first boot sequence but still depend on common foundation
 | 0 — Device facts | Exact firmware, DTS/DTBO, partition/boot metadata, component IDs, recovery baseline | Prevents building against a mismatched board/vendor set | Device identity and recovery facts recorded |
 | 1 — Platform base | Kona DTS, clocks, resets, PMIC, regulators, pinctrl, interconnect, LLCC, SMMU, UFS, USB/ADB | Every later subsystem depends on this layer | Stable boot, storage, ADB and clean critical probe logs |
 | 2 — Memory + display + touch | DMA-BUF/secure heaps, DRM/MSM, panel, GT9886 | Provides a visible and interactive system and establishes buffer contracts | UI, brightness, touch, suspend/resume |
-| 3 — GPU | KGSL-vs-DRM decision, A650 firmware/GMU, KMI and memory path | GPU shares memory/IOMMU with display and camera | GPU workload and graphics HAL pass |
+| 3 — GPU | DRM/MSM A650, firmware/GMU, DMA-BUF and source-built userspace | GPU shares memory/IOMMU with display and camera | GPU workload and graphics HAL pass |
 | 4 — IPC + modem + wireless | SMEM/GLINK/QRTR/QMI/remoteproc/IPA, WLAN and Bluetooth | Establishes Qualcomm remote subsystem communication | Calls/data/Wi-Fi/BT and subsystem recovery |
 | 5 — Power + thermal + audio | Charger/VOOC, fuel gauge, TSENS/BCL/LMH, Q6/ASoC | Power safety and DSP dependencies need platform/IPC foundations | Safe charging, thermal control and full audio route tests |
 | 6 — Camera + remaining peripherals | Spectra, sensors, fingerprint, NFC, haptics, secure services | These depend on stable memory, IPC, power and secure-world foundations | Per-component hardware tests and logs |
@@ -177,16 +177,16 @@ Use this subsystem order alongside the [RMX2072 milestones](../plan.md#milestone
 
 ## 5. Evidence still required
 
-The following items block a device-exact dependency graph:
+Use the captured baseline where available and verify the remaining board-specific dependencies:
 
-- A complete matched-source pairing for the captured F.20 firmware/vendor baseline. Historical F.15/F.17 extraction references do not establish that pairing.
-- Actual DTB/DTBO and kernel command line from the handset.
-- Panel ID, touch controller ID and touch bus/address.
+- Record exact provenance whenever an F.20 artifact is used for comparison. Keep the F.15 and F.17 extraction references distinct.
+- The stock handset selects DTB 12 and DTBO 17. Verify which source-built trees the target boot selects and reproduce the USB/UFS results.
+- Confirm scanout and touch on 6.18 for the recorded RM19795 panel and GT9886 on I2C 8 at 0x5d. [Board review](ADAPTATION_REVIEW_2026-11-07.md)
 - Camera sensor enumeration and module/EEPROM IDs.
 - WLAN chipset and driver/firmware binding; Bluetooth controller and transport.
 - Charger, fuel-gauge, VOOC and haptic controller IDs.
 - Sensor-hub ownership versus direct AP-side sensor buses.
-- Boot image header, partition map, AVB state and verified recovery route.
+- Boot-v2, the GPT/AVB capture and boot/DTBO recovery are recorded. Complete the recovery test for partitions affected by the target UFS layout.
 - Vendor HAL and firmware versions for the exact handset build.
 
 Do not fill these fields from a different SM8250 handset or from a shared common-tree example.

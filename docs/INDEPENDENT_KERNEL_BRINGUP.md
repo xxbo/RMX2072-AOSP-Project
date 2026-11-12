@@ -1,8 +1,8 @@
 # Independent 6.18 kernel bring-up
 
-The current goal is a stable, RAM-only 6.18 diagnostic environment on RMX2072. GSI, Android framework/vendor integration, super resizing and user-data mounts are deferred.
+This journal records the RAM-only diagnostic trials that established the 6.18 control for subsequent Android and storage work. The [current roadmap](../plan.md#next-work-on-m1) and [Android handset trials](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) track M1.
 
-**Latest handset result (November 8).** The legacy-base SCM trial reached 6.18 diagnostic userspace, SMMU probe and gadget binding. The phone reset before host enumeration was observed and was restored to the stock logging reader. The [November 9 source review and next comparison](#2026-11-09-review--primary-usb-stream-and-the-next-comparison) correct the USB SID attribution. The following entries are chronological checkpoints.
+**November 8 checkpoint.** The legacy-base SCM trial reached 6.18 diagnostic userspace, SMMU probe and gadget binding. The phone reset before host enumeration was observed and was restored to the stock logging reader. The [November 9 source review and next comparison](#2026-11-09-review--primary-usb-stream-and-the-next-comparison) correct the USB SID attribution. The following entries are chronological checkpoints.
 
 ## Platform revision
 
@@ -297,4 +297,4 @@ After the soak, `usb_burst_errors.py` reproduced a short uncapped response (261,
 
 The final live state at uptime **667.47 seconds** still has CPUs `0-7`, configured high-speed USB and an advancing DWC3 IRQ counter (57,147). A bounded dmesg scan found no matches for kernel panic, BUG, unhandled fault, SError or RCU stall. The existing two GPU clock-off warnings remain, and no handset block filesystem was mounted. This is a working RAM-only diagnostic baseline with inherited firmware state and clock/power preservation flags, not full hardware, suspend, storage or Android qualification.
 
-User-assisted double-volume entry and a live ACM reboot recovered EDL before the 720-second fallback. Complete pre-restore trial hashes and post-restore reader/original-DTBO hashes matched. Stock Android boot completion, root capture and a final direct check (`4.19.157-perf+`, `sys.boot_completed=1`) passed. All experiment runners have finished. The phone is restored to the original stock-kernel logging reader. The next isolated platform controls are documented in the [watchdog/UFS/PHY/TLMM audit](POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md); GSI remains deferred.
+User-assisted double-volume entry and a live ACM reboot recovered EDL before the 720-second fallback. Complete pre-restore trial hashes and post-restore reader/original-DTBO hashes matched. Stock Android boot completion, root capture and a final direct check (`4.19.157-perf+`, `sys.boot_completed=1`) passed. All experiment runners have finished. The phone is restored to the original stock-kernel logging reader. The next isolated platform controls are documented in the [watchdog/UFS/PHY/TLMM audit](POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md). That November 9 profile exercised the diagnostic ramdisk.

@@ -2,13 +2,13 @@
 
 The execution path is GitHub Actions for kernel/driver builds, a selected official Google Android 17 ARM64 GSI for the system layer, and the locally connected RMX2072 for flashing and hardware tests. A local full AOSP build host is not required for this phase.
 
-**November 8 runtime milestone:** Actions-built 6.18.32 reached diagnostic userspace with the logging-adjusted stock DTB bundle and original DTBO. The recovered console records eight CPUs activated, diagnostic init, no UDC, and an explicit EDL restart at 90.74 seconds. Stock reader recovery and Android boot completion passed afterwards. This is a partial kernel boot, not Android/GSI support or ten-minute stability. Current evidence and remaining gates are in [independent kernel bring-up](INDEPENDENT_KERNEL_BRINGUP.md) and the [runtime record](../build/device/handoff-runtime-2026-11-08.json). The [development plan](../plan.md) tracks the later GSI trials and current acceptance criteria.
+The November 8 [runtime record](../build/device/handoff-runtime-2026-11-08.json) established eight CPUs and diagnostic init. The November 11 [handset trials](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) reached Android PID 1 at `selinux_setup` with the GSI on USB and the project vendor in RAM. The [M1 work list](../plan.md#next-work-on-m1) starts at the kernel policy write and the internal UFS layout.
 
-## Legacy build gate
+## Legacy comparison build
 
 `Legacy Kernel Build` is manually triggered. Run `stage=config` first; use `stage=kernel` after configuration validation.
 
-Configuration validation passed in [run 42224170969](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224170969). The first full build ([run 42224859055](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224859055)) failed on one Clang `-Werror,-Wmisleading-indentation` diagnostic in `goodix_common.c:277`. A minimal whitespace-only patch aligns the unconditional statement; warnings remain enabled. The build applies the checked-in patch with `git apply --check` and records its SHA-256. A corrected full run is required before claiming success.
+Configuration validation passed in [run 42224170969](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224170969). The first full build ([run 42224859055](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42224859055)) failed on one Clang `-Werror,-Wmisleading-indentation` diagnostic in `goodix_common.c:277`. A minimal whitespace-only patch aligns the unconditional statement; warnings remain enabled. The build applies the checked-in patch with `git apply --check` and records its SHA-256. The later [full retry](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866) passed.
 
 Inputs are fixed by `sources/SOURCE_LOCK.json` and `build/legacy-kernel.json`. The selected community 4.19.325 source has the complete Techpack reference, while the official Q/S trees contain Techpack stubs. This is a candidate build, not a proven F.20 source match. The actual handset runs 4.19.157-perf+.
 
@@ -24,11 +24,11 @@ The existing `experiment/gki-6.18-repo-mirror` branch has already passed a compl
 
 The kernel/common pin already resolves to 6.18.32. The main workflow now locks all 58 manifest projects using the resolved snapshot from that successful run, verifies every checkout and adds a strict NQ-NCI DDK compilation gate. A kernel/common SHA alone is insufficient. The default manifest includes extra device/test projects; evaluate its groups and workspace footprint on the Actions runner rather than downloading everything blindly.
 
-The generic ACK baseline is built. Next add a separate KGSL compile/KMI probe and introduce the RMX2072 boot/DTS/UFS/USB changes. A generic GKI Image is not an RMX2072 boot image. The existing boot header is v2 with an embedded DTB bundle; vendor_boot/init_boot are absent from the physical GPT.
+The generic ACK distribution and the separate RMX2072 platform kernel have both built. The latter has run Android first-stage init. The device uses a v2 boot header with an embedded DTB bundle. Its GPT has no vendor_boot or init_boot partition. KGSL compile/KMI work is an optional graphics comparison.
 
 ## GSI gate
 
-The system target is the official Android 17 QPR1 ARM64 + GMS image CP3A.260905.010 in [the GSI lock](../build/gsi.json). Use the 6.18 kernel and a project-built vendor for M1. Build a compatible boot-v2 ramdisk, capture the Android init handoff and validate the UFS-backed system. The [GSI bring-up guide](GSI_BUILD_GUIDE.md) covers the sequence and measured capacity constraint.
+The [locked GSI](../build/gsi.json) and the project vendor are the M1 system pair. Use the [USB/RAM fixture](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/docs/ANDROID17_USB_MOUNT.md#project-vendor-and-pid-1-policy-setup) to observe policy installation and second-stage init, and qualify local storage and verified mounts for the cold boot. See the [GSI guide](GSI_BUILD_GUIDE.md).
 
 ## Evidence and synchronization
 
@@ -36,13 +36,15 @@ Commit project-authored code/configuration, source pins and redacted findings pr
 
 Record build-tested, boot-tested and hardware-tested independently. Update this document and the compatibility matrix after each actual run.
 
+Push the code, process notes and reviewed result to the active PR branch when each trial finishes, including a failed trial that changes the next step. Keep the trial ID, boot ID, image hashes, first unmet step, available CI run and restoration outcome together. Verify the remote commit and include the PR or commit link in the handoff. For M1, see the [handset records](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) and [host replay procedure](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/docs/ANDROID17_USB_MOUNT.md#host-package-and-record-replay).
+
 ## Selected device trees
 
 A read-only local parse of the original F.20 boot/DTBO backups found 25 concatenated boot DTBs and 18 DTBO entries. The live phone reports `ro.boot.dtb_idx=12` and `ro.boot.dtbo_idx=17`; selected root selectors and blob hashes are in `build/device/stock-dt-selection.json`. Boot entry 12 identifies Kona v2.1 (SoC 356, revision 0x20001); overlay 17 identifies Kona MTP with board ID 0x10008. These indices identify the stock selection; they do not establish 6.18 bindings or driver compatibility. Direct live DT filesystem reads remain denied.
 
-The corrected legacy run [42226376116](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226376116) passed the Goodix compile point, then failed in qcacld with `/bin/sh: Argument list too long`. The codeload root embeds the 40-character commit in every repeated include path. The build now renames that extracted root to a short workspace path before configuring; it keeps Wi-Fi enabled and retains the source/patch hashes. This change needs a new full run.
+The corrected legacy run [42226376116](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226376116) passed the Goodix compile point, then failed in qcacld with `/bin/sh: Argument list too long`. The codeload root embeds the 40-character commit in every repeated include path. The build now renames that extracted root to a short workspace path before configuring; it keeps Wi-Fi enabled and retains the source/patch hashes. The next full retry used the shortened path.
 
-The shortened-path full legacy retry is [run 42228243866](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), currently pending a final build result. The main locked GKI + strict DDK run is [42226214281](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281).
+The shortened-path full legacy retry is [run 42228243866](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866), which passed. The main locked GKI + strict DDK run is [42226214281](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42226214281).
 
 ## Completed locked GKI + strict NFC milestone
 
@@ -52,7 +54,7 @@ The shortened-path full legacy retry is [run 42228243866](https://github.com/xxb
 
 The shortened-path legacy full build [42228243866](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866) passed and produced a 27,314,415-byte artifact. This is build evidence, not a stock-source match or physical boot result.
 
-`SM8250 6.18 Platform Bootstrap` is the next compile gate. It uses the same 58-project dependency lock, a standalone Kleaf kernel target and a checked-in SM8250 pre-defconfig fragment. Pinctrl, clock/RPMh, SPMI/regulators, interconnect, SMMU, UFS/PHY and USB/I2C/UART support are requested built-in to match the boot-v2 early-driver requirement. Kconfig must preserve every requested assignment. This is a custom platform configuration and is not represented as an unchanged GKI-certified kernel. It produces Image/modules/config/symvers, not an RMX2072 boot image; board DTS and display/vendor ABI work remain necessary.
+`SM8250 6.18 Platform Bootstrap` builds the board kernel separately from the generic distribution. It uses the same 58-project dependency lock, a standalone Kleaf kernel target and a checked-in SM8250 pre-defconfig fragment. Pinctrl, clock/RPMh, SPMI/regulators, interconnect, SMMU, UFS/PHY and USB/I2C/UART support are requested built-in to match the boot-v2 early-driver requirement. Kconfig must preserve every requested assignment. This is a custom platform configuration and is not represented as an unchanged GKI-certified kernel. It produces Image/modules/config/symvers, not an RMX2072 boot image; board DTS and display/vendor ABI work remain necessary.
 
 ## Runtime diagnostics and first board DT
 
@@ -70,7 +72,7 @@ The standalone platform build [42233938138](https://github.com/xxbo/RMX2072-AOSP
 
 A locally built static-BusyBox initramfs configures a CDC ACM USB serial shell and mounts only proc/sysfs/devtmpfs-or-tmpfs/configfs. It never mounts a block filesystem. Its newc format was checked by BusyBox on the handset. The diagnostic boot-v2 package preserves the stock load offsets and OS/patch header fields, uses the verified platform Image plus the compiled USB diagnostic DTB, and fits the original 96 MiB boot partition. A matching no-op DTBO is padded to the original 24 MiB partition size. Both boot and DTBO have paired readback and restore recipes prepared locally. Device boot has not yet been attempted at this checkpoint.
 
-This step proves the kernel/USB/logging foundation before Android integration. Display/HWC/KGSL compatibility and the official Google GSI's FCM/VNDK/capacity gaps remain on the desktop critical path. No USB diagnostic shell result should be labeled an Android desktop result.
+This diagnostic established the logging and USB baseline. M3 uses the project graphics stack and physical input tests. Capacity measurements and F.20 interface comparisons are recorded separately in the [GSI preflight](GSI_PREFLIGHT_2026-11-06.md).
 
 ## First physical 6.18 attempt: bootloader rejection and recovery pending
 
@@ -96,7 +98,7 @@ After that physical-state confirmation, Firehose reset completed successfully. A
 
 The user authorized continuing physical experiments after successful recovery. Preflight confirmed unlocked state, 97% battery, matching prepared image hashes, all four AVB format tests passing, and byte-for-byte reconstruction of the previously booted Magisk image using the same envelope-retention procedure.
 
-The subsequent execution scope is independent 6.18 kernel stability, not GSI integration. The next platform revision requires `HWSPINLOCK_QCOM` and `QCOM_WDT` built-in. The former supplies the TCSR mutex referenced by SMEM; the latter binds the inherited APSS watchdog node and can handle a watchdog already running at firmware handoff. Neither omission has been proven to cause the previous restart loop. Existing SCM, gadget/ACM and pstore requirements are made explicit in the fragment, and CI publishes the actual configuration audit after checking every assignment. Keep the current USB-only board DTS unchanged for this first dependency comparison; no Android/GSI/super integration is part of this revision.
+The follow-up to this November 7 trial focused on independent kernel stability. That revision required `HWSPINLOCK_QCOM` and `QCOM_WDT` built-in. The former supplies the TCSR mutex referenced by SMEM; the latter binds the inherited APSS watchdog node and can handle a watchdog already running at firmware handoff. Neither omission has been proven to cause the previous restart loop. Existing SCM, gadget/ACM and pstore requirements are made explicit in the fragment, and CI publishes the actual configuration audit after checking every assignment. Keep the current USB-only board DTS unchanged for this first dependency comparison; no Android/GSI/super integration is part of this revision.
 
 ADB software reboot into EDL succeeded without another hardware shorting operation. Full pre-write boot and DTBO reads matched the restored original images. The corrected diagnostic boot (`a9fa28ecdb081ba59cfeb06eadec2ce86737b61012b1cdf8e7f7d73c91267dcb`) and DTBO (`513e851e3540370b9e263d72e904861b102f16b3c5a1bea2e059b00cc1344589`) were then written; both complete post-write readbacks matched those hashes. Firehose reset completed. USB diagnostic enumeration and the user's screen observation are pending at this checkpoint. No other partition was written.
 

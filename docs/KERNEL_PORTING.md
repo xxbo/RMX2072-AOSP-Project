@@ -6,11 +6,11 @@ Use the official RMX2072 Android Q 4.19.81 source as the device-specific legacy 
 
 The 4.19.325 tree is the newest inspected community reference, not a proven RMX2072 build. Its current shared device-tree proprietary-file list is sourced from RMX3371. Its KONA/Oplus configuration is useful for understanding downstream implementation and build wiring, but must not be copied as the final RMX2072 configuration.
 
-The modern target is the pinned Android 17 ACK/GKI 6.18 reference. It is a research baseline, not a device-ready kernel.
+Build the board kernel against the pinned Android 17 ACK 6.18 source. Use the warm-tested G3 board profile for driver regressions while M2 develops the source-built DTB/DTBO. [Current acceptance](../plan.md#milestones-and-acceptance)
 
 ## Staged approach
 
-1. Reproduce a known-compatible kernel/device build before changing architecture.
+1. Reproduce the current 6.18 diagnostic on the same board profile before comparing driver changes. Retain the 4.19 builds for source and recovery comparisons.
 2. Capture exact RMX2072 firmware, DTB/DTBO, partition/boot metadata and recovery facts.
 3. Compare official and community source trees by subsystem; trace Kconfig, Makefiles, DTS bindings, firmware and userspace contracts.
 4. Map each driver to upstream Linux/ACK implementations and classify it as reuse, DTS/config adaptation, vendor-delta port, ABI bridge or userspace/firmware integration.
@@ -35,7 +35,7 @@ The modern target is the pinned Android 17 ACK/GKI 6.18 reference. It is a resea
 | 0 — Device facts | Exact firmware, component IDs, DTB/DTBO, partition/boot metadata and recovery baseline | No unresolved board/vendor pairing assumptions |
 | 1 — Platform base | Kona DTS, clocks/resets, PMIC/regulators, pinctrl, interconnect, LLCC, SMMU, UFS, USB/ADB | Stable boot, storage, ADB and clean critical probe logs |
 | 2 — Memory, display and touch | DMA-BUF/secure heaps, DRM/MSM, panel and GT9886 | Visible UI, brightness, touch and suspend/resume |
-| 3 — GPU | KGSL-vs-DRM decision, A650 firmware/GMU, KMI and memory path | GPU submission and graphics userspace pass |
+| 3 — GPU | DRM/MSM A650, firmware/GMU, DMA-BUF and source-built graphics userspace | GPU submission and graphics userspace pass |
 | 4 — Qualcomm IPC and connectivity | SMEM/GLINK/QRTR/QMI/remoteproc/IPA, modem, WLAN and Bluetooth | Calls/data/Wi-Fi/BT and subsystem recovery |
 | 5 — Power, thermal and audio | Charger/VOOC, fuel gauge, TSENS/BCL/LMH, Q6/ASoC | Safe charging, thermal control and audio route tests |
 | 6 — Camera and remaining peripherals | Spectra, sensors, fingerprint, NFC, haptics and secure services | Per-component hardware tests with retained logs |
@@ -48,7 +48,7 @@ Do not begin the full camera or audio migration before the memory, IOMMU and Qua
 - Do not equate an upstream directory or Kconfig symbol with device support.
 - Do not copy a complete 4.19 downstream subsystem into GKI without tracing its dependencies and API/KMI surface.
 - Treat vendor kernel modules, proprietary userspace libraries, firmware and HALs as separate compatibility surfaces.
-- Keep the existing KGSL userspace ABI in view: upstream DRM/MSM with Adreno 650 support is not a drop-in replacement for a vendor stack expecting KGSL nodes/ioctls.
+- Prototype upstream DRM/MSM with a source-built allocator and composer for M3. Use the legacy KGSL UAPI to interpret F.20 captures.
 - Treat ION-to-DMA-BUF as a cross-subsystem ABI migration affecting GPU, camera, audio and video.
 - Treat camera Spectra, Q6 audio, modem/IPA, secure memory and OPlus charging as integrated stacks, not single C files.
 - Do not import RMX3371 proprietary blobs or assume the shared SM8250 config is the RMX2072 final config.
@@ -72,4 +72,4 @@ The completed run #8 configuration is not a Kona board configuration: it disable
 
 The pinned ACK source does provide `sm8250.dtsi` and HDK/MTP board examples, but its qcom DTS directory has no RMX2072/Realme board file. Those reference bindings need comparison with the selected stock DTB 12 / DTBO 17. The stock embedded DTB bundle is not automatically compatible with upstream 6.18 bindings.
 
-The SM8250 bootstrap now supplies an early-boot platform configuration for RAM-only diagnostics. Primary USB SID0 enables host ACM communication and has passed a 606-second paced transfer test. Uncapped burst short reads remain unresolved. Watchdog, UFS/PHY, production clock/power handling and later module loading still need individual validation; see the [dependency audit](POST_USB_PLATFORM_DEPENDENCIES_2026-11-09.md). Do not mix 4.19 modules into the 6.18 build. A full generic distribution can pass while board requirements remain unresolved.
+The SM8250 platform kernel passed paced SID0 USB and warm, read-only G3 UFS tests. The APSS watchdog was exercised on a separate diagnostic boot. Uncapped USB transfers, cold storage initialization, production power handling and later module loading still need validation. Run only modules built for the selected 6.18 configuration. [Driver and handset evidence](COMPATIBILITY_MATRIX.md) · [Watchdog trial](https://github.com/xxbo/RMX2072-AOSP-Project/pull/2)

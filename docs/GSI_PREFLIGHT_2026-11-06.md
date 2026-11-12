@@ -31,6 +31,8 @@ These steps document the F.20 compatibility investigation. The [current roadmap]
 1. Obtain a host libvintf checker matching this Android release and run it with explicit GSI system plus captured stock vendor/odm mappings and recorded boot properties.
 2. Resolve VNDK 30 availability and system_ext mounting behavior using the actual boot path.
 3. Design and review a capacity/recovery plan for the logical partition layout, or validate a compatible DSU path that avoids resizing super.
-4. Only then create device-specific flashing commands and collect first-boot logs. Keep the stock kernel for the first system-layer trial; 6.18 board bring-up remains a separate test.
+4. Only then create device-specific flashing commands and collect first-boot logs. The proposed November 6 comparison used the stock kernel. The subsequent target-system trials used the project 6.18 kernel.
 
 No system partition, logical partition size, AVB setting or boot image was changed during this preflight.
+
+On November 10 the GSI ran its own toybox from USB-backed dm-verity. On November 11 Android PID 1 mounted the GSI and project vendor. The measured deficit above still applies to the specified F.20 layout. [Handset journal](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/docs/ANDROID17_USB_MOUNT.md) · [Current M1 work](../plan.md#next-work-on-m1)

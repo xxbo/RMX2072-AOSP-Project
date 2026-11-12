@@ -1,5 +1,7 @@
 # Platform work after USB diagnostics
 
+This binding study started on November 9 with the RAM diagnostic profile. For subsequent watchdog, UFS and Android results, see the [hardware checkpoints](../plan.md#verified-starting-point) and [current M1 work](../plan.md#next-work-on-m1).
+
 This is a read-only comparison of the captured effective vendor tree, the pinned ACK compiled SM8250 tree and the downloaded bootstrap configuration. It does not activate storage, change voltages or establish Android compatibility. The working USB profile keeps original DTBO and the native entry wrapper; it still uses `clk_ignore_unused`, `pd_ignore_unused` and permissive firmware dependency linking.
 
 | Dependency | Captured legacy state | Pinned modern binding / next validation |

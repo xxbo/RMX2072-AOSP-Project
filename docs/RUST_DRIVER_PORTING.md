@@ -4,7 +4,7 @@
 
 Rust is the preferred language for newly written RMX2072 drivers, provided the required subsystem APIs are available in the pinned Android Common Kernel source. Existing C drivers remain reference implementations for hardware sequencing, userspace ABI and vendor behavior; they are not to be mechanically translated line by line.
 
-The first objective is to build the complete pinned GKI 6.18 ARM64 distribution with its official Kleaf toolchain. The GKI arm64 defconfig contains CONFIG_RUST=y. The build manifest also syncs the matching Rust toolchain and Kleaf dependencies.
+The pinned 6.18 ARM64 distribution has built with its official Kleaf toolchain. The manifest syncs the matching Rust toolchain, and the generic arm64 defconfig has CONFIG_RUST=y. The Rust NFC prototype belongs to the peripheral workstream. M1–M3 can use working upstream drivers in their existing language. [Handset milestones](../plan.md#milestones-and-acceptance)
 
 ## Important maturity qualification
 
@@ -16,7 +16,7 @@ For every driver, inspect the exact pinned source tree under common/rust/kernel/
 
 The Android Common Kernel source line has Rust abstractions for I2C driver registration, regulator state management and miscdevice registration/file operations in its Rust kernel crate. These are promising building blocks for NQ-NCI: I2C transport, optional regulator control and the existing /dev/nq-nci userspace endpoint may be implementable mostly in Rust.
 
-The exact pinned release tag remains the authority. The first Kleaf build should archive an inventory of the modules exported by common/rust/kernel/lib.rs and the corresponding source files before the Rust driver skeleton is written. In particular, GPIO consumer access and the required IRQ/wakeup model need an exact-source check; a small C shim may be the safest initial bridge for GPIO lines and IRQ plumbing.
+The exact pinned release tag remains the authority. For the Rust prototype, archive an inventory of the modules exported by common/rust/kernel/lib.rs and the corresponding source files before the Rust driver skeleton is written. In particular, GPIO consumer access and the required IRQ/wakeup model need an exact-source check; a small C shim may be the safest initial bridge for GPIO lines and IRQ plumbing.
 
 ## Expected architecture
 
