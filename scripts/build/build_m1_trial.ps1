@@ -6,7 +6,8 @@ param(
     [Parameter(Mandatory)][string]$NdkDirectory,
     [Parameter(Mandatory)][string]$OutputDirectory,
     [Parameter(Mandatory)][ValidatePattern('^ufs-host-g3-gsi17-firststage-[a-zA-Z0-9-]+$')][string]$Trial,
-    [string]$ProjectVendor
+    [string]$ProjectVendor,
+    [switch]$TraceInitFault
 )
 $ErrorActionPreference = 'Stop'
 $work = (Resolve-Path -LiteralPath $WorkDirectory).Path
@@ -49,6 +50,7 @@ try {
         $timer = '410'
         $vendorArgs = @('--project-vendor',(Resolve-Path -LiteralPath $ProjectVendor).Path)
     }
+    if ($TraceInitFault) { $vendorArgs += '--trace-init-fault' }
     $rd = @("$PSScriptRoot/build_diag_ramdisk.py",'--busybox',"$prior/control-tools/busybox",
         '--reboot-helper',"$prior/control-tools/reboot-edl",'--entry-carrier',"$prior/control-tools/entry-carry",
         '--gadget-bind-delay','20','--return-to-edl-after',$timer,'--trial-id',$Trial,'--ufs-host-g3-test',

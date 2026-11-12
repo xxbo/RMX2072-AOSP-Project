@@ -23,6 +23,8 @@
 
 static int events = -1, kmsg = -1, kernel_log = -1;
 
+static void start_fault_trace(void);
+
 /* One write per record, on the same device-to-host stream as GSI17 READ. */
 static void report(const char *fmt, ...) {
     char line[896] = "M1EVENT ";
@@ -41,6 +43,25 @@ static void fail(const char *name) {
     /* PID 1 exiting would panic the kernel. The recovery timer is a sibling. */
     if (getpid() == PID_ONE) for (;;) pause();
     exit(1);
+}
+
+/* Capture the mapped file offsets before init installs its production policy. */
+static void start_fault_trace(void) {
+    if (access("/m1-trace-fault", F_OK)) return;
+    FILE *maps = fopen("/proc/1/maps", "r");
+    if (!maps) fail("init mappings");
+    char row[640];
+    while (fgets(row, sizeof(row), maps)) {
+        if (strstr(row, " /")) {
+            row[strcspn(row, "\n")] = 0;
+            report("map=%s", row);
+        }
+    }
+    fclose(maps);
+    int fd = open("/run/m1/trace/tracing_on", O_WRONLY | O_CLOEXEC);
+    if (fd < 0 || write(fd, "1", 1) != 1) fail("start fault trace");
+    close(fd);
+    report("fault_trace=armed");
 }
 
 static void handoff(void) {
@@ -203,6 +224,7 @@ static void observe(int vendor_trial) {
                     argument(info.entry.args[1], path, sizeof(path));
                     if (!strcmp(path, "/sys/fs/selinux/load") || !strcmp(path, "/selinux/load")) {
                         if (vendor_trial != 2) hold("policy-load-open");
+                        start_fault_trace();
                         int timeout;
                         watchdog = open("/run/m1/watchdog", O_WRONLY | O_CLOEXEC);
                         if (watchdog < 0 || ioctl(watchdog, WDIOC_GETTIMEOUT, &timeout) < 0)

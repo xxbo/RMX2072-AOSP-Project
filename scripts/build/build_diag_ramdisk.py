@@ -48,6 +48,7 @@ def main():
     p.add_argument('--android-first-stage', type=pathlib.Path, help='Pinned API 37 generic ramdisk /init')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
     p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
+    p.add_argument('--trace-init-fault', action='store_true', help='Trace PID 1 file faults and failed block completions')
     p.add_argument('--gsi-init-probe', type=pathlib.Path,
                    help='Include the Android 17 and F.20 combined policy diagnostic')
     p.add_argument('--return-to-edl-after', type=int)
@@ -59,6 +60,8 @@ def main():
     a = p.parse_args()
     if a.project_vendor and not a.android_first_stage:
         p.error('The project vendor requires the Android first-stage profile')
+    if a.trace_init_fault and not (a.project_vendor and (a.trial_id or '').startswith('ufs-host-g3-gsi17-firststage-vendor-load-')):
+        p.error('Fault tracing requires a policy-install trial')
     if bool(a.android_first_stage) != bool(a.first_stage_witness) or (a.android_first_stage and
             not (a.gsi_usb_reader and a.return_to_edl_after and (a.trial_id or '').startswith('ufs-host-g3-gsi17-firststage-'))):
         p.error('First-stage requires the init, observer, GSI reader, recovery timer and firststage trial ID')
@@ -149,6 +152,8 @@ def main():
             add('bin/first-stage-witness', 0o100755, witness)
             stage_script = (root/'scripts/device_audit/first_stage_mount.sh').read_bytes().replace(b'\r\n', b'\n')
             add('bin/first-stage-mount', 0o100755, stage_script)
+            if a.trace_init_fault:
+                add('m1-trace-fault', 0o100444, b'1\n')
             if a.project_vendor:
                 info = json.loads((a.project_vendor/'vendor.json').read_text())
                 vendor = (a.project_vendor/'vendor.img').read_bytes()
