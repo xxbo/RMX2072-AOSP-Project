@@ -1,0 +1,419 @@
+{
+  "trials": [
+    {
+      "trial": "ufs-host-g3-gsi17-firststage-vendor-load-03",
+      "boot_sha256": "9498f1db82a85de496ccdebffc715943b1ab3b9cc52b19a4335a99a02784cebf",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "fixture_rc": 1,
+      "phase": "dmsetup before PID 1 handoff",
+      "error": "Please specify both major number and minor number.",
+      "usb": {
+        "requests": 1,
+        "bytes": 4096,
+        "data_bytes": 0,
+        "tree_bytes": 0
+      },
+      "recovery": {
+        "status": "PASS",
+        "build": "RMX2072_11_F.20",
+        "boot_id": "3792ebe6-4fae-4100-af84-7165b0eb06a3",
+        "sys_boot_completed": 1,
+        "kernel": "4.19.157-perf+",
+        "readbacks": {
+          "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "host_local_events": [
+          {
+            "at": "2026-11-12T22:54:19.359826",
+            "event": "enter: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-12T22:54:22.475955",
+            "event": "before: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:54:28.109540",
+            "event": "candidate: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:54:28.110539",
+            "event": "candidate reset"
+          },
+          {
+            "at": "2026-11-12T22:55:03.980430",
+            "event": "return: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-12T22:55:07.150027",
+            "event": "return-read: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:55:12.791477",
+            "event": "restored: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:55:12.951688",
+            "event": "original reader reset"
+          },
+          {
+            "at": "2026-11-12T22:55:41.675276",
+            "event": "stock Android boot completed"
+          },
+          {
+            "at": "2026-11-12T22:55:45.300949",
+            "event": "stock root evidence saved"
+          }
+        ]
+      }
+    },
+    {
+      "trial": "ufs-host-g3-gsi17-firststage-vendor-load-04",
+      "boot_id": "d519bb88-39d7-4990-8c96-53e69ae060ad",
+      "control_trial": "ufs-host-g3-gsi17-firststage-vendor-02",
+      "control_commit": "da4385b38212ea8f84307f672a741da77172ecc5",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "vendor_image_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+      "first_stage_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+      "gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "boot_sha256": "d02455f880ab07aa55bbf28e9f9298cbba222a13d5f4fb7896d8834465c86511",
+      "ramdisk_sha256": "b19165b12d65451f6a974c4a109bf5050194a4c89a2e1fa53d4a52fce9a4d03c",
+      "witness_sha256": "6353cef23d48202fe1334d7242a27498b48793b5002c462659add0be42244000",
+      "live_transcript_sha256": "fa1370bf1f61f29b96039af6fa9c96c4e3371a7f52f44712a08b1c2ff9c0204a",
+      "pstore_excerpt_sha256": "b360c88f3c253566e331f1f4983ff081c4ef0dee085b8994647a88b0c59f51ee",
+      "usb": {
+        "requests": 2,
+        "bytes": 8192,
+        "data_bytes": 4096,
+        "tree_bytes": 0
+      },
+      "observations": [
+        "last_block_sha256=62243764641576fdd73e9ca12f4d7abc212cbe187a7fc3342e8c692c8fbf6b62",
+        "seed_backing=254:2 ram=7:1 sectors=37136 ranges_sha256=3c95636f28f0ca750144cbe98538b25c6323350b9dde0830a74917662c87754e",
+        "source_table=0 7721120 user",
+        "verity_table=0 7599128 verity 1 254:2 254:2 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "boot_id=d519bb88-39d7-4990-8c96-53e69ae060ad",
+        "init_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+        "gsi_device=dm-1 dev=254:1",
+        "vendor_device=loop0 dev=7:0 image_sha256=8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+        "disk=sda ro=1",
+        "disk=sdb ro=1",
+        "disk=sdc ro=1",
+        "disk=sdd ro=1",
+        "disk=sde ro=1",
+        "disk=sdf ro=1",
+        "exec_pid=1 path=/init staged_inode_match=1",
+        "mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0",
+        "mount_pid=1 source=devpts target=/dev/pts fs=devpts flags=0 rc=0",
+        "mount_pid=1 source=proc target=/proc fs=proc flags=0 rc=0",
+        "mount_pid=1 source=sysfs target=/sys fs=sysfs flags=0 rc=0",
+        "mount_pid=1 source=selinuxfs target=/sys/fs/selinux fs=selinuxfs flags=0 rc=0",
+        "mount_pid=1 source=tmpfs target=/mnt fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/debug_ramdisk fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/second_stage_resources fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev target=/system/dev fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/proc target=/system/proc fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/sys target=/system/sys fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/mnt target=/system/mnt fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/debug_ramdisk target=/system/debug_ramdisk fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/second_stage_resources target=/system/second_stage_resources fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/system target=/ fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/dev/block/loop0 target=/vendor fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev/remount target=/dev/remount fs=(null) flags=0x1000 rc=0",
+        "mount_pid=1 source=(null) target=/dev/remount fs=(null) flags=0x40000 rc=0",
+        "exec_pid=1 path=/system/bin/init arg=selinux_setup",
+        "fault_trace=armed",
+        "policy_open_entry path=/sys/fs/selinux/load watchdog_seconds=30",
+        "policy_open_rc=4",
+        "policy_write_entry fd=4 count=703220",
+        "policy_write_rc=703220 count=703220",
+        "enforcing=0",
+        "enforcing=1",
+        "enforce_read_rc=-13"
+      ],
+      "pstore_observations": [
+        "[   30.105806][   T78] audit: type=1404 audit(30.087:5): enforcing=1 old_enforcing=0"
+      ],
+      "results": {
+        "kernel_policy_load": {
+          "status": "PASS",
+          "fd": 4,
+          "bytes_requested": 703220,
+          "syscall_return": 703220,
+          "errno": null
+        },
+        "enforcing": "PASS",
+        "second_stage_exec": "UNOBSERVED",
+        "pid1_exit": null,
+        "android17_adb": "NOT RUN",
+        "disconnected_ufs_boot": "NOT RUN"
+      },
+      "intermediate_diagnostic_boot_id": "4ee2be45-93b6-45b9-a3e4-5387a76c3750",
+      "recovery": {
+        "status": "PASS",
+        "build": "RMX2072_11_F.20",
+        "boot_id": "0699b3d0-8202-43db-bf31-312519da15e5",
+        "sys_boot_completed": 1,
+        "kernel": "4.19.157-perf+",
+        "readbacks": {
+          "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "host_local_events": [
+          {
+            "at": "2026-11-12T22:56:02.005055",
+            "event": "enter: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-12T22:56:05.137279",
+            "event": "before: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:56:10.769028",
+            "event": "candidate: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:56:10.769028",
+            "event": "candidate reset"
+          },
+          {
+            "at": "2026-11-12T22:57:27.228772",
+            "event": "return: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-12T22:57:30.384969",
+            "event": "return-read: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:57:36.061071",
+            "event": "restored: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T22:57:36.224401",
+            "event": "original reader reset"
+          },
+          {
+            "at": "2026-11-12T22:58:05.015538",
+            "event": "stock Android boot completed"
+          },
+          {
+            "at": "2026-11-12T22:58:08.556280",
+            "event": "stock root evidence saved"
+          }
+        ]
+      },
+      "faults_with_matching_io_error": [],
+      "raw_console_sha256": "3ba382331a27f6bc8cf889eb7a527bcc469970aa1b2e319e7403da6fee50dd7b",
+      "host_read_list_sha256": "86ab2da7e239e187c02317f3151c31dd3847dbd8c66f31febae02e17a13171f0",
+      "gsi_seed_sha256": "86a5f4325113b8ba054e5d0ea14e0d389f458fa066afd2ddbfc0621dcd7bf6e2",
+      "gsi_seed_ranges_sha256": "3c95636f28f0ca750144cbe98538b25c6323350b9dde0830a74917662c87754e",
+      "selected_fallback_reads": [
+        {
+          "path": "/system/etc/selinux/plat_file_contexts",
+          "inode": 1007,
+          "file_offset": 0,
+          "gsi_sector": 715920,
+          "kernel_io_error": false,
+          "host_request": true
+        }
+      ],
+      "kernel_observations": []
+    },
+    {
+      "trial": "ufs-host-g3-gsi17-firststage-vendor-load-05",
+      "boot_id": "b5e32a49-9311-4839-ad8a-dcf1b95d8e71",
+      "control_trial": "ufs-host-g3-gsi17-firststage-vendor-02",
+      "control_commit": "da4385b38212ea8f84307f672a741da77172ecc5",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "vendor_image_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+      "first_stage_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+      "gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "boot_sha256": "f1938589f7b226c8ad0a7d437f0cfa98f378776b5d9d85f86004e9a322e6e13b",
+      "ramdisk_sha256": "835127a1f90beb0be4cb5f8e26450a068236e328d78827ef9cef31361d655b42",
+      "witness_sha256": "ec2f5c8553f4dfe398ee26c5371d047b2395b216fc1ce611d5a2060a57ec1ad2",
+      "live_transcript_sha256": "750a268ec43653f6573efd20a2afdb0be4334ddfdf13e6aca86769aef64e9cbe",
+      "pstore_excerpt_sha256": "105caf46a402b961ed7ab7ebb498c8326a12754bedb2c518a5bcac79ad511f32",
+      "usb": {
+        "requests": 2,
+        "bytes": 8192,
+        "data_bytes": 0,
+        "tree_bytes": 4096
+      },
+      "observations": [
+        "last_block_sha256=62243764641576fdd73e9ca12f4d7abc212cbe187a7fc3342e8c692c8fbf6b62",
+        "seed_backing=254:2 ram=7:1 sectors=37696 ranges_sha256=b8a8664a3a15cd66039944684a7a7351a272cded694343dac1b42e30647ce871",
+        "source_table=0 7721120 user",
+        "verity_table=0 7599128 verity 1 254:2 254:2 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "boot_id=b5e32a49-9311-4839-ad8a-dcf1b95d8e71",
+        "init_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+        "gsi_device=dm-1 dev=254:1",
+        "vendor_device=loop0 dev=7:0 image_sha256=8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+        "disk=sda ro=1",
+        "disk=sdb ro=1",
+        "disk=sdc ro=1",
+        "disk=sdd ro=1",
+        "disk=sde ro=1",
+        "disk=sdf ro=1",
+        "exec_pid=1 path=/init staged_inode_match=1",
+        "mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0",
+        "mount_pid=1 source=devpts target=/dev/pts fs=devpts flags=0 rc=0",
+        "mount_pid=1 source=proc target=/proc fs=proc flags=0 rc=0",
+        "mount_pid=1 source=sysfs target=/sys fs=sysfs flags=0 rc=0",
+        "mount_pid=1 source=selinuxfs target=/sys/fs/selinux fs=selinuxfs flags=0 rc=0",
+        "mount_pid=1 source=tmpfs target=/mnt fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/debug_ramdisk fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/second_stage_resources fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev target=/system/dev fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/proc target=/system/proc fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/sys target=/system/sys fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/mnt target=/system/mnt fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/debug_ramdisk target=/system/debug_ramdisk fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/second_stage_resources target=/system/second_stage_resources fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/system target=/ fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/dev/block/loop0 target=/vendor fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev/remount target=/dev/remount fs=(null) flags=0x1000 rc=0",
+        "mount_pid=1 source=(null) target=/dev/remount fs=(null) flags=0x40000 rc=0",
+        "exec_pid=1 path=/system/bin/init arg=selinux_setup",
+        "exec_audit_rc=0",
+        "fault_trace=armed",
+        "policy_open_entry path=/sys/fs/selinux/load watchdog_seconds=30",
+        "policy_open_rc=4",
+        "policy_write_entry fd=4 count=703220",
+        "policy_write_rc=703220 count=703220",
+        "enforcing=0",
+        "enforce_read_rc=-13",
+        "post_install_window=end"
+      ],
+      "pstore_observations": [
+        "[   30.465219][   T78] audit: type=1404 audit(30.447:5): enforcing=1 old_enforcing=0",
+        "[   30.535063][   T78] audit: type=1400 audit(30.519:8): avc:  denied  { write } for  pid=717 comm=\"gsi-usb-reader\" path=\"/run/gsi17/backend.log\" dev=\"rootfs\" ino=462 scontext=u:r:kernel:s0 tcontext=u:object_r:rootfs:s0 tclass=file permissive=0"
+      ],
+      "results": {
+        "kernel_policy_load": {
+          "status": "PASS",
+          "fd": 4,
+          "bytes_requested": 703220,
+          "syscall_return": 703220,
+          "errno": null
+        },
+        "enforcing": "PASS",
+        "second_stage_exec": "PASS",
+        "pid1_exit": null,
+        "android17_adb": "NOT RUN",
+        "disconnected_ufs_boot": "NOT RUN"
+      },
+      "intermediate_diagnostic_boot_id": "ec89c640-ceb7-4168-9fb8-95cbc286f400",
+      "recovery": {
+        "status": "PASS",
+        "build": "RMX2072_11_F.20",
+        "boot_id": "cfdbd55a-80e3-4412-ade0-2e71bb052e3d",
+        "sys_boot_completed": 1,
+        "kernel": "4.19.157-perf+",
+        "readbacks": {
+          "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "host_local_events": [
+          {
+            "at": "2026-11-12T23:00:27.805365",
+            "event": "enter: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-12T23:00:30.900892",
+            "event": "before: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T23:00:36.471684",
+            "event": "candidate: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T23:00:36.471684",
+            "event": "candidate reset"
+          },
+          {
+            "at": "2026-11-12T23:02:36.243308",
+            "event": "return: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-12T23:02:39.363769",
+            "event": "return-read: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T23:02:44.981817",
+            "event": "restored: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-12T23:02:45.131665",
+            "event": "original reader reset"
+          },
+          {
+            "at": "2026-11-12T23:03:13.771075",
+            "event": "stock Android boot completed"
+          },
+          {
+            "at": "2026-11-12T23:03:17.544700",
+            "event": "stock root evidence saved"
+          }
+        ]
+      },
+      "faults_with_matching_io_error": [],
+      "raw_console_sha256": "b16cd383e2cc3b1a9a327280fe0b12104fb4e479b57839629fc12efa04fc9efb",
+      "host_read_list_sha256": "42605746b4f7b0b08eb2cbee01ef80347dd635713e87f2b533696172548b7dcb",
+      "gsi_seed_sha256": "54acfc7503eaf65964ad88a4553585bd11ff88cbac7bf473645605e2c3f7cf36",
+      "gsi_seed_ranges_sha256": "b8a8664a3a15cd66039944684a7a7351a272cded694343dac1b42e30647ce871",
+      "selected_fallback_reads": [
+        {
+          "path": "/system/build.prop",
+          "inode": 659,
+          "file_offset": 0,
+          "gsi_sector": 704136,
+          "kernel_io_error": true,
+          "host_request": false
+        }
+      ],
+      "kernel_observations": [
+        "I/O error: sector 704136: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7068096: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7599584: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7657936: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7467888: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7467912: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 256: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 4746608: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 200: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 1048784: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7068144: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7068168: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7068176: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7068184: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 7605120: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "I/O error: sector 707480: no user-space daemon for dm-user/rmx-gsi17-source target",
+        "[    T1] init: init second stage started!"
+      ],
+      "second_stage_messages": [
+        {
+          "seconds": 30.492625,
+          "message": "init second stage started!"
+        },
+        {
+          "seconds": 30.535792,
+          "message": "Couldn't load property file '/system/build.prop': Unable to read file contents: I/O error"
+        },
+        {
+          "seconds": 30.558717,
+          "message": "Unable to read config file '/system/etc/init/hw/init.rc': open() failed: I/O error"
+        },
+        {
+          "seconds": 30.566145,
+          "message": "Failed to read task profiles from /etc/cgroups.json: I/O error"
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,20 @@
 # Android 17 over USB on RMX2072
 
+## PID 1 SIGBUS and second-stage execution
+
+Four warm boots on the same 6.18.32 kernel, G3 tree and vendor 02 image isolated the effect of the GSI backing device. Each boot returned to the F.20 reader. The recovery harness checked the boot and DTBO partitions before the trial, after programming, on return to EDL and after restoration.
+
+| Policy-load trial | Observation |
+| --- | --- |
+| 02, USB only | After enforcing, sector 2215072 on the USB source lost its userspace reader. The verified device returned `-EIO` for the 4 KiB read. PID 1 faulted on inode 2729 at offset 98304 in `/system/lib64/libselinux.so` and received SIGBUS with `si_code=2`. A subsequent instruction fault in `/system/bin/bootstrap/linker64`, inode 266 at offset 1257472, matched another failed read at sector 596848. Both matches use the live PID 1 mappings and extents from the pinned GSI. |
+| 03, RAM setup | The bundled dmsetup required both a major and a minor number. It returned 1 before handoff. The next build supplied the live device-mapper major number. |
+| 04, mapped files in RAM | The host served the GSI footer and the first page of `/system/etc/selinux/plat_file_contexts`. The saved console contains damaged text near the stage transition. The relative PC `0xc56ec` in its PID 1 backtrace resolves to `android::init::SecondStageMain(int, char**)` using the pinned init's `.gnu_debugdata`. This is indirect evidence for this run. |
+| 05, mapped files and context files in RAM | At 30.465219 s the kernel audit recorded `enforcing=1 old_enforcing=0`. At 30.492625 s PID 1 logged `init: init second stage started!`. The first reported failure to read system properties was `/system/build.prop` at 30.535792 s. Its first page maps to sector 704136, where dm-user reported that its reader had exited. Init also reported I/O errors reading `/system/etc/init/hw/init.rc` and `/etc/cgroups.json`. |
+
+The kernel's filemap trace reports a file offset in bytes. The block trace reports sectors of 512 bytes. The comparison packs the original GSI data blocks and their hash-tree ancestors into a read-only loop device. A linear map routes all other reads to the original USB backend. The GSI signer, verity root, policy inputs and executable bytes match the control. Trial 05 packed 4712 blocks (18.4 MiB); it still depended on USB for the rest of the image. The PID 1 log establishes second-stage entry. Android 17 ADB, framework startup and an independent UFS boot require separate tests. [USB fault record](../build/device/gsi17-enforcing-fault-usb-2026-11-12.json) · [RAM comparison and F.20 recoveries](../build/device/gsi17-enforcing-second-stage-2026-11-12.json)
+
+For an offline replay with Python and `dissect.extfs==3.15`, run `scripts/build/build_m1_gsi_seed.py --image SYSTEM_IMG --inputs build/device/gsi17-enforcing-seed-inputs.json --output PRIVATE/seed`. Add `--contexts` to reproduce trial 05. Compare the block and range digests with the handset record. Build the diagnostic package with `build_m1_trial.ps1 -TraceInitFault -GsiBlockSeed PRIVATE/seed` and its usual private input paths. For the USB control, supply only `-TraceInitFault`. Capture with `serve_gsi_usb.py --policy-install`, recover the raw ramoops files from the next diagnostic boot, and run `record_init_fault.py --work PRIVATE --trial TRIAL --vendor VENDOR_DIR --image SYSTEM_IMG --output RECORD_JSON` after F.20 completes. Keep the device's virtual addresses and raw console in the private capture.
+
 ## Kernel policy installation on November 12
 
 On 6.18.32, global PID 1 switched root to the USB-backed Android 17 GSI, mounted the project vendor and executed `/system/bin/init selinux_setup`. This replay used the kernel, G3 DTB bundle, GSI and vendor image from vendor trial 02. PID 1 opened `/sys/fs/selinux/load` as fd 4. Its 703220-byte write returned 703220. The observer detached after the syscall. It read `enforce=0` immediately afterward. At 49.188205 s, the kernel audit recorded `enforcing=1 old_enforcing=0`. [Handset record](../build/device/gsi17-policy-install-2026-11-12.json)

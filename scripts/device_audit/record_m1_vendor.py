@@ -41,7 +41,7 @@ def recovery_events(path):
 
 def verified_recovery(disk, package, pack, restored, boot_id):
     stock_build, completion, stock_id = restored.read_text(encoding='utf-8-sig').split()
-    require(stock_build == 'RMX2072_11_F.20' and completion == '1' and UUID(stock_id) != UUID(boot_id),
+    require(stock_build == 'RMX2072_11_F.20' and completion == '1' and UUID(stock_id) != (UUID(boot_id) if boot_id else None),
             'Missing separate F.20 boot')
     stock = '9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3'
     dtbo = '61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef'
@@ -160,7 +160,9 @@ def install_record(work, trial, vendor_dir, restored):
     require(all(s in rows for s in required) and all(f'disk=sd{c} ro=1' in rows for c in 'abcdef'),
             'Missing source, mount or PID 1 evidence')
     pstore = saved.read_text(encoding='utf-8')
-    require('trial='+trial+' boot_id='+boot_id in pstore and
+    pmsg = (live/'pmsg-ramoops-0').read_bytes() if (live/'pmsg-ramoops-0').is_file() else b''
+    same_boot = 'trial='+trial+' boot_id='+boot_id in pstore or (trial.encode() in pmsg and boot_id.encode() in pmsg)
+    require(same_boot and
             len({UUID(boot_id), UUID(intermediate['boot_id']), UUID(restored.read_text().split()[-1])}) == 3,
             'Wrong previous boot or ambiguous recovery identities')
     # Console RAM on this board can contain damaged bytes. Publish only intact matching spans.
