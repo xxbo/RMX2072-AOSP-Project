@@ -227,7 +227,7 @@ def verify_policy_probe(log):
     return init_policy_observations(log)
 
 
-def serve(console, image, ref, deadline, stats, mode):
+def serve(console, image, ref, deadline, stats, mode, events=None):
     console.write(b"\n/bin/gsi17-mount "+mode+b" >/run/gsi17-run.log 2>&1; rc=$?; printf '\\nGSI17_''EXIT %s\\n' \"$rc\"\n")
     pending = bytearray()
     traces = []
@@ -239,6 +239,10 @@ def serve(console, image, ref, deadline, stats, mode):
             continue
         line = bytes(pending).strip()
         pending.clear()
+        if events is not None and line.startswith(b'M1EVENT '):
+            events.write(line + b'\n')
+            events.flush()
+            continue
         if re.fullmatch(rb'GSI17_EXIT [0-9]+',line):
             return int(line.split()[1]), traces
         match = re.fullmatch(rb'GSI17 READ ([0-9]+) ([0-9]+)',line)
@@ -276,10 +280,13 @@ def main():
     modes.add_argument('--userspace',action='store_true',help='Run the GSI toybox with its bootstrap linker inside the verified root')
     modes.add_argument('--combined',action='store_true',help='Mount F.20 vendor and odm and collect the Android policy probe')
     modes.add_argument('--first-stage',action='store_true',help='Hand PID 1 to Android and capture its mount syscalls')
+    modes.add_argument('--policy-install',action='store_true',help='Capture the Android PID 1 policy write over ACM')
     modes.add_argument('--project-vendor-report',type=Path,help='Verify switched GSI root, project vendor image and SELinux setup')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-[A-Za-z0-9-]+',a.trial):
         p.error('Unexpected trial id')
+    if a.policy_install and not re.fullmatch(r'ufs-host-g3-gsi17-firststage-vendor-load-[0-9]+', a.trial):
+        p.error('Policy installation requires a dedicated vendor-load trial')
     a.output.mkdir(parents=True,exist_ok=False)
     ref = json.loads(REFERENCE.read_text())
     stats = dict(requests=0,bytes=0,data_bytes=0,tree_bytes=0)
@@ -303,6 +310,16 @@ def main():
                     raise ValueError('Unexpected live trial')
                 report['identity'] = ident
                 until = time.monotonic()+ident['timer_seconds']-ident['uptime_seconds']-30
+                if a.policy_install:
+                    with (a.output/'policy-events.txt').open('xb') as events:
+                        try:
+                            rc, report['first_requests'] = serve(console, image, ref, until, stats, b'install', events)
+                        except serial.SerialException as exc:
+                            report.update(status='transport-disconnected', transport_error=str(exc))
+                            return
+                    report.update(status='fixture-exited', fixture_rc=rc)
+                    (a.output/'mount.txt').write_text(transcript(console), encoding='utf-8')
+                    return
                 first_stage = a.first_stage or a.project_vendor_report
                 mode = b'firststage' if first_stage else b'combined' if a.combined else b'userspace' if a.userspace else b'mount'
                 rc, report['first_requests'] = serve(console,image,ref,until,stats,mode)

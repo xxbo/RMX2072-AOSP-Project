@@ -1,0 +1,137 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-vendor-load-01",
+  "boot_id": "10534777-04cc-42e4-9c77-450c06119de2",
+  "control_trial": "ufs-host-g3-gsi17-firststage-vendor-02",
+  "control_commit": "da4385b38212ea8f84307f672a741da77172ecc5",
+  "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+  "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+  "vendor_image_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+  "first_stage_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+  "gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "boot_sha256": "bd8be05f7f91e3d732fcb153bd827f136c864d9537b55725a7ec1f317c3cfac3",
+  "ramdisk_sha256": "2648b00b285b570728878622d435e2bc107ecbdae4e5fa83d600353368e6b8fe",
+  "witness_sha256": "7928a6699e55f6538ba9cc93acef5e5cd702b0c5ce82f1439d9d1e4392303a92",
+  "live_transcript_sha256": "ccfcd99a74077f2805877c37d0d7739e97c3e4366ec443271e6c836a383eba7f",
+  "pstore_excerpt_sha256": "c7b0ff50bfda9dde34d0d2b3aaec61a95649cd1a6ee67b16901b2545fc2da262",
+  "usb": {
+    "requests": 2386,
+    "bytes": 9773056,
+    "data_bytes": 9310208,
+    "tree_bytes": 458752
+  },
+  "observations": [
+    "last_block_sha256=62243764641576fdd73e9ca12f4d7abc212cbe187a7fc3342e8c692c8fbf6b62",
+    "source_table=0 7721120 user",
+    "verity_table=0 7599128 verity 1 254:0 254:0 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+    "boot_id=10534777-04cc-42e4-9c77-450c06119de2",
+    "init_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+    "gsi_device=dm-1 dev=254:1",
+    "vendor_device=loop0 dev=7:0 image_sha256=8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+    "disk=sda ro=1",
+    "disk=sdb ro=1",
+    "disk=sdc ro=1",
+    "disk=sdd ro=1",
+    "disk=sde ro=1",
+    "disk=sdf ro=1",
+    "exec_pid=1 path=/init staged_inode_match=1",
+    "mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0",
+    "mount_pid=1 source=devpts target=/dev/pts fs=devpts flags=0 rc=0",
+    "mount_pid=1 source=proc target=/proc fs=proc flags=0 rc=0",
+    "mount_pid=1 source=sysfs target=/sys fs=sysfs flags=0 rc=0",
+    "mount_pid=1 source=selinuxfs target=/sys/fs/selinux fs=selinuxfs flags=0 rc=0",
+    "mount_pid=1 source=tmpfs target=/mnt fs=tmpfs flags=0xe rc=0",
+    "mount_pid=1 source=tmpfs target=/debug_ramdisk fs=tmpfs flags=0xe rc=0",
+    "mount_pid=1 source=tmpfs target=/second_stage_resources fs=tmpfs flags=0xe rc=0",
+    "mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0",
+    "mount_pid=1 source=/dev target=/system/dev fs=(null) flags=0x2000 rc=0",
+    "mount_pid=1 source=/proc target=/system/proc fs=(null) flags=0x2000 rc=0",
+    "mount_pid=1 source=/sys target=/system/sys fs=(null) flags=0x2000 rc=0",
+    "mount_pid=1 source=/mnt target=/system/mnt fs=(null) flags=0x2000 rc=0",
+    "mount_pid=1 source=/debug_ramdisk target=/system/debug_ramdisk fs=(null) flags=0x2000 rc=0",
+    "mount_pid=1 source=/second_stage_resources target=/system/second_stage_resources fs=(null) flags=0x2000 rc=0",
+    "mount_pid=1 source=/system target=/ fs=(null) flags=0x2000 rc=0",
+    "mount_pid=1 source=/dev/block/loop0 target=/vendor fs=ext4 flags=0x1 rc=0",
+    "mount_pid=1 source=/dev/remount target=/dev/remount fs=(null) flags=0x1000 rc=0",
+    "mount_pid=1 source=(null) target=/dev/remount fs=(null) flags=0x40000 rc=0",
+    "exec_pid=1 path=/system/bin/init arg=selinux_setup",
+    "policy_open_entry path=/sys/fs/selinux/load watchdog_seconds=30",
+    "policy_open_rc=4",
+    "policy_write_entry fd=4 count=703220",
+    "policy_write_rc=703220 count=703220",
+    "enforcing=0"
+  ],
+  "pstore_observations": [
+    "[   49.188205][   T78] audit: type=1404 audit(49.167:9): enforcing=1 old_enforcing=0",
+    "[   49.190520][   T78] audit: type=1400 audit(49.167:11): avc:  denied  { write } for  pid=714 comm=\"gsi-usb-reader\" path=\"/run/gsi17/backend.log\" dev=\"rootfs\" ino=459 scontext=u:r:kernel:s0 tcontext=u:object_r:rootfs:s0 tclass=file permissive=0",
+    "[   49.191566][    T1] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000007"
+  ],
+  "results": {
+    "kernel_policy_load": {
+      "status": "PASS",
+      "fd": 4,
+      "bytes_requested": 703220,
+      "syscall_return": 703220,
+      "errno": null
+    },
+    "enforcing": "PASS",
+    "second_stage_exec": "UNOBSERVED",
+    "pid1_exit": "0x00000007",
+    "android17_adb": "NOT RUN",
+    "disconnected_ufs_boot": "NOT RUN"
+  },
+  "intermediate_diagnostic_boot_id": "0f8a6859-bbd4-41a1-84ef-bd4c64572f71",
+  "recovery": {
+    "status": "PASS",
+    "build": "RMX2072_11_F.20",
+    "boot_id": "80f29b30-6ed4-457f-ba0c-a85eddd8ee60",
+    "sys_boot_completed": 1,
+    "kernel": "4.19.157-perf+",
+    "readbacks": {
+      "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+    },
+    "host_local_events": [
+      {
+        "at": "2026-11-12T22:27:10.304208",
+        "event": "enter: Sahara programmer ready"
+      },
+      {
+        "at": "2026-11-12T22:27:13.570675",
+        "event": "before: complete boot and original DTBO hashes matched"
+      },
+      {
+        "at": "2026-11-12T22:27:19.240903",
+        "event": "candidate: complete boot and original DTBO hashes matched"
+      },
+      {
+        "at": "2026-11-12T22:27:19.241829",
+        "event": "candidate reset"
+      },
+      {
+        "at": "2026-11-12T22:29:55.010498",
+        "event": "return: Sahara programmer ready"
+      },
+      {
+        "at": "2026-11-12T22:29:58.176137",
+        "event": "return-read: complete boot and original DTBO hashes matched"
+      },
+      {
+        "at": "2026-11-12T22:30:03.758635",
+        "event": "restored: complete boot and original DTBO hashes matched"
+      },
+      {
+        "at": "2026-11-12T22:30:03.926363",
+        "event": "original reader reset"
+      },
+      {
+        "at": "2026-11-12T22:30:32.577131",
+        "event": "stock Android boot completed"
+      },
+      {
+        "at": "2026-11-12T22:30:36.371950",
+        "event": "stock root evidence saved"
+      }
+    ]
+  }
+}
