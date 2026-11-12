@@ -23,7 +23,12 @@ make_node() {
 
 read -r image_bytes data_bytes block_size tree_start root_hash salt < /gsi17-table
 mode=${1:-mount}
-case "$mode" in mount|userspace|combined) ;; firststage) [ -x /bin/first-stage-mount ] ;; *) exit 2 ;; esac
+case "$mode" in
+    mount|userspace|combined) ;;
+    firststage) [ -x /bin/first-stage-mount ] ;;
+    install) case "$(cat /trial-id)" in ufs-host-g3-gsi17-firststage-vendor-load-*) ;; *) exit 2 ;; esac ;;
+    *) exit 2 ;;
+esac
 mkdir -p /dev/mapper "$base"
 [ -c /dev/mapper/control ] || make_node /sys/class/misc/device-mapper/dev /dev/mapper/control c
 for n in "$raw" "$verified"; do if device "$n" >/dev/null; then exit 1; fi; done
@@ -62,7 +67,7 @@ else
     make_node "/sys/class/misc/dm-user!$raw/dev" "$channel" c
 fi
 stty raw -echo min 1 time 0 < "$tty"
-# Only the backend writes to tty until the saved console settings are restored.
+# READ requests and optional M1EVENT records each occupy one complete line.
 ( exec /bin/gsi-usb-reader "$channel" "$tty" "$image_bytes" ) > "$base/backend.log" 2>&1 &
 backend=$!
 dev=$(cat "$source/dev")
@@ -81,9 +86,9 @@ echo 0 > "$d/queue/read_ahead_kb"
 make_node "$d/dev" "$base/verified" b
 echo "source_table=$(dm table "$raw")"
 echo "verity_table=$(dm table "$verified")"
-if [ "$mode" = firststage ]; then
+if [ "$mode" = firststage ] || [ "$mode" = install ]; then
     # Android owns any resulting mount. Leave the verified map pinned until EDL.
-    /bin/first-stage-mount "$d" || result=$?
+    /bin/first-stage-mount "$d" "$mode" || result=$?
     status=$(dm status "$verified")
     echo "verity_status=$status"
     if [ -f /run/m1/go ]; then

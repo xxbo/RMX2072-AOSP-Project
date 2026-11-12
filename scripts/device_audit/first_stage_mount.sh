@@ -56,6 +56,21 @@ for part in /sys/class/block/sd*; do
     rm "$base/ro-node"
 done
 # Check that the trace sees the correct exec before permitting the handoff.
+if [ "${2:-}" = install ]; then
+    [ "$mode" = observe-vendor ]
+    case "$(cat /trial-id)" in ufs-host-g3-gsi17-firststage-vendor-load-*) ;; *) exit 2 ;; esac
+    wd=/sys/class/watchdog/watchdog0
+    case "$(readlink -f "$wd/device")" in */17c10000.qcom,wdt) ;; *) exit 1 ;; esac
+    n=$(cat "$wd/dev")
+    mknod "$base/watchdog" c "${n%:*}" "${n#*:}"
+    echo 8 > /proc/sys/kernel/printk
+    grep -E '^(boot_id|init_sha256|gsi_device|vendor_device|source_table|verity_table|last_block_sha256)=' \
+        /run/gsi17-run.log | sed 's/^/M1EVENT /' > /dev/ttyGS0
+    for disk in /sys/class/block/sd?; do
+        echo "M1EVENT disk=$(basename "$disk") ro=$(cat "$disk/ro")" > /dev/ttyGS0
+    done
+    mode=observe-install
+fi
 /bin/first-stage-witness "$mode" > "$base/witness" 2>&1 &
 observer=$!
 for i in $(seq 1 5); do [ ! -f "$base/ready" ] || break; sleep 1; done

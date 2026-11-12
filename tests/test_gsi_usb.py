@@ -9,10 +9,37 @@ import unittest
 import zlib
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
-from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, transcript, verify_first_stage, verify_image, verify_mount
+from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, serve, transcript, verify_first_stage, verify_image, verify_mount
 
 
 class GsiUsbTests(unittest.TestCase):
+    def test_live_policy_events_survive_disconnect_while_serving_image(self):
+        class Console:
+            def __init__(self):
+                self.rows = iter((b'M1EVENT policy_write_', b'entry fd=7 count=12\n',
+                                  b'GSI17 READ 0 512\n', b'M1EVENT policy_write_rc=-22 count=12\n'))
+                self.writes = []
+
+            def read_until(self, delimiter):
+                try:
+                    return next(self.rows)
+                except StopIteration:
+                    raise OSError('disconnected')
+
+            def write(self, data):
+                self.writes.append(data)
+                return len(data)
+
+        console, events = Console(), io.BytesIO()
+        ref = dict(image_bytes=512, hashtree=dict(image_bytes=512, fec_offset=512))
+        stats = dict(requests=0, bytes=0, data_bytes=0, tree_bytes=0)
+        with self.assertRaisesRegex(OSError, 'disconnected'):
+            serve(console, io.BytesIO(bytes(512)), ref, float('inf'), stats, b'install', events)
+        self.assertEqual(events.getvalue().splitlines(), [b'M1EVENT policy_write_entry fd=7 count=12',
+                                                         b'M1EVENT policy_write_rc=-22 count=12'])
+        self.assertEqual(console.writes[1], read_packet(io.BytesIO(bytes(512)), 512, 0, 512))
+        self.assertEqual(stats['data_bytes'], 512)
+
     def test_vendor_replay_requires_switch_root_new_init_and_strict_policy(self):
         trial = json.loads((REFERENCE.parent/'gsi17-project-vendor-2026-11-11.json').read_text())['trials'][-1]
         log = '\n'.join(trial['observations'])
