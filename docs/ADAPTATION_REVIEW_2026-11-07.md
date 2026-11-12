@@ -1,5 +1,7 @@
 # RMX2072 6.18 adaptation review after the second trial
 
+This review describes the November 7 trial. Later boots established kernel execution, USB, warm UFS and the Android first-stage handoff. See the [current physical results](../plan.md#verified-starting-point) and [M1 work list](../plan.md#next-work-on-m1).
+
 This review uses the actual configuration from platform build 42233938138, the checked-in USB diagnostic DTS, the selected stock DTB/DTBO and root captures from the F.20 handset. It describes remaining work beyond logging. It does not diagnose the restart loop: physical execution of the 6.18 kernel is still unproven. Stock-kernel debug Android has been recovered and verified.
 
 The configuration snapshot is [machine-readable](../build/device/bootstrap-adaptation-audit-2026-11-07.json). Its SHA-256 is `fa09c1232f575baa68cd507f7e2707bd3dee1143b1f12dccc00e24792900f2d2`. The audit script records actual built values; requested fragment assignments alone are insufficient.

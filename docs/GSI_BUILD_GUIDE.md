@@ -1,33 +1,12 @@
-# Android 17 GSI Build and Bring-up Guide
+# Android 17 GSI bring-up guide
 
-## Strategy
-Treat GSI bring-up and kernel modernization as separate tracks. First test a suitable Android 17 GSI with a known-compatible device kernel/vendor stack. This isolates framework and Treble compatibility from kernel migration.
+The selected system image is Google Android 17 QPR1 ARM64 + GMS, CP3A.260905.010. The project supplies the ACK 6.18 kernel and RMX2072 vendor implementation. Record the external image's build ID and SHA-256 from [the GSI lock](../build/gsi.json) alongside the hashes of the board artifacts used for each boot.
 
-The proposed execution environment is GitHub Actions for kernel/module builds and an official ARM64 Android 17 GSI for the system layer; local USB remains the hardware-test interface. See the [captured F.20 baseline](DEVICE_BASELINE_2026-11-06.md) for boot header v2, single boot/recovery layout, vendor FCM 5 and unresolved Android 17 compatibility gates. The GSI is a candidate until its exact image contents and device boot are checked.
+## Headless boot sequence
 
-## Preflight
-- Confirm exact RMX2072 model and region.
-- Confirm bootloader unlock capability and understand the data wipe.
-- Capture partition layout, boot image metadata, AVB state and stock firmware build.
-- Verify Treble/VINTF status and dynamic partition arrangement.
-- Obtain a complete stock restore package and verify its hashes.
-- Confirm GSI architecture, binder mode, partition size and Android release requirements.
+1. Replay the warm USB-backed control. Android first-stage init mounted the verified GSI, switched root and mounted the project vendor from RAM. PID 1 entered `selinux_setup`. Trial 02 selected genfs `202604` and passed a separate strict compile. [Handset trial and replay](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/docs/ANDROID17_USB_MOUNT.md#project-vendor-and-pid-1-policy-setup)
+2. Extend observation past the kernel policy write. Record its result, enforcing state, second-stage exec or the first error. Replace fixture-only device paths and the temporary emulator first-stage binary for the source-built boot path. Validate the target vendor/GSI VINTF pair and record signing and verity inputs for both images.
+3. Select an internal UFS layout from measured image sizes and document recovery for the partitions it changes. Preserving every current F.20 logical partition leaves a 1,095,585,792-byte deficit for the selected GSI. See the [partition preflight](GSI_PREFLIGHT_2026-11-06.md).
+4. Cold-boot with the USB image server disconnected, then connect ADB and collect the same-boot identity, mount sources and Android init logs specified in the [M1 acceptance criteria](../plan.md#milestones-and-acceptance).
 
-## Build options
-1. Use an official or reputable Android 17 GSI for an initial compatibility experiment.
-2. Build AOSP system images from the corresponding Android source branch after fixing the build host, manifest and target configuration.
-3. Keep device-specific configuration, vendor blobs and kernel work outside the generic system image where possible.
-
-## Validation sequence
-1. Validate image metadata and image size before flashing.
-2. Confirm target partition and fastboot/fastbootd mode.
-3. Follow device-specific instructions and preserve stock images.
-4. Boot without changing the kernel initially.
-5. Capture first-boot logs, VINTF results and dmesg.
-6. Test display, touch, telephony, Wi-Fi, Bluetooth, audio, camera, sensors, charging and encryption separately.
-
-This is a planning checklist, not a verified RMX2072 flashing recipe. Exact commands require the handset partition map, bootloader state and firmware revision.
-
-## Selected package and measured preflight
-
-The chosen package is now Android 17 QPR1 ARM64 + GMS CP3A.260905.010. It has been downloaded locally and hash-verified. Read [the actual image and partition findings](GSI_PREFLIGHT_2026-11-06.md) before planning a flash; FCM/VNDK and capacity gaps remain unresolved.
+The F.20 vendor comparison remains available for isolating compatibility issues. A project-built generic system image is an optional comparison with the pinned prebuilt GSI. Board drivers and Android hardware services belong in the kernel and device vendor implementation.
