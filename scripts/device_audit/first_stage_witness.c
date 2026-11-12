@@ -62,13 +62,23 @@ static void hold(const char *reason) {
     for (;;) pause();
 }
 
-static void observe(void) {
+static int is_policy_setup(void) {
+    static const char args[] = "/system/bin/init\0selinux_setup";
+    char cmdline[sizeof(args) + 1];
+    int fd = open("/proc/1/cmdline", O_RDONLY | O_CLOEXEC);
+    if (fd < 0) fail("PID 1 cmdline");
+    ssize_t size = read(fd, cmdline, sizeof(cmdline));
+    close(fd);
+    return size == sizeof(args) && !memcmp(cmdline, args, sizeof(args));
+}
+
+static void observe(int vendor_trial) {
     struct stat expected;
     if (stat(ROOT "/init", &expected)) fail("staged init");
     if (ptrace(PTRACE_SEIZE, PID_ONE, NULL, (void *)(PTRACE_O_TRACEEXEC | PTRACE_O_TRACESYSGOOD)))
         fail("seize PID 1");
     marker("/run/m1/ready");
-    int active = 0, in_mount = 0;
+    int active = 0, in_mount = 0, policy_setup = 0;
     char source[256], target[256], fs[96];
     unsigned long flags = 0;
     for (;;) {
@@ -85,7 +95,11 @@ static void observe(void) {
             if (actual.st_dev == expected.st_dev && actual.st_ino == expected.st_ino) {
                 printf("exec_pid=1 path=/init staged_inode_match=1\n");
                 active = 1;
-            } else if (active) hold("next-exec");
+            } else if (active) {
+                if (!vendor_trial || policy_setup || !is_policy_setup()) hold("next-exec");
+                printf("exec_pid=1 path=/system/bin/init arg=selinux_setup\n");
+                policy_setup = 1;
+            }
         } else if (active && sig == (SIGTRAP | 0x80)) {
             struct ptrace_syscall_info info = {0};
             if (ptrace(PTRACE_GET_SYSCALL_INFO, PID_ONE, (void *)sizeof(info), &info) < 0)
@@ -98,13 +112,20 @@ static void observe(void) {
                     argument(info.entry.args[2], fs, sizeof(fs));
                     flags = info.entry.args[3];
                 }
+                if (policy_setup && info.entry.nr == __NR_openat) {
+                    char path[256];
+                    argument(info.entry.args[1], path, sizeof(path));
+                    if (!strcmp(path, "/sys/fs/selinux/load") || !strcmp(path, "/selinux/load"))
+                        hold("policy-load-open");
+                }
                 if (info.entry.nr == __NR_reboot || info.entry.nr == __NR_exit_group)
                     hold(info.entry.nr == __NR_reboot ? "reboot-request" : "exit-request");
             } else if (info.op == PTRACE_SYSCALL_INFO_EXIT && in_mount) {
                 printf("mount_pid=1 source=%s target=%s fs=%s flags=%#lx rc=%lld\n",
                        source, target, fs, flags, (long long)info.exit.rval);
                 in_mount = 0;
-                if (!strcmp(target, "/system") || !strncmp(source, "/dev/block/", 11))
+                if ((!vendor_trial || info.exit.rval < 0) &&
+                    (!strcmp(target, "/system") || !strncmp(source, "/dev/block/", 11)))
                     hold("partition-mount");
             }
         } else if (!(status >> 16)) {
@@ -119,7 +140,8 @@ static void observe(void) {
 int main(int argc, char **argv) {
     setvbuf(stdout, NULL, _IONBF, 0);
     if (argc == 2 && !strcmp(argv[1], "handoff")) handoff();
-    else if (argc == 2 && !strcmp(argv[1], "observe")) observe();
+    else if (argc == 2 && !strcmp(argv[1], "observe")) observe(0);
+    else if (argc == 2 && !strcmp(argv[1], "observe-vendor")) observe(1);
     else return 2;
     return 0;
 }

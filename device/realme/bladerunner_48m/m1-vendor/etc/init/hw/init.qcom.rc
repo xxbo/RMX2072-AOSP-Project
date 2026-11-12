@@ -1,0 +1,2 @@
+on early-init
+    write /dev/kmsg "RMX2072: project vendor early-init"

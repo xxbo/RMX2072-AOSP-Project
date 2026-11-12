@@ -1,0 +1,314 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-11",
+  "gsi_build": "CP3A.260905.010",
+  "system_source": "Read-only USB dm-user with a pinned GSI signer and dm-verity descriptor",
+  "vendor_source": "Project-built 2 MiB ext4 embedded in the ramdisk and loop-mounted read-only; recorded content hash, no vendor AVB signature",
+  "board": "Stock-derived G3 device-tree bundle",
+  "checkpoint": "Debugger stopped PID 1 at open of the SELinux policy load interface before kernel policy installation",
+  "trials": [
+    {
+      "trial": "ufs-host-g3-gsi17-firststage-vendor-01",
+      "boot_id": "f536262d-4b7f-4de0-b338-7de3a3e26e20",
+      "image_build_run": 43043556576,
+      "boot_sha256": "98041631608c7b99ab59f7c3419bfe4f86fe412be85dafc3c06be397ce479512",
+      "ramdisk_sha256": "a3707050d90c7e4db115fad7ddb4959a994ddb935c6312dabeb5825da1102f02",
+      "vendor_image_sha256": "7869ef03d788f0c665dcc21211233ba2724a74e9b128c6ec12a9480346e47f92",
+      "vendor_source_files": {
+        "/etc/fstab.qcom": "e18ce16eafcd5f6d18b6a57bc667cc060a567cc3757f60ae286faed20e591252",
+        "/etc/init/hw/init.qcom.rc": "1a2828a547856a152bfb8e063814c0e0cb60ba330240899af6f9bc7a256d6bdb",
+        "/etc/selinux/plat_pub_versioned.cil": "b0ebe55553d5e1533e939cbd049d1a1b5693fdd5251f77d382b1431041e28f49",
+        "/etc/selinux/plat_sepolicy_vers.txt": "9ccf1380024ff3eada859a5835f3358166aa75c36cb0b2c16dcfccad7131940a",
+        "/etc/selinux/vendor_file_contexts": "79289f9d301174b32dd60529ea1b6494644a532d54f82e023fc9eda5e3a44793",
+        "/etc/selinux/vendor_sepolicy.cil": "cffc866af69291ab6c529a9701f02624d9670efb60daf180bfe6692040a47938",
+        "/etc/ueventd.rc": "46204724cb861e69753b01ba30377663f0fee7574a6be77027b694e07d8245f6",
+        "/etc/vintf/manifest.xml": "56c477fb84b58f3d3f1fcfd76b46430dc5ed41056384522033925d0523675abc"
+      },
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "first_stage_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+      "witness_sha256": "5f50bd8a74eb6324b7aea27c6e7163a838144e1e14b87b5ca93755062bc59dc6",
+      "gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "transcript_sha256": "7cd2d7a427d474bd9126ce0d1a0cc5580295bb4bef6408ff913febb58581a49a",
+      "usb": {
+        "requests": 2898,
+        "bytes": 11870208,
+        "data_bytes": 11407360,
+        "tree_bytes": 458752
+      },
+      "observations": [
+        "last_block_sha256=62243764641576fdd73e9ca12f4d7abc212cbe187a7fc3342e8c692c8fbf6b62",
+        "source_table=0 7721120 user ",
+        "verity_table=0 7599128 verity 1 254:0 254:0 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "boot_id=f536262d-4b7f-4de0-b338-7de3a3e26e20",
+        "init_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+        "gsi_device=dm-1 dev=254:1",
+        "vendor_device=loop0 dev=7:0 image_sha256=7869ef03d788f0c665dcc21211233ba2724a74e9b128c6ec12a9480346e47f92",
+        "exec_pid=1 path=/init staged_inode_match=1",
+        "mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0",
+        "mount_pid=1 source=devpts target=/dev/pts fs=devpts flags=0 rc=0",
+        "mount_pid=1 source=proc target=/proc fs=proc flags=0 rc=0",
+        "mount_pid=1 source=sysfs target=/sys fs=sysfs flags=0 rc=0",
+        "mount_pid=1 source=selinuxfs target=/sys/fs/selinux fs=selinuxfs flags=0 rc=0",
+        "mount_pid=1 source=tmpfs target=/mnt fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/debug_ramdisk fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/second_stage_resources fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev target=/system/dev fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/proc target=/system/proc fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/sys target=/system/sys fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/mnt target=/system/mnt fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/debug_ramdisk target=/system/debug_ramdisk fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/second_stage_resources target=/system/second_stage_resources fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/system target=/ fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/dev/block/loop0 target=/vendor fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev/remount target=/dev/remount fs=(null) flags=0x1000 rc=0",
+        "mount_pid=1 source=(null) target=/dev/remount fs=(null) flags=0x40000 rc=0",
+        "exec_pid=1 path=/system/bin/init arg=selinux_setup",
+        "trial_stop=policy-load-open",
+        "pid1_exe=/system/bin/init",
+        "pid1_sha256=779a5071836fe419ae1d3ab3ca79d7f861ed24c75fef25e173bcfe73c4daefa4",
+        "pid1_mountinfo=39 47 0:26 / /dev rw,nosuid,relatime - tmpfs tmpfs rw,mode=755",
+        "pid1_mountinfo=47 38 254:1 / / ro,relatime - ext4 /dev/block/dm-1 ro,norecovery",
+        "pid1_mountinfo=48 47 7:0 / /vendor ro,relatime - ext4 /dev/block/loop0 ro,norecovery",
+        "mounted_vendor_fstab=match",
+        "mounted_vendor_policy_version=202604",
+        "pid1_cmdline=/system/bin/init selinux_setup ",
+        "[   36.870187][    T1] init: Opening SELinux policy",
+        "[   36.997247][    T1] init: Compiling SELinux policy",
+        "[   37.356564][    T1] init: Missing /system/etc/selinux/plat_sepolicy_genfs_202404.cil; skipping",
+        "[   47.463812][    T1] init: Loading SELinux policy",
+        "verity_status=0 7599128 verity V -"
+      ],
+      "results": {
+        "first_stage_pid1": "PASS",
+        "switch_root_to_gsi": "PASS",
+        "project_vendor_mount": "PASS",
+        "gsi_pid1_selinux_setup": "PASS",
+        "runtime_policy_compilation": "PASS",
+        "genfs_202604": "FAIL",
+        "strict_neverallow_compile": "NOT RUN",
+        "first_unmet_step": "Vendor did not select 202604 genfs labels. Init fell back to 202404 and skipped the missing optional input.",
+        "kernel_policy_load": "NOT RUN",
+        "second_stage_init": "NOT RUN",
+        "full_vintf_check": "NOT RUN",
+        "android17_adb": "NOT RUN",
+        "disconnected_ufs_boot": "NOT RUN"
+      },
+      "recovery": {
+        "status": "PASS",
+        "build": "RMX2072_11_F.20",
+        "boot_id": "4fb277f4-4d0a-4f95-8afc-2c29e3921ae1",
+        "sys_boot_completed": 1,
+        "kernel": "4.19.157-perf+",
+        "software_edl_seconds": 7.234,
+        "readbacks": {
+          "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "host_local_events": [
+          {
+            "at": "2026-11-11T23:01:38.131668",
+            "event": "enter: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:01:41.280165",
+            "event": "before: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:01:46.852457",
+            "event": "candidate: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:01:46.854461",
+            "event": "candidate reset"
+          },
+          {
+            "at": "2026-11-11T23:02:51.949646",
+            "event": "return: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:02:55.066406",
+            "event": "return-read: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:03:00.636825",
+            "event": "restored: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:03:00.775530",
+            "event": "original reader reset"
+          },
+          {
+            "at": "2026-11-11T23:03:29.294990",
+            "event": "stock Android boot completed"
+          },
+          {
+            "at": "2026-11-11T23:03:32.845517",
+            "event": "stock root evidence saved"
+          }
+        ]
+      }
+    },
+    {
+      "trial": "ufs-host-g3-gsi17-firststage-vendor-02",
+      "boot_id": "b27f1fb7-8bb9-4c8f-a4a4-7ac8eec0264c",
+      "image_build_run": 43044877414,
+      "boot_sha256": "afbb119e162333dfbf40f27dccb76c48f830c5e25184ac3382a4dfedfe8060d6",
+      "ramdisk_sha256": "6d405b86aa3dbf4c2ad9e571cbc6f1052ca12bbd9a4fa6aa6510ea5907ba28c5",
+      "vendor_image_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+      "vendor_source_files": {
+        "/etc/fstab.qcom": "e18ce16eafcd5f6d18b6a57bc667cc060a567cc3757f60ae286faed20e591252",
+        "/etc/init/hw/init.qcom.rc": "1a2828a547856a152bfb8e063814c0e0cb60ba330240899af6f9bc7a256d6bdb",
+        "/etc/selinux/genfs_labels_version.txt": "9ccf1380024ff3eada859a5835f3358166aa75c36cb0b2c16dcfccad7131940a",
+        "/etc/selinux/plat_pub_versioned.cil": "b0ebe55553d5e1533e939cbd049d1a1b5693fdd5251f77d382b1431041e28f49",
+        "/etc/selinux/plat_sepolicy_vers.txt": "9ccf1380024ff3eada859a5835f3358166aa75c36cb0b2c16dcfccad7131940a",
+        "/etc/selinux/vendor_file_contexts": "79289f9d301174b32dd60529ea1b6494644a532d54f82e023fc9eda5e3a44793",
+        "/etc/selinux/vendor_sepolicy.cil": "cffc866af69291ab6c529a9701f02624d9670efb60daf180bfe6692040a47938",
+        "/etc/ueventd.rc": "46204724cb861e69753b01ba30377663f0fee7574a6be77027b694e07d8245f6",
+        "/etc/vintf/manifest.xml": "0bd5f60f4fd99bf71330a78f98064335d02d3bd9e743304645a332ffa61d7673"
+      },
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "first_stage_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+      "witness_sha256": "5f50bd8a74eb6324b7aea27c6e7163a838144e1e14b87b5ca93755062bc59dc6",
+      "gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "transcript_sha256": "5503857432aa69c569768dd84ff859c891b3837a0238ba1169aa6092f491cc97",
+      "usb": {
+        "requests": 2902,
+        "bytes": 11886592,
+        "data_bytes": 11419648,
+        "tree_bytes": 462848
+      },
+      "observations": [
+        "last_block_sha256=62243764641576fdd73e9ca12f4d7abc212cbe187a7fc3342e8c692c8fbf6b62",
+        "source_table=0 7721120 user ",
+        "verity_table=0 7599128 verity 1 254:0 254:0 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "boot_id=b27f1fb7-8bb9-4c8f-a4a4-7ac8eec0264c",
+        "init_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+        "gsi_device=dm-1 dev=254:1",
+        "vendor_device=loop0 dev=7:0 image_sha256=8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+        "exec_pid=1 path=/init staged_inode_match=1",
+        "mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0",
+        "mount_pid=1 source=devpts target=/dev/pts fs=devpts flags=0 rc=0",
+        "mount_pid=1 source=proc target=/proc fs=proc flags=0 rc=0",
+        "mount_pid=1 source=sysfs target=/sys fs=sysfs flags=0 rc=0",
+        "mount_pid=1 source=selinuxfs target=/sys/fs/selinux fs=selinuxfs flags=0 rc=0",
+        "mount_pid=1 source=tmpfs target=/mnt fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/debug_ramdisk fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=tmpfs target=/second_stage_resources fs=tmpfs flags=0xe rc=0",
+        "mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev target=/system/dev fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/proc target=/system/proc fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/sys target=/system/sys fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/mnt target=/system/mnt fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/debug_ramdisk target=/system/debug_ramdisk fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/second_stage_resources target=/system/second_stage_resources fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/system target=/ fs=(null) flags=0x2000 rc=0",
+        "mount_pid=1 source=/dev/block/loop0 target=/vendor fs=ext4 flags=0x1 rc=0",
+        "mount_pid=1 source=/dev/remount target=/dev/remount fs=(null) flags=0x1000 rc=0",
+        "mount_pid=1 source=(null) target=/dev/remount fs=(null) flags=0x40000 rc=0",
+        "exec_pid=1 path=/system/bin/init arg=selinux_setup",
+        "trial_stop=policy-load-open",
+        "pid1_exe=/system/bin/init",
+        "pid1_sha256=779a5071836fe419ae1d3ab3ca79d7f861ed24c75fef25e173bcfe73c4daefa4",
+        "pid1_mountinfo=39 47 0:26 / /dev rw,nosuid,relatime - tmpfs tmpfs rw,mode=755",
+        "pid1_mountinfo=47 38 254:1 / / ro,relatime - ext4 /dev/block/dm-1 ro,norecovery",
+        "pid1_mountinfo=48 47 7:0 / /vendor ro,relatime - ext4 /dev/block/loop0 ro,norecovery",
+        "mounted_vendor_fstab=match",
+        "mounted_vendor_policy_version=202604",
+        "pid1_cmdline=/system/bin/init selinux_setup ",
+        "strict_inputs=/system/etc/selinux/plat_sepolicy.cil /system/etc/selinux/mapping/202604.cil /vendor/etc/selinux/plat_pub_versioned.cil /vendor/etc/selinux/vendor_sepolicy.cil /system/etc/selinux/plat_sepolicy_genfs_202604.cil",
+        "strict_compile_rc=0",
+        "strict_policy_sha256=d41c4f6bcd1797b69bb095c947f1da9bc606c1886744b2257be4ff7c0b1dbfbc",
+        "[   36.943586][    T1] init: Opening SELinux policy",
+        "[   37.068339][    T1] init: Compiling SELinux policy",
+        "[   37.463260][    T1] init: Using /system/etc/selinux/plat_sepolicy_genfs_202604.cil for genfs labels",
+        "[   47.711286][    T1] init: Loading SELinux policy",
+        "verity_status=0 7599128 verity V -"
+      ],
+      "results": {
+        "first_stage_pid1": "PASS",
+        "switch_root_to_gsi": "PASS",
+        "project_vendor_mount": "PASS",
+        "gsi_pid1_selinux_setup": "PASS",
+        "runtime_policy_compilation": "PASS",
+        "genfs_202604": "PASS",
+        "strict_neverallow_compile": "PASS",
+        "first_unmet_step": null,
+        "kernel_policy_load": "NOT RUN",
+        "second_stage_init": "NOT RUN",
+        "full_vintf_check": "NOT RUN",
+        "android17_adb": "NOT RUN",
+        "disconnected_ufs_boot": "NOT RUN"
+      },
+      "recovery": {
+        "status": "PASS",
+        "build": "RMX2072_11_F.20",
+        "boot_id": "8f343560-952b-401f-b32e-eee60b2b0b10",
+        "sys_boot_completed": 1,
+        "kernel": "4.19.157-perf+",
+        "software_edl_seconds": 7.188,
+        "readbacks": {
+          "boot-readback.img": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo-readback.img": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+        },
+        "host_local_events": [
+          {
+            "at": "2026-11-11T23:07:54.622126",
+            "event": "enter: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:07:57.720906",
+            "event": "before: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:08:03.282730",
+            "event": "candidate: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:08:03.282730",
+            "event": "candidate reset"
+          },
+          {
+            "at": "2026-11-11T23:09:54.403594",
+            "event": "return: Sahara programmer ready"
+          },
+          {
+            "at": "2026-11-11T23:09:57.502813",
+            "event": "return-read: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:10:03.112476",
+            "event": "restored: complete boot and original DTBO hashes matched"
+          },
+          {
+            "at": "2026-11-11T23:10:03.261849",
+            "event": "original reader reset"
+          },
+          {
+            "at": "2026-11-11T23:10:31.737547",
+            "event": "stock Android boot completed"
+          },
+          {
+            "at": "2026-11-11T23:10:35.483401",
+            "event": "stock root evidence saved"
+          }
+        ]
+      }
+    }
+  ],
+  "host_event_timezone": "Asia/Shanghai",
+  "reproduction": {
+    "trial": "ufs-host-g3-gsi17-firststage-vendor-02",
+    "verified_ci_commit": "a485b698e582cbfa729e870707bf2cbedc96fb44",
+    "ci_run": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43045844770",
+    "ci_result": "success",
+    "artifact_id": 13866488665,
+    "artifact_zip_digest": "sha256:e489f792fa6e970685fd720a41f93cd433ca0983fcf445fbf447bcdfe3aa3dca",
+    "ci_vendor_matches_handset_image_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+    "offline_rebuilt_boot_sha256": "afbb119e162333dfbf40f27dccb76c48f830c5e25184ac3382a4dfedfe8060d6"
+  }
+}

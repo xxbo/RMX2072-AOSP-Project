@@ -10,12 +10,12 @@
 
 The pinned Android Common Kernel 6.18 tree contains the upstream Qualcomm DRM/MSM graphics driver and an Adreno 6xx implementation whose catalog includes Adreno 650 (chip ID `0x06050002`, revision 650). The same tree does not contain the legacy `drivers/gpu/msm` KGSL driver or the KGSL UAPI header.
 
-This gives us two distinct migration directions:
+The source comparison covers two kernel/userspace interfaces.
 
 1. **Port modern KGSL to Android GKI 6.18.** Use Qualcomm's separately maintained KGSL module as a modern code reference, then resolve its Android GKI KMI, vendor-hook, Kconfig, DMA/IOMMU, firmware and module integration requirements.
-2. **Use upstream DRM/MSM.** The kernel-side Adreno 650 implementation exists, but this is not a drop-in replacement for a legacy Android userspace stack that expects `/dev/kgsl-3d0` and KGSL ioctls. The RMX2072 vendor userspace/HAL compatibility must be established before considering this route viable.
+2. **Use upstream DRM/MSM.** Validate Adreno 650 submission, buffer sharing and synchronization with source-built graphics userspace on RMX2072.
 
-The current evidence makes the first direction the more direct experiment for preserving the existing Qualcomm Android userspace contract. This is a research priority, not yet a proven bootable solution.
+The KGSL experiment answers how the old Qualcomm Android userspace could be preserved. For the project vendor, prototype DRM/MSM with a source-built allocator and composer. M3 acceptance requires physical display, touch and launcher evidence. [Project milestones](../plan.md#milestones-and-acceptance)
 
 ## 2. Immutable source revisions
 
@@ -170,18 +170,18 @@ The source-level presence of a hook or export alone is not sufficient to prove G
 | Route | Current evidence | Main unknowns |
 |---|---|---|
 | Port modern Qualcomm KGSL to GKI 6.18 | Modern KGSL source exists; A650 firmware names and code paths are present; GKI has relevant Qualcomm infrastructure | KMI allowlist, API drift, module build, vendor hooks, memory/IOMMU integration, exact firmware and userspace ABI |
-| Use GKI DRM/MSM directly | Upstream 6.18 DRM/MSM and A650 catalog are present | Compatibility with RMX2072 vendor userspace, Android graphics HAL integration, buffer/sync ABI, display integration |
+| Use GKI DRM/MSM directly | Upstream 6.18 DRM/MSM and A650 catalog are present | Source-built userspace, Android graphics HAL integration, buffer/sync ABI, display integration |
 | Forward-port old Realme KGSL 4.19 | Exact device-origin source is available | Very large kernel API gap, old framework assumptions and long-term maintenance burden |
 
-**Recommended research priority:** investigate the modern Qualcomm KGSL module against the exact Android 17 GKI KMI/build target first, while keeping DRM/MSM as the upstream architectural fallback/reference. Do not yet choose either route as the final implementation.
+Record the required GPU firmware and its provenance alongside the M3 board and userspace tests. KGSL remains available for a specifically identified compatibility comparison.
 
-## 9. Next GitHub Actions research gates
+## 9. Optional KGSL comparison tests
 
 1. **GKI KMI symbol audit:** discover the exact ABI/KMI lists for the pinned Android 17 GKI release and compare every undefined symbol from the modern KGSL module.
 2. **AArch64 UAPI ABI validation:** repeat `sizeof` / `offsetof` probes with the pinned Android LLVM toolchain and add compile-time assertions for all common KGSL structs.
 3. **Kconfig dependency closure:** recursively resolve all KGSL dependencies and selected symbols against the actual target GKI config fragments.
 4. **Module build experiment:** create a separate, manually triggered workflow using the exact GKI build environment. Do not run full module builds on every push.
-5. **Device/vendor pairing:** resolve RMX2072 device-tree and vendor firmware versions before any boot-image or module integration experiment.
+5. **Device/vendor pairing.** For a stock-ABI comparison, identify the precise firmware and userspace version being measured.
 
 ## 10. Limitations
 

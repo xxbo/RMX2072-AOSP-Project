@@ -1,5 +1,31 @@
 # Android 17 over USB on RMX2072
 
+## Project vendor and PID 1 policy setup
+
+Two physical boots on 6.18.32 switched the root to the CP3A.260905.010 GSI and mounted the project vendor at `/vendor`. First-stage init issued both read-only ext4 mounts. The observed `MS_MOVE` from `/system` to `/` returned zero. PID 1 then executed the GSI's `/system/bin/init selinux_setup`; its SHA-256 matched the executable extracted from the pinned GSI. Its mount table showed `254:1` (USB-backed dm-verity) at `/` and `7:0` (RAM-backed loop0) at `/vendor`. The mounted vendor fstab matched the ramdisk copy. See the [two handset records and F.20 recovery readbacks](../build/device/gsi17-project-vendor-2026-11-11.json).
+
+The first run exposed a missing vendor genfs version. Init selected 202404 and skipped that optional CIL. The revised vendor selects 202604, which the GSI supplies, and uses the same version spelling in its VINTF manifest. On the second run init logged `Opening SELinux policy` at 36.944 s, selected `plat_sepolicy_genfs_202604.cil` at 37.463 s and logged `Loading SELinux policy` at 47.711 s. The observer stopped the process at the opening of the kernel load interface. A separate invocation of the GSI's compiler read the mounted policy inputs with neverallow checking enabled, returned zero and produced the policy digest in the hardware record. Kernel installation, enforcing mode, second-stage init, VINTF compatibility and Android ADB remain untested.
+
+The [vendor source](../device/realme/bladerunner_48m/m1-vendor) contains the USB fixture fstab, board init and ueventd configuration, a device manifest and split SELinux inputs. It declares no HAL instances. The 2 MiB image is identified by content hash and embedded in the test ramdisk. It has no vendor AVB signature. The GSI uses the existing pinned signer and dm-verity path.
+
+On Linux, `python scripts/build/build_m1_vendor.py --output PRIVATE/vendor` uses e2fsprogs to create the filesystem, check it and read back its files and SELinux labels. Set `PRIVATE` to a directory outside the checkout. CI compares two builds byte-for-byte. Add `--project-vendor PRIVATE/vendor` to the first-stage ramdisk build described below and run the host with `--project-vendor-report PRIVATE/vendor/vendor.json` in place of `--first-stage`.
+
+### Host package and record replay
+
+The Windows packaging helper accepts the two private input-cache roots used for these trials. The current work cache supplies the G3 headers, DT runtime DLLs, watchdog control boot, 6.18 Image and provenance, APK cache, USB reader, first-stage init and observer. The prior cache supplies libfdt/dtc, static control tools and the entry probe; the F.20 DTBO comes from its sibling recovery kit. Supply a new private output directory. Replaying vendor trial 02 with its inputs reproduced the full boot partition image SHA-256 `afbb119e162333dfbf40f27dccb76c48f830c5e25184ac3382a4dfedfe8060d6`. The final CI vendor image also matched the 2 MiB image used on that handset boot. [CI run](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43045844770)
+
+```powershell
+$trial = 'ufs-host-g3-gsi17-firststage-vendor-02'
+./scripts/build/build_m1_trial.ps1 -Trial $trial -WorkDirectory $workCache -PriorWorkDirectory $priorCache -NdkDirectory $ndk -ProjectVendor $vendorDir -OutputDirectory $newPrivateOutput
+```
+
+During a scheduled handset trial, `observe_gsi17.py` runs the GSI server, writes the USB transcript and requests software EDL for the local restore harness. For an offline replay after restoration, `record_m1_vendor.py` checks the saved transcript, vendor image, software-return report and full boot/DTBO readbacks at four points. It reads the F.20 display ID, completion flag and boot ID from a three-line capture and writes one trial entry to a new JSON file. Review the entry for the milestone record. The two archived timelines use the workstation's Asia/Shanghai clock.
+
+```powershell
+python scripts/device_audit/observe_gsi17.py --image $gsi --trial $trial --project-vendor-report "$vendorDir/vendor.json" --output "$workCache/$trial-live"
+python scripts/device_audit/record_m1_vendor.py --work $workCache --trial $trial --vendor-dir $vendorDir --restored $restoredText --image-build-run 43044877414 --output $newTrialJson
+```
+
 ## M1 first-stage handoff on November 11
 
 On the physical RMX2072, Android 17 first-stage `/init` ran as global PID 1 on Linux 6.18.32. Its first mount was a tmpfs on `/dev`. Its first partition mount attached the USB-backed CP3A.260905.010 GSI to `/system`. Both syscalls returned zero. The observer stopped PID 1 on return from the partition mount and read its executable and mount table through the diagnostic namespace. See the [trial evidence, hashes and separate F.20 recovery](../build/device/gsi17-first-stage-2026-11-11.json).
@@ -11,7 +37,7 @@ mount_pid=1 source=/dev/block/dm-1 target=/system fs=ext4 flags=0x1 rc=0
 pid1_mountinfo=47 38 254:1 / /system ro,relatime - ext4 /dev/block/dm-1 ro,norecovery
 ```
 
-The static first-stage executable came from the first cpio archive in Google's API 37 ARM64 emulator ramdisk, build CE2A.260420.051.A3. The SDK package and GSI have separate build identities. The host verified the GSI signature, signer and hashtree descriptor before serving it. The diagnostic created the dm-verity target and supplied its block device to the board fstab. Android created its own device nodes and issued the mount. All six internal UFS LUNs and their partitions were read-only. This checkpoint used the stock-derived G3 device tree and a USB host. Project vendor, second-stage init and a disconnected UFS boot remain open.
+The static first-stage executable came from the first cpio archive in Google's API 37 ARM64 emulator ramdisk, build CE2A.260420.051.A3. The SDK package and GSI have separate build identities. The host verified the GSI signature, signer and hashtree descriptor before serving it. The diagnostic created the dm-verity target and supplied its block device to the board fstab. Android created its own device nodes and issued the mount. All six internal UFS LUNs and their partitions were read-only. This checkpoint used the stock-derived G3 device tree and a USB host. The later [project vendor trials](#project-vendor-and-pid-1-policy-setup) added the vendor mount. Second-stage init and a disconnected UFS boot remain open.
 
 To reproduce, extract `init` from the first legacy-LZ4 cpio in `arm64-v8a/ramdisk.img` and verify the [pinned ramdisk and ELF](../build/device/android17-first-stage-source.json). Compile the observer with `scripts/build/build_gsi_usb_reader.py --ndk <ndk> --first-stage-witness --output <observer>`. Add `--android-first-stage <init> --first-stage-witness <observer>` to the G3 USB reader ramdisk build, select a `ufs-host-g3-gsi17-firststage-*` trial ID and enable the EDL timer. Use `serve_gsi_usb.py --first-stage` with the pinned GSI. After the transcript is saved, the existing `usb_edl_return.py --mode command` procedure returns the phone to the restore harness.
 
@@ -30,7 +56,7 @@ The host opens the 3,953,213,440-byte image read-only, checks its complete SHA-2
 
 The userspace trial ran `/system/bin/toybox` through the image's `/system/bin/bootstrap/linker64` inside a chroot, with read-only proc and an explicit library search path. `linker64 --list /system/bin/init` returned zero and listed 31 libraries under `/system`. The linker reported that `/linkerconfig/ld.config.txt` had not been generated. The diagnostic init remained PID 1. The USB test did not start apexd, load F.20 vendor HALs or boot the Android framework.
 
-F.20's system fstab entries name Q, R and S GSI public keys. All three key files in the F.20 reader boot ramdisk differ from this GSI's embedded signer. The diagnostic verified the specific downloaded image using its pinned identity. A first-stage integration needs an explicit trust path for that key and the stock vendor/odm chains. The FCM, VNDK and persistent storage constraints are documented in the [GSI preflight](GSI_PREFLIGHT_2026-11-06.md).
+F.20's system fstab entries name Q, R and S GSI public keys. All three key files in the F.20 reader boot ramdisk differ from this GSI's embedded signer. The diagnostic verified the specific downloaded image using its pinned identity. The combined stock comparison used the F.20 vendor/ODM chains. The target needs explicit trust paths for the selected GSI and the project-built vendor. The FCM, VNDK and persistent storage constraints are documented in the [GSI preflight](GSI_PREFLIGHT_2026-11-06.md).
 
 ## Replay
 

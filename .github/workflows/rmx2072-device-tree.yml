@@ -25,12 +25,16 @@ on:
       - 'scripts/device_audit/gsi17_mount.sh'
       - 'scripts/device_audit/gsi17_policy.sh'
       - 'scripts/device_audit/first_stage_mount.sh'
+      - 'device/realme/bladerunner_48m/m1-vendor/**'
       - 'scripts/device_audit/first_stage_witness.c'
       - 'build/device/android17-first-stage-source.json'
       - 'scripts/device_audit/gsi_init_probe.c'
       - 'build/device/f20-odm-verity-reference.json'
       - 'scripts/device_audit/gsi_usb_reader.c'
       - 'scripts/device_audit/serve_gsi_usb.py'
+      - 'scripts/device_audit/observe_gsi17.py'
+      - 'scripts/device_audit/record_m1_vendor.py'
+      - 'build/device/gsi17-project-vendor-2026-11-11.json'
       - 'build/device/gsi17-mount-reference.json'
       - 'build/device/f20-verity-reference.json'
       - 'build/super-readonly-apks.json'
@@ -69,6 +73,15 @@ jobs:
           sh -n scripts/device_audit/first_stage_mount.sh
           for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh scripts/device_audit/verity_readonly.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
+      - name: Build and reproduce the project vendor image
+        run: |
+          python scripts/build/build_m1_vendor.py --output "$RUNNER_TEMP/vendor-a"
+          python scripts/build/build_m1_vendor.py --output "$RUNNER_TEMP/vendor-b"
+          cmp "$RUNNER_TEMP/vendor-a/vendor.img" "$RUNNER_TEMP/vendor-b/vendor.img"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rmx2072-m1-vendor
+          path: ${{ runner.temp }}/vendor-a/
       - name: Cross-compile the static Android 17 dm-user reader
         run: |
           ndk="${ANDROID_NDK_HOME:-}"

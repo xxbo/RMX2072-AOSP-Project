@@ -38,14 +38,11 @@ The workflow uploads the complete kernel_aarch64_dist output under the artifact 
 
 Run #5 produced `Image` (43.5 MB), `Image.gz` (17.7 MB), `Image.lz4` (20.8 MB), `vmlinux` (224.4 MB), `kernel_aarch64_Module.symvers`, `system_dlkm.erofs.img`, `system_dlkm.ext4.img` and the in-tree kernel modules. This proves the generic Android 17 GKI 6.18 ARM64 distribution can be built from the pinned source/toolchain. It does not prove RMX2072 board compatibility, device-tree correctness, vendor module compatibility, bootability or hardware operation.
 
-## Next stages
+## Board integration and module experiments
 
-1. Completed: repository-owned kernel snapshot and full Kleaf distribution build.
-2. Inspect the actual GKI config and KMI artifacts.
-3. Build a minimal Rust module using the exact kernel Rust toolchain.
-4. Add RMX2072 device-specific configuration and platform support.
-5. Port drivers one at a time and validate their KMI dependencies.
-6. Integrate the resulting kernel, DTB/DTBO and vendor modules only after the board-level dependencies are understood.
+The generic distribution and strict NFC DDK checks have passed. The separate SM8250 platform kernel reached Android first-stage init with a USB-backed GSI and project vendor. The [handset roadmap](../plan.md#next-work-on-m1) tracks the UFS cold boot and the source-built board trees. [Physical evidence](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json)
+
+For a driver port, inspect the actual build configuration and KMI artifacts. Validate module loading and hardware behavior on the matching platform build. A Rust module prototype can be tested independently of the headless boot milestones.
 
 ## Strict driver gate on main
 

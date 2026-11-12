@@ -65,7 +65,7 @@ The weekly schedule runs at 03:17 UTC on Mondays. Scheduled workflows may start 
 - [Driver dependency map](./DRIVER_DEPENDENCY_MAP.md)
 - [Hardware and source inventory](./HARDWARE_INVENTORY.md)
 
-The first-pass driver matrix is source-reviewed and intentionally conservative. It distinguishes RMX2072-specific manifest evidence from generic SM8250 source references and from the still-unverified ACK/GKI hardware path.
+The first-pass driver matrix separates RMX2072-specific source evidence from shared SM8250 references. The [compatibility matrix](COMPATIBILITY_MATRIX.md) records subsequent 6.18 handset tests, including warm UFS and Android first-stage init.
 
 ## Next automation stages
 
@@ -98,7 +98,7 @@ For each subsystem, report source presence, active build wiring, device-tree bin
 
 ### Stage C — Reproducible build experiments
 
-Only after the correct source/device-tree/vendor pairing is established, add a separate build workflow. Build jobs must use pinned toolchains and source SHAs, preserve logs and artifact hashes, and keep proprietary blobs and signing material outside the public repository.
+The generic ACK, board kernel and legacy comparison builds have separate workflows. Use the pinned toolchains and source SHAs, keep logs and artifact hashes, and record any factory input used in a comparison. [Build execution](BUILD_EXECUTION.md)
 
 ### Stage D — GKI compatibility analysis
 
@@ -107,7 +107,7 @@ Compare the 4.19 downstream driver interfaces with the Android Common Kernel 6.1
 ## Security and resource policy
 
 - Use the workflow's read-only GITHUB_TOKEN permission.
-- Keep upstream repositories external; do not mirror full kernel trees into this project.
+- The scanner reads external source at pinned revisions. The build uses a dedicated [ACK snapshot branch](GKI_618_SOURCE_MIRROR.md).
 - Do not store extracted vendor binaries, factory images, modem firmware, DRM assets, keys, personal device dumps or credentials in workflow artifacts.
 - Keep artifact retention finite.
 - Do not run full kernel builds on every push. Build workflows will be explicit and separately gated.
