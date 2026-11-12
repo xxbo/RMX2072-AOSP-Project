@@ -10,9 +10,22 @@ import zlib
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
 from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, serve, transcript, verify_first_stage, verify_image, verify_mount
+from record_m1_vendor import policy_result
 
 
 class GsiUsbTests(unittest.TestCase):
+    def test_policy_return_is_bound_to_the_open_fd_and_full_write(self):
+        opening = 'policy_open_entry path=/sys/fs/selinux/load watchdog_seconds=30'
+        rows = [opening, 'policy_open_rc=4', 'policy_write_entry fd=4 count=703220']
+        self.assertEqual(policy_result([opening, 'policy_open_rc=-13'])['errno'], 13)
+        self.assertEqual(policy_result(rows)['status'], 'UNOBSERVED')
+        for rc, status, error in [(703220, 'PASS', None), (-22, 'FAIL', 22), (8, 'FAIL', None)]:
+            with self.subTest(rc=rc):
+                result = policy_result(rows + [f'policy_write_rc={rc} count=703220'])
+                self.assertEqual((result['status'], result['errno']), (status, error))
+        with self.assertRaises(ValueError):
+            policy_result([opening, 'policy_open_rc=5', rows[2], 'policy_write_rc=703220 count=703220'])
+
     def test_live_policy_events_survive_disconnect_while_serving_image(self):
         class Console:
             def __init__(self):

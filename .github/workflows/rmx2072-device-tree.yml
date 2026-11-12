@@ -34,6 +34,8 @@ on:
       - 'scripts/device_audit/serve_gsi_usb.py'
       - 'scripts/device_audit/observe_gsi17.py'
       - 'scripts/device_audit/record_m1_vendor.py'
+      - 'scripts/device_audit/recover_policy_install.py'
+      - 'build/device/gsi17-policy-install-2026-11-12.json'
       - 'build/device/gsi17-project-vendor-2026-11-11.json'
       - 'build/device/gsi17-mount-reference.json'
       - 'build/device/f20-verity-reference.json'
