@@ -7,7 +7,8 @@ param(
     [Parameter(Mandatory)][string]$OutputDirectory,
     [Parameter(Mandatory)][ValidatePattern('^ufs-host-g3-gsi17-firststage-[a-zA-Z0-9-]+$')][string]$Trial,
     [string]$ProjectVendor,
-    [switch]$TraceInitFault
+    [switch]$TraceInitFault,
+    [string]$GsiBlockSeed
 )
 $ErrorActionPreference = 'Stop'
 $work = (Resolve-Path -LiteralPath $WorkDirectory).Path
@@ -51,6 +52,7 @@ try {
         $vendorArgs = @('--project-vendor',(Resolve-Path -LiteralPath $ProjectVendor).Path)
     }
     if ($TraceInitFault) { $vendorArgs += '--trace-init-fault' }
+    if ($GsiBlockSeed) { $vendorArgs += @('--gsi-block-seed',(Resolve-Path -LiteralPath $GsiBlockSeed).Path) }
     $rd = @("$PSScriptRoot/build_diag_ramdisk.py",'--busybox',"$prior/control-tools/busybox",
         '--reboot-helper',"$prior/control-tools/reboot-edl",'--entry-carrier',"$prior/control-tools/entry-carry",
         '--gadget-bind-delay','20','--return-to-edl-after',$timer,'--trial-id',$Trial,'--ufs-host-g3-test',

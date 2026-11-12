@@ -9,6 +9,7 @@ base=/run/gsi17
 tty=/dev/ttyGS0
 raw=rmx-gsi17-source
 verified=rmx-gsi17-verity
+seeded=rmx-gsi17-seeded
 dm() { /bin/lp/ld-musl-aarch64.so.1 --library-path /bin/lp /bin/lp/dmsetup --noudevsync --noudevrules "$@"; }
 device() {
     for d in /sys/class/block/dm-*; do
@@ -41,6 +42,8 @@ cleanup() {
     if awk -v m="$base/mnt/proc" '$2==m {ok=1} END {exit !ok}' /proc/mounts; then umount "$base/mnt/proc" || rc=1; fi
     if awk -v m="$base/mnt" '$2==m {ok=1} END {exit !ok}' /proc/mounts; then umount "$base/mnt" || rc=1; fi
     if device "$verified" >/dev/null; then dm remove "$verified" || rc=1; fi
+    if device "$seeded" >/dev/null; then dm remove "$seeded" || rc=1; fi
+    if [ -b "$base/seed-loop" ]; then losetup -d "$base/seed-loop" || rc=1; fi
     if [ -n "$backend" ]; then kill "$backend" 2>/dev/null || :; wait "$backend" 2>/dev/null || :; fi
     if device "$raw" >/dev/null; then dm remove "$raw" || rc=1; fi
     stty "$saved" < "$tty" || rc=1
@@ -75,11 +78,35 @@ make_node "$source/dev" "$base/source" b
 dd if="$base/source" of="$base/footer" bs=4096 skip=$((image_bytes/4096-1)) count=1 iflag=direct
 footer=$(sha256sum "$base/footer")
 echo "last_block_sha256=${footer%% *}"
+if [ -f /gsi-seed.blocks ]; then
+    [ "$mode" = install ]
+    loop=/sys/class/block/loop1
+    [ ! -e "$loop/loop/backing_file" ]
+    make_node "$loop/dev" "$base/seed-loop" b
+    losetup -r "$base/seed-loop" /gsi-seed.blocks
+    [ "$(cat "$loop/ro")" = 1 ]
+    # Uncached sectors still use the original USB backend. The original GSI
+    # verity descriptor checks both sources above this read-only linear table.
+    awk -v src="$dev" -v ram="$(cat "$loop/dev")" -v size="$((image_bytes/512))" '
+        BEGIN { end=0; used=0 }
+        { first=$1*8; len=$2*8; if (first>end) print end,first-end,"linear",src,end;
+          print first,len,"linear",ram,used+0; end=first+len; used+=len }
+        END { if (end<size) print end,size-end,"linear",src,end }' /gsi-seed.ranges > "$base/seed.table"
+    dm_major=${dev%:*}
+    dm create "$seeded" --major "$dm_major" --minor 2 --readonly < "$base/seed.table"
+    seeddev=$(device "$seeded")
+    [ "$(cat "$seeddev/ro")" = 1 ]
+    [ "$(cat "$seeddev/size")" = "$((image_bytes/512))" ]
+    dev=$(cat "$seeddev/dev")
+    echo "seed_backing=$dev ram=$(cat "$loop/dev") sectors=$(cat "$loop/size") ranges_sha256=$(sha256sum /gsi-seed.ranges | cut -d' ' -f1)"
+fi
 blocks=$((data_bytes/block_size))
 if [ -w /sys/module/dm_verity/parameters/prefetch_cluster ]; then
     echo 4096 > /sys/module/dm_verity/parameters/prefetch_cluster
 fi
-dm create "$verified" --readonly --table "0 $((data_bytes/512)) verity 1 $dev $dev $block_size $block_size $blocks $tree_start sha256 $root_hash $salt"
+set --
+if [ -f /gsi-seed.blocks ]; then set -- --major "$dm_major" --minor 1; fi
+dm create "$verified" "$@" --readonly --table "0 $((data_bytes/512)) verity 1 $dev $dev $block_size $block_size $blocks $tree_start sha256 $root_hash $salt"
 d=$(device "$verified")
 [ "$(cat "$d/ro")" = 1 ]
 echo 0 > "$d/queue/read_ahead_kb"

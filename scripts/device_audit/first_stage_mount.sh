@@ -81,7 +81,7 @@ if [ "${2:-}" = install ]; then
         [ ! -w /proc/sys/debug/exception-trace ] || echo 1 > /proc/sys/debug/exception-trace
         [ ! -w /proc/sys/kernel/print-fatal-signals ] || echo 1 > /proc/sys/kernel/print-fatal-signals
     fi
-    grep -E '^(boot_id|init_sha256|gsi_device|vendor_device|source_table|verity_table|last_block_sha256)=' \
+    grep -E '^(boot_id|init_sha256|gsi_device|vendor_device|source_table|verity_table|last_block_sha256|seed_backing)=' \
         /run/gsi17-run.log | sed 's/^/M1EVENT /' > /dev/ttyGS0
     for disk in /sys/class/block/sd?; do
         echo "M1EVENT disk=$(basename "$disk") ro=$(cat "$disk/ro")" > /dev/ttyGS0
