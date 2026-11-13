@@ -1,0 +1,371 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-13",
+  "gsi": "CP3A.260905.010",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "signed_images": {
+    "system": {
+      "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+      "bytes": 3953213440,
+      "tree": {
+        "version": 1,
+        "image_bytes": 3890753536,
+        "tree_offset": 3890753536,
+        "tree_bytes": 30642176,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 2,
+        "fec_offset": 3921395712,
+        "fec_bytes": 31006720,
+        "algorithm": "sha256",
+        "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+        "flags": 0
+      }
+    },
+    "vendor": {
+      "sha256": "6c59052a6c45a09578a913da389f7e9cefcb46f77b09511ea9cf80f5d4c4c27c",
+      "key_sha256": "ee13eae94a2bd9ae0a2272b3fdcc0aec902c9a308d0363b3262feac65419c73b",
+      "bytes": 3145728,
+      "tree": {
+        "version": 1,
+        "image_bytes": 2097152,
+        "tree_offset": 2097152,
+        "tree_bytes": 20480,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 0,
+        "fec_offset": 0,
+        "fec_bytes": 0,
+        "algorithm": "sha256",
+        "salt": "dacb21f04b780f254fa3ecefd55bc6f17c1fb48426a501602c41545ce560b062",
+        "root_digest": "c7c7c6fb664b58f745af416734ac271e0a6e95b6038071580197715561565402",
+        "flags": 0
+      }
+    }
+  },
+  "vendor_build": {
+    "commit": "8d46de6d2d84c286f72078d70d15382e2ab4b38e",
+    "ci_run": 43436009380,
+    "artifact_zip_digest": "sha256:d24b4ea16bba895b9ff2c6a55625d56be0ab90e4bc5831a4a674321fd55ce283",
+    "filesystem_sha256": "dacb21f04b780f254fa3ecefd55bc6f17c1fb48426a501602c41545ce560b062",
+    "properties": {
+      "/vendor/build.prop": {
+        "ro.zygote": "zygote64_32"
+      }
+    },
+    "labels": {
+      "/vendor/build.prop": "u:object_r:vendor_file:s0",
+      "/vendor/etc/fstab.qcom": "u:object_r:vendor_configs_file:s0"
+    },
+    "fstab_sha256": "cd8d058ff8dbae2a44a2f8c9b833e3e0a5786eb229c2aa5cae4e8655e9bb9f1e"
+  },
+  "candidate": {
+    "bytes": 8866758656,
+    "super_sha256": "8bd66b54878374c6f9a494bb89e9041e3105f0a83323c0e9814bde2940530870",
+    "metadata_prefix_sha256": "3b58e5799d4871a5d599a3384ffcb98f4e3bdfc3cdcee45a19d177e7c0a706b8",
+    "group_headroom_bytes": 915103744,
+    "active_extents_in_512b_sectors": {
+      "vendor": [
+        [
+          3008,
+          6144
+        ]
+      ],
+      "system": [
+        [
+          9152,
+          1209344
+        ],
+        [
+          1464256,
+          2048
+        ],
+        [
+          1479616,
+          149504
+        ],
+        [
+          1850304,
+          25600
+        ],
+        [
+          1881024,
+          26624
+        ],
+        [
+          1924032,
+          803840
+        ],
+        [
+          3354560,
+          49152
+        ],
+        [
+          3428288,
+          2696192
+        ],
+        [
+          6126528,
+          13312
+        ],
+        [
+          6140864,
+          3072
+        ],
+        [
+          11129792,
+          1088
+        ],
+        [
+          13039552,
+          64
+        ],
+        [
+          13184960,
+          64
+        ],
+        [
+          13330368,
+          64
+        ],
+        [
+          13475776,
+          438272
+        ],
+        [
+          13992896,
+          2302880
+        ]
+      ]
+    }
+  },
+  "boot": {
+    "image_sha256": "682112d0c13e963db191f0fe7db9fe0b11241c4a59428c683c274c8acfa6d8fd",
+    "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+    "boot_source_commit": "203bf31",
+    "host_observer_commit": "59a64cd",
+    "conditions": "USB-attached warm boot, diagnostic ACM handoff, internal UFS, read-only UFS block devices, watchdog enabled",
+    "first_stage_init_source": "Google API 37 emulator ramdisk",
+    "dt": "Factory-derived G3 DTB and original F.20 DTBO",
+    "ramdisk_sha256": "2a2ce72f644929f7055c24a66d06e0a7222ba6e99cfd3496c5945e3a18bc9aa0"
+  },
+  "scratch_build": {
+    "commit": "6f96661580dc869ff3b2b6fc1c0cb675886ed46d",
+    "ci_run": 43441208798,
+    "volumes": {
+      "data": {
+        "bytes": 536870912,
+        "sha256": "3609b84f64c748ec526b9a5cad9c8d60fa75fb95246d883d73e5300ea663e561",
+        "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+        "gzip_sha256": "b083742d72df2140ef211aa9332d5ce221fc4e159caf2c23f0da3392faeac3c0"
+      },
+      "metadata": {
+        "bytes": 33554432,
+        "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+        "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+        "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+      }
+    },
+    "physical_userdata_mounted": false
+  },
+  "trial": {
+    "id": "ufs-host-g3-gsi17-firststage-ufs-05",
+    "boot_id": "cc122bec-c8ca-4ae0-993f-f231d5869fad",
+    "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+    "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+    "mounts": {
+      "system": {
+        "node": "dm-14",
+        "device": "254:14",
+        "linear_device": "254:0",
+        "super": "8:10",
+        "extents": 16,
+        "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+        "avb_at_seconds": 26.425759,
+        "verity_status": "0 7599128 verity V 0",
+        "pid": 1,
+        "filesystem": "ext4",
+        "readonly": true,
+        "mount_rc": 0
+      },
+      "vendor": {
+        "node": "dm-15",
+        "device": "254:15",
+        "linear_device": "254:1",
+        "super": "8:10",
+        "extents": 1,
+        "root_sha256": "c7c7c6fb664b58f745af416734ac271e0a6e95b6038071580197715561565402",
+        "avb_at_seconds": 26.517562,
+        "verity_status": "0 4096 verity V -",
+        "pid": 1,
+        "filesystem": "ext4",
+        "readonly": true,
+        "mount_rc": 0
+      }
+    },
+    "enforcing_seconds": 47.442569,
+    "second_stage_seconds": 47.469589,
+    "file_reads": {
+      "/system/build.prop": {
+        "at_seconds": 47.518592,
+        "pid": 1,
+        "inode": 659,
+        "device": "254:14",
+        "requested_bytes": 5675,
+        "returned_bytes": 5675
+      },
+      "/system/etc/init/hw/init.rc": {
+        "at_seconds": 47.544356,
+        "pid": 1,
+        "inode": 757,
+        "device": "254:14",
+        "requested_bytes": 56913,
+        "returned_bytes": 56913
+      }
+    },
+    "raw_sha256": {
+      "acm.log": "9147c15320b728fcecae6d9368d11fe6f8c96c4b5ad2a5d024dd3dd80814be25",
+      "console-ramoops-0": "48e13961e64090baede40e587b492101d1fe5d1215e7c8c5a635acb109bc92fe",
+      "pmsg-ramoops-0": "c09a115c105a54f52c2d0dee2d4690188e5a1663c75aa9edfe9ad6d4009527e2"
+    },
+    "zygote_imports": {
+      "/system/etc/init/hw/init.zygote64_32.rc": {
+        "at_seconds": 47.552065,
+        "pid": 1,
+        "inode": 762,
+        "device": "254:14",
+        "requested_bytes": 620,
+        "returned_bytes": 620,
+        "parsing_seconds": 47.551639
+      },
+      "/system/etc/init/hw/init.zygote64.rc": {
+        "at_seconds": 47.553142,
+        "pid": 1,
+        "inode": 761,
+        "device": "254:14",
+        "requested_bytes": 901,
+        "returned_bytes": 901,
+        "parsing_seconds": 47.552728
+      },
+      "/system/etc/init/hw/init.boringssl.zygote64_32.rc": {
+        "at_seconds": 47.553907,
+        "pid": 1,
+        "inode": 756,
+        "device": "254:14",
+        "requested_bytes": 392,
+        "returned_bytes": 392,
+        "parsing_seconds": 47.553415
+      }
+    },
+    "vold_fstab": {
+      "at_seconds": 48.478071,
+      "pid": 2027,
+      "inode": 14,
+      "device": "254:15",
+      "requested_bytes": 220,
+      "returned_bytes": 220,
+      "service": "vold",
+      "domain": "u:r:vold:s0",
+      "service_start_seconds": 48.37993,
+      "domain_evidence": "Caller(pid=2027,uid=0,sid=u:r:vold:s0)"
+    },
+    "adb": {
+      "result": "INCOMPLETE_SAMPLING",
+      "samples": 89,
+      "errors": 1,
+      "transport_states": [],
+      "interval_seconds": 96.313,
+      "maximum_sample_gap_seconds": 4.437,
+      "diagnostic_acm_seen": true,
+      "raw_sha256": {
+        "adb.jsonl": "efb4c39d645a47cf75bbc961ef218c73d63fc18bc1a5b13cc36c79bf4e7dc48a",
+        "host-events.jsonl": "f2eac409c447b62f0cfa7cbcb90788eda6446c0bdef0ad0161654eb5a87ce4ad"
+      }
+    },
+    "first_keystore_abort": {
+      "pid": 2035,
+      "start_seconds": 48.607708,
+      "sigabrt_seconds": 48.822156,
+      "first_process_log": [
+        "[   48.779772][ T2035] ks_buf: (uprobe) tag=\"keystore2\" msg=\"system/security/keystore2/src/keystore2_main.rs:61 - Keystore2 is starting.",
+        "[   48.779772][ T2035] \"",
+        "[   48.780781][ T2035] ks_buf: (uprobe) tag=\"keystore2\" msg=\"system/security/keystore2/src/keystore2_main.rs:67 - Setting up sqlite logging for keystore2",
+        "[   48.780781][ T2035] \"",
+        "[   48.784194][ T2035] ks_buf: (uprobe) tag=\"keystore2\" msg=\"system/security/keystore2/src/keystore2_main.rs:105 - Starting thread pool now.",
+        "[   48.784194][ T2035] \"",
+        "[   48.787045][ T2035] ks_add: (uprobe) task=\"keystore2\" name=\"android.security.compat\"",
+        "[   48.787662][ T2035] ks_added: (uprobe) task=\"keystore2\" rc=0",
+        "[   48.788188][ T2035] ks_buf: (uprobe) tag=\"keystore2\" msg=\"system/security/keystore2/src/service.rs:76 - Failed to construct mandatory security level TEE: system/security/keystore2/src/security_level.rs:108: KeystoreSecurityLevel::new_native_binder.",
+        "[   48.788188][ T2035] ",
+        "[   48.788188][ T2035] Caused by:",
+        "[   48.788188][ T2035]     0: system/security/keystore2/src/globals.rs:349: Cannot connect to Keymint",
+        "[   48.788188][ T2035]     1: system/security/keystore2/src/globals.rs:271: Trying to get Legacy wrapper. Attempt to get keystore compat service for security level r#TRUSTED_ENVIRONMENT",
+        "[   48.788188][ T2035]     2: Error::Km(r#HARDWARE_TYPE_UNAVAILABLE)",
+        "[   48.788188][ T2035] \"",
+        "[   48.788896][ T2035] ks_buf: (uprobe) tag=\"keystore2\" msg=\"system/security/keystore2/src/service.rs:77 - Does the device have a /default Keymaster or KeyMint instance?",
+        "[   48.788896][ T2035] \"",
+        "[   48.789185][ T2035] ks_buf: (uprobe) tag=\"keystore2\" msg=\"system/security/keystore2/src/keystore2_main.rs:57 - panicked at system/security/keystore2/src/keystore2_main.rs:113:9:",
+        "[   48.789185][ T2035] Failed to create service android.system.keystore2.IKeystoreService/default because of system/security/keystore2/src/service.rs:78: Trying to construct mandatory security level TEE",
+        "[   48.789185][ T2035] ",
+        "[   48.789185][ T2035] Caused by:",
+        "[   48.789185][ T2035]     0: system/security/keystore2/src/security_level.rs:108: KeystoreSecurityLevel::new_native_binder.",
+        "[   48.789185][ T2035]     1: system/security/keystore2/src/globals.rs:349: Cannot connect to Keymint",
+        "[   48.789185][ T2035]     2: system/security/keystore2/src/globals.rs:271: Trying to get Legacy wrapper. Attempt to get keystore compat service for security level r#TRUSTED_ENVIRONMENT",
+        "[   48.789185][ T2035]     3: Error::Km(r#HARDWARE_TYPE_UNAVAILABLE).",
+        "[   48.789185][ T2035] \""
+      ]
+    },
+    "scratch_mounts": {
+      "data": {
+        "device": "7:0",
+        "filesystem": "ext4",
+        "backing": "/run/m1-scratch/data.ext4",
+        "write_fsync_unlink": "PASS"
+      },
+      "metadata": {
+        "device": "7:1",
+        "filesystem": "ext4",
+        "backing": "/run/m1-scratch/metadata.ext4",
+        "write_fsync_unlink": "PASS"
+      }
+    },
+    "keystore_add_service_attempts": [
+      "android.security.compat"
+    ],
+    "maintenance_last_lookup_failure": "[   85.725695][    T1] init: Control message: Could not find 'aidl/android.security.maintenance' for ctl.interface_start from pid: 2013 (/system/bin/servicemanager)",
+    "vdc": {
+      "pid": 2041,
+      "start": "[   48.653957][    T1] init: SVC_EXEC service 'exec 5 (/system/bin/vdc keymaster earlyBootEnded)' pid 2041 (uid 1000 gid 1000+0 context default) started; waiting...",
+      "exit_record": null
+    },
+    "usb": {
+      "samples": 40,
+      "device_ids": [
+        "VID_1D6B&PID_0104",
+        "VID_1D6B&PID_0104&MI_00"
+      ],
+      "interface_ids": [
+        "USB\\Class_02",
+        "USB\\Class_02&SubClass_02",
+        "USB\\Class_02&SubClass_02&Prot_01"
+      ],
+      "adb_interface_seen": false,
+      "max_gap_seconds": 2.69,
+      "raw_sha256": "a514d40e56f137ca044a1a4cafd5c6e14d8622dd2f79139afa837d10a2846d9b"
+    },
+    "apex_observations": [
+      "[   47.754600][ T1894] apexd-bootstrap: Found pre-installed APEX /system/apex/com.google.android.adbd.capex",
+      "[   47.789453][ T1894] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.virt.apex",
+      "[   47.789551][ T1894] apexd-bootstrap: Found bootstrap APEX /system/apex/com.google.android.tzdata6.apex",
+      "[   47.789706][ T1894] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.i18n.apex",
+      "[   47.789857][ T1894] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.runtime.apex",
+      "[   47.903445][ T1894] apexd-bootstrap: Activated 4 packages. duration=74ms"
+    ],
+    "keystore_sigabrt_count": 8,
+    "candidate_readback_chunks": 17,
+    "scope": "USB-attached warm boot; GSI and vendor from UFS, writable ext4 loop devices backed by RAM. Cold boot not run.",
+    "console_ring_note": "Console retained enforcing onward. The handoff boot ID was recovered from pmsg; first-stage AVB messages were recovered from the concurrent ACM kmsg stream."
+  }
+}

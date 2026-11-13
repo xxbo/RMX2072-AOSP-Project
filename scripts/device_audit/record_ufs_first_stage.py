@@ -36,8 +36,12 @@ def record(directory, layout):
     if not identity['kernel'].startswith('6.18.'):
         raise ValueError('Unexpected kernel')
     boot = match(r'^M1EVENT boot_id=([0-9a-f-]{36})$', serial)[1]
-    match('kernel='+re.escape(identity['kernel'])+' phase=android-first-stage-handoff trial='+
-          re.escape(identity['trial'])+' boot_id='+boot+'$', console)
+    handoff = ('kernel='+re.escape(identity['kernel'])+' phase=android-first-stage-handoff trial='+
+               re.escape(identity['trial'])+' boot_id='+boot+'$')
+    # Heavy service logging can wrap the console ring before the next boot.
+    # The same supervisor writes the same handoff marker to the pmsg ring.
+    if not re.search(handoff, console, re.MULTILINE):
+        match(handoff, read('pmsg-ramoops-0'))
     backing = match(r'^M1EVENT ufs_super=(\S*/1d84000\.ufs/\S*/sda/sda10) dev=(\d+:\d+) ro=1$', serial)
     mounts = {}
     for name in ('system', 'vendor'):
@@ -60,9 +64,15 @@ def record(directory, layout):
             cursor += int(length)
         if actual != layout['candidate']['active_extents_in_512b_sectors'][name]:
             raise ValueError(f'{name}: live extents differ from the candidate')
-        avb = match(rf"^\[\s*([0-9.]+)\]\[\s*T1\].+Returning avb_handle for '/{name}' with status: Success$", console)
+        avb_text = f"Returning avb_handle for '/{name}' with status: Success"
+        avb = re.search(r'^\[\s*([0-9.]+)\]\[\s*T1\].+'+avb_text+'$', console, re.M)
+        if avb:
+            avb_seconds = float(avb[1])
+        else:
+            kmsg = match(r'^\d+,\d+,(\d+),[^\n]*,caller=T1;init: .+'+avb_text+'$', serial)
+            avb_seconds = int(kmsg[1])/1_000_000
         mounts[name] = dict(node=node, device=device, linear_device=table[4], super=backing[2],
-                            extents=len(actual), root_sha256=tree['root_digest'], avb_at_seconds=float(avb[1]),
+                            extents=len(actual), root_sha256=tree['root_digest'], avb_at_seconds=avb_seconds,
                             verity_status=status, pid=1, filesystem='ext4', readonly=True, mount_rc=0)
     enforcing = float(match(r'^\[\s*([0-9.]+)\].+ enforcing=1 old_enforcing=0 .* res=1$', console)[1])
     second = float(match(r'^\[\s*([0-9.]+)\]\[\s*T1\] init: init second stage started!$', console)[1])

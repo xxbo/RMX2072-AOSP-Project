@@ -81,3 +81,34 @@ python scripts/device_audit/record_ufs_first_stage.py --capture PRIVATE/live \
 ```
 
 The handset returned to 9008 by software. Recovery restored all 17 original super chunks and the F.20 log-reader boot baseline. Independent readback matched super, boot and the original DTBO. F.20 then reported `sys.boot_completed=1` on boot `4ac714d3-ae03-45b9-8a43-eb3775901ab4`. Both LP metadata dumps and the SHA-256 computed over super from Android matched the pre-trial values.
+
+## Writable /data and /metadata trial
+
+Build the scratch filesystems using `python scripts/build/build_m1_scratch.py --output PRIVATE/volumes` on a host with e2fsprogs. Pass that directory to `build_diag_ramdisk.py --scratch-volumes PRIVATE/volumes` alongside the trial 04 signed UFS profile. The data image is 512 MiB and includes the GSI file labels and Android ownership for its root, `misc` and `misc/keystore`. Metadata begins with a labeled root on a separate 32 MiB image.
+
+After the UFS vendor mount, the diagnostic decompresses both images into a bounded tmpfs and checks their raw digests. The observer mounts the two loop-backed ext4 filesystems in Android init's namespace and verifies a create, write, fsync and unlink on each volume. UFS block devices remain read-only during Android execution.
+
+The observer verifies the GSI library hashes and records keystore2's Android log messages and Binder registration calls and returns. Match the first keystore PID against its log messages and init's exit record. Check the exit status of the specific vdc invocation, APEX activation, USB interface descriptors and host ADB state separately. [Linux 6.18 uprobe interface](https://docs.kernel.org/6.18/trace/uprobetracer.html) · [AOSP keystore2 registration](https://android.googlesource.com/platform/system/security/+/refs/heads/main/keystore2/src/keystore2_main.rs)
+
+On Windows, start `watch_trial_usb.ps1` in 9008 before the test reset. Pass a JSONL output path and the observer's `live/host-events.jsonl` as `-HandoffEvents`. The collector follows the physical USB port through re-enumeration and records interface compatible IDs. The ACM observer separately samples the ADB server.
+
+### Trial 05 handset result
+
+The handset ran ACK 6.18.32 and switched to SELinux enforcing at 47.442569 seconds. Both scratch mounts passed the write check. The console ring wrapped during service retries. The matching pmsg handoff marker identifies boot `cc122bec-c8ca-4ae0-993f-f231d5869fad`, and the live ACM stream retains both AVB successes. The persistent console contains the first keystore process's complete panic. [Handset record](../build/device/m1-ufs-first-stage-writable-2026-11-13.json)
+
+| Time since boot | Observation |
+| ---: | --- |
+| 48.607708 s | Init started keystore2 as PID 2035. |
+| 48.653957 s | Init waited for PID 2041 running `vdc keymaster earlyBootEnded`. |
+| 48.787662 s | The same keystore2 thread returned 0 from registering `android.security.compat`. |
+| 48.788188 s | Creating the mandatory TEE security level failed. The direct KeyMint lookup and the legacy wrapper ended in `HARDWARE_TYPE_UNAVAILABLE`. |
+| 48.789185 s | Keystore2 logged the panic constructing `android.system.keystore2.IKeystoreService/default`. |
+| 48.822156 s | Init recorded the first SIGABRT for PID 2035. Eight keystore2 invocations aborted during the capture. |
+| 85.725695 s | Init still could not resolve `aidl/android.security.maintenance`. The trace contains no maintenance registration or matching vdc exit. |
+
+The bootstrap APEX scan found `com.google.android.adbd.capex`. It activated the four bootstrap packages (virt, tzdata, i18n and runtime). The capture contains no adbd activation or service start. Across 96.313 seconds, 88 ADB queries returned an empty list and one timed out. All 40 USB samples showed either a disconnected port or the diagnostic gadget. The only observed interface was CDC ACM (02/02/01).
+
+```sh
+python scripts/device_audit/record_ufs_scratch.py --capture PRIVATE/live --usb PRIVATE/usb-port.jsonl \
+    --layout build/device/m1-ufs-first-stage-writable-2026-11-13.json
+```
