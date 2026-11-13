@@ -1,0 +1,273 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-13",
+  "firmware": "RMX2072_11_F.20",
+  "original_full_android_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+  "host_backup_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+  "adb_before_edl_boot_id": "cfdbd55a-80e3-4412-ade0-2e71bb052e3d",
+  "firehose_read": {
+    "bytes": 8866758656,
+    "sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "command": "read",
+    "lun": 0,
+    "sector_bytes": 4096,
+    "first_sector": 193032,
+    "sectors": 2164736,
+    "parts": [
+      {
+        "bytes": 536870912,
+        "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+      },
+      {
+        "bytes": 276824064,
+        "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+      }
+    ],
+    "restored_os": [
+      "RMX2072_11_F.20",
+      "1",
+      "97a1c14e-dae0-4b8c-b53a-8bd4e98de977"
+    ]
+  },
+  "candidate_native_lpdump": {
+    "runtime": "pinned Alpine aarch64 AOSP lpdump, on F.20",
+    "input": "temporary sparse regular file containing candidate LP prefix",
+    "slot0_partitions": 14,
+    "slot1_partitions": 9,
+    "extent_tables_matched": true
+  },
+  "host_rehearsal": {
+    "source_bytes": 8866758656,
+    "source_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "target_bytes": {
+      "system": 3953213440,
+      "vendor": 2097152
+    },
+    "target_sha256": {
+      "system": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "vendor": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90"
+    },
+    "group_limit_bytes": 8862564352,
+    "stock_allocated_bytes": 6627184640,
+    "shortfall_with_both_targets_keeping_other_partitions": 685142016,
+    "candidate_allocated_bytes": 7946412032,
+    "candidate_group_headroom_bytes": 916152320,
+    "slot0_removed": [
+      "my_stock"
+    ],
+    "slot0_replaced": [
+      "system",
+      "vendor"
+    ],
+    "slot1_metadata_preserved": true,
+    "slot1_payloads_changed": [
+      "system"
+    ],
+    "partitions_before": [
+      {
+        "system": "04739e77e523644b8c836eced8d4e93077db47cbe27bb4d62eb353f265f2329d",
+        "vendor": "6ce6fd7565ee107c76a86575b0cbaf049ab30c182c8485ea25611ac566aeece0",
+        "product": "64927a0f20d3a51a3b0de26ff48e64e5f7b9feb57177349903bea85a9560a142",
+        "my_region": "9b6f8c8c18d4142000214490177aa3f14a45fcb80536747327ae2f31a9bab166",
+        "my_manifest": "e4ed7e0dd470dc6879f41de3144f1d2da86c36a44e57ba495283211a223a8a98",
+        "my_preload": "ce59f184862280fec37aa6928054ac616c0d067106265e7c72481368c55b9643",
+        "my_stock": "7225635d8a99cf0c139190c2899c57946a2b4137c6df50a79927a21f38bd44e0",
+        "my_carrier": "01a2a1db5f613246a7749c9cb9a8c9898e1a942ded6d9ca815909b63c541b2bc",
+        "my_product": "76602a33a8b0b961e76081b4c54922eb8ac2b66778937e880e8e9793ed22bdac",
+        "system_ext": "e69f7d3153f48f853733a7452de7e97e9158f05e7a41e5277cab9c1c4d6b85b0",
+        "odm": "17023333767b93bc7ef5e0432d4efb232de1f1ef0331cfea2ee5888a101808d5",
+        "my_company": "a56c7ce89791db30464a1578f1b31d7d3391c170755721de596357a19fd70f38",
+        "my_engineering": "5af9c165c60fb413d37074992356dc68c1afae6f05e8035b6500c1318f83674c",
+        "my_heytap": "59d155025761d34352d682b59777fc5897e21b166f494cd60a732d98262aba82",
+        "my_bigball": "e7246be1e4fe98d8c85057c8eb27e99eaf8675d1d0703643658256b9edf1b3bb"
+      },
+      {
+        "system": "9fccf51af13b80671be6bb277f60a53f910c58f1755c3669f99d1d326e086b5b",
+        "vendor": "4715a32460592a51181cbd993051c52c0e0a52146832082532b409b5cb5d16a0",
+        "product": "5db7f958d11b0f5cf8cfa525487606e2aa763c5188d0411f5795ea82a895e5ec",
+        "engineering": "52c3c5815ade08a56f56b94ed095868a1e0063ca69b19871312d8532c0d50c1f",
+        "oppo_product": "0acf5e35e92c601d33e7a5f003ba341b9398744cbf9dc5d16dc2c5f5b9be78df",
+        "common_preload": "2ee0b1233eaedd0def1fa49f43af0ad6498936297df9addb445e2b0d11e6de9f",
+        "version.19795": "24596fcc0b24a3890b3111a1a426fdfd6a036828c75788c9175bd83a5ce58375",
+        "version.19797": "3ca142da3fee3acf0c958812674c3936395763bd35719b56752a573a965d4823",
+        "version.20607": "64b1d89ab291cc7d00f4888ae4a539e701bcad0adf99cccaaa091292cba4150e"
+      }
+    ],
+    "partitions_after": [
+      {
+        "system": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+        "vendor": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+        "product": "64927a0f20d3a51a3b0de26ff48e64e5f7b9feb57177349903bea85a9560a142",
+        "my_region": "9b6f8c8c18d4142000214490177aa3f14a45fcb80536747327ae2f31a9bab166",
+        "my_manifest": "e4ed7e0dd470dc6879f41de3144f1d2da86c36a44e57ba495283211a223a8a98",
+        "my_preload": "ce59f184862280fec37aa6928054ac616c0d067106265e7c72481368c55b9643",
+        "my_carrier": "01a2a1db5f613246a7749c9cb9a8c9898e1a942ded6d9ca815909b63c541b2bc",
+        "my_product": "76602a33a8b0b961e76081b4c54922eb8ac2b66778937e880e8e9793ed22bdac",
+        "system_ext": "e69f7d3153f48f853733a7452de7e97e9158f05e7a41e5277cab9c1c4d6b85b0",
+        "odm": "17023333767b93bc7ef5e0432d4efb232de1f1ef0331cfea2ee5888a101808d5",
+        "my_company": "a56c7ce89791db30464a1578f1b31d7d3391c170755721de596357a19fd70f38",
+        "my_engineering": "5af9c165c60fb413d37074992356dc68c1afae6f05e8035b6500c1318f83674c",
+        "my_heytap": "59d155025761d34352d682b59777fc5897e21b166f494cd60a732d98262aba82",
+        "my_bigball": "e7246be1e4fe98d8c85057c8eb27e99eaf8675d1d0703643658256b9edf1b3bb"
+      },
+      {
+        "system": "934504018f95c45de4ce72cff6042f795a05a7d12f364d8666bb3578f05baf1d",
+        "vendor": "4715a32460592a51181cbd993051c52c0e0a52146832082532b409b5cb5d16a0",
+        "product": "5db7f958d11b0f5cf8cfa525487606e2aa763c5188d0411f5795ea82a895e5ec",
+        "engineering": "52c3c5815ade08a56f56b94ed095868a1e0063ca69b19871312d8532c0d50c1f",
+        "oppo_product": "0acf5e35e92c601d33e7a5f003ba341b9398744cbf9dc5d16dc2c5f5b9be78df",
+        "common_preload": "2ee0b1233eaedd0def1fa49f43af0ad6498936297df9addb445e2b0d11e6de9f",
+        "version.19795": "24596fcc0b24a3890b3111a1a426fdfd6a036828c75788c9175bd83a5ce58375",
+        "version.19797": "3ca142da3fee3acf0c958812674c3936395763bd35719b56752a573a965d4823",
+        "version.20607": "64b1d89ab291cc7d00f4888ae4a539e701bcad0adf99cccaaa091292cba4150e"
+      }
+    ],
+    "targets_in_512_byte_sectors": {
+      "vendor": [
+        [
+          3008,
+          4096
+        ]
+      ],
+      "system": [
+        [
+          7104,
+          1211392
+        ],
+        [
+          1464256,
+          2048
+        ],
+        [
+          1479616,
+          149504
+        ],
+        [
+          1850304,
+          25600
+        ],
+        [
+          1881024,
+          26624
+        ],
+        [
+          1924032,
+          803840
+        ],
+        [
+          3354560,
+          49152
+        ],
+        [
+          3428288,
+          2696192
+        ],
+        [
+          6126528,
+          13312
+        ],
+        [
+          6140864,
+          3072
+        ],
+        [
+          11129792,
+          1088
+        ],
+        [
+          13039552,
+          64
+        ],
+        [
+          13184960,
+          64
+        ],
+        [
+          13330368,
+          64
+        ],
+        [
+          13475776,
+          438272
+        ],
+        [
+          13992896,
+          2300832
+        ]
+      ]
+    },
+    "candidate_prefix_sha256": "0f506191c857b844ec508d72b183ea64daffa57204b9299d3dc31e669c3fdbb6",
+    "candidate_full_sha256": "f24a292400d72ffc0d77bfba490f3f016e57091e711a7a2845756dbe2d7c11f2",
+    "restored_regular_file_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+  },
+  "recovery_xml_sha256": "5a1b918a6873a90404f3ca0a7fd91449e67c129865779873fdafbec2f2b8c5d4",
+  "results": {
+    "full_stock_backup": "PASS",
+    "independent_edl_read": "PASS",
+    "host_full_rollback": "PASS",
+    "stock_kit_hashes": "PASS",
+    "stock_handset_program": "NOT RUN",
+    "candidate_handset_program": "NOT RUN",
+    "ufs_gsi_boot": "NOT RUN"
+  }
+}

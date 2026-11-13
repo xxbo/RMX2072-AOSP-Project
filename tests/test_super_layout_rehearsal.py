@@ -4,7 +4,7 @@ import unittest
 import xml.etree.ElementTree as ET
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
-from check_super_chunks import FIRST, SECTORS, read_xml
+from check_super_chunks import FIRST, SECTORS, read_xml, stock_restore_xml
 from rehearse_super_layout import allocate
 
 
@@ -29,3 +29,9 @@ class SuperLayoutTests(unittest.TestCase):
         self.assertEqual(allocate(gaps,4),[(68,4)])
         with self.assertRaises(ValueError):
             allocate(gaps,8)
+
+    def test_restore_uses_the_same_chunks_and_writes_metadata_last(self):
+        read = ET.fromstring(read_xml())
+        write = ET.fromstring(stock_restore_xml())
+        self.assertTrue(all(r.tag=='program' for r in write))
+        self.assertEqual([r.attrib for r in write],[r.attrib for r in list(read)[1:]]+[read[0].attrib])

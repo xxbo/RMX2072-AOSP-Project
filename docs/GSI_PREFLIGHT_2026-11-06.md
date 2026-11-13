@@ -24,6 +24,8 @@ Read-only `lpdump` on the connected handset reports qti_dynamic_partitions maxim
 
 Do not remove OEM logical partitions until their boot dependencies and a complete super recovery method are understood. The existing full super backup is local and hashed, but a complete super restore has not been exercised.
 
+The November 13 rehearsal includes the project vendor at its actual 2 MiB size. Replacing both stock images reduces the group deficit to 685,142,016 bytes. The host candidate, retained partitions, overlapping slot 1 payload and recovery checks are recorded in the [M1 UFS layout](M1_UFS_LAYOUT.md).
+
 ## November 6 stock-vendor experiment design
 
 These steps document the F.20 compatibility investigation. The [current roadmap](../plan.md) targets a source-built vendor on ACK 6.18. The partition measurements above remain relevant to any layout that preserves the same logical partitions.
