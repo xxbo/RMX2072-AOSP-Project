@@ -40,7 +40,7 @@ Run #5 produced `Image` (43.5 MB), `Image.gz` (17.7 MB), `Image.lz4` (20.8 MB), 
 
 ## Board integration and module experiments
 
-The generic distribution and strict NFC DDK checks have passed. The separate SM8250 platform kernel reached Android first-stage init with a USB-backed GSI and project vendor. The [handset roadmap](../plan.md#next-work-on-m1) tracks the UFS cold boot and the source-built board trees. [Physical evidence](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json)
+The generic distribution and strict NFC DDK checks have passed. The separate SM8250 platform kernel ran Android 17 second-stage init under enforcing with the RAM/USB-backed GSI and RAM-mounted project vendor. The [handset roadmap](../plan.md#next-work-on-m1) tracks the UFS cold boot and source-built board trees. [Trial 05](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/build/device/gsi17-enforcing-second-stage-2026-11-12.json)
 
 For a driver port, inspect the actual build configuration and KMI artifacts. Validate module loading and hardware behavior on the matching platform build. A Rust module prototype can be tested independently of the headless boot milestones.
 

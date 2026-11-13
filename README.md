@@ -6,9 +6,9 @@ Independent Android platform research and porting project for the **realme X50 P
 
 ## Current handset result
 
-On two warm RMX2072 boots, Android first-stage init ran as PID 1 on 6.18.32, switched root to the USB-backed Android 17 GSI and mounted the source-built vendor at `/vendor` from RAM. PID 1 then executed the GSI's `/system/bin/init selinux_setup`. Trial 02 selected genfs `202604` and passed a separate policy compile with neverallow checking enabled. The observer stopped before the kernel policy write. [Handset records](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) · [Process and replay](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/docs/ANDROID17_USB_MOUNT.md#project-vendor-and-pid-1-policy-setup)
+On November 12, Android 17 PID 1 on the RMX2072 ran second-stage init under SELinux enforcing on the project-built 6.18.32 kernel. The kernel accepted all 703,220 policy bytes. The project vendor was mounted read-only from RAM. Trial 05 supplied 4,712 original GSI blocks from RAM. All other reads depended on the USB fallback under the original dm-verity root. [Handset record](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/build/device/gsi17-enforcing-second-stage-2026-11-12.json)
 
-**M1 is in progress.** The next handset trial should capture actual policy installation, enforcing state and second-stage init. In parallel, establish the UFS layout, verified mappings and recovery for both target images. Acceptance requires an image-server-disconnected cold boot followed by same-boot ADB on Android 17. The current fixture uses a factory-derived board DTB, original DTBO and a temporary Google emulator first-stage init. [Milestones](plan.md#milestones-and-acceptance) · [Next M1 tests](plan.md#next-work-on-m1)
+**M1 is in progress.** The USB fallback lost its reader. Second-stage init reported an I/O error reading `/system/build.prop`, then errors reading `/system/etc/init/hw/init.rc` and `/etc/cgroups.json`. The next test moves the system and project vendor to verified UFS-backed mappings. M1 requires a cold boot with the image server disconnected and ADB from that same Android 17 boot. M2 replaces the factory-derived G3 DTB, original DTBO and temporary emulator first-stage init. [Fault comparison](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/docs/ANDROID17_USB_MOUNT.md#pid-1-sigbus-and-second-stage-execution) · [M1 work list](plan.md#next-work-on-m1)
 
 ### Diagnostic and build records
 
@@ -105,6 +105,7 @@ These are upstream references, not copies of their contents:
 - [x] Archive and hash local boot/recovery/firmware and calibration backups (userdata excluded; complete restore still untested).
 - [x] Build the Android 17 ACK 6.18 kernel and demonstrate diagnostic userspace and USB on the handset.
 - [x] Exercise UFS HS-G3 reads and verified F.20 mounts, then observe Android first-stage init mount both the USB-backed GSI and the RAM-backed project vendor. [Handset trials](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json)
+- [x] Run Android 17 second-stage init under enforcing with the RAM/USB-backed GSI. [Trial 05](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/build/device/gsi17-enforcing-second-stage-2026-11-12.json)
 - [ ] Boot Android 17 from UFS with a source-built vendor and working ADB.
 - [ ] Repeat that boot on source-built board device trees and bring up the interactive desktop.
 - [ ] Qualify daily-use hardware and the update/recovery path. See [milestone acceptance](plan.md#milestones-and-acceptance).
