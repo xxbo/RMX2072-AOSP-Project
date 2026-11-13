@@ -1,0 +1,49 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "kernel": "4.19.157-perf+",
+  "boot_id": "714bc753-3d76-4bfc-b01c-8319ebb9cf9b",
+  "interface": "android.hardware.keymaster@4.0::IKeymasterDevice/default",
+  "transport": "hwbinder",
+  "init_service": "keymaster-4-0",
+  "pid": 677,
+  "domain": "u:r:vendor_hal_keymaster_qti:s0",
+  "devices": [
+    "/dev/binderfs/hwbinder",
+    "/dev/qseecom",
+    "/dev/ion"
+  ],
+  "driver": "/sys/bus/platform/drivers/qseecom/82400000.qseecom",
+  "interface_libraries": [
+    "libqtikeymaster4.so",
+    "libkeymasterdeviceutils.so",
+    "libkeymasterutils.so",
+    "libQSEEComAPI.so"
+  ],
+  "stock_scm_trace": {
+    "filter": "common_pid == 677",
+    "idle_seconds": 1,
+    "idle": [
+      0,
+      0
+    ],
+    "tee_generate_exit": 0,
+    "generate_starts": 5,
+    "generate_ends": 5,
+    "delete_exit": 0
+  },
+  "app_loaded_query": {
+    "keymaster": "absent",
+    "keymaster64": "loaded",
+    "ro.boot.keymaster": "1",
+    "keymaster_partition": "/dev/block/sde10"
+  },
+  "maintenance": "found",
+  "vdc": {
+    "pid": 769,
+    "start_seconds": 5.012492,
+    "exit_seconds": 5.029418,
+    "exit_status": 0
+  },
+  "gsi_hidl_manager_max_fcm": 8,
+  "gsi_highest_matrix_listing_keymaster_4_0": 7
+}

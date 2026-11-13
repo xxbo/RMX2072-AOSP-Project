@@ -1,0 +1,9 @@
+{
+  "/bin/hw/android.hardware.keymaster@4.0-service-qti": "68711763ead1160efe7db5275241b894f443dc1e481433cdfefbedf69717166f",
+  "/lib64/libkeymasterdeviceutils.so": "e7b223728a88d76eec8b615eb4c1a1e9eb857bd4b20f9a5f762a5a60766f0603",
+  "/lib64/libkeymasterutils.so": "8d92872bfe7aead75eecece9206dae52ec2087d6e669ac7f7d2136831def78ba",
+  "/lib64/libqcbor.so": "992222d255a46694c18683e87c10d9d914307a1bb11de3936045e5f2cea84104",
+  "/lib64/libQSEEComAPI.so": "f5274283690c77730166d928ba55507d171e8c6f40af6195ce2500f43423e27c",
+  "/lib64/libqtikeymaster4.so": "8fb4d8c7ad198c49379400ff52beb6fe6f1482ca53220b27192e4faacb4311d1",
+  "/lib64/libspcom.so": "9da90331b7da925f7f9f7554bf1d4a99974d4c2e4f9c6038771be43a8a5dcac7"
+}

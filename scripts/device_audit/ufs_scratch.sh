@@ -46,3 +46,15 @@ for name in ks_add ks_added; do
 done
 echo 1 > "$events/enable"
 echo 'M1EVENT keystore_trace=armed' > /dev/ttyGS0
+
+apps=/sys/module/rmx2072_keymaster_lookup/parameters/apps
+if [ -r "$apps" ]; then
+    printf '%s\n' "p:m1ks/km_print $log:0xa1cc tag=+0(%x1):string fmt=+0(%x2):string" >> "$t/uprobe_events"
+    echo 'tag == "KeyMasterHalDevice" || tag == "KeymasterUtils" || tag == "QSEECOMAPI"' > "$events/km_print/filter"
+    echo 1 > "$events/km_print/enable"
+    if result=$(cat "$apps"); then
+        echo "M1EVENT qsee_lookup $result" > /dev/ttyGS0
+    else
+        echo "M1EVENT qsee_lookup_read_failed=$?" > /dev/ttyGS0
+    fi
+fi
