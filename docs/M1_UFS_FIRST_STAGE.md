@@ -112,3 +112,5 @@ The bootstrap APEX scan found `com.google.android.adbd.capex`. It activated the 
 python scripts/device_audit/record_ufs_scratch.py --capture PRIVATE/live --usb PRIVATE/usb-port.jsonl \
     --layout build/device/m1-ufs-first-stage-writable-2026-11-13.json
 ```
+
+Trial 05 returned to 9008 by software. Recovery verified each of the 17 original super chunks, the F.20 log-reader boot and the original DTBO. F.20 booted with ID `714bc753-3d76-4bfc-b01c-8319ebb9cf9b` and `sys.boot_completed=1`. Both LP metadata slots and the device-side full super digest matched the pre-trial baseline. On that boot, `lshal -i` listed `android.hardware.keymaster@4.0::IKeymasterDevice/default` and the vendor manifest specified hwbinder. This identifies the stock interface for the next project vendor comparison.
