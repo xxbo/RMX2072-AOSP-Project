@@ -6,7 +6,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DEVICE = ROOT / 'device/realme/bladerunner_48m'
-SERVICE = '/bin/hw/android.hardware.keymaster@4.0-service-qti'
 
 
 def inventory():

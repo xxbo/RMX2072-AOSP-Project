@@ -19,13 +19,17 @@ def build(output, reference=None):
     if ROOT in output.parents or output == ROOT:
         raise ValueError('Select an output outside the checkout')
     output.mkdir(parents=True, exist_ok=True)
-    env = dict(os.environ, LC_ALL='C', TZ='UTC', E2FSPROGS_FAKE_TIME=str(EPOCH))
-    source = SOURCE
     if reference:
         from stage_keymaster_reference import stage
-        reference_stage = tempfile.TemporaryDirectory(dir=output)
-        source = Path(reference_stage.name) / 'vendor'
-        stage(reference, source)
+        with tempfile.TemporaryDirectory(dir=output) as tmp:
+            source = Path(tmp) / 'vendor'
+            stage(reference, source)
+            return build_image(source, output)
+    return build_image(SOURCE, output)
+
+
+def build_image(source, output):
+    env = dict(os.environ, LC_ALL='C', TZ='UTC', E2FSPROGS_FAKE_TIME=str(EPOCH))
     paths = sorted(source.rglob('*'))
     contexts = []
     for row in (source/'etc/selinux/vendor_file_contexts').read_text().splitlines():
@@ -89,8 +93,6 @@ def build(output, reference=None):
         digest = hashlib.sha256(image.read_bytes()).hexdigest()
         image.replace(output/'vendor.img')
     (output/'vendor.json').write_text(json.dumps(dict(sha256=digest, files=hashes), indent=2)+'\n')
-    if reference:
-        reference_stage.cleanup()
     return digest
 
 
