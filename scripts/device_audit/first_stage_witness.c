@@ -331,9 +331,39 @@ static void observe(int vendor_trial) {
     }
 }
 
+/* Pin the checked loop node and init's current root before entering its
+ * namespace. setns resets the caller's root to the namespace root. */
+static void scratch_mount(const char *name) {
+    if (strcmp(name, "data") && strcmp(name, "metadata")) exit(2);
+    char source[64], target[64];
+    snprintf(source, sizeof(source), "/run/m1-scratch/%s-loop", name);
+    snprintf(target, sizeof(target), "/%s", name);
+    int loop = open(source, O_PATH | O_CLOEXEC);
+    int root = open("/proc/1/root", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+    if (loop < 0 || root < 0) fail("pin scratch device and Android root");
+    struct stat device, volume;
+    if (fstat(loop, &device) || !S_ISBLK(device.st_mode)) fail("check scratch block node");
+    int ns = open("/proc/1/ns/mnt", O_RDONLY | O_CLOEXEC);
+    if (ns < 0 || setns(ns, CLONE_NEWNS)) fail("enter Android mount namespace");
+    close(ns);
+    if (fchdir(root) || chroot(".") || chdir("/")) fail("enter Android root");
+    close(root);
+    snprintf(source, sizeof(source), "/proc/self/fd/%d", loop);
+    if (mount(source, target, "ext4", MS_NOSUID | MS_NODEV, NULL)) fail("mount RAM ext4");
+    close(loop);
+    if (stat(target, &volume) || device.st_rdev != volume.st_dev)
+        fail("verify RAM ext4 mount");
+    char sentinel[128];
+    snprintf(sentinel, sizeof(sentinel), "%s/.m1-write-test", target);
+    int fd = open(sentinel, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0600);
+    if (fd < 0 || write(fd, "M1", 2) != 2 || fsync(fd) || close(fd) || unlink(sentinel))
+        fail("verify RAM ext4 write");
+}
+
 int main(int argc, char **argv) {
     setvbuf(stdout, NULL, _IONBF, 0);
-    if (argc == 2 && !strcmp(argv[1], "handoff")) handoff();
+    if (argc == 3 && !strcmp(argv[1], "scratch-mount")) scratch_mount(argv[2]);
+    else if (argc == 2 && !strcmp(argv[1], "handoff")) handoff();
     else if (argc == 2 && !strcmp(argv[1], "observe")) observe(0);
     else if (argc == 2 && !strcmp(argv[1], "observe-vendor")) observe(1);
     else if (argc == 2 && !strcmp(argv[1], "observe-install")) observe(2);

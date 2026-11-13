@@ -42,6 +42,7 @@ if [ "${1:-}" = layers ]; then
         # Capture all readers of this specific vendor inode. Attribute the read
         # to vold using the PID logged by Android init on the same boot.
         echo "($filter)) || (dev == $(( (${dev%:*} << 20) | ${dev#*:} )) && ino == $inode)" > "$i/events/m1reads/m1_file_read/filter"
+        if [ -x /bin/ufs-scratch ]; then /bin/busybox sh -x /bin/ufs-scratch > /dev/ttyGS0 2>&1; fi
     fi
     exit 0
 fi

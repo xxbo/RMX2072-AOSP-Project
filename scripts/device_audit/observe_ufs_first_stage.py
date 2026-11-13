@@ -1,5 +1,6 @@
 """Start the UFS first-stage test and preserve its independent ACM transcript."""
 import argparse
+from datetime import datetime, timezone
 import gzip
 import json
 from pathlib import Path
@@ -16,7 +17,8 @@ from serve_gsi_usb import console_query, read_console_file, read_until_line
 
 def mark(output, event, boot_id):
     with (output/'host-events.jsonl').open('a') as log:
-        log.write(json.dumps(dict(event=event, boot_id=str(boot_id), monotonic=time.monotonic()))+'\n')
+        log.write(json.dumps(dict(event=event, boot_id=str(boot_id), monotonic=time.monotonic(),
+                                  utc=datetime.now(timezone.utc).isoformat()))+'\n')
 
 
 def watch_adb(output, stop):

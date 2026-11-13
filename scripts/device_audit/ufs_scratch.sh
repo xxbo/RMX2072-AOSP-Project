@@ -1,0 +1,48 @@
+#!/bin/busybox sh
+# Called once while PID 1 is stopped after its verified vendor mount.
+set -eu
+root=/proc/1/root
+store=/run/m1-scratch
+mkdir "$store"
+mount -t tmpfs -o size=640m,mode=0700 tmpfs "$store"
+for name in data metadata; do
+    case "$name" in data) index=0 ;; metadata) index=1 ;; esac
+    sys=/sys/class/block/loop$index
+    [ "$(readlink -f "$sys")" = "/sys/devices/virtual/block/loop$index" ]
+    [ ! -e "$sys/loop/backing_file" ]
+    dev=$(cat "$sys/dev")
+    [ "$dev" = "7:$index" ]
+    node="$store/$name-loop"
+    mknod "$node" b 7 "$index"
+    gzip -dc "/$name.ext4.gz" > "$store/$name.ext4"
+    [ "$(sha256sum "$store/$name.ext4" | cut -d' ' -f1)" = "$(cat "/$name.ext4.sha256")" ]
+    losetup "$node" "$store/$name.ext4"
+    [ "$(cat "$sys/loop/backing_file")" = "$store/$name.ext4" ]
+    [ "$(cat "$sys/ro")" = 0 ]
+    /bin/first-stage-witness scratch-mount "$name"
+    awk -v dev="$dev" -v target="/$name" '$3==dev && $5==target && $6 ~ /^rw(,|$)/ && / - ext4 / {
+        print "M1EVENT scratch_mount=" target " device=" dev " flags=" $6 " fs=ext4"; ok=1
+    } END {exit !ok}' /proc/1/mountinfo > /dev/ttyGS0
+    echo "M1EVENT scratch_backing=/$name file=$(cat "$sys/loop/backing_file")" > /dev/ttyGS0
+done
+
+# File offsets of exported AArch64 functions in the pinned CP3A.260905.010 GSI.
+# Read only Android log calls tagged keystore2 and binder registrations by that process.
+log=$root/system/lib64/liblog.so
+binder=$root/system/lib64/libbinder_ndk.so
+[ "$(sha256sum "$log" | cut -d' ' -f1)" = 8dab885114a41c63e2c4451dfb59ec745610418faeead26c7607173eaf57e8c4 ]
+[ "$(sha256sum "$binder" | cut -d' ' -f1)" = 5ba4c4cf25919c5c6b6a30f7ff3e0c7db879f3e63206996569709b9c9fbc13a1 ]
+t=/sys/kernel/debug/tracing
+events=$t/instances/m1reads/events/m1ks
+printf '%s\n' "p:m1ks/ks_buf $log:0x9d50 tag=+0(%x2):string msg=+0(%x3):string" \
+    "p:m1ks/ks_log $log:0x9e5c tag=+0(%x1):string msg=+0(%x2):string" \
+    "p:m1ks/ks_add $binder:0x24640 task=\$comm name=+0(%x1):string" \
+    "r:m1ks/ks_added $binder:0x24640 task=\$comm rc=\$retval:s32" >> "$t/uprobe_events"
+for name in ks_buf ks_log; do
+    echo 'tag == "keystore2"' > "$events/$name/filter"
+done
+for name in ks_add ks_added; do
+    echo 'task == "keystore2"' > "$events/$name/filter"
+done
+echo 1 > "$events/enable"
+echo 'M1EVENT keystore_trace=armed' > /dev/ttyGS0

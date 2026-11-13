@@ -8,7 +8,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 On November 13 the RMX2072 ran Android 17 second-stage init under SELinux enforcing on ACK 6.18.32 with system and project vendor verified on internal UFS. PID 1 imported the 64/32-bit zygote definitions and vold read all 220 bytes of the vendor fstab. [Handset record](build/device/m1-ufs-first-stage-vendor-services-2026-11-13.json)
 
-**M1 is in progress.** The USB-attached boot reached `post-fs-data`. Init waited on `vdc keymaster earlyBootEnded`, keystore2 repeatedly aborted, and the host observed no Android ADB transport. M1 still requires a disconnected cold boot followed by a verified API 37 ADB shell. [M1 work list](plan.md#next-work-on-m1)
+**M1 is in progress.** With separate writable RAM-backed ext4 data and metadata, keystore2 reported `HARDWARE_TYPE_UNAVAILABLE` while constructing the mandatory TEE security level. The maintenance service remained unavailable, init waited on `vdc keymaster earlyBootEnded`, and the host saw only diagnostic USB ACM. M1 still requires a disconnected cold boot followed by a verified API 37 ADB shell. [First panic and USB results](docs/M1_UFS_FIRST_STAGE.md#trial-05-handset-result) · [M1 work list](plan.md#next-work-on-m1)
 
 ### Diagnostic and build records
 
