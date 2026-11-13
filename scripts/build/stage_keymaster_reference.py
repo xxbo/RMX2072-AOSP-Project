@@ -19,6 +19,7 @@ def inventory():
     files['/etc/selinux/vendor_file_contexts'] += (
         b'/vendor/bin/hw/android\\.hardware\\.keymaster@4\\.0-service-qti u:object_r:rmx_keymaster_exec:s0\n')
     blobs = json.loads((ref / 'f20-files.json').read_text())
+    blobs.update(json.loads((ref / 'f20-vndk30.json').read_text()))
     return files, blobs
 
 

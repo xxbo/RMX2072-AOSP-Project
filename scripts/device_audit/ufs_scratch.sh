@@ -55,16 +55,12 @@ if [ -r "$apps" ]; then
     # Init starts the reference ELF under its stock basename. Capture only
     # that task's stderr and pathname lookups, before Android logd is available.
     printf '%s\n' 'p:m1ks/km_open do_sys_openat2 task=$comm path=+u0($arg2):ustring' \
-        'r:m1ks/km_opened do_sys_openat2 task=$comm rc=$retval:s64' \
         'p:m1ks/km_stderr ksys_write task=$comm fd=$arg1:u32 msg=+u0($arg2):ustring' \
         'p:m1ks/km_stderrv do_writev task=$comm fd=$arg1:u32 msg=+u0(+u0($arg2)):ustring' >> "$t/kprobe_events"
-    echo 'task == "android.hardwar" && (path ~ "/dev/*" || path ~ "*/libqtikeymaster4.so" || path ~ "*ld.config.txt")' > "$events/km_open/filter"
-    echo 'task == "android.hardwar" && rc < 0' > "$events/km_opened/filter"
-    for name in km_open km_opened; do
-        echo 1 > "$events/$name/enable"
-    done
+    echo 'task == "android.hardwar" && (path == "/dev/qseecom" || path == "/dev/ion" || path == "/dev/hwbinder" || path ~ "/dev/dma_heap/*")' > "$events/km_open/filter"
+    echo 1 > "$events/km_open/enable"
     for name in km_stderr km_stderrv; do
-        echo 'task == "android.hardwar" && fd == 2' > "$events/$name/filter"
+        echo 'task == "android.hardwar" && fd == 2 && (msg ~ "*not found*" || msg ~ "*cannot locate*" || msg ~ "*not accessible*")' > "$events/$name/filter"
         echo 1 > "$events/$name/enable"
     done
     if result=$(cat "$apps"); then

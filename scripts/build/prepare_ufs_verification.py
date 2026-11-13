@@ -43,7 +43,7 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
     if records['system']['sha256'] != reference['image_sha256'] or records['system']['tree'] != reference['hashtree']:
         raise ValueError('GSI differs from the pinned image')
     payload_bytes = records['vendor']['tree']['image_bytes']
-    if payload_bytes != 2 * 1024 * 1024:
+    if payload_bytes != (16 if keymaster_reference else 2) * 1024 * 1024:
         raise ValueError('Unexpected project vendor filesystem size')
     with vendor.open('rb') as image:
         payload = hashlib.sha256(image.read(payload_bytes)).hexdigest()

@@ -349,7 +349,19 @@
         "rc_parse_errors": [],
         "first_linker_failure": "[   50.227893][ T2038] km_stderr: (ksys_write+0x0/0xf0) task=\"android.hardwar\" fd=2 msg=\"library \"libcutils.so\" not found: needed by main executable\""
       },
-      "early_log_coverage": "Console ring starts in post-fs. The exact enforcing transition, early file reads and bootstrap APEX activation lines are unavailable."
+      "early_log_coverage": "Console ring starts in post-fs. The exact enforcing transition, early file reads and bootstrap APEX activation lines are unavailable.",
+      "restored_F20": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "c68895e8-b504-43cf-ab60-153a42ff25e8",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
     }
   ]
 }

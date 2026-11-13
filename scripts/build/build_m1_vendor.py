@@ -24,11 +24,11 @@ def build(output, reference=None):
         with tempfile.TemporaryDirectory(dir=output) as tmp:
             source = Path(tmp) / 'vendor'
             stage(reference, source)
-            return build_image(source, output)
-    return build_image(SOURCE, output)
+            return build_image(source, output, 16 * 1024 * 1024)
+    return build_image(SOURCE, output, 2 * 1024 * 1024)
 
 
-def build_image(source, output):
+def build_image(source, output, size):
     env = dict(os.environ, LC_ALL='C', TZ='UTC', E2FSPROGS_FAKE_TIME=str(EPOCH))
     paths = sorted(source.rglob('*'))
     contexts = []
@@ -38,7 +38,7 @@ def build_image(source, output):
     with tempfile.TemporaryDirectory(dir=output) as tmp:
         stage = Path(tmp)
         image = stage/'vendor.img'
-        image.write_bytes(bytes(2 * 1024 * 1024))
+        image.write_bytes(bytes(size))
         subprocess.run(['mke2fs', '-q', '-F', '-t', 'ext4', '-b', '4096', '-I', '256',
                         '-N', '128', '-m', '0', '-L', 'rmx-m1-vendor', '-U', UUID,
                         '-O', 'none,extent,filetype,ext_attr,sparse_super',
@@ -49,7 +49,7 @@ def build_image(source, output):
         labels = {}
         for index, path in enumerate([source, *paths]):
             name = '/'+path.relative_to(source).as_posix() if path != source else '/'
-            if not re.fullmatch(r'/[a-zA-Z0-9@/_.-]*', name) or path.is_symlink():
+            if not re.fullmatch(r'/[a-zA-Z0-9+@/_.-]*', name) or path.is_symlink():
                 raise ValueError('Unexpected vendor source '+name)
             if path.is_file():
                 data = path.read_bytes()
