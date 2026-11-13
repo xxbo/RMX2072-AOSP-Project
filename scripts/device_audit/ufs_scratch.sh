@@ -59,6 +59,19 @@ if [ -r "$apps" ]; then
         'p:m1ks/km_stderrv do_writev task=$comm fd=$arg1:u32 msg=+u0(+u0($arg2)):ustring' >> "$t/kprobe_events"
     echo 'task == "android.hardwar" && (path == "/dev/qseecom" || path == "/dev/ion" || path == "/dev/hwbinder" || path ~ "/dev/dma_heap/*")' > "$events/km_open/filter"
     echo 1 > "$events/km_open/enable"
+    km=$root/vendor/lib64/libkeymasterdeviceutils.so
+    if [ -f "$km" ]; then
+        [ "$(sha256sum "$km" | cut -d' ' -f1)" = e7b223728a88d76eec8b615eb4c1a1e9eb857bd4b20f9a5f762a5a60766f0603 ]
+        # The two sites following property_get read its stack buffer. Record
+        # only the initial value and enable a one-shot for the first retry.
+        printf '%s\n' "p:m1ks/km_listener $km:0x2410 value=+0(\$stack):string" \
+            "p:m1ks/km_listener_retry $km:0x2450 value=+0(\$stack):string" \
+            "p:m1ks/km_start_ta $km:0x2480 app=+0(%x2):string" >> "$t/uprobe_events"
+        echo 1 > "$events/km_listener/enable"
+        echo 'disable_event:m1ks:km_listener_retry:1' > "$events/km_listener_retry/trigger"
+        echo 1 > "$events/km_listener_retry/enable"
+        echo 1 > "$events/km_start_ta/enable"
+    fi
     for name in km_stderr km_stderrv; do
         echo 'task == "android.hardwar" && fd == 2 && (msg ~ "*not found*" || msg ~ "*cannot locate*" || msg ~ "*not accessible*")' > "$events/$name/filter"
         echo 1 > "$events/$name/enable"
