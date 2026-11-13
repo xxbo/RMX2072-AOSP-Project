@@ -33,7 +33,7 @@ def image_profile(path, name, key_digest):
     return key, dict(sha256=full, key_sha256=key_digest, bytes=size, tree=tree)
 
 
-def prepare(system, vendor, vendor_key, output):
+def prepare(system, vendor, vendor_key, output, vendor_report=None):
     reference = json.loads((ROOT/'build/device/gsi17-mount-reference.json').read_text())
     inputs = [('system', system, reference['key_sha256']),
               ('vendor', vendor, hashlib.sha256(vendor_key.read_bytes()).hexdigest())]
@@ -42,14 +42,25 @@ def prepare(system, vendor, vendor_key, output):
         keys[name], records[name] = image_profile(path, name, key_digest)
     if records['system']['sha256'] != reference['image_sha256'] or records['system']['tree'] != reference['hashtree']:
         raise ValueError('GSI differs from the pinned image')
-    control = json.loads((ROOT/'build/device/gsi17-enforcing-second-stage-2026-11-12.json').read_text())
     payload_bytes = records['vendor']['tree']['image_bytes']
     if payload_bytes != 2 * 1024 * 1024:
-        raise ValueError('Unexpected vendor 02 filesystem size')
+        raise ValueError('Unexpected project vendor filesystem size')
     with vendor.open('rb') as image:
         payload = hashlib.sha256(image.read(payload_bytes)).hexdigest()
-    if payload != control['trials'][-1]['vendor_image_sha256']:
-        raise ValueError('Signed vendor does not contain the project vendor 02 filesystem')
+    if vendor_report:
+        report = json.loads(vendor_report.read_text())
+        source = ROOT/'device/realme/bladerunner_48m/m1-vendor'
+        files = {'/'+p.relative_to(source).as_posix():
+                 hashlib.sha256(p.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+                 for p in source.rglob('*') if p.is_file()}
+        if files != report['files']:
+            raise ValueError('Vendor report differs from the project sources')
+        expected = report['sha256']
+    else:
+        control = json.loads((ROOT/'build/device/gsi17-enforcing-second-stage-2026-11-12.json').read_text())
+        expected = control['trials'][-1]['vendor_image_sha256']
+    if payload != expected:
+        raise ValueError('Signed vendor filesystem differs from the specified build')
     output.mkdir(parents=True, exist_ok=False)
     for name, key in keys.items():
         (output/(name+'.avbpubkey')).write_bytes(key)
@@ -60,5 +71,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for option in ('system', 'vendor', 'vendor-key', 'output'):
         parser.add_argument('--'+option, required=True, type=Path)
+    parser.add_argument('--vendor-report', type=Path, help='CI vendor.json for the current project sources')
     args = parser.parse_args()
-    prepare(args.system, args.vendor, args.vendor_key, args.output)
+    prepare(args.system, args.vendor, args.vendor_key, args.output, args.vendor_report)

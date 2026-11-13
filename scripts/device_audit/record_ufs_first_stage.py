@@ -16,15 +16,15 @@ def match(pattern, text):
     return found
 
 
-def full_read(console, inode, device, size, stage):
+def full_read(console, inode, device, size, stage, pid=1):
     major, minor = map(int, device.split(':'))
     dev = (major << 20) | minor  # Kernel dev_t recorded by the probe.
-    pattern = (rf'^\[\s*([0-9.]+)\]\[\s*T1\] m1_file_read: [^\n]* ino={inode} '
-               rf'dev={dev} count={size} result={size}$')
+    pattern = (rf'^\[\s*([0-9.]+)\]\[\s*T{pid}\] m1_file_read: [^\n]* ino={inode} '
+               rf'dev={dev} count=(\d+) result={size}$')
     for found in re.finditer(pattern, console, re.MULTILINE):
-        if float(found[1]) > stage:
-            return dict(at_seconds=float(found[1]), pid=1, inode=inode, device=device,
-                        requested_bytes=size, returned_bytes=size)
+        if float(found[1]) > stage and int(found[2]) >= size:
+            return dict(at_seconds=float(found[1]), pid=pid, inode=inode, device=device,
+                        requested_bytes=int(found[2]), returned_bytes=size)
     raise ValueError(f'No complete post-stage read of inode {inode} on {device}')
 
 
@@ -77,9 +77,66 @@ def record(directory, layout):
                             for f in ('acm.log', 'console-ramoops-0')})
 
 
+def vendor_services(directory, trial):
+    serial = (directory/'acm.log').read_text(errors='replace')
+    console = (directory/'console-ramoops-0').read_text(errors='replace')
+    mounts = trial['mounts']
+    stage = trial['second_stage_seconds']
+    reads = {}
+    for rc in ('init.zygote64_32.rc', 'init.zygote64.rc', 'init.boringssl.zygote64_32.rc'):
+        path = '/system/etc/init/hw/'+rc
+        target = match(r'^M1EVENT read_target='+re.escape(path)+r' ino=(\d+) bytes=(\d+)$', serial)
+        parsed = match(r'^\[\s*([0-9.]+)\]\[\s*T1\] init: Parsing file '+re.escape(path)+r'\.\.\.$', console)
+        if float(parsed[1]) <= stage:
+            raise ValueError('Import outside second stage: '+path)
+        reads[path] = full_read(console, int(target[1]), mounts['system']['device'], int(target[2]), stage)
+        reads[path]['parsing_seconds'] = float(parsed[1])
+    start = match(r"^\[\s*([0-9.]+)\]\[\s*T1\] init: \.\.\. started service 'vold' has pid (\d+)$", console)
+    target = match(r'^M1EVENT read_target=/vendor/etc/fstab\.qcom ino=(\d+) bytes=(\d+)$', serial)
+    fstab = full_read(console, int(target[1]), mounts['vendor']['device'], int(target[2]), stage, int(start[2]))
+    caller = match(r'Caller\(pid='+start[2]+r',uid=0,sid=u:r:vold:s0\)', console)
+    fstab.update(service='vold', domain='u:r:vold:s0', service_start_seconds=float(start[1]),
+                 domain_evidence=caller[0])
+    return dict(zygote_imports=reads, vold_fstab=fstab, adb=adb_observations(directory, trial))
+
+
+def adb_observations(directory, trial):
+    events = [json.loads(row) for row in (directory/'host-events.jsonl').read_text().splitlines()]
+    handoff = next(e for e in events if e['event'] == 'handoff_requested' and e['boot_id'] == trial['boot_id'])
+    recovery = next(e for e in events if e['event'] == 'recovery_boot' and e['boot_id'] != trial['boot_id'])
+    samples = map(json.loads, (directory/'adb.jsonl').read_text().splitlines())
+    rows = [r for r in samples if handoff['monotonic'] <= r['monotonic'] <= recovery['monotonic']]
+    if not rows:
+        raise ValueError('No ADB observations within the test interval')
+    times = [handoff['monotonic'], *[r['monotonic'] for r in rows], recovery['monotonic']]
+    states = sorted({line.split()[1] for row in rows for line in row.get('transports', [])})
+    errors = sum('error' in row for row in rows)
+    identities = [fields for r in rows for fields in r.get('identity', {}).values()]
+    confirmed = any(len(fields) == 5 and fields[1:] == ['37', 'running', trial['kernel'],
+                    trial['boot_id']] for fields in identities)
+    result = 'NO_TRANSPORT_OBSERVED'
+    if confirmed:
+        result = 'API37_SHELL_VERIFIED'
+    elif states:
+        result = 'TRANSPORT_PRESENT_IDENTITY_UNVERIFIED'
+    elif errors:
+        result = 'INCOMPLETE_SAMPLING'
+    return dict(result=result,
+                samples=len(rows), errors=errors, transport_states=states,
+                interval_seconds=round(times[-1]-times[0], 3),
+                maximum_sample_gap_seconds=round(max(b-a for a,b in zip(times,times[1:])), 3),
+                diagnostic_acm_seen=any(row.get('diagnostic_acm') for row in rows),
+                raw_sha256={name:hashlib.sha256((directory/name).read_bytes()).hexdigest()
+                            for name in ('adb.jsonl', 'host-events.jsonl')})
+
+
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', required=True, type=Path)
     p.add_argument('--layout', required=True, type=Path)
+    p.add_argument('--vendor-services', action='store_true')
     args = p.parse_args()
-    print(json.dumps(record(args.capture, json.loads(args.layout.read_text())), indent=2))
+    trial = record(args.capture, json.loads(args.layout.read_text()))
+    if args.vendor_services:
+        trial.update(vendor_services(args.capture, trial))
+    print(json.dumps(trial, indent=2))

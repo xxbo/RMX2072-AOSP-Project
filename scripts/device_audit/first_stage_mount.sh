@@ -115,7 +115,13 @@ echo "pid1_exe=$(readlink /proc/1/exe)"
 echo "pid1_sha256=$(sha256sum /proc/1/exe | cut -d' ' -f1)"
 awk '$5=="/" || $5=="/dev" || $5=="/vendor" || $5=="/system" {print "pid1_mountinfo=" $0}' /proc/1/mountinfo
 if [ "$mode" = observe-vendor ] && [ -f /proc/1/root/vendor/etc/fstab.qcom ]; then
-    cmp /project-vendor.fstab /proc/1/root/vendor/etc/fstab.qcom
+    [ -r /proc/1/root/vendor/etc/fstab.qcom ]
+    if [ "$d" = ufs ]; then
+        cmp /proc/1/root/vendor/etc/fstab.qcom /ufs-fstab
+    else
+        hash=$(sha256sum /proc/1/root/vendor/etc/fstab.qcom | cut -d' ' -f1)
+        [ "$hash" = "$(cat /project-vendor-fstab.sha256)" ]
+    fi
     echo "mounted_vendor_fstab=match"
     echo "mounted_vendor_policy_version=$(cat /proc/1/root/vendor/etc/selinux/plat_sepolicy_vers.txt)"
     echo "pid1_cmdline=$(tr '\000' ' ' < /proc/1/cmdline)"

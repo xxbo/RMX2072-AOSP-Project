@@ -1,5 +1,1 @@
-; Board config has a distinct file label. This fixture supplies no HAL domains.
-(type vendor_rmx2072_board_config)
-(roletype object_r vendor_rmx2072_board_config)
-(typeattributeset file_type (vendor_rmx2072_board_config))
-(typeattributeset vendor_file_type (vendor_rmx2072_board_config))
+; This vendor uses the platform vendor_file and vendor_configs_file labels.

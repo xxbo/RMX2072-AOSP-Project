@@ -1,3 +1,2 @@
-# M1 USB fixture. dm-1 is the checked GSI verity target, loop0 the project vendor.
-/dev/block/dm-1  /system  ext4  ro,noload  wait,first_stage_mount
-/dev/block/loop0 /vendor  ext4  ro,noload  wait,first_stage_mount
+system /system ext4 ro,noload wait,logical,first_stage_mount,avb=vbmeta_system,avb_keys=/avb/system.avbpubkey
+vendor /vendor ext4 ro,noload wait,logical,first_stage_mount,avb=vbmeta_vendor,avb_keys=/avb/vendor.avbpubkey
