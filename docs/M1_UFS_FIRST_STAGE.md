@@ -20,7 +20,7 @@ The profile builder verifies both embedded RSA signatures, pins the system image
 
 ## Evidence
 
-The ramdisk fstab selects logical partitions by their names. Android regenerates block devices and reads LP metadata, then uses its first-stage AVB setup to mount system and vendor. The observer checks each successful mount against the actual dm-verity table, its pinned root digest and the dm-linear extents on the UFS super. Device-mapper minor numbers are recorded at runtime. The vendor 02 filesystem still contains the historical USB fixture fstab; the first-stage root embeds the separate UFS fstab. [UFS fstab](https://github.com/xxbo/RMX2072-AOSP-Project/blob/209bfe94ed4bebf48e524181efac17e3ea572a9b/device/realme/bladerunner_48m/fstab.m1-ufs) · [AOSP first-stage mount](https://android.googlesource.com/platform/system/core/+/refs/heads/main/init/first_stage_mount.cpp)
+The ramdisk fstab selects logical partitions by their names. Android regenerates block devices and reads LP metadata, then uses its first-stage AVB setup to mount system and vendor. The observer checks each successful mount against the actual dm-verity table, its pinned root digest and the dm-linear extents on the UFS super. Device-mapper minor numbers are recorded at runtime. The vendor 02 filesystem still contains the historical USB fixture fstab; the first-stage root embeds the separate UFS fstab. [UFS fstab](https://github.com/xxbo/RMX2072-AOSP-Project/blob/209bfe94ed4bebf48e524181efac17e3ea572a9b/device/realme/bladerunner_48m/fstab.m1-ufs) 路 [AOSP first-stage mount](https://android.googlesource.com/platform/system/core/+/refs/heads/main/init/first_stage_mount.cpp)
 
 Collect the ACM stream with `observe_ufs_first_stage.py` and save ramoops during recovery. For this kernel and GSI, the probe on `vfs_read` records PID 1, the filesystem device and inode, request size and actual return value. Inodes 659 and 757 identify `/system/build.prop` and `/system/etc/init/hw/init.rc`. Compare their read results with the enforcing transition and second-stage entry from the same boot. The handset trial and stock recovery results are in the [machine-readable record](../build/device/m1-ufs-first-stage-2026-11-13.json).
 
@@ -45,4 +45,37 @@ To regenerate the mount and read results, place the private `acm.log`, `identity
 ```sh
 python scripts/device_audit/record_ufs_first_stage.py --capture PRIVATE/live \
     --layout build/device/m1-ufs-first-stage-2026-11-13.json
+```
+
+
+## Trial 04 · Zygote imports and vold on UFS
+
+The project vendor supplies `ro.zygote=zygote64_32` in `/vendor/build.prop`. Both the first-stage ramdisk and the vendor partition use the two logical UFS entries from `m1-vendor/etc/fstab.qcom`. The vendor filesystem stores the fstab with the platform's `vendor_configs_file` context. CI checked every ext4 file and SELinux xattr, built the vendor twice and compared the images byte for byte. The signed 3 MiB vendor used the existing engineering key. [Vendor build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43436009380)
+
+After signing, pass the matching CI manifest to the profile builder. The manifest binds the original ext4 digest to the tracked source inventory. Use its `sha256` as the AVB salt when reproducing this build.
+
+```sh
+python scripts/build/prepare_ufs_verification.py --system PRIVATE/system.img \
+    --vendor PRIVATE/vendor-signed.img --vendor-key PRIVATE/vendor.avbpubkey \
+    --vendor-report PRIVATE/vendor.json --output PRIVATE/profile
+```
+
+On boot `0682a103-f53f-43b6-af8c-13eb63883546`, init verified and mounted system and vendor from UFS and entered second stage at 27.449207 seconds. SELinux had entered enforcing at 27.422965 seconds. The mounted file's inode and size, the kernel read result and the caller identify each observation. The import events and binder caller identity are in the [handset record](../build/device/m1-ufs-first-stage-vendor-services-2026-11-13.json).
+
+| Time since boot | Reader | File | Bytes read |
+| ---: | --- | --- | ---: |
+| 27.528196 s | init, PID 1 | `/system/etc/init/hw/init.zygote64_32.rc` | 620 / 620 |
+| 27.529043 s | init, PID 1 | `init.zygote64.rc`, imported by the preceding file | 901 / 901 |
+| 27.529758 s | init, PID 1 | `init.boringssl.zygote64_32.rc` | 392 / 392 |
+| 28.463988 s | vold, PID 1778, `u:r:vold:s0` | `/vendor/etc/fstab.qcom`, inode 14, device 254:15 | 220 / 220 |
+
+The host took 73 successful ADB samples over 76.344 seconds from the handoff request through identification of the recovery boot. The longest sample gap was 1.156 seconds. Diagnostic ACM enumerated. Every ADB device list in that interval was empty. Boot logs show the bootstrap APEX scan finding `com.google.android.adbd.capex`. They contain no service start for adbd or zygote. The watchdog bounded this USB-attached test.
+
+At `post-fs-data`, init encountered read-only `/data` and a missing `/data/misc/keystore`. It waited for `vdc keymaster earlyBootEnded` at 28.655711 seconds. Vold requested `android.security.maintenance`, and init reported eight `keystore2` exits on SIGABRT through the captured window. This records the wait and the process failures. Identifying the abort cause requires the keystore log for that crash and a writable diagnostic data setup.
+
+Capture with `observe_ufs_first_stage.py --observe-adb`. Replay the mounts, reads, service identity and host ADB window from the private capture using the checked-in layout.
+
+```sh
+python scripts/device_audit/record_ufs_first_stage.py --capture PRIVATE/live \
+    --layout build/device/m1-ufs-first-stage-vendor-services-2026-11-13.json --vendor-services
 ```

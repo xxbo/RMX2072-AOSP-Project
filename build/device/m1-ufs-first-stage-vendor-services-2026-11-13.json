@@ -1,0 +1,311 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-13",
+  "gsi": "CP3A.260905.010",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "signed_images": {
+    "system": {
+      "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+      "bytes": 3953213440,
+      "tree": {
+        "version": 1,
+        "image_bytes": 3890753536,
+        "tree_offset": 3890753536,
+        "tree_bytes": 30642176,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 2,
+        "fec_offset": 3921395712,
+        "fec_bytes": 31006720,
+        "algorithm": "sha256",
+        "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+        "flags": 0
+      }
+    },
+    "vendor": {
+      "sha256": "6c59052a6c45a09578a913da389f7e9cefcb46f77b09511ea9cf80f5d4c4c27c",
+      "key_sha256": "ee13eae94a2bd9ae0a2272b3fdcc0aec902c9a308d0363b3262feac65419c73b",
+      "bytes": 3145728,
+      "tree": {
+        "version": 1,
+        "image_bytes": 2097152,
+        "tree_offset": 2097152,
+        "tree_bytes": 20480,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 0,
+        "fec_offset": 0,
+        "fec_bytes": 0,
+        "algorithm": "sha256",
+        "salt": "dacb21f04b780f254fa3ecefd55bc6f17c1fb48426a501602c41545ce560b062",
+        "root_digest": "c7c7c6fb664b58f745af416734ac271e0a6e95b6038071580197715561565402",
+        "flags": 0
+      }
+    }
+  },
+  "vendor_build": {
+    "commit": "8d46de6d2d84c286f72078d70d15382e2ab4b38e",
+    "ci_run": 43436009380,
+    "artifact_zip_digest": "sha256:d24b4ea16bba895b9ff2c6a55625d56be0ab90e4bc5831a4a674321fd55ce283",
+    "filesystem_sha256": "dacb21f04b780f254fa3ecefd55bc6f17c1fb48426a501602c41545ce560b062",
+    "properties": {
+      "/vendor/build.prop": {
+        "ro.zygote": "zygote64_32"
+      }
+    },
+    "labels": {
+      "/vendor/build.prop": "u:object_r:vendor_file:s0",
+      "/vendor/etc/fstab.qcom": "u:object_r:vendor_configs_file:s0"
+    },
+    "fstab_sha256": "cd8d058ff8dbae2a44a2f8c9b833e3e0a5786eb229c2aa5cae4e8655e9bb9f1e"
+  },
+  "candidate": {
+    "bytes": 8866758656,
+    "super_sha256": "8bd66b54878374c6f9a494bb89e9041e3105f0a83323c0e9814bde2940530870",
+    "metadata_prefix_sha256": "3b58e5799d4871a5d599a3384ffcb98f4e3bdfc3cdcee45a19d177e7c0a706b8",
+    "group_headroom_bytes": 915103744,
+    "active_extents_in_512b_sectors": {
+      "vendor": [
+        [
+          3008,
+          6144
+        ]
+      ],
+      "system": [
+        [
+          9152,
+          1209344
+        ],
+        [
+          1464256,
+          2048
+        ],
+        [
+          1479616,
+          149504
+        ],
+        [
+          1850304,
+          25600
+        ],
+        [
+          1881024,
+          26624
+        ],
+        [
+          1924032,
+          803840
+        ],
+        [
+          3354560,
+          49152
+        ],
+        [
+          3428288,
+          2696192
+        ],
+        [
+          6126528,
+          13312
+        ],
+        [
+          6140864,
+          3072
+        ],
+        [
+          11129792,
+          1088
+        ],
+        [
+          13039552,
+          64
+        ],
+        [
+          13184960,
+          64
+        ],
+        [
+          13330368,
+          64
+        ],
+        [
+          13475776,
+          438272
+        ],
+        [
+          13992896,
+          2302880
+        ]
+      ]
+    }
+  },
+  "boot": {
+    "image_sha256": "271b3a082b9f0d5b2d212175e4bf9114c39ed52c924576459c0509c4faf49a6e",
+    "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+    "boot_source_commit": "1376104",
+    "host_observer_commit": "17cc544",
+    "conditions": "USB-attached warm boot, diagnostic ACM handoff, internal UFS, read-only UFS block devices, watchdog enabled",
+    "first_stage_init_source": "Google API 37 emulator ramdisk",
+    "dt": "Factory-derived G3 DTB and original F.20 DTBO"
+  },
+  "trial": {
+    "id": "ufs-host-g3-gsi17-firststage-ufs-04",
+    "boot_id": "0682a103-f53f-43b6-af8c-13eb63883546",
+    "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+    "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+    "mounts": {
+      "system": {
+        "node": "dm-14",
+        "device": "254:14",
+        "linear_device": "254:0",
+        "super": "8:10",
+        "extents": 16,
+        "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+        "avb_at_seconds": 25.375226,
+        "verity_status": "0 7599128 verity V 0",
+        "pid": 1,
+        "filesystem": "ext4",
+        "readonly": true,
+        "mount_rc": 0
+      },
+      "vendor": {
+        "node": "dm-15",
+        "device": "254:15",
+        "linear_device": "254:1",
+        "super": "8:10",
+        "extents": 1,
+        "root_sha256": "c7c7c6fb664b58f745af416734ac271e0a6e95b6038071580197715561565402",
+        "avb_at_seconds": 25.463845,
+        "verity_status": "0 4096 verity V -",
+        "pid": 1,
+        "filesystem": "ext4",
+        "readonly": true,
+        "mount_rc": 0
+      }
+    },
+    "enforcing_seconds": 27.422965,
+    "second_stage_seconds": 27.449207,
+    "file_reads": {
+      "/system/build.prop": {
+        "at_seconds": 27.496282,
+        "pid": 1,
+        "inode": 659,
+        "device": "254:14",
+        "requested_bytes": 5675,
+        "returned_bytes": 5675
+      },
+      "/system/etc/init/hw/init.rc": {
+        "at_seconds": 27.5203,
+        "pid": 1,
+        "inode": 757,
+        "device": "254:14",
+        "requested_bytes": 56913,
+        "returned_bytes": 56913
+      }
+    },
+    "raw_sha256": {
+      "acm.log": "0f7332316dabfbebcd83599d3175799c4b1d1d2b8e83810863280d87767276b2",
+      "console-ramoops-0": "f0cc8d58f5c33b69178eed182677dbefcaa98267e5359790010c9c9fb9859dbf"
+    },
+    "zygote_imports": {
+      "/system/etc/init/hw/init.zygote64_32.rc": {
+        "at_seconds": 27.528196,
+        "pid": 1,
+        "inode": 762,
+        "device": "254:14",
+        "requested_bytes": 620,
+        "returned_bytes": 620,
+        "parsing_seconds": 27.527776
+      },
+      "/system/etc/init/hw/init.zygote64.rc": {
+        "at_seconds": 27.529043,
+        "pid": 1,
+        "inode": 761,
+        "device": "254:14",
+        "requested_bytes": 901,
+        "returned_bytes": 901,
+        "parsing_seconds": 27.528674
+      },
+      "/system/etc/init/hw/init.boringssl.zygote64_32.rc": {
+        "at_seconds": 27.529758,
+        "pid": 1,
+        "inode": 756,
+        "device": "254:14",
+        "requested_bytes": 392,
+        "returned_bytes": 392,
+        "parsing_seconds": 27.529345
+      }
+    },
+    "vold_fstab": {
+      "at_seconds": 28.463988,
+      "pid": 1778,
+      "inode": 14,
+      "device": "254:15",
+      "requested_bytes": 220,
+      "returned_bytes": 220,
+      "service": "vold",
+      "domain": "u:r:vold:s0",
+      "service_start_seconds": 28.371932,
+      "domain_evidence": "Caller(pid=1778,uid=0,sid=u:r:vold:s0)"
+    },
+    "adb": {
+      "result": "NO_TRANSPORT_OBSERVED",
+      "samples": 73,
+      "errors": 0,
+      "transport_states": [],
+      "interval_seconds": 76.344,
+      "maximum_sample_gap_seconds": 1.156,
+      "diagnostic_acm_seen": true,
+      "raw_sha256": {
+        "adb.jsonl": "e2dcebff2422bf27f27d8ad29c71ba3ec3bf99dead11b62d4a6c1838500142e5",
+        "host-events.jsonl": "5afab372c33da467d5dcdfaf0c48383ee1eb6da6b8790be2aade9a02f006e02b"
+      }
+    },
+    "candidate_readback_chunks": 17,
+    "log_excerpts": {
+      "acm": [
+        "M1EVENT boot_id=0682a103-f53f-43b6-af8c-13eb63883546",
+        "M1EVENT verified_ufs_mount=system dev=254:14",
+        "M1EVENT verified_ufs_mount=vendor dev=254:15",
+        "M1EVENT read_target=/system/etc/init/hw/init.zygote64_32.rc ino=762 bytes=620",
+        "M1EVENT read_target=/system/etc/init/hw/init.zygote64.rc ino=761 bytes=901",
+        "M1EVENT read_target=/system/etc/init/hw/init.boringssl.zygote64_32.rc ino=756 bytes=392",
+        "M1EVENT read_target=/vendor/etc/fstab.qcom ino=14 bytes=220",
+        "M1EVENT policy_write_rc=703105 count=703105"
+      ],
+      "console": [
+        "[   25.014320][    T1] RMX2072-SUPERVISOR kernel=6.18.32-android17-5-maybe-dirty-4k phase=android-first-stage-handoff trial=ufs-host-g3-gsi17-firststage-ufs-04 boot_id=0682a103-f53f-43b6-af8c-13eb63883546",
+        "[   27.422965][   T78] audit: type=1404 audit(27.403:4): enforcing=1 old_enforcing=0 auid=4294967295 ses=4294967295 enabled=1 old-enabled=1 lsm=selinux res=1",
+        "[   27.449207][    T1] init: init second stage started!",
+        "[   27.514802][    T1] init: [libfs_mgr] vendor overlay: vndk version not defined",
+        "[   27.521271][    T1] init: Added '/system/etc/init/hw/init.zygote64_32.rc' to import list",
+        "[   27.522485][    T1] init: Added '/system/etc/init/hw/init.boringssl.zygote64_32.rc' to import list",
+        "[   27.527776][    T1] init: Parsing file /system/etc/init/hw/init.zygote64_32.rc...",
+        "[   27.528196][    T1] m1_file_read: (ksys_read+0x78/0xf0 <- vfs_read) ino=762 dev=266338318 count=620 result=620",
+        "[   27.528396][    T1] init: Added '/system/etc/init/hw/init.zygote64.rc' to import list",
+        "[   27.528674][    T1] init: Parsing file /system/etc/init/hw/init.zygote64.rc...",
+        "[   27.529043][    T1] m1_file_read: (ksys_read+0x78/0xf0 <- vfs_read) ino=761 dev=266338318 count=901 result=901",
+        "[   27.529345][    T1] init: Parsing file /system/etc/init/hw/init.boringssl.zygote64_32.rc...",
+        "[   27.529758][    T1] m1_file_read: (ksys_read+0x78/0xf0 <- vfs_read) ino=756 dev=266338318 count=392 result=392",
+        "[   27.734659][ T1643] apexd-bootstrap: Found pre-installed APEX /system/apex/com.google.android.adbd.capex",
+        "[   27.770382][ T1643] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.runtime.apex",
+        "[   27.898603][ T1643] apexd-bootstrap: Activated 4 packages. duration=46ms",
+        "[   28.371932][    T1] init: ... started service 'vold' has pid 1778",
+        "[   28.463988][ T1778] m1_file_read: (ksys_read+0x78/0xf0 <- vfs_read) ino=14 dev=266338319 count=220 result=220",
+        "[   28.471475][ T1764] servicemanager: Caller(pid=1778,uid=0,sid=u:r:vold:s0) Found android.system.vold.IVold/default in framework VINTF manifest.",
+        "[   28.614999][    T1] init: Command 'chown system system /data' action=post-fs-data (/system/etc/init/hw/init.rc:669) took 0ms and failed: lchown() failed: Read-only file system",
+        "[   28.645754][    T1] selinux: SELinux: Could not get canonical path for /data/misc/keystore restorecon: No such file or directory.",
+        "[   28.655711][    T1] init: SVC_EXEC service 'exec 5 (/system/bin/vdc keymaster earlyBootEnded)' pid 1792 (uid 1000 gid 1000+0 context default) started; waiting...",
+        "[   28.689294][    T1] init: Control message: Could not find 'aidl/android.security.maintenance' for ctl.interface_start from pid: 1764 (/system/bin/servicemanager)",
+        "[   28.749440][    T1] init: Service 'keystore2' (pid 1786) received SIGABRT"
+      ]
+    },
+    "keystore2_sigabrt_count": 8,
+    "diagnostic_recovery_boot_id": "8b614dab-4219-410b-a7ce-20707bfd6222",
+    "android_zygote_process_start": "UNOBSERVED",
+    "adbd_start_log": "UNOBSERVED",
+    "disconnected_cold_boot": "NOT_RUN"
+  }
+}

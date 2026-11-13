@@ -6,9 +6,9 @@ Independent Android platform research and porting project for the **realme X50 P
 
 ## Current handset result
 
-On November 12, Android 17 PID 1 on the RMX2072 ran second-stage init under SELinux enforcing on the project-built 6.18.32 kernel. The kernel accepted all 703,220 policy bytes. The project vendor was mounted read-only from RAM. Trial 05 supplied 4,712 original GSI blocks from RAM. All other reads depended on the USB fallback under the original dm-verity root. [Handset record](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/build/device/gsi17-enforcing-second-stage-2026-11-12.json)
+On November 13 the RMX2072 ran Android 17 second-stage init under SELinux enforcing on ACK 6.18.32 with system and project vendor verified on internal UFS. PID 1 imported the 64/32-bit zygote definitions and vold read all 220 bytes of the vendor fstab. [Handset record](build/device/m1-ufs-first-stage-vendor-services-2026-11-13.json)
 
-**M1 is in progress.** The USB fallback lost its reader. Second-stage init reported an I/O error reading `/system/build.prop`, then errors reading `/system/etc/init/hw/init.rc` and `/etc/cgroups.json`. The next test moves the system and project vendor to verified UFS-backed mappings. M1 requires a cold boot with the image server disconnected and ADB from that same Android 17 boot. M2 replaces the factory-derived G3 DTB, original DTBO and temporary emulator first-stage init. [Fault comparison](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/docs/ANDROID17_USB_MOUNT.md#pid-1-sigbus-and-second-stage-execution) · [M1 work list](plan.md#next-work-on-m1)
+**M1 is in progress.** The USB-attached boot reached `post-fs-data`. Init waited on `vdc keymaster earlyBootEnded`, keystore2 repeatedly aborted, and the host observed no Android ADB transport. M1 still requires a disconnected cold boot followed by a verified API 37 ADB shell. [M1 work list](plan.md#next-work-on-m1)
 
 ### Diagnostic and build records
 
