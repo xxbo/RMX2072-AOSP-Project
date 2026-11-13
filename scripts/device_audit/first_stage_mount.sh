@@ -3,8 +3,10 @@
 set -eu
 case "$(cat /trial-id)" in ufs-host-g3-gsi17-firststage-*) ;; *) exit 2 ;; esac
 d=$1
-[ "$(cat "$d/dm/name")" = rmx-gsi17-verity ]
-[ "$(cat "$d/ro")" = 1 ]
+if [ "$d" != ufs ]; then
+    [ "$(cat "$d/dm/name")" = rmx-gsi17-verity ]
+    [ "$(cat "$d/ro")" = 1 ]
+fi
 base=/run/m1
 root=$base/root
 mkdir "$base"
@@ -18,11 +20,18 @@ chmod 0755 "$root/init"
 cmp /android-first-stage "$root/init"
 echo "boot_id=$(cat /proc/sys/kernel/random/boot_id)"
 echo "init_sha256=$(sha256sum "$root/init" | cut -d' ' -f1)"
-echo "gsi_device=$(basename "$d") dev=$(cat "$d/dev")"
 # Android regenerates its own device nodes in its new /dev. fs_mgr consumes
 # only the read-only dm-verity device created from the pinned GSI descriptor.
-printf '/dev/block/%s /system ext4 ro,noload wait,first_stage_mount\n' "$(basename "$d")" > "$root/fstab.qcom"
 mode=observe
+if [ "$d" = ufs ]; then
+    mkdir "$root/avb"
+    cp /system.avbpubkey /vendor.avbpubkey "$root/avb/"
+    cp /ufs-fstab "$root/fstab.qcom"
+    mode=observe-vendor
+else
+    echo "gsi_device=$(basename "$d") dev=$(cat "$d/dev")"
+    printf '/dev/block/%s /system ext4 ro,noload wait,first_stage_mount\n' "$(basename "$d")" > "$root/fstab.qcom"
+fi
 if [ -f /project-vendor.img ]; then
     [ "$(basename "$d")" = dm-1 ]
     loop=/sys/class/block/loop0
@@ -58,12 +67,16 @@ done
 # Check that the trace sees the correct exec before permitting the handoff.
 if [ "${2:-}" = install ]; then
     [ "$mode" = observe-vendor ]
-    case "$(cat /trial-id)" in ufs-host-g3-gsi17-firststage-vendor-load-*) ;; *) exit 2 ;; esac
+    case "$(cat /trial-id)" in ufs-host-g3-gsi17-firststage-vendor-load-*|ufs-host-g3-gsi17-firststage-ufs-*) ;; *) exit 2 ;; esac
     wd=/sys/class/watchdog/watchdog0
     case "$(readlink -f "$wd/device")" in */17c10000.qcom,wdt) ;; *) exit 1 ;; esac
     n=$(cat "$wd/dev")
     mknod "$base/watchdog" c "${n%:*}" "${n#*:}"
     echo 8 > /proc/sys/kernel/printk
+    if [ "$d" = ufs ]; then
+        echo "M1EVENT ufs_super=$(readlink -f /sys/class/block/sda10) dev=$(cat /sys/class/block/sda10/dev) ro=$(cat /sys/class/block/sda10/ro)" > /dev/ttyGS0
+        /bin/ufs-init-trace
+    fi
     if [ -f /m1-trace-fault ]; then
         trace=/run/m1/trace
         mkdir "$trace"

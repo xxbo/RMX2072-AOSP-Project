@@ -1,0 +1,2 @@
+system /system ext4 ro,noload wait,logical,first_stage_mount,avb=vbmeta_system,avb_keys=/avb/system.avbpubkey
+vendor /vendor ext4 ro,noload wait,logical,first_stage_mount,avb=vbmeta_vendor,avb_keys=/avb/vendor.avbpubkey

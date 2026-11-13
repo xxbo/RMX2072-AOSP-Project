@@ -187,6 +187,36 @@ static void post_install(void) {
     fail("software return");
 }
 
+/* The kernel may restrict proc after policy installation. Record the actual
+ * layers while PID 1 is stopped just after a successful partition mount. */
+static void mount_layers(const char *source, const char *target) {
+    if (access("/ufs-fstab", F_OK) || strncmp(source, "/dev/block/dm-", 14) ||
+        (strcmp(target, "/system") && strcmp(target, "/vendor"))) return;
+    char line[256];
+    const char *name = strrchr(source, '/') + 1;
+    snprintf(line, sizeof(line), "/sys/class/block/%s/dm/name", name);
+    char map[128];
+    int n = read_proc(line, map, sizeof(map) - 1);
+    if (n <= 0) return;
+    map[n] = 0;
+    map[strcspn(map, "\r\n")] = 0;
+    report("mounted_mapper=%s node=%s target=%s", map, name, target);
+    pid_t child = fork();
+    if (child == 0) {
+        execl("/bin/busybox", "busybox", "sh", "/bin/ufs-init-trace", "layers",
+              target + 1, name, (char *)NULL);
+        _exit(127);
+    }
+    if (child > 0) {
+        int status = 0;
+        pid_t waited;
+        do { waited = waitpid(child, &status, 0); } while (waited < 0 && errno == EINTR);
+        if (waited != child || !WIFEXITED(status) || WEXITSTATUS(status))
+            hold("unexpected-ufs-mapping");
+    }
+    if (child < 0) hold("ufs-mapping-observer-failed");
+}
+
 static int is_policy_setup(void) {
     static const char args[] = "/system/bin/init\0selinux_setup";
     char cmdline[sizeof(args) + 1];
@@ -286,6 +316,7 @@ static void observe(int vendor_trial) {
             } else if (info.op == PTRACE_SYSCALL_INFO_EXIT && in_mount) {
                 report("mount_pid=1 source=%s target=%s fs=%s flags=%#lx rc=%lld",
                        source, target, fs, flags, (long long)info.exit.rval);
+                if (info.exit.rval == 0) mount_layers(source, target);
                 in_mount = 0;
                 if ((!vendor_trial || info.exit.rval < 0) &&
                     (!strcmp(target, "/system") || !strncmp(source, "/dev/block/", 11)))
