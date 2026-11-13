@@ -1,4 +1,4 @@
-"""Generate read-only Firehose requests and verify a complete RMX2072 super read."""
+"""Prepare the RMX2072 F.20 stock recovery kit and verify full Firehose readbacks."""
 import argparse
 import hashlib
 import json
@@ -80,6 +80,19 @@ def build_stock_kit(backup, directory, out, expected):
     (out/'stock-super-kit.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
 
+def verify_restored_super(kit, readback, expected):
+    """Compare a separately acquired post-program readback to the original kit."""
+    if readback.resolve() == kit.resolve():
+        raise ValueError('Provide the post-program readback directory separately from the kit')
+    manifest = json.loads((kit / 'stock-super-kit.json').read_text())
+    if manifest['sha256'] != expected:
+        raise ValueError('Kit digest differs from the original stock digest')
+    measured = verify(readback, expected)
+    if measured['bytes'] != manifest['bytes'] or measured['parts'] != manifest['parts']:
+        raise ValueError('Readback differs from the original kit manifest')
+    return measured
+
+
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='op',required=True)
@@ -91,11 +104,17 @@ if __name__=='__main__':
     for arg in ('android-backup','directory','output'):
         kit.add_argument('--'+arg,type=Path,required=True)
     kit.add_argument('--sha256',required=True)
+    restored = commands.add_parser('verify-restore')
+    restored.add_argument('--kit', type=Path, required=True)
+    restored.add_argument('--readback', type=Path, required=True)
+    restored.add_argument('--sha256', required=True)
     args = parser.parse_args()
     if args.op=='xml':
         with args.output.open('xb') as out:
             out.write(read_xml())
     elif args.op=='verify':
         print(json.dumps(verify(args.directory,args.sha256),indent=2))
+    elif args.op=='verify-restore':
+        print(json.dumps(verify_restored_super(args.kit, args.readback, args.sha256), indent=2))
     else:
         build_stock_kit(args.android_backup,args.directory,args.output,args.sha256)

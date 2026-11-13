@@ -266,8 +266,167 @@
     "independent_edl_read": "PASS",
     "host_full_rollback": "PASS",
     "stock_kit_hashes": "PASS",
-    "stock_handset_program": "NOT RUN",
+    "stock_handset_program": "PASS",
     "candidate_handset_program": "NOT RUN",
-    "ufs_gsi_boot": "NOT RUN"
+    "ufs_gsi_boot": "NOT RUN",
+    "stock_handset_readback": "PASS",
+    "stock_handset_boot": "PASS"
+  },
+  "handset_stock_restore": {
+    "physical_stock_restore": "PASS",
+    "bytes": 8866758656,
+    "sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "matched_chunks": 17,
+    "post_boot_device_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "matched_lp_slots": [
+      0,
+      1
+    ],
+    "prior_boot_id": "97a1c14e-dae0-4b8c-b53a-8bd4e98de977",
+    "after_boot_id": "7d5b36c4-1be3-48f3-a162-8e3d470f530e",
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "adb": true,
+    "restore_xml_sha256": "5a1b918a6873a90404f3ca0a7fd91449e67c129865779873fdafbec2f2b8c5d4",
+    "events": [
+      {
+        "at": "2026-11-13T20:28:27.122907+08:00",
+        "event": "Original F.20 boot, geometry and all input chunks verified"
+      },
+      {
+        "at": "2026-11-13T20:28:38.762501+08:00",
+        "event": "Sahara ready; starting stock-only programming"
+      },
+      {
+        "at": "2026-11-13T20:32:05.398803+08:00",
+        "event": "Firehose completed all stock writes; starting fresh independent readback"
+      },
+      {
+        "at": "2026-11-13T20:35:37.743813+08:00",
+        "event": "All seventeen readback chunks and full stock digest matched"
+      },
+      {
+        "at": "2026-11-13T20:36:06.825199+08:00",
+        "event": "Restored F.20 completed a new Android boot with ADB"
+      },
+      {
+        "at": "2026-11-13T20:36:20.193887+08:00",
+        "event": "Both F.20 LP slots and on-device full super digest verified"
+      }
+    ],
+    "firehose_transfers": {
+      "write": {
+        "seconds": 206.344,
+        "requests": 17,
+        "log_sha256": "4f5718e33c77ae6bfd479ff4e15b3b772a09cea9d404e9bc1da088ed14a9475d"
+      },
+      "readback": {
+        "seconds": 197.922,
+        "requests": 17,
+        "log_sha256": "86d58cbab0136225a4f0b62502ed2ea01b29afa88d903c03d33529988097de8c"
+      }
+    },
+    "programmed_chunk_order": [
+      "super-read-01.bin",
+      "super-read-02.bin",
+      "super-read-03.bin",
+      "super-read-04.bin",
+      "super-read-05.bin",
+      "super-read-06.bin",
+      "super-read-07.bin",
+      "super-read-08.bin",
+      "super-read-09.bin",
+      "super-read-10.bin",
+      "super-read-11.bin",
+      "super-read-12.bin",
+      "super-read-13.bin",
+      "super-read-14.bin",
+      "super-read-15.bin",
+      "super-read-16.bin",
+      "super-read-00.bin"
+    ],
+    "post_program_readback_parts": [
+      {
+        "bytes": 536870912,
+        "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+      },
+      {
+        "bytes": 536870912,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+      },
+      {
+        "bytes": 276824064,
+        "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+      }
+    ],
+    "lpdump_text_sha256": {
+      "normalization": "UTF-8, LF, trimmed outer whitespace",
+      "slots": {
+        "0": {
+          "before": "cd53ad69ce970a3e3701fb42045072988f818fd117e2f2c94b49b9b611e9bf2b",
+          "after": "cd53ad69ce970a3e3701fb42045072988f818fd117e2f2c94b49b9b611e9bf2b"
+        },
+        "1": {
+          "before": "e3ca209861bbe28989616740a849e934c9957020272f035af26a8367804bc592",
+          "after": "e3ca209861bbe28989616740a849e934c9957020272f035af26a8367804bc592"
+        }
+      }
+    }
   }
 }

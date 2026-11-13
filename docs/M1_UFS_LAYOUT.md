@@ -30,4 +30,16 @@ The handset's standalone AOSP `lpdump` also parsed both candidate slots from a t
 
 The complete hashes, physical ranges and per-partition results are in the [qualification record](../build/device/m1-super-layout-2026-11-13.json).
 
-The next hardware checkpoint is a full stock `super` write through 9008, a fresh readback of every byte, and an F.20 boot. The candidate layout additionally needs a trust path for the project vendor and first-stage discovery of the UFS-backed system and vendor. [M1 plan](../plan.md#next-work-on-m1)
+## Verify a handset restoration
+
+On November 13, Firehose programmed 8,866,758,656 original F.20 bytes in 17 requests on LUN 0. The transfer took 206.344 seconds, with the metadata-containing chunk last. A separate 197.922-second read in the same 9008 session matched all 17 original chunk digests and the full SHA-256. After reset, ADB reported `RMX2072_11_F.20`, `sys.boot_completed=1` and a new boot ID, `7d5b36c4-1be3-48f3-a162-8e3d470f530e`. Both LP dumps matched the pre-write captures, and Android independently returned the same full digest. Only the F.20 stock layout was programmed. The Android 17 candidate still requires first-stage partition discovery and a verification path for the project vendor. [Handset evidence](../build/device/m1-super-layout-2026-11-13.json) · [M1 plan](../plan.md#next-work-on-m1)
+
+Use the kit digest from the original F.20 acquisition. After the stock programming session, read the same sectors with `stock-super-read.xml` into a new empty directory while the handset is still in 9008. The following command rehashes those files in sector order and compares each chunk and the complete partition against the kit and the original digest.
+
+```sh
+python scripts/device_audit/check_super_chunks.py verify-restore \
+    --kit PRIVATE/stock-kit --readback PRIVATE/post-program-read \
+    --sha256 f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532
+```
+
+After a matching readback, reset to F.20. Check the build, a fresh boot ID and `sys.boot_completed` over ADB. Compare the outputs of `lpdump -s 0` and `lpdump -s 1` with the pre-write captures and run `sha256sum /dev/block/by-name/super` again on the booted handset.
