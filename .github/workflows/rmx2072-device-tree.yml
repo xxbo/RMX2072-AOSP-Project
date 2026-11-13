@@ -25,6 +25,11 @@ on:
       - 'scripts/device_audit/gsi17_mount.sh'
       - 'scripts/device_audit/gsi17_policy.sh'
       - 'scripts/device_audit/first_stage_mount.sh'
+      - 'scripts/device_audit/ufs_init_trace.sh'
+      - 'scripts/device_audit/observe_ufs_first_stage.py'
+      - 'scripts/device_audit/record_ufs_first_stage.py'
+      - 'build/device/m1-ufs-first-stage-*.json'
+      - 'device/realme/bladerunner_48m/fstab.m1-ufs'
       - 'device/realme/bladerunner_48m/m1-vendor/**'
       - 'scripts/device_audit/first_stage_witness.c'
       - 'build/device/android17-first-stage-source.json'
@@ -77,6 +82,7 @@ jobs:
           sh -n scripts/device_audit/gsi17_mount.sh
           sh -n scripts/device_audit/gsi17_policy.sh
           sh -n scripts/device_audit/first_stage_mount.sh
+          sh -n scripts/device_audit/ufs_init_trace.sh
           for script in device/realme/bladerunner_48m/bootstrap/diag-*.sh scripts/device_audit/watchdog_smoke.sh scripts/device_audit/ufs_phy_cycle.sh scripts/device_audit/ufs_host_trial.sh scripts/device_audit/ufs_g3_test.sh scripts/device_audit/super_readonly.sh scripts/device_audit/verity_readonly.sh; do sh -n "$script"; done
           python -m unittest discover -s tests
       - name: Build and reproduce the project vendor image

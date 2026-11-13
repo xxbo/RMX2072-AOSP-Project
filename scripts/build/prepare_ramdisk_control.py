@@ -15,6 +15,8 @@ def main():
     for name in ('source', 'ramdisk', 'output'):
         p.add_argument('--'+name, required=True, type=pathlib.Path)
     p.add_argument('--expected-source-sha256', required=True)
+    p.add_argument('--ufs-boot-device', action='store_true',
+                   help='Expose the 6.18 staged UFS controller to Android first-stage discovery')
     a = p.parse_args()
     repo = pathlib.Path(__file__).resolve().parents[2]
     if a.output.resolve() == repo or repo in a.output.resolve().parents:
@@ -33,6 +35,13 @@ def main():
     dtstart = start+align(word(16))
     dtb = b[dtstart:dtstart+word(1648)]
     raw = bytearray(b[:start])+rd+bytes(align(len(rd))-len(rd))+dtb
+    if a.ufs_boot_device:
+        cmdline = b[64:576].split(b'\0', 1)[0]
+        # Match the staged platform controller when Android builds by-name links.
+        cmdline += b' androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs tp_printk tp_printk_stop_on_boot'
+        if len(cmdline) >= 512 or any(b[608:1632]):
+            raise ValueError('UFS boot device does not fit the expected boot header')
+        raw[64:576] = cmdline.ljust(512, b'\0')
     struct.pack_into('<I', raw, 16, len(rd))
     raw[576:608] = image_id(raw)
     raw.extend(bytes(-len(raw)%4096))
@@ -42,7 +51,7 @@ def main():
     a.output.mkdir(parents=True, exist_ok=False)
     (a.output/'boot-diag.img').write_bytes(result)
     report = dict(source_boot_sha256=sha(b), boot_sha256=sha(result), ramdisk_sha256=sha(rd),
-                  kernel_and_dtb_byte_identical=True, command_line_byte_identical=True,
+                  kernel_and_dtb_byte_identical=True, command_line_byte_identical=not a.ufs_boot_device,
                   avb_envelope=envelope, status='prepared-not-device-tested')
     (a.output/'control.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report))

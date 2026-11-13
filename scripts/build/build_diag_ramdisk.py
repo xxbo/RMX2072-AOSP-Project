@@ -48,6 +48,8 @@ def main():
     p.add_argument('--android-first-stage', type=pathlib.Path, help='Pinned API 37 generic ramdisk /init')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
     p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
+    p.add_argument('--ufs-first-stage', type=pathlib.Path, metavar='PROFILE',
+                   help='UFS first-stage profile with signed system and vendor public keys')
     p.add_argument('--trace-init-fault', action='store_true', help='Trace PID 1 file faults and failed block completions')
     p.add_argument('--gsi-block-seed', type=pathlib.Path, help='Original GSI blocks and ranges for the RAM-backed comparison')
     p.add_argument('--gsi-init-probe', type=pathlib.Path,
@@ -59,6 +61,9 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.ufs_first_stage and (not a.android_first_stage or not a.super_tools_apks or
+                              a.gsi_usb_reader or a.project_vendor or a.gsi_block_seed):
+        p.error('UFS first-stage requires init and liblp, and uses only internal system and vendor')
     if a.project_vendor and not a.android_first_stage:
         p.error('The project vendor requires the Android first-stage profile')
     if a.trace_init_fault and not (a.project_vendor and (a.trial_id or '').startswith('ufs-host-g3-gsi17-firststage-vendor-load-')):
@@ -66,7 +71,7 @@ def main():
     if a.gsi_block_seed and not a.trace_init_fault:
         p.error('The seed comparison requires the same fault tracing as the USB control')
     if bool(a.android_first_stage) != bool(a.first_stage_witness) or (a.android_first_stage and
-            not (a.gsi_usb_reader and a.return_to_edl_after and (a.trial_id or '').startswith('ufs-host-g3-gsi17-firststage-'))):
+            not ((a.gsi_usb_reader or a.ufs_first_stage) and a.return_to_edl_after and (a.trial_id or '').startswith('ufs-host-g3-gsi17-firststage-'))):
         p.error('First-stage requires the init, observer, GSI reader, recovery timer and firststage trial ID')
     if a.gsi_init_probe and not (a.gsi_usb_reader and a.f20_verity):
         p.error('--gsi-init-probe requires --gsi-usb-reader and --f20-verity')
@@ -142,8 +147,7 @@ def main():
             add('bin/lp/'+name, 0o100755, elf)
         super_test = (root/'scripts/device_audit/super_readonly.sh').read_bytes().replace(b'\r\n', b'\n')
         add('bin/super-readonly', 0o100755, super_test)
-    if a.gsi_usb_reader:
-        reader = read_static_arm64(a.gsi_usb_reader)
+    if a.gsi_usb_reader or a.ufs_first_stage:
         if a.android_first_stage:
             first = read_static_arm64(a.android_first_stage)
             first_hash = hashlib.sha256(first).hexdigest()
@@ -170,9 +174,26 @@ def main():
                 add('project-vendor.img', 0o100444, vendor)
                 add('project-vendor.sha256', 0o100444, (vendor_hash+'\n').encode())
                 add('project-vendor.fstab', 0o100444, (source_dir/'etc/fstab.qcom').read_bytes().replace(b'\r\n', b'\n'))
-        add('bin/gsi-usb-reader', 0o100755, reader)
-        script = (root/'scripts/device_audit/gsi17_mount.sh').read_bytes().replace(b'\r\n', b'\n')
-        add('bin/gsi17-mount', 0o100755, script)
+        if a.ufs_first_stage:
+            profile = json.loads((a.ufs_first_stage/'signed.json').read_text())
+            gsi = json.loads((root/'build/device/gsi17-mount-reference.json').read_text())
+            if profile['system']['key_sha256'] != gsi['key_sha256']:
+                raise ValueError('Unexpected GSI key')
+            for name in ('system', 'vendor'):
+                key = (a.ufs_first_stage/(name+'.avbpubkey')).read_bytes()
+                if hashlib.sha256(key).hexdigest() != profile[name]['key_sha256']:
+                    raise ValueError('Key fingerprint mismatch: '+name)
+                add(name+'.avbpubkey', 0o100444, key)
+                tree = profile[name]['tree']
+                add(name+'.verity-root', 0o100444, (tree['root_digest']+'\n').encode())
+            fstab = root/'device/realme/bladerunner_48m/fstab.m1-ufs'
+            add('ufs-fstab', 0o100444, fstab.read_bytes().replace(b'\r\n', b'\n'))
+            add('bin/ufs-init-trace', 0o100755, (root/'scripts/device_audit/ufs_init_trace.sh').read_bytes().replace(b'\r\n', b'\n'))
+        if a.gsi_usb_reader:
+            reader = read_static_arm64(a.gsi_usb_reader)
+            add('bin/gsi-usb-reader', 0o100755, reader)
+            script = (root/'scripts/device_audit/gsi17_mount.sh').read_bytes().replace(b'\r\n', b'\n')
+            add('bin/gsi17-mount', 0o100755, script)
         ref = json.loads((root/'build/device/gsi17-mount-reference.json').read_text())
         if a.gsi_block_seed:
             info = json.loads((a.gsi_block_seed/'seed.json').read_text())
@@ -287,6 +308,9 @@ def main():
     if a.android_first_stage:
         report.update(scope='Android API 37 first-stage init as global PID 1 with read-only USB-backed GSI',
                       first_stage_init_sha256=first_hash, witness_sha256=hashlib.sha256(witness).hexdigest())
+    if a.ufs_first_stage:
+        report.update(scope='Android API 37 first-stage init on internal UFS',
+                      public_keys={k: v['key_sha256'] for k, v in profile.items()})
     if a.project_vendor:
         report['project_vendor_sha256'] = vendor_hash
     if a.gsi_block_seed:

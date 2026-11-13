@@ -1,0 +1,298 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-13",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "signed_images": {
+    "system": {
+      "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+      "bytes": 3953213440,
+      "tree": {
+        "version": 1,
+        "image_bytes": 3890753536,
+        "tree_offset": 3890753536,
+        "tree_bytes": 30642176,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 2,
+        "fec_offset": 3921395712,
+        "fec_bytes": 31006720,
+        "algorithm": "sha256",
+        "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+        "flags": 0
+      }
+    },
+    "vendor": {
+      "sha256": "d6dadc54d7f821d26d8250f7a3215086597440c87b239a45772dbd4971fff844",
+      "key_sha256": "ee13eae94a2bd9ae0a2272b3fdcc0aec902c9a308d0363b3262feac65419c73b",
+      "bytes": 3145728,
+      "tree": {
+        "version": 1,
+        "image_bytes": 2097152,
+        "tree_offset": 2097152,
+        "tree_bytes": 20480,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 0,
+        "fec_offset": 0,
+        "fec_bytes": 0,
+        "algorithm": "sha256",
+        "salt": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+        "root_digest": "8f928008616a770443302261c8c2264d8b02e855822cd81d673da84f1a5b4902",
+        "flags": 0
+      },
+      "filesystem_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+      "avbtool_source": "https://android.googlesource.com/platform/external/avb/+/refs/tags/android-16.0.0_r1/avbtool.py",
+      "avbtool_sha256": "e5a664a38db623da00f080219bc0ee60a640a9dc4a872803616fae4938ac749b"
+    }
+  },
+  "candidate": {
+    "bytes": 8866758656,
+    "super_sha256": "00b7a1107d57f012679ab311f45a1b0ba855a5400f846a6a9060f9143ded1ad3",
+    "metadata_prefix_sha256": "3b58e5799d4871a5d599a3384ffcb98f4e3bdfc3cdcee45a19d177e7c0a706b8",
+    "group_headroom_bytes": 915103744,
+    "slot0_removed": [
+      "my_stock"
+    ],
+    "slot1_payloads_changed": [
+      "system"
+    ],
+    "changed_chunk_indexes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      10,
+      12,
+      13,
+      14,
+      15
+    ],
+    "active_extents_in_512b_sectors": {
+      "vendor": [
+        [
+          3008,
+          6144
+        ]
+      ],
+      "system": [
+        [
+          9152,
+          1209344
+        ],
+        [
+          1464256,
+          2048
+        ],
+        [
+          1479616,
+          149504
+        ],
+        [
+          1850304,
+          25600
+        ],
+        [
+          1881024,
+          26624
+        ],
+        [
+          1924032,
+          803840
+        ],
+        [
+          3354560,
+          49152
+        ],
+        [
+          3428288,
+          2696192
+        ],
+        [
+          6126528,
+          13312
+        ],
+        [
+          6140864,
+          3072
+        ],
+        [
+          11129792,
+          1088
+        ],
+        [
+          13039552,
+          64
+        ],
+        [
+          13184960,
+          64
+        ],
+        [
+          13330368,
+          64
+        ],
+        [
+          13475776,
+          438272
+        ],
+        [
+          13992896,
+          2302880
+        ]
+      ]
+    }
+  },
+  "candidates_are_engineering_boots": true,
+  "trials": [
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-02",
+      "candidate_super_program": "PASS",
+      "test_boot_program": "FAIL",
+      "first_stage": "NOT RUN",
+      "error": "Host Firehose rejected boot request XML without its XML declaration before dispatching the program handler.",
+      "test_boot_log_sha256": "92a6d85f24b69ced46715354fbc6aebac4a4c1631c5049d540c72c3ab2924307",
+      "restored_F20": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "3f088ab4-19ee-4680-b768-e36bbef4f71c",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-03",
+      "boot_id": "d7add4b7-7174-40a4-a9be-121a9fdc1ecf",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+      "mounts": {
+        "system": {
+          "node": "dm-14",
+          "device": "254:14",
+          "linear_device": "254:0",
+          "super": "8:10",
+          "extents": 16,
+          "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+          "avb_at_seconds": 37.504232,
+          "verity_status": "0 7599128 verity V 0",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        },
+        "vendor": {
+          "node": "dm-15",
+          "device": "254:15",
+          "linear_device": "254:1",
+          "super": "8:10",
+          "extents": 1,
+          "root_sha256": "8f928008616a770443302261c8c2264d8b02e855822cd81d673da84f1a5b4902",
+          "avb_at_seconds": 37.596451,
+          "verity_status": "0 4096 verity V -",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        }
+      },
+      "enforcing_seconds": 39.58969,
+      "second_stage_seconds": 39.61579,
+      "file_reads": {
+        "/system/build.prop": {
+          "at_seconds": 39.66275,
+          "pid": 1,
+          "inode": 659,
+          "device": "254:14",
+          "requested_bytes": 5675,
+          "returned_bytes": 5675
+        },
+        "/system/etc/init/hw/init.rc": {
+          "at_seconds": 39.68673,
+          "pid": 1,
+          "inode": 757,
+          "device": "254:14",
+          "requested_bytes": 56913,
+          "returned_bytes": 56913
+        }
+      },
+      "raw_sha256": {
+        "acm.log": "0a806c0217137bfb033a19063ee936eeb7e5811d33a37b963eb3a535358c6a08",
+        "console-ramoops-0": "bb0bc7b978945a0d8a6abf5ee01181719cf7bc77de23c6d51b006fd5a752305e"
+      },
+      "boot_sha256": "d927f892eb9578dc530c94a6ca4ca6b8272ba754fbe8408972cf51314b108811",
+      "code_commit": "bb6ae90",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "candidate_super_sha256": "00b7a1107d57f012679ab311f45a1b0ba855a5400f846a6a9060f9143ded1ad3",
+      "candidate_readback_chunks": 17,
+      "second_stage_file_reads": "PASS",
+      "disconnected_cold_boot": "NOT RUN",
+      "android17_adb": "NOT RUN",
+      "next_observations": [
+        "[   39.687703][    T1] init: /system/etc/init/hw/init.rc: 12: Could not expand import: property 'ro.zygote' doesn't exist while expanding '/system/etc/init/hw/init.${ro.zygote}.rc'",
+        "[   39.691997][    T1] init: Unable to read config file '/init.qcom.rc': open() failed: No such file or directory",
+        "[   39.750073][    T1] init: starting service 'ueventd'...",
+        "[   40.397633][    T1] init: starting service 'servicemanager'...",
+        "[   40.423746][    T1] init: starting service 'vold'...",
+        "[   40.490701][ T1787] type=1400 audit(40.471:50): avc:  denied  { read } for  comm=\"vold\" name=\"fstab.qcom\" dev=\"dm-15\" ino=13 scontext=u:r:vold:s0 tcontext=u:object_r:vendor_rmx2072_board_config:s0 tclass=file permissive=0",
+        "[   40.490877][ T1777] vold: Failed to open default fstab: Permission denied"
+      ],
+      "console_retrieved_on_diagnostic_boot_id": "5634c6da-4bcc-46cb-8650-b119363952d8",
+      "capture_notes": [
+        "Initial host observer lacked pyserial. Relaunched on the existing serial runtime before first-stage handoff.",
+        "Enforcing denied the diagnostic observer proc and kmsg access. PID 1 reads were captured by the kernel probe and persisted in ramoops."
+      ],
+      "restored_F20": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "eb461622-8f63-4ad8-8f72-1bcd715b4d3d",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ],
+        "matched_9008_chunks": 17,
+        "readback_bytes": 8866758656,
+        "timeline": [
+          {
+            "at": "2026-11-13T21:15:33.796111+08:00",
+            "event": "Stock device, unlocked state, original super and private inputs verified"
+          },
+          {
+            "at": "2026-11-13T21:15:45.954842+08:00",
+            "event": "enter Sahara ready"
+          },
+          {
+            "at": "2026-11-13T21:21:44.404747+08:00",
+            "event": "Candidate super 17/17 and boot readbacks match; starting diagnostic"
+          },
+          {
+            "at": "2026-11-13T21:24:29.956606+08:00",
+            "event": "return Sahara ready"
+          },
+          {
+            "at": "2026-11-13T21:24:33.145742+08:00",
+            "event": "Restoring original super and boot"
+          },
+          {
+            "at": "2026-11-13T21:31:37.197563+08:00",
+            "event": "Original super all 17 chunks, boot and DTBO match"
+          },
+          {
+            "at": "2026-11-13T21:32:24.354955+08:00",
+            "event": "Restored F20 completed; Android super hash and LP slots match"
+          }
+        ]
+      }
+    }
+  ]
+}
