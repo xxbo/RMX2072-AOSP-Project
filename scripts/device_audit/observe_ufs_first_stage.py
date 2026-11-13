@@ -14,6 +14,11 @@ from usb_edl_return import ACM, EDL, END, QUERY, parse_identity, ports_with_id
 from serve_gsi_usb import console_query, read_console_file, read_until_line
 
 
+def mark(output, event, boot_id):
+    with (output/'host-events.jsonl').open('a') as log:
+        log.write(json.dumps(dict(event=event, boot_id=str(boot_id), monotonic=time.monotonic()))+'\n')
+
+
 def watch_adb(output, stop):
     """Record transport states, including offline and unauthorized, throughout the trial."""
     start = time.monotonic()
@@ -28,7 +33,7 @@ def watch_adb(output, stop):
                 state = dict(transports=rows, diagnostic_acm=ACM in ports, edl=EDL in ports)
             except (OSError, subprocess.SubprocessError) as error:
                 state = dict(error=str(error))
-            entry = dict(elapsed=round(time.monotonic()-start, 3), **state)
+            entry = dict(elapsed=round(time.monotonic()-start, 3), monotonic=time.monotonic(), **state)
             if state != previous:
                 for row in state.get('transports', []):
                     fields = row.split()
@@ -64,6 +69,7 @@ def previous_boot(trial, original, output, deadline):
                         raise RuntimeError('Unexpected trial after reset')
                     fresh = UUID(console_query(console, b'cat /proc/sys/kernel/random/boot_id').decode())
                     if fresh != original:
+                        mark(output, 'recovery_boot', fresh)
                         (output/'intermediate-boot.json').write_text(json.dumps(
                             dict(boot_id=str(fresh), identity=identity), indent=2)+'\n')
                         console_query(console, b'mkdir -p /run/prev; mount -t pstore pstore /run/prev')
@@ -98,6 +104,7 @@ def observe(trial, output, timeout):
             raise ValueError('Unexpected running trial')
         original = UUID(console_query(console, b'cat /proc/sys/kernel/random/boot_id').decode())
         (output/'identity.json').write_text(json.dumps(identity, indent=2) + '\n')
+        mark(output, 'handoff_requested', original)
         # Capture bootstrap failures too. A failed mount can stop PID 1 before
         # the witness observes a mount syscall, leaving the outer console alive.
         console.write(b"\nstty -echo; cat /proc/sys/kernel/random/boot_id; "
@@ -121,6 +128,7 @@ def observe(trial, output, timeout):
                     return
                 tail += data
                 if b'M1EVENT post_install_window=end' in tail:
+                    mark(output, 'post_install_window_end', original)
                     break
                 tail = tail[-64:]
     previous_boot(trial, original, output, time.monotonic()+180)

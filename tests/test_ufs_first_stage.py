@@ -1,9 +1,11 @@
+import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
-from record_ufs_first_stage import full_read
+from record_ufs_first_stage import adb_observations, full_read
 
 
 class UfsInitReadTest(unittest.TestCase):
@@ -17,3 +19,25 @@ class UfsInitReadTest(unittest.TestCase):
             full_read(wrong, 659, '254:14', 5675, 40)
         read = full_read(wrong + '\n' + row(43), 659, '254:14', 5675, 40)
         self.assertEqual((read['at_seconds'], read['returned_bytes']), (43, 5675))
+
+    def test_vold_read_can_request_more_than_file_size(self):
+        line = '[   40.600000][ T1777] m1_file_read: (vfs_read) ino=14 dev=266338319 count=4096 result=220'
+        result = full_read(line, 14, '254:15', 220, 40, pid=1777)
+        self.assertEqual(result['requested_bytes'], 4096)
+        with self.assertRaises(ValueError):
+            full_read(line, 14, '254:15', 220, 40, pid=1)
+
+    def test_stock_adb_outside_handoff_does_not_qualify(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            capture = Path(tmp)
+            events = [dict(monotonic=10, boot_id='trial', event='handoff_requested'),
+                      dict(monotonic=13, boot_id='next', event='recovery_boot')]
+            rows = [dict(monotonic=9, transports=['stock device']),
+                    dict(monotonic=11, transports=[], diagnostic_acm=True),
+                    dict(monotonic=12, transports=[]), dict(monotonic=14, transports=['stock device'])]
+            for name, entries in [('host-events.jsonl', events), ('adb.jsonl', rows)]:
+                (capture/name).write_text('\n'.join(map(json.dumps, entries)))
+            result = adb_observations(capture, dict(boot_id='trial', kernel='6.18'))
+            self.assertEqual(result['result'], 'NO_TRANSPORT_OBSERVED')
+            self.assertEqual(result['samples'], 2)
+            self.assertTrue(result['diagnostic_acm_seen'])
