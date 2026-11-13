@@ -1,0 +1,160 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-13",
+  "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+  "signed_images": {
+    "system": {
+      "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+      "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+      "bytes": 3953213440,
+      "tree": {
+        "version": 1,
+        "image_bytes": 3890753536,
+        "tree_offset": 3890753536,
+        "tree_bytes": 30642176,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 2,
+        "fec_offset": 3921395712,
+        "fec_bytes": 31006720,
+        "algorithm": "sha256",
+        "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+        "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+        "flags": 0
+      }
+    },
+    "vendor": {
+      "sha256": "d6dadc54d7f821d26d8250f7a3215086597440c87b239a45772dbd4971fff844",
+      "key_sha256": "ee13eae94a2bd9ae0a2272b3fdcc0aec902c9a308d0363b3262feac65419c73b",
+      "bytes": 3145728,
+      "tree": {
+        "version": 1,
+        "image_bytes": 2097152,
+        "tree_offset": 2097152,
+        "tree_bytes": 20480,
+        "data_block_bytes": 4096,
+        "hash_block_bytes": 4096,
+        "fec_roots": 0,
+        "fec_offset": 0,
+        "fec_bytes": 0,
+        "algorithm": "sha256",
+        "salt": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+        "root_digest": "8f928008616a770443302261c8c2264d8b02e855822cd81d673da84f1a5b4902",
+        "flags": 0
+      },
+      "filesystem_sha256": "8222950372b5c1327e7cf9b4de1fa852ba7a833847af76b767afac6838364f90",
+      "avbtool_source": "https://android.googlesource.com/platform/external/avb/+/refs/tags/android-16.0.0_r1/avbtool.py",
+      "avbtool_sha256": "e5a664a38db623da00f080219bc0ee60a640a9dc4a872803616fae4938ac749b"
+    }
+  },
+  "candidate": {
+    "bytes": 8866758656,
+    "super_sha256": "00b7a1107d57f012679ab311f45a1b0ba855a5400f846a6a9060f9143ded1ad3",
+    "metadata_prefix_sha256": "3b58e5799d4871a5d599a3384ffcb98f4e3bdfc3cdcee45a19d177e7c0a706b8",
+    "group_headroom_bytes": 915103744,
+    "slot0_removed": [
+      "my_stock"
+    ],
+    "slot1_payloads_changed": [
+      "system"
+    ],
+    "changed_chunk_indexes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      10,
+      12,
+      13,
+      14,
+      15
+    ],
+    "active_extents_in_512b_sectors": {
+      "vendor": [
+        [
+          3008,
+          6144
+        ]
+      ],
+      "system": [
+        [
+          9152,
+          1209344
+        ],
+        [
+          1464256,
+          2048
+        ],
+        [
+          1479616,
+          149504
+        ],
+        [
+          1850304,
+          25600
+        ],
+        [
+          1881024,
+          26624
+        ],
+        [
+          1924032,
+          803840
+        ],
+        [
+          3354560,
+          49152
+        ],
+        [
+          3428288,
+          2696192
+        ],
+        [
+          6126528,
+          13312
+        ],
+        [
+          6140864,
+          3072
+        ],
+        [
+          11129792,
+          1088
+        ],
+        [
+          13039552,
+          64
+        ],
+        [
+          13184960,
+          64
+        ],
+        [
+          13330368,
+          64
+        ],
+        [
+          13475776,
+          438272
+        ],
+        [
+          13992896,
+          2302880
+        ]
+      ]
+    }
+  },
+  "candidates_are_engineering_boots": true,
+  "trials": [
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-02",
+      "candidate_super_program": "PASS",
+      "test_boot_program": "FAIL",
+      "first_stage": "NOT RUN",
+      "error": "Host Firehose rejected boot request XML without its XML declaration before dispatching the program handler.",
+      "test_boot_log_sha256": "92a6d85f24b69ced46715354fbc6aebac4a4c1631c5049d540c72c3ab2924307"
+    }
+  ]
+}

@@ -38,7 +38,7 @@ def main():
     if a.ufs_boot_device:
         cmdline = b[64:576].split(b'\0', 1)[0]
         # Match the staged platform controller when Android builds by-name links.
-        cmdline += b' androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs'
+        cmdline += b' androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs tp_printk tp_printk_stop_on_boot'
         if len(cmdline) >= 512 or any(b[608:1632]):
             raise ValueError('UFS boot device does not fit the expected boot header')
         raw[64:576] = cmdline.ljust(512, b'\0')

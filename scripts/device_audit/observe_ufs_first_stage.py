@@ -31,7 +31,7 @@ def observe(trial, output, timeout):
         # Capture bootstrap failures too. A failed mount can stop PID 1 before
         # the witness observes a mount syscall, leaving the outer console alive.
         console.write(b"\nstty -echo; cat /proc/sys/kernel/random/boot_id; "
-                      b"(cat /dev/kmsg | awk '/init:|libfs_mgr|libfstab|avb|verity|SELinux:|panic|enforcing=/{print;fflush()}' "
+                      b"(cat /dev/kmsg | awk '/init:|libfs_mgr|libfstab|avb|verity|SELinux:|panic|enforcing=|m1_file_read/{print;fflush()}' "
                       b"> /dev/ttyGS0) & "
                       b"/bin/busybox sh -x /bin/first-stage-mount ufs install "
                       b"> /run/gsi17-run.log 2>&1; x=$?; tail -80 /run/gsi17-run.log; "

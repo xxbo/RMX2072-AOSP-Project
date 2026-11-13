@@ -32,16 +32,13 @@ ctl=$(cat /sys/class/misc/device-mapper/dev)
 [ -c /dev/mapper/control ] || mknod /dev/mapper/control c "${ctl%:*}" "${ctl#*:}"
 i=$t/instances/m1reads
 mkdir "$i"
-echo 256 > "$i/buffer_size_kb"
-echo 'p:m1reads/read_begin vfs_read ino=+64(+32(%x0)):u64 dev=+16(+40(+32(%x0))):u32 count=%x2:u64' >> "$t/kprobe_events"
-echo 'r:m1reads/read_end vfs_read result=$retval:s64' >> "$t/kprobe_events"
-echo 'common_pid == 1' > "$i/events/m1reads/read_begin/filter"
-echo 'common_pid == 1' > "$i/events/m1reads/read_end/filter"
-echo 1 > "$i/events/m1reads/enable"
+echo 'r:m1reads/m1_file_read vfs_read ino=+64(+32($arg1)):u64 dev=+16(+40(+32($arg1))):u32 count=$arg3:u64 result=$retval:s64' >> "$t/kprobe_events"
+# Limit printk to these two files and to PID 1. Disable earlier UFS link
+# startup probes before enabling trace-to-printk in this diagnostic boot.
+echo 0 > "$t/instances/rmxlink/events/enable"
+echo 'common_pid == 1 && (ino == 659 || ino == 757)' > "$i/events/m1reads/m1_file_read/filter"
+echo 1 > "$i/events/m1reads/m1_file_read/enable"
 echo 1 > "$i/tracing_on"
-# Open both sinks before the SELinux domain transition. The host can still
-# receive preceding records if the kernel later restricts either descriptor.
-awk '
-    /read_begin:/ { keep = ($0 ~ /ino=(659|757) /); if (keep) { print; fflush() }; next }
-    /read_end:/ && keep { print; fflush(); keep=0 }
-' "$i/trace_pipe" > /dev/ttyGS0 &
+echo 1 > /proc/sys/kernel/tracepoint_printk
+[ "$(cat /proc/sys/kernel/tracepoint_printk)" = 1 ]
+echo 'M1EVENT read_trace=pid1 inode=659,757 sink=printk' > /dev/ttyGS0

@@ -42,6 +42,14 @@ def prepare(system, vendor, vendor_key, output):
         keys[name], records[name] = image_profile(path, name, key_digest)
     if records['system']['sha256'] != reference['image_sha256'] or records['system']['tree'] != reference['hashtree']:
         raise ValueError('GSI differs from the pinned image')
+    control = json.loads((ROOT/'build/device/gsi17-enforcing-second-stage-2026-11-12.json').read_text())
+    payload_bytes = records['vendor']['tree']['image_bytes']
+    if payload_bytes != 2 * 1024 * 1024:
+        raise ValueError('Unexpected vendor 02 filesystem size')
+    with vendor.open('rb') as image:
+        payload = hashlib.sha256(image.read(payload_bytes)).hexdigest()
+    if payload != control['trials'][-1]['vendor_image_sha256']:
+        raise ValueError('Signed vendor does not contain the project vendor 02 filesystem')
     output.mkdir(parents=True, exist_ok=False)
     for name, key in keys.items():
         (output/(name+'.avbpubkey')).write_bytes(key)
