@@ -2,6 +2,8 @@
 # Offsets verified from the exact 6.18.32 Image BTF. The inode numbers belong
 # to CP3A.260905.010. Correlate the filesystem device with the PID 1 mounts.
 set -eu
+t=/sys/kernel/debug/tracing
+i=$t/instances/m1reads
 if [ "${1:-}" = layers ]; then
     case "$2" in system|vendor) ;; *) exit 2 ;; esac
     dm() { /bin/lp/ld-musl-aarch64.so.1 --library-path /bin/lp /bin/lp/dmsetup --noudevsync --noudevrules "$@"; }
@@ -24,13 +26,28 @@ if [ "${1:-}" = layers ]; then
     [ "${12}" = "$(cat "/$name.verity-root")" ]
     [ "$(cat "/sys/class/block/$node/ro")" = 1 ]
     echo "M1EVENT verified_ufs_mount=$name dev=$(cat "/sys/class/block/$node/dev")" > /dev/ttyGS0
+    if [ "$name" = vendor ]; then
+        root=/proc/1/root
+        filter='common_pid == 1 && (ino == 659 || ino == 757'
+        for file in init.zygote64_32.rc init.zygote64.rc init.boringssl.zygote64_32.rc; do
+            path="/system/etc/init/hw/$file"
+            inode=$(stat -c %i "$root$path")
+            echo "M1EVENT read_target=$path ino=$inode bytes=$(stat -c %s "$root$path")" > /dev/ttyGS0
+            filter="$filter || ino == $inode"
+        done
+        dev=$(cat "/sys/class/block/$node/dev")
+        inode=$(stat -c %i "$root/vendor/etc/fstab.qcom")
+        bytes=$(stat -c %s "$root/vendor/etc/fstab.qcom")
+        echo "M1EVENT read_target=/vendor/etc/fstab.qcom ino=$inode bytes=$bytes" > /dev/ttyGS0
+        # Capture all readers of this specific vendor inode. Attribute the read
+        # to vold using the PID logged by Android init on the same boot.
+        echo "($filter)) || (dev == $(( (${dev%:*} << 20) | ${dev#*:} )) && ino == $inode)" > "$i/events/m1reads/m1_file_read/filter"
+    fi
     exit 0
 fi
-t=/sys/kernel/debug/tracing
 mkdir -p /dev/mapper
 ctl=$(cat /sys/class/misc/device-mapper/dev)
 [ -c /dev/mapper/control ] || mknod /dev/mapper/control c "${ctl%:*}" "${ctl#*:}"
-i=$t/instances/m1reads
 mkdir "$i"
 echo 'r:m1reads/m1_file_read vfs_read ino=+64(+32($arg1)):u64 dev=+16(+40(+32($arg1))):u32 count=$arg3:u64 result=$retval:s64' >> "$t/kprobe_events"
 # Limit printk to these two files and to PID 1. Disable earlier UFS link
