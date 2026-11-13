@@ -20,7 +20,7 @@ The profile builder verifies both embedded RSA signatures, pins the system image
 
 ## Evidence
 
-The ramdisk fstab selects logical partitions by their names. Android regenerates block devices and reads LP metadata, then uses its first-stage AVB setup to mount system and vendor. The observer checks each successful mount against the actual dm-verity table, its pinned root digest and the dm-linear extents on the UFS super. Device-mapper minor numbers are recorded at runtime. The vendor 02 filesystem still contains the historical USB fixture fstab; the first-stage root embeds the separate UFS fstab. [UFS fstab](https://github.com/xxbo/RMX2072-AOSP-Project/blob/209bfe94ed4bebf48e524181efac17e3ea572a9b/device/realme/bladerunner_48m/fstab.m1-ufs) 路 [AOSP first-stage mount](https://android.googlesource.com/platform/system/core/+/refs/heads/main/init/first_stage_mount.cpp)
+The ramdisk fstab selects logical partitions by their names. Android regenerates block devices and reads LP metadata, then uses its first-stage AVB setup to mount system and vendor. The observer checks each successful mount against the actual dm-verity table, its pinned root digest and the dm-linear extents on the UFS super. Device-mapper minor numbers are recorded at runtime. The vendor 02 filesystem still contains the historical USB fixture fstab; the first-stage root embeds the separate UFS fstab. [UFS fstab](https://github.com/xxbo/RMX2072-AOSP-Project/blob/209bfe94ed4bebf48e524181efac17e3ea572a9b/device/realme/bladerunner_48m/fstab.m1-ufs) · [AOSP first-stage mount](https://android.googlesource.com/platform/system/core/+/refs/heads/main/init/first_stage_mount.cpp)
 
 Collect the ACM stream with `observe_ufs_first_stage.py` and save ramoops during recovery. For this kernel and GSI, the probe on `vfs_read` records PID 1, the filesystem device and inode, request size and actual return value. Inodes 659 and 757 identify `/system/build.prop` and `/system/etc/init/hw/init.rc`. Compare their read results with the enforcing transition and second-stage entry from the same boot. The handset trial and stock recovery results are in the [machine-readable record](../build/device/m1-ufs-first-stage-2026-11-13.json).
 
@@ -79,3 +79,5 @@ Capture with `observe_ufs_first_stage.py --observe-adb`. Replay the mounts, read
 python scripts/device_audit/record_ufs_first_stage.py --capture PRIVATE/live \
     --layout build/device/m1-ufs-first-stage-vendor-services-2026-11-13.json --vendor-services
 ```
+
+The handset returned to 9008 by software. Recovery restored all 17 original super chunks and the F.20 log-reader boot baseline. Independent readback matched super, boot and the original DTBO. F.20 then reported `sys.boot_completed=1` on boot `4ac714d3-ae03-45b9-8a43-eb3775901ab4`. Both LP metadata dumps and the SHA-256 computed over super from Android matched the pre-trial values.
