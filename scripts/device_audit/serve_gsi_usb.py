@@ -58,27 +58,31 @@ def read_until_line(console, end, timeout):
     raise TimeoutError(end.decode())
 
 
-def transcript(console):
-    def query(cmd):
-        console.write(b"\nprintf '\\nMOUNT_''BEGIN\\n'; "+cmd+b"; printf '\\nMOUNT_''END\\n'\n")
-        rows = read_until_line(console,b'MOUNT_END',8).replace(b'\r',b'').splitlines()
-        return b''.join(rows[rows.index(b'MOUNT_BEGIN')+1:rows.index(b'MOUNT_END')])
+def console_query(console, cmd):
+    console.write(b"\nprintf '\\nMOUNT_''BEGIN\\n'; "+cmd+b"; printf '\\nMOUNT_''END\\n'\n")
+    rows = read_until_line(console,b'MOUNT_END',8).replace(b'\r',b'').splitlines()
+    return b''.join(rows[rows.index(b'MOUNT_BEGIN')+1:rows.index(b'MOUNT_END')])
 
+def transcript(console):
     path = b'/run/gsi17-transcript'
-    meta = query(b"{ cat /run/gsi17-run.log; cat /run/gsi17/backend.log 2>/dev/null; "
+    return read_console_file(console, path, b"{ cat /run/gsi17-run.log; cat /run/gsi17/backend.log 2>/dev/null; "
                  b"dmesg | grep -Ei 'dm-user|EXT4-fs|verity:|corrupted' | tail -12; } > "+path+
-                 b"; printf '%s %s' \"$(wc -c < "+path+b")\" \"$(sha256sum "+path+b" | cut -d' ' -f1)\"")
+                 b"; ").decode(errors='replace')
+
+
+def read_console_file(console, path, prepare=b''):
+    meta = console_query(console, prepare+b"printf '%s %s' \"$(wc -c < "+path+b")\" \"$(sha256sum "+path+b" | cut -d' ' -f1)\"")
     size, digest = meta.split()
     size = int(size)
-    if not 0 < size <= 256*1024 or not re.fullmatch(b'[0-9a-f]{64}',digest):
+    if not 0 < size <= 1024*1024 or not re.fullmatch(b'[0-9a-f]{64}',digest):
         raise ValueError('Unexpected diagnostic transcript metadata')
     data = bytearray()
     for pos in range(0,size,384):
         cmd = b'dd if='+path+f' bs=384 skip={pos//384} count=1 2>/dev/null | base64'.encode()
-        data.extend(base64.b64decode(query(cmd),validate=True))
+        data.extend(base64.b64decode(console_query(console,cmd),validate=True))
     if len(data) != size or hashlib.sha256(data).hexdigest().encode() != digest:
         raise ValueError('Incomplete USB transcript')
-    return data.decode(errors='replace')
+    return bytes(data)
 
 
 def verify_gsi_tables(log, ref):
@@ -227,7 +231,7 @@ def verify_policy_probe(log):
     return init_policy_observations(log)
 
 
-def serve(console, image, ref, deadline, stats, mode, events=None):
+def serve(console, image, ref, deadline, stats, mode, events=None, reads=None):
     console.write(b"\n/bin/gsi17-mount "+mode+b" >/run/gsi17-run.log 2>&1; rc=$?; printf '\\nGSI17_''EXIT %s\\n' \"$rc\"\n")
     pending = bytearray()
     traces = []
@@ -252,6 +256,9 @@ def serve(console, image, ref, deadline, stats, mode, events=None):
             continue
         offset, count = map(int,match.groups())
         packet = read_packet(image,ref['image_bytes'],offset,count)
+        if reads is not None:
+            reads.write(f'{offset} {count}\n')
+            reads.flush()
         for pos in range(0,len(packet),1024):
             chunk = packet[pos:pos+1024]
             if console.write(chunk) != len(chunk):
@@ -311,9 +318,9 @@ def main():
                 report['identity'] = ident
                 until = time.monotonic()+ident['timer_seconds']-ident['uptime_seconds']-30
                 if a.policy_install:
-                    with (a.output/'policy-events.txt').open('xb') as events:
+                    with (a.output/'policy-events.txt').open('xb') as events, (a.output/'gsi-reads.txt').open('x') as reads:
                         try:
-                            rc, report['first_requests'] = serve(console, image, ref, until, stats, b'install', events)
+                            rc, report['first_requests'] = serve(console, image, ref, until, stats, b'install', events=events, reads=reads)
                         except serial.SerialException as exc:
                             report.update(status='transport-disconnected', transport_error=str(exc))
                             return

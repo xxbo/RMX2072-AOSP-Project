@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 from uuid import UUID
 
-from serve_gsi_usb import read_until_line, transcript
+from serve_gsi_usb import console_query, read_console_file, read_until_line, transcript
 from usb_edl_return import ACM, END, QUERY, parse_identity
 
 
@@ -39,6 +39,10 @@ def recover(live):
                           b"grep -aE 'M1EVENT|init:|enforcing|reboot:|panic|avc:|sys.boot_completed|BOOT_ID|boot_id|second.stage' "
                           b"\"$p\" | tail -180; done; } >/run/gsi17-run.log; printf '\\nREC_''SAVED\\n'\n")
             read_until_line(console, b'REC_SAVED', 8)
+            for name in ('console-ramoops-0', 'dmesg-ramoops-0.enc.z', 'dmesg-ramoops-0', 'pmsg-ramoops-0'):
+                path = b'/run/prev/'+name.encode()
+                if console_query(console, b'test -s '+path+b' && echo present') == b'present':
+                    (live/name).write_bytes(read_console_file(console, path))
             with (live/'intermediate-pstore.txt').open('x', encoding='utf-8') as out:
                 out.write(transcript(console))
         finally:

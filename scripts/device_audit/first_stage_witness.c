@@ -2,6 +2,8 @@
 #define _GNU_SOURCE
 #include <errno.h>
 #include <fcntl.h>
+#include <linux/audit.h>
+#include <linux/netlink.h>
 #include <linux/watchdog.h>
 #include <sched.h>
 #include <signal.h>
@@ -13,6 +15,7 @@
 #include <sys/ioctl.h>
 #include <sys/mount.h>
 #include <sys/ptrace.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/wait.h>
@@ -22,6 +25,7 @@
 #define PID_ONE 1
 
 static int events = -1, kmsg = -1, kernel_log = -1;
+
 
 /* One write per record, on the same device-to-host stream as GSI17 READ. */
 static void report(const char *fmt, ...) {
@@ -41,6 +45,59 @@ static void fail(const char *name) {
     /* PID 1 exiting would panic the kernel. The recovery timer is a sibling. */
     if (getpid() == PID_ONE) for (;;) pause();
     exit(1);
+}
+
+/* Scope syscall auditing to the next execve of PID 1 on this diagnostic boot.
+ * The kernel records EXECVE arguments and the syscall outcome across the
+ * domain transition even when the userspace observer loses access to proc. */
+static void audit_init_exec(void) {
+    struct {
+        struct nlmsghdr header;
+        struct audit_rule_data rule;
+    } request = {0};
+    struct sockaddr_nl addr = { .nl_family = AF_NETLINK };
+    struct timeval timeout = { .tv_sec = 1 };
+    struct { struct nlmsghdr header; struct nlmsgerr ack; } reply = {0};
+    int fd = socket(AF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_AUDIT);
+    if (fd < 0) { report("exec_audit_rc=%d", -errno); return; }
+    request.header.nlmsg_len = NLMSG_LENGTH(sizeof(request.rule));
+    request.header.nlmsg_type = AUDIT_ADD_RULE;
+    request.header.nlmsg_flags = NLM_F_REQUEST | NLM_F_ACK;
+    request.header.nlmsg_seq = 1;
+    request.rule.flags = AUDIT_FILTER_EXIT;
+    request.rule.action = AUDIT_ALWAYS;
+    request.rule.mask[__NR_execve / 32] = 1U << (__NR_execve % 32);
+    request.rule.field_count = 1;
+    request.rule.fields[0] = AUDIT_PID;
+    request.rule.values[0] = PID_ONE;
+    request.rule.fieldflags[0] = AUDIT_EQUAL;
+    int rc = -EPROTO;
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0 ||
+        sendto(fd, &request, request.header.nlmsg_len, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0 ||
+        recv(fd, &reply, sizeof(reply), 0) < 0) rc = -errno;
+    else if (reply.header.nlmsg_type == NLMSG_ERROR && reply.header.nlmsg_seq == 1) rc = reply.ack.error;
+    close(fd);
+    report("exec_audit_rc=%d", rc);
+}
+
+/* Capture the mapped file offsets before init installs its production policy. */
+static void start_fault_trace(void) {
+    if (access("/m1-trace-fault", F_OK)) return;
+    FILE *maps = fopen("/proc/1/maps", "r");
+    if (!maps) fail("init mappings");
+    char row[640];
+    while (fgets(row, sizeof(row), maps)) {
+        if (strstr(row, " /")) {
+            row[strcspn(row, "\n")] = 0;
+            report("map=%s", row);
+        }
+    }
+    fclose(maps);
+    int fd = open("/run/m1/trace/tracing_on", O_WRONLY | O_CLOEXEC);
+    if (fd < 0 || write(fd, "1", 1) != 1) fail("start fault trace");
+    close(fd);
+    audit_init_exec();
+    report("fault_trace=armed");
 }
 
 static void handoff(void) {
@@ -203,6 +260,7 @@ static void observe(int vendor_trial) {
                     argument(info.entry.args[1], path, sizeof(path));
                     if (!strcmp(path, "/sys/fs/selinux/load") || !strcmp(path, "/selinux/load")) {
                         if (vendor_trial != 2) hold("policy-load-open");
+                        start_fault_trace();
                         int timeout;
                         watchdog = open("/run/m1/watchdog", O_WRONLY | O_CLOEXEC);
                         if (watchdog < 0 || ioctl(watchdog, WDIOC_GETTIMEOUT, &timeout) < 0)

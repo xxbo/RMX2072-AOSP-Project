@@ -11,9 +11,27 @@ import zlib
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
 from serve_gsi_usb import REFERENCE, init_policy_observations, read_packet, serve, transcript, verify_first_stage, verify_image, verify_mount
 from record_m1_vendor import policy_result
+from record_init_fault import sector_for_offset
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/build'))
+from build_m1_gsi_seed import hash_blocks
 
 
 class GsiUsbTests(unittest.TestCase):
+    def test_file_offsets_across_extents_and_holes(self):
+        runs = [(20, 2), (None, 1), (5, 4)]
+        self.assertEqual(sector_for_offset(runs, 4096, 4096), 168)
+        self.assertIsNone(sector_for_offset(runs, 8192, 4096))
+        self.assertEqual(sector_for_offset(runs, 12288, 4096), 40)
+        with self.assertRaises(ValueError):
+            sector_for_offset(runs, 7*4096, 4096)
+
+    def test_packed_gsi_pages_include_root_first_hashtree_ancestors(self):
+        # 16385 data blocks produce 129 leaf-hash blocks, 2 intermediate
+        # blocks and 1 root block, in reverse order on disk.
+        self.assertEqual(set(hash_blocks({0,16384}, 16385)),
+                         {16385,16386,16387,16388,16516})
+
     def test_policy_return_is_bound_to_the_open_fd_and_full_write(self):
         opening = 'policy_open_entry path=/sys/fs/selinux/load watchdog_seconds=30'
         rows = [opening, 'policy_open_rc=4', 'policy_write_entry fd=4 count=703220']

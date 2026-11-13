@@ -64,7 +64,24 @@ if [ "${2:-}" = install ]; then
     n=$(cat "$wd/dev")
     mknod "$base/watchdog" c "${n%:*}" "${n#*:}"
     echo 8 > /proc/sys/kernel/printk
-    grep -E '^(boot_id|init_sha256|gsi_device|vendor_device|source_table|verity_table|last_block_sha256)=' \
+    if [ -f /m1-trace-fault ]; then
+        trace=/run/m1/trace
+        mkdir "$trace"
+        mount -t tracefs tracefs "$trace"
+        echo 0 > "$trace/tracing_on"
+        echo 4 > "$trace/buffer_size_kb"
+        for pair in 'filemap/mm_filemap_fault:common_pid == 1' \
+                    'signal/signal_generate:sig == 7' 'sched/sched_process_exec:pid == 1' \
+                    'block/block_bio_complete:error != 0'; do
+            event=${pair%%:*}
+            printf '%s\n' "${pair#*:}" > "$trace/events/$event/filter"
+            echo 1 > "$trace/events/$event/enable"
+        done
+        echo 1 > /proc/sys/kernel/ftrace_dump_on_oops
+        [ ! -w /proc/sys/debug/exception-trace ] || echo 1 > /proc/sys/debug/exception-trace
+        [ ! -w /proc/sys/kernel/print-fatal-signals ] || echo 1 > /proc/sys/kernel/print-fatal-signals
+    fi
+    grep -E '^(boot_id|init_sha256|gsi_device|vendor_device|source_table|verity_table|last_block_sha256|seed_backing)=' \
         /run/gsi17-run.log | sed 's/^/M1EVENT /' > /dev/ttyGS0
     for disk in /sys/class/block/sd?; do
         echo "M1EVENT disk=$(basename "$disk") ro=$(cat "$disk/ro")" > /dev/ttyGS0
