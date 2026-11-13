@@ -171,9 +171,10 @@ def main():
                          for path in source_dir.rglob('*') if path.is_file()}
                 if len(vendor) != 2*1024*1024 or vendor_hash != info['sha256'] or files != info['files']:
                     raise ValueError('Vendor image or source inventory differs from build report')
+                add('project-vendor-fstab.sha256', 0o100444, (files['/etc/fstab.qcom']+'\n').encode())
                 add('project-vendor.img', 0o100444, vendor)
                 add('project-vendor.sha256', 0o100444, (vendor_hash+'\n').encode())
-                add('project-vendor.fstab', 0o100444, (source_dir/'etc/fstab.qcom').read_bytes().replace(b'\r\n', b'\n'))
+                add('project-vendor.fstab', 0o100444, (source_dir.parent/'fstab.m1-usb').read_bytes().replace(b'\r\n', b'\n'))
         if a.ufs_first_stage:
             profile = json.loads((a.ufs_first_stage/'signed.json').read_text())
             gsi = json.loads((root/'build/device/gsi17-mount-reference.json').read_text())
@@ -186,7 +187,7 @@ def main():
                 add(name+'.avbpubkey', 0o100444, key)
                 tree = profile[name]['tree']
                 add(name+'.verity-root', 0o100444, (tree['root_digest']+'\n').encode())
-            fstab = root/'device/realme/bladerunner_48m/fstab.m1-ufs'
+            fstab = root/'device/realme/bladerunner_48m/m1-vendor/etc/fstab.qcom'
             add('ufs-fstab', 0o100444, fstab.read_bytes().replace(b'\r\n', b'\n'))
             add('bin/ufs-init-trace', 0o100755, (root/'scripts/device_audit/ufs_init_trace.sh').read_bytes().replace(b'\r\n', b'\n'))
         if a.gsi_usb_reader:

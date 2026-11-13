@@ -1,3 +1,2 @@
 /vendor(/.*)?                         u:object_r:vendor_file:s0
 /vendor/etc(/.*)?                     u:object_r:vendor_configs_file:s0
-/vendor/etc/fstab\.qcom                u:object_r:vendor_rmx2072_board_config:s0
