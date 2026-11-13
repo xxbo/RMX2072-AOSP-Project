@@ -94,6 +94,12 @@ jobs:
         with:
           name: rmx2072-m1-vendor
           path: ${{ runner.temp }}/vendor-a/
+      - name: Build volatile ext4 test volumes
+        run: python scripts/build/build_m1_scratch.py --output "$RUNNER_TEMP/m1-scratch"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rmx2072-m1-scratch
+          path: ${{ runner.temp }}/m1-scratch/
       - name: Cross-compile the static Android 17 dm-user reader
         run: |
           ndk="${ANDROID_NDK_HOME:-}"
