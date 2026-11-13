@@ -22,7 +22,7 @@ Matrix kernel requirements must be evaluated at the correct vendor/kernel FCM le
 
 Read-only `lpdump` on the connected handset reports qti_dynamic_partitions maximum size 8,862,564,352 bytes, with 6,627,184,640 currently allocated. Existing system is 622,247,936 bytes; replacing it with this GSI requires growth of 3,330,965,504 bytes, exceeding free group capacity by 1,095,585,792 bytes, before alignment allowances. It cannot fit through an ordinary system resize while retaining every current logical partition. See `build/device/stock-logical-partitions.json`.
 
-Do not remove OEM logical partitions until their boot dependencies and a complete super recovery method are understood. The existing full super backup is local and hashed, but a complete super restore has not been exercised.
+The November 13 rehearsal includes the project vendor at its actual 2 MiB size. Replacing both stock images reduces the group deficit to 685,142,016 bytes. On the workstation, removing `my_stock` made them fit. On the handset, the original F.20 bytes passed a full 9008 write, independent readback and Android boot. OEM partition dependencies under the candidate layout still need a boot test. [M1 UFS layout and recovery results](M1_UFS_LAYOUT.md)
 
 ## November 6 stock-vendor experiment design
 

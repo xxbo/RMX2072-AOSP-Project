@@ -35,6 +35,8 @@ on:
       - 'scripts/device_audit/observe_gsi17.py'
       - 'scripts/device_audit/record_m1_vendor.py'
       - 'scripts/device_audit/record_init_fault.py'
+      - 'scripts/device_audit/rehearse_super_layout.py'
+      - 'scripts/device_audit/check_super_chunks.py'
       - 'build/device/gsi17-enforcing-*.json'
       - 'scripts/device_audit/recover_policy_install.py'
       - 'build/device/gsi17-policy-install-2026-11-12.json'
