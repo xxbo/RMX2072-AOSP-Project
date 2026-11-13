@@ -2,7 +2,7 @@
 
 The execution path is GitHub Actions for kernel/driver builds, a selected official Google Android 17 ARM64 GSI for the system layer, and the locally connected RMX2072 for flashing and hardware tests. A local full AOSP build host is not required for this phase.
 
-The November 8 [runtime record](../build/device/handoff-runtime-2026-11-08.json) established eight CPUs and diagnostic init. The November 11 [handset trials](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json) reached Android PID 1 at `selinux_setup` with the GSI on USB and the project vendor in RAM. The [M1 work list](../plan.md#next-work-on-m1) starts at the kernel policy write and the internal UFS layout.
+The November 8 [runtime record](../build/device/handoff-runtime-2026-11-08.json) established eight CPUs and diagnostic init. On November 12 Android 17 PID 1 entered second-stage init under enforcing on 6.18.32. System property and init configuration reads then failed on the USB fallback. The [M1 work list](../plan.md#next-work-on-m1) now covers verified UFS-backed system and vendor, recovery and same-boot ADB. [Trial 05](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/build/device/gsi17-enforcing-second-stage-2026-11-12.json)
 
 ## Legacy comparison build
 
@@ -24,11 +24,11 @@ The existing `experiment/gki-6.18-repo-mirror` branch has already passed a compl
 
 The kernel/common pin already resolves to 6.18.32. The main workflow now locks all 58 manifest projects using the resolved snapshot from that successful run, verifies every checkout and adds a strict NQ-NCI DDK compilation gate. A kernel/common SHA alone is insufficient. The default manifest includes extra device/test projects; evaluate its groups and workspace footprint on the Actions runner rather than downloading everything blindly.
 
-The generic ACK distribution and the separate RMX2072 platform kernel have both built. The latter has run Android first-stage init. The device uses a v2 boot header with an embedded DTB bundle. Its GPT has no vendor_boot or init_boot partition. KGSL compile/KMI work is an optional graphics comparison.
+The generic ACK distribution and the separate RMX2072 platform kernel have both built. The platform kernel has run Android second-stage init under enforcing. The device uses a v2 boot header with an embedded DTB bundle. Its GPT has no vendor_boot or init_boot partition. KGSL compile/KMI work is an optional graphics comparison.
 
 ## GSI gate
 
-The [locked GSI](../build/gsi.json) and the project vendor are the M1 system pair. Use the [USB/RAM fixture](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/docs/ANDROID17_USB_MOUNT.md#project-vendor-and-pid-1-policy-setup) to observe policy installation and second-stage init, and qualify local storage and verified mounts for the cold boot. See the [GSI guide](GSI_BUILD_GUIDE.md).
+Use the [locked GSI](../build/gsi.json) and project-built vendor for M1. Keep the [RAM/USB comparison](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/docs/ANDROID17_USB_MOUNT.md#pid-1-sigbus-and-second-stage-execution) for regression checks. On the target layout, verify that reads continue under enforcing from UFS through second-stage init, then collect the [headless boot evidence](GSI_BUILD_GUIDE.md).
 
 ## Evidence and synchronization
 

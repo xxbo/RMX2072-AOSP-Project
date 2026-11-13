@@ -64,7 +64,7 @@ Do not begin the full camera or audio migration before the memory, IOMMU and Qua
 - The connected handset runs F.20; captured stock vendor and boot metadata are the current baseline. Historical F.15/F.17 trees remain references.
 - Physical handset/boot/partition/AVB capture: completed; bootloader unlocked and stock Android boot verified. Actual DTB 12 / DTBO 17 selection and NFC provider fixups recorded.
 - Legacy community build: the Goodix and qcacld build fixes passed in [run #4](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866). Physical boot of that rebuilt image is pending.
-- Generic ACK/GKI 6.18 distribution: full build passed in run 42194678844. Main now freezes all manifest dependencies and runs a strict NFC DDK build. Strict NFC module loading remains untested. The separate SM8250 platform build reached diagnostic userspace on RMX2072. See the [board bring-up record](INDEPENDENT_KERNEL_BRINGUP.md).
+- Generic ACK/GKI 6.18 distribution: full build passed in run 42194678844. Main now freezes all manifest dependencies and runs a strict NFC DDK build. Strict NFC module loading remains untested. The separate SM8250 platform kernel reached Android 17 second-stage init under enforcing with RAM/USB-backed system and RAM-backed vendor. Port and test the board drivers on this 6.18 baseline. UFS cold boot and per-driver hardware qualification remain open. [Handset result](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/build/device/gsi17-enforcing-second-stage-2026-11-12.json) · [Driver status](COMPATIBILITY_MATRIX.md).
 
 ## Measured generic-kernel platform gap
 
