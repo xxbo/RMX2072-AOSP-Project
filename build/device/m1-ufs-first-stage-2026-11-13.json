@@ -154,7 +154,101 @@
       "test_boot_program": "FAIL",
       "first_stage": "NOT RUN",
       "error": "Host Firehose rejected boot request XML without its XML declaration before dispatching the program handler.",
-      "test_boot_log_sha256": "92a6d85f24b69ced46715354fbc6aebac4a4c1631c5049d540c72c3ab2924307"
+      "test_boot_log_sha256": "92a6d85f24b69ced46715354fbc6aebac4a4c1631c5049d540c72c3ab2924307",
+      "restored_F20": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "3f088ab4-19ee-4680-b768-e36bbef4f71c",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-03",
+      "boot_id": "d7add4b7-7174-40a4-a9be-121a9fdc1ecf",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+      "mounts": {
+        "system": {
+          "node": "dm-14",
+          "device": "254:14",
+          "linear_device": "254:0",
+          "super": "8:10",
+          "extents": 16,
+          "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+          "avb_at_seconds": 37.504232,
+          "verity_status": "0 7599128 verity V 0",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        },
+        "vendor": {
+          "node": "dm-15",
+          "device": "254:15",
+          "linear_device": "254:1",
+          "super": "8:10",
+          "extents": 1,
+          "root_sha256": "8f928008616a770443302261c8c2264d8b02e855822cd81d673da84f1a5b4902",
+          "avb_at_seconds": 37.596451,
+          "verity_status": "0 4096 verity V -",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        }
+      },
+      "enforcing_seconds": 39.58969,
+      "second_stage_seconds": 39.61579,
+      "file_reads": {
+        "/system/build.prop": {
+          "at_seconds": 39.66275,
+          "pid": 1,
+          "inode": 659,
+          "device": "254:14",
+          "requested_bytes": 5675,
+          "returned_bytes": 5675
+        },
+        "/system/etc/init/hw/init.rc": {
+          "at_seconds": 39.68673,
+          "pid": 1,
+          "inode": 757,
+          "device": "254:14",
+          "requested_bytes": 56913,
+          "returned_bytes": 56913
+        }
+      },
+      "raw_sha256": {
+        "acm.log": "0a806c0217137bfb033a19063ee936eeb7e5811d33a37b963eb3a535358c6a08",
+        "console-ramoops-0": "bb0bc7b978945a0d8a6abf5ee01181719cf7bc77de23c6d51b006fd5a752305e"
+      },
+      "boot_sha256": "d927f892eb9578dc530c94a6ca4ca6b8272ba754fbe8408972cf51314b108811",
+      "code_commit": "bb6ae90",
+      "kernel_sha256": "5e2019c6193f0ad8e44e8fab6d626930b65803ced01a2ec10fbda81e4e51dc73",
+      "candidate_super_sha256": "00b7a1107d57f012679ab311f45a1b0ba855a5400f846a6a9060f9143ded1ad3",
+      "candidate_readback_chunks": 17,
+      "second_stage_file_reads": "PASS",
+      "disconnected_cold_boot": "NOT RUN",
+      "android17_adb": "NOT RUN",
+      "next_observations": [
+        "[   39.687703][    T1] init: /system/etc/init/hw/init.rc: 12: Could not expand import: property 'ro.zygote' doesn't exist while expanding '/system/etc/init/hw/init.${ro.zygote}.rc'",
+        "[   39.691997][    T1] init: Unable to read config file '/init.qcom.rc': open() failed: No such file or directory",
+        "[   39.750073][    T1] init: starting service 'ueventd'...",
+        "[   40.397633][    T1] init: starting service 'servicemanager'...",
+        "[   40.423746][    T1] init: starting service 'vold'...",
+        "[   40.490701][ T1787] type=1400 audit(40.471:50): avc:  denied  { read } for  comm=\"vold\" name=\"fstab.qcom\" dev=\"dm-15\" ino=13 scontext=u:r:vold:s0 tcontext=u:object_r:vendor_rmx2072_board_config:s0 tclass=file permissive=0",
+        "[   40.490877][ T1777] vold: Failed to open default fstab: Permission denied"
+      ],
+      "console_retrieved_on_diagnostic_boot_id": "5634c6da-4bcc-46cb-8650-b119363952d8",
+      "capture_notes": [
+        "Initial host observer lacked pyserial. Relaunched on the existing serial runtime before first-stage handoff.",
+        "Enforcing denied the diagnostic observer proc and kmsg access. PID 1 reads were captured by the kernel probe and persisted in ramoops."
+      ]
     }
   ]
 }

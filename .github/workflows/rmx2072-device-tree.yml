@@ -27,6 +27,8 @@ on:
       - 'scripts/device_audit/first_stage_mount.sh'
       - 'scripts/device_audit/ufs_init_trace.sh'
       - 'scripts/device_audit/observe_ufs_first_stage.py'
+      - 'scripts/device_audit/record_ufs_first_stage.py'
+      - 'build/device/m1-ufs-first-stage-*.json'
       - 'device/realme/bladerunner_48m/fstab.m1-ufs'
       - 'device/realme/bladerunner_48m/m1-vendor/**'
       - 'scripts/device_audit/first_stage_witness.c'
