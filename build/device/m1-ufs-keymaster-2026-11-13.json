@@ -226,6 +226,130 @@
           1
         ]
       }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-07",
+      "boot_id": "99a0acee-9f8f-4fde-a457-0312c30110ca",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+      "mounts": {
+        "system": {
+          "node": "dm-14",
+          "device": "254:14",
+          "linear_device": "254:0",
+          "super": "8:10",
+          "extents": 16,
+          "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+          "avb_at_seconds": 26.415702,
+          "verity_status": "0 7599128 verity V 0",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        },
+        "vendor": {
+          "node": "dm-15",
+          "device": "254:15",
+          "linear_device": "254:1",
+          "super": "8:10",
+          "extents": 1,
+          "root_sha256": "13f51cb7fd47b1a64c683fe178c3e0de60e1dff9711332c30e71307ee3f5b863",
+          "avb_at_seconds": 26.514923,
+          "verity_status": "0 4096 verity V -",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        }
+      },
+      "enforcing_seconds": null,
+      "second_stage_seconds": null,
+      "file_reads": {},
+      "raw_sha256": {
+        "acm.log": "0d9f6e948c6f6212c4d286839f6d4bf1cc26013bb559e3af2cc3bfdded97ffc4",
+        "console-ramoops-0": "c0e179cabf55e12cf8b4ebb95f07efa404970dcfecf4d1d016d4d495bca604e6",
+        "pmsg-ramoops-0": "be0194257fa09c83f9211948794bf6dbe43ae758106cbedd23e04d723d2af670"
+      },
+      "adb": {
+        "result": "NO_TRANSPORT_OBSERVED",
+        "samples": 94,
+        "errors": 0,
+        "transport_states": [],
+        "interval_seconds": 97.609,
+        "maximum_sample_gap_seconds": 1.047,
+        "diagnostic_acm_seen": true,
+        "raw_sha256": {
+          "adb.jsonl": "5b30f475b468eb53c604b374e196b404053cf4762ff301aee569a1a13874ff16",
+          "host-events.jsonl": "8006e4d2fb39897f861fe27e0549d734518436476b7373dce0844baa15e77f6d"
+        }
+      },
+      "console_start_missing": true,
+      "first_keystore_abort": null,
+      "keystore_registrations": [
+        {
+          "tid": 2021,
+          "name": "android.security.compat",
+          "rc": 0
+        }
+      ],
+      "qsee_app_lookup_rc": {
+        "keymaster": -2,
+        "keymaster64": 0
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keystore_add_service_attempts": [
+        "android.security.compat"
+      ],
+      "maintenance_last_lookup_failure": "[   87.149209][    T1] init: Control message: Could not find 'aidl/android.security.maintenance' for ctl.interface_start from pid: 1999 (/system/bin/servicemanager)",
+      "vdc": {
+        "pid": 2027,
+        "start": "[   50.069440][    T1] init: SVC_EXEC service 'exec 5 (/system/bin/vdc keymaster earlyBootEnded)' pid 2027 (uid 1000 gid 1000+0 context default) started; waiting...",
+        "exit_record": null
+      },
+      "usb": {
+        "samples": 49,
+        "device_ids": [
+          "VID_1D6B&PID_0104",
+          "VID_1D6B&PID_0104&MI_00"
+        ],
+        "interface_ids": [
+          "USB\\Class_02",
+          "USB\\Class_02&SubClass_02",
+          "USB\\Class_02&SubClass_02&Prot_01"
+        ],
+        "adb_interface_seen": false,
+        "max_gap_seconds": 2.213,
+        "raw_sha256": "be94e2875038c18e8288045d3be311e002a0699a98b042c5f66508ab518ce45f"
+      },
+      "apex_observations": [],
+      "keystore_sigabrt_count": 0,
+      "test_boot_sha256": "3b6659f3e778d9b8e76232e5db99e6dc924e1ebd8d96350608f4a6f90595b863",
+      "candidate_super_sha256": "c896ec0ac14377099f5babea10defd4f1b44c4921d61702842d8a4a790dd605e",
+      "project_vendor_sha256": "c9db4e68d4f416a344668c529fa88f86263340d0c6e2f5ae337e6d743cde5a43",
+      "reference_hal": {
+        "starts": 37,
+        "exits": 37,
+        "first_start": "[   50.212111][    T1] init: ... started service 'vendor.rmx-keymaster' has pid 2038",
+        "first_exit": "[   50.229036][    T1] init: Service 'vendor.rmx-keymaster' (pid 2038) exited with status 1",
+        "first_hidl_request": "[   50.212342][    T1] init: Control message: Processed ctl.interface_start for 'android.hardware.keymaster@4.0::IKeymasterDevice/default' from pid: 2000 (/system/system_ext/bin/hwservicemanager)",
+        "hidl_start_requests": 38,
+        "rc_parse_errors": [],
+        "first_linker_failure": "[   50.227893][ T2038] km_stderr: (ksys_write+0x0/0xf0) task=\"android.hardwar\" fd=2 msg=\"library \"libcutils.so\" not found: needed by main executable\""
+      },
+      "early_log_coverage": "Console ring starts in post-fs. The exact enforcing transition, early file reads and bootstrap APEX activation lines are unavailable."
     }
   ]
 }

@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import re
 
-from record_ufs_first_stage import match, record, vendor_services
+from record_ufs_first_stage import adb_observations, match, record, vendor_services
 
 
 def usb_interfaces(port_log, live):
@@ -27,9 +27,13 @@ def usb_interfaces(port_log, live):
                 raw_sha256=hashlib.sha256(port_log.read_bytes()).hexdigest())
 
 
-def extract(live, port_log, layout):
-    trial = record(live, layout)
-    trial.update(vendor_services(live, trial))
+def extract(live, port_log, layout, *, console_tail=False):
+    trial = record(live, layout, console_tail=console_tail)
+    if console_tail:
+        trial['adb'] = adb_observations(live, trial)
+        trial['console_start_missing'] = True
+    else:
+        trial.update(vendor_services(live, trial))
     console = (live/'console-ramoops-0').read_bytes().decode('utf8', errors='replace').replace('\r','')
     serial = (live/'acm.log').read_bytes().decode('utf8', errors='replace').replace('\r','')
     pmsg = (live/'pmsg-ramoops-0').read_bytes()
@@ -87,5 +91,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ['capture','usb','layout']:
         parser.add_argument('--'+name, type=Path, required=True)
+    parser.add_argument('--console-tail', action='store_true', help='Early timestamps and file reads rolled out of the console')
     args = parser.parse_args()
-    print(json.dumps(extract(args.capture, args.usb, json.loads(args.layout.read_text())), indent=2))
+    print(json.dumps(extract(args.capture, args.usb, json.loads(args.layout.read_text()), console_tail=args.console_tail), indent=2))
