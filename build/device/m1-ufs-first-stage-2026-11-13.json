@@ -248,7 +248,51 @@
       "capture_notes": [
         "Initial host observer lacked pyserial. Relaunched on the existing serial runtime before first-stage handoff.",
         "Enforcing denied the diagnostic observer proc and kmsg access. PID 1 reads were captured by the kernel probe and persisted in ramoops."
-      ]
+      ],
+      "restored_F20": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "eb461622-8f63-4ad8-8f72-1bcd715b4d3d",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ],
+        "matched_9008_chunks": 17,
+        "readback_bytes": 8866758656,
+        "timeline": [
+          {
+            "at": "2026-11-13T21:15:33.796111+08:00",
+            "event": "Stock device, unlocked state, original super and private inputs verified"
+          },
+          {
+            "at": "2026-11-13T21:15:45.954842+08:00",
+            "event": "enter Sahara ready"
+          },
+          {
+            "at": "2026-11-13T21:21:44.404747+08:00",
+            "event": "Candidate super 17/17 and boot readbacks match; starting diagnostic"
+          },
+          {
+            "at": "2026-11-13T21:24:29.956606+08:00",
+            "event": "return Sahara ready"
+          },
+          {
+            "at": "2026-11-13T21:24:33.145742+08:00",
+            "event": "Restoring original super and boot"
+          },
+          {
+            "at": "2026-11-13T21:31:37.197563+08:00",
+            "event": "Original super all 17 chunks, boot and DTBO match"
+          },
+          {
+            "at": "2026-11-13T21:32:24.354955+08:00",
+            "event": "Restored F20 completed; Android super hash and LP slots match"
+          }
+        ]
+      }
     }
   ]
 }
