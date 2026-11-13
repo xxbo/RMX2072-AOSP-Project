@@ -114,3 +114,9 @@ python scripts/device_audit/record_ufs_scratch.py --capture PRIVATE/live --usb P
 ```
 
 Trial 05 returned to 9008 by software. Recovery verified each of the 17 original super chunks, the F.20 log-reader boot and the original DTBO. F.20 booted with ID `714bc753-3d76-4bfc-b01c-8319ebb9cf9b` and `sys.boot_completed=1`. Both LP metadata slots and the device-side full super digest matched the pre-trial baseline. On that boot, `lshal -i` listed `android.hardware.keymaster@4.0::IKeymasterDevice/default` and the vendor manifest specified hwbinder. This identifies the stock interface for the next project vendor comparison.
+
+## F.20 Keymaster reference and Android 17 compatibility
+
+F.20 exposed `android.hardware.keymaster@4.0::IKeymasterDevice/default` over hwbinder. The running service held descriptors for hwbinder, QSEECom, ION and a DMA buffer. Its QSEECom device was bound to `82400000.qseecom`. Generating a temporary TEE key through Android Keystore produced five paired SCM trace events in the HAL process after an idle second with zero events. The key was deleted successfully. A separate loaded-app query found `keymaster64` resident and `keymaster` absent. F.20 registered `android.security.maintenance` and init recorded a successful exit for `vdc keymaster earlyBootEnded` after 17 ms. [Stock observations](../build/device/m1-f20-keymaster-path-2026-11-13.json)
+
+In CP3A.260905.010, the system_ext manifest caps the HIDL manager at FCM 8. Matrix 7 lists Keymaster 4.0/default. The M1 comparison selects device FCM 7, retains the GSI's 202604 split SELinux policy and uses the QTI service with six pinned libraries from the handset. Build the private comparison with `build_m1_vendor.py --keymaster-reference DIR --output OUT`. The default image still builds from the project's M1 vendor sources. The comparison and release have different dependencies. [Private HAL inventory](../device/realme/bladerunner_48m/m1-keymaster-reference/f20-files.json)
