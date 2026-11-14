@@ -186,7 +186,7 @@ incomplete component refresh before entering EDL.
 Run 43621938934 required `trendy_team_aaos_vac_triage`, declared in the pinned
 `packages/services/Car/teams/Android.bp`. That project is now sparsely checked
 out to its original team metadata only, with the resolved revision and sparse
-path checked by the artifact installer. Run 43623644069 is building this recipe.
+path checked by the artifact installer. Run 43623644069 passed these owner checks.
 
 The standard libfdt merge keeps the base root compatibility unless a fragment
 changes it; DTBO root selector properties are not payload. The source overlay
@@ -197,3 +197,11 @@ selector-copy behavior. Both the offline effective tree and the pre-policy
 runtime witness must carry that identity. The rebuilt pair passes the 79-node
 resource comparison and the USB/UFS/watchdog/PDC/PON checks. This remains an
 offline result; hardware selection and recovery still need the M2 trial.
+
+Run 43623644069 then failed global Soong analysis on the unrelated
+`apex.apexd_test_bootclasspath-fragment`: its Java test payload has no framework
+dex jar in this native-only workspace. `system/apex` now keeps all implementation
+sources while sparse checkout excludes only `apexd/apexd_testdata/`. The exact
+exclusion and pinned project revision accompany the artifact and are validated
+locally. No init source, target dependency implementation or build-tool validation
+is patched. Run 43625784408 is building this scoped workspace.

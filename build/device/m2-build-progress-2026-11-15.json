@@ -79,6 +79,21 @@
       ],
       "job_log_sha256": "08074f477477ed554b0a8369eb3c3964cf9351bcc9c4b8be0e0692b13e226e16",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43623644069,
+      "source_commit": "aa3a9c33164ed46802f02a8d155d00bd82696325",
+      "result": "FAIL_BUILD",
+      "first_failure": "Unrelated APEX Java test payload has no framework dex jar in the native init workspace",
+      "selected_log": [
+        "2026-11-14T18:14:55.2883032Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.2886212Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.2890297Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.2891481Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.4742391Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "d208be269f5515b8d3853bc0f9af292ac7464565c01133aca8e50a1554aae0fb",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -86,8 +101,8 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "source_init_run": 43623644069,
-    "source_init_commit": "aa3a9c33164ed46802f02a8d155d00bd82696325"
+    "source_init_run": 43625784408,
+    "source_init_commit": "b953ee88707d049f1016ae87d11508e4a8cf562b"
   },
   "host_tests": {
     "total": 81,
