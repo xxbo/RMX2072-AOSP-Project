@@ -1,6 +1,12 @@
 #!/system/bin/sh
 # Run as root on F.20. Print only SCM function IDs, result codes and listener IDs.
 set -eu
+control=/data/local/tmp/rmx2072-f20-hmac-control
+if [ "$#" -gt 0 ]; then
+    test "$#" = 1
+    test "$1" = --hmac-control
+    test "$(sha256sum "$control" | cut -d' ' -f1)" = 71844d2532aefc295bbfb248b4c6b294c83b9cbda7ce4a01fd2368d9ed86d63f
+fi
 test "$(getprop ro.build.display.id)" = RMX2072_11_F.20
 test "$(getprop sys.boot_completed)" = 1
 test "$(getprop vendor.sys.listeners.registered)" = true
@@ -68,12 +74,16 @@ sample() {
 }
 sample idle sleep 1
 worker_start=$(date +%s)
-key_created=1
-sample generate keystore_cli_v2 generate --seclevel=tee --name="$alias_name"
-sample characteristics keystore_cli_v2 get-chars --name="$alias_name"
-sample sign_verify keystore_cli_v2 sign-verify --name="$alias_name"
-sample delete keystore_cli_v2 delete --name="$alias_name"
-key_created=0
+if [ "$#" = 1 ]; then
+    sample hmac_parameters env LD_LIBRARY_PATH=/vendor/lib64:/apex/com.android.vndk.v30/lib64 "$control"
+else
+    key_created=1
+    sample generate keystore_cli_v2 generate --seclevel=tee --name="$alias_name"
+    sample characteristics keystore_cli_v2 get-chars --name="$alias_name"
+    sample sign_verify keystore_cli_v2 sign-verify --name="$alias_name"
+    sample delete keystore_cli_v2 delete --name="$alias_name"
+    key_created=0
+fi
 logcat -b all -d --pid="$daemon" -v epoch -s DrmLibTime:D QC-time-services:D |
     awk -v start="$worker_start" '$1 >= start {
         if (/command id, time_cmd_id = [0-9]+$/) print "TIME_COMMAND", $NF

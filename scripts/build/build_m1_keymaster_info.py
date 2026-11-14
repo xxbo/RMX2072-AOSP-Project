@@ -8,7 +8,7 @@ import subprocess
 DEVICE = Path(__file__).resolve().parents[2] / 'device/realme/bladerunner_48m/m1-keymaster-info'
 
 
-def build(ndk, headers, bionic, libraries, output):
+def build(ndk, headers, bionic, libraries, output, f20_hmac_control=False):
     output.mkdir(parents=True, exist_ok=True)
     tools = next((ndk / 'toolchains/llvm/prebuilt').iterdir()) / 'bin'
     clang = next(p for p in (tools / 'clang++.exe', tools / 'clang++') if p.is_file())
@@ -27,7 +27,8 @@ def build(ndk, headers, bionic, libraries, output):
     for inc in includes:
         args.extend(['-isystem', str(inc)])
     manifest = {}
-    for name in ('service', 'client'):
+    names = ('f20-hmac-control',) if f20_hmac_control else ('service', 'client')
+    for name in names:
         binary = output / ('rmx-keymaster-info-' + name)
         subprocess.run(args + [str(DEVICE / (name + '.cpp')), '-L' + str(libraries),
                        '-Wl,--no-undefined', '-Wl,--hash-style=both', '-Wl,--build-id=sha1',
@@ -41,4 +42,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('ndk', 'headers', 'bionic', 'libraries', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--f20-hmac-control', action='store_true',
+                        help='Build the separate stock parameter-retrieval control')
     build(**vars(parser.parse_args()))

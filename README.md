@@ -8,7 +8,7 @@ Independent Android platform research and porting project for the **realme X50 P
 
 On November 13 the RMX2072 ran Android 17 second-stage init under SELinux enforcing on ACK 6.18.32 with system and project vendor verified on internal UFS. PID 1 imported the 64/32-bit zygote definitions and vold read all 220 bytes of the vendor fstab. [Handset record](build/device/m1-ufs-first-stage-vendor-services-2026-11-13.json)
 
-**M1 is in progress.** With writable RAM-backed data and metadata, UFS trial 05 captured the first keystore2 panic creating the mandatory TEE security level. In trial 09 the GSI requested Keymaster 4.0/default. The private F.20 reference HAL opened hwbinder and read an empty listener readiness property. The capture showed no callable instance or maintenance registration. Init was waiting on `vdc keymaster earlyBootEnded` and USB exposed diagnostic ACM. The next M1 checks are a source-built service call from the GSI and a disconnected cold boot followed by an API 37 ADB shell. [Keymaster trials](docs/M1_UFS_FIRST_STAGE.md#four-writable-volume-handset-runs) · [M1 work list](plan.md#next-work-on-m1)
+**M1 is in progress.** Android 17 keystore2 called the project-built Keymaster 4.0/default under SELinux enforcing on 6.18. The resident TEE app reported API 4.0 and TA 4.546. The information-only service returned its hardware information, then the GSI received UNIMPLEMENTED during shared-secret parameter retrieval. Maintenance registration, completion of earlyBootEnded and an API 37 ADB shell remain open on the USB-attached UFS boot. [Handset results](docs/M1_UFS_FIRST_STAGE.md#android-17-calls-the-source-built-keymaster-service) · [M1 work list](plan.md#next-work-on-m1)
 
 ### Diagnostic and build records
 

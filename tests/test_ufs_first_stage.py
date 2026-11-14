@@ -6,9 +6,20 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
 from record_ufs_first_stage import adb_observations, full_read
+from record_ufs_scratch import keymaster_observations
 
 
 class UfsInitReadTest(unittest.TestCase):
+    def test_keymaster_reply_requires_matching_init_service_and_client(self):
+        console = """[ 8.0][ T1] init: ... started service 'vendor.rmx-keymaster' has pid 32
+[ 9.0][ T32] ks_log: (uprobe) tag="RMXKeymaster" msg="registered default"
+[ 9.1][ T32] ks_log: (uprobe) tag="RMXKeymaster" msg="getHardwareInfo caller=21 level=TEE name=test"
+"""
+        self.assertEqual(keymaster_observations('', console, 22), {})
+        self.assertEqual(keymaster_observations('', console.replace('T32]', 'T31]'), 21), {})
+        reply = keymaster_observations('', console, 21)['gsi_hidl_reply']
+        self.assertEqual((reply['caller_pid'], reply['service_pid'], reply['name']), (21, 32, 'test'))
+
     def test_read_requires_pid_device_count_and_post_stage_timestamp(self):
         def row(when, pid=1, device=266338318, result=5675):
             return (f'[{when:12.6f}][   T{pid}] m1_file_read: (vfs_read) '
