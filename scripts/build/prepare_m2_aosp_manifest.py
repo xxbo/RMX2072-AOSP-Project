@@ -16,13 +16,13 @@ external/libcxxabi external/libevent external/liburing external/libxml2
 external/lz4 external/lzma external/modp_b64 external/pcre external/pogreb external/protobuf external/selinux
 external/scudo external/sqlite external/starlark-go external/tinyxml2 external/zlib external/zstd
 external/rust/android-crates-io external/rust/cxx
-frameworks/native frameworks/libs/native_bridge_support frameworks/libs/modules-utils
+frameworks/base frameworks/native frameworks/libs/native_bridge_support frameworks/libs/modules-utils
 frameworks/proto_logging hardware/libhardware hardware/libhardware_legacy
 hardware/interfaces kernel/configs libnativehelper packages/modules/Virtualization packages/modules/adb
 prebuilts/build-tools prebuilts/clang-tools prebuilts/clang/host/linux-x86
 prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8
 prebuilts/go/linux-x86 prebuilts/jdk/jdk21 prebuilts/jdk/jdk25
-prebuilts/misc prebuilts/ndk prebuilts/rust prebuilts/rust-toolchain/linux-x86
+prebuilts/misc prebuilts/ndk prebuilts/rust prebuilts/siso prebuilts/rust-toolchain/linux-x86
 prebuilts/rust-toolchain/linux-musl-x86 prebuilts/sdk prebuilts/tools
 prebuilts/remoteexecution-client prebuilts/bazel/common
 toolchain/pgo-profiles tools/metalava tools/tradefederation/prebuilts'''.split()

@@ -158,3 +158,11 @@ The static target dependency audit also follows modern protobuf into
 projects are selected explicitly. Host Python launchers/stdlib are already
 provided by the pinned build-tools project; no replacement libraries or stubs
 are introduced.
+
+Run 43619675442 completed Blueprint bootstrap after adding `prebuilts/siso`,
+then Soong reported the missing team metadata `trendy_team_webapps_cros_android`.
+The exact upstream definition is in
+`frameworks/base/core/java/android/hardware/serial/Android.bp`; the selected
+workspace now includes its source project rather than synthesizing that module.
+This check is global to the partial workspace even though serialservice is not
+part of the requested init target.
