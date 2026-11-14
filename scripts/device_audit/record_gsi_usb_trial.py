@@ -6,8 +6,8 @@ def load(path):return json.loads(path.read_text(encoding='utf-8-sig'))
 def rows(path):return [json.loads(x) for x in path.read_text(encoding='utf-8-sig').splitlines()] if path.exists() else []
 def record(directory):
     live=directory/'live';inputs=load(directory/'inputs.json');events=rows(live/'host-events.jsonl')
-    original=next(e['boot_id'] for e in events if e['event']=='handoff_requested')
-    text=(live/'acm.log').read_text(errors='replace')
+    original=next(e['boot_id'] for e in events if e['event'] in ('handoff_requested','autonomous_handoff_observed'))
+    text=(live/('boot-events.txt' if (live/'boot-events.txt').exists() else 'acm.log')).read_text(errors='replace')
     serial=[l for l in text.splitlines() if l.startswith('M1EVENT ')]
     adb=rows(live/'adb.jsonl');physical=rows(directory/'usb.jsonl')
     terminal=directory/'gsi-retained.json'

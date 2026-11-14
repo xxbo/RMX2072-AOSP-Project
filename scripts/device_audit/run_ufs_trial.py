@@ -143,7 +143,7 @@ def main():
     event('Candidate boot and full super readback passed; starting physical test')
     env=dict(os.environ,PYTHONPATH=str(w/'serial-deps'))
     with (dest/'observer.log').open('xb') as log,(dest/'usb-observer.log').open('xb') as usb_log:
-     observer=subprocess.Popen([sys.executable,'-u',audit/'observe_ufs_first_stage.py','--trial',trial,'--output',dest/'live','--observe-adb']+(['--retain-gsi'] if args.retain_gsi else []),stdout=log,stderr=subprocess.STDOUT,env=env)
+     observer=subprocess.Popen([sys.executable,'-u',audit/'observe_ufs_first_stage.py','--trial',trial,'--output',dest/'live','--observe-adb']+(['--retain-gsi'] if args.retain_gsi else [])+(['--autonomous'] if args.retain_gsi and rd.get('autonomous_ufs') else []),stdout=log,stderr=subprocess.STDOUT,env=env)
      usb=subprocess.Popen(['pwsh','-NoProfile','-File',audit/'watch_trial_usb.ps1','-Output',dest/'usb.jsonl','-HandoffEvents',dest/'live/host-events.jsonl'],stdout=usb_log,stderr=subprocess.STDOUT)
      end=time.monotonic()+20
      while not (dest/'usb.jsonl').exists() and time.monotonic()<end:
@@ -182,7 +182,7 @@ def main():
     identities=[]
     event_path=dest/'live/host-events.jsonl'
     events=[json.loads(line) for line in event_path.read_text().splitlines()] if event_path.exists() else []
-    original_boot=next((row['boot_id'] for row in events if row['event']=='handoff_requested'),None)
+    original_boot=next((row['boot_id'] for row in events if row['event'] in ('handoff_requested','autonomous_handoff_observed')),None)
     expected_release=(p/'kernel/kernel.release').read_text().strip()
     if adb_log.exists():
      for line in adb_log.read_text().splitlines():

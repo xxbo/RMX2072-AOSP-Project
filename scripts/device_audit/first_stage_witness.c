@@ -27,6 +27,8 @@
 
 static int events = -1, kmsg = -1, kernel_log = -1;
 
+static void publish_autoboot(void);
+
 
 /* One write per record, on the same device-to-host stream as GSI17 READ. */
 static void report(const char *fmt, ...) {
@@ -234,11 +236,13 @@ static int is_policy_setup(void) {
 
 static void observe(int vendor_trial) {
     int usb_guard = !access("/m1-usb-guard", F_OK);
+    int autonomous = !access("/m1-autoboot", F_OK);
     struct stat expected;
     int policy_fd = -1, opening = 0, writing = 0, watchdog = -1;
     unsigned long long count = 0;
     if (vendor_trial == 2) {
-        events = open("/dev/ttyGS0", O_WRONLY | O_NOCTTY | O_CLOEXEC);
+        events = open(autonomous ? "/run/m1-autoboot.events" : "/dev/ttyGS0",
+                      O_WRONLY | O_APPEND | O_NOCTTY | O_CLOEXEC);
         kmsg = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
         if (events < 0 || kmsg < 0) fail("live event sinks");
         kernel_log = open("/dev/kmsg", O_RDONLY | O_NONBLOCK | O_CLOEXEC);
@@ -314,6 +318,12 @@ static void observe(int vendor_trial) {
                             fclose(timer);
                             if (kill(timer_pid, SIGTERM)) hold("guard-timer-cancel-failed");
                             report("usb_guard=handoff watchdog_seconds=%d old_timer_cancelled=1", timeout);
+                            if (autonomous) {
+                                publish_autoboot();
+                                /* The parent shell only waits for this observer. Stop it
+                                 * before enforcing, avoiding inherited diagnostic retries. */
+                                if (getppid() > 1) kill(getppid(), SIGTERM);
+                            }
                             /* Release ownership without magic close; hardware remains armed.
                              * Android's oneshot guard must reopen it within 30 seconds. */
                             close(watchdog); watchdog = -1;
@@ -353,6 +363,27 @@ static void observe(int vendor_trial) {
         if (ptrace(active ? PTRACE_SYSCALL : PTRACE_CONT, PID_ONE, NULL, (void *)(intptr_t)deliver))
             fail("resume PID 1");
     }
+}
+
+/* Snapshot mount/verity evidence while init is stopped before loading policy.
+ * Android shell can read this file on the disposable data volume after boot. */
+static void publish_autoboot(void) {
+    const char *dirs[] = {"/proc/1/root/data/local", "/proc/1/root/data/local/tmp"};
+    const char label[] = "u:object_r:shell_data_file:s0";
+    for (unsigned i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+        if (mkdir(dirs[i], 0771) && errno != EEXIST) hold("autoboot-log-directory");
+        if (chown(dirs[i], 2000, 2000) || setxattr(dirs[i], "security.selinux", label, sizeof(label), 0))
+            hold("autoboot-log-directory-label");
+    }
+    int in = open("/run/m1-autoboot.events", O_RDONLY | O_CLOEXEC);
+    int out = open("/proc/1/root/data/local/tmp/rmx-m1-boot.txt", O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0444);
+    if (in < 0 || out < 0) hold("autoboot-log-open");
+    char buf[4096]; ssize_t n;
+    while ((n = read(in, buf, sizeof(buf))) > 0)
+        if (write(out, buf, n) != n) hold("autoboot-log-write");
+    if (n < 0 || fsetxattr(out, "security.selinux", label, sizeof(label), 0) || fsync(out))
+        hold("autoboot-log-sync");
+    close(in); close(out);
 }
 
 /* Pin the checked loop node and init's current root before entering its

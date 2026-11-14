@@ -1,6 +1,8 @@
 #!/bin/busybox sh
 # $1 is the sysfs block device of the already verified, read-only GSI target.
 set -eu
+event_sink=/dev/ttyGS0
+[ ! -f /m1-autoboot ] || event_sink=/run/m1-autoboot.events
 case "$(cat /trial-id)" in ufs-host-g3-gsi17-firststage-*) ;; *) exit 2 ;; esac
 d=$1
 if [ "$d" != ufs ]; then
@@ -74,7 +76,7 @@ if [ "${2:-}" = install ]; then
     mknod "$base/watchdog" c "${n%:*}" "${n#*:}"
     echo 8 > /proc/sys/kernel/printk
     if [ "$d" = ufs ]; then
-        echo "M1EVENT ufs_super=$(readlink -f /sys/class/block/sda10) dev=$(cat /sys/class/block/sda10/dev) ro=$(cat /sys/class/block/sda10/ro)" > /dev/ttyGS0
+        echo "M1EVENT ufs_super=$(readlink -f /sys/class/block/sda10) dev=$(cat /sys/class/block/sda10/dev) ro=$(cat /sys/class/block/sda10/ro)" >> "$event_sink"
         /bin/ufs-init-trace
     fi
     if [ -f /m1-trace-fault ]; then
@@ -95,9 +97,9 @@ if [ "${2:-}" = install ]; then
         [ ! -w /proc/sys/kernel/print-fatal-signals ] || echo 1 > /proc/sys/kernel/print-fatal-signals
     fi
     grep -E '^(boot_id|init_sha256|gsi_device|vendor_device|source_table|verity_table|last_block_sha256|seed_backing)=' \
-        /run/gsi17-run.log | sed 's/^/M1EVENT /' > /dev/ttyGS0
+        /run/gsi17-run.log | sed 's/^/M1EVENT /' >> "$event_sink"
     for disk in /sys/class/block/sd?; do
-        echo "M1EVENT disk=$(basename "$disk") ro=$(cat "$disk/ro")" > /dev/ttyGS0
+        echo "M1EVENT disk=$(basename "$disk") ro=$(cat "$disk/ro")" >> "$event_sink"
     done
     mode=observe-install
 fi

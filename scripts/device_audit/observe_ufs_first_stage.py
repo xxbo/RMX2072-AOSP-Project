@@ -21,7 +21,7 @@ def mark(output, event, boot_id):
                                   utc=datetime.now(timezone.utc).isoformat()))+'\n')
 
 
-def watch_adb(output, stop, retain=False):
+def watch_adb(output, stop, retain=False, autonomous=False):
     """Record transport states, including offline and unauthorized, throughout the trial."""
     start = time.monotonic()
     previous = None
@@ -50,13 +50,15 @@ def watch_adb(output, stop, retain=False):
                             entry.setdefault('identity', {})[fields[0]] = data.splitlines()
                         except (OSError, subprocess.SubprocessError) as error:
                             entry['identity_error'] = str(error)
-            if retain and not accepted and time.monotonic()-last_attempt > 3 and (output/'host-events.jsonl').exists():
+            if retain and not accepted and time.monotonic()-last_attempt > 3 and (autonomous or (output/'host-events.jsonl').exists()):
                 last_attempt = time.monotonic()
                 try:
-                    from gsi_adb_accept import accept
-                    events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
-                    original = next(x['boot_id'] for x in events if x['event']=='handoff_requested')
+                    from gsi_adb_accept import accept, fetch_autonomous
                     if any(row.startswith('RMX2072-M1') and row.split()[1]=='device' for row in state.get('transports', [])):
+                        if autonomous: original=fetch_autonomous(output)
+                        else:
+                            events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
+                            original = next(x['boot_id'] for x in events if x['event']=='handoff_requested')
                         accept(output, original); accepted=True
                 except (OSError, subprocess.SubprocessError, ValueError, StopIteration) as error:
                     entry['accept_error'] = str(error)
@@ -95,6 +97,12 @@ def previous_boot(trial, original, output, deadline, return_on_accepted=True):
                                     b'gzip -c '+path+b' > /run/previous.gz; ')
                                 (output/name).write_bytes(gzip.decompress(data))
                         console.write(b'/bin/reboot-edl edl\n')
+                        console.flush()
+                        # Closing immediately can cancel the last USB write on Windows.
+                        until=time.monotonic()+3
+                        while time.monotonic()<until:
+                            try: console.read(1024)
+                            except SerialException: break
                         return
             except (SerialException, TimeoutError, ValueError) as error:
                 print('Recovery console:', error, flush=True)
@@ -170,14 +178,20 @@ if __name__ == '__main__':
     parser.add_argument('--wait', type=int, default=120)
     parser.add_argument('--observe-adb', action='store_true')
     parser.add_argument('--retain-gsi', action='store_true')
+    parser.add_argument('--autonomous', action='store_true')
     args = parser.parse_args()
     stop = threading.Event()
     args.output.mkdir(parents=True, exist_ok=False)
     if args.observe_adb:
-        monitor = threading.Thread(target=watch_adb, args=(args.output, stop, args.retain_gsi))
+        monitor = threading.Thread(target=watch_adb, args=(args.output, stop, args.retain_gsi, args.autonomous))
         monitor.start()
     try:
-        observe(args.trial, args.output, args.wait)
+        if args.autonomous:
+            deadline=time.monotonic()+400
+            while ports_with_id(comports(),EDL) and time.monotonic()<deadline: time.sleep(.25)
+            previous_boot(args.trial,UUID(int=0),args.output,deadline)
+        else:
+            observe(args.trial, args.output, args.wait)
     finally:
         stop.set()
         if args.observe_adb:

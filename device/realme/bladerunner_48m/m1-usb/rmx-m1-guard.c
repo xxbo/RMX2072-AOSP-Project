@@ -14,13 +14,19 @@
 #include <time.h>
 #include <unistd.h>
 
+static int journal = -1;
+static char boot_id[40];
 static void state(const char *value) {
     __system_property_set("vendor.rmx.m1.state", value);
+    if (journal >= 0 && dprintf(journal, "RMX-M1-AUTO boot=%s state=%s\n", boot_id, value) < 0) {
+        /* No feeding after losing the recovery marker. */
+        _exit(1);
+    }
     int fd = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
     if (fd >= 0) { dprintf(fd, "<6>RMX-M1-GUARD state=%s\n", value); close(fd); }
 }
 static int control(const char *mode, const char *boot) {
-    if (strlen(boot) != 36 || (strcmp(mode, "--keep") && strcmp(mode, "--retain") && strcmp(mode, "--rollback"))) return 2;
+    if (strlen(boot) != 36 || (strcmp(mode, "--keep") && strcmp(mode, "--retain") && strcmp(mode, "--rollback") && strcmp(mode, "--expire-lease"))) return 2;
     int fd = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
     struct sockaddr_un addr = { .sun_family = AF_UNIX };
     strcpy(addr.sun_path, "/dev/socket/rmx_m1_guard");
@@ -40,13 +46,21 @@ int main(int argc, char **argv) {
     if (!socket_env) { state("socket-missing"); return 1; }
     int server = atoi(socket_env);
     if (listen(server, 4)) { state("socket-listen-error"); return 1; }
-    char boot[40] = {0}, keep[64], retain[64], rollback[64];
+    char boot[40] = {0}, keep[64], retain[64], rollback[64], expire[64];
     int fd = open("/proc/sys/kernel/random/boot_id", O_RDONLY | O_CLOEXEC);
     if (fd < 0 || read(fd, boot, 37) != 37) { state("boot-id-error"); return 1; }
     close(fd); boot[36] = 0;
+    strcpy(boot_id, boot);
+    for (int attempt=0; attempt<10; attempt++) {
+        journal = open("/dev/pmsg0", O_WRONLY | O_CLOEXEC);
+        if (journal >= 0) break;
+        sleep(1);
+    }
+    if (journal < 0) { state("journal-open-error"); return 1; }
     snprintf(retain, sizeof(retain), "retain:%s", boot);
     snprintf(keep, sizeof(keep), "keep:%s", boot);
     snprintf(rollback, sizeof(rollback), "rollback:%s", boot);
+    snprintf(expire, sizeof(expire), "expire-lease:%s", boot);
     fd = -1;
     for (int attempt=0; attempt<10; attempt++) {
         fd = open("/dev/watchdog", O_WRONLY | O_CLOEXEC);
@@ -81,6 +95,10 @@ int main(int argc, char **argv) {
                 const char *reply = "rejected";
                 int returning = 0;
                 if (n > 0 && !getsockopt(client, SOL_SOCKET, SO_PEERCRED, &cred, &bytes) && cred.uid == 2000) {
+                    if (!strcmp(command, expire) && accepted == 2) {
+                        accepted=1; first_ack=now.tv_sec; lease_end=now.tv_sec+45;
+                        reply="lease"; state(reply);
+                    }
                     if (!strcmp(command, keep) && accepted != 2) {
                         if (!accepted) first_ack = now.tv_sec;
                         accepted=1; lease_end=now.tv_sec+45; reply="lease"; state(reply);

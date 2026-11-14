@@ -73,3 +73,32 @@ The USB layout follows the AOSP FunctionFS/configfs integration in
 Its actual service and permission requirements are checked against the pinned
 CP3A.260905.010 GSI. This is a warm, USB-attached engineering test, not M1 cold
 boot acceptance or M2 factory-tree independence.
+
+## Autonomous startup candidate
+
+`rebuild_m1_usb_trial.py --autonomous-ufs` packages a startup path that invokes
+the existing verified UFS first-stage handoff itself. It does not require an
+enumerated diagnostic gadget. Early evidence is buffered in RAM and copied
+to `/data/local/tmp/rmx-m1-boot.txt` on the same disposable data seed before
+policy installation. ADB can retrieve it without initiating the handoff.
+The optional temporary-key TIME probe is skipped because this profile has no
+verified RTC; no host time or invented timestamp is supplied.
+
+The supervisor and guard write boot-bound state markers into reserved-RAM
+pmsg. On a subsequent boot, a pending/failed attempt selects a diagnostic
+capture window and then EDL rather than retrying Android indefinitely. A
+retained marker permits normal startup. This is reserved-RAM recovery state,
+not a persistent UFS boot counter. The hardware power-off/cold-start behavior
+still requires physical measurement.
+
+An authenticated `--expire-lease CURRENT_BOOT_ID` command changes a retained
+guard back to a 45-second lease for deliberate host-loss fault injection.
+Without a renewal, feeding stops and the 30-second hardware watchdog expires.
+Trial 27's earlier stop-feeding injection already recorded a kernel pretimeout,
+a new diagnostic boot and verified F.20 recovery; that test needed a repeated
+host EDL request. The observer now flushes and drains that serial request.
+[Watchdog control evidence](../../../../build/device/m1-watchdog-expiry-2026-11-14.json)
+
+Use `--reuse-super` only when system and signed vendor are unchanged. The
+builder checks their manifests, hashes and every existing candidate chunk
+before reusing them for a ramdisk-only change.

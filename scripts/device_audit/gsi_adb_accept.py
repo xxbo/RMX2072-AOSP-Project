@@ -4,12 +4,26 @@ import re
 from pathlib import Path
 import subprocess
 import time
+from datetime import datetime, timezone
 
 RELEASE = '6.18.32-android17-5-maybe-dirty-4k'
 SERIAL = 'RMX2072-M1'
 
 def shell(command, timeout=8):
     return subprocess.check_output(['adb','-s',SERIAL,'shell',command], text=True, timeout=timeout, stderr=subprocess.STDOUT).replace('\r','')
+
+def fetch_autonomous(output):
+    """Fetch pre-policy evidence; this observation never requests Android startup."""
+    boot=shell('cat /proc/sys/kernel/random/boot_id').strip()
+    from uuid import UUID
+    UUID(boot)
+    evidence=shell('cat /data/local/tmp/rmx-m1-boot.txt')
+    if 'M1EVENT autonomous=1\n' not in evidence or set(re.findall(r'^M1EVENT boot_id=(.*)$',evidence,re.M))!={boot}:
+        raise ValueError('Autonomous evidence absent or from another boot')
+    (output/'boot-events.txt').write_text(evidence,encoding='utf-8')
+    with (output/'host-events.jsonl').open('a') as log:
+        log.write(json.dumps(dict(event='autonomous_handoff_observed',boot_id=boot,monotonic=time.monotonic(),utc=datetime.now(timezone.utc).isoformat()))+'\n')
+    return boot
 
 def verified_ufs_graph(mounts, backing):
     rows = [x.split() for x in mounts.splitlines()]
@@ -54,12 +68,13 @@ def inspect(output, original):
         # pre-policy witness only when it names this boot and these exact mounts.
         if 'SLAVE=' in backing or '/1d84000.ufs/' not in backing:
             raise ValueError('Unexpected or incomplete live UFS backing')
-        if not (output/'host-events.jsonl').is_file() or not (output/'acm.log').is_file():
+        transcript_path=output/('boot-events.txt' if (output/'boot-events.txt').is_file() else 'acm.log')
+        if not (output/'host-events.jsonl').is_file() or not transcript_path.is_file():
             raise ValueError('Restricted sysfs requires independent same-boot UFS witness')
         events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
-        if not any(x.get('event')=='handoff_requested' and x.get('boot_id')==original for x in events):
+        if not any(x.get('event') in ('handoff_requested','autonomous_handoff_observed') and x.get('boot_id')==original for x in events):
             raise ValueError('UFS witness does not match current boot')
-        transcript = (output/'acm.log').read_text(errors='replace')
+        transcript = transcript_path.read_text(errors='replace')
         if set(re.findall(r'^M1EVENT boot_id=(.*)$',transcript,re.M)) != {original} or not re.search(r'^M1EVENT ufs_super=.*/1d84000.ufs/.* dev=8:10 ro=1$',transcript,re.M):
             raise ValueError('UFS witness boot identity or physical device invalid')
         for partition,point in [('system','/'),('vendor','/vendor')]:
@@ -72,10 +87,11 @@ def inspect(output, original):
             if not re.search(r'M1EVENT status='+partition+r'-verity \d+ \d+ verity V ',transcript):
                 raise ValueError('UFS witness verity validation absent: '+partition)
             lower = re.findall(r'Created logical partition '+partition+r' on device /dev/block/dm-(\d+)',transcript)
+            lower += re.findall(r'^M1EVENT linear_mapper='+partition+r' dev=254:(\d+)$',transcript,re.M)
             if len(set(lower))!=1 or not re.search(r'M1EVENT table='+partition+r'-verity \d+ \d+ verity 1 254:'+lower[0]+r' 254:'+lower[0]+r' ',transcript):
                 raise ValueError('UFS witness verity chain invalid: '+partition)
         graph = None
-        evidence = 'same-boot ACM witness plus matching live ADB mounts (sysfs_dm restricted)'
+        evidence = 'same-boot '+('autonomous device' if transcript_path.name=='boot-events.txt' else 'ACM')+' witness plus matching live ADB mounts (sysfs_dm restricted)'
     return dict(identity=identity,pid1=init,mounts=mounts,backing=backing,ufs_graph=graph,ufs_evidence=evidence)
 
 def accept(output, original):

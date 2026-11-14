@@ -54,6 +54,7 @@ def main():
     p.add_argument('--scratch-volumes', type=pathlib.Path,
                    help='CI-built ext4 fixtures for a volatile UFS service trial')
     p.add_argument('--adb-public-key', type=pathlib.Path, help='Authorized host public key for guarded GSI ADB trial')
+    p.add_argument('--autonomous-ufs', action='store_true', help='Start verified UFS Android without a host or USB console')
     p.add_argument('--trace-init-fault', action='store_true', help='Trace PID 1 file faults and failed block completions')
     p.add_argument('--gsi-block-seed', type=pathlib.Path, help='Original GSI blocks and ranges for the RAM-backed comparison')
     p.add_argument('--gsi-init-probe', type=pathlib.Path,
@@ -65,6 +66,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.autonomous_ufs and not (a.adb_public_key and a.ufs_first_stage and a.entry_carrier):
+        p.error('Autonomous UFS requires the guarded signed profile and recovery evidence carrier')
     if a.adb_public_key and not a.scratch_volumes:
         p.error('Guarded ADB requires the existing writable scratch volumes')
     if a.scratch_volumes and not a.ufs_first_stage:
@@ -275,6 +278,9 @@ def main():
         add('bin/verity-readonly', 0o100755, verity_test)
     if a.trial_id:
         add('trial-id', 0o100600, (a.trial_id+'\n').encode())
+    if a.autonomous_ufs:
+        add('m1-autoboot', 0o100444, b'1\n')
+        add('m1-autoboot.sh', 0o100755, (root/'device/realme/bladerunner_48m/bootstrap/m1-autoboot.sh').read_bytes().replace(b'\r\n',b'\n'))
     if a.defer_gadget_bind:
         add('defer-gadget-bind', 0o100600, b'1\n')
     if a.gadget_bind_delay is not None:
@@ -315,6 +321,9 @@ def main():
     if a.adb_public_key:
         report['adb_public_key_sha256'] = hashlib.sha256((key+' M1-host\n').encode()).hexdigest()
         report['guarded_adb'] = True
+    report['autonomous_ufs'] = a.autonomous_ufs
+    if a.autonomous_ufs:
+        report['autoboot_sha256'] = hashlib.sha256((root/'device/realme/bladerunner_48m/bootstrap/m1-autoboot.sh').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     if a.ufs_reset_info:
         report['ufs_reset_info_sha256'] = hashlib.sha256(line_info).hexdigest()
     if a.ufs_phy_cycle:

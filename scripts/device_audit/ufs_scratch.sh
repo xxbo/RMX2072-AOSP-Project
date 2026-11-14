@@ -1,6 +1,8 @@
 #!/bin/busybox sh
 # Called once while PID 1 is stopped after its verified vendor mount.
 set -eu
+event_sink=/dev/ttyGS0
+[ ! -f /m1-autoboot ] || event_sink=/run/m1-autoboot.events
 root=/proc/1/root
 store=/run/m1-scratch
 mkdir "$store"
@@ -22,8 +24,8 @@ for name in data metadata; do
     /bin/first-stage-witness scratch-mount "$name"
     awk -v dev="$dev" -v target="/$name" '$3==dev && $5==target && $6 ~ /^rw(,|$)/ && / - ext4 / {
         print "M1EVENT scratch_mount=" target " device=" dev " flags=" $6 " fs=ext4"; ok=1
-    } END {exit !ok}' /proc/1/mountinfo > /dev/ttyGS0
-    echo "M1EVENT scratch_backing=/$name file=$(cat "$sys/loop/backing_file")" > /dev/ttyGS0
+    } END {exit !ok}' /proc/1/mountinfo >> "$event_sink"
+    echo "M1EVENT scratch_backing=/$name file=$(cat "$sys/loop/backing_file")" >> "$event_sink"
 done
 
 log=$root/system/lib64/liblog.so
@@ -78,7 +80,7 @@ for site in "get:$compat:0x2cb0c" "wrap:$compat:0x2b03c" "soft:$soft:0x16844" "p
         "r:m1ks/ks_compat_${name}_return $location task=\$comm" >> "$t/uprobe_events"
 done
 echo 1 > "$events/enable"
-echo 'M1EVENT keystore_trace=armed' > /dev/ttyGS0
+echo 'M1EVENT keystore_trace=armed' >> "$event_sink"
 
 apps=/sys/module/rmx2072_keymaster_lookup/parameters/apps
 if [ -r "$apps" ]; then
@@ -110,34 +112,34 @@ if [ -r "$apps" ]; then
         echo 1 > "$events/$name/enable"
     done
     if result=$(cat "$apps"); then
-        echo "M1EVENT qsee_lookup $result" > /dev/ttyGS0
+        echo "M1EVENT qsee_lookup $result" >> "$event_sink"
     else
-        echo "M1EVENT qsee_lookup_read_failed=$?" > /dev/ttyGS0
+        echo "M1EVENT qsee_lookup_read_failed=$?" >> "$event_sink"
     fi
     version=${apps%/*}/version_info
     if [ -r "$version" ]; then
         if result=$(cat "$version"); then
-            echo "M1EVENT keymaster_version_before_listener $result" > /dev/ttyGS0
+            echo "M1EVENT keymaster_version_before_listener $result" >> "$event_sink"
         else
-            echo "M1EVENT keymaster_version_before_listener_read_failed=$?" > /dev/ttyGS0
+            echo "M1EVENT keymaster_version_before_listener_read_failed=$?" >> "$event_sink"
         fi
     fi
     for listener in time cancel; do
         node=/sys/module/qcom_scm/parameters/listener_${listener}_lifetime
         if [ -r "$node" ]; then
             if result=$(cat "$node"); then
-                echo "M1EVENT qsee_listener_lifetime $result" > /dev/ttyGS0
+                echo "M1EVENT qsee_listener_lifetime $result" >> "$event_sink"
             else
-                echo "M1EVENT qsee_listener_lifetime_read_failed $listener $?" > /dev/ttyGS0
+                echo "M1EVENT qsee_listener_lifetime_read_failed $listener $?" >> "$event_sink"
             fi
         fi
     done
     temp_key=/sys/module/qcom_scm/parameters/temp_hmac_key
-    if [ -r "$temp_key" ]; then
+    if [ -r "$temp_key" ] && [ ! -f /m1-autoboot ]; then
         if result=$(cat "$version"); then
-            echo "M1EVENT keymaster_version_before_temp_key $result" > /dev/ttyGS0
+            echo "M1EVENT keymaster_version_before_temp_key $result" >> "$event_sink"
         else
-            echo "M1EVENT keymaster_version_before_temp_key_read_failed=$?" > /dev/ttyGS0
+            echo "M1EVENT keymaster_version_before_temp_key_read_failed=$?" >> "$event_sink"
         fi
         grep -qx 'ro.build.version.release=17' "$root/system/build.prop"
         grep -qx 'ro.build.version.security_patch=2026-09-05' "$root/system/build.prop"
@@ -149,17 +151,17 @@ if [ -r "$apps" ]; then
              echo l > /proc/sysrq-trigger
          fi) &
         if result=$(cat "$temp_key"); then
-            echo "M1EVENT temporary_key $result" > /dev/ttyGS0
+            echo "M1EVENT temporary_key $result" >> "$event_sink"
         else
-            echo "M1EVENT temporary_key_read_failed=$?" > /dev/ttyGS0
+            echo "M1EVENT temporary_key_read_failed=$?" >> "$event_sink"
         fi
         touch "$key_done"
     fi
     if [ -r "$version" ]; then
         if result=$(cat "$version"); then
-            echo "M1EVENT keymaster_version $result" > /dev/ttyGS0
+            echo "M1EVENT keymaster_version $result" >> "$event_sink"
         else
-            echo "M1EVENT keymaster_version_read_failed=$?" > /dev/ttyGS0
+            echo "M1EVENT keymaster_version_read_failed=$?" >> "$event_sink"
         fi
     fi
 fi
