@@ -95,3 +95,16 @@ Source-init run 43614577780 passed the previous dependency failure, then rejecte
 the obsolete `BOARD_BUILD_SYSTEM_ROOT_IMAGE` product variable. That variable and
 the deprecated 64-bit Binder setting were removed for Android 17. The build
 continues with the same pinned upstream sources and project product.
+
+`build/device/m2-source-dt-build-2026-11-15.json` records the clean offline build,
+its output digests and the complete recovery-set recheck. That record deliberately
+marks hardware acceptance as not run. `fetch_m2_artifact.py` installs only artifacts
+from a successful pinned workflow and checks source/configuration/output digests.
+`rebuild_m2_source_trial.py` then prepares one current candidate while verifying
+that the GSI, signed vendor, guard and super container remain the accepted inputs.
+
+The reconnect observer captures arrival uptime and the same-boot component and
+power-provider evidence before retention. Missing source markers, mismatched init
+or power-provider evidence requests guarded rollback. The existing M1 cold-start
+record remains valid under the extended checker. A disconnected power-key start
+and a separate watchdog expiry/recovery run are still required on the new pair.

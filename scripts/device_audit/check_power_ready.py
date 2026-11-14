@@ -29,5 +29,7 @@ def check_power_ready(text, boot):
         raise ValueError('Primary PON binding is absent or ambiguous')
     if len(revision)!=1:
         raise ValueError('No verified GEN2_PRIMARY PON read in this boot')
-    return dict(boot_id=boot,primary_spmi_sid=0,pon_revision=int(revision[0]),
-                pon_subtype=4,pon_driver='pm8941-pwrkey',poweroff_driver='msm-restart',binding=binding)
+    result=dict(boot_id=boot,primary_spmi_sid=0,pon_revision=int(revision[0]),
+                pon_subtype=4,pon_driver='pm8941-pwrkey',poweroff_driver='msm-restart')
+    if binding=='upstream-pon-parent-pwrkey-child':result['binding']=binding
+    return result
