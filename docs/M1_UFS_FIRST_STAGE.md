@@ -440,7 +440,8 @@ this, EDL disappeared again and GSI restarted as
 `2f056517-6895-49e3-aa65-58cb960ecb0b`. The manual EDL monitor began after
 EDL entry, so its 2-second observation is not the total EDL lifetime. An
 explicit ADB EDL request let the prepared runner capture Sahara and restore
-F.20; final verification is recorded in the linked artifact when complete.
+F.20. All 17 super chunks, boot, DTBO, both LP slots, the full Android-side
+super digest and boot completion passed; restored boot was `2b1bb7ba-b546-4eb2-9f8f-f8ddf285f8e5`.
 
 Trial 32 creates and validates the recovery device node automatically. It
 qualifies immediate capture by the prepared host, separately from stable
