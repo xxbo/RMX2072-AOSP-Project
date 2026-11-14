@@ -18,10 +18,10 @@ contents belong in Git. The GSI retains `ro.adb.secure=1` and `ro.debuggable=0`.
 
 ## Watchdog sequence
 
-1. Before policy installation, the witness arms the watchdog for 120 seconds,
+1. Before policy installation, the witness arms the watchdog for 30 seconds,
    cancels the old diagnostic return timer, then releases its descriptor without
    magic close. The watchdog remains armed until Android reopens it.
-2. The init service opens the watchdog and sets 60 seconds. It feeds for at most
+2. The init service opens the watchdog and sets 30 seconds. It feeds for at most
    150 seconds while waiting for the authenticated host.
 3. The host checks API 37, the exact kernel, boot ID, enforcing, PID 1, UFS mounts
    and running adbd/guardian. A matching `keep` starts a 45-second renewable
@@ -32,6 +32,11 @@ contents belong in Git. The GSI retains `ro.adb.secure=1` and `ro.debuggable=0`.
    reset boots the diagnostic ramdisk; the attached host collects pstore, enters
    EDL and restores the verified original boot/super. Original userdata is not
    mounted or formatted. Retained operation still uses volatile data/metadata.
+
+The pinned KPSS watchdog limits its counter to 0xFFFFF ticks; with the measured
+32764 Hz clock its maximum timeout is 32 seconds. Trial 26 rejected the initial
+120-second request before policy installation. Both owners now request 30
+seconds; long host windows are implemented by periodic feeding.
 
 ## Rebuild and run
 

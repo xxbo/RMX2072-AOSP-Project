@@ -302,8 +302,10 @@ static void observe(int vendor_trial) {
                         if (watchdog < 0 || ioctl(watchdog, WDIOC_GETTIMEOUT, &timeout) < 0)
                             hold("watchdog-open-failed");
                         if (usb_guard) {
-                            timeout = 120;
-                            if (ioctl(watchdog, WDIOC_SETTIMEOUT, &timeout) || timeout != 120)
+                            timeout = 30;
+                            int set_rc = ioctl(watchdog, WDIOC_SETTIMEOUT, &timeout);
+                            report("usb_guard_timeout requested=30 actual=%d rc=%d errno=%d", timeout, set_rc, set_rc ? errno : 0);
+                            if (set_rc || timeout != 30)
                                 hold("guard-timeout-failed");
                             FILE *timer = fopen("/control-return-pid", "r");
                             int timer_pid = 0;
@@ -313,7 +315,7 @@ static void observe(int vendor_trial) {
                             if (kill(timer_pid, SIGTERM)) hold("guard-timer-cancel-failed");
                             report("usb_guard=handoff watchdog_seconds=%d old_timer_cancelled=1", timeout);
                             /* Release ownership without magic close; hardware remains armed.
-                             * Android's oneshot guard must reopen it within 120 seconds. */
+                             * Android's oneshot guard must reopen it within 30 seconds. */
                             close(watchdog); watchdog = -1;
                         }
                         if (lseek(kernel_log, 0, SEEK_END) < 0) fail("seek kernel log");

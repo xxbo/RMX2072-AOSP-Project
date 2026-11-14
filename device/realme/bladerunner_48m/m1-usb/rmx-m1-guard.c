@@ -55,10 +55,11 @@ int main(int argc, char **argv) {
         sleep(1);
     }
     if (fd < 0) { state("watchdog-open-error"); return 1; }
-    int timeout = 60;
-    if (ioctl(fd, WDIOC_SETTIMEOUT, &timeout) || timeout != 60) {
+    int timeout = 30;
+    if (ioctl(fd, WDIOC_SETTIMEOUT, &timeout) || timeout != 30) {
         state("watchdog-timeout-error"); close(fd); return 1;
     }
+    __system_property_set("vendor.rmx.m1.timeout", "30");
     struct timespec start, now;
     clock_gettime(CLOCK_BOOTTIME, &start);
     int accepted = 0;
