@@ -132,3 +132,9 @@ including its own worker log. GitHub's check annotation reports
 available. This is a host failure, not evidence of a compiler or handset failure.
 The bootstrap workflow now removes unused hosted SDK/tool caches before syncing
 the pinned Kleaf toolchains and records free space before building.
+
+Source-init run 43617966430 passed arm64 product configuration after the bounded
+repair added the real `toolchain/pgo-profiles` project. Blueprint then required
+`kernel-config-soong-rules`, declared in the pinned `kernel/configs/build/Android.bp`.
+Both projects are now explicit workspace dependencies. This is still a source
+workspace failure before compiling the target executable.
