@@ -7,7 +7,7 @@ Shutdown completion was not independently observed while disconnected. These
 observations do not yet distinguish incomplete shutdown from a PMIC wakeup
 configuration problem. [Trial evidence](../build/device/m1-autonomous-boot-2026-11-14.json)
 
-The current kernel contains PSCI and the SPMI bus/PMIC infrastructure, but its
+The kernel used through trial 33 contains PSCI and the SPMI bus/PMIC infrastructure, but its
 recorded configuration does not enable `POWER_RESET_MSM`,
 `POWER_RESET_QCOM_PON`, `INPUT_PM8941_PWRKEY` or `RTC_DRV_PM8XXX`.
 The effective selected base tree plus OEM overlay 17 describes primary PON at
@@ -130,5 +130,31 @@ the successful pinned workflow/commit, source patch digests and dist SHA256SUMS
 (including the decompressed Image), then replaces the current kernel inputs.
 It does not retain a full archive or an old image version. Its verify-only
 path was exercised against the existing successful kernel artifact and
-reproduced the current Image hash without replacing inputs. Whole-archive
+reproduced the then-current Image hash without replacing inputs. Whole-archive
 digest verification is explicitly not claimed for range downloads.
+
+## Trial 34: primary PON read, Android blocked by damaged prior journal
+
+The optional PON build succeeded at source commit
+`f511744555230f4632f7fd3c60f510ddd2e023f1`
+([Actions run 43602623668](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43602623668)).
+Its checked Image hash is `dc41c03c967543000bd6ecafdf529c14b14174a4470ca463f3e387a6e0c64092`.
+The host verified the old boot, original DTBO and all 17 unchanged candidate
+super chunks, then updated only boot and read it back.
+
+New boot `3f1921b1-d7c3-4be6-8d9f-5acd8da6d0c5` reached diagnostics. At
+0.788894 seconds the driver reported primary PON revision 1, subtype 4 and
+preserved pull/debounce. At 1.017985 seconds autonomous startup reported
+`previous=unreadable` and selected recovery before attempting Android. The
+saved prior pmsg belongs to retained trial 33, with 38 corrected bytes and
+32 unrecoverable ECC blocks. Its later damaged markers correctly prevent
+accepting an older valid retained record. The corruption source is unresolved.
+
+The host observer captured evidence and explicitly requested EDL. Full F.20
+restoration passed all 17 super chunk readbacks, boot/DTBO readbacks, both LP
+slots, the Android-side full super digest and boot completion (boot
+`5d65f047-1413-4b84-b779-3b0449ed5431`). This is not another automatic
+watchdog recovery pass. GSI acceptance, PS_HOLD binding
+and disconnected power-key startup were not tested on this boot. Retry this
+same kernel from the stock baseline without relaxing the journal parser.
+[Trial 34 evidence](../build/device/m1-pon-journal-rejection-34-2026-11-14.json)
