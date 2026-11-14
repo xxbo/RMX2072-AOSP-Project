@@ -101,7 +101,7 @@ def previous_boot(trial, original, output, deadline, return_on_accepted=True, re
                         if not request_edl:
                             until=min(deadline,time.monotonic()+40)
                             while time.monotonic()<until:
-                                if console_query(console,b'test -s /run/m1-recovery-watchdog.log && echo present')==b'present':
+                                if console_query(console,b'grep -q "disable ioctl rc=0" /run/m1-recovery-watchdog.log 2>/dev/null && echo present')==b'present':
                                     data=read_console_file(console,b'/run/recovery-watchdog.gz',b'gzip -c /run/m1-recovery-watchdog.log > /run/recovery-watchdog.gz; ')
                                     (output/'recovery-watchdog.log').write_bytes(gzip.decompress(data))
                                     break

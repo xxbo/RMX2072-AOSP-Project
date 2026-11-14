@@ -38,7 +38,11 @@ def main():
             if (fault/name).exists():
                 record[name+'_selected']=[s for s in (fault/name).read_text(errors='replace').splitlines() if 'RMX-M1-' in s or 'watchdog0: pretimeout event' in s]
         if (fault/'recovery-providers.txt').exists():record['recovery_providers']=(fault/'recovery-providers.txt').read_text(errors='replace')
+        if (fault/'recovery-watchdog.log').exists():record['recovery_watchdog']=(fault/'recovery-watchdog.log').read_text(errors='replace')
         record['current_mode']='See fault/restore records; warm retention is historical'
+    if (trial/'boot-only-source.json').exists():
+        source=load(trial/'boot-only-source.json')
+        record['boot_only_update']={key:source[key] for key in ('previous_record','previous_boot_sha256')}
     if (restore/'restored.json').exists():
         record['restored']=load(restore/'restored.json')
         record['restore_readbacks']=[json.loads(x) for x in (restore/'readbacks.jsonl').read_text().splitlines()]

@@ -52,7 +52,7 @@ def main():
                     recovery=json.loads((a.output/'intermediate-boot.json').read_text())['boot_id']
                     assert 'M1RECOVERY boot='+recovery+' ' in disarm
                     assert 'AP watchdog disable ioctl rc=0 identity=qcom_wdt' in disarm
-                (a.output/'result.json').write_text(json.dumps(dict(boot_id=boot,automatic_edl=True,elapsed=row['elapsed'],edl_continuous_seconds=row['edl_continuous_seconds'],journal_expired=True,kernel_pretimeout=True,host_reboot_commands=False),indent=2)+'\n')
+                (a.output/'result.json').write_text(json.dumps(dict(boot_id=boot,automatic_edl=True,elapsed=row['elapsed'],edl_continuous_seconds=row['edl_continuous_seconds'],journal_expired=True,kernel_pretimeout=True,recovery_watchdog_disarm_verified=a.require_watchdog_disarm,host_reboot_commands=False),indent=2)+'\n')
                 if a.recovery_gate:
                     pending=a.recovery_gate.with_suffix('.tmp')
                     pending.write_text(json.dumps(dict(trial=a.trial,allow_recovery=True,automatic_edl=True,boot_id=boot,edl_continuous_seconds=row['edl_continuous_seconds']))+'\n')
@@ -64,6 +64,7 @@ def main():
             if ports_with_id(ports,ACM) and not captured:
                 previous_boot(a.trial,UUID(boot),a.output,time.monotonic()+60,return_on_accepted=False,request_edl=False)
                 captured=True
+                row['capture_completed_elapsed']=round(time.monotonic()-start,3)
             try:row['adb']=shell('cat /proc/sys/kernel/random/boot_id; getprop vendor.rmx.m1.state',3).splitlines()
             except (OSError,subprocess.SubprocessError):pass
             log.write(json.dumps(row)+'\n');log.flush()
