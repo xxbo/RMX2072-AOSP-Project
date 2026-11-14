@@ -65,6 +65,20 @@
       ],
       "job_log_sha256": "41544a8b8a2023127408e1df6d37e66ea0b4c1429309d225dc44e1f41afbe2ab",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43621938934,
+      "source_commit": "b2b390fb4e8af4896be3a13e32429eb81d394a47",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing trendy_team_aaos_vac_triage owner metadata",
+      "selected_log": [
+        "2026-11-14T17:52:21.9463730Z error: hardware/interfaces/automotive/vehicle/aidl/impl/3/default_config/test/Android.bp:17:1: \"//hardware/interfaces/automotive/vehicle/aidl/impl/3/default_config/test\" depends on undefined module \"trendy_team_aaos_vac_triage\".",
+        "2026-11-14T17:52:21.9465413Z error: hardware/interfaces/automotive/vehicle/aidl/aidl_test/Android.bp:17:1: \"//hardware/interfaces/automotive/vehicle/aidl/aidl_test\" depends on undefined module \"trendy_team_aaos_vac_triage\".",
+        "2026-11-14T17:52:21.9467033Z error: hardware/interfaces/automotive/vehicle/aidl/impl/3/fake_impl/hardware/test/Android.bp:17:1: \"//hardware/interfaces/automotive/vehicle/aidl/impl/3/fake_impl/hardware/test\" depends on undefined module \"trendy_team_aaos_vac_triage\".",
+        "2026-11-14T17:52:22.1667968Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "08074f477477ed554b0a8369eb3c3964cf9351bcc9c4b8be0e0692b13e226e16",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -72,8 +86,8 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "source_init_run": 43621938934,
-    "source_init_commit": "b2b390fb4e8af4896be3a13e32429eb81d394a47"
+    "source_init_run": 43623644069,
+    "source_init_commit": "aa3a9c33164ed46802f02a8d155d00bd82696325"
   },
   "host_tests": {
     "total": 81,

@@ -178,7 +178,22 @@ members, raw Image, source patches, resolved common source and required built-in
 configuration passed local verification. The raw Image digest is
 `96631ce06d589f82267aa6f833fd1bb86dfabced4aba3a92a03bf518f720b487`.
 `build/device/m2-source-kernel-build-2026-11-15.json` records the result. Source-init
-run 43621938934 remains pending; the handset still runs the accepted M1 image.
+run 43621938934 failed on another missing owner declaration; the handset still runs the accepted M1 image.
 No M2 boot has been flashed. Before any candidate write, the runner requires the
 current raw kernel, ramdisk, boot and build records to agree, rejecting an
 incomplete component refresh before entering EDL.
+
+Run 43621938934 required `trendy_team_aaos_vac_triage`, declared in the pinned
+`packages/services/Car/teams/Android.bp`. That project is now sparsely checked
+out to its original team metadata only, with the resolved revision and sparse
+path checked by the artifact installer. Run 43623644069 is building this recipe.
+
+The standard libfdt merge keeps the base root compatibility unless a fragment
+changes it; DTBO root selector properties are not payload. The source overlay
+now explicitly supplies the measured `qcom,kona-mtp` compatibility list and
+`oplus,dtsi_no = <20607>` in its root fragment. This preserves the conditions
+used by the SCM recovery and PON notifier guards regardless of bootloader
+selector-copy behavior. Both the offline effective tree and the pre-policy
+runtime witness must carry that identity. The rebuilt pair passes the 79-node
+resource comparison and the USB/UFS/watchdog/PDC/PON checks. This remains an
+offline result; hardware selection and recovery still need the M2 trial.
