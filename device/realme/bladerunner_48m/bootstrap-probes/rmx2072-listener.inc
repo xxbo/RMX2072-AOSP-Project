@@ -104,6 +104,7 @@ static int rmx2072_resume_time(struct rmx2072_key_test *test,
 	struct timespec64 now;
 
 	test->time_command = le32_to_cpu(message[0]);
+	pr_info("rmx2072-temp-key: callback id=11 command=%u\n", test->time_command);
 	ktime_get_real_ts64(&now);
 	if (test->time_command == 770 && now.tv_sec >= 1577836800 && now.tv_sec <= U32_MAX) {
 		message[1] = cpu_to_le32(now.tv_sec);
@@ -111,6 +112,7 @@ static int rmx2072_resume_time(struct rmx2072_key_test *test,
 		message[3] = 0;
 		desc.args[1] = QSEECOM_RESULT_SUCCESS;
 	}
+	pr_info("rmx2072-temp-key: resuming callback status=%llu\n", desc.args[1]);
 	return __qcom_scm_qseecom_call(&desc, resp);
 }
 
@@ -129,13 +131,19 @@ static int rmx2072_key_call(struct rmx2072_key_test *test, size_t len, bool *ter
 
 	lockdep_assert_held(&qcom_scm_qseecom_call_lock);
 	*terminal = false;
+	pr_info("rmx2072-temp-key: send method=%u bytes=%zu\n",
+		le32_to_cpu(*(__le32 *)test->request), len);
 	rc = __qcom_scm_qseecom_call(&desc, &resp);
+	pr_info("rmx2072-temp-key: send rc=%d result=%llu listener=%llu\n",
+		rc, resp.result, resp.data);
 	test->first_result = resp.result;
 	while (!rc && resp.result == QSEECOM_RESULT_INCOMPLETE) {
 		test->last_listener = resp.data;
 		if (resp.data != 11 || ++test->callbacks > 8)
 			return -EOPNOTSUPP;
 		rc = rmx2072_resume_time(test, &resp);
+		pr_info("rmx2072-temp-key: resumed rc=%d result=%llu listener=%llu\n",
+			rc, resp.result, resp.data);
 	}
 	test->final_result = resp.result;
 	if (rc)
@@ -167,6 +175,7 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 	    of_property_read_u32(of_root, "oplus,dtsi_no", &board) || board != 20607 ||
 	    !qcom_scm_is_available())
 		return -ENODEV;
+	pr_info("rmx2072-temp-key: lookup\n");
 	rc = qcom_scm_qseecom_app_get_id("keymaster64", &t.app_id);
 	if (rc)
 		return rc;
@@ -176,6 +185,7 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		return -EALREADY;
 	}
 	attempted = true;
+	pr_info("rmx2072-temp-key: allocating buffers\n");
 	req = t.request = qcom_tzmem_alloc(__scm->mempool, capacity, GFP_KERNEL);
 	reply = t.reply = qcom_tzmem_alloc(__scm->mempool, capacity, GFP_KERNEL);
 	t.listener = qcom_tzmem_alloc(__scm->mempool, SZ_16K + SZ_4K, GFP_KERNEL);
@@ -185,7 +195,9 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		goto out;
 	memset(t.listener, 0, SZ_16K + SZ_4K);
 	memset(t.sglist, 0, 32);
+	pr_info("rmx2072-temp-key: registering time listener\n");
 	rc = rmx2072_listener_change(11, t.listener, &resp);
+	pr_info("rmx2072-temp-key: registered rc=%d result=%llu\n", rc, resp.result);
 	listener_owned = rc || resp.result != QSEECOM_RESULT_FAILURE;
 	if (rc || resp.result != QSEECOM_RESULT_SUCCESS) {
 		rc = rc ?: -EIO;
@@ -221,6 +233,7 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		delete_status = (s32)le32_to_cpu(reply[0]);
 unregister:
 	if (terminal) {
+		pr_info("rmx2072-temp-key: unregistering\n");
 		teardown = rmx2072_listener_change(11, NULL, &resp);
 		if (!teardown && resp.result != QSEECOM_RESULT_SUCCESS)
 			teardown = -EIO;

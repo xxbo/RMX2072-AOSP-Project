@@ -106,9 +106,9 @@ def observe(trial, output, timeout):
             raise ValueError('Unexpected running trial')
         original = UUID(console_query(console, b'cat /proc/sys/kernel/random/boot_id').decode())
         if console_query(console, b'test -r /sys/module/qcom_scm/parameters/temp_hmac_key && echo present') == b'present':
-            before = int(console_query(console, b'date -u +%s'))
+            before = int(console_query(console, b'/bin/busybox date -u +%s 2>/dev/null'))
             now = datetime.now(timezone.utc)
-            command = now.strftime("date -u -s '%Y-%m-%d %H:%M:%S' >/dev/null && date -u +%s")
+            command = now.strftime("/bin/busybox date -u -s '%Y-%m-%d %H:%M:%S' >/dev/null 2>&1 && /bin/busybox date -u +%%s 2>/dev/null")
             after = int(console_query(console, command.encode()))
             if abs(datetime.now(timezone.utc).timestamp() - after) > 5:
                 raise ValueError('Diagnostic UTC did not match the USB host')
