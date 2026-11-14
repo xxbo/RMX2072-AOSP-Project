@@ -244,11 +244,13 @@ The final control record reports generation 0, deletion 0, one callback, final r
 
 The next version query returned transport -22, and 30 project service attempts logged `TEE version unavailable`. This boot registered compat and retained the vdc wait. The HMAC/maintenance/vdc successes from trial 22 and this callback transaction still need to work together in one kernel. Compare the normal version/HMAC transport and buffer layout with the tested whitelist path before attributing the regression to a specific cause. The pmsg record again has 32 unrecoverable ECC blocks and is excluded from these service claims.
 
+After trial 24, recovery verified the full original super, F.20 log-reader boot, stock DTBO and both LP slots. F.20 completed boot `d6e4a951-6c64-4c7b-8673-3d43193e7413`, and its own full super digest matched the baseline. A fresh stock temporary-key control then generated a 455-byte blob through TIME listener 11 and deleted it with status 0.
+
 ### Follow-up candidate · One Keymaster transport
 
 The version and HMAC readers now use the same whitelist SCM command and contiguous 40 KiB request/response allocation as the trial 24 temporary-key control. The helper accepts only the two fixed query methods and exact response sizes. It shares the QSEE transaction lock, wipes completed buffers, and refuses subsequent requests if a transaction leaves secure-world ownership uncertain. It does not cache a version result or substitute HMAC bytes. The observer records version queries before listener lifetime tests, before the temporary-key transaction and after it.
 
-This is a candidate fix, with no new handset pass claimed. The previous evidence does not isolate whether the command, allocation layout or secure-world state caused `-22`. Acceptance requires the temporary-key callback, subsequent HAL registration/HMAC, maintenance and the matching vdc exit on the same boot.
+The command and allocation layout changed together; the earlier evidence does not isolate which difference caused `-22`. The acceptance sequence is the temporary-key callback, subsequent HAL registration/HMAC, maintenance and the matching vdc exit on one boot. Trial 25 below supplies that physical result.
 
 The user removed the private local work directories to recover disk space. Reacquire the original F.20 recovery bytes before another write. Keep one verified recovery set and one current candidate, stream large acquisitions directly into their final chunks, and remove duplicate readbacks only after recording their verified digests. Preserve source and sanitized logs in Git. A usable API 37 ADB connection should permit continued debugging in GSI; do not schedule unconditional F.20 restoration for that successful case.
 
@@ -258,4 +260,25 @@ The recovery set was subsequently reacquired from the running handset. A read-on
 
 The recovered scratch seeds and rebuilt HAL/vendor filesystem match the previous hashes. The deleted private engineering signing key was replaced, so the signed vendor footer and its public key differ even though the filesystem is identical. The first-stage profile verifies that new key. Local validation with DTC available completed 59 tests without skips. Kernel build [43574920850](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43574920850) compiled the unified transport from commit `b45b1f1820fcd7a97280cadb507c28a81c7d394a` successfully; physical acceptance remains separate from that build result.
 
-Recovery verified the full original super, F.20 log-reader boot, stock DTBO and both LP slots. F.20 completed boot `d6e4a951-6c64-4c7b-8673-3d43193e7413`, and its own full super digest matched the baseline. A fresh stock temporary-key control then generated a 455-byte blob through TIME listener 11 and deleted it with status 0.
+
+### Trial 25 · Listener continuation and GSI HAL on one kernel
+
+Boot `36f78fb1-b358-4aac-996e-a65775b23da6` used kernel build `43574920850`, the unchanged GSI and HAL/vendor filesystem, and the same writable data/metadata seeds. The replacement engineering key signed the vendor footer. First-stage init verified and mounted system/vendor from internal UFS; PID 1 entered enforcing at 49.401883 s and second stage at 49.428002 s. Both scratch volumes passed write/fsync/unlink. The kernel console has no ECC errors; pmsg reports 32 unrecoverable blocks and is excluded from Android service claims. [Normalized record](../build/device/m1-ufs-keymaster-transport-2026-11-14.json)
+
+| Same-boot observation | Result |
+| --- | --- |
+| Version before listener registration, before temporary key and after deletion | Transport 0, status 0, API 4.0, TA 4.546 at all three checkpoints. |
+| CONFIGURE / temporary generation / deletion / listener teardown | All 0; 455-byte temporary blob deleted without logging its bytes. |
+| TIME listener 11, command 770 | One callback at 47.386699 s; continuation completed at 47.396373 s. |
+| Project HIDL service PID 2070 | Registered default at 50.812354 s; returned hardware information to GSI keystore2 PID 2053. |
+| getHmacSharingParameters | TEE-backed status 0 at 50.816489 s to the same keystore2 process. |
+| android.security.maintenance | Binder registration returned 0. |
+| vdc keymaster earlyBootEnded | PID 2059 exited 0 at 50.844207 s; wait 0.169 s. |
+| APEX | 43 activated at 58.666016 s; adbd init imported at 58.736605 s. |
+| Android ADB | No transport in 87 polls over 90.047 s; 55 physical USB samples showed diagnostic ACM only. |
+
+This establishes that the trial 22 GSI service path and trial 24 listener transaction can coexist in the unified kernel. It is one successful bounded boot. Shared-secret computation still returns -100 and boot-level key creation still fails with UNIMPLEMENTED because the HAL's key methods are unfinished. The kernel's fixed temporary-key control does not implement general HIDL key generation. Neither framework boot completion nor full key storage is claimed.
+
+The console records `sys.usb.config=none && sys.usb.configfs=0` at 60.442504 s, a failed legacy android_usb write, and `init.svc.adbd=stopped`. There is no adbd service start in the saved console. Inspecting the pinned GSI shows `ro.secure=1`, `ro.adb.secure=1`, `ro.debuggable=0`; its generic USB rules expect the vendor to prepare gadget `g1`, FunctionFS and `sys.usb.controller`. The current project vendor has no such setup, and diagnostic ACM already owns the controller. The next USB trial must provide that handoff, an authorized host public key in scratch data, and explicit watchdog/return-timer ownership. A successful ADB shell alone would not cancel the existing bounded return.
+
+The harness read back the complete candidate before boot. With no API 37 ADB observed, it automatically returned through the diagnostic recovery path and restored the original set. All 17 original super chunks, the log-reader boot and original DTBO matched; both LP metadata slots and the Android-side full super digest matched. F.20 completed boot `54f8df06-4b4b-4679-9959-2f7f97a47152`. The per-partition readbacks and final F.20 checks are recorded with the trial. Local storage retains one original recovery set and one current candidate; no historical boot/super versions or duplicate full readbacks are required.
