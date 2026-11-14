@@ -233,5 +233,16 @@ The upstream `r-launched-dcla-enabled-apex-module` defaults live in
 `packages/modules/common/sdk/Android.bp`; the workspace now includes that pinned
 file and its root package metadata only. This also preserves the upstream SDK
 defaults used by native libraries. Sparse selection is recorded and verified.
-Run 43631673665 is building the 116-project workspace. The GSI's ADB/APEX and the
+Run 43631673665 passed Soong/Kati analysis and compiled native targets. The GSI's ADB/APEX and the
 handset itself remain unchanged; no M2 candidate has been flashed.
+
+Run 43631673665 reached 44% of the native build before host `libsqlite` failed
+for missing `libicuuc` and `libicui18n`. The pinned ICU project now retains its
+original native implementation, initialization library, headers, data and build
+metadata. Unrelated ICU Java trees are not selected. The build first generates
+the product Ninja graph, then uses `ninja -t commands init_first_stage` to list
+all fatal missing-dependency edges in that target closure before compilation.
+This read-only check does not execute those commands or bypass dependencies.
+Its report and exact ICU sparse selection are required during installation.
+No M2 image was produced or flashed by this failed run; live M1 GSI still has
+API 37, enforcing, retained ADB and the maintenance service.

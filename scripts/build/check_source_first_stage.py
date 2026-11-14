@@ -42,6 +42,15 @@ def verify_source_first_stage(directory, binary):
     common_sparse = (directory / 'modules-common-sparse.txt').read_text().splitlines()
     if common_sparse != ['/Android.bp', '/sdk/Android.bp'] or 'packages/modules/common' not in projects:
         raise ValueError('First-stage mainline build defaults selection differs')
+    icu_sparse = (directory / 'icu-sparse.txt').read_text().splitlines()
+    if (icu_sparse != ['/Android.bp', '/LICENSE', '/icu.aconfig', '/icu4c/', '/android_icu4c/', '/libandroidicuinit/']
+            or 'external/icu' not in projects):
+        raise ValueError('First-stage native ICU source selection differs')
+    dependencies = json.loads((directory / 'target-dependencies.json').read_text())
+    if (dependencies.get('target') != 'init_first_stage'
+            or dependencies.get('missing_dependency_commands') != []
+            or dependencies.get('command_count', 0) <= 0):
+        raise ValueError('First-stage target dependency closure was not checked')
     for name in ('rmx2072_m2_init.mk', 'BoardConfig.mk', 'AndroidProducts.mk'):
         product = (directory / name).read_bytes().replace(b'\r\n', b'\n')
         expected = (repo / 'device/realme/bladerunner_48m/m2-init' / name).read_bytes().replace(b'\r\n', b'\n')
@@ -51,4 +60,4 @@ def verify_source_first_stage(directory, binary):
                 resolved_manifest_sha256=hashes['resolved-manifest.xml'], source_projects=len(projects),
                 sparse_projects={'frameworks/base': sparse, 'packages/services/Car': car_sparse,
                                  'system/apex': apex_sparse, 'packages/modules/Virtualization': avf_sparse,
-                                 'packages/modules/common': common_sparse})
+                                 'packages/modules/common': common_sparse, 'external/icu': icu_sparse})

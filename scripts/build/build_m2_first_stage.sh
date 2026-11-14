@@ -29,6 +29,10 @@ git -C packages/modules/Virtualization sparse-checkout set --no-cone \
 git -C packages/modules/Virtualization sparse-checkout list > "$ARTIFACT_DIR/avf-sparse.txt"
 git -C packages/modules/common sparse-checkout set --no-cone /Android.bp /sdk/Android.bp
 git -C packages/modules/common sparse-checkout list > "$ARTIFACT_DIR/modules-common-sparse.txt"
+# Host SQLite used by init's build tools links these real ICU native libraries.
+git -C external/icu sparse-checkout set --no-cone \
+  /Android.bp /LICENSE /icu.aconfig /icu4c/ /android_icu4c/ /libandroidicuinit/
+git -C external/icu sparse-checkout list > "$ARTIFACT_DIR/icu-sparse.txt"
 repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
 test "$(git -C system/core rev-parse HEAD)" = 545d2487e38192a2ce25040897ced877cf6b4f53
 mkdir -p device/realme/rmx2072_m2
@@ -48,10 +52,16 @@ test -s "$ARTIFACT_DIR/resolved-manifest.xml"
 # dependencies of init_first_stage itself remain fatal Ninja build edges.
 export ALLOW_MISSING_DEPENDENCIES=true
 export SOONG_UI_NINJA_ARGS=-v
+export M2_RECIPE_ROOT="$ROOT_DIR" M2_ARTIFACT_DIR="$ARTIFACT_DIR"
 for attempt in $(seq 1 12); do
   # Run each attempt in a subshell so envsetup cannot retain a failed product.
   set +e
-  bash -c 'set -eo pipefail; source build/envsetup.sh; lunch rmx2072_m2_init-aosp_current-user; m -j2 init_first_stage' \
+  bash -c 'set -eo pipefail
+    source build/envsetup.sh
+    lunch rmx2072_m2_init-aosp_current-user
+    m --skip-ninja init_first_stage
+    python3 "$M2_RECIPE_ROOT/scripts/build/check_m2_ninja_deps.py" --output "$M2_ARTIFACT_DIR/target-dependencies.json"
+    m -j2 init_first_stage' \
     2>&1 | tee "$ARTIFACT_DIR/build-$attempt.log"
   result=${PIPESTATUS[0]}
   set -e

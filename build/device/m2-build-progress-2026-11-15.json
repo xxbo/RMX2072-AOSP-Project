@@ -131,6 +131,18 @@
       ],
       "job_log_sha256": "8925a82b546795e806f01e801cae1853a3153c0079c793b550103b525e3a386f",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43631673665,
+      "source_commit": "ac911af296f373715175aa21f7d8ab1c93e8f313",
+      "result": "FAIL_BUILD",
+      "first_failure": "Native compilation reached 44%; host SQLite is missing real ICU libraries",
+      "selected_log": [
+        "2026-11-14T19:45:14.1749633Z prebuilts/build-tools/path/linux-x86/echo 'module libsqlite missing dependencies: libicui18n, libicuuc' && false",
+        "2026-11-14T19:45:14.1775733Z module libsqlite missing dependencies: libicui18n, libicuuc"
+      ],
+      "job_log_sha256": "90c9940c093b10c4c4b59b2fabf198eb462a66d11790399364cba355ab3cafa3",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -138,9 +150,9 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "source_init_run": 43631673665,
-    "source_init_commit": "ac911af296f373715175aa21f7d8ab1c93e8f313",
-    "selected_projects": 116
+    "source_init_run": null,
+    "selected_projects": 117,
+    "next_change": "Pinned native ICU and read-only inspection of the complete init Ninja command closure"
   },
   "host_tests": {
     "total": 81,

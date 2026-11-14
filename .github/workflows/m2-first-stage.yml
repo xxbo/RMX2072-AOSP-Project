@@ -8,6 +8,7 @@ on:
       - 'scripts/build/*m2*aosp*'
       - 'scripts/build/build_m2_first_stage.sh'
       - 'scripts/build/complete_m2_workspace.py'
+      - 'scripts/build/check_m2_ninja_deps.py'
       - 'device/realme/bladerunner_48m/m2-init/**'
       - 'build/m2-first-stage-source.json'
 permissions:
