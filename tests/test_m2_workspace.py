@@ -18,6 +18,10 @@ class WorkspaceCompletionTest(unittest.TestCase):
     def test_does_not_retry_missing_file_inside_selected_project(self):
         self.assertEqual(missing_projects('system/core/init/missing.cpp: not found', self.manifest, {'system/core'}), [])
 
+    def test_missing_path_question_punctuation_is_recognized(self):
+        nodes = missing_projects('cannot build, missing external/pogreb?', self.manifest, {'system/core'})
+        self.assertEqual([p.get('path') for p in nodes], ['external/pogreb'])
+
     def test_unknown_path_or_module_does_not_add_source(self):
         self.assertEqual(missing_projects('external/unknown/Android.bp: missing; module pogreb not found', self.manifest, set()), [])
 

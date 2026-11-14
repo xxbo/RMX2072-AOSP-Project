@@ -21,7 +21,7 @@ def missing_projects(log, upstream, selected):
         if not re.search(r'not exist|not found|no such file|does not exist|cannot find|missing|failed to find', line, re.I):
             continue
         for path in projects.keys() - selected:
-            if re.search(r'(?<![\w.-])' + re.escape(path) + r'(?=[/\s"\x27:)]|$)', line):
+            if re.search(r'(?<![\w.-])' + re.escape(path) + r'(?=[/\s"\x27:)?]|$)', line):
                 found.add(path)
     return [projects[p] for p in sorted(found)]
 

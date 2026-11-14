@@ -3,7 +3,10 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SOURCE_DIR="${RUNNER_TEMP:?}/rmx2072-m2-aosp"
 ARTIFACT_DIR="$ROOT_DIR/artifacts/m2-first-stage"
+PHASE=${1:-all}
+case "$PHASE" in prepare|build|all) ;; *) exit 2 ;; esac
 mkdir -p "$SOURCE_DIR" "$ARTIFACT_DIR"
+if [[ "$PHASE" != build ]]; then
 python3 "$ROOT_DIR/scripts/build/prepare_m2_aosp_manifest.py" --output "$ARTIFACT_DIR/selected.xml"
 cd "$SOURCE_DIR"
 repo init -u https://android.googlesource.com/platform/manifest -b android-17.0.0_r1 --depth=1 --no-clone-bundle
@@ -20,6 +23,10 @@ git -C packages/services/Car sparse-checkout list > "$ARTIFACT_DIR/car-sparse.tx
 # to init's native libapexd_flags. Keep the implementation, omit only test data.
 git -C system/apex sparse-checkout set --no-cone '/*' '!/apexd/apexd_testdata/'
 git -C system/apex sparse-checkout list > "$ARTIFACT_DIR/apex-sparse.txt"
+# init uses only the AVF C++ flag headers and their upstream build defaults.
+git -C packages/modules/Virtualization sparse-checkout set --no-cone \
+  /Android.bp /build/Android.bp /build/avf_flags.aconfig /libs/libavf_cc_flags/
+git -C packages/modules/Virtualization sparse-checkout list > "$ARTIFACT_DIR/avf-sparse.txt"
 repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
 test "$(git -C system/core rev-parse HEAD)" = 545d2487e38192a2ce25040897ced877cf6b4f53
 mkdir -p device/realme/rmx2072_m2
@@ -30,6 +37,11 @@ cp "$ROOT_DIR/device/realme/bladerunner_48m/m2-init/"* device/realme/rmx2072_m2/
   df -h .
   free -h
 } > "$ARTIFACT_DIR/build-host.txt"
+fi
+if [[ "$PHASE" == prepare ]]; then exit 0; fi
+cd "$SOURCE_DIR"
+test "$(git -C system/core rev-parse HEAD)" = 545d2487e38192a2ce25040897ced877cf6b4f53
+test -s "$ARTIFACT_DIR/resolved-manifest.xml"
 # Unrelated modules in the selected source projects are not built. Missing
 # dependencies of init_first_stage itself remain fatal Ninja build edges.
 export ALLOW_MISSING_DEPENDENCIES=true

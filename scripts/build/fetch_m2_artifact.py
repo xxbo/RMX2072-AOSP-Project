@@ -70,7 +70,8 @@ def main():
         with zipfile.ZipFile(io.BytesIO(archive)) as z:
             wanted = {'init', 'source.json', 'resolved-manifest.xml', 'SHA256SUMS',
                       'build-host.txt', 'elf.txt', 'AndroidProducts.mk', 'BoardConfig.mk',
-                      'rmx2072_m2_init.mk', 'frameworks-base-sparse.txt', 'car-sparse.txt', 'apex-sparse.txt'}
+                      'rmx2072_m2_init.mk', 'frameworks-base-sparse.txt', 'car-sparse.txt',
+                      'apex-sparse.txt', 'avf-sparse.txt'}
             files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
         if files.keys() != wanted:
             raise ValueError('Incomplete first-stage artifact')
