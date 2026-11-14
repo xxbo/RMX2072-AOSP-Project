@@ -172,5 +172,25 @@ Local adbd readiness retained the guard before host acceptance. Enforcing,
 verified UFS system/vendor and the maintenance service remain available.
 The 193.781-second same-boot soak and 1 MiB hash-checked ADB transfer passed.
 This verifies driver binding in GSI; physical disconnected shutdown and
-power-key startup still require operator testing.
+power-key startup were subsequently tested below.
 [Trial 35 evidence](../build/device/m1-pon-gsi-35-2026-11-14.json)
+
+### Disconnected power-key start passed on trial 35
+
+The driver-gated helper scheduled Android `reboot -p` with a 75-second delay.
+USB disappeared before the deadline. After the deadline plus 25 seconds,
+the operator pressed power with USB still disconnected and reported the
+realme logo. USB remained absent for more than 90 seconds after that reply.
+
+Reconnection immediately exposed GSI ADB with new boot
+`9e7b6ff1-f413-4f79-a0df-d91d0c3f9de9`. Measured uptime places kernel startup
+after the shutdown window, within the operator's power-key interval, and at
+least 138.771 seconds before ADB reappeared. The guard had already retained
+locally through adbd; enforcing, UFS mounts, primary PON/PS_HOLD binding,
+the subsequent same-boot soak and 1 MiB transfer passed. The previous console
+and pmsg were absent after this power cycle, so no shutdown notifier log is
+claimed. This passes the operator-controlled disconnected-start test.
+
+Watchdog-triggered recovery must still be repeated on this changed kernel;
+trial 32's full recovery used the earlier kernel.
+[Disconnected-start evidence](../build/device/m1-disconnected-start-35-2026-11-14.json)
