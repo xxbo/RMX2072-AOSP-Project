@@ -959,6 +959,268 @@
           1
         ]
       }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-20",
+      "boot_id": "c8baa5a4-6759-45f4-b3e2-3b6d97344332",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+      "mounts": {
+        "system": {
+          "node": "dm-14",
+          "device": "254:14",
+          "linear_device": "254:0",
+          "super": "8:10",
+          "extents": 16,
+          "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+          "avb_at_seconds": 114.626429,
+          "verity_status": "0 7599128 verity V 0",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        },
+        "vendor": {
+          "node": "dm-15",
+          "device": "254:15",
+          "linear_device": "254:1",
+          "super": "8:10",
+          "extents": 1,
+          "root_sha256": "a12c313120abbee43adfaf8d72dfc76650f292f0a79f8040cc16236a0c37f4be",
+          "avb_at_seconds": 114.706998,
+          "verity_status": "0 32768 verity V -",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        }
+      },
+      "enforcing_seconds": 135.662057,
+      "second_stage_seconds": 135.689921,
+      "file_reads": {
+        "/system/build.prop": {
+          "at_seconds": 135.739083,
+          "pid": 1,
+          "inode": 659,
+          "device": "254:14",
+          "requested_bytes": 5675,
+          "returned_bytes": 5675
+        },
+        "/system/etc/init/hw/init.rc": {
+          "at_seconds": 135.764409,
+          "pid": 1,
+          "inode": 757,
+          "device": "254:14",
+          "requested_bytes": 56913,
+          "returned_bytes": 56913
+        }
+      },
+      "raw_sha256": {
+        "acm.log": "7f9bda2858037e01880158959874f13a3119bdc26838bee1e7d93cf43da09a82",
+        "console-ramoops-0": "6186389ea795d6f58966a93e79600a9c0a2c5761b6218a181b096d0edceda954",
+        "pmsg-ramoops-0": "b01d6507d32112bd6e0640402ddfb50b0f477a667735a5cdd012b12fd48d3b53"
+      },
+      "zygote_imports": {
+        "/system/etc/init/hw/init.zygote64_32.rc": {
+          "at_seconds": 135.772199,
+          "pid": 1,
+          "inode": 762,
+          "device": "254:14",
+          "requested_bytes": 620,
+          "returned_bytes": 620,
+          "parsing_seconds": 135.771773
+        },
+        "/system/etc/init/hw/init.zygote64.rc": {
+          "at_seconds": 135.772946,
+          "pid": 1,
+          "inode": 761,
+          "device": "254:14",
+          "requested_bytes": 901,
+          "returned_bytes": 901,
+          "parsing_seconds": 135.772611
+        },
+        "/system/etc/init/hw/init.boringssl.zygote64_32.rc": {
+          "at_seconds": 135.773629,
+          "pid": 1,
+          "inode": 756,
+          "device": "254:14",
+          "requested_bytes": 392,
+          "returned_bytes": 392,
+          "parsing_seconds": 135.773239
+        }
+      },
+      "vold_fstab": {
+        "at_seconds": 136.686514,
+        "pid": 2269,
+        "inode": 18,
+        "device": "254:15",
+        "requested_bytes": 220,
+        "returned_bytes": 220,
+        "service": "vold",
+        "domain": "u:r:vold:s0",
+        "service_start_seconds": 136.588017,
+        "domain_evidence": "Caller(pid=2269,uid=0,sid=u:r:vold:s0)"
+      },
+      "adb": {
+        "result": "NO_TRANSPORT_OBSERVED",
+        "samples": 93,
+        "errors": 0,
+        "transport_states": [],
+        "interval_seconds": 95.828,
+        "maximum_sample_gap_seconds": 1.172,
+        "diagnostic_acm_seen": true,
+        "raw_sha256": {
+          "adb.jsonl": "c47db96321c582150c659e7ff18d36788be2d880c05a99ee8e1d9be95043f64c",
+          "host-events.jsonl": "714eaee78b38c3a9cb47062599732a2e2bc76f45116cf97a336291b5440319a7"
+        }
+      },
+      "keymaster": {
+        "version_transaction": {
+          "transport_rc": 0,
+          "status": 0,
+          "api": "4.0",
+          "ta": "4.546"
+        },
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ],
+        "gsi_hidl_reply": {
+          "instance": "android.hardware.keymaster@4.0::IKeymasterDevice/default",
+          "service_pid": 2294,
+          "caller": "keystore2",
+          "caller_pid": 2277,
+          "registration_seconds": 137.029543,
+          "reply_seconds": 137.030518,
+          "level": "TEE",
+          "name": "RMX2072 keymaster64 API 4.0 TA 4.546"
+        },
+        "hmac_parameter_reply": {
+          "service_pid": 2294,
+          "caller_pid": 2277,
+          "seconds": 137.033289,
+          "status": 0
+        },
+        "shared_secret_computation_error": {
+          "seconds": 137.03364,
+          "rc": -100
+        }
+      },
+      "first_keystore_abort": null,
+      "keystore_registrations": [
+        {
+          "tid": 2277,
+          "name": "android.security.compat",
+          "rc": 0
+        }
+      ],
+      "qsee_app_lookup_rc": {
+        "keymaster": -2,
+        "keymaster64": 0
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keystore_add_service_attempts": [
+        "android.security.compat"
+      ],
+      "maintenance_last_lookup_failure": "[  173.927204][    T1] init: Control message: Could not find 'aidl/android.security.maintenance' for ctl.interface_start from pid: 2255 (/system/bin/servicemanager)",
+      "vdc": {
+        "pid": 2283,
+        "start": "[  136.846180][    T1] init: SVC_EXEC service 'exec 5 (/system/bin/vdc keymaster earlyBootEnded)' pid 2283 (uid 1000 gid 1000+0 context default) started; waiting...",
+        "exit_record": null
+      },
+      "usb": {
+        "samples": 44,
+        "device_ids": [
+          "VID_1D6B&PID_0104",
+          "VID_1D6B&PID_0104&MI_00"
+        ],
+        "interface_ids": [
+          "USB\\Class_02",
+          "USB\\Class_02&SubClass_02",
+          "USB\\Class_02&SubClass_02&Prot_01"
+        ],
+        "adb_interface_seen": false,
+        "max_gap_seconds": 2.275,
+        "raw_sha256": "ffcdf9112a2c7c031d5818e7feefb117a414f02cd21b4416203d4a7e3e0888a3"
+      },
+      "apex_observations": [
+        "[  135.931054][ T2136] apexd-bootstrap: Found pre-installed APEX /system/apex/com.google.android.adbd.capex",
+        "[  135.969717][ T2136] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.virt.apex",
+        "[  135.969858][ T2136] apexd-bootstrap: Found bootstrap APEX /system/apex/com.google.android.tzdata6.apex",
+        "[  135.970044][ T2136] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.i18n.apex",
+        "[  135.970224][ T2136] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.runtime.apex",
+        "[  136.061413][ T2136] apexd-bootstrap: Activated 4 packages. duration=52ms"
+      ],
+      "keystore_sigabrt_count": 0,
+      "keystore_entropy_waits": [
+        "[  136.807145][ T2277] ks_getrandom: (probe) task=\"keystore2\" bytes=40 flags=1",
+        "[  136.807303][ T2277] ks_gotrandom: (probe) task=\"keystore2\" rc=40",
+        "[  136.926247][ T2277] ks_getrandom: (probe) task=\"keystore2\" bytes=40 flags=1",
+        "[  136.926443][ T2277] ks_gotrandom: (probe) task=\"keystore2\" rc=40",
+        "[  136.926865][ T2277] ks_getrandom: (probe) task=\"keystore2\" bytes=4 flags=1",
+        "[  136.926957][ T2277] ks_gotrandom: (probe) task=\"keystore2\" rc=4",
+        "[  136.927102][ T2277] ks_getrandom: (probe) task=\"keystore2\" bytes=4 flags=1",
+        "[  136.927244][ T2277] ks_gotrandom: (probe) task=\"keystore2\" rc=4",
+        "[  136.937073][ T2277] ks_getrandom: (probe) task=\"keystore2\" bytes=16 flags=4",
+        "[  136.937412][ T2277] ks_gotrandom: (probe) task=\"keystore2\" rc=16",
+        "[  136.938103][ T2286] ks_getrandom: (probe) task=\"keystore2\" bytes=16 flags=4",
+        "[  136.938438][ T2286] ks_gotrandom: (probe) task=\"keystore2\" rc=16"
+      ],
+      "observer_retries": [
+        {
+          "reason": "Initial observer lacked pyserial",
+          "resolution": "Restarted with existing work/serial-deps on the same diagnostic boot",
+          "handoff_utc": "2026-11-14T05:46:24.901094+00:00"
+        }
+      ],
+      "entropy_observation": "Six captured getrandom calls returned the requested byte count; service initialization remained incomplete",
+      "ramdisk_source_commit": "481030587",
+      "build": {
+        "actions_run": 43548003683,
+        "kernel_source_commit": "b9b5790052764e2020f96d64d1b3aab4581e97ec",
+        "artifact_id": 14095738018,
+        "artifact_digest": "sha256:f38b557291344aa627b4b5cad3acd8043adcb7544e345e48365ec6c4a4293314",
+        "kernel_sha256": "c2b9160447856a603aa2091a9fb18190319fdd332ce090ef805b50f076743d0c",
+        "ramdisk_sha256": "4bd42c30cdff845c4fc7f6f87b8471e7fd2578100c87f8c190bbfc46c7931c90",
+        "boot_sha256": "dd810fb47b6121f65710e665142fc1fc6aa7f75fc294a06bf64b6ff0ee81b77a"
+      },
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "39d07b41-85c6-4a56-992e-edabee3776ae",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
     }
   ]
 }
