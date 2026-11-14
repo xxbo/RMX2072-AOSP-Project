@@ -21,10 +21,12 @@ def mark(output, event, boot_id):
                                   utc=datetime.now(timezone.utc).isoformat()))+'\n')
 
 
-def watch_adb(output, stop):
+def watch_adb(output, stop, retain=False):
     """Record transport states, including offline and unauthorized, throughout the trial."""
     start = time.monotonic()
     previous = None
+    accepted = False
+    last_attempt = 0
     with (output/'adb.jsonl').open('x') as log:
         while not stop.is_set():
             try:
@@ -48,14 +50,25 @@ def watch_adb(output, stop):
                             entry.setdefault('identity', {})[fields[0]] = data.splitlines()
                         except (OSError, subprocess.SubprocessError) as error:
                             entry['identity_error'] = str(error)
+            if retain and not accepted and time.monotonic()-last_attempt > 3 and (output/'host-events.jsonl').exists():
+                last_attempt = time.monotonic()
+                try:
+                    from gsi_adb_accept import accept
+                    events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
+                    original = next(x['boot_id'] for x in events if x['event']=='handoff_requested')
+                    if any(row.startswith('RMX2072-M1') and row.split()[1]=='device' for row in state.get('transports', [])):
+                        accept(output, original); accepted=True
+                except (OSError, subprocess.SubprocessError, ValueError, StopIteration) as error:
+                    entry['accept_error'] = str(error)
             previous = state
             log.write(json.dumps(entry)+'\n')
             log.flush()
             stop.wait(1)
 
 
-def previous_boot(trial, original, output, deadline):
+def previous_boot(trial, original, output, deadline, return_on_accepted=True):
     while time.monotonic() < deadline:
+        if return_on_accepted and (output/'gsi-accepted.json').exists(): return
         ports = comports()
         if ports_with_id(ports, EDL):
             return
@@ -132,6 +145,7 @@ def observe(trial, output, timeout):
         with (output/'acm.log').open('xb') as capture:
             tail = b''
             while time.monotonic() < deadline:
+                if (output/'gsi-accepted.json').exists(): break
                 try:
                     data = console.read(16384)
                 except SerialException:
@@ -146,7 +160,7 @@ def observe(trial, output, timeout):
                     mark(output, 'post_install_window_end', original)
                     break
                 tail = tail[-64:]
-    previous_boot(trial, original, output, time.monotonic()+180)
+    previous_boot(trial, original, output, time.monotonic()+300)
 
 
 if __name__ == '__main__':
@@ -155,11 +169,12 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--wait', type=int, default=120)
     parser.add_argument('--observe-adb', action='store_true')
+    parser.add_argument('--retain-gsi', action='store_true')
     args = parser.parse_args()
     stop = threading.Event()
     args.output.mkdir(parents=True, exist_ok=False)
     if args.observe_adb:
-        monitor = threading.Thread(target=watch_adb, args=(args.output, stop))
+        monitor = threading.Thread(target=watch_adb, args=(args.output, stop, args.retain_gsi))
         monitor.start()
     try:
         observe(args.trial, args.output, args.wait)

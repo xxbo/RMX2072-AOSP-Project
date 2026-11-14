@@ -33,7 +33,7 @@ def image_profile(path, name, key_digest):
     return key, dict(sha256=full, key_sha256=key_digest, bytes=size, tree=tree)
 
 
-def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False, keymaster_info=False):
+def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False, keymaster_info=False, usb_guard=None):
     reference = json.loads((ROOT/'build/device/gsi17-mount-reference.json').read_text())
     inputs = [('system', system, reference['key_sha256']),
               ('vendor', vendor, hashlib.sha256(vendor_key.read_bytes()).hexdigest())]
@@ -55,7 +55,7 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
                  for p in source.rglob('*') if p.is_file()}
         if keymaster_reference or keymaster_info:
             from stage_keymaster_reference import inventory
-            project, blobs = inventory(keymaster_info)
+            project, blobs = inventory(keymaster_info, usb_guard)
             files = {path: hashlib.sha256(data).hexdigest() for path, data in project.items()} | blobs
         if files != report['files']:
             raise ValueError('Vendor report differs from the project sources')
@@ -65,7 +65,9 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
         expected = control['trials'][-1]['vendor_image_sha256']
     if payload != expected:
         raise ValueError('Signed vendor filesystem differs from the specified build')
-    output.mkdir(parents=True, exist_ok=False)
+    if output.exists() and any(p.name not in {'system.avbpubkey','vendor.avbpubkey','signed.json'} or not p.is_file() for p in output.iterdir()):
+        raise ValueError('Refuse to replace an unrecognized verification directory')
+    output.mkdir(parents=True, exist_ok=True)
     for name, key in keys.items():
         (output/(name+'.avbpubkey')).write_bytes(key)
     (output/'signed.json').write_text(json.dumps(records, indent=2) + '\n')
@@ -79,8 +81,10 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--keymaster-reference', action='store_true', help='Check the pinned private F.20 comparison inventory')
     group.add_argument('--keymaster-info', action='store_true', help='Check source-built info HAL and AOSP VNDK hashes')
+    parser.add_argument('--usb-guard', type=Path)
     args = parser.parse_args()
+    if args.usb_guard and not args.keymaster_info: parser.error('--usb-guard requires --keymaster-info')
     if (args.keymaster_reference or args.keymaster_info) and not args.vendor_report:
         parser.error('A Keymaster profile requires its image report')
     prepare(args.system, args.vendor, args.vendor_key, args.output, args.vendor_report,
-            args.keymaster_reference, args.keymaster_info)
+            args.keymaster_reference, args.keymaster_info, args.usb_guard)

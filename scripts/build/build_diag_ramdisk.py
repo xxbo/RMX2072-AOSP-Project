@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build a deterministic RAM-only diagnostic initramfs from verified static BusyBox."""
 import argparse
+import base64
 import gzip
 import hashlib
 import io
@@ -52,6 +53,7 @@ def main():
                    help='UFS first-stage profile with signed system and vendor public keys')
     p.add_argument('--scratch-volumes', type=pathlib.Path,
                    help='CI-built ext4 fixtures for a volatile UFS service trial')
+    p.add_argument('--adb-public-key', type=pathlib.Path, help='Authorized host public key for guarded GSI ADB trial')
     p.add_argument('--trace-init-fault', action='store_true', help='Trace PID 1 file faults and failed block completions')
     p.add_argument('--gsi-block-seed', type=pathlib.Path, help='Original GSI blocks and ranges for the RAM-backed comparison')
     p.add_argument('--gsi-init-probe', type=pathlib.Path,
@@ -63,6 +65,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.adb_public_key and not a.scratch_volumes:
+        p.error('Guarded ADB requires the existing writable scratch volumes')
     if a.scratch_volumes and not a.ufs_first_stage:
         p.error('Writable scratch mounts require the UFS profile')
     if a.ufs_first_stage and (not a.android_first_stage or not a.super_tools_apks or
@@ -205,6 +209,13 @@ def main():
                     add(name+'.ext4.sha256', 0o100444, (info['sha256']+'\n').encode())
                 script = (root/'scripts/device_audit/ufs_scratch.sh').read_bytes().replace(b'\r\n', b'\n')
                 add('bin/ufs-scratch', 0o100755, script)
+                if a.adb_public_key:
+                    key = a.adb_public_key.read_text().strip().split()[0]
+                    decoded = base64.b64decode(key, validate=True)
+                    if len(decoded) != 524 or struct.unpack_from('<I', decoded)[0] != 64:
+                        raise ValueError('Expected an Android RSA public key, never a private key')
+                    add('m1-adb-public-key', 0o100400, (key+' M1-host\n').encode())
+                    add('m1-usb-guard', 0o100444, b'1\n')
         if a.gsi_usb_reader:
             reader = read_static_arm64(a.gsi_usb_reader)
             add('bin/gsi-usb-reader', 0o100755, reader)
@@ -301,6 +312,9 @@ def main():
                   cpio_sha256=hashlib.sha256(archive).hexdigest(),
                   gzip_sha256=hashlib.sha256(data.getvalue()).hexdigest(),
                   scope='USB serial shell in RAM; no block mounts or handset writes')
+    if a.adb_public_key:
+        report['adb_public_key_sha256'] = hashlib.sha256((key+' M1-host\n').encode()).hexdigest()
+        report['guarded_adb'] = True
     if a.ufs_reset_info:
         report['ufs_reset_info_sha256'] = hashlib.sha256(line_info).hexdigest()
     if a.ufs_phy_cycle:

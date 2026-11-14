@@ -4,8 +4,8 @@ Workspace layout: recovery/f20, recovery/tools, recovery/OplusEdlTool/Tools,
 serial-deps, current/{boot,kernel,candidate,volumes}, and records. All large
 readback files are removed only after their expected digest matches. No
 partition outside boot and super is programmed. Original userdata is untouched.
-A detected API 37 ADB boot retains the GSI layout after the bounded return;
-that state still needs a watchdog handoff before sustained GSI debugging.
+The guarded profile keeps GSI running only after authenticated identity checks,
+a renewable watchdog lease and a 190-second ADB soak; failures recover to F.20.
 """
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--workspace', type=Path, required=True)
     parser.add_argument('--trial', required=True)
     parser.add_argument('--restore-only', action='store_true')
+    parser.add_argument('--retain-gsi', action='store_true')
     args = parser.parse_args()
     sys.path.insert(0, str(args.workspace.resolve()/'serial-deps'))
     from serial.tools.list_ports import comports
@@ -126,7 +127,10 @@ def main():
     assert phone('sha256sum /dev/block/by-name/super',240).split()[0]==candidate['source_sha256']
     geometry=phone('readlink -f /dev/block/by-name/super; cat /sys/class/block/sda10/start /sys/class/block/sda10/size /sys/class/block/sda/queue/logical_block_size').splitlines()
     assert geometry==['/dev/block/sda10','1544256','17317888','4096']
-    (dest/'inputs.json').write_text(json.dumps(dict(trial=trial,kernel=json.loads((p/'kernel/provenance.json').read_text()),boot=boot,candidate=candidate,scratch=json.loads((p/'volumes/scratch.json').read_text())),indent=2)+'\n')
+    if args.retain_gsi:
+     rd=json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())
+     assert rd.get('guarded_adb') and rd['trial_id']==trial
+    (dest/'inputs.json').write_text(json.dumps(dict(trial=trial,source_commit=subprocess.check_output(['git','-C',str(audit.parents[1]),'rev-parse','HEAD'],text=True).strip(),kernel=json.loads((p/'kernel/provenance.json').read_text()),boot=boot,candidate=candidate,scratch=json.loads((p/'volumes/scratch.json').read_text()),usb_build=json.loads((p/'usb-build.json').read_text()) if args.retain_gsi else None,ramdisk=json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())),indent=2)+'\n')
     event('F.20 identity, geometry, complete original and candidate images verified')
     enter('entry',True);read_boot('before',orig['partitions']['boot']['sha256'])
     try:
@@ -139,18 +143,40 @@ def main():
     event('Candidate boot and full super readback passed; starting physical test')
     env=dict(os.environ,PYTHONPATH=str(w/'serial-deps'))
     with (dest/'observer.log').open('xb') as log,(dest/'usb-observer.log').open('xb') as usb_log:
-     observer=subprocess.Popen([sys.executable,'-u',audit/'observe_ufs_first_stage.py','--trial',trial,'--output',dest/'live','--observe-adb'],stdout=log,stderr=subprocess.STDOUT,env=env)
+     observer=subprocess.Popen([sys.executable,'-u',audit/'observe_ufs_first_stage.py','--trial',trial,'--output',dest/'live','--observe-adb']+(['--retain-gsi'] if args.retain_gsi else []),stdout=log,stderr=subprocess.STDOUT,env=env)
      usb=subprocess.Popen(['pwsh','-NoProfile','-File',audit/'watch_trial_usb.ps1','-Output',dest/'usb.jsonl','-HandoffEvents',dest/'live/host-events.jsonl'],stdout=usb_log,stderr=subprocess.STDOUT)
      end=time.monotonic()+20
      while not (dest/'usb.jsonl').exists() and time.monotonic()<end:
       if usb.poll() is not None:raise RuntimeError('USB observer failed before reset')
       time.sleep(.3)
      assert (dest/'usb.jsonl').exists()
-     reset('test-reset');enter('return')
+     reset('test-reset')
+     retained = False
+     until = time.monotonic()+450
+     while time.monotonic()<until:
+      if args.retain_gsi and (dest/'live/gsi-accepted.json').exists():
+       from gsi_adb_accept import soak_and_retain
+       event('Authenticated API 37 ADB accepted; checking renewable watchdog lease for 190 seconds')
+       try:
+        soak_and_retain(dest/'live');retained=True
+       except (OSError,subprocess.SubprocessError,ValueError) as error:
+        event('ADB soak failed; watchdog lease will expire: '+str(error))
+        from observe_ufs_first_stage import previous_boot
+        from uuid import UUID
+        original=json.loads((dest/'live/gsi-accepted.json').read_text())['identity'][2]
+        previous_boot(trial,UUID(original),dest/'live',time.monotonic()+300,return_on_accepted=False)
+       break
+      if any((x.vid,x.pid)==(0x05c6,0x9008) for x in comports()):break
+      time.sleep(1)
+     if not retained:enter('return')
      try:observer.wait(timeout=10)
      except subprocess.TimeoutExpired:observer.terminate();observer.wait(5)
      try:usb.wait(timeout=10)
      except subprocess.TimeoutExpired:usb.terminate();usb.wait(5)
+    if retained:
+     (dest/'gsi-retained.json').write_text(json.dumps(dict(current_mode='Android 17 GSI',candidate_super_retained=True,stock_restored=False,stable=json.loads((dest/'live/gsi-stable.json').read_text())),indent=2)+'\n')
+     event('GSI ADB stable across old timers; guardian retained and phone left running Android 17')
+     return
     read_boot('return',boot['boot_sha256'])
     adb_log=dest/'live/adb.jsonl'
     identities=[]
@@ -163,7 +189,7 @@ def main():
       for serial,identity in json.loads(line).get('identity',{}).items():
        if len(identity)>=5 and identity[1]=='37' and identity[2]=='running' and identity[3]==expected_release and identity[4]==original_boot:
         identities.append(dict(serial=serial,identity=identity))
-    if identities:
+    if identities and not args.retain_gsi:
      (dest/'gsi-retained.json').write_text(json.dumps(dict(gsi_adb_observed=identities,current_mode='EDL after bounded watchdog trial',candidate_super_retained=True,stock_restored=False),indent=2)+'\n')
      event('API 37 ADB was observed; retaining GSI layout for follow-up boot and watchdog handoff')
     else:restore()

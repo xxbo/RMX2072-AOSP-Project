@@ -14,7 +14,7 @@ EPOCH = 1230768000
 UUID = '896e7471-c34c-40c8-b854-8efe96b80533'
 
 
-def build(output, reference=None, info=None):
+def build(output, reference=None, info=None, usb_guard=None):
     output = output.resolve()
     if ROOT in output.parents or output == ROOT:
         raise ValueError('Select an output outside the checkout')
@@ -23,7 +23,7 @@ def build(output, reference=None, info=None):
         from stage_keymaster_reference import stage
         with tempfile.TemporaryDirectory(dir=output) as tmp:
             source = Path(tmp) / 'vendor'
-            stage(info or reference, source, bool(info))
+            stage(info or reference, source, bool(info), usb_guard)
             return build_image(source, output, 16 * 1024 * 1024)
     return build_image(SOURCE, output, 2 * 1024 * 1024)
 
@@ -102,5 +102,7 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--keymaster-reference', type=Path, help='Directory of pinned private F.20 ELF inputs')
     group.add_argument('--keymaster-info', type=Path, help='Project info HAL and pinned AOSP VNDK libraries')
+    parser.add_argument('--usb-guard', type=Path, help='Source-built M1 watchdog/ADB guardian')
     args = parser.parse_args()
-    print(build(args.output, args.keymaster_reference, args.keymaster_info))
+    if args.usb_guard and not args.keymaster_info: parser.error('--usb-guard requires --keymaster-info')
+    print(build(args.output, args.keymaster_reference, args.keymaster_info, args.usb_guard))

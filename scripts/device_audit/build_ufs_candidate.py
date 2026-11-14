@@ -93,7 +93,10 @@ def build(stock, system, vendor, profile, output):
             raise ValueError('Stock logical partition differs: ' + name)
     sizes = {name: signed[name]['bytes'] for name in ('system', 'vendor')}
     new_prefix, targets, limit, total = make_candidate(prefix, sizes)
-    output.mkdir(parents=True, exist_ok=False)
+    allowed = {name for name, _, _ in chunks()} | {'candidate.json','candidate.xml','layout.json'}
+    if output.resolve() == stock.resolve() or (output.exists() and any(p.name not in allowed or not p.is_file() for p in output.iterdir())):
+        raise ValueError('Refuse to overwrite recovery or an unrecognized candidate directory')
+    output.mkdir(parents=True, exist_ok=True)
     for name, _, _ in chunks():
         shutil.copyfile(stock/name, output/name)
     target = ChunkedImage([output/name for name, _, _ in chunks()], CHUNK*UFS_SECTOR, writable=True)

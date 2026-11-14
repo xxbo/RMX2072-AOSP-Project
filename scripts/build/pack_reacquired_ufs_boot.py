@@ -114,7 +114,9 @@ def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha25
     raw[576:608] = image_id(raw)
     raw.extend(bytes(-len(raw)%4096))
     result, envelope = retain_envelope(source, raw)
-    output.mkdir(parents=True, exist_ok=False)
+    if output.exists() and any(p.name not in {'boot-diag.img','control.json'} or not p.is_file() for p in output.iterdir()):
+        raise ValueError('Refuse to replace an unrecognized boot output directory')
+    output.mkdir(parents=True, exist_ok=True)
     path = output/'boot-diag.img'
     path.write_bytes(result)
     packed = inspect(path)['trees']

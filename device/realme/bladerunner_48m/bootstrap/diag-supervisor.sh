@@ -21,6 +21,7 @@ if [ -r /control-return-seconds ]; then
         /bin/reboot-edl edl > /dev/kmsg 2>&1
         record phase=control-return-failed
     ) &
+    echo $! > /control-return-pid
 fi
 if [ -x /bin/entry-carry ]; then
     /bin/busybox mkdir -p /sys/fs/pstore

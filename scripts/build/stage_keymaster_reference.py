@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEVICE = ROOT / 'device/realme/bladerunner_48m'
 
 
-def inventory(info=False):
+def inventory(info=False, usb_guard=None):
     base = DEVICE / 'm1-vendor'
     ref = DEVICE / 'm1-keymaster-reference'
     files = {'/' + f.relative_to(base).as_posix(): f.read_bytes().replace(b'\r\n', b'\n')
@@ -28,13 +28,23 @@ def inventory(info=False):
             (base / 'etc/selinux/vendor_file_contexts').read_bytes().replace(b'\r\n', b'\n') +
             b'/vendor/bin/hw/rmx-keymaster-info-service u:object_r:rmx_keymaster_exec:s0\n')
         blobs = json.loads((src / 'inputs.json').read_text())
+    if usb_guard:
+        from build_diag_ramdisk import read_static_arm64
+        usb = DEVICE / 'm1-usb'
+        files['/bin/hw/rmx-m1-guard'] = read_static_arm64(usb_guard)
+        files['/bin/hw/rmx-m1-control'] = files['/bin/hw/rmx-m1-guard']
+        files['/etc/init/rmx-m1-usb.rc'] = (usb/'usb.rc').read_bytes().replace(b'\r\n', b'\n')
+        files['/etc/selinux/vendor_sepolicy.cil'] += (usb/'guard.cil').read_bytes().replace(b'\r\n', b'\n')
+        files['/etc/selinux/vendor_file_contexts'] += b'/vendor/bin/hw/rmx-m1-guard u:object_r:rmx_m1_guard_exec:s0\n/vendor/bin/hw/rmx-m1-control u:object_r:vendor_shell_exec:s0\n/dev/socket/rmx_m1_guard u:object_r:rmx_m1_guard_socket:s0\n'
+        files['/etc/selinux/vendor_property_contexts'] = b'vendor.rmx.m1. u:object_r:rmx_m1_control_prop:s0 prefix string\n'
+        files['/etc/ueventd.rc'] += b'/dev/watchdog 0600 root root\n'
     return files, blobs
 
 
-def stage(reference, output, info=False):
+def stage(reference, output, info=False, usb_guard=None):
     if ROOT == output.resolve() or ROOT in output.resolve().parents:
         raise ValueError('The extracted F.20 files belong in a private output directory')
-    files, blobs = inventory(info)
+    files, blobs = inventory(info, usb_guard)
     for path, digest in blobs.items():
         data = (reference / Path(path).name).read_bytes()
         if data[:6] != b'\x7fELF\x02\x01' or hashlib.sha256(data).hexdigest() != digest:

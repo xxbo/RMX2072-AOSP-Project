@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/xattr.h>
 #include <sys/mount.h>
 #include <sys/ptrace.h>
 #include <sys/socket.h>
@@ -232,6 +233,7 @@ static int is_policy_setup(void) {
 }
 
 static void observe(int vendor_trial) {
+    int usb_guard = !access("/m1-usb-guard", F_OK);
     struct stat expected;
     int policy_fd = -1, opening = 0, writing = 0, watchdog = -1;
     unsigned long long count = 0;
@@ -299,6 +301,21 @@ static void observe(int vendor_trial) {
                         watchdog = open("/run/m1/watchdog", O_WRONLY | O_CLOEXEC);
                         if (watchdog < 0 || ioctl(watchdog, WDIOC_GETTIMEOUT, &timeout) < 0)
                             hold("watchdog-open-failed");
+                        if (usb_guard) {
+                            timeout = 120;
+                            if (ioctl(watchdog, WDIOC_SETTIMEOUT, &timeout) || timeout != 120)
+                                hold("guard-timeout-failed");
+                            FILE *timer = fopen("/control-return-pid", "r");
+                            int timer_pid = 0;
+                            if (!timer || fscanf(timer, "%d", &timer_pid) != 1 || timer_pid <= 1)
+                                hold("guard-timer-pid-failed");
+                            fclose(timer);
+                            if (kill(timer_pid, SIGTERM)) hold("guard-timer-cancel-failed");
+                            report("usb_guard=handoff watchdog_seconds=%d old_timer_cancelled=1", timeout);
+                            /* Release ownership without magic close; hardware remains armed.
+                             * Android's oneshot guard must reopen it within 120 seconds. */
+                            close(watchdog); watchdog = -1;
+                        }
                         if (lseek(kernel_log, 0, SEEK_END) < 0) fail("seek kernel log");
                         report("policy_open_entry path=%s watchdog_seconds=%d", path, timeout);
                         opening = 1;
@@ -316,6 +333,7 @@ static void observe(int vendor_trial) {
                 if (info.exit.rval <= 0 || (unsigned long long)info.exit.rval != count)
                     hold("policy-write-error");
                 if (ptrace(PTRACE_DETACH, PID_ONE, NULL, NULL)) fail("detach after policy write");
+                if (usb_guard) _exit(0);
                 post_install();
             } else if (info.op == PTRACE_SYSCALL_INFO_EXIT && in_mount) {
                 report("mount_pid=1 source=%s target=%s fs=%s flags=%#lx rc=%lld",
@@ -342,6 +360,12 @@ static void scratch_mount(const char *name) {
     char source[64], target[64];
     snprintf(source, sizeof(source), "/run/m1-scratch/%s-loop", name);
     snprintf(target, sizeof(target), "/%s", name);
+    char key[768] = {0};
+    int key_bytes = 0;
+    if (!strcmp(name, "data") && !access("/m1-usb-guard", F_OK)) {
+        key_bytes = read_proc("/m1-adb-public-key", key, sizeof(key));
+        if (key_bytes <= 0 || key_bytes >= (int)sizeof(key)) fail("authorized public key");
+    }
     int loop = open(source, O_PATH | O_CLOEXEC);
     int root = open("/proc/1/root", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
     if (loop < 0 || root < 0) fail("pin scratch device and Android root");
@@ -362,6 +386,17 @@ static void scratch_mount(const char *name) {
     int fd = open(sentinel, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0600);
     if (fd < 0 || write(fd, "M1", 2) != 2 || fsync(fd) || close(fd) || unlink(sentinel))
         fail("verify RAM ext4 write");
+    if (key_bytes) {
+        static const char label[] = "u:object_r:adb_keys_file:s0";
+        if (mkdir("/data/misc/adb", 02750) || chown("/data/misc/adb", 1000, 2000) ||
+            chmod("/data/misc/adb", 02750) ||
+            setxattr("/data/misc/adb", "security.selinux", label, sizeof(label), 0))
+            fail("label adb directory");
+        fd = open("/data/misc/adb/adb_keys", O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0640);
+        if (fd < 0 || write(fd, key, key_bytes) != key_bytes || fchown(fd, 1000, 2000) ||
+            fsetxattr(fd, "security.selinux", label, sizeof(label), 0) || fsync(fd) || close(fd))
+            fail("install authorized public key");
+    }
 }
 
 int main(int argc, char **argv) {
