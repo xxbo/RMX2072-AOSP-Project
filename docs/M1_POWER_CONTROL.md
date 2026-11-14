@@ -79,3 +79,24 @@ trial additionally publishes read-only deferred-probe, SPMI device/driver and
 early power-log snapshots to scratch data, before policy installation. Missing
 optional snapshot entries do not stop Android boot. No PON conversion or new
 poweroff driver is included in that control.
+
+## Separate PON/poweroff compile candidate
+
+The optional `pon_power` workflow input adds `INPUT_PM8941_PWRKEY` and
+`POWER_RESET_MSM`. A narrow patch lets the upstream pm8941 power-key driver
+use the measured legacy primary PON node directly: Kona MTP, dtsi_no 20607,
+SPMI SID 0, PON reg `<0x800 0x100>`, system-reset flag and the exact two
+captured interrupt specifiers are required. Probe also requires GEN2_PRIMARY
+subtype. Secondary/modem PON nodes are rejected. This avoids replacing the
+original DTBO during M1; M2 removes the alias in favor of project source DTs.
+
+The compatibility profile preserves firmware pull-up and hardware debounce
+settings, reads the hardware debounce for software filtering, and uses the
+existing upstream PS_HOLD notifier on explicit shutdown/restart. It does not
+configure the PMIC watchdog or write reboot-reason spare registers. The
+upstream MSM poweroff driver maps the measured first PS_HOLD resource at
+0xc264000 (4 bytes); the second resource at 0x1fd3000 remains the existing
+EDL selector. This is a separate compile candidate, not included in trials
+31/32 and not yet a hardware-verified shutdown fix. First qualify PDC/SPMI
+with the existing kernel, then inspect the new driver binding and notifier
+logs before repeating the physical disconnected start.

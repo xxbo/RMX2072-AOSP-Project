@@ -57,6 +57,10 @@ done
         cat "$device/uevent"
     done
     echo POWER_LOG
+    for device in /sys/bus/platform/devices/*power-on* /sys/bus/platform/devices/*restart*; do
+        [ -e "$device" ] || continue
+        printf 'PLATFORM=%s DRIVER=%s\n' "${device##*/}" "$(readlink -f "$device/driver")"
+    done
     dmesg | grep -iE 'spmi|pmic|pdc|psci|power.?off|pon@|pwrkey' || true
 } > /run/m1-power.txt 2>&1 || true
 /bin/busybox sh /bin/first-stage-mount ufs install > /run/gsi17-run.log 2>&1
