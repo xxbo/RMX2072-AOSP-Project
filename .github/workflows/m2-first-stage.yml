@@ -1,0 +1,37 @@
+name: M2 source-built first-stage init
+on:
+  workflow_dispatch:
+  push:
+    branches: [bringup/m2-source-boot]
+    paths:
+      - '.github/workflows/m2-first-stage.yml'
+      - 'scripts/build/*m2*aosp*'
+      - 'scripts/build/build_m2_first_stage.sh'
+      - 'device/realme/bladerunner_48m/m2-init/**'
+      - 'build/m2-first-stage-source.json'
+permissions:
+  contents: read
+concurrency:
+  group: m2-first-stage-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install source build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y repo git-core gnupg flex bison build-essential zip curl zlib1g-dev libc6-dev-i386 libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
+      - name: Build pinned Android first-stage init
+        run: bash scripts/build/build_m2_first_stage.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m2-first-stage-${{ github.run_number }}
+          path: artifacts/m2-first-stage/
+          if-no-files-found: error
+          retention-days: 7
