@@ -93,7 +93,9 @@ original DTBO during M1; M2 removes the alias in favor of project source DTs.
 The compatibility profile preserves firmware pull-up and hardware debounce
 settings, reads the hardware debounce for software filtering, and uses the
 existing upstream PS_HOLD notifier on explicit shutdown/restart. It does not
-configure the PMIC watchdog or write reboot-reason spare registers. The
+configure the PMIC watchdog or write reboot-reason spare registers. Its
+legacy notifier runs after the board SCM EDL notifier, so the warm reset type
+is selected before programming PON. The
 upstream MSM poweroff driver maps the measured first PS_HOLD resource at
 0xc264000 (4 bytes); the second resource at 0x1fd3000 remains the existing
 EDL selector. This is a separate compile candidate, not included in trials

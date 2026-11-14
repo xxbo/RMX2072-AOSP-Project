@@ -89,7 +89,17 @@
  	error = of_property_read_u32(pdev->dev.of_node, "linux,code",
  				     &pwrkey->code);
  	if (error) {
-@@ -462,7 +509,18 @@
+@@ -395,6 +442,9 @@
+ 
+ 	if (pwrkey->data->supports_ps_hold_poff_config) {
+ 		pwrkey->reboot_notifier.notifier_call = pm8941_reboot_notify;
++		/* The board SCM notifier must select warm EDL before PON type. */
++		if (legacy)
++			pwrkey->reboot_notifier.priority = -128;
+ 		error = register_reboot_notifier(&pwrkey->reboot_notifier);
+ 		if (error) {
+ 			dev_err(&pdev->dev, "failed to register reboot notifier: %d\n",
+@@ -462,7 +512,18 @@
  	.wakeup_source_default = false,
  };
  
