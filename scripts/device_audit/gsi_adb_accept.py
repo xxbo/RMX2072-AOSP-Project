@@ -1,5 +1,6 @@
 """Accept a guarded GSI boot only through an authenticated, matching ADB shell."""
 import json
+import re
 from pathlib import Path
 import subprocess
 import time
@@ -9,6 +10,28 @@ SERIAL = 'RMX2072-M1'
 
 def shell(command, timeout=8):
     return subprocess.check_output(['adb','-s',SERIAL,'shell',command], text=True, timeout=timeout, stderr=subprocess.STDOUT).replace('\r','')
+
+def verified_ufs_graph(mounts, backing):
+    rows = [x.split() for x in mounts.splitlines()]
+    roots = []
+    for point in ('/', '/vendor'):
+        row = next((x for x in rows if len(x)>=4 and x[1]==point and x[2]=='ext4' and x[3].split(',')[0]=='ro'),None)
+        if not row or not re.fullmatch(r'/dev/block/dm-\d+',row[0]):
+            raise ValueError('Unexpected verified mount source: '+point)
+        roots.append(row[0].rsplit('/',1)[1])
+    graph={};node=None
+    for line in backing.splitlines():
+        if line.startswith('NODE='):
+            node=line[5:];graph[node]=[]
+        elif line.startswith('SLAVE=') and node:graph[node].append(line[6:])
+    def leaves(node, seen):
+        if node in seen:raise ValueError('Device mapper cycle')
+        if node=='sda10':return {node}
+        if not re.fullmatch(r'dm-\d+',node) or not graph.get(node):raise ValueError('Incomplete UFS mapping')
+        return set().union(*(leaves(child,seen|{node}) for child in graph[node]))
+    if '/1d84000.ufs/' not in backing or any(leaves(x,set())!={'sda10'} for x in roots):
+        raise ValueError('System/vendor do not both map to UFS super')
+    return graph
 
 def inspect(output, original):
     identity = shell('getprop ro.build.version.sdk; uname -r; cat /proc/sys/kernel/random/boot_id; getenforce; getprop init.svc.adbd; getprop init.svc.vendor.rmx-m1-guard; getprop vendor.rmx.m1.state; getprop sys.usb.state').splitlines()
@@ -22,10 +45,9 @@ def inspect(output, original):
         raise ValueError('Verified read-only vendor mount absent')
     if not any(' / ext4 ro,' in l or ' /system ext4 ro,' in l for l in mounts.splitlines()):
         raise ValueError('Read-only GSI mount absent')
-    backing = shell('readlink -f /sys/class/block/sda10; ls -l /sys/class/block/dm-*/slaves')
-    if '/1d84000.ufs/' not in backing or 'sda10' not in backing:
-        raise ValueError('UFS super backing not visible')
-    return dict(identity=identity,pid1=init,mounts=mounts,backing=backing)
+    backing = shell('readlink -f /sys/class/block/sda10; for n in /sys/class/block/dm-*; do echo NODE=${n##*/}; for s in $n/slaves/*; do [ ! -e "$s" ] || echo SLAVE=${s##*/}; done; done')
+    graph = verified_ufs_graph(mounts,backing)
+    return dict(identity=identity,pid1=init,mounts=mounts,backing=backing,ufs_graph=graph)
 
 def accept(output, original):
     proof = inspect(output, original)

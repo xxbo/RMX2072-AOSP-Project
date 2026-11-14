@@ -8,7 +8,7 @@ P=Path(__file__).resolve().parents[1]/'scripts/device_audit/gsi_adb_accept.py'
 spec=importlib.util.spec_from_file_location('gsi_accept',P);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 BOOT='36f78fb1-b358-4aac-996e-a65775b23da6'
 IDENTITY='\n'.join(['37',m.RELEASE,BOOT,'Enforcing','running','running','armed','adb'])+'\n'
-RESP=[IDENTITY,'/system/bin/init\x00second_stage\x00','/dev/block/dm-14 / ext4 ro,seclabel 0 0\n/dev/block/dm-15 /vendor ext4 ro,seclabel 0 0\n','/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/sda10\nsda10\n']
+RESP=[IDENTITY,'/system/bin/init\x00second_stage\x00','/dev/block/dm-14 / ext4 ro,seclabel 0 0\n/dev/block/dm-15 /vendor ext4 ro,seclabel 0 0\n','/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/sda10\nNODE=dm-14\nSLAVE=dm-0\nNODE=dm-0\nSLAVE=sda10\nNODE=dm-15\nSLAVE=dm-1\nNODE=dm-1\nSLAVE=sda10\n']
 
 class GsiAcceptanceTests(unittest.TestCase):
     def test_wrong_boot_never_requests_keep(self):
@@ -17,6 +17,9 @@ class GsiAcceptanceTests(unittest.TestCase):
             self.assertEqual(sh.call_count,1)
     def test_missing_ufs_backing_cannot_be_accepted(self):
         with patch.object(m,'shell',side_effect=RESP[:3]+['loop0']):
+            with self.assertRaises(ValueError):m.inspect(Path('.'),BOOT)
+    def test_unrelated_ufs_device_cannot_validate_loop_backing(self):
+        with patch.object(m,'shell',side_effect=RESP[:3]+[RESP[3].replace('SLAVE=sda10','SLAVE=loop0')]):
             with self.assertRaises(ValueError):m.inspect(Path('.'),BOOT)
     def test_missing_pid_one_cannot_be_accepted(self):
         with patch.object(m,'shell',side_effect=[IDENTITY,'Permission denied']):
