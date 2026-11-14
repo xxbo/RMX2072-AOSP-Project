@@ -44,6 +44,7 @@ def main():
     if (trial/'boot-only-source.json').exists():
         source=load(trial/'boot-only-source.json')
         record['boot_only_update']={key:source[key] for key in ('previous_record','previous_boot_sha256')}
+    if (live/'power-providers.txt').exists():record['early_power_providers']=(live/'power-providers.txt').read_text()
     if (restore/'restored.json').exists():
         record['restored']=load(restore/'restored.json')
         record['restore_readbacks']=[json.loads(x) for x in (restore/'readbacks.jsonl').read_text().splitlines()]

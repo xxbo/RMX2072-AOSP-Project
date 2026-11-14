@@ -1,0 +1,2340 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-32",
+  "inputs": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-32",
+    "source_commit": "22d893dfc948ae95c5944b5583010e0394d4d596",
+    "kernel": {
+      "run_id": 43574920850,
+      "source_commit": "b45b1f1820fcd7a97280cadb507c28a81c7d394a",
+      "artifact_id": 14106453505,
+      "artifact_archive_digest": "sha256:cd7ea4d78df42004a6350eeb89d6d0e3ffb7c4787c1b1625a20d9ca475f4540b",
+      "archive_digest_verified": false,
+      "selected_member_sha256": {
+        "SHA256SUMS": "275e7b4cf3cfc528ed54632a4e43a2d6f2f8fc1e0dd0e6c4c850b049b76799a5",
+        "build-metadata.txt": "1d49fd730711a6628b77699f9f2324d0f1cf25ba383e9f1e8995dda516ccbb2e",
+        "dist/Image.gz": "fcb43fcaad10b94c9cbfeba7eb99c3b5102c343ec1234fa5727b063d74924ffe",
+        "dist/kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+        "dist/sm8250_bootstrap_dot_config": "661bfc1300e47c348f21b724f008cf627ac0e94e9eff78016a7e811b930d6f38",
+        "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+        "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+        "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+        "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+        "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+      },
+      "image_sha256": "fce9822138a0f763a9661d84c5679fcc13d92e4f5f6983e19e45572c1bcdcaab",
+      "source_digests_verified": true
+    },
+    "boot": {
+      "source_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "boot_sha256": "6d67afcac69a29dd7a83837c752134eaad740ee30607d0a57d42d6915ffeddf1",
+      "kernel_sha256": "fce9822138a0f763a9661d84c5679fcc13d92e4f5f6983e19e45572c1bcdcaab",
+      "entry_probe": false,
+      "ramdisk_sha256": "f84dc524c7ec2bf0ade35540788e96256824851a8d8df39dc17adecb8c6273af",
+      "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+      "selected_base_sha256": "bfb4d8f788cb1d2e219100bde454d8a4caf62df561972a31f71e7ce6f76d0447",
+      "other_24_trees_identical": true,
+      "extra_overlays": {},
+      "overlays": {
+        "rmx2072-legacy-usb-scm-sid0.dtb": "1005264c3bc6a07c753e99088358f0465e49b2621243a426e51a0f975ff030e4",
+        "rmx2072-sid0-watchdog.dtb": "4bd8ef4974d2160f2ba230259e7058bf50beecd9698e382ed7d464ac2bb40e7a",
+        "rmx2072-ufs-host-g3.dtb": "5937aeb644b5784dc20e354e9f3a8b87eaf4cf30e8ab3e3a1680394f25e5ea59"
+      },
+      "checks": {
+        "watchdog_pre_oem": {
+          "path": "/soc/qcom,wdt@17c10000",
+          "reg": [
+            398524416,
+            4096
+          ],
+          "interrupts": [
+            0,
+            0,
+            1
+          ],
+          "gic": "/soc/interrupt-controller@17a00000",
+          "sleep_clock_hz": 32764,
+          "changed_properties": [
+            "clocks",
+            "compatible",
+            "interrupts"
+          ],
+          "primary_usb_sid_mask": [
+            0,
+            0
+          ]
+        },
+        "watchdog_post_oem": {
+          "path": "/soc/qcom,wdt@17c10000",
+          "reg": [
+            398524416,
+            4096
+          ],
+          "interrupts": [
+            0,
+            0,
+            1
+          ],
+          "gic": "/soc/interrupt-controller@17a00000",
+          "sleep_clock_hz": 32764,
+          "changed_properties": [
+            "clocks",
+            "compatible",
+            "interrupts"
+          ],
+          "primary_usb_sid_mask": [
+            0,
+            0
+          ]
+        },
+        "ufs_pre_oem": {
+          "host": "/soc/ufs-host-lab/ufs@1d84000",
+          "parked": "/soc/ufshc@1d84000",
+          "phy": "/soc/ufs-phy-lab/phy@1d87000",
+          "board_xo_hz": 38400000,
+          "max_core_hz": 300000000,
+          "interconnect_providers": 5,
+          "smmu_stream_ids": [
+            224,
+            1248
+          ],
+          "relocated_reference_cells": 0,
+          "primary_usb_sid_mask": [
+            0,
+            0
+          ]
+        },
+        "ufs_post_oem": {
+          "host": "/soc/ufs-host-lab/ufs@1d84000",
+          "parked": "/soc/ufshc@1d84000",
+          "phy": "/soc/ufs-phy-lab/phy@1d87000",
+          "board_xo_hz": 38400000,
+          "max_core_hz": 300000000,
+          "interconnect_providers": 5,
+          "smmu_stream_ids": [
+            224,
+            1248
+          ],
+          "relocated_reference_cells": 556,
+          "primary_usb_sid_mask": [
+            0,
+            0
+          ]
+        },
+        "final_usb_sid": [
+          0,
+          0
+        ]
+      },
+      "cmdline": "rdinit=/init earlycon console=ttyMSM0,115200n8 loglevel=8 ignore_loglevel printk.devkmsg=on clk_ignore_unused pd_ignore_unused fw_devlink=permissive panic=30 androidboot.hardware=qcom androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs tp_printk tp_printk_stop_on_boot",
+      "avb_envelope": {
+        "payload_size": 67665920,
+        "vbmeta_offset": 67665920,
+        "vbmeta_size": 2432,
+        "retained_metadata_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
+        "qualification": "Stock metadata retained; its signed hash does not match modified payload; unlocked-device experiment only"
+      },
+      "status": "packaged-not-device-tested"
+    },
+    "candidate": {
+      "bytes": 8866758656,
+      "sha256": "bcaf350af6f3ccb5218e468837c6e37ef3a266df302f3b77cd6416df81a3988d",
+      "source_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+      "parts": [
+        "e71456a2239e8cf1f9cd16ef4462259b44e8dbd0adc86dad58e744b44e4d4c1a",
+        "2ad61042a83a2f1daf6c2900bc22fa52bdc0653ec9d810002242fc1bb1625127",
+        "6913f5ab879440b164c8d610bddf4401a16c9954239d7ca3bdd46fda18be3850",
+        "5d49e8a4c977520972e2fa5738db733b0060520a797b3c7766a266c61a334836",
+        "98a3937f0390bdb7bd1460bb20bef2c5ad23fd2251547b983f1139c00370a28e",
+        "582be529b97a07315dcd40f7382f679bb750513d2eef9764fb9e71fca3f8b540",
+        "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+        "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+        "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+        "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+        "7b406e4d653c25bde79cd4562880e496362ab0a3fb6eed0b736a9f4c5947ad4e",
+        "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+        "c229d586e86af6a993bbcc63e12b60c221a26a857efb47ec4b028ae7e81eafb0",
+        "fec8538e5ecbefd8f2e99dd109b77c7e28c460b6e06437e55876a0c7492ea311",
+        "aaaafea978ae92ffce43462ce2f325be1d6a01aa9926590097093af019190008",
+        "b03b3928b9a9be609474719a63ef9603edb38a1bbff8733ea7abff3dbe480dfb",
+        "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+      ],
+      "changed_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        12,
+        13,
+        14,
+        15
+      ],
+      "signed": {
+        "system": {
+          "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+          "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+          "bytes": 3953213440,
+          "tree": {
+            "version": 1,
+            "image_bytes": 3890753536,
+            "tree_offset": 3890753536,
+            "tree_bytes": 30642176,
+            "data_block_bytes": 4096,
+            "hash_block_bytes": 4096,
+            "fec_roots": 2,
+            "fec_offset": 3921395712,
+            "fec_bytes": 31006720,
+            "algorithm": "sha256",
+            "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+            "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+            "flags": 0
+          }
+        },
+        "vendor": {
+          "sha256": "10f8a24714d97d63fe5ed1b32eaa224e5df21e0e7d864a43dd847e0bcf2f976e",
+          "key_sha256": "0d4dd0f2fc523adbf286204adfa27dbae6d2b2c280ed58208f5f60cbdf439d6e",
+          "bytes": 17825792,
+          "tree": {
+            "version": 1,
+            "image_bytes": 16777216,
+            "tree_offset": 16777216,
+            "tree_bytes": 135168,
+            "data_block_bytes": 4096,
+            "hash_block_bytes": 4096,
+            "fec_roots": 0,
+            "fec_offset": 0,
+            "fec_bytes": 0,
+            "algorithm": "sha256",
+            "salt": "21952bdc3a043d7b04025dba1ccd95d79abc3c1fea797aa20e8337f8a5bc5081",
+            "root_digest": "6e1ed503b5ca4edb4cc452e81ff3721f5d4263484faeb7b98bba4c51de29bf9e",
+            "flags": 0
+          }
+        }
+      },
+      "targets": {
+        "vendor": [
+          [
+            3008,
+            34816
+          ]
+        ],
+        "system": [
+          [
+            37824,
+            1180672
+          ],
+          [
+            1464256,
+            2048
+          ],
+          [
+            1479616,
+            149504
+          ],
+          [
+            1850304,
+            25600
+          ],
+          [
+            1881024,
+            26624
+          ],
+          [
+            1924032,
+            803840
+          ],
+          [
+            3354560,
+            49152
+          ],
+          [
+            3428288,
+            2696192
+          ],
+          [
+            6126528,
+            13312
+          ],
+          [
+            6140864,
+            3072
+          ],
+          [
+            11129792,
+            1088
+          ],
+          [
+            13039552,
+            64
+          ],
+          [
+            13184960,
+            64
+          ],
+          [
+            13330368,
+            64
+          ],
+          [
+            13475776,
+            438272
+          ],
+          [
+            13992896,
+            2331552
+          ]
+        ]
+      },
+      "prefix_sha256": "04419fc43c4d44cd9645b43ae21a2386cd38c7bcca5356e12e3f543df3fdd197",
+      "headroom": 900423680,
+      "partitions_before": [
+        {
+          "system": "04739e77e523644b8c836eced8d4e93077db47cbe27bb4d62eb353f265f2329d",
+          "vendor": "6ce6fd7565ee107c76a86575b0cbaf049ab30c182c8485ea25611ac566aeece0",
+          "product": "64927a0f20d3a51a3b0de26ff48e64e5f7b9feb57177349903bea85a9560a142",
+          "my_region": "9b6f8c8c18d4142000214490177aa3f14a45fcb80536747327ae2f31a9bab166",
+          "my_manifest": "e4ed7e0dd470dc6879f41de3144f1d2da86c36a44e57ba495283211a223a8a98",
+          "my_preload": "ce59f184862280fec37aa6928054ac616c0d067106265e7c72481368c55b9643",
+          "my_stock": "7225635d8a99cf0c139190c2899c57946a2b4137c6df50a79927a21f38bd44e0",
+          "my_carrier": "01a2a1db5f613246a7749c9cb9a8c9898e1a942ded6d9ca815909b63c541b2bc",
+          "my_product": "76602a33a8b0b961e76081b4c54922eb8ac2b66778937e880e8e9793ed22bdac",
+          "system_ext": "e69f7d3153f48f853733a7452de7e97e9158f05e7a41e5277cab9c1c4d6b85b0",
+          "odm": "17023333767b93bc7ef5e0432d4efb232de1f1ef0331cfea2ee5888a101808d5",
+          "my_company": "a56c7ce89791db30464a1578f1b31d7d3391c170755721de596357a19fd70f38",
+          "my_engineering": "5af9c165c60fb413d37074992356dc68c1afae6f05e8035b6500c1318f83674c",
+          "my_heytap": "59d155025761d34352d682b59777fc5897e21b166f494cd60a732d98262aba82",
+          "my_bigball": "e7246be1e4fe98d8c85057c8eb27e99eaf8675d1d0703643658256b9edf1b3bb"
+        },
+        {
+          "system": "9fccf51af13b80671be6bb277f60a53f910c58f1755c3669f99d1d326e086b5b",
+          "vendor": "4715a32460592a51181cbd993051c52c0e0a52146832082532b409b5cb5d16a0",
+          "product": "5db7f958d11b0f5cf8cfa525487606e2aa763c5188d0411f5795ea82a895e5ec",
+          "engineering": "52c3c5815ade08a56f56b94ed095868a1e0063ca69b19871312d8532c0d50c1f",
+          "oppo_product": "0acf5e35e92c601d33e7a5f003ba341b9398744cbf9dc5d16dc2c5f5b9be78df",
+          "common_preload": "2ee0b1233eaedd0def1fa49f43af0ad6498936297df9addb445e2b0d11e6de9f",
+          "version.19795": "24596fcc0b24a3890b3111a1a426fdfd6a036828c75788c9175bd83a5ce58375",
+          "version.19797": "3ca142da3fee3acf0c958812674c3936395763bd35719b56752a573a965d4823",
+          "version.20607": "64b1d89ab291cc7d00f4888ae4a539e701bcad0adf99cccaaa091292cba4150e"
+        }
+      ],
+      "partitions_after": [
+        {
+          "system": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+          "vendor": "10f8a24714d97d63fe5ed1b32eaa224e5df21e0e7d864a43dd847e0bcf2f976e",
+          "product": "64927a0f20d3a51a3b0de26ff48e64e5f7b9feb57177349903bea85a9560a142",
+          "my_region": "9b6f8c8c18d4142000214490177aa3f14a45fcb80536747327ae2f31a9bab166",
+          "my_manifest": "e4ed7e0dd470dc6879f41de3144f1d2da86c36a44e57ba495283211a223a8a98",
+          "my_preload": "ce59f184862280fec37aa6928054ac616c0d067106265e7c72481368c55b9643",
+          "my_carrier": "01a2a1db5f613246a7749c9cb9a8c9898e1a942ded6d9ca815909b63c541b2bc",
+          "my_product": "76602a33a8b0b961e76081b4c54922eb8ac2b66778937e880e8e9793ed22bdac",
+          "system_ext": "e69f7d3153f48f853733a7452de7e97e9158f05e7a41e5277cab9c1c4d6b85b0",
+          "odm": "17023333767b93bc7ef5e0432d4efb232de1f1ef0331cfea2ee5888a101808d5",
+          "my_company": "a56c7ce89791db30464a1578f1b31d7d3391c170755721de596357a19fd70f38",
+          "my_engineering": "5af9c165c60fb413d37074992356dc68c1afae6f05e8035b6500c1318f83674c",
+          "my_heytap": "59d155025761d34352d682b59777fc5897e21b166f494cd60a732d98262aba82",
+          "my_bigball": "e7246be1e4fe98d8c85057c8eb27e99eaf8675d1d0703643658256b9edf1b3bb"
+        },
+        {
+          "system": "2d98e828b97d7a148c6bb34214372f334f77874b48485cf4b86c7f5bc97a952f",
+          "vendor": "4715a32460592a51181cbd993051c52c0e0a52146832082532b409b5cb5d16a0",
+          "product": "5db7f958d11b0f5cf8cfa525487606e2aa763c5188d0411f5795ea82a895e5ec",
+          "engineering": "52c3c5815ade08a56f56b94ed095868a1e0063ca69b19871312d8532c0d50c1f",
+          "oppo_product": "0acf5e35e92c601d33e7a5f003ba341b9398744cbf9dc5d16dc2c5f5b9be78df",
+          "common_preload": "2ee0b1233eaedd0def1fa49f43af0ad6498936297df9addb445e2b0d11e6de9f",
+          "version.19795": "24596fcc0b24a3890b3111a1a426fdfd6a036828c75788c9175bd83a5ce58375",
+          "version.19797": "3ca142da3fee3acf0c958812674c3936395763bd35719b56752a573a965d4823",
+          "version.20607": "64b1d89ab291cc7d00f4888ae4a539e701bcad0adf99cccaaa091292cba4150e"
+        }
+      ]
+    },
+    "scratch": {
+      "data": {
+        "bytes": 536870912,
+        "sha256": "3609b84f64c748ec526b9a5cad9c8d60fa75fb95246d883d73e5300ea663e561",
+        "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+        "gzip_sha256": "b083742d72df2140ef211aa9332d5ce221fc4e159caf2c23f0da3392faeac3c0"
+      },
+      "metadata": {
+        "bytes": 33554432,
+        "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+        "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+        "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+      }
+    },
+    "usb_build": {
+      "trial": "ufs-host-g3-gsi17-firststage-ufs-32",
+      "kernel": "fce9822138a0f763a9661d84c5679fcc13d92e4f5f6983e19e45572c1bcdcaab",
+      "guard": "5c246d37358c301339725eba62b03ced02d8e75de8fa642e9f43c1548fd19e66",
+      "witness": "020f4f2903c400d5f67a112a8835171921e2985b0f85ef0a092980a3fa6ef7fb",
+      "vendor_unsigned": "21952bdc3a043d7b04025dba1ccd95d79abc3c1fea797aa20e8337f8a5bc5081",
+      "vendor_signed": "10f8a24714d97d63fe5ed1b32eaa224e5df21e0e7d864a43dd847e0bcf2f976e",
+      "engineering_key": "reused trial25 key",
+      "adb_public_key_sha256": "fa92ad018ac1d01317a6731be6172cb4e34753489f7e4a521ae4df25c583dc29"
+    },
+    "ramdisk": {
+      "busybox_sha256": "4d60ab3f5a59ebb2ca863f2f514e6924401b581e9b64f602665c008177626651",
+      "reboot_helper_sha256": "fa04fbcfeaa2b9d73c6f56d3b08c3c5bccf55b68d620435f897e8868a3e673cc",
+      "entry_carrier_sha256": "f13ff7bf22c0a3d924d5834bb14363209266e7fb15148337022f8a3bdd3c5695",
+      "trial_id": "ufs-host-g3-gsi17-firststage-ufs-32",
+      "control_return_seconds": 180,
+      "defer_gadget_bind": false,
+      "gadget_bind_delay_seconds": 20,
+      "snapshot_intervals_seconds": [
+        2,
+        13,
+        30,
+        30
+      ],
+      "init_sha256": "0f368d8b2d8a935cc369e1607887c9dfe8c25a76f9662c9d8e4d5d93a6b11112",
+      "supervisor_sha256": "d070d4d8b13584bb58b19ad46335be3b16fce215da9de6f3c041fa909205b649",
+      "snapshot_sha256": "e1080c1859111f1c593d00273483ec28ac034f483e6bcfa5a3bc09ea9ddee7d0",
+      "cpio_sha256": "8d7b8b393b2b65cf0bc08d7b82e2c554d8dd18b7ab2d9c0dc783fea6fbac1f11",
+      "gzip_sha256": "f84dc524c7ec2bf0ade35540788e96256824851a8d8df39dc17adecb8c6273af",
+      "scope": "Android API 37 first-stage init on internal UFS",
+      "adb_public_key_sha256": "fa92ad018ac1d01317a6731be6172cb4e34753489f7e4a521ae4df25c583dc29",
+      "guarded_adb": true,
+      "autonomous_ufs": true,
+      "autoboot_sha256": "9ea2abfdc40d4a36642f6daec2d519d7d6a4e3ef5f25347ae6d385051677fb72",
+      "ufs_host_test_sha256": "175b833b4781ee12969130743434f0c897811ee501315a41ac16ba05d87b4b42",
+      "ufs_g3_test_sha256": "e3ca4d3f5e9d4e48ce4495cac5f24013a85385a57eb160db01c4c6f21cfbfbf4",
+      "super_tools_files": 57,
+      "super_test_sha256": "b65ae24f53cc7c5561405a3d0d910f6c0c3824efcd4f4e601d4cbb803906ecb4",
+      "first_stage_init_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+      "witness_sha256": "020f4f2903c400d5f67a112a8835171921e2985b0f85ef0a092980a3fa6ef7fb",
+      "public_keys": {
+        "system": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+        "vendor": "0d4dd0f2fc523adbf286204adfa27dbae6d2b2c280ed58208f5f60cbdf439d6e"
+      }
+    }
+  },
+  "boot_id": "182b2715-fbcc-41f0-81ec-61213cfe1034",
+  "identity": [
+    "37",
+    "6.18.32-android17-5-maybe-dirty-4k",
+    "182b2715-fbcc-41f0-81ec-61213cfe1034",
+    "Enforcing",
+    "running",
+    "",
+    "retained",
+    "adb"
+  ],
+  "pid1": "/system/bin/init\u0000second_stage",
+  "ufs_evidence": "same-boot autonomous device witness plus matching live ADB mounts (sysfs_dm restricted)",
+  "ufs_events": [
+    "M1EVENT autonomous=1",
+    "M1EVENT previous_guard=none",
+    "M1EVENT boot_usb_state=not attached",
+    "M1EVENT clock_source=unavailable fixed_time_probe=skipped",
+    "M1EVENT ufs_super=/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10 dev=8:10 ro=1",
+    "M1EVENT table=system 0 1180672 linear 8:10 37824",
+    "M1EVENT table=system 1180672 2048 linear 8:10 1464256",
+    "M1EVENT table=system 1182720 149504 linear 8:10 1479616",
+    "M1EVENT table=system 1332224 25600 linear 8:10 1850304",
+    "M1EVENT table=system 1357824 26624 linear 8:10 1881024",
+    "M1EVENT table=system 1384448 803840 linear 8:10 1924032",
+    "M1EVENT table=system 2188288 49152 linear 8:10 3354560",
+    "M1EVENT table=system 2237440 2696192 linear 8:10 3428288",
+    "M1EVENT table=system 4933632 13312 linear 8:10 6126528",
+    "M1EVENT table=system 4946944 3072 linear 8:10 6140864",
+    "M1EVENT table=system 4950016 1088 linear 8:10 11129792",
+    "M1EVENT table=system 4951104 64 linear 8:10 13039552",
+    "M1EVENT table=system 4951168 64 linear 8:10 13184960",
+    "M1EVENT table=system 4951232 64 linear 8:10 13330368",
+    "M1EVENT table=system 4951296 438272 linear 8:10 13475776",
+    "M1EVENT table=system 5389568 2331552 linear 8:10 13992896",
+    "M1EVENT table=system-verity 0 7599128 verity 1 254:0 254:0 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d 10 restart_on_corruption ignore_zero_blocks use_fec_from_device 254:0 fec_blocks 957372 fec_start 957372 fec_roots 2",
+    "M1EVENT status=system-verity 0 7599128 verity V 0",
+    "M1EVENT linear_mapper=system dev=254:0",
+    "M1EVENT verified_ufs_mount=system dev=254:14",
+    "M1EVENT table=vendor 0 34816 linear 8:10 3008",
+    "M1EVENT table=vendor-verity 0 32768 verity 1 254:1 254:1 4096 4096 4096 4096 sha256 6e1ed503b5ca4edb4cc452e81ff3721f5d4263484faeb7b98bba4c51de29bf9e 21952bdc3a043d7b04025dba1ccd95d79abc3c1fea797aa20e8337f8a5bc5081 2 restart_on_corruption ignore_zero_blocks",
+    "M1EVENT status=vendor-verity 0 32768 verity V -",
+    "M1EVENT linear_mapper=vendor dev=254:1",
+    "M1EVENT verified_ufs_mount=vendor dev=254:15"
+  ],
+  "soak_seconds": 193.484,
+  "soak": [
+    {
+      "elapsed": 0.578,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 11.172,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 21.89,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 32.515,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 43.094,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 53.672,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 64.25,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 74.844,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 85.422,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 96.0,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 106.625,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 117.25,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 127.844,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 138.453,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 149.062,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 159.672,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 170.25,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    },
+    {
+      "elapsed": 180.859,
+      "identity": [
+        "37",
+        "6.18.32-android17-5-maybe-dirty-4k",
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "Enforcing",
+        "running",
+        "",
+        "retained",
+        "adb"
+      ]
+    }
+  ],
+  "guard_mode": "retained",
+  "adb_smoke": {
+    "boot_id": "182b2715-fbcc-41f0-81ec-61213cfe1034",
+    "bytes": 1048576,
+    "identity": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "182b2715-fbcc-41f0-81ec-61213cfe1034",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "data_mountinfo": [
+      "67 57 7:0 / /data rw,nosuid,nodev,relatime shared:9 - ext4 /proc/self/fd/3 rw,seclabel",
+      "68 57 7:1 / /metadata rw,nosuid,nodev,relatime shared:10 - ext4 /proc/self/fd/3 rw,seclabel"
+    ],
+    "push": "C:\\Users\\xiaob\\AppData\\Local\\Temp\\rmx-m1-adb-8o4scx5h\\probe.bin: 1 file pushed, 0 skipped. 782.5 MB/s (1048576 bytes in 0.001s)",
+    "push_seconds": 0.047,
+    "pull": "/data/local/tmp/rmx-m1-adb-23d75cc4983d488aa069a4abe97afe57/probe.bin: 1 file pulled, 0 skipped. 36.7 MB/s (1048576 bytes in 0.027s)",
+    "pull_seconds": 0.047,
+    "device_sha256": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83",
+    "returned_sha256": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83",
+    "maintenance": "Service android.security.maintenance: found",
+    "shell_identity": "uid=2000(shell) gid=2000(shell) groups=2000(shell),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs) context=u:r:shell:s0",
+    "uptime": "264.38 1938.64",
+    "boot_completed": "",
+    "wrong_boot_rejected": true,
+    "after": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "182b2715-fbcc-41f0-81ec-61213cfe1034",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "temporary_files_removed": true
+  },
+  "local_readiness": {
+    "utc": "2026-11-14T13:50:57.665657+00:00",
+    "observed": [
+      "182b2715-fbcc-41f0-81ec-61213cfe1034",
+      "retained",
+      "1",
+      "local-adbd",
+      "292.13 2146.16",
+      "Service android.security.maintenance: found"
+    ],
+    "acceptance_mode": "retained"
+  },
+  "independent_readbacks": [
+    {
+      "label": "before-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "utc": "2026-11-14T13:40:03.024678+00:00"
+    },
+    {
+      "label": "before-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "utc": "2026-11-14T13:40:03.719358+00:00"
+    },
+    {
+      "label": "candidate-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "6d67afcac69a29dd7a83837c752134eaad740ee30607d0a57d42d6915ffeddf1",
+      "utc": "2026-11-14T13:42:27.566732+00:00"
+    },
+    {
+      "label": "candidate-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "utc": "2026-11-14T13:42:28.264198+00:00"
+    },
+    {
+      "label": "candidate-super-read-00",
+      "lun": 0,
+      "start_sector": 193032,
+      "sectors": 131072,
+      "sha256": "e71456a2239e8cf1f9cd16ef4462259b44e8dbd0adc86dad58e744b44e4d4c1a",
+      "utc": "2026-11-14T13:42:40.953534+00:00"
+    },
+    {
+      "label": "candidate-super-read-01",
+      "lun": 0,
+      "start_sector": 324104,
+      "sectors": 131072,
+      "sha256": "2ad61042a83a2f1daf6c2900bc22fa52bdc0653ec9d810002242fc1bb1625127",
+      "utc": "2026-11-14T13:42:53.693925+00:00"
+    },
+    {
+      "label": "candidate-super-read-02",
+      "lun": 0,
+      "start_sector": 455176,
+      "sectors": 131072,
+      "sha256": "6913f5ab879440b164c8d610bddf4401a16c9954239d7ca3bdd46fda18be3850",
+      "utc": "2026-11-14T13:43:06.395575+00:00"
+    },
+    {
+      "label": "candidate-super-read-03",
+      "lun": 0,
+      "start_sector": 586248,
+      "sectors": 131072,
+      "sha256": "5d49e8a4c977520972e2fa5738db733b0060520a797b3c7766a266c61a334836",
+      "utc": "2026-11-14T13:43:19.101458+00:00"
+    },
+    {
+      "label": "candidate-super-read-04",
+      "lun": 0,
+      "start_sector": 717320,
+      "sectors": 131072,
+      "sha256": "98a3937f0390bdb7bd1460bb20bef2c5ad23fd2251547b983f1139c00370a28e",
+      "utc": "2026-11-14T13:43:31.806266+00:00"
+    },
+    {
+      "label": "candidate-super-read-05",
+      "lun": 0,
+      "start_sector": 848392,
+      "sectors": 131072,
+      "sha256": "582be529b97a07315dcd40f7382f679bb750513d2eef9764fb9e71fca3f8b540",
+      "utc": "2026-11-14T13:43:44.531325+00:00"
+    },
+    {
+      "label": "candidate-super-read-06",
+      "lun": 0,
+      "start_sector": 979464,
+      "sectors": 131072,
+      "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+      "utc": "2026-11-14T13:43:57.252237+00:00"
+    },
+    {
+      "label": "candidate-super-read-07",
+      "lun": 0,
+      "start_sector": 1110536,
+      "sectors": 131072,
+      "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+      "utc": "2026-11-14T13:44:09.952748+00:00"
+    },
+    {
+      "label": "candidate-super-read-08",
+      "lun": 0,
+      "start_sector": 1241608,
+      "sectors": 131072,
+      "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+      "utc": "2026-11-14T13:44:22.672951+00:00"
+    },
+    {
+      "label": "candidate-super-read-09",
+      "lun": 0,
+      "start_sector": 1372680,
+      "sectors": 131072,
+      "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+      "utc": "2026-11-14T13:44:35.394008+00:00"
+    },
+    {
+      "label": "candidate-super-read-10",
+      "lun": 0,
+      "start_sector": 1503752,
+      "sectors": 131072,
+      "sha256": "7b406e4d653c25bde79cd4562880e496362ab0a3fb6eed0b736a9f4c5947ad4e",
+      "utc": "2026-11-14T13:44:48.112422+00:00"
+    },
+    {
+      "label": "candidate-super-read-11",
+      "lun": 0,
+      "start_sector": 1634824,
+      "sectors": 131072,
+      "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+      "utc": "2026-11-14T13:45:00.869349+00:00"
+    },
+    {
+      "label": "candidate-super-read-12",
+      "lun": 0,
+      "start_sector": 1765896,
+      "sectors": 131072,
+      "sha256": "c229d586e86af6a993bbcc63e12b60c221a26a857efb47ec4b028ae7e81eafb0",
+      "utc": "2026-11-14T13:45:13.581711+00:00"
+    },
+    {
+      "label": "candidate-super-read-13",
+      "lun": 0,
+      "start_sector": 1896968,
+      "sectors": 131072,
+      "sha256": "fec8538e5ecbefd8f2e99dd109b77c7e28c460b6e06437e55876a0c7492ea311",
+      "utc": "2026-11-14T13:45:26.348382+00:00"
+    },
+    {
+      "label": "candidate-super-read-14",
+      "lun": 0,
+      "start_sector": 2028040,
+      "sectors": 131072,
+      "sha256": "aaaafea978ae92ffce43462ce2f325be1d6a01aa9926590097093af019190008",
+      "utc": "2026-11-14T13:45:39.074961+00:00"
+    },
+    {
+      "label": "candidate-super-read-15",
+      "lun": 0,
+      "start_sector": 2159112,
+      "sectors": 131072,
+      "sha256": "b03b3928b9a9be609474719a63ef9603edb38a1bbff8733ea7abff3dbe480dfb",
+      "utc": "2026-11-14T13:45:51.680557+00:00"
+    },
+    {
+      "label": "candidate-super-read-16",
+      "lun": 0,
+      "start_sector": 2290184,
+      "sectors": 67584,
+      "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+      "utc": "2026-11-14T13:45:58.269494+00:00"
+    }
+  ],
+  "disconnected_cold_start": "NOT RUN on this artifact",
+  "current_mode": "See fault/restore records; warm retention is historical",
+  "fault": {
+    "boot_id": "182b2715-fbcc-41f0-81ec-61213cfe1034",
+    "utc": "2026-11-14T13:51:13.220739+00:00",
+    "command": "expire-lease",
+    "lease_seconds": 45,
+    "hardware_seconds": 30,
+    "host_reboot_commands": false
+  },
+  "fault_transports": [
+    {
+      "elapsed": 0.062,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 1.187,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 2.312,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 3.422,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 4.547,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 5.672,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 6.797,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 7.922,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 9.047,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 10.156,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 11.281,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 12.422,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 13.547,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 14.672,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 15.797,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 16.937,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 18.078,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 19.187,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 20.312,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 21.453,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 22.578,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 23.719,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 24.828,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 25.953,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 27.094,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 28.219,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 29.344,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 30.469,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 31.594,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 32.719,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 33.844,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 34.953,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 36.078,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 37.234,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 38.359,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 39.469,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 40.609,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 41.734,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 42.859,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 43.984,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "lease"
+      ]
+    },
+    {
+      "elapsed": 45.094,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 46.219,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 47.344,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 48.484,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 49.609,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 50.734,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 51.875,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 53.0,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 54.125,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 55.25,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 56.39,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 57.531,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 58.672,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 59.781,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 60.922,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 62.062,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 63.203,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 64.328,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 65.453,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 66.562,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 67.703,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 68.844,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 69.969,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 71.078,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 72.234,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 73.359,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 74.5,
+      "ports": [],
+      "adb": [
+        "182b2715-fbcc-41f0-81ec-61213cfe1034",
+        "expired"
+      ]
+    },
+    {
+      "elapsed": 75.609,
+      "ports": []
+    },
+    {
+      "elapsed": 79.64,
+      "ports": []
+    },
+    {
+      "elapsed": 82.422,
+      "ports": []
+    },
+    {
+      "elapsed": 83.469,
+      "ports": []
+    },
+    {
+      "elapsed": 84.484,
+      "ports": []
+    },
+    {
+      "elapsed": 85.515,
+      "ports": []
+    },
+    {
+      "elapsed": 86.547,
+      "ports": []
+    },
+    {
+      "elapsed": 87.578,
+      "ports": []
+    },
+    {
+      "elapsed": 88.609,
+      "ports": []
+    },
+    {
+      "elapsed": 89.656,
+      "ports": []
+    },
+    {
+      "elapsed": 90.687,
+      "ports": []
+    },
+    {
+      "elapsed": 91.719,
+      "ports": []
+    },
+    {
+      "elapsed": 92.75,
+      "ports": []
+    },
+    {
+      "elapsed": 93.781,
+      "ports": []
+    },
+    {
+      "elapsed": 94.812,
+      "ports": []
+    },
+    {
+      "elapsed": 95.844,
+      "ports": []
+    },
+    {
+      "elapsed": 96.875,
+      "ports": []
+    },
+    {
+      "elapsed": 97.906,
+      "ports": []
+    },
+    {
+      "elapsed": 98.937,
+      "ports": []
+    },
+    {
+      "elapsed": 99.969,
+      "ports": []
+    },
+    {
+      "elapsed": 101.015,
+      "ports": []
+    },
+    {
+      "elapsed": 102.031,
+      "ports": []
+    },
+    {
+      "elapsed": 103.078,
+      "ports": []
+    },
+    {
+      "elapsed": 104.109,
+      "ports": []
+    },
+    {
+      "elapsed": 105.14,
+      "ports": []
+    },
+    {
+      "elapsed": 106.172,
+      "ports": []
+    },
+    {
+      "elapsed": 107.187,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ],
+      "capture_completed_elapsed": 117.0
+    },
+    {
+      "elapsed": 118.062,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 119.094,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 120.125,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 121.172,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 122.187,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 123.219,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 124.265,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 125.281,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 126.312,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 127.359,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 128.39,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 129.406,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 130.453,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 131.484,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 132.547,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 133.578,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 134.609,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 135.656,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 136.687,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 137.719,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 138.75,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 139.781,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 140.812,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 141.844,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 142.875,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 143.906,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 144.953,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 146.0,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 147.062,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 148.078,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 149.109,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 150.14,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 151.172,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 152.203,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 153.25,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 154.265,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 155.297,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 156.328,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 157.359,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 158.39,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 159.422,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 160.469,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 161.5,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 162.531,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 163.562,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 164.594,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 165.64,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 166.672,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 167.719,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 168.75,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 169.781,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 170.812,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 171.844,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 172.875,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 173.906,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 174.922,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 175.969,
+      "ports": [
+        {
+          "device": "COM7",
+          "vid": 7531,
+          "pid": 260
+        }
+      ]
+    },
+    {
+      "elapsed": 177.0,
+      "ports": []
+    },
+    {
+      "elapsed": 178.031,
+      "ports": []
+    },
+    {
+      "elapsed": 179.062,
+      "ports": []
+    },
+    {
+      "elapsed": 180.094,
+      "ports": []
+    },
+    {
+      "elapsed": 181.125,
+      "ports": []
+    },
+    {
+      "elapsed": 182.156,
+      "ports": []
+    },
+    {
+      "elapsed": 183.203,
+      "ports": [
+        {
+          "device": "COM6",
+          "vid": 1478,
+          "pid": 36872
+        }
+      ],
+      "edl_continuous_seconds": 0.0,
+      "automatic_edl": true
+    }
+  ],
+  "fault_result": {
+    "boot_id": "182b2715-fbcc-41f0-81ec-61213cfe1034",
+    "recovery_boot_id": "021b671a-8ce6-42ef-b76f-9a2ed5873701",
+    "automatic_edl": true,
+    "elapsed": 183.203,
+    "edl_continuous_seconds": 0.0,
+    "capture_next_edl": true,
+    "journal_expired": true,
+    "kernel_pretimeout": true,
+    "recovery_watchdog_disarm_verified": true,
+    "host_reboot_commands": false
+  },
+  "fault_intermediate-boot": {
+    "boot_id": "021b671a-8ce6-42ef-b76f-9a2ed5873701",
+    "identity": {
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "trial": "ufs-host-g3-gsi17-firststage-ufs-32",
+      "udc": "configured",
+      "uptime_seconds": 22.2,
+      "timer_seconds": 180
+    }
+  },
+  "fault_host-tools": {
+    "source_commit": "48cc688d40e22a40df235a88b4d538bfaf2d2ea6",
+    "sha256": {
+      "run_guard_expiry.py": "bab43e40e595963e9d362013838a6cea39cc793c2097c591e6657753f2229b06",
+      "observe_ufs_first_stage.py": "0111f19fe185d6f0b3e786a0f91d883af7aed4d6dc16e14857427f266e9fa8d1",
+      "run_ufs_trial.py": "3c2e2791c7ad653cf1fc6058494f73778697df92bf0a90ee21fb999fb02f305a",
+      "gsi_adb_accept.py": "3910b06bc9f61aaafaab369a146b3f9dae2aa7ce5350f4be857b9f3b404357a6"
+    }
+  },
+  "fault_recovery-gate": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-32",
+    "allow_recovery": true,
+    "boot_id": "182b2715-fbcc-41f0-81ec-61213cfe1034",
+    "host_reboot_commands": false,
+    "utc": "2026-11-14T13:53:10.257172+00:00",
+    "await_autonomous_edl": true,
+    "recovery_boot_id": "021b671a-8ce6-42ef-b76f-9a2ed5873701",
+    "reset_and_disarm_verified": true
+  },
+  "console-ramoops-0_selected": [
+    "[  307.805352][ T1363] RMX-M1-GUARD state=lease",
+    "[  352.856011][ T1363] RMX-M1-GUARD state=expired",
+    "[  381.855928][    C0] watchdog0: pretimeout event"
+  ],
+  "pmsg-ramoops-0_selected": [
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=attempt",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=armed",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=retained",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=lease",
+    "RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=expired"
+  ],
+  "recovery_providers": "DEFERRED0.gpio-regulator\t1.gpio-regulator\tsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO2.gpio-regulator\t4.gpio-regulator\t3.gpio-regulator\t5.gpio-regulator\t6.gpio-regulator\t7.gpio-regulator\tc440000.qcom,spmi\tsoc:gpio_keys\tSPMItotal 0POWER[    0.000000][    T0] psci: probing for conduit method from DT.[    0.000000][    T0] psci: PSCIv1.1 detected in firmware.[    0.000000][    T0] psci: Using standard PSCI v0.2 function IDs[    0.000000][    T0] psci: MIGRATE_INFO_TYPE not supported.[    0.000000][    T0] psci: SMC Calling Convention v1.1[    0.000000][    T0] psci: OSI mode supported.[    0.000000][    T0] psci: [Firmware Bug]: failed to set PC mode: -3[    0.803403][    T1] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    0.854312][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    0.914156][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    0.915532][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    1.018474][  T129] M1AUTO boot=021b671a-8ce6-42ef-b76f-9a2ed5873701 previous=RMX-M1-AUTO boot=182b2715-fbcc-41f0-81ec-61213cfe1034 state=expired[   10.988949][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[   10.990283][   T97] platform c440000.qcom,spmi: deferred probe pending: (reason unknown)[   21.233465][  T235] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k value=c440000.qcom,spmi\t[   21.655749][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)",
+  "recovery_watchdog": "M1RECOVERY boot=021b671a-8ce6-42ef-b76f-9a2ed5873701 uptime=31.00 244.39\nM1RECOVERY AP watchdog disable ioctl rc=0 identity=qcom_wdt\n",
+  "early_power_providers": "M1POWER boot=182b2715-fbcc-41f0-81ec-61213cfe1034\nDEFERRED\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n0.gpio-regulator\t\n1.gpio-regulator\t\n2.gpio-regulator\t\n4.gpio-regulator\t\n3.gpio-regulator\t\n5.gpio-regulator\t\n6.gpio-regulator\t\n7.gpio-regulator\t\nc440000.qcom,spmi\t\nsoc:gpio_keys\t\nSPMI\ntotal 0\nPOWER_LOG\n[    0.000000][    T0] psci: probing for conduit method from DT.\n[    0.000000][    T0] psci: PSCIv1.1 detected in firmware.\n[    0.000000][    T0] psci: Using standard PSCI v0.2 function IDs\n[    0.000000][    T0] psci: MIGRATE_INFO_TYPE not supported.\n[    0.000000][    T0] psci: SMC Calling Convention v1.1\n[    0.000000][    T0] psci: OSI mode supported.\n[    0.000000][    T0] psci: [Firmware Bug]: failed to set PC mode: -3\n[    0.837731][    T1] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)\n[    0.888367][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)\n[    0.951429][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)\n[    0.953297][   T13] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)\n",
+  "complete_automatic_recovery": false,
+  "raw_sha256": {
+    "ufs-host-g3-gsi17-firststage-ufs-32/before-boot.log": "279d045830383e2959f2634bb9ecdb5d33bd564d75868c993b3fab22b3607662",
+    "ufs-host-g3-gsi17-firststage-ufs-32/before-boot.xml": "e772a7be032c07e454fac39c734dd2ff0761ef1e1ceea93feeebd99c0c9af557",
+    "ufs-host-g3-gsi17-firststage-ufs-32/before-dtbo.log": "523c87855d5b7c74d6258dd18da3d4fed3292ef14e243046cdb479b69a8d50e8",
+    "ufs-host-g3-gsi17-firststage-ufs-32/before-dtbo.xml": "ad233dacebca856fc993967a1271ea06b173beb14a41eccc18c2b47921fd9ce4",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-boot.log": "93dd7d5252dfed6d3370b5addc66d1d250d7c46209d50e7141c2557a17b94057",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-boot.xml": "e772a7be032c07e454fac39c734dd2ff0761ef1e1ceea93feeebd99c0c9af557",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-dtbo.log": "ec53e00db7cef4f1c19859c066f6bedf189ebae4ef6cfb0210b825b4a897c2e2",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-dtbo.xml": "ad233dacebca856fc993967a1271ea06b173beb14a41eccc18c2b47921fd9ce4",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-00.log": "939924c7d672b926f1981b02f5673b0bab8cd05d508750062610b6809f5258ca",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-00.xml": "fbb1c21780b3c9d378f4517c9308bd9bae2cc4c91ea9478b8a19272e0b2cd668",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-01.log": "9d00d94a3197845071f2ab0553eedaafe1a9bad7b05c1023b7f2c6a54ed57bd5",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-01.xml": "a1fbbfcdd5899bcd09c9f2911e15048d3464308109cca18963c763469c3cab27",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-02.log": "1f7b089c4c3189d9cb4336bf7a146c0373469dcca348ee5095c9fdc0bcaecc7e",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-02.xml": "431a080b4c5822dd624ec63aa6f1f51ef6532d67ec1646d8ec0d0394aab8760a",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-03.log": "010cd26dd22fe32dd1b35b82873e691408eb8f405bc6b49ee144733afe40a3ba",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-03.xml": "639c3db5960d17dfea2b4ac08a843a3db00edc4b350cab9c756ef529ef185fdb",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-04.log": "a77700ecbd0383172f9d1abe1783d528ce77d4b4e5ec5d4dc75755e6cfd5e7d6",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-04.xml": "a48e6d434fbbab87a5cab4de1aa963de6391f1d164d9b7e5db0adf274ab4b883",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-05.log": "d9360c358eecaed8d9d0391f50c392dd4670e50fbc7402b41f1bd0bec12b5bd2",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-05.xml": "e94542e28ac2367120f2f0fd5a4c356519e69ce8a97e55ab84cab5938eb0b0d5",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-06.log": "c58d4906024fe54fc0e070f5ec4cd6188d17368db153ba331b1570df8109acad",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-06.xml": "5bf76f4b334eb5414b82b05860f1f8f69724d44fe2451e9d250edfd3dd299623",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-07.log": "17858bb0ca1a949a210b9714cec3c8d7576d24257aa0aa023df6e64764ade920",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-07.xml": "d8b02662ed1876b9b99d36a149273182472fb4d4b964010d098e0c5fefe874b6",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-08.log": "347e1065a4b7e7599bcc24e5b744825e0efbaec825cc852d8a71bb6c21b19878",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-08.xml": "265be38fd6daca7e69ad9a86a2fd0b3ac15cecb5dbb810f3559c7dbf05a71111",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-09.log": "4a3aeae190b9243a47aba0804defb19daa8b9fff33a5835738a3580ddc289b75",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-09.xml": "372f3bdca3e94d68e7f5e10e1029a928ad0828062cfbf6b6d81a688c65e180b6",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-10.log": "34230e00164dd0cfe7cf18ab0148dbfcaea94c50e8cea06ad388175b846c1b1e",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-10.xml": "ab1d50ba9962bc8f87ebfaaa59a7fc44b4c2b50753f3ae77d8af8fc73cd0015a",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-11.log": "b694457bbbe95d600010e57a5587016e1c094e2c950df90c51d1924ff74c453b",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-11.xml": "42e4c3c706acdda9e0721794e910191fbf90c929b65f2dbcd854559a7282e7df",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-12.log": "839912fdc9ff8030bc10066c1debeac514d755a0511925320b705edd1121123d",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-12.xml": "cb4a0096bed13508415d9b32d6f2bb40dc3c8fc3cd5fc8b67e0656665a2cfcdc",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-13.log": "9512350fd7b3e6c75e62abb7da6fa25f04459f9e5a7cd71fa02ede5def942882",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-13.xml": "4d2f652a4c8a6a7235638693b0ffac1c5f6bab116775503769da4d1646e08545",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-14.log": "0eff4e862e749eacbeda00141ede2ebb322de6240e400cb2a129aff917e27888",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-14.xml": "50c533eeb6bc3cf7825cea04c4369f54e5947dbde468246cb7d0241fc72a615c",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-15.log": "3c4ce50329ab76f4531c20ca198d6bbbb864e4a1cd180dd64b1c867e3e646ed0",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-15.xml": "09f911f5c00bc060b7fc3ca2ee8c2401a434192f1acc8379a0fb98ba5e63adec",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-16.log": "39731a8b35171944070b5f04b1ad77b28b90a20c83a1e92b96da76d0c800ff0e",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super-read-16.xml": "f882fb1d54f078ccf4de679e9580f9e8cc2067a52babb1361f1dfcd218a8a44a",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super.log": "62b50640ccab9943b81f6a55c53c6188f6204d1ba83e746cca4c014303a466b1",
+    "ufs-host-g3-gsi17-firststage-ufs-32/candidate-super.xml": "88034a72fb2c241b020c42f246ff751f52ee2ee344448cf0d599b5859edddac6",
+    "ufs-host-g3-gsi17-firststage-ufs-32/entry.log": "df72c3965e9e602e51d6e5daccd838d5d2dcd211a3ff80daeda4a51cfa25456f",
+    "ufs-host-g3-gsi17-firststage-ufs-32/gsi-retained.json": "24841556d1fa6ac0b074c05cc2e0a8b79be1b9e5a20d947f551b892c0df6a74d",
+    "ufs-host-g3-gsi17-firststage-ufs-32/inputs.json": "142447cb9a081ff1b6a221ac92663e8a1f105e75b1cbc9e562eff52ee1834ab5",
+    "ufs-host-g3-gsi17-firststage-ufs-32/observer.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ufs-host-g3-gsi17-firststage-ufs-32/port_trace.txt": "a8d643f0b28949070212772deaeedb36847467db8b80264671dfadbda39394f1",
+    "ufs-host-g3-gsi17-firststage-ufs-32/readbacks.jsonl": "68a631e57232e90525041f11fb7219decca7a2738b9cd8c1225c4013332df238",
+    "ufs-host-g3-gsi17-firststage-ufs-32/test-boot.log": "138d1f104518c088ca0457695caae5df1b60b3a696034a2eac2ba653990f6dcd",
+    "ufs-host-g3-gsi17-firststage-ufs-32/test-boot.xml": "d6efad3c694b0253e38c7a63b97ed63676faa1feba00c6645f5eaf838cb04c07",
+    "ufs-host-g3-gsi17-firststage-ufs-32/test-reset.log": "91a6c3d4b10eea2d72d5d5324bea582ceaa35bcb3fffc46a6919ff9570a40088",
+    "ufs-host-g3-gsi17-firststage-ufs-32/test-reset.xml": "9e78d4e9e210f991b14a749b4826e5077479f174093c678d3bfdc29828d8ed59",
+    "ufs-host-g3-gsi17-firststage-ufs-32/timeline.jsonl": "368fc1f77ddb8f62b91df2055b9e5cdeb267bd6ac1a8c523b7cb891782da3ca9",
+    "ufs-host-g3-gsi17-firststage-ufs-32/usb-observer.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ufs-host-g3-gsi17-firststage-ufs-32/usb.jsonl": "ec4be025829fd2b6dc94bab58ae20ec1763798ae9c069155c06044eb19bf96ce",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/adb-smoke.json": "58257dcaeee209b7cc2f3b41ad4708b79485953113aee09d732f759ec0fc841c",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/adb.jsonl": "6642c84b16aad406dfdc46d0c7eb3f49c3e65e15f0b467474e12d51404c88ee4",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/boot-events.txt": "cae9dba15932371cfcb710aa0ff00a3662f0c7e95953bf2b1b7f827baf310c4e",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/gsi-accepted.json": "6dcb12034aab1db355712e9d01f158336cf1a581793f23655d36413eaf75d061",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/gsi-stable.json": "fb9c484c16a1f72a39ebdc3f122bdfaa83110a555ca4d19891e44830255ac56f",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/host-events.jsonl": "2f19a74c8297cf35e68da6dcd5228bfd86b3df2767355329b9f13c1597f42700",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/local-readiness.json": "43b3a621bc63b2ff275ccc75b2f16f12c993e7d5f81e026c76ab091932ababf1",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/logcat.txt": "39907e21d588a995a91286522c0900b14c60782178466f840ebd3e36d0a906ac",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/power-providers.txt": "494f89c9f591edab5fb1a81232f54bb9bbefc0bab53429435ad23c922072a87e",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/processes.txt": "7b00ca085d27d11e691a33f09e01611fe4b390350111f6ad2d532c92466e36bc",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/properties.txt": "a05756d7b72fb823284d187009b9c2e9dcd5250b4fac3a082aaec582f5ea3b52",
+    "ufs-host-g3-gsi17-firststage-ufs-32/live/watchdog.txt": "f9526d7bc7ea4cd359ebc2589bec16822dca7f53b36c7b718c9a9af75c6a7c97",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/before.json": "81fc6a08d6682fdab06d71d981fde8095729a67b50ec36812e7eb8e165af0769",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/console-ramoops-0": "87370fd968efd8d05436a55f0eac59b753e153a0a2d9eff9e562f43c427293b0",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/fault.json": "69817f00c8b78b8166ae9e0fad3ed52d360f0d6f7e375a4567ee37621b3cafba",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/host-events.jsonl": "54206c0a0662d4ae65f9383a4f276a2d72f7d240bb94a8dfafcb49bb99834c0d",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/host-tools.json": "ce7205ed3b24d48fcd59d55cdd91abce0dd2d06c0c33a43522fdf6a9751963f6",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/intermediate-boot.json": "032dd8d1acfb339e07ebeee5578ebb45da5053e44c07f8c61d66ef265655e9ef",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/pmsg-ramoops-0": "6bba06054b6d6e8845f193ee9f1b0d97d8192d950d3dd3ea943a9fb929243dc0",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/recovery-gate.json": "43e2710d2813c3dfc539569f16682b339561c9b195c6eb09be23d5c912e38302",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/recovery-providers.txt": "b82bcb8fc5c9ee69b233be63b09df4946366f219d1511a2f0aca70c93376cf40",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/recovery-watchdog.log": "ad4df978f04dbf9ec468d17384de0f90693df7304ab46675ff33b3e026c342cf",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/result.json": "4150bbd936a37979a2a975cd9fc3b0624f50a26d38319c041388a9ff58c235d2",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry/transport.jsonl": "c2edd0a54be4dda65c3d602f8e2a58e1242ff41f5c855cb61d7e5d6c4b0fe873",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry-restore/port_trace.txt": "c134710dedeba7391d5a93013dd26e36ede98ec398b8213125ec62a1735b1367",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry-restore/recovery-entry.log": "e11d8c0b2c3506aa4ed9fe14d9df299e512cd2722ac914067f03c11803261ac7",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry-restore/recovery-ready.json": "d2828e829cdd4a08f544d01f7b07616eca1c275de6583014c87b2ca79f4c1cab",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry-restore/restore-super.log": "f3357060f9a03627fa01a45a9867f628b36025a65c1185125ef28356579151f8",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry-restore/restore-super.xml": "5a1b918a6873a90404f3ca0a7fd91449e67c129865779873fdafbec2f2b8c5d4",
+    "ufs-host-g3-gsi17-firststage-ufs-32-expiry-restore/timeline.jsonl": "bae4554ab554a8bba81ddfd6fac0522e1668a995c83b7e597ebb7792ac901881"
+  }
+}

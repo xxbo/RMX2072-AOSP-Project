@@ -449,3 +449,22 @@ unattended EDL. Kernel, device tree, vendor, GSI and scratch seeds remain
 unchanged; the ramdisk also publishes read-only power-provider evidence for
 the later PDC-only control.
 [Trial 31 evidence](../build/device/m1-autonomous-recovery-31-2026-11-14.json)
+
+### Trial 32 · Autonomous EDL captured by a prepared host
+
+Boot `182b2715-fbcc-41f0-81ec-61213cfe1034` passed local retention and the
+same-boot enforcing/UFS/ADB soak. Expiry was observed at 45.094 seconds and
+ADB disappeared at 75.609 seconds. Recovery boot
+`021b671a-8ce6-42ef-b76f-9a2ed5873701` created its own watchdog node and
+reported successful qcom_wdt disable at uptime 31.00. The observer correlated
+the old expired journal and 29-second kernel pretimeout, then released the
+prepared host to wait for EDL.
+
+The phone independently entered EDL at 183.203 seconds and the waiting host
+captured Sahara and began original restoration. No host reboot command or
+physical key was used. Full restore/readback/boot verification is pending in
+this initial record; only its completion establishes the complete result.
+This immediate-capture test makes no 45-second unattended EDL claim. The
+early read-only power snapshot confirms SPMI v5 remains deferred with no
+PMIC devices; the next control changes only PDC compatibility in the DT.
+[Trial 32 evidence](../build/device/m1-autonomous-recovery-32-2026-11-14.json)
