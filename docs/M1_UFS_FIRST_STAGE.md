@@ -462,8 +462,10 @@ prepared host to wait for EDL.
 
 The phone independently entered EDL at 183.203 seconds and the waiting host
 captured Sahara and began original restoration. No host reboot command or
-physical key was used. Full restore/readback/boot verification is pending in
-this initial record; only its completion establishes the complete result.
+physical key was used. Full original restoration, 17 super chunk readbacks, boot/DTBO readbacks,
+both LP slots, the Android-side full super digest and F.20 boot completion
+all passed. Restored boot was `314ead02-b23b-4636-85a0-5f76ba18973d`.
+This establishes complete automatic recovery with the prepared computer.
 This immediate-capture test makes no 45-second unattended EDL claim. The
 early read-only power snapshot confirms SPMI v5 remains deferred with no
 PMIC devices; the next control changes only PDC compatibility in the DT.
