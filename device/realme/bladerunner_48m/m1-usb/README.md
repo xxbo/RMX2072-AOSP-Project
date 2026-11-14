@@ -24,9 +24,14 @@ contents belong in Git. The GSI retains `ro.adb.secure=1` and `ro.debuggable=0`.
 2. The init service opens the watchdog and sets 30 seconds. It feeds for at most
    150 seconds while waiting for the authenticated host.
 3. The host checks API 37, the exact kernel, boot ID, enforcing, PID 1, UFS mounts
-   and running adbd/guardian. A matching `keep` starts a 45-second renewable
+   and running adbd plus a responding guardian. Production GSI shell cannot
+   read the vendor init service property or `sysfs_dm`; use the independently
+   captured same-boot UFS witness and matching live mounts in that case. Never
+   accept a conflicting graph, mismatched boot, mapper or verity chain.
+   A matching `keep` starts a 45-second renewable
    lease. Loss of the host during this phase expires the lease.
-4. After a 190-second ADB soak, `retain` commits continuous watchdog feeding.
+4. After a 190-second ADB soak and hash-checked scratch-volume file transfer,
+   `retain` commits continuous watchdog feeding.
    The guardian also enforces at least 180 seconds since the first ACK.
 5. A failed trial or an explicit matching `rollback` stops feeding. The hardware
    reset boots the diagnostic ramdisk; the attached host collects pstore, enters
@@ -37,6 +42,15 @@ The pinned KPSS watchdog limits its counter to 0xFFFFF ticks; with the measured
 32764 Hz clock its maximum timeout is 32 seconds. Trial 26 rejected the initial
 120-second request before policy installation. Both owners now request 30
 seconds; long host windows are implemented by periodic feeding.
+
+Trial 27 passed authenticated shell access, a 192.563-second lease soak,
+1 MiB push/pull verification and wrong-boot command rejection. It remains in
+GSI with state `retained`. The file smoke was run separately before and after
+retention on that boot; future runs perform it inside the retention gate.
+The host validator was corrected during this trial for production-GSI access
+restrictions. Trial 26 validated pre-policy failure recovery; missing-ACK and
+expired-lease fault injection for the new guard has not yet been run. See
+[the actual trial records](../../../../build/device/m1-gsi-adb-2026-11-14.json).
 
 ## Rebuild and run
 

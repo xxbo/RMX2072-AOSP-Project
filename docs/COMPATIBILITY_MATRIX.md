@@ -27,7 +27,7 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Boot / reboot | Android 17 second-stage entry from internal UFS on a USB-attached warm boot | The GSI reached post-fs-data. Disconnected Android cold boot and target boot completion remain open. [UFS trial records](M1_UFS_FIRST_STAGE.md) |
 | Display / brightness / refresh rate | Unknown | |
 | Touch / gestures | Unknown | |
-| USB / ADB / MTP | Diagnostic ACM hardware-tested, Android 17 ADB unavailable in trial 25 | The 606-second paced ACM test passed; uncapped bursts produced short reads. Trial 25 activated adbd's APEX but selected USB config none/configfs 0. There was no adbd start, ADB transport or ADB interface in 87 ADB polls and 55 USB samples. Project vendor USB setup and diagnostic handoff remain open; MTP is untested. [Soak evidence](../build/device/usb-soak-2026-11-09.json) · [Trial 25](../build/device/m1-ufs-keymaster-transport-2026-11-14.json) |
+| USB / ADB / MTP | Authenticated Android 17 ADB hardware-tested in trial 27 | Diagnostic ACM handed the measured UDC to configfs/FunctionFS ADB (18d1:4ee7). API 37, 6.18.32, Android PID 1 and enforcing matched one boot. A 192-second watchdog lease soak and 1 MiB bidirectional transfer with matching hashes passed. The phone remains in GSI with the guard retained. The host validator needed a live permission-handling correction; final same-boot checks passed. MTP and disconnected cold boot remain untested. [Trial 27](../build/device/m1-gsi-adb-2026-11-14.json) |
 | UFS | Hardware-tested (warm, read-only on 6.18) | Two-lane HS-G3 and six LUNs. First-stage init verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
 | Encrypted userdata | Open | Writable RAM-backed ext4 data and metadata passed write and fsync checks. Persistent encrypted UFS userdata across reboot remains untested. [Scratch volumes](M1_UFS_FIRST_STAGE.md#writable-data-and-metadata-trial) |
 | SIM / calls / SMS / mobile data | Unknown | |
@@ -42,7 +42,7 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Charging / fast charging | Unknown | |
 | Thermal / sustained performance | Unknown | |
 | Widevine / DRM | Unknown | |
-| OTA / recovery / rollback | F.20 recovery hardware-tested, Android GSI update open | Trial 25 uses the reacquired single recovery set and streamed per-chunk verification. Full super, both LP slots, log-reader boot, original DTBO and F.20 boot completion are checked after restoration. [Trial 25 recovery](../build/device/m1-ufs-keymaster-transport-2026-11-14.json) |
+| OTA / recovery / rollback | F.20 recovery hardware-tested, retained GSI watchdog tested | Trial 26 stopped before policy on an unsupported watchdog timeout and automatically restored the one original set; full super, boot, DTBO, both LP slots and F.20 boot completion matched. Trial 27 accepted 30 seconds and retained GSI after the lease soak. Fault injection of the new guard's missing-ACK/expired-lease path remains open. [Trials 26–27](../build/device/m1-gsi-adb-2026-11-14.json) |
 
 ## Test record template
 For each test, record date/device build, kernel commit/config, system/vendor fingerprints, exact steps, expected and observed behavior, logs and result.

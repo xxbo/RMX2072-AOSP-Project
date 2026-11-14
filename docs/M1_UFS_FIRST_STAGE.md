@@ -285,4 +285,63 @@ The harness read back the complete candidate before boot. With no API 37 ADB obs
 
 ### Guarded ADB candidate after trial 25
 
-The optional project USB profile adds configfs/FunctionFS setup, the measured a600000.usb controller, authenticated scratch-volume ADB keys and a source-built watchdog owner. The host must pass same-boot Android identity checks and a renewable 190-second ADB soak before retaining GSI. Missing ADB or an expired lease returns through the existing diagnostic/EDL recovery. Full GSI split-policy compilation passed with neverallow checks enabled; 65 local tests passed. Handset acceptance is pending. See [the profile and recovery protocol](../device/realme/bladerunner_48m/m1-usb/README.md).
+The optional project USB profile adds configfs/FunctionFS setup, the measured a600000.usb controller, authenticated scratch-volume ADB keys and a source-built watchdog owner. The host must pass same-boot Android identity checks and a renewable 190-second ADB soak before retaining GSI. Missing ADB or an expired lease is designed to return through the existing diagnostic/EDL recovery. Full GSI split-policy compilation passed with neverallow checks enabled; 65 local tests passed at candidate preparation. The physical outcomes follow below. See [the profile and recovery protocol](../device/realme/bladerunner_48m/m1-usb/README.md).
+
+### Trials 26–27 · Authenticated GSI ADB and retained watchdog
+
+Trial 26 stopped before policy installation: the KPSS watchdog rejected a
+120-second timeout. Its 0xFFFFF-tick counter at the measured 32764 Hz permits
+at most 32 seconds. Both the witness and Android guard now request 30 seconds
+and feed periodically for longer host windows. Trial 26 returned to 9008 and
+automatically restored F.20. Independent full super/boot/DTBO readbacks, both
+LP slots, the Android-side super digest and boot completion passed on boot
+`54425c28-3298-47f6-ae31-8bf11242cea3`. No policy installation or GSI ADB result
+is attributed to that failed trial.
+
+Trial 27 booted `7cb8f75f-a65f-4bfb-9a37-d4cb732370be` using the same unified
+6.18 kernel, GSI and writable test-volume seeds. The complete candidate was
+independently read back before boot. The witness recorded both verified UFS
+mounts, successful temporary-key listener continuation and subsequent version
+query, then `requested=30 actual=30 rc=0 errno=0` and cancellation of the old
+return timer. The kernel accepted all 706125 policy bytes. The vendor USB
+rules released diagnostic ACM and prepared `g1`, FunctionFS and the measured
+`a600000.usb` controller for GSI adbd. The host observed 18d1:4ee7 and an
+authenticated `RMX2072-M1` transport.
+
+| Check | Trial 27 result |
+| --- | --- |
+| Android identity | API 37; `6.18.32-android17-5-maybe-dirty-4k`; PID 1 `/system/bin/init second_stage`; enforcing; same boot ID. |
+| UFS system/vendor | Live read-only ext4 mounts on dm-14/dm-15 match the independent same-boot witness, verity status and linear tables backed by UFS sda10. |
+| ADB authentication | Existing host public key only in the live scratch data; `ro.adb.secure=1`, `ro.debuggable=0`, shell UID 2000. |
+| Guard | 192.563-second same-boot lease soak completed; final state `retained`. A wrong-boot keep command was rejected. |
+| File transfer | 1 MiB push and pull passed before and after retention. Device and returned SHA-256 both `fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83`; temporary files removed. |
+| Writable volumes | Mountinfo reports data 7:0 and metadata 7:1; original userdata was not mounted. |
+| GSI services | ADB `service check` finds `android.security.maintenance`; logcat records successful TEE earlyBootEnded and adbd APEX activation. This capture does not independently trace vdc process exit. |
+| End state | Phone left running GSI; no F.20 restoration after trial 27. |
+
+The first host validator incorrectly required shell-readable vendor init
+status and `sysfs_dm`. The production GSI denies both. Same-boot keep commands
+preserved the running trial while the host validator was corrected; no phone
+image or policy changed during this correction. Acceptance uses the
+boot-bound guard response and independent ACM UFS evidence matched to live
+mounts. The final stricter checks also passed after retention. A fresh boot
+with the final host scripts is still untested. There are now 67 passing local
+tests, including rejection of mismatched witness boot IDs, backing devices,
+verity chains and mount identities.
+
+The current image still needs a host request to start Android from diagnostic
+init. Disconnected autonomous cold boot remains M1 work. The new guard's
+missing-ACK and expired-lease reset paths have not been fault-injected on the
+handset; trial 26 separately establishes automatic recovery from a pre-policy
+failure. Retained GSI uses volatile data/metadata. Its framework has not
+completed boot: SurfaceFlinger aborts because no OpenGL ES implementation is
+available, audioserver receives SIGSEGV, and the project HAL still leaves
+shared-secret computation and key generation unimplemented. Logcat and
+process captures are now available directly through Android ADB.
+
+Keep one F.20 recovery set and one current candidate, plus their pinned build
+inputs. Rebuild in place only over recognized current output files; retain
+digest manifests and small trial logs instead of historical partition images.
+The current large files total about 22.1 GB, primarily the two 8.87 GB super
+sets and the 3.95 GB GSI input. Raw readbacks are removed only after matching
+the expected digest. [Machine-readable trials, hashes and limitations](../build/device/m1-gsi-adb-2026-11-14.json)
