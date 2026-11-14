@@ -113,7 +113,10 @@ def main():
     assert sha(loader)=='9955d332f67bd610621d092520fa65626743e10a5b781c4f2ae532b99934dea9'
     assert verify(stock,'f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532')['parts']==orig['partitions']['super']['parts']
     assert sha(stock/'boot.img')==orig['partitions']['boot']['sha256'] and sha(stock/'dtbo.img')==orig['partitions']['dtbo']['sha256']
-    if restore_only:enter('recovery-entry');restore();sys.exit(0)
+    if restore_only:
+     (dest/'recovery-ready.json').write_text(json.dumps(dict(original_images_verified=True,utc=datetime.now(timezone.utc).isoformat()))+'\n')
+     event('Original recovery inputs verified; waiting for EDL')
+     enter('recovery-entry');restore();sys.exit(0)
     assert sha(p/'boot/boot-diag.img')==boot['boot_sha256']
     assert [x['sha256'] for x in verify(p/'candidate',candidate['sha256'])['parts']]==candidate['parts']
     expected_rows=ET.fromstring(stock_restore_xml())

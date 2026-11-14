@@ -374,3 +374,33 @@ chunks, boot and DTBO matched independent readbacks. F.20 completed boot
 `ffdb6dc3-5877-4dd3-a74b-b4f5dd23c02f`; both LP slots and the complete
 Android-side super hash matched. The phone is back in F.20.
 [Full evidence and limitations](../build/device/m1-autonomous-boot-2026-11-14.json)
+
+### Trial 29 · Local retention and recovery-marker survival
+
+The same kernel and DT bundle booted with the non-writing native alignment
+wrapper. Boot `fee5d118-d5ad-4191-83e0-ec6bd6736058` independently retained
+the watchdog through `local-adbd`, before any host keep command. Enforcing,
+API 37, second-stage PID 1, verified UFS mounts and maintenance passed. A
+194-second same-boot check and 1 MiB hash-checked transfer passed with the
+guard already retained. This is USB-attached startup, not disconnected cold
+acceptance.
+
+Fault injection reached `expired` at 45.203 seconds and lost ADB at 75.718
+seconds. The kernel pretimeout followed the expired marker by 29 seconds.
+Recovery boot `690518ae-9933-41f6-800c-f079d75a35a3` read that exact marker,
+selected diagnostics and automatically reached 9008 at 183.390 seconds. The
+1325-byte pmsg had no ECC errors. No host reboot command was sent during this
+part of the test.
+
+The full recovery nevertheless remains **unqualified**: 9008 was transient.
+While the newly started restore runner verified its original inputs, the
+handset returned to GSI boot `e964c1e5-c062-4c8a-b8bb-f452cf064855`, whose
+previous guard was `none`. Its previous pstore was damaged across the EDL
+cycle. The host then requested EDL explicitly; the already waiting restore
+runner captured Sahara and began the original restore. The cause of the
+short EDL window is not established. For the next complete fault rehearsal,
+validate and arm the host recovery runner **before** stopping the guard lease,
+and require automatic Sahara capture plus verified F.20 boot. Reaching 9008
+alone is not full rollback acceptance.
+
+[Trial 29 raw-log digests and results](../build/device/m1-autonomous-recovery-29-2026-11-14.json)

@@ -39,3 +39,13 @@ binding, register access, the effective IRQ provider and the primary/secondary
 PON topology. No PMIC registers have been modified by this investigation and
 no poweroff fix is claimed. Missing Linux key input support alone does not
 prove why a fully powered-off handset fails to wake.
+
+The trial 29 recovery console confirmed that `c440000.qcom,spmi` is deferred,
+while the arbiter identifies hardware version v5. Its parent IRQ resolves to
+PDC pin 1. The effective PDC node still has only `qcom,kona-pdc`; the pinned
+[6.18 PDC driver](https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/drivers/irqchip/qcom-pdc.c)
+registers `qcom,pdc`, and `CONFIG_QCOM_PDC=y` is already built in. This identifies
+a missing binding before PMIC children can appear. A PDC-only correction must
+be tested independently of the earlier combined TLMM/PDC probe. The short EDL
+window has not been attributed to PMIC watchdog behavior without further
+measurements.

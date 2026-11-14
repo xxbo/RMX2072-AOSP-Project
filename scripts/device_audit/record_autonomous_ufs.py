@@ -32,7 +32,7 @@ def main():
     if (fault/'fault.json').exists():
         record['fault']=load(fault/'fault.json')
         record['fault_transports']=[json.loads(x) for x in (fault/'transport.jsonl').read_text().splitlines()]
-        for name in ('result','failure','intermediate-boot'):
+        for name in ('result','failure','intermediate-boot','edl-window-failure'):
             if (fault/(name+'.json')).exists():record['fault_'+name]=load(fault/(name+'.json'))
         for name in ('console-ramoops-0','pmsg-ramoops-0'):
             if (fault/name).exists():

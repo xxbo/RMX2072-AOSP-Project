@@ -2283,6 +2283,14 @@
       "timer_seconds": 180
     }
   },
+  "fault_edl-window-failure": {
+    "result": "FAIL_STABLE_EDL_RECOVERY",
+    "automatic_edl_observed": true,
+    "automatic_edl_not_held": true,
+    "host_restore_missed_window": true,
+    "utc": "2026-11-14T12:39:52.267002+00:00",
+    "note": "A fresh autonomous GSI boot returned while the restore-only runner validated inputs then waited for EDL. Full autonomous recovery is not yet qualified."
+  },
   "console-ramoops-0_selected": [
     "[  344.294024][ T1339] RMX-M1-GUARD state=lease",
     "[  389.342792][ T1339] RMX-M1-GUARD state=expired",
@@ -2377,14 +2385,24 @@
     "ufs-host-g3-gsi17-firststage-ufs-29/live/processes.txt": "e2688cb8f55c4b01bd5ed148ebec1cbf5d683869f9f33d419e3e4223c2f0e631",
     "ufs-host-g3-gsi17-firststage-ufs-29/live/properties.txt": "83fd8a375667537fd0ab8797e06c9a17543833bbe1ea8795808d89ff00e9f3f0",
     "ufs-host-g3-gsi17-firststage-ufs-29/live/watchdog.txt": "1a44b43f4bde801edbeaff721955c8faeed139983a411e8a02616df29154e94f",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry/after-edl-boot.txt": "cc4f22afbe0acfe7f3d05339dbfb9ba49aea33823ce12a550004aad29351593d",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry/after-edl-previous-console": "fb8f5d8e03152b5cfda14a25ab7e6be333b931d444d81c1221e2de97f964aad0",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry/after-edl-previous-pmsg": "08dcbb25d50c79b21cc78d31b3eb33a0132631b3bb9126c5895031e1568387d0",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry/after-edl-reboot.txt": "4f3e857601bace8dba231fed801cdde5ddd8b1f73231c542c72d4cc3f9cdd1b1",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/before.json": "d101dc41310db3c333383a653e13b00276f7d94ee55c20f289f5a26bff7499a9",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/console-ramoops-0": "0e32f61cd8234b47621cd3cd2318bdde7e643c386b0c38c3c2ab3da511b486c3",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry/edl-window-failure.json": "e2ddf08669a000311cf07959695ee1afb83775e6b2a0fccc9ef01b5cdba09fbf",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/fault.json": "3e99157294fc3fbaa1a4ba2a44a54a041c1b2b37acfbb128d29b0bc2378051cd",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/host-events.jsonl": "d91537d3ba82d217f3f40d9f65fd9ec1279344dcc9b1945a6e2dd40894fb1711",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/intermediate-boot.json": "c11b1ab6bf0ab60dcb4bbca3e475e5e673a784c514c536b79d0b5da9cfb87925",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/pmsg-ramoops-0": "634cf592643793eb47a2c468226382cc3df25d5eb931dc4c94dd60f5532c9933",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/recovery-providers.txt": "39ed8ceff9a100afeca8580d2f7419a966b0b940b505b6fa4063d43ff325bf52",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/result.json": "4f9a5de6ad3ca3145efdedcdb0c8169292f3f42b30431931b95de41fd1d98714",
-    "ufs-host-g3-gsi17-firststage-ufs-29-expiry/transport.jsonl": "88e99f762941594f06d1abaa734218a8806b74f17645d6bf261ad4c8d5709720"
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry/transport.jsonl": "88e99f762941594f06d1abaa734218a8806b74f17645d6bf261ad4c8d5709720",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/port_trace.txt": "faaacfcf233bb4336bb4cbb6df5a38295633f44836b81ad57a1242c8f47e11f6",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/recovery-entry.log": "b857edd6b1fbf4c2a62985245c9906380894e802b8b2ccc9e41d12fb5ba5b49b",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restore-super.log": "4b92e6a138acaf5c80d0d158260ad880c5bc95d26ca621accf470c8734f68057",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restore-super.xml": "5a1b918a6873a90404f3ca0a7fd91449e67c129865779873fdafbec2f2b8c5d4",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/timeline.jsonl": "852303aebba5f0ac2b1fda816ead7e3583955367d26e2d9db55cb77efe9f00fb"
   }
 }
