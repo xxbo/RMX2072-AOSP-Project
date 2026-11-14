@@ -120,11 +120,13 @@ static int rmx2072_key_call(struct rmx2072_key_test *test, size_t len, bool *ter
 {
 	struct qcom_scm_desc desc = {
 		.owner = QSEECOM_TZ_OWNER_TZ_APPS, .svc = QSEECOM_TZ_SVC_APP_ID_PLACEHOLDER,
-		.cmd = QSEECOM_TZ_CMD_APP_SEND,
-		.arginfo = QCOM_SCM_ARGS(5, QCOM_SCM_VAL, QCOM_SCM_RW, QCOM_SCM_VAL,
-					    QCOM_SCM_RW, QCOM_SCM_VAL),
+		/* F.20 uses TZ_APP_QSAPP_SEND_DATA_WITH_WHITELIST_ID (0x70000006). */
+		.cmd = 6,
+		.arginfo = QCOM_SCM_ARGS(7, QCOM_SCM_VAL, QCOM_SCM_RW, QCOM_SCM_VAL,
+					    QCOM_SCM_RW, QCOM_SCM_VAL, QCOM_SCM_RW, QCOM_SCM_VAL),
 		.args = { test->app_id, qcom_tzmem_to_phys(test->request), len,
-			  qcom_tzmem_to_phys(test->reply), SZ_32K + SZ_8K - len },
+			  qcom_tzmem_to_phys(test->reply), SZ_32K + SZ_8K - len,
+			  qcom_tzmem_to_phys(test->sglist), 32 },
 	};
 	struct qcom_scm_qseecom_resp resp = {};
 	int rc;
