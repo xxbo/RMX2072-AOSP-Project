@@ -96,13 +96,16 @@ def inspect(output, original):
 
 def accept(output, original):
     proof = inspect(output, original)
+    if (output/'boot-events.txt').exists() and proof['identity'][6] != 'retained':
+        raise ValueError('Autonomous boot has not yet passed its local readiness window')
     reply = shell('/vendor/bin/hw/rmx-m1-control --keep '+original).strip()
-    if reply != 'lease': raise ValueError('Guardian rejected same-boot control: '+reply)
+    if reply not in ('lease','retained'): raise ValueError('Guardian rejected same-boot control: '+reply)
     for _ in range(5):
-        if shell('getprop vendor.rmx.m1.state').strip() == 'lease':break
+        if shell('getprop vendor.rmx.m1.state').strip() == reply:break
         time.sleep(1)
     else:raise ValueError('Guardian did not accept matching boot ACK')
     proof['acknowledged_monotonic'] = time.monotonic()
+    proof['guard_mode_at_acceptance'] = reply
     (output/'gsi-accepted.json').write_text(json.dumps(proof,indent=2)+'\n')
     return proof
 
@@ -115,12 +118,13 @@ def collect(output):
 def soak_and_retain(output):
     proof = json.loads((output/'gsi-accepted.json').read_text())
     original = proof['identity'][2]
+    expected = proof.get('guard_mode_at_acceptance', 'lease')
     start = time.monotonic()
     rows=[]
     try:
         while time.monotonic()-start < 190:
             current = inspect(output, original)
-            if shell('/vendor/bin/hw/rmx-m1-control --keep '+original).strip() != 'lease':
+            if shell('/vendor/bin/hw/rmx-m1-control --keep '+original).strip() != expected:
                 raise ValueError('Watchdog lease renewal failed')
             rows.append(dict(elapsed=round(time.monotonic()-start,3),identity=current['identity']))
             time.sleep(10)
@@ -131,7 +135,7 @@ def soak_and_retain(output):
             raise ValueError('Watchdog retention commit failed')
         if shell('getprop vendor.rmx.m1.state').strip() != 'retained':
             raise ValueError('Retained state not confirmed')
-        final.update(soak=rows,seconds=round(time.monotonic()-start,3),guardian='retained')
+        final.update(soak=rows,seconds=round(time.monotonic()-start,3),guardian='retained',guard_mode_during_soak=expected)
         (output/'gsi-stable.json').write_text(json.dumps(final,indent=2)+'\n')
         collect(output)
         return final

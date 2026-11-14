@@ -1,0 +1,70 @@
+{
+  "witness_sha256": "41f093db62025931315e0462a7e9ad9124f4d9dfc7898b8db4bf63f62b647a59",
+  "cases": [
+    {
+      "case": "empty",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "stdout": "none",
+      "stderr": ""
+    },
+    {
+      "case": "binary-without-marker",
+      "sha256": "10fc3c51a152e90e5b90319b601d92ccf37290ef53c35ff92507687d8a911a08",
+      "returncode": 0,
+      "stdout": "none",
+      "stderr": ""
+    },
+    {
+      "case": "binary-retained",
+      "sha256": "3f43cf0d8d07a87b38d23191f6bf281ccc2fef21691ea3926101325037ddddcc",
+      "returncode": 0,
+      "stdout": "RMX-M1-AUTO boot=36f78fb1-b358-4aac-996e-a65775b23da6 state=retained",
+      "stderr": ""
+    },
+    {
+      "case": "expired-after-retained",
+      "sha256": "dd9b07dfc8c58c3a4aae4271649040553413daa2fd0ad91efd626a8a4d1fa5ca",
+      "returncode": 0,
+      "stdout": "RMX-M1-AUTO boot=36f78fb1-b358-4aac-996e-a65775b23da6 state=expired",
+      "stderr": ""
+    },
+    {
+      "case": "torn-after-retained",
+      "sha256": "f223090bb5d7cf02800ff62eccf4af25019eb68d784ad5114414928295040af5",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "damaged autoboot marker"
+    },
+    {
+      "case": "damaged-uuid-after-retained",
+      "sha256": "16301ddb177ea5ce8726c288777f4638be7806806efaf39cf8668377f3c0fd39",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "damaged autoboot marker"
+    },
+    {
+      "case": "later-complete-marker",
+      "sha256": "d99afcddcf280451e1adf05ab2dd30407546024f039f1d11ee11722fda488f2d",
+      "returncode": 0,
+      "stdout": "RMX-M1-AUTO boot=36f78fb1-b358-4aac-996e-a65775b23da6 state=retained",
+      "stderr": ""
+    },
+    {
+      "case": "oversized",
+      "sha256": "f1dd00ef88a2945e69a20c998c4eec9c37fa23ad7df39bcfd7c71d4f260dcf8c",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "absent-after-cold-power-loss",
+      "returncode": 0,
+      "stdout": "none"
+    }
+  ],
+  "strict_policy_compile": "SECILC_RC=0, neverallow checks enabled",
+  "local_tests": "69 passed, zero skips",
+  "entry_probe": false,
+  "scope": "Preparation checks only; not a hardware boot or watchdog recovery claim"
+}

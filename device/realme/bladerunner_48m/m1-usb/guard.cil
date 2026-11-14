@@ -26,6 +26,7 @@
 (allow rmx_m1_guard property_socket (sock_file (write)))
 (allow rmx_m1_guard init (unix_stream_socket (connectto)))
 (allow shell rmx_m1_control_prop (file (getattr open read map)))
+(allow vendor_init rmx_m1_control_prop (property_service (set)))
 
 (type rmx_m1_guard_socket)
 (roletype object_r rmx_m1_guard_socket)

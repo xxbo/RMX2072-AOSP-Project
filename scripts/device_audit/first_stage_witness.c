@@ -21,6 +21,7 @@
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "m1_autoboot_state.h"
 
 #define ROOT "/run/m1/root"
 #define PID_ONE 1
@@ -365,6 +366,25 @@ static void observe(int vendor_trial) {
     }
 }
 
+static void publish_file(const char *source, const char *name, int optional) {
+    const char label[] = "u:object_r:shell_data_file:s0";
+    char target[160];
+    snprintf(target, sizeof(target), "/proc/1/root/data/local/tmp/%s", name);
+    int in = open(source, O_RDONLY | O_CLOEXEC);
+    if (in < 0 && optional && errno == ENOENT) return;
+    if (in < 0) hold("autoboot-log-input");
+    int out = open(target, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0444);
+    if (out < 0) hold("autoboot-log-output");
+    char buf[4096]; ssize_t n; size_t size = 0;
+    while ((n = read(in, buf, sizeof(buf))) > 0) {
+        size += (size_t)n;
+        if (size > 2U*1024U*1024U+4096U || write(out, buf, n) != n) hold("autoboot-log-write");
+    }
+    if (n < 0 || fsetxattr(out, "security.selinux", label, sizeof(label), 0) || fsync(out))
+        hold("autoboot-log-sync");
+    close(in); close(out);
+}
+
 /* Snapshot mount/verity evidence while init is stopped before loading policy.
  * Android shell can read this file on the disposable data volume after boot. */
 static void publish_autoboot(void) {
@@ -375,15 +395,9 @@ static void publish_autoboot(void) {
         if (chown(dirs[i], 2000, 2000) || setxattr(dirs[i], "security.selinux", label, sizeof(label), 0))
             hold("autoboot-log-directory-label");
     }
-    int in = open("/run/m1-autoboot.events", O_RDONLY | O_CLOEXEC);
-    int out = open("/proc/1/root/data/local/tmp/rmx-m1-boot.txt", O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0444);
-    if (in < 0 || out < 0) hold("autoboot-log-open");
-    char buf[4096]; ssize_t n;
-    while ((n = read(in, buf, sizeof(buf))) > 0)
-        if (write(out, buf, n) != n) hold("autoboot-log-write");
-    if (n < 0 || fsetxattr(out, "security.selinux", label, sizeof(label), 0) || fsync(out))
-        hold("autoboot-log-sync");
-    close(in); close(out);
+    publish_file("/run/m1-autoboot.events", "rmx-m1-boot.txt", 0);
+    publish_file("/sys/fs/pstore/console-ramoops-0", "rmx-m1-previous-console", 1);
+    publish_file("/sys/fs/pstore/pmsg-ramoops-0", "rmx-m1-previous-pmsg", 1);
 }
 
 /* Pin the checked loop node and init's current root before entering its
@@ -434,6 +448,7 @@ static void scratch_mount(const char *name) {
 
 int main(int argc, char **argv) {
     setvbuf(stdout, NULL, _IONBF, 0);
+    if (argc == 3 && !strcmp(argv[1], "autoboot-state")) return autoboot_state(argv[2]);
     if (argc == 3 && !strcmp(argv[1], "scratch-mount")) scratch_mount(argv[2]);
     else if (argc == 2 && !strcmp(argv[1], "handoff")) handoff();
     else if (argc == 2 && !strcmp(argv[1], "observe")) observe(0);

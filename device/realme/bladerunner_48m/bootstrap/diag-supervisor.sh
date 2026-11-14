@@ -23,7 +23,7 @@ if [ -r /control-return-seconds ]; then
     ) &
     echo $! > /control-return-pid
 fi
-if [ -x /bin/entry-carry ]; then
+if [ -x /bin/entry-carry ] && [ ! -f /m1-autoboot ]; then
     /bin/busybox mkdir -p /sys/fs/pstore
     /bin/busybox mount -t pstore pstore /sys/fs/pstore
     /bin/entry-carry --capture > /dev/kmsg 2>&1

@@ -1,4 +1,4 @@
-/* M1 engineering trial: bounded until an authenticated same-boot host ACK. */
+/* M1 engineering watchdog: local ADB readiness or a bounded host test lease. */
 #define _GNU_SOURCE
 #include <errno.h>
 #include <stdlib.h>
@@ -77,10 +77,30 @@ int main(int argc, char **argv) {
     struct timespec start, now;
     clock_gettime(CLOCK_BOOTTIME, &start);
     int accepted = 0;
-    time_t first_ack = 0, lease_end = 0;
+    time_t first_ack = 0, lease_end = 0, ready_since = 0, lost_since = 0, journal_at = 0;
     state("armed");
     for (;;) {
         clock_gettime(CLOCK_BOOTTIME, &now);
+        char ready[PROP_VALUE_MAX] = {0};
+        __system_property_get("vendor.rmx.m1.usb_ready", ready);
+        if (!strcmp(ready, "1")) {
+            lost_since = 0;
+            if (!ready_since) ready_since = now.tv_sec;
+        } else {
+            ready_since = 0;
+            if (!lost_since) lost_since = now.tv_sec;
+        }
+        if (!accepted && ready_since && now.tv_sec-ready_since >= 30) {
+            accepted = 2; journal_at = now.tv_sec;
+            __system_property_set("vendor.rmx.m1.accepted_by", "local-adbd");
+            state("retained");
+        }
+        if (accepted == 2 && lost_since && now.tv_sec-lost_since >= 30) {
+            state("usb-health-lost"); break;
+        }
+        if (accepted == 2 && now.tv_sec-journal_at >= 30) {
+            state("retained"); journal_at = now.tv_sec;
+        }
         if ((!accepted && now.tv_sec - start.tv_sec >= 150) || (accepted == 1 && now.tv_sec >= lease_end)) { state("expired"); break; }
         if (ioctl(fd, WDIOC_KEEPALIVE, 0)) { state("feed-error"); break; }
         struct pollfd pollfd = { .fd = server, .events = POLLIN };
@@ -99,13 +119,19 @@ int main(int argc, char **argv) {
                         accepted=1; first_ack=now.tv_sec; lease_end=now.tv_sec+45;
                         reply="lease"; state(reply);
                     }
-                    if (!strcmp(command, keep) && accepted != 2) {
-                        if (!accepted) first_ack = now.tv_sec;
-                        accepted=1; lease_end=now.tv_sec+45; reply="lease"; state(reply);
+                    if (!strcmp(command, keep)) {
+                        if (accepted == 2) reply="retained";
+                        else {
+                            if (!accepted) first_ack = now.tv_sec;
+                            accepted=1; lease_end=now.tv_sec+45; reply="lease"; state(reply);
+                        }
                     }
                     if (!strcmp(command, retain) && accepted == 1 && now.tv_sec-first_ack >= 180) {
-                        accepted=2; reply="retained"; state(reply);
+                        accepted=2; journal_at=now.tv_sec; reply="retained";
+                        __system_property_set("vendor.rmx.m1.accepted_by", "host-soak");
+                        state(reply);
                     }
+                    if (!strcmp(command, retain) && accepted == 2) reply="retained";
                     if (!strcmp(command, rollback)) { returning=1; reply="rollback"; state(reply); }
                 }
                 send(client, reply, strlen(reply), MSG_NOSIGNAL); close(client);

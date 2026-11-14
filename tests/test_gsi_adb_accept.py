@@ -66,6 +66,14 @@ class GsiAcceptanceTests(unittest.TestCase):
             self.assertEqual(proof['identity'][2],BOOT)
             self.assertTrue((Path(d)/'gsi-accepted.json').exists())
             self.assertIn('--keep '+BOOT,sh.call_args_list[4].args[0])
+    def test_autonomous_boot_must_retain_without_host_keep(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d); (p/'boot-events.txt').write_text('autonomous fixture')
+            with patch.object(m,'shell',side_effect=RESP) as sh:
+                with self.assertRaises(ValueError):m.accept(p,BOOT)
+                self.assertEqual(sh.call_count,4)
+            with patch.object(m,'shell',side_effect=[IDENTITY.replace('armed','retained')]+RESP[1:]+['retained','retained']):
+                self.assertEqual(m.accept(p,BOOT)['guard_mode_at_acceptance'],'retained')
     def test_soak_failure_requests_rollback(self):
         with tempfile.TemporaryDirectory() as d:
             import json

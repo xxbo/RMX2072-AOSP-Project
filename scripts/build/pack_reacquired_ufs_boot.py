@@ -33,7 +33,7 @@ def sha(data):
 
 
 def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha256,
-         entry_probe, ramdisk, output):
+         ramdisk, output, entry_probe=None):
     repo = Path(__file__).resolve().parents[2]
     if output.resolve().is_relative_to(repo):
         raise ValueError('Keep private images outside the repository')
@@ -90,7 +90,9 @@ def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha25
     raw_kernel = kernel.read_bytes()
     if sha(raw_kernel) != expected_kernel_sha256:
         raise ValueError('Kernel digest mismatch')
-    wrapped = wrap(raw_kernel, entry_probe.read_bytes())
+    # Autonomous recovery owns pmsg. The old entry probe overwrites its data
+    # without updating ramoops ECC and can destroy the previous guard marker.
+    wrapped = wrap(raw_kernel, entry_probe.read_bytes() if entry_probe else None)
     rd = ramdisk.read_bytes()
     import gzip
     if gzip.decompress(rd)[:6] != b'070701':
@@ -124,7 +126,8 @@ def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha25
                                 for i, t in enumerate(packed)):
         raise ValueError('Packaged DTB bundle differs')
     record = dict(source_boot_sha256=sha(source), dtbo_sha256=sha(dtbo), boot_sha256=sha(result),
-                  kernel_sha256=sha(raw_kernel), ramdisk_sha256=sha(rd), dtb_bundle_sha256=sha(bundle),
+                  kernel_sha256=sha(raw_kernel), entry_probe=bool(entry_probe),
+                  ramdisk_sha256=sha(rd), dtb_bundle_sha256=sha(bundle),
                   selected_base_sha256=sha(stages[3]), other_24_trees_identical=True,
                   overlays=OVERLAYS, checks=checks, cmdline=command.decode(), avb_envelope=envelope,
                   status='packaged-not-device-tested')
@@ -134,7 +137,8 @@ def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha25
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('stock-boot', 'stock-dtbo', 'overlays', 'libfdt', 'kernel', 'entry-probe', 'ramdisk', 'output'):
+    for name in ('stock-boot', 'stock-dtbo', 'overlays', 'libfdt', 'kernel', 'ramdisk', 'output'):
         parser.add_argument('--'+name, type=Path, required=True)
+    parser.add_argument('--entry-probe', type=Path)
     parser.add_argument('--expected-kernel-sha256', required=True)
     pack(**vars(parser.parse_args()))

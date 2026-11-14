@@ -22,9 +22,15 @@ contents belong in Git. The GSI retains `ro.adb.secure=1` and `ro.debuggable=0`.
    cancels the old diagnostic return timer, then releases its descriptor without
    magic close. The watchdog remains armed until Android reopens it.
 2. The init service opens the watchdog and sets 30 seconds. It feeds for at most
-   150 seconds while waiting for the authenticated host.
+   150 seconds while waiting for local ADB readiness or an authenticated host test.
+   With no host lease, 30 continuous seconds of `adbd=running` and configured
+   ADB changes the guard to `retained` locally. This does not prove an authenticated
+   USB session; the later host acceptance remains separate. Retained mode stops
+   feeding if local USB readiness is lost for 30 seconds. Cable absence alone
+   does not change the configured USB state.
 3. The host checks API 37, the exact kernel, boot ID, enforcing, PID 1, UFS mounts
-   and running adbd plus a responding guardian. Production GSI shell cannot
+   and running adbd plus a responding guardian. Autonomous acceptance first waits for local retention
+   without sending keep commands. Production GSI shell cannot
    read the vendor init service property or `sysfs_dm`; use the independently
    captured same-boot UFS witness and matching live mounts in that case. Never
    accept a conflicting graph, mismatched boot, mapper or verity chain.
@@ -34,8 +40,8 @@ contents belong in Git. The GSI retains `ro.adb.secure=1` and `ro.debuggable=0`.
    `retain` commits continuous watchdog feeding.
    The guardian also enforces at least 180 seconds since the first ACK.
 5. A failed trial or an explicit matching `rollback` stops feeding. The hardware
-   reset boots the diagnostic ramdisk; the attached host collects pstore, enters
-   EDL and restores the verified original boot/super. Original userdata is not
+   reset boots the recovery path; it exposes diagnostic pstore for 90 seconds
+   and then enters EDL itself. The attached host restores the verified original boot/super. Original userdata is not
    mounted or formatted. Retained operation still uses volatile data/metadata.
 
 The pinned KPSS watchdog limits its counter to 0xFFFFF ticks; with the measured
@@ -83,6 +89,13 @@ to `/data/local/tmp/rmx-m1-boot.txt` on the same disposable data seed before
 policy installation. ADB can retrieve it without initiating the handoff.
 The optional temporary-key TIME probe is skipped because this profile has no
 verified RTC; no host time or invented timestamp is supplied.
+
+Trial 28 exposed a collision between the old native-entry probe and the pmsg
+journal. The autonomous packer now uses the non-writing alignment wrapper and
+skips entry-carry; the kernel and selected DTB are unchanged. A bounded binary
+parser rejects damaged last records instead of silently accepting an empty
+grep result. Previous console/pmsg are also copied onto scratch data for ADB
+inspection. These fixes require a new hardware reset qualification.
 
 The supervisor and guard write boot-bound state markers into reserved-RAM
 pmsg. On a subsequent boot, a pending/failed attempt selects a diagnostic

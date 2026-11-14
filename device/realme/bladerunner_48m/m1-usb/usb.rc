@@ -39,3 +39,14 @@ on property:apexd.status=activated
 
 on boot
     setprop sys.usb.config adb
+
+# Local readiness is independent of cable attachment or host authentication.
+# init bridges its service state into this vendor-owned engineering property.
+on property:sys.usb.state=adb && property:init.svc.adbd=running
+    setprop vendor.rmx.m1.usb_ready 1
+
+on property:init.svc.adbd=stopped
+    setprop vendor.rmx.m1.usb_ready 0
+
+on property:sys.usb.state=none
+    setprop vendor.rmx.m1.usb_ready 0
