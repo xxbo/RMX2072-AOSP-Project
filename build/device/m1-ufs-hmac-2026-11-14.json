@@ -841,6 +841,124 @@
           1
         ]
       }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-17",
+      "boot_id": "e2b158e1-e48a-4930-8438-3abf780c864e",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "outcome": "Capture stopped after CONFIGURE submission through the whitelist app call; no return or temporary-key generation was observed",
+      "mounts": {
+        "system": {
+          "seconds": 26.439995,
+          "source": "/dev/block/dm-14",
+          "mount_rc": 0,
+          "readonly": true
+        },
+        "vendor": {
+          "seconds": 26.525332,
+          "source": "/dev/block/dm-15",
+          "mount_rc": 0,
+          "readonly": true
+        }
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keymaster": {
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ],
+        "temporary_key_stages": [
+          "[   45.316611][ T1695] rmx2072-temp-key: lookup",
+          "[   45.317124][ T1695] rmx2072-temp-key: allocating buffers",
+          "[   45.317764][ T1695] rmx2072-temp-key: registering time listener",
+          "[   45.318120][ T1695] rmx2072-temp-key: registered rc=0 result=0",
+          "[   45.318217][ T1695] rmx2072-temp-key: send method=278 bytes=36"
+        ]
+      },
+      "diagnostic_clock": {
+        "boot_id": "e2b158e1-e48a-4930-8438-3abf780c864e",
+        "source": "USB host UTC",
+        "host_utc": "2026-11-14T05:22:04.181333+00:00",
+        "before_seconds": 22,
+        "after_seconds": 1794633724
+      },
+      "observer_retries": [],
+      "selinux_handoff": "NOT REACHED",
+      "gsi_keystore2": "NOT RUN",
+      "maintenance": "NOT RUN",
+      "vdc_early_boot_ended": "NOT RUN",
+      "capture_limitations": [
+        "Last stage is method 278 CONFIGURE submission with 36 request bytes",
+        "No CONFIGURE status, key generation, callback or Android handoff was captured",
+        "Pmsg ECC errors exclude it from Android execution claims"
+      ],
+      "raw_sha256": {
+        "acm.log": "3a4606684688b507075b1b533d79adcc036fd7ed46d56b78d3f4ee61ff43bdca",
+        "console-ramoops-0": "19bba14f515d78dcb8a188893fc9121582a1b329d9c5f0d42abfeab8f53b46ee",
+        "pmsg-ramoops-0": "0ba8299c223d348a770b01793881de690cbb9baf4183ee516fdd10dd322db30b"
+      },
+      "pmsg_ecc": "ECC: 4 Corrected bytes, 32 unrecoverable blocks",
+      "console_ecc": "ECC: No errors detected",
+      "post_restore_control": {
+        "boot_id": "c4c1e72d-e4c1-4a22-913b-461635db9668",
+        "maintenance_found": true,
+        "temporary_hmac_key": {
+          "generate": 0,
+          "blob_bytes": 455,
+          "delete": 0
+        },
+        "raw_sha256": "ccd1d90f829d547078228cca8870240ec2a89b9bf15dee30210545d7c175aa18"
+      },
+      "shared_memory_followup": {
+        "stock_kprobe": "Unavailable because F20 has no kprobe_events interface; no runtime enabled value collected",
+        "source_reference": "realme Q qtee_shmbridge.c enables and registers shared memory during initialization",
+        "trial17_tzmem_mode": "GENERIC",
+        "next_candidate": "SHMBRIDGE with a startup status log; hypothesis awaits hardware test"
+      },
+      "build": {
+        "actions_run": 43557613693,
+        "kernel_source_commit": "ab2598154c14addd7a525472a5fa1a7fcccc1061",
+        "artifact_id": 14099388370,
+        "artifact_digest": "sha256:31ad602ec4608fcb23ff71c5ad93e6e28bb1552e804daeca00d47a770e013330",
+        "kernel_sha256": "041a3919df337bfe29174f1d351044279555afa91024e6ca6704533a1fabafca",
+        "ramdisk_sha256": "5e0230ab9e5e3baa6c9219fdf422b0ad7b44995ade980f5e3e91aa7c88e344d9",
+        "boot_sha256": "65d28be51be2757dad65ffded4fe93953a4bae039425c75ee42b9a9623fe023d"
+      },
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "c4c1e72d-e4c1-4a22-913b-461635db9668",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
     }
   ]
 }

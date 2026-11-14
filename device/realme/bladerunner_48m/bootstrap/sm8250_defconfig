@@ -17,6 +17,9 @@ CONFIG_HWSPINLOCK=y
 CONFIG_HWSPINLOCK_QCOM=y
 CONFIG_QCOM_SCM=y
 CONFIG_QCOM_QSEECOM=y
+# Register SCM request and listener memory with secure world, as in the stock
+# QTEE shared-memory bridge path. The driver handles unsupported firmware.
+CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y
 CONFIG_QCOM_AOSS_QMP=y
 CONFIG_QCOM_PDC=y
 CONFIG_SPMI=y
