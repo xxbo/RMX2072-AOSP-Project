@@ -219,10 +219,29 @@ Recovery returned F.20 to boot `a35919f0-d87d-4b63-8dac-989854105004` with `sys.
 
 Two controlled stock Keymaster service restarts on that boot captured CONFIGURE returning 0 without a listener callback. A probe at the verified library's legacy-configure call site recorded a 48-byte request with three scalar parameters, OS_VERSION 120000, OS_PATCHLEVEL 202402 and VENDOR_PATCHLEVEL 20240205. Trial 23 retains the two OS parameters to measure the contiguous-buffer change. The following candidate adds VENDOR_PATCHLEVEL 19700101, matching the engineering vendor property, and checks that property before invoking the control. A subsequent stock temporary key generated and deleted successfully with the time listener exercised. [Stock CONFIGURE record](../build/device/m1-f20-hmac-method-2026-11-14.json)
 
-Run the CONFIGURE collector as root on the pinned F.20 build. It verifies both library digests, restarts `keymaster-4-0` once, records the three scalar configuration fields and command lengths, and checks the replacement service PID. Its private trace instance is disabled and removed after collection. Keep the raw stdout with the local capture and publish the normalized fields and digest. [CONFIGURE collector](../scripts/device_audit/f20_keymaster_configure.sh)
+Run the CONFIGURE collector as root on the pinned F.20 build. It verifies both library digests, restarts `keymaster-4-0` once, records the three scalar configuration fields and command lengths, and checks the replacement service PID. After collection it disables its private trace instance and removes its probes. Keep the raw stdout with the local capture and publish the normalized fields and digest. [CONFIGURE collector](../scripts/device_audit/f20_keymaster_configure.sh)
 
 ### Trial 23 · CONFIGURE reaches the trusted application
 
 On boot `49453ec5-6eae-402e-b00a-41f892a53ad6`, the early host capture saved `SHM Bridge enabled` at 0.604557 s. With the contiguous buffer, the 36-byte CONFIGURE call returned SCM transport 0 and secure completion 0 at 45.931227 s. Its TA status was INVALID_ARGUMENT (-38). TIME listener teardown succeeded, and the generation/deletion stages remained unexecuted. Their -61 values are the probe's ENODATA sentinel. [Trial 23 evidence](../build/device/m1-ufs-hmac-2026-11-14.json) · [Keymaster error codes](https://android.googlesource.com/platform/hardware/interfaces/+/refs/heads/main/keymaster/4.0/types.hal)
 
 The following version transaction returned transport -22. Android entered enforcing and second stage, but 30 project HAL attempts logged `TEE version unavailable`. The GSI registered compat and kept waiting in vdc. The successful HMAC/maintenance/vdc sequence remains recorded in trial 22's earlier kernel. The next configured-key comparison supplies the third vendor patch-level parameter and also checks these later service results.
+
+### Trial 24 · Temporary key and TIME listener continuation
+
+Boot `e479c140-e432-4c59-9ab6-cdbee31f767a` used the same signed UFS images and writable scratch seeds. The three-parameter CONFIGURE matched the GSI OS version/month and the project's engineering vendor patch date. The early capture recorded SHM Bridge enabled. USB-host UTC was set and checked before handoff. The persistent console has no ECC errors. [Trial 24 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+| Time since boot | Kernel probe result |
+| ---: | --- |
+| 46.035243 s | CONFIGURE returned 0 with OS_VERSION 170000, OS_PATCHLEVEL 202609 and VENDOR_PATCHLEVEL 19700101. |
+| 46.036650 s | Generation returned INCOMPLETE with listener ID 11. |
+| 46.036744 s | The TIME buffer contained command 770. |
+| 46.045664 s | Sending the time response resumed the transaction with transport 0 and secure completion 0. |
+| 46.045848 s | The probe submitted deletion of the returned 455-byte blob. |
+| 46.051760 s | Deletion completed with transport 0 and secure completion 0. |
+
+The final control record reports generation 0, deletion 0, one callback, final result 0 and listener teardown 0. The fixed kernel control exercised the resident TEE app directly. The project's HIDL `generateKey` method still returns UNIMPLEMENTED.
+
+The next version query returned transport -22, and 30 project service attempts logged `TEE version unavailable`. This boot registered compat and retained the vdc wait. The HMAC/maintenance/vdc successes from trial 22 and this callback transaction still need to work together in one kernel. Compare the normal version/HMAC transport and buffer layout with the tested whitelist path before attributing the regression to a specific cause. The pmsg record again has 32 unrecoverable ECC blocks and is excluded from these service claims.
+
+Recovery verified the full original super, F.20 log-reader boot, stock DTBO and both LP slots. F.20 completed boot `d6e4a951-6c64-4c7b-8673-3d43193e7413`, and its own full super digest matched the baseline. A fresh stock temporary-key control then generated a 455-byte blob through TIME listener 11 and deleted it with status 0.
