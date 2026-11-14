@@ -1,0 +1,155 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "kernel": "4.19.157-perf+",
+  "boot_id": "dad9639e-cbe0-40b0-9ebe-3908c8b9ec8f",
+  "hal_pid": 654,
+  "qseecomd_pid": 8903,
+  "started_listeners": {
+    "8192": "RPMB system services",
+    "12288": "SSD system services",
+    "16384": "secure UI services",
+    "11": "time services",
+    "10": "file system services",
+    "28672": "gpfile system services",
+    "36864": "interrupt services",
+    "45056": "secure processor services",
+    "4352": "gp request cancellation services",
+    "49152": "output protection service listener"
+  },
+  "captures": [
+    {
+      "capture": 2,
+      "source_sha256": "1fb2522ec629ffc0b2c9c7c4f5ba16c6d384d4bd48787e8bb5b9fa8ccc7841a6",
+      "phases": {
+        "idle": {
+          "exit": 0,
+          "scm_calls": []
+        },
+        "generate": {
+          "exit": 0,
+          "scm_calls": [
+            {
+              "function": "0x70000006",
+              "result": 1,
+              "listener": 11
+            },
+            {
+              "function": "0x72000205",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            }
+          ]
+        },
+        "characteristics": {
+          "exit": 0,
+          "scm_calls": []
+        },
+        "sign_verify": {
+          "exit": 0,
+          "scm_calls": [
+            {
+              "function": "0x70000006",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            }
+          ]
+        },
+        "delete": {
+          "exit": 0,
+          "scm_calls": []
+        }
+      },
+      "time_command": 770,
+      "time_source": "ATS_MODEM",
+      "time_exit": 0,
+      "maintenance": "found"
+    },
+    {
+      "capture": 3,
+      "source_sha256": "e60cc4aae5509a251294283b68d5ee2495326876890d2cd960bef35529701c05",
+      "phases": {
+        "idle": {
+          "exit": 0,
+          "scm_calls": []
+        },
+        "generate": {
+          "exit": 0,
+          "scm_calls": [
+            {
+              "function": "0x70000006",
+              "result": 1,
+              "listener": 11
+            },
+            {
+              "function": "0x72000205",
+              "result": 1,
+              "listener": 4352
+            },
+            {
+              "function": "0x72000205",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            }
+          ]
+        },
+        "characteristics": {
+          "exit": 0,
+          "scm_calls": []
+        },
+        "sign_verify": {
+          "exit": 0,
+          "scm_calls": [
+            {
+              "function": "0x70000006",
+              "result": 0
+            },
+            {
+              "function": "0x70000006",
+              "result": 0
+            }
+          ]
+        },
+        "delete": {
+          "exit": 0,
+          "scm_calls": []
+        }
+      },
+      "time_command": 770,
+      "time_source": "ATS_MODEM",
+      "time_exit": 0,
+      "maintenance": "found"
+    }
+  ],
+  "client_control": {
+    "interface": "android.hardware.keymaster@4.0::IKeymasterDevice/default",
+    "level": 1,
+    "name": "Keymaster HAL: 4",
+    "author": "QTI",
+    "source_client_sha256": "3a2cf7e3689104587a48c7592ccc3603dbede63b2e1e119b39efd636c13bf964"
+  }
+}

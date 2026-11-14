@@ -1,0 +1,7 @@
+; Read only the board driver's fixed, read-only hardware version result.
+(type rmx_keymaster_version)
+(roletype object_r rmx_keymaster_version)
+(typeattributeset fs_type (rmx_keymaster_version))
+(typeattributeset sysfs_type (rmx_keymaster_version))
+(genfscon sysfs "/module/rmx2072_keymaster_lookup/parameters/version_info" (u object_r rmx_keymaster_version ((s0) (s0))))
+(allow rmx_keymaster rmx_keymaster_version (file (getattr open read)))

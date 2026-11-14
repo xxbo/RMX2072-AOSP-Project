@@ -33,7 +33,7 @@ def image_profile(path, name, key_digest):
     return key, dict(sha256=full, key_sha256=key_digest, bytes=size, tree=tree)
 
 
-def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False):
+def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False, keymaster_info=False):
     reference = json.loads((ROOT/'build/device/gsi17-mount-reference.json').read_text())
     inputs = [('system', system, reference['key_sha256']),
               ('vendor', vendor, hashlib.sha256(vendor_key.read_bytes()).hexdigest())]
@@ -43,7 +43,7 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
     if records['system']['sha256'] != reference['image_sha256'] or records['system']['tree'] != reference['hashtree']:
         raise ValueError('GSI differs from the pinned image')
     payload_bytes = records['vendor']['tree']['image_bytes']
-    if payload_bytes != (16 if keymaster_reference else 2) * 1024 * 1024:
+    if payload_bytes != (16 if keymaster_reference or keymaster_info else 2) * 1024 * 1024:
         raise ValueError('Unexpected project vendor filesystem size')
     with vendor.open('rb') as image:
         payload = hashlib.sha256(image.read(payload_bytes)).hexdigest()
@@ -53,9 +53,9 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
         files = {'/'+p.relative_to(source).as_posix():
                  hashlib.sha256(p.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
                  for p in source.rglob('*') if p.is_file()}
-        if keymaster_reference:
+        if keymaster_reference or keymaster_info:
             from stage_keymaster_reference import inventory
-            project, blobs = inventory()
+            project, blobs = inventory(keymaster_info)
             files = {path: hashlib.sha256(data).hexdigest() for path, data in project.items()} | blobs
         if files != report['files']:
             raise ValueError('Vendor report differs from the project sources')
@@ -76,8 +76,11 @@ if __name__ == '__main__':
     for option in ('system', 'vendor', 'vendor-key', 'output'):
         parser.add_argument('--'+option, required=True, type=Path)
     parser.add_argument('--vendor-report', type=Path, help='CI vendor.json for the current project sources')
-    parser.add_argument('--keymaster-reference', action='store_true', help='Check the pinned private F.20 comparison inventory')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--keymaster-reference', action='store_true', help='Check the pinned private F.20 comparison inventory')
+    group.add_argument('--keymaster-info', action='store_true', help='Check source-built info HAL and AOSP VNDK hashes')
     args = parser.parse_args()
-    if args.keymaster_reference and not args.vendor_report:
-        parser.error('The reference comparison requires its image report')
-    prepare(args.system, args.vendor, args.vendor_key, args.output, args.vendor_report, args.keymaster_reference)
+    if (args.keymaster_reference or args.keymaster_info) and not args.vendor_report:
+        parser.error('A Keymaster profile requires its image report')
+    prepare(args.system, args.vendor, args.vendor_key, args.output, args.vendor_report,
+            args.keymaster_reference, args.keymaster_info)

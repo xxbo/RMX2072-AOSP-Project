@@ -1,0 +1,12 @@
+{
+  "/bin/hw/rmx-keymaster-info-client": "3a2cf7e3689104587a48c7592ccc3603dbede63b2e1e119b39efd636c13bf964",
+  "/bin/hw/rmx-keymaster-info-service": "e92e8b0aed0011e8dfd0aad007f0009ef40ce40c1f270075c5f496b5de8331f8",
+  "/lib64/android.hardware.keymaster@3.0.so": "d3cb2d7b22fab94369a47bd977cad32f532866d238eb1acf06bcdaae2eaaa98a",
+  "/lib64/android.hardware.keymaster@4.0.so": "d059609161006ad62414363a3e4e8a4ff3d9b1887db3e416b3814afe4bdfb353",
+  "/lib64/libbase.so": "70f3f1b58a36aba2420882c8b86a58be4b90c50f2e0829ca7c44a998967d76bf",
+  "/lib64/libc++.so": "c11b1dde676a67cfbc27c8f3c47a5132959e477a12b96f23bb1fb09d66f40dd9",
+  "/lib64/libcutils.so": "0031d87c283735ac3ab2241f5d214d6c460ac9881a02660588b6b912d5537295",
+  "/lib64/libhidlbase.so": "7bfbd57ee8afbde1c1be2ff7a710a56afad1e7f4e6501660d8074c8e8493aba5",
+  "/lib64/libprocessgroup.so": "4671c51375ad5a421af35a7dc3eb22f464f1fda8246632e4403df19276c6eb46",
+  "/lib64/libutils.so": "8a214952c74211d24913257f9f30dac04609d0a42c047c0f2970975a7d54df56"
+}
