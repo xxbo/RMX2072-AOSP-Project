@@ -82,5 +82,33 @@
       }
     ],
     "raw_sha256": "2495408cd21f70000bb5feb48c3348227272c4182db2901895112404691a5c9b"
+  },
+  "configure_control": {
+    "boot_id": "a35919f0-d87d-4b63-8dac-989854105004",
+    "method": 278,
+    "request_bytes": 48,
+    "response_bytes": 40912,
+    "parameter_offset": 12,
+    "parameters": [
+      {
+        "tag": "0x300002c1",
+        "name": "OS_VERSION",
+        "value": 120000
+      },
+      {
+        "tag": "0x300002c2",
+        "name": "OS_PATCHLEVEL",
+        "value": 202402
+      },
+      {
+        "tag": "0x300002ce",
+        "name": "VENDOR_PATCHLEVEL",
+        "value": 20240205
+      }
+    ],
+    "return_status": 0,
+    "observed_listener_callbacks": 0,
+    "trigger": "Single controlled stock Keymaster service restart per capture",
+    "raw_sha256": "bb98d2059bcd7735c248a25be6a2cb15f8a03bbef5b8e17f3c5d3f9e7cc55154"
   }
 }
