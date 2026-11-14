@@ -46,6 +46,12 @@ def main():
             try:row['adb']=shell('cat /proc/sys/kernel/random/boot_id; getprop vendor.rmx.m1.state',3).splitlines()
             except (OSError,subprocess.SubprocessError):pass
             log.write(json.dumps(row)+'\n');log.flush()
+            if row.get('adb') and row['adb'][0] != boot:
+                failure=dict(result='FAIL_AUTONOMOUS_EDL',old_boot=boot,
+                             unexpected_new_gsi_boot=row['adb'][0],elapsed=row['elapsed'],
+                             host_reboot_commands=False)
+                (a.output/'failure.json').write_text(json.dumps(failure,indent=2)+'\n')
+                raise RuntimeError('Watchdog restarted GSI instead of selecting recovery')
             state=(row['ports'],row.get('adb'))
             if state!=last:print(json.dumps(row),flush=True);last=state
             time.sleep(1)
