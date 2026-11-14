@@ -24,11 +24,20 @@ cp "$ROOT_DIR/device/realme/bladerunner_48m/m2-init/"* device/realme/rmx2072_m2/
 # dependencies of init_first_stage itself remain fatal Ninja build edges.
 export ALLOW_MISSING_DEPENDENCIES=true
 export SOONG_UI_NINJA_ARGS=-v
-set +u
-source build/envsetup.sh
-lunch rmx2072_m2_init-aosp_current-user 2>&1 | tee "$ARTIFACT_DIR/lunch.log"
-m -j2 init_first_stage 2>&1 | tee "$ARTIFACT_DIR/build.log"
-set -u
+for attempt in $(seq 1 12); do
+  # Run each attempt in a subshell so envsetup cannot retain a failed product.
+  set +e
+  bash -c 'set -eo pipefail; source build/envsetup.sh; lunch rmx2072_m2_init-aosp_current-user; m -j2 init_first_stage' \
+    2>&1 | tee "$ARTIFACT_DIR/build-$attempt.log"
+  result=${PIPESTATUS[0]}
+  set -e
+  if [[ "$result" == 0 ]]; then break; fi
+  python3 "$ROOT_DIR/scripts/build/complete_m2_workspace.py" \
+    --workspace "$SOURCE_DIR" --upstream "$ARTIFACT_DIR/selected.upstream.xml" \
+    --log "$ARTIFACT_DIR/build-$attempt.log" --record "$ARTIFACT_DIR/dependency-additions.jsonl"
+done
+test "$result" == 0
+repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
 INIT=out/target/product/rmx2072_m2/ramdisk/init
 test -s "$INIT"
 cp "$INIT" "$ARTIFACT_DIR/init"
