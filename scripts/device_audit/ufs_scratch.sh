@@ -39,7 +39,7 @@ printf '%s\n' "p:m1ks/ks_buf $log:0x9d50 tag=+0(%x2):string msg=+0(%x3):string" 
     "p:m1ks/ks_add $binder:0x24640 task=\$comm name=+0(%x1):string" \
     "r:m1ks/ks_added $binder:0x24640 task=\$comm rc=\$retval:s32" >> "$t/uprobe_events"
 for name in ks_buf ks_log; do
-    echo 'tag == "keystore2"' > "$events/$name/filter"
+    echo 'tag == "keystore2" || tag == "RMXKeymaster"' > "$events/$name/filter"
 done
 for name in ks_add ks_added; do
     echo 'task == "keystore2"' > "$events/$name/filter"
@@ -82,6 +82,16 @@ if [ -r "$apps" ]; then
         echo "M1EVENT qsee_lookup_read_failed=$?" > /dev/ttyGS0
     fi
     version=${apps%/*}/version_info
+    for listener in time cancel; do
+        node=/sys/module/qcom_scm/parameters/listener_${listener}_lifetime
+        if [ -r "$node" ]; then
+            if result=$(cat "$node"); then
+                echo "M1EVENT qsee_listener_lifetime $result" > /dev/ttyGS0
+            else
+                echo "M1EVENT qsee_listener_lifetime_read_failed $listener $?" > /dev/ttyGS0
+            fi
+        fi
+    done
     if [ -r "$version" ]; then
         if result=$(cat "$version"); then
             echo "M1EVENT keymaster_version $result" > /dev/ttyGS0

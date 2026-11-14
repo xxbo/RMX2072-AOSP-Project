@@ -17,6 +17,19 @@ KM_PROBE="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-probes/rmx2072-keyma
 cp "$KM_PROBE" "$WORKSPACE/common/drivers/firmware/qcom/"
 printf '\nobj-$(CONFIG_QCOM_QSEECOM) += rmx2072-keymaster-lookup.o\n' >> "$WORKSPACE/common/drivers/firmware/qcom/Makefile"
 sha256sum "$KM_PROBE" > "$ARTIFACT_DIR/keymaster-lookup.sha256"
+LISTENER="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-probes/rmx2072-listener.inc"
+cp "$LISTENER" "$WORKSPACE/common/drivers/firmware/qcom/"
+python3 - "$WORKSPACE/common/drivers/firmware/qcom/qcom_scm.c" <<'PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+s = p.read_text()
+anchor = "/**\n * qcom_scm_qseecom_call()"
+if s.count(anchor) != 1:
+    raise ValueError("Pinned SCM listener insertion point changed")
+p.write_text(s.replace(anchor, '#include "rmx2072-listener.inc"\n\n' + anchor))
+PY
+sha256sum "$LISTENER" > "$ARTIFACT_DIR/listener.sha256"
 cp "$ROOT_DIR/artifacts/gki-6.18-kernel-build/resolved-manifest.xml" "$ARTIFACT_DIR/"
 cp "$ROOT_DIR/artifacts/gki-6.18-kernel-build/build-metadata.txt" "$ARTIFACT_DIR/"
 mkdir -p "$WORKSPACE/rmx2072/bootstrap"
