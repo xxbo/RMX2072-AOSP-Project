@@ -225,5 +225,13 @@ libraries and required build-tool projects: 115 initial projects instead of 152.
 The real init dependency graph is still built, and missing dependencies of the
 requested target remain fatal. No Rust generator or init implementation is
 patched. This workspace change does not alter the handset GSI, project HAL or
-vendor. Run 43629741053 is building the bounded selection; handset M2 acceptance
+vendor. Run 43629741053 reached the APEX defaults check; handset M2 acceptance
 remains unrun.
+
+Run 43629741053 stopped on `com.android.adbd` lacking an inherited minimum SDK.
+The upstream `r-launched-dcla-enabled-apex-module` defaults live in
+`packages/modules/common/sdk/Android.bp`; the workspace now includes that pinned
+file and its root package metadata only. This also preserves the upstream SDK
+defaults used by native libraries. Sparse selection is recorded and verified.
+Run 43631673665 is building the 116-project workspace. The GSI's ADB/APEX and the
+handset itself remain unchanged; no M2 candidate has been flashed.

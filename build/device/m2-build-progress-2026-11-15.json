@@ -119,6 +119,18 @@
       ],
       "job_log_sha256": "9c4142eec36cfdd1cf328a555a1962cb459d9fa39f505ec4928a55935a618c3d",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43629741053,
+      "source_commit": "973a464c5b6e9fd82c7900ef7ee4ee6f817a3ce1",
+      "result": "FAIL_BUILD",
+      "first_failure": "ADB APEX lacked inherited minimum SDK because upstream mainline defaults were not selected",
+      "selected_log": [
+        "2026-11-14T19:17:18.4597498Z error: packages/modules/adb/apex/Android.bp:35:1: module \"com.android.adbd\" variant \"android_common_com.android.adbd\": updatable: updatable APEXes should set min_sdk_version as well",
+        "2026-11-14T19:17:18.7336279Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "8925a82b546795e806f01e801cae1853a3153c0079c793b550103b525e3a386f",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -126,9 +138,9 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "source_init_run": 43629741053,
-    "source_init_commit": "973a464c5b6e9fd82c7900ef7ee4ee6f817a3ce1",
-    "selected_projects": 115
+    "source_init_run": 43631673665,
+    "source_init_commit": "ac911af296f373715175aa21f7d8ab1c93e8f313",
+    "selected_projects": 116
   },
   "host_tests": {
     "total": 81,
