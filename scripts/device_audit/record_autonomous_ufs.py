@@ -32,13 +32,14 @@ def main():
     if (fault/'fault.json').exists():
         record['fault']=load(fault/'fault.json')
         record['fault_transports']=[json.loads(x) for x in (fault/'transport.jsonl').read_text().splitlines()]
-        for name in ('result','failure','intermediate-boot','edl-window-failure','host-tools'):
+        for name in ('result','failure','intermediate-boot','edl-window-failure','host-tools','manual-disarm-result','recovery-gate'):
             if (fault/(name+'.json')).exists():record['fault_'+name]=load(fault/(name+'.json'))
         for name in ('console-ramoops-0','pmsg-ramoops-0'):
             if (fault/name).exists():
                 record[name+'_selected']=[s for s in (fault/name).read_text(errors='replace').splitlines() if 'RMX-M1-' in s or 'watchdog0: pretimeout event' in s]
         if (fault/'recovery-providers.txt').exists():record['recovery_providers']=(fault/'recovery-providers.txt').read_text(errors='replace')
         if (fault/'recovery-watchdog.log').exists():record['recovery_watchdog']=(fault/'recovery-watchdog.log').read_text(errors='replace')
+        if (fault/'manual-disarm-probe.txt').exists():record['manual_disarm_probe']=(fault/'manual-disarm-probe.txt').read_text(errors='replace')
         record['current_mode']='See fault/restore records; warm retention is historical'
     if (trial/'boot-only-source.json').exists():
         source=load(trial/'boot-only-source.json')
@@ -47,6 +48,9 @@ def main():
         record['restored']=load(restore/'restored.json')
         record['restore_readbacks']=[json.loads(x) for x in (restore/'readbacks.jsonl').read_text().splitlines()]
         record['current_mode']='F.20 restored and verified'
+    record['complete_automatic_recovery']=bool(record.get('restored') and
+        record.get('fault_result',{}).get('automatic_edl') and
+        not record.get('fault_failure') and not record.get('fault_manual-disarm-result'))
     record['raw_sha256']={str(path.relative_to(root)).replace('\\','/'):hashlib.sha256(path.read_bytes()).hexdigest()
                          for directory in (trial,live,fault,restore) if directory.exists()
                          for path in directory.iterdir() if path.is_file() and path.stat().st_size<10000000}

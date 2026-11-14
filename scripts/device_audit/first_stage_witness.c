@@ -19,6 +19,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
+#include <sys/sysmacros.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include "m1_autoboot_state.h"
@@ -456,7 +457,24 @@ static int recovery_stop_watchdog(void) {
         strcmp(device, "/sys/devices/platform/soc/17c10000.qcom,wdt")) {
         fputs("M1RECOVERY watchdog scope mismatch\n", stderr); return 1;
     }
-    int fd = open("/dev/watchdog0", O_WRONLY | O_CLOEXEC);
+    /* Diagnostic /dev can be tmpfs: unlike Android, it has no ueventd. */
+    unsigned int major_number = 0, minor_number = 0;
+    FILE *devfile = fopen("/sys/class/watchdog/watchdog0/dev", "r");
+    if (!devfile) { perror("recovery watchdog dev"); return 1; }
+    int fields = fscanf(devfile, "%u:%u", &major_number, &minor_number);
+    fclose(devfile);
+    if (fields != 2 || !major_number || major_number > 4095 || minor_number) {
+        fputs("M1RECOVERY watchdog device number mismatch\n", stderr); return 1;
+    }
+    dev_t number = makedev(major_number, minor_number);
+    if (mknod("/dev/watchdog0", S_IFCHR | 0600, number) && errno != EEXIST) {
+        perror("recovery watchdog mknod"); return 1;
+    }
+    struct stat node;
+    if (lstat("/dev/watchdog0", &node) || !S_ISCHR(node.st_mode) || node.st_rdev != number) {
+        fputs("M1RECOVERY watchdog node mismatch\n", stderr); return 1;
+    }
+    int fd = open("/dev/watchdog0", O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
     int option = WDIOS_DISABLECARD;
     struct watchdog_info info = {0};
     if (fd < 0) { perror("recovery watchdog open"); return 1; }

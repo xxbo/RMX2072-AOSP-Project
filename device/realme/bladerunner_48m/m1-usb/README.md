@@ -151,3 +151,21 @@ and live same-boot acceptance. EDL verifies the previous boot, original DTBO
 and every candidate super chunk before programming only boot. The new boot
 and unchanged DTBO are read back before startup. Failure restores the verified
 original recovery set. This avoids rewriting an unchanged system/vendor.
+
+Trial 31 exposed another recovery-only precondition: diagnostic `/dev` is
+tmpfs and no ueventd creates watchdog0. Android's device node does not imply
+that the next diagnostic boot has it. The helper now reads the exact class
+device number, creates a character node only when absent, rejects a mismatched
+or symlink node, and uses the same checked disable ioctl. Manually creating
+the node in trial 31 proved GETSUPPORT/DISABLECARD success, but EDL still
+disappeared. That intervention is not automatic-recovery acceptance.
+
+For complete recovery with a prepared computer, trial 32 uses
+`--capture-next-edl --require-watchdog-disarm --edl-hold-seconds 0`. After
+correlating the expired boot, recovery boot, 29-second kernel pretimeout and
+disarm result, the observer releases the restore runner to wait for the next
+EDL enumeration. It never requests reboot. Full original readbacks and F.20
+boot are still mandatory. This tests immediate automatic capture; it does not
+claim that unattended EDL remains stable for 45 seconds or that F.20 can
+restore without a computer. The longer EDL hold remains a separate failed
+check.

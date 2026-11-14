@@ -422,3 +422,29 @@ injected. Trial 31 uses GETSUPPORT and SETOPTIONS to check and stop the AP
 watchdog, then waits two watchdog intervals before EDL. A boot-only update
 retains the existing verified container and scratch seeds.
 [Trial 30 evidence](../build/device/m1-autonomous-recovery-30-2026-11-14.json)
+
+### Trial 31 · Boot-only update and diagnostic node failure
+
+A retained GSI was updated by programming only boot after independent reads
+verified its old boot, original DTBO and all 17 unchanged candidate super
+chunks. New boot `cea43da0-c26b-4667-a7b8-5a523c9f650a` again passed
+local-adbd retention, enforcing, maintenance and the full ADB soak/transfer.
+Lease expiry reset it into recovery boot
+`8a40c470-5f00-4b4a-81ed-9cc20cbf2120`. The journal matched and kernel
+pretimeout followed guard expiry by 29 seconds.
+
+Automatic disarm failed with ENOENT because diagnostic /dev had no watchdog0
+node. Host intervention created the node from sysfs (240:0); the same helper
+then returned `AP watchdog disable ioctl rc=0 identity=qcom_wdt`. Despite
+this, EDL disappeared again and GSI restarted as
+`2f056517-6895-49e3-aa65-58cb960ecb0b`. The manual EDL monitor began after
+EDL entry, so its 2-second observation is not the total EDL lifetime. An
+explicit ADB EDL request let the prepared runner capture Sahara and restore
+F.20; final verification is recorded in the linked artifact when complete.
+
+Trial 32 creates and validates the recovery device node automatically. It
+qualifies immediate capture by the prepared host, separately from stable
+unattended EDL. Kernel, device tree, vendor, GSI and scratch seeds remain
+unchanged; the ramdisk also publishes read-only power-provider evidence for
+the later PDC-only control.
+[Trial 31 evidence](../build/device/m1-autonomous-recovery-31-2026-11-14.json)
