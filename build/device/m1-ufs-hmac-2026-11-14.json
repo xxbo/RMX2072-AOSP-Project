@@ -28,8 +28,6 @@
     "/lib64/libutils.so": "8a214952c74211d24913257f9f30dac04609d0a42c047c0f2970975a7d54df56"
   },
   "system_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
-  "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
-  "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
   "trials": [
     {
       "id": "ufs-host-g3-gsi17-firststage-ufs-13",
@@ -258,6 +256,8 @@
         "ramdisk_sha256": "79e094eca23b291c3095a5a3a73deb12a06dc1b07e51aa033aebc6e42fac9068",
         "boot_sha256": "ab3ef4d18cffe099604e4eae999aa731ce75c15021f814e0d3e3e44be8e2e4dc"
       },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
       "restoration": {
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
@@ -355,6 +355,8 @@
         "ramdisk_sha256": "765c18582beb53b323ca2916000290cf36c6486e802818dd76610f1f92bd4c8d",
         "boot_sha256": "1ef84cbe50f05053eb13705daa5a127b7b9d64b2400e8eb2d49e2d6eb869c3f5"
       },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
       "restoration": {
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
@@ -469,6 +471,8 @@
         "ramdisk_sha256": "c2f68930cce35c933e8a4755c05a0f7d4ce2ba6da47dea23d0e7e25c2e4d9a63",
         "boot_sha256": "f5fe4b3c224e1a14f0cf6b67da6b0b1d8de03aabb9160fa83c640f67db1c6094"
       },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
       "restoration": {
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
@@ -587,6 +591,8 @@
         "ramdisk_sha256": "7b6424171a0a129da65bb82aaba025917133c271568c38f827bff0217f514999",
         "boot_sha256": "40db7000b32cfe91930a2148ddc3ef4061fb94662e544138861b588cd49e9f74"
       },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
       "restoration": {
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
@@ -829,6 +835,8 @@
         "ramdisk_sha256": "20ee27b6573a2cc99537462b63b77342a5950b7a81981abb1cbe0839be4b869a",
         "boot_sha256": "485e8a10738c7f9fc9370a57f82e44176ea842c86acbe95ff825a7c84768ee2d"
       },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
       "restoration": {
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
@@ -947,6 +955,8 @@
         "ramdisk_sha256": "5e0230ab9e5e3baa6c9219fdf422b0ad7b44995ade980f5e3e91aa7c88e344d9",
         "boot_sha256": "65d28be51be2757dad65ffded4fe93953a4bae039425c75ee42b9a9623fe023d"
       },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
       "restoration": {
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
@@ -1209,10 +1219,168 @@
         "ramdisk_sha256": "4bd42c30cdff845c4fc7f6f87b8471e7fd2578100c87f8c190bbfc46c7931c90",
         "boot_sha256": "dd810fb47b6121f65710e665142fc1fc6aa7f75fc294a06bf64b6ff0ee81b77a"
       },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
       "restoration": {
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
         "boot_id": "39d07b41-85c6-4a56-992e-edabee3776ae",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-21",
+      "boot_id": "abc152a1-c024-4515-8a0c-4e02ad277b8d",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+      "mounts": {
+        "system": {
+          "node": "dm-14",
+          "device": "254:14",
+          "linear_device": "254:0",
+          "super": "8:10",
+          "extents": 16,
+          "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+          "avb_at_seconds": 25.3618,
+          "verity_status": "0 7599128 verity V 0",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        },
+        "vendor": {
+          "node": "dm-15",
+          "device": "254:15",
+          "linear_device": "254:1",
+          "super": "8:10",
+          "extents": 1,
+          "root_sha256": "3c0d45b36e45563008fec6c52e26dc5a1cdcfa165c46287e8169be8c0cab27c6",
+          "avb_at_seconds": 25.446969,
+          "verity_status": "0 32768 verity V -",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        }
+      },
+      "enforcing_seconds": null,
+      "second_stage_seconds": null,
+      "file_reads": {},
+      "raw_sha256": {
+        "acm.log": "7931f23b519c9e55458028b562745a23b7a978a73887629703e5e56280f8234d",
+        "console-ramoops-0": "ed47f00314b4f4b3f9a4f038b2947d7013a42841bf8e8070544c01f8a6980dfa",
+        "pmsg-ramoops-0": "9c54e36e503fb6ccf905abce9584c6cfb921a6b74b1f480c2ab18f0e6fbbe674"
+      },
+      "outcome": "With vendor patch-level property present, GSI activated 43 APEX packages and imported adbd init rules; earliest keystore/vdc results rolled out of the console",
+      "adb": {
+        "result": "NO_TRANSPORT_OBSERVED",
+        "samples": 94,
+        "errors": 0,
+        "transport_states": [],
+        "interval_seconds": 96.781,
+        "maximum_sample_gap_seconds": 1.156,
+        "diagnostic_acm_seen": true,
+        "raw_sha256": {
+          "adb.jsonl": "ef40e598fa81c05f6d202fcb9696f5d6d7b01baa67dc3cfde112207327b984fc",
+          "host-events.jsonl": "d49f7f50df5a9744616bd4e6606ac49748b054976e5bba54ef2ef7ed827c5155"
+        }
+      },
+      "usb": {
+        "samples": 44,
+        "device_ids": [
+          "VID_1D6B&PID_0104",
+          "VID_1D6B&PID_0104&MI_00"
+        ],
+        "interface_ids": [
+          "USB\\Class_02",
+          "USB\\Class_02&SubClass_02",
+          "USB\\Class_02&SubClass_02&Prot_01"
+        ],
+        "adb_interface_seen": false,
+        "max_gap_seconds": 2.277,
+        "raw_sha256": "568c20ed4e524b5c67eac738dd6c753d30a090d28fb4c94454bacb566392e860"
+      },
+      "keymaster": {
+        "version_transaction": {
+          "transport_rc": 0,
+          "status": 0,
+          "api": "4.0",
+          "ta": "4.546"
+        },
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ]
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "capture_limitations": [
+        "Console begins at 50.253333 seconds; initial keystore registration, HMAC reply and earlyBootEnded result are absent",
+        "Pmsg contains ECC errors; its early Android content is excluded from service-result claims"
+      ],
+      "maintenance": "EARLY RESULT NOT RETAINED",
+      "vdc_early_boot_ended": "EARLY RESULT NOT RETAINED",
+      "console_ecc": "ECC: No errors detected",
+      "pmsg_ecc": "ECC: 4 Corrected bytes, 32 unrecoverable blocks",
+      "vendor_patch_level": {
+        "value_in_signed_vendor": "1970-01-01",
+        "meaning": "Engineering placeholder for an undeclared vendor security patch level"
+      },
+      "apex_observations": [
+        "[   57.202467][ T2053] apexd: Activated 43 packages. duration=7711ms",
+        "[   57.205903][ T1880] init: Wait for property 'apexd.status=activated' took 7613ms",
+        "[   57.270773][    T1] init: Parsing file /apex/com.android.adbd/etc/init.rc..."
+      ],
+      "compatibility_observations": [
+        "[   57.245976][ T2039] ks_compat_get_entry: (probe) task=\"keystore2\"",
+        "[   57.246270][ T2039] ks_compat_get_return: (probe) task=\"keystore2\""
+      ],
+      "ramdisk_source_commit": "4a5b07987",
+      "build": {
+        "actions_run": 43548003683,
+        "kernel_source_commit": "b9b5790052764e2020f96d64d1b3aab4581e97ec",
+        "artifact_id": 14095738018,
+        "artifact_digest": "sha256:f38b557291344aa627b4b5cad3acd8043adcb7544e345e48365ec6c4a4293314",
+        "kernel_sha256": "c2b9160447856a603aa2091a9fb18190319fdd332ce090ef805b50f076743d0c",
+        "ramdisk_sha256": "682ab3f873e46b0f3c390acfb394daa00dac391c3b376365a7827388dd50c426",
+        "boot_sha256": "6d677c380eafee753ec190c87368f8598034d2f5970a95d5f448efc2314de8e2"
+      },
+      "vendor_sha256": "2e54a8d57826c454a7f228bb551f59706ad2ef13abbbeda771f72f56f48ba140",
+      "super_sha256": "75bf0e4aa0564c5ce719a8bb5dc0e7c81cf904fee202c89b774b9e53c3fdc5aa",
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "7dcc45d1-58f7-41d2-8c64-375c737e76f8",
         "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
         "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
         "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
