@@ -367,6 +367,119 @@
           1
         ]
       }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-15",
+      "boot_id": "096a5663-82e0-4f9b-8de2-40e30ef9c5ac",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "outcome": "Temporary-key generation returned KEYMASTER_NOT_CONFIGURED (-64); capture stopped at monitor wait before SELinux handoff",
+      "mounts": {
+        "system": {
+          "seconds": 25.40643,
+          "source": "/dev/block/dm-14",
+          "mount_rc": 0,
+          "readonly": true
+        },
+        "vendor": {
+          "seconds": 25.496546,
+          "source": "/dev/block/dm-15",
+          "mount_rc": 0,
+          "readonly": true
+        }
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keymaster": {
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ],
+        "temporary_hmac_key": {
+          "rc": 0,
+          "first": 0,
+          "listener": 0,
+          "command": 0,
+          "callbacks": 0,
+          "final": 0,
+          "generate": -64,
+          "blob_bytes": 0,
+          "delete": -61,
+          "unregister": 0
+        },
+        "temporary_key_stages": [
+          "[   47.849825][ T1855] rmx2072-temp-key: lookup",
+          "[   47.850145][ T1855] rmx2072-temp-key: allocating buffers",
+          "[   47.850735][ T1855] rmx2072-temp-key: registering time listener",
+          "[   47.851060][ T1855] rmx2072-temp-key: registered rc=0 result=0",
+          "[   47.851164][ T1855] rmx2072-temp-key: send method=264 bytes=84",
+          "[   47.852913][ T1855] rmx2072-temp-key: send rc=0 result=0 listener=1",
+          "[   47.853086][ T1855] rmx2072-temp-key: unregistering"
+        ]
+      },
+      "diagnostic_clock": {
+        "boot_id": "096a5663-82e0-4f9b-8de2-40e30ef9c5ac",
+        "source": "USB host UTC",
+        "host_utc": "2026-11-14T04:32:13.953321+00:00",
+        "before_seconds": 22,
+        "after_seconds": 1794630733
+      },
+      "observer_retries": [],
+      "selinux_handoff": "NOT REACHED",
+      "gsi_keystore2": "NOT RUN",
+      "maintenance": "NOT RUN",
+      "vdc_early_boot_ended": "NOT RUN",
+      "capture_limitations": [
+        "Last serial command is wait for the background stack monitor; no subsequent version or Android handoff was captured"
+      ],
+      "raw_sha256": {
+        "acm.log": "5e17fe9f696a3d5c02e5993d1773500c950489d819f08c08e448f5405f92fec1",
+        "console-ramoops-0": "810ec0789548431a2b28a2c6e500f0f225be1f24c8b52430bdec355310798f38",
+        "pmsg-ramoops-0": "e3af9a3e2e9238f93d84c4e11e3c0ba38fa188ef053ffa69a82ae053bd8e2652"
+      },
+      "pmsg_ecc": "ECC: 4 Corrected bytes, 32 unrecoverable blocks",
+      "build": {
+        "actions_run": 43553673564,
+        "kernel_source_commit": "bf806ae58d7ce87f58e5c60f06cb522e87aa6180",
+        "artifact_id": 14097753531,
+        "artifact_digest": "sha256:2373093f10bd464e7386d6870210d8c720129030ad596e8d10676531ba5ed6d0",
+        "kernel_sha256": "a6df011f90c3b97f685dbbfe706da99212e196d7d95b649dc73326c3f58d5216",
+        "ramdisk_sha256": "c2f68930cce35c933e8a4755c05a0f7d4ce2ba6da47dea23d0e7e25c2e4d9a63",
+        "boot_sha256": "f5fe4b3c224e1a14f0cf6b67da6b0b1d8de03aabb9160fa83c640f67db1c6094"
+      },
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "0d901e30-e0b9-4ce9-bba8-f5ae4919bf0d",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
     }
   ]
 }
