@@ -27,6 +27,20 @@ prebuilts/rust-toolchain/linux-musl-x86 prebuilts/sdk prebuilts/tools
 prebuilts/remoteexecution-client prebuilts/bazel/common
 toolchain/pgo-profiles tools/metalava tools/tradefederation/prebuilts'''.split()
 
+# Native init and its storage/base libraries. Including every system project
+# also analyzes unrelated keystore/network/service Rust flag libraries, whose
+# framework declarations are deliberately absent from this native workspace.
+SYSTEM = '''system/apex system/core system/extras system/fs/fs_mgr system/gsid
+system/hardware/interfaces system/libartpalette system/libbase system/libfmq
+system/libhidl system/libhwbinder system/libprocinfo system/librustutils
+system/libsysprop system/libufdt system/libvintf system/libziparchive
+system/linkerconfig system/logging system/memory/libdmabufheap system/memory/libion
+system/memory/libmeminfo system/memory/libmemtrack system/memory/libmemunreachable
+system/memory/libwrapfd system/sepolicy system/server_configurable_flags
+system/testing/gtest_extras system/tools/aidl system/tools/hidl
+system/tools/mkbootimg system/tools/sysprop system/tools/xsdc
+system/unwinding system/update_engine'''.split()
+
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -38,10 +52,9 @@ def main():
     data=base64.b64decode(opener.open(url,timeout=60).read())
     upstream=ET.fromstring(data)
     projects={x.attrib.get('path',x.attrib['name']):x for x in upstream.findall('project')}
-    missing=sorted(set(EXACT)-projects.keys())
+    missing=sorted((set(EXACT) | set(SYSTEM))-projects.keys())
     if missing:raise ValueError('Unknown pinned project paths: '+repr(missing))
-    selected=set(EXACT)|{x for x in projects if x.startswith('build/') or
-        (x.startswith('system/') and not x.startswith('system/software_defined_vehicle/'))}
+    selected=set(EXACT)|set(SYSTEM)|{x for x in projects if x.startswith('build/')}
     manifest=ET.Element('manifest')
     ET.SubElement(manifest,'remote',name='aosp',fetch='https://android.googlesource.com/')
     ET.SubElement(manifest,'default',remote='aosp',revision='refs/tags/'+pin['aosp_tag'])
