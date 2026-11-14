@@ -1,0 +1,1009 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-14",
+  "trials": [
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-28",
+      "boot_id": "60e66c01-facc-420e-97d4-1fc8df464188",
+      "inputs": {
+        "trial": "ufs-host-g3-gsi17-firststage-ufs-28",
+        "source_commit": "59bda5ccb96941ef3365688505cef38ed28e2ec9",
+        "kernel": {
+          "run_id": 43574920850,
+          "source_commit": "b45b1f1820fcd7a97280cadb507c28a81c7d394a",
+          "artifact_id": 14106453505,
+          "artifact_archive_digest": "sha256:cd7ea4d78df42004a6350eeb89d6d0e3ffb7c4787c1b1625a20d9ca475f4540b",
+          "archive_digest_verified": false,
+          "selected_member_sha256": {
+            "SHA256SUMS": "275e7b4cf3cfc528ed54632a4e43a2d6f2f8fc1e0dd0e6c4c850b049b76799a5",
+            "build-metadata.txt": "1d49fd730711a6628b77699f9f2324d0f1cf25ba383e9f1e8995dda516ccbb2e",
+            "dist/Image.gz": "fcb43fcaad10b94c9cbfeba7eb99c3b5102c343ec1234fa5727b063d74924ffe",
+            "dist/kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+            "dist/sm8250_bootstrap_dot_config": "661bfc1300e47c348f21b724f008cf627ac0e94e9eff78016a7e811b930d6f38",
+            "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+            "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+            "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+            "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+            "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+          },
+          "image_sha256": "fce9822138a0f763a9661d84c5679fcc13d92e4f5f6983e19e45572c1bcdcaab",
+          "source_digests_verified": true
+        },
+        "boot": {
+          "source_boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+          "boot_sha256": "72f0f9722daf92ef31a1eaf99e28eb0d513c341c157c7a69e0ff8fdb335bd52b",
+          "kernel_sha256": "fce9822138a0f763a9661d84c5679fcc13d92e4f5f6983e19e45572c1bcdcaab",
+          "ramdisk_sha256": "b657798e166db9df33ae28418519b66d085fee22ee57b508a108150b7f25b337",
+          "dtb_bundle_sha256": "40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758",
+          "selected_base_sha256": "bfb4d8f788cb1d2e219100bde454d8a4caf62df561972a31f71e7ce6f76d0447",
+          "other_24_trees_identical": true,
+          "overlays": {
+            "rmx2072-legacy-usb-scm-sid0.dtb": "1005264c3bc6a07c753e99088358f0465e49b2621243a426e51a0f975ff030e4",
+            "rmx2072-sid0-watchdog.dtb": "4bd8ef4974d2160f2ba230259e7058bf50beecd9698e382ed7d464ac2bb40e7a",
+            "rmx2072-ufs-host-g3.dtb": "5937aeb644b5784dc20e354e9f3a8b87eaf4cf30e8ab3e3a1680394f25e5ea59"
+          },
+          "checks": {
+            "watchdog_pre_oem": {
+              "path": "/soc/qcom,wdt@17c10000",
+              "reg": [
+                398524416,
+                4096
+              ],
+              "interrupts": [
+                0,
+                0,
+                1
+              ],
+              "gic": "/soc/interrupt-controller@17a00000",
+              "sleep_clock_hz": 32764,
+              "changed_properties": [
+                "clocks",
+                "compatible",
+                "interrupts"
+              ],
+              "primary_usb_sid_mask": [
+                0,
+                0
+              ]
+            },
+            "watchdog_post_oem": {
+              "path": "/soc/qcom,wdt@17c10000",
+              "reg": [
+                398524416,
+                4096
+              ],
+              "interrupts": [
+                0,
+                0,
+                1
+              ],
+              "gic": "/soc/interrupt-controller@17a00000",
+              "sleep_clock_hz": 32764,
+              "changed_properties": [
+                "clocks",
+                "compatible",
+                "interrupts"
+              ],
+              "primary_usb_sid_mask": [
+                0,
+                0
+              ]
+            },
+            "ufs_pre_oem": {
+              "host": "/soc/ufs-host-lab/ufs@1d84000",
+              "parked": "/soc/ufshc@1d84000",
+              "phy": "/soc/ufs-phy-lab/phy@1d87000",
+              "board_xo_hz": 38400000,
+              "max_core_hz": 300000000,
+              "interconnect_providers": 5,
+              "smmu_stream_ids": [
+                224,
+                1248
+              ],
+              "relocated_reference_cells": 0,
+              "primary_usb_sid_mask": [
+                0,
+                0
+              ]
+            },
+            "ufs_post_oem": {
+              "host": "/soc/ufs-host-lab/ufs@1d84000",
+              "parked": "/soc/ufshc@1d84000",
+              "phy": "/soc/ufs-phy-lab/phy@1d87000",
+              "board_xo_hz": 38400000,
+              "max_core_hz": 300000000,
+              "interconnect_providers": 5,
+              "smmu_stream_ids": [
+                224,
+                1248
+              ],
+              "relocated_reference_cells": 556,
+              "primary_usb_sid_mask": [
+                0,
+                0
+              ]
+            },
+            "final_usb_sid": [
+              0,
+              0
+            ]
+          },
+          "cmdline": "rdinit=/init earlycon console=ttyMSM0,115200n8 loglevel=8 ignore_loglevel printk.devkmsg=on clk_ignore_unused pd_ignore_unused fw_devlink=permissive panic=30 androidboot.hardware=qcom androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs tp_printk tp_printk_stop_on_boot",
+          "avb_envelope": {
+            "payload_size": 67665920,
+            "vbmeta_offset": 67665920,
+            "vbmeta_size": 2432,
+            "retained_metadata_sha256": "997f87083a80dcaba6f021e93b15a6c5f086460949dc55a6d29c33aee2572679",
+            "qualification": "Stock metadata retained; its signed hash does not match modified payload; unlocked-device experiment only"
+          },
+          "status": "packaged-not-device-tested"
+        },
+        "candidate": {
+          "bytes": 8866758656,
+          "sha256": "dfa3318fa6311925f64fdb8d8282e641c6a6dfbc09117b978c6df074748b00b1",
+          "source_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+          "parts": [
+            "dcb6dabdd8e4dda93fef52c245ee599250efa01db226a807a326a0fcf6672cf1",
+            "2ad61042a83a2f1daf6c2900bc22fa52bdc0653ec9d810002242fc1bb1625127",
+            "6913f5ab879440b164c8d610bddf4401a16c9954239d7ca3bdd46fda18be3850",
+            "5d49e8a4c977520972e2fa5738db733b0060520a797b3c7766a266c61a334836",
+            "98a3937f0390bdb7bd1460bb20bef2c5ad23fd2251547b983f1139c00370a28e",
+            "582be529b97a07315dcd40f7382f679bb750513d2eef9764fb9e71fca3f8b540",
+            "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+            "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+            "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+            "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+            "7b406e4d653c25bde79cd4562880e496362ab0a3fb6eed0b736a9f4c5947ad4e",
+            "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+            "c229d586e86af6a993bbcc63e12b60c221a26a857efb47ec4b028ae7e81eafb0",
+            "fec8538e5ecbefd8f2e99dd109b77c7e28c460b6e06437e55876a0c7492ea311",
+            "aaaafea978ae92ffce43462ce2f325be1d6a01aa9926590097093af019190008",
+            "b03b3928b9a9be609474719a63ef9603edb38a1bbff8733ea7abff3dbe480dfb",
+            "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+          ],
+          "changed_chunks": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            10,
+            12,
+            13,
+            14,
+            15
+          ],
+          "signed": {
+            "system": {
+              "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+              "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+              "bytes": 3953213440,
+              "tree": {
+                "version": 1,
+                "image_bytes": 3890753536,
+                "tree_offset": 3890753536,
+                "tree_bytes": 30642176,
+                "data_block_bytes": 4096,
+                "hash_block_bytes": 4096,
+                "fec_roots": 2,
+                "fec_offset": 3921395712,
+                "fec_bytes": 31006720,
+                "algorithm": "sha256",
+                "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+                "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+                "flags": 0
+              }
+            },
+            "vendor": {
+              "sha256": "d14d76c45d539c0013ae252c0657904d78607445fe63337c7181dab91da45a63",
+              "key_sha256": "0d4dd0f2fc523adbf286204adfa27dbae6d2b2c280ed58208f5f60cbdf439d6e",
+              "bytes": 17825792,
+              "tree": {
+                "version": 1,
+                "image_bytes": 16777216,
+                "tree_offset": 16777216,
+                "tree_bytes": 135168,
+                "data_block_bytes": 4096,
+                "hash_block_bytes": 4096,
+                "fec_roots": 0,
+                "fec_offset": 0,
+                "fec_bytes": 0,
+                "algorithm": "sha256",
+                "salt": "ef455b24fed6cb28387089c2dd50fed070448837b6d5ed25c4c93956200e351c",
+                "root_digest": "1dc9634b7548d2ddade178fca7593f5c42857c24de52528223b9cd5794ed8eb3",
+                "flags": 0
+              }
+            }
+          },
+          "targets": {
+            "vendor": [
+              [
+                3008,
+                34816
+              ]
+            ],
+            "system": [
+              [
+                37824,
+                1180672
+              ],
+              [
+                1464256,
+                2048
+              ],
+              [
+                1479616,
+                149504
+              ],
+              [
+                1850304,
+                25600
+              ],
+              [
+                1881024,
+                26624
+              ],
+              [
+                1924032,
+                803840
+              ],
+              [
+                3354560,
+                49152
+              ],
+              [
+                3428288,
+                2696192
+              ],
+              [
+                6126528,
+                13312
+              ],
+              [
+                6140864,
+                3072
+              ],
+              [
+                11129792,
+                1088
+              ],
+              [
+                13039552,
+                64
+              ],
+              [
+                13184960,
+                64
+              ],
+              [
+                13330368,
+                64
+              ],
+              [
+                13475776,
+                438272
+              ],
+              [
+                13992896,
+                2331552
+              ]
+            ]
+          },
+          "prefix_sha256": "04419fc43c4d44cd9645b43ae21a2386cd38c7bcca5356e12e3f543df3fdd197",
+          "headroom": 900423680,
+          "partitions_before": [
+            {
+              "system": "04739e77e523644b8c836eced8d4e93077db47cbe27bb4d62eb353f265f2329d",
+              "vendor": "6ce6fd7565ee107c76a86575b0cbaf049ab30c182c8485ea25611ac566aeece0",
+              "product": "64927a0f20d3a51a3b0de26ff48e64e5f7b9feb57177349903bea85a9560a142",
+              "my_region": "9b6f8c8c18d4142000214490177aa3f14a45fcb80536747327ae2f31a9bab166",
+              "my_manifest": "e4ed7e0dd470dc6879f41de3144f1d2da86c36a44e57ba495283211a223a8a98",
+              "my_preload": "ce59f184862280fec37aa6928054ac616c0d067106265e7c72481368c55b9643",
+              "my_stock": "7225635d8a99cf0c139190c2899c57946a2b4137c6df50a79927a21f38bd44e0",
+              "my_carrier": "01a2a1db5f613246a7749c9cb9a8c9898e1a942ded6d9ca815909b63c541b2bc",
+              "my_product": "76602a33a8b0b961e76081b4c54922eb8ac2b66778937e880e8e9793ed22bdac",
+              "system_ext": "e69f7d3153f48f853733a7452de7e97e9158f05e7a41e5277cab9c1c4d6b85b0",
+              "odm": "17023333767b93bc7ef5e0432d4efb232de1f1ef0331cfea2ee5888a101808d5",
+              "my_company": "a56c7ce89791db30464a1578f1b31d7d3391c170755721de596357a19fd70f38",
+              "my_engineering": "5af9c165c60fb413d37074992356dc68c1afae6f05e8035b6500c1318f83674c",
+              "my_heytap": "59d155025761d34352d682b59777fc5897e21b166f494cd60a732d98262aba82",
+              "my_bigball": "e7246be1e4fe98d8c85057c8eb27e99eaf8675d1d0703643658256b9edf1b3bb"
+            },
+            {
+              "system": "9fccf51af13b80671be6bb277f60a53f910c58f1755c3669f99d1d326e086b5b",
+              "vendor": "4715a32460592a51181cbd993051c52c0e0a52146832082532b409b5cb5d16a0",
+              "product": "5db7f958d11b0f5cf8cfa525487606e2aa763c5188d0411f5795ea82a895e5ec",
+              "engineering": "52c3c5815ade08a56f56b94ed095868a1e0063ca69b19871312d8532c0d50c1f",
+              "oppo_product": "0acf5e35e92c601d33e7a5f003ba341b9398744cbf9dc5d16dc2c5f5b9be78df",
+              "common_preload": "2ee0b1233eaedd0def1fa49f43af0ad6498936297df9addb445e2b0d11e6de9f",
+              "version.19795": "24596fcc0b24a3890b3111a1a426fdfd6a036828c75788c9175bd83a5ce58375",
+              "version.19797": "3ca142da3fee3acf0c958812674c3936395763bd35719b56752a573a965d4823",
+              "version.20607": "64b1d89ab291cc7d00f4888ae4a539e701bcad0adf99cccaaa091292cba4150e"
+            }
+          ],
+          "partitions_after": [
+            {
+              "system": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+              "vendor": "d14d76c45d539c0013ae252c0657904d78607445fe63337c7181dab91da45a63",
+              "product": "64927a0f20d3a51a3b0de26ff48e64e5f7b9feb57177349903bea85a9560a142",
+              "my_region": "9b6f8c8c18d4142000214490177aa3f14a45fcb80536747327ae2f31a9bab166",
+              "my_manifest": "e4ed7e0dd470dc6879f41de3144f1d2da86c36a44e57ba495283211a223a8a98",
+              "my_preload": "ce59f184862280fec37aa6928054ac616c0d067106265e7c72481368c55b9643",
+              "my_carrier": "01a2a1db5f613246a7749c9cb9a8c9898e1a942ded6d9ca815909b63c541b2bc",
+              "my_product": "76602a33a8b0b961e76081b4c54922eb8ac2b66778937e880e8e9793ed22bdac",
+              "system_ext": "e69f7d3153f48f853733a7452de7e97e9158f05e7a41e5277cab9c1c4d6b85b0",
+              "odm": "17023333767b93bc7ef5e0432d4efb232de1f1ef0331cfea2ee5888a101808d5",
+              "my_company": "a56c7ce89791db30464a1578f1b31d7d3391c170755721de596357a19fd70f38",
+              "my_engineering": "5af9c165c60fb413d37074992356dc68c1afae6f05e8035b6500c1318f83674c",
+              "my_heytap": "59d155025761d34352d682b59777fc5897e21b166f494cd60a732d98262aba82",
+              "my_bigball": "e7246be1e4fe98d8c85057c8eb27e99eaf8675d1d0703643658256b9edf1b3bb"
+            },
+            {
+              "system": "3b8b3a0c41501059ba2d2f61343d36a8239a10f0af6f7b57e264fa2f9b747849",
+              "vendor": "4715a32460592a51181cbd993051c52c0e0a52146832082532b409b5cb5d16a0",
+              "product": "5db7f958d11b0f5cf8cfa525487606e2aa763c5188d0411f5795ea82a895e5ec",
+              "engineering": "52c3c5815ade08a56f56b94ed095868a1e0063ca69b19871312d8532c0d50c1f",
+              "oppo_product": "0acf5e35e92c601d33e7a5f003ba341b9398744cbf9dc5d16dc2c5f5b9be78df",
+              "common_preload": "2ee0b1233eaedd0def1fa49f43af0ad6498936297df9addb445e2b0d11e6de9f",
+              "version.19795": "24596fcc0b24a3890b3111a1a426fdfd6a036828c75788c9175bd83a5ce58375",
+              "version.19797": "3ca142da3fee3acf0c958812674c3936395763bd35719b56752a573a965d4823",
+              "version.20607": "64b1d89ab291cc7d00f4888ae4a539e701bcad0adf99cccaaa091292cba4150e"
+            }
+          ]
+        },
+        "scratch": {
+          "data": {
+            "bytes": 536870912,
+            "sha256": "3609b84f64c748ec526b9a5cad9c8d60fa75fb95246d883d73e5300ea663e561",
+            "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+            "gzip_sha256": "b083742d72df2140ef211aa9332d5ce221fc4e159caf2c23f0da3392faeac3c0"
+          },
+          "metadata": {
+            "bytes": 33554432,
+            "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+            "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+            "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+          }
+        },
+        "usb_build": {
+          "trial": "ufs-host-g3-gsi17-firststage-ufs-28",
+          "kernel": "fce9822138a0f763a9661d84c5679fcc13d92e4f5f6983e19e45572c1bcdcaab",
+          "guard": "35e592f4971dc640d02c2dabe14ddd9f6be6577b455adb1714b5c44f571e0634",
+          "witness": "df272bd0b71a216f8802d4c4f0a52086202f024dd6147da4664a1ebd92c958d3",
+          "vendor_unsigned": "ef455b24fed6cb28387089c2dd50fed070448837b6d5ed25c4c93956200e351c",
+          "vendor_signed": "d14d76c45d539c0013ae252c0657904d78607445fe63337c7181dab91da45a63",
+          "engineering_key": "reused trial25 key",
+          "adb_public_key_sha256": "fa92ad018ac1d01317a6731be6172cb4e34753489f7e4a521ae4df25c583dc29"
+        },
+        "ramdisk": {
+          "busybox_sha256": "4d60ab3f5a59ebb2ca863f2f514e6924401b581e9b64f602665c008177626651",
+          "reboot_helper_sha256": "fa04fbcfeaa2b9d73c6f56d3b08c3c5bccf55b68d620435f897e8868a3e673cc",
+          "entry_carrier_sha256": "f13ff7bf22c0a3d924d5834bb14363209266e7fb15148337022f8a3bdd3c5695",
+          "trial_id": "ufs-host-g3-gsi17-firststage-ufs-28",
+          "control_return_seconds": 180,
+          "defer_gadget_bind": false,
+          "gadget_bind_delay_seconds": 20,
+          "snapshot_intervals_seconds": [
+            2,
+            13,
+            30,
+            30
+          ],
+          "init_sha256": "0f368d8b2d8a935cc369e1607887c9dfe8c25a76f9662c9d8e4d5d93a6b11112",
+          "supervisor_sha256": "c5cc0514b6da784ef044df1fcebf24866137e43f39b9d8ae7c2c4e8c4acc74f3",
+          "snapshot_sha256": "e1080c1859111f1c593d00273483ec28ac034f483e6bcfa5a3bc09ea9ddee7d0",
+          "cpio_sha256": "cc588b6badd8be12d66960a5268c73e2f6222a4e8a03fc5e0b90e62508daebe3",
+          "gzip_sha256": "b657798e166db9df33ae28418519b66d085fee22ee57b508a108150b7f25b337",
+          "scope": "Android API 37 first-stage init on internal UFS",
+          "adb_public_key_sha256": "fa92ad018ac1d01317a6731be6172cb4e34753489f7e4a521ae4df25c583dc29",
+          "guarded_adb": true,
+          "autonomous_ufs": true,
+          "autoboot_sha256": "f3817a475e28512e98257cc749ea9926203200e7c65118fdba362ef62c053d1f",
+          "ufs_host_test_sha256": "175b833b4781ee12969130743434f0c897811ee501315a41ac16ba05d87b4b42",
+          "ufs_g3_test_sha256": "e3ca4d3f5e9d4e48ce4495cac5f24013a85385a57eb160db01c4c6f21cfbfbf4",
+          "super_tools_files": 57,
+          "super_test_sha256": "b65ae24f53cc7c5561405a3d0d910f6c0c3824efcd4f4e601d4cbb803906ecb4",
+          "first_stage_init_sha256": "f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+          "witness_sha256": "df272bd0b71a216f8802d4c4f0a52086202f024dd6147da4664a1ebd92c958d3",
+          "public_keys": {
+            "system": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+            "vendor": "0d4dd0f2fc523adbf286204adfa27dbae6d2b2c280ed58208f5f60cbdf439d6e"
+          }
+        }
+      },
+      "events": [
+        {
+          "event": "autonomous_handoff_observed",
+          "boot_id": "60e66c01-facc-420e-97d4-1fc8df464188",
+          "monotonic": 40286.171,
+          "utc": "2026-11-14T11:43:59.865694+00:00"
+        }
+      ],
+      "serial_events": [
+        "M1EVENT autonomous=1",
+        "M1EVENT boot_id=60e66c01-facc-420e-97d4-1fc8df464188",
+        "M1EVENT boot_usb_state=not attached",
+        "M1EVENT clock_source=unavailable fixed_time_probe=skipped",
+        "M1EVENT ufs_super=/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10 dev=8:10 ro=1",
+        "M1EVENT read_trace=pid1 inode=659,757 sink=printk",
+        "M1EVENT boot_id=60e66c01-facc-420e-97d4-1fc8df464188",
+        "M1EVENT init_sha256=f3f8ae99365896b86abe8ae6b8d0dfe49909b3432b7c28b8604cae7dfd080957",
+        "M1EVENT disk=sda ro=1",
+        "M1EVENT disk=sdb ro=1",
+        "M1EVENT disk=sdc ro=1",
+        "M1EVENT disk=sdd ro=1",
+        "M1EVENT disk=sde ro=1",
+        "M1EVENT disk=sdf ro=1",
+        "M1EVENT exec_pid=1 path=/init staged_inode_match=1",
+        "M1EVENT mount_pid=1 source=tmpfs target=/dev fs=tmpfs flags=0x2 rc=0",
+        "M1EVENT mount_pid=1 source=devpts target=/dev/pts fs=devpts flags=0 rc=0",
+        "M1EVENT mount_pid=1 source=proc target=/proc fs=proc flags=0 rc=0",
+        "M1EVENT mount_pid=1 source=sysfs target=/sys fs=sysfs flags=0 rc=0",
+        "M1EVENT mount_pid=1 source=selinuxfs target=/sys/fs/selinux fs=selinuxfs flags=0 rc=0",
+        "M1EVENT mount_pid=1 source=tmpfs target=/mnt fs=tmpfs flags=0xe rc=0",
+        "M1EVENT mount_pid=1 source=tmpfs target=/debug_ramdisk fs=tmpfs flags=0xe rc=0",
+        "M1EVENT mount_pid=1 source=tmpfs target=/second_stage_resources fs=tmpfs flags=0xe rc=0",
+        "M1EVENT mount_pid=1 source=/dev/block/dm-14 target=/system fs=ext4 flags=0x1 rc=0",
+        "M1EVENT mounted_mapper=system-verity node=dm-14 target=/system",
+        "M1EVENT table=system 0 1180672 linear 8:10 37824",
+        "M1EVENT table=system 1180672 2048 linear 8:10 1464256",
+        "M1EVENT table=system 1182720 149504 linear 8:10 1479616",
+        "M1EVENT table=system 1332224 25600 linear 8:10 1850304",
+        "M1EVENT table=system 1357824 26624 linear 8:10 1881024",
+        "M1EVENT table=system 1384448 803840 linear 8:10 1924032",
+        "M1EVENT table=system 2188288 49152 linear 8:10 3354560",
+        "M1EVENT table=system 2237440 2696192 linear 8:10 3428288",
+        "M1EVENT table=system 4933632 13312 linear 8:10 6126528",
+        "M1EVENT table=system 4946944 3072 linear 8:10 6140864",
+        "M1EVENT table=system 4950016 1088 linear 8:10 11129792",
+        "M1EVENT table=system 4951104 64 linear 8:10 13039552",
+        "M1EVENT table=system 4951168 64 linear 8:10 13184960",
+        "M1EVENT table=system 4951232 64 linear 8:10 13330368",
+        "M1EVENT table=system 4951296 438272 linear 8:10 13475776",
+        "M1EVENT table=system 5389568 2331552 linear 8:10 13992896",
+        "M1EVENT table=system-verity 0 7599128 verity 1 254:0 254:0 4096 4096 949891 949891 sha256 96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d 10 restart_on_corruption ignore_zero_blocks use_fec_from_device 254:0 fec_blocks 957372 fec_start 957372 fec_roots 2",
+        "M1EVENT status=system-verity 0 7599128 verity V 0",
+        "M1EVENT linear_mapper=system dev=254:0",
+        "M1EVENT verified_ufs_mount=system dev=254:14",
+        "M1EVENT mount_pid=1 source=/dev target=/system/dev fs=(null) flags=0x2000 rc=0",
+        "M1EVENT mount_pid=1 source=/proc target=/system/proc fs=(null) flags=0x2000 rc=0",
+        "M1EVENT mount_pid=1 source=/sys target=/system/sys fs=(null) flags=0x2000 rc=0",
+        "M1EVENT mount_pid=1 source=/mnt target=/system/mnt fs=(null) flags=0x2000 rc=0",
+        "M1EVENT mount_pid=1 source=/debug_ramdisk target=/system/debug_ramdisk fs=(null) flags=0x2000 rc=0",
+        "M1EVENT mount_pid=1 source=/second_stage_resources target=/system/second_stage_resources fs=(null) flags=0x2000 rc=0",
+        "M1EVENT mount_pid=1 source=/system target=/ fs=(null) flags=0x2000 rc=0",
+        "M1EVENT mount_pid=1 source=/dev/block/dm-15 target=/vendor fs=ext4 flags=0x1 rc=0",
+        "M1EVENT mounted_mapper=vendor-verity node=dm-15 target=/vendor",
+        "M1EVENT table=vendor 0 34816 linear 8:10 3008",
+        "M1EVENT table=vendor-verity 0 32768 verity 1 254:1 254:1 4096 4096 4096 4096 sha256 1dc9634b7548d2ddade178fca7593f5c42857c24de52528223b9cd5794ed8eb3 ef455b24fed6cb28387089c2dd50fed070448837b6d5ed25c4c93956200e351c 2 restart_on_corruption ignore_zero_blocks",
+        "M1EVENT status=vendor-verity 0 32768 verity V -",
+        "M1EVENT linear_mapper=vendor dev=254:1",
+        "M1EVENT verified_ufs_mount=vendor dev=254:15",
+        "M1EVENT read_target=/system/etc/init/hw/init.zygote64_32.rc ino=762 bytes=620",
+        "M1EVENT read_target=/system/etc/init/hw/init.zygote64.rc ino=761 bytes=901",
+        "M1EVENT read_target=/system/etc/init/hw/init.boringssl.zygote64_32.rc ino=756 bytes=392",
+        "M1EVENT read_target=/vendor/etc/fstab.qcom ino=20 bytes=220",
+        "M1EVENT scratch_mount=/data device=7:0 flags=rw,nosuid,nodev,relatime fs=ext4",
+        "M1EVENT scratch_backing=/data file=/run/m1-scratch/data.ext4",
+        "M1EVENT scratch_mount=/metadata device=7:1 flags=rw,nosuid,nodev,relatime fs=ext4",
+        "M1EVENT scratch_backing=/metadata file=/run/m1-scratch/metadata.ext4",
+        "M1EVENT keystore_trace=armed",
+        "M1EVENT qsee_lookup keymaster=-2 keymaster64=0",
+        "M1EVENT keymaster_version_before_listener transport_rc=0 status=0 api=4.0 ta=4.546",
+        "M1EVENT qsee_listener_lifetime id=11 register_rc=0 register_result=0 unregister_rc=0 unregister_result=0",
+        "M1EVENT qsee_listener_lifetime id=4352 register_rc=0 register_result=0 unregister_rc=0 unregister_result=0",
+        "M1EVENT keymaster_version transport_rc=0 status=0 api=4.0 ta=4.546",
+        "M1EVENT mount_pid=1 source=/dev/remount target=/dev/remount fs=(null) flags=0x1000 rc=0",
+        "M1EVENT mount_pid=1 source=(null) target=/dev/remount fs=(null) flags=0x40000 rc=0",
+        "M1EVENT exec_pid=1 path=/system/bin/init arg=selinux_setup",
+        "M1EVENT usb_guard_timeout requested=30 actual=30 rc=0 errno=0",
+        "M1EVENT usb_guard=handoff watchdog_seconds=30 old_timer_cancelled=1"
+      ],
+      "adb": {
+        "samples": 49,
+        "states": [
+          "RMX2072-M1             device product:gsi_gms_arm64 model:GMS_on_ARM64 device:generic_arm64 transport_id:41"
+        ],
+        "accept_errors": []
+      },
+      "physical_usb": {
+        "samples": 115,
+        "device_ids": [
+          "VID_05C6&PID_9008",
+          "VID_18D1&PID_4EE7"
+        ]
+      },
+      "disposition": {
+        "current_mode": "Android 17 GSI",
+        "candidate_super_retained": true,
+        "stock_restored": false,
+        "stable": {
+          "identity": [
+            "37",
+            "6.18.32-android17-5-maybe-dirty-4k",
+            "60e66c01-facc-420e-97d4-1fc8df464188",
+            "Enforcing",
+            "running",
+            "",
+            "lease",
+            "adb"
+          ],
+          "pid1": "/system/bin/init\u0000second_stage",
+          "mounts": "/dev/block/dm-14 / ext4 ro,seclabel,relatime,norecovery 0 0\ntmpfs /dev tmpfs rw,seclabel,nosuid,relatime,mode=755 0 0\ndevpts /dev/pts devpts rw,seclabel,relatime,mode=600,ptmxmode=000 0 0\nproc /proc proc rw,relatime,gid=3009,hidepid=invisible 0 0\nsysfs /sys sysfs rw,seclabel,relatime 0 0\nselinuxfs /sys/fs/selinux selinuxfs rw,relatime 0 0\ntmpfs /mnt tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755,gid=1000 0 0\ntmpfs /mnt/installer tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755,gid=1000 0 0\ntmpfs /mnt/androidwritable tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755,gid=1000 0 0\n/dev/block/dm-15 /vendor ext4 ro,seclabel,relatime,norecovery 0 0\n/proc/self/fd/3 /data ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /metadata ext4 rw,seclabel,nosuid,nodev,relatime 0 0\ntmpfs /apex tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755 0 0\ntmpfs /bootstrap-apex tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755 0 0\ntmpfs /linkerconfig tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755 0 0\nnone /dev/blkio cgroup rw,nosuid,nodev,noexec,relatime,blkio,favordynmods 0 0\nnone /sys/fs/cgroup cgroup2 rw,nosuid,nodev,noexec,relatime,favordynmods,memory_recursiveprot 0 0\nnone /dev/cpuctl cgroup rw,nosuid,nodev,noexec,relatime,cpu,favordynmods 0 0\nnone /dev/cpuset cgroup rw,nosuid,nodev,noexec,relatime,cpuset,noprefix,cpuset_v2_mode,favordynmods 0 0\ntracefs /sys/kernel/tracing tracefs rw,seclabel,relatime,gid=3012 0 0\n/dev/block/loop3 /bootstrap-apex/com.android.runtime@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop3 /bootstrap-apex/com.android.runtime ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop2 /bootstrap-apex/com.android.i18n@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop2 /bootstrap-apex/com.android.i18n ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop5 /bootstrap-apex/com.android.virt@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop4 /bootstrap-apex/com.android.tzdata@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop5 /bootstrap-apex/com.android.virt ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop4 /bootstrap-apex/com.android.tzdata ext4 ro,dirsync,seclabel,nodev,noatime 0 0\ntmpfs /tmp tmpfs rw,seclabel,relatime 0 0\nnone /config configfs rw,nosuid,nodev,noexec,relatime 0 0\nbinder /dev/binderfs binder rw,relatime,max=1048576,stats=global 0 0\nnone /sys/fs/fuse/connections fusectl rw,relatime 0 0\nbpf /sys/fs/bpf bpf rw,nosuid,nodev,noexec,relatime 0 0\nnone /sys/fs/pstore pstore rw,seclabel,nosuid,nodev,noexec,relatime 0 0\ntmpfs /mnt/vm tmpfs rw,seclabel,nosuid,nodev,noexec,relatime 0 0\nadb /dev/usb-ffs/adb functionfs rw,seclabel,relatime 0 0\ntmpfs /storage tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755,gid=1000 0 0\ntmpfs /linkerconfig tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=755 0 0\ntmpfs /data_mirror tmpfs rw,seclabel,nosuid,nodev,noexec,relatime,mode=700,gid=1000 0 0\n/proc/self/fd/3 /data_mirror/data_ce/null ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /data_mirror/data_de/null ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /data_mirror/misc_ce/null ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /data_mirror/misc_de/null ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /data_mirror/storage_area ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /data_mirror/cur_profiles ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /data_mirror/ref_profiles ext4 rw,seclabel,nosuid,nodev,relatime 0 0\nsecurityfs /sys/kernel/security securityfs rw,relatime 0 0\n/dev/block/dm-42 /apex/com.android.appsearch@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-16 /apex/com.android.mediaprovider@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-48 /apex/com.android.uwb@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-50 /apex/com.android.scheduling@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-17 /apex/com.android.webapp@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-37 /apex/com.android.bt@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-16 /apex/com.android.mediaprovider ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-42 /apex/com.android.appsearch ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-37 /apex/com.android.bt ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-50 /apex/com.android.scheduling ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-17 /apex/com.android.webapp ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-48 /apex/com.android.uwb ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-25 /apex/com.android.npumanager@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-26 /apex/com.android.ondevicepersonalization@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-25 /apex/com.android.npumanager ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-26 /apex/com.android.ondevicepersonalization ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-31 /apex/com.android.profiling@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-24 /apex/com.android.configinfrastructure@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-31 /apex/com.android.profiling ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-29 /apex/com.android.media@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-24 /apex/com.android.configinfrastructure ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-29 /apex/com.android.media ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-19 /apex/com.android.tethering@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-19 /apex/com.android.tethering ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-34 /apex/com.android.adservices@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-38 /apex/com.android.uprobestats@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-34 /apex/com.android.adservices ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-18 /apex/com.android.resolv@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-38 /apex/com.android.uprobestats ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-39 /apex/com.android.adbd@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-18 /apex/com.android.resolv ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-46 /apex/com.android.art@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-40 /apex/com.android.media.swcodec@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-43 /apex/com.android.conscrypt@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-39 /apex/com.android.adbd ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-43 /apex/com.android.conscrypt ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-40 /apex/com.android.media.swcodec ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-46 /apex/com.android.art ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-45 /apex/com.android.permission@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-45 /apex/com.android.permission ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-47 /apex/com.android.extservices@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop9 /apex/com.android.devicelock@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-47 /apex/com.android.extservices ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop9 /apex/com.android.devicelock ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-21 /apex/com.android.wifi@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-21 /apex/com.android.wifi ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-53 /apex/com.android.crashrecovery@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-49 /apex/com.android.telephonycore@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-57 /apex/com.android.ipsec@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-49 /apex/com.android.telephonycore ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-57 /apex/com.android.ipsec ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-54 /apex/com.android.neuralnetworks@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-53 /apex/com.android.crashrecovery ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-55 /apex/com.android.cellbroadcast@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-54 /apex/com.android.neuralnetworks ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-55 /apex/com.android.cellbroadcast ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop8 /apex/com.android.apex.cts.shim@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop16 /apex/com.android.vndk.v33@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop16 /apex/com.android.vndk.v33 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-23 /apex/com.android.nfcservices@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/dm-23 /apex/com.android.nfcservices ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop8 /apex/com.android.apex.cts.shim ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop24 /apex/com.android.vndk.v31@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop26 /apex/com.android.vndk.v32@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop31 /apex/com.android.vndk.v34@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop24 /apex/com.android.vndk.v31 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop26 /apex/com.android.vndk.v32 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop31 /apex/com.android.vndk.v34 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop19 /apex/com.android.rkpd@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop20 /apex/com.android.os.statsd@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop19 /apex/com.android.rkpd ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop20 /apex/com.android.os.statsd ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop46 /apex/com.android.runtime@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop46 /apex/com.android.runtime ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop28 /apex/com.android.sdkext@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop40 /apex/com.android.healthfitness@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop28 /apex/com.android.sdkext ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop40 /apex/com.android.healthfitness ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop44 /apex/com.android.i18n@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop36 /apex/com.android.tzdata@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop44 /apex/com.android.i18n ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop36 /apex/com.android.tzdata ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop48 /apex/com.android.virt@371899999 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop39 /apex/com.android.hardware.biometrics.fingerprint.virtual@1 ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop48 /apex/com.android.virt ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/dev/block/loop39 /apex/com.android.hardware.biometrics.fingerprint.virtual ext4 ro,dirsync,seclabel,nodev,noatime 0 0\n/proc/self/fd/3 /data/user/0 ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n/proc/self/fd/3 /data_mirror/data_ce/null/0 ext4 rw,seclabel,nosuid,nodev,relatime 0 0\n",
+          "backing": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10\nNODE=dm-0\nNODE=dm-1\nNODE=dm-10\nNODE=dm-11\nNODE=dm-12\nNODE=dm-13\nNODE=dm-14\nNODE=dm-15\nNODE=dm-16\nNODE=dm-17\nNODE=dm-18\nNODE=dm-19\nNODE=dm-2\nNODE=dm-20\nNODE=dm-21\nNODE=dm-22\nNODE=dm-23\nNODE=dm-24\nNODE=dm-25\nNODE=dm-26\nNODE=dm-27\nNODE=dm-28\nNODE=dm-29\nNODE=dm-3\nNODE=dm-30\nNODE=dm-31\nNODE=dm-32\nNODE=dm-33\nNODE=dm-34\nNODE=dm-35\nNODE=dm-36\nNODE=dm-37\nNODE=dm-38\nNODE=dm-39\nNODE=dm-4\nNODE=dm-40\nNODE=dm-41\nNODE=dm-42\nNODE=dm-43\nNODE=dm-44\nNODE=dm-45\nNODE=dm-46\nNODE=dm-47\nNODE=dm-48\nNODE=dm-49\nNODE=dm-5\nNODE=dm-50\nNODE=dm-51\nNODE=dm-52\nNODE=dm-53\nNODE=dm-54\nNODE=dm-55\nNODE=dm-56\nNODE=dm-57\nNODE=dm-58\nNODE=dm-6\nNODE=dm-7\nNODE=dm-8\nNODE=dm-9\n",
+          "ufs_graph": null,
+          "ufs_evidence": "same-boot autonomous device witness plus matching live ADB mounts (sysfs_dm restricted)",
+          "soak": [
+            {
+              "elapsed": 0.672,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 11.329,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 22.0,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 32.657,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 43.297,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 53.954,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 64.594,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 75.313,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 85.969,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 96.61,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 107.235,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 117.875,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 128.516,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 139.141,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 149.75,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 160.422,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 171.079,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            },
+            {
+              "elapsed": 181.719,
+              "identity": [
+                "37",
+                "6.18.32-android17-5-maybe-dirty-4k",
+                "60e66c01-facc-420e-97d4-1fc8df464188",
+                "Enforcing",
+                "running",
+                "",
+                "lease",
+                "adb"
+              ]
+            }
+          ],
+          "seconds": 194.547,
+          "guardian": "retained"
+        }
+      },
+      "independent_edl_readbacks": [
+        {
+          "label": "before-boot",
+          "lun": 4,
+          "start_sector": 79366,
+          "sectors": 24576,
+          "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+          "utc": "2026-11-14T11:37:15.752948+00:00"
+        },
+        {
+          "label": "before-dtbo",
+          "lun": 4,
+          "start_sector": 104298,
+          "sectors": 6144,
+          "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+          "utc": "2026-11-14T11:37:16.472673+00:00"
+        },
+        {
+          "label": "candidate-boot",
+          "lun": 4,
+          "start_sector": 79366,
+          "sectors": 24576,
+          "sha256": "72f0f9722daf92ef31a1eaf99e28eb0d513c341c157c7a69e0ff8fdb335bd52b",
+          "utc": "2026-11-14T11:39:40.644681+00:00"
+        },
+        {
+          "label": "candidate-dtbo",
+          "lun": 4,
+          "start_sector": 104298,
+          "sectors": 6144,
+          "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+          "utc": "2026-11-14T11:39:41.353864+00:00"
+        },
+        {
+          "label": "candidate-super-read-00",
+          "lun": 0,
+          "start_sector": 193032,
+          "sectors": 131072,
+          "sha256": "dcb6dabdd8e4dda93fef52c245ee599250efa01db226a807a326a0fcf6672cf1",
+          "utc": "2026-11-14T11:39:53.817730+00:00"
+        },
+        {
+          "label": "candidate-super-read-01",
+          "lun": 0,
+          "start_sector": 324104,
+          "sectors": 131072,
+          "sha256": "2ad61042a83a2f1daf6c2900bc22fa52bdc0653ec9d810002242fc1bb1625127",
+          "utc": "2026-11-14T11:40:06.376814+00:00"
+        },
+        {
+          "label": "candidate-super-read-02",
+          "lun": 0,
+          "start_sector": 455176,
+          "sectors": 131072,
+          "sha256": "6913f5ab879440b164c8d610bddf4401a16c9954239d7ca3bdd46fda18be3850",
+          "utc": "2026-11-14T11:40:18.911146+00:00"
+        },
+        {
+          "label": "candidate-super-read-03",
+          "lun": 0,
+          "start_sector": 586248,
+          "sectors": 131072,
+          "sha256": "5d49e8a4c977520972e2fa5738db733b0060520a797b3c7766a266c61a334836",
+          "utc": "2026-11-14T11:40:31.390985+00:00"
+        },
+        {
+          "label": "candidate-super-read-04",
+          "lun": 0,
+          "start_sector": 717320,
+          "sectors": 131072,
+          "sha256": "98a3937f0390bdb7bd1460bb20bef2c5ad23fd2251547b983f1139c00370a28e",
+          "utc": "2026-11-14T11:40:43.920210+00:00"
+        },
+        {
+          "label": "candidate-super-read-05",
+          "lun": 0,
+          "start_sector": 848392,
+          "sectors": 131072,
+          "sha256": "582be529b97a07315dcd40f7382f679bb750513d2eef9764fb9e71fca3f8b540",
+          "utc": "2026-11-14T11:40:56.522766+00:00"
+        },
+        {
+          "label": "candidate-super-read-06",
+          "lun": 0,
+          "start_sector": 979464,
+          "sectors": 131072,
+          "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+          "utc": "2026-11-14T11:41:09.104400+00:00"
+        },
+        {
+          "label": "candidate-super-read-07",
+          "lun": 0,
+          "start_sector": 1110536,
+          "sectors": 131072,
+          "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+          "utc": "2026-11-14T11:41:21.700104+00:00"
+        },
+        {
+          "label": "candidate-super-read-08",
+          "lun": 0,
+          "start_sector": 1241608,
+          "sectors": 131072,
+          "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+          "utc": "2026-11-14T11:41:34.283619+00:00"
+        },
+        {
+          "label": "candidate-super-read-09",
+          "lun": 0,
+          "start_sector": 1372680,
+          "sectors": 131072,
+          "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+          "utc": "2026-11-14T11:41:46.802687+00:00"
+        },
+        {
+          "label": "candidate-super-read-10",
+          "lun": 0,
+          "start_sector": 1503752,
+          "sectors": 131072,
+          "sha256": "7b406e4d653c25bde79cd4562880e496362ab0a3fb6eed0b736a9f4c5947ad4e",
+          "utc": "2026-11-14T11:41:59.358409+00:00"
+        },
+        {
+          "label": "candidate-super-read-11",
+          "lun": 0,
+          "start_sector": 1634824,
+          "sectors": 131072,
+          "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+          "utc": "2026-11-14T11:42:11.972994+00:00"
+        },
+        {
+          "label": "candidate-super-read-12",
+          "lun": 0,
+          "start_sector": 1765896,
+          "sectors": 131072,
+          "sha256": "c229d586e86af6a993bbcc63e12b60c221a26a857efb47ec4b028ae7e81eafb0",
+          "utc": "2026-11-14T11:42:24.563227+00:00"
+        },
+        {
+          "label": "candidate-super-read-13",
+          "lun": 0,
+          "start_sector": 1896968,
+          "sectors": 131072,
+          "sha256": "fec8538e5ecbefd8f2e99dd109b77c7e28c460b6e06437e55876a0c7492ea311",
+          "utc": "2026-11-14T11:42:37.160486+00:00"
+        },
+        {
+          "label": "candidate-super-read-14",
+          "lun": 0,
+          "start_sector": 2028040,
+          "sectors": 131072,
+          "sha256": "aaaafea978ae92ffce43462ce2f325be1d6a01aa9926590097093af019190008",
+          "utc": "2026-11-14T11:42:49.714493+00:00"
+        },
+        {
+          "label": "candidate-super-read-15",
+          "lun": 0,
+          "start_sector": 2159112,
+          "sectors": 131072,
+          "sha256": "b03b3928b9a9be609474719a63ef9603edb38a1bbff8733ea7abff3dbe480dfb",
+          "utc": "2026-11-14T11:43:02.245486+00:00"
+        },
+        {
+          "label": "candidate-super-read-16",
+          "lun": 0,
+          "start_sector": 2290184,
+          "sectors": 67584,
+          "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+          "utc": "2026-11-14T11:43:08.788102+00:00"
+        }
+      ],
+      "raw_sha256": {
+        "adb-smoke.json": "746f19f0a5c01d9703d811cd0b42df479e4e9e61d5dec8dbc4b20f749ea612dd",
+        "adb.jsonl": "26059fa557376647ad40572b6e83e90a41ee507209af5a85771f56679c66046d",
+        "boot-events.txt": "42f12337041a95bf903640de25684a4eea19acdeb126c664c685ab68234766df",
+        "gsi-accepted.json": "3af839452f642141525f5c33c0d474fb0155fb8aa83f8ec60ed8b3b1c680ecc8",
+        "gsi-stable.json": "f93cd93d5bb9e0c61a4fa2bd515f4670ba77714c845803807feb864596cdbb9a",
+        "host-events.jsonl": "e50be10612d525b1868bc32d1e154aa79dd43111eb4c6b4ded3a9d2f82e431c7",
+        "logcat.txt": "433825996afcb553e0bd371be9ef3117b4ef3e91528ea14ba02de268860084e2",
+        "processes.txt": "f37f0bbcce72158daef878228f522edae1cd97e68ee1d655db9de1969b80fbba",
+        "properties.txt": "e3d92ced998a38f17d3324a7199549c2874e324243fb52a1f82603e8d6415511",
+        "watchdog.txt": "1f052f8071c84b55543e228a512d547aecbdc4b198e87a6d212f54df5fbf91e4"
+      },
+      "console_notes": [],
+      "result": "AUTONOMOUS_WARM_GSI_ADB_RETAINED",
+      "cold_boot": "PENDING operator power cycle",
+      "host_handoff_requested": false,
+      "host_clock_set": false,
+      "limits": [
+        "Same writable seed volumes; fixed TIME probe skipped without RTC",
+        "Warm test does not prove disconnected cold start"
+      ],
+      "adb_smoke": {
+        "boot_id": "60e66c01-facc-420e-97d4-1fc8df464188",
+        "bytes": 1048576,
+        "identity": [
+          "37",
+          "6.18.32-android17-5-maybe-dirty-4k",
+          "60e66c01-facc-420e-97d4-1fc8df464188",
+          "Enforcing",
+          "running",
+          "",
+          "lease",
+          "adb"
+        ],
+        "data_mountinfo": [
+          "67 57 7:0 / /data rw,nosuid,nodev,relatime shared:9 - ext4 /proc/self/fd/3 rw,seclabel",
+          "68 57 7:1 / /metadata rw,nosuid,nodev,relatime shared:10 - ext4 /proc/self/fd/3 rw,seclabel"
+        ],
+        "push_seconds": 0.047,
+        "pull_seconds": 0.094,
+        "device_sha256": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83",
+        "returned_sha256": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83",
+        "maintenance": "Service android.security.maintenance: found",
+        "shell_identity": "uid=2000(shell) gid=2000(shell) groups=2000(shell),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs) context=u:r:shell:s0",
+        "uptime": "238.32 1744.62",
+        "boot_completed": "",
+        "wrong_boot_rejected": true,
+        "after": [
+          "37",
+          "6.18.32-android17-5-maybe-dirty-4k",
+          "60e66c01-facc-420e-97d4-1fc8df464188",
+          "Enforcing",
+          "running",
+          "",
+          "lease",
+          "adb"
+        ],
+        "temporary_files_removed": true
+      }
+    }
+  ]
+}
