@@ -44,6 +44,21 @@ for attempt in $(seq 1 30); do
     if /bin/ufs-host-test preflight > /run/m1-preflight.log 2>&1; then break; fi
     sleep 1
 done
+# Read-only provider evidence for the PDC/SPMI power-control investigation.
+{
+    printf 'M1POWER boot=%s\n' "$boot"
+    echo DEFERRED
+    cat /sys/kernel/debug/devices_deferred
+    echo SPMI
+    ls -l /sys/bus/spmi/devices
+    for device in /sys/bus/spmi/devices/*; do
+        [ -e "$device" ] || continue
+        printf 'DEVICE=%s DRIVER=%s\n' "${device##*/}" "$(readlink -f "$device/driver")"
+        cat "$device/uevent"
+    done
+    echo POWER_LOG
+    dmesg | grep -iE 'spmi|pmic|pdc|psci|power.?off|pon@|pwrkey' || true
+} > /run/m1-power.txt 2>&1 || true
 /bin/busybox sh /bin/first-stage-mount ufs install > /run/gsi17-run.log 2>&1
 mark failed
 exec /bin/reboot-edl edl

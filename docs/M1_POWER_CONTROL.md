@@ -69,3 +69,13 @@ Synthetic negative tests reject changed TLMM, routing, IRQ or status. The
 actual retained board tree also passed both checks. No PDC image has been
 boot-tested yet, and this does not supply the missing PON poweroff driver.
 [Offline validation](../build/device/m1-pdc-only-preflight-2026-11-14.json)
+
+The pinned upstream [PM8150 tree](https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/arch/arm64/boot/dts/qcom/pm8150.dtsi)
+uses a pm8998-compatible PON parent at 0x800 and a pm8941-compatible power-key
+child on SID 0, peripheral 8, IRQ 0. The power-key driver registers the notifier
+that selects shutdown versus warm/hard reset; its mere presence in a DT source
+is not evidence that it bound or programmed this handset. The next PDC-only
+trial additionally publishes read-only deferred-probe, SPMI device/driver and
+early power-log snapshots to scratch data, before policy installation. Missing
+optional snapshot entries do not stop Android boot. No PON conversion or new
+poweroff driver is included in that control.
