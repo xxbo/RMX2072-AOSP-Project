@@ -118,6 +118,9 @@ static int rmx2072_resume_time(struct rmx2072_key_test *test,
 
 static int rmx2072_key_call(struct rmx2072_key_test *test, size_t len, bool *terminal)
 {
+	/* F.20 places the response immediately after the serialized request in
+	 * the same 40 KiB client buffer. Keep both addresses in one allocation. */
+	void *reply = (u8 *)test->request + len;
 	struct qcom_scm_desc desc = {
 		.owner = QSEECOM_TZ_OWNER_TZ_APPS, .svc = QSEECOM_TZ_SVC_APP_ID_PLACEHOLDER,
 		/* F.20 uses TZ_APP_QSAPP_SEND_DATA_WITH_WHITELIST_ID (0x70000006). */
@@ -125,13 +128,16 @@ static int rmx2072_key_call(struct rmx2072_key_test *test, size_t len, bool *ter
 		.arginfo = QCOM_SCM_ARGS(7, QCOM_SCM_VAL, QCOM_SCM_RW, QCOM_SCM_VAL,
 					    QCOM_SCM_RW, QCOM_SCM_VAL, QCOM_SCM_RW, QCOM_SCM_VAL),
 		.args = { test->app_id, qcom_tzmem_to_phys(test->request), len,
-			  qcom_tzmem_to_phys(test->reply), SZ_32K + SZ_8K - len,
+			  qcom_tzmem_to_phys(test->request) + len, SZ_32K + SZ_8K - len,
 			  qcom_tzmem_to_phys(test->sglist), 32 },
 	};
 	struct qcom_scm_qseecom_resp resp = {};
 	int rc;
 
 	lockdep_assert_held(&qcom_scm_qseecom_call_lock);
+	test->reply = reply;
+	memset(reply, 0, SZ_32K + SZ_8K - len);
+	*(__le32 *)reply = cpu_to_le32((u32)-1000);
 	*terminal = false;
 	pr_info("rmx2072-temp-key: send method=%u bytes=%zu\n",
 		le32_to_cpu(*(__le32 *)test->request), len);
@@ -195,11 +201,10 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 	attempted = true;
 	pr_info("rmx2072-temp-key: allocating buffers\n");
 	req = t.request = qcom_tzmem_alloc(__scm->mempool, capacity, GFP_KERNEL);
-	reply = t.reply = qcom_tzmem_alloc(__scm->mempool, capacity, GFP_KERNEL);
 	t.listener = qcom_tzmem_alloc(__scm->mempool, SZ_16K + SZ_4K, GFP_KERNEL);
 	t.sglist = qcom_tzmem_alloc(__scm->mempool, 32, GFP_KERNEL);
 	rc = -ENOMEM;
-	if (!req || !reply || !t.listener || !t.sglist)
+	if (!req || !t.listener || !t.sglist)
 		goto out;
 	memset(t.listener, 0, SZ_16K + SZ_4K);
 	memset(t.sglist, 0, 32);
@@ -213,11 +218,10 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 	}
 	for (i = 0; i < ARRAY_SIZE(configure); ++i)
 		req[i] = cpu_to_le32(configure[i]);
-	memset(reply, 0, capacity);
-	reply[0] = cpu_to_le32((u32)-1000);
 	rc = rmx2072_key_call(&t, sizeof(configure), &terminal);
 	if (rc)
 		goto unregister;
+	reply = t.reply;
 	configure_status = (s32)le32_to_cpu(reply[0]);
 	pr_info("rmx2072-temp-key: configure status=%d os_version=170000 os_patchlevel=202609\n",
 		configure_status);
@@ -225,13 +229,12 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		goto unregister;
 	for (i = 0; i < ARRAY_SIZE(generate); ++i)
 		req[i] = cpu_to_le32(generate[i]);
-	memset(reply, 0, capacity);
-	reply[0] = cpu_to_le32((u32)-1000);
 	rc = rmx2072_key_call(&t, sizeof(generate), &terminal);
 	first = t.first_result;
 	final = t.final_result;
 	if (rc)
 		goto unregister;
+	reply = t.reply;
 	generate_status = (s32)le32_to_cpu(reply[0]);
 	if (generate_status)
 		goto unregister;
@@ -242,15 +245,13 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		rc = -EPROTO;
 		goto unregister;
 	}
+	memmove(req + 3, (u8 *)reply + offset, blob_len);
 	req[0] = cpu_to_le32(0x10d);
 	req[1] = cpu_to_le32(12);
 	req[2] = cpu_to_le32(blob_len);
-	memcpy(req + 3, (u8 *)reply + offset, blob_len);
-	memset(reply, 0, capacity);
-	reply[0] = cpu_to_le32((u32)-1000);
 	rc = rmx2072_key_call(&t, 12 + blob_len, &terminal);
 	if (!rc)
-		delete_status = (s32)le32_to_cpu(reply[0]);
+		delete_status = (s32)le32_to_cpu(*(__le32 *)t.reply);
 unregister:
 	if (terminal) {
 		pr_info("rmx2072-temp-key: unregistering\n");
@@ -270,10 +271,6 @@ out:
 		if (req) {
 			memzero_explicit(req, capacity);
 			qcom_tzmem_free(req);
-		}
-		if (reply) {
-			memzero_explicit(reply, capacity);
-			qcom_tzmem_free(reply);
 		}
 	}
 	mutex_unlock(&qcom_scm_qseecom_call_lock);

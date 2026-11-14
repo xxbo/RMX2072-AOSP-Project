@@ -105,6 +105,9 @@ def observe(trial, output, timeout):
         if identity['trial'] != trial:
             raise ValueError('Unexpected running trial')
         original = UUID(console_query(console, b'cat /proc/sys/kernel/random/boot_id').decode())
+        # Preserve the allocator's boot-time result before Android fills pstore.
+        bridge = console_query(console, b"dmesg | grep 'SHM Bridge'")
+        (output/'shmbridge.txt').write_bytes(bridge + b'\n')
         if console_query(console, b'test -r /sys/module/qcom_scm/parameters/temp_hmac_key && echo present') == b'present':
             before = int(console_query(console, b'/bin/busybox date -u +%s 2>/dev/null'))
             now = datetime.now(timezone.utc)
