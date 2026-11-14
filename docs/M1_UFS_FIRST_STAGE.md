@@ -481,3 +481,25 @@ addresses; primary SID 00 and seven other addresses bind pmic-spmi. PON and
 PS_HOLD remain unbound, matching the disabled driver configuration. The phone
 is retained on GSI while the separate PON/poweroff kernel builds. No cold-start
 pass is claimed. [Evidence](../build/device/m1-pdc-spmi-33-2026-11-14.json)
+
+### Trials 34–35 · PON kernel and disconnected headless startup
+
+The optional upstream PON/PS_HOLD build (`dc41c03c...`) reached diagnostics
+and identified the primary PON in trial 34, but rejected a damaged previous
+boot journal before Android. The original F.20 restore was fully verified.
+Trial 35 retried the same kernel from F.20 and passed autonomous GSI startup,
+primary PON and PS_HOLD driver bindings, enforcing, maintenance, a
+193.781-second soak and the 1 MiB ADB transfer.
+
+After the scheduled shutdown, USB remained disconnected while the operator
+pressed power and saw the realme logo. The reconnect observer accepted new
+GSI boot `9e7b6ff1-f413-4f79-a0df-d91d0c3f9de9`, which uptime places at
+least 138.771 seconds before ADB reconnection. Local guard acceptance, Android
+PID 1, API 37, exact kernel release, enforcing and UFS-backed system/vendor
+passed again, followed by the full soak and transfer. This passes M1's
+disconnected headless-start acceptance on the recorded factory-derived tree
+and original DTBO; M2 still replaces those trees and the emulator-derived
+first-stage init. Framework boot completion and persistent encrypted userdata
+remain separate work.
+[Power investigation](M1_POWER_CONTROL.md) ·
+[Disconnected-start record](../build/device/m1-disconnected-start-35-2026-11-14.json)

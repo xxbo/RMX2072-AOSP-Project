@@ -109,7 +109,7 @@ These are upstream references, not copies of their contents:
 - [x] Exercise UFS HS-G3 reads and verified F.20 mounts, then observe Android first-stage init mount both the USB-backed GSI and the RAM-backed project vendor. [Handset trials](https://github.com/xxbo/RMX2072-AOSP-Project/blob/da4385b38212ea8f84307f672a741da77172ecc5/build/device/gsi17-project-vendor-2026-11-11.json)
 - [x] Run Android 17 second-stage init under enforcing with the RAM/USB-backed GSI. [Trial 05](https://github.com/xxbo/RMX2072-AOSP-Project/blob/19d77ebfd3b5c5eed24c49c4494043a9203a12b7/build/device/gsi17-enforcing-second-stage-2026-11-12.json)
 - [x] Verify the GSI and project vendor on internal UFS, then read the system init scripts and vendor fstab under enforcing in a USB-attached warm boot. [UFS trial 04](docs/M1_UFS_FIRST_STAGE.md#trial-04--zygote-imports-and-vold-on-ufs)
-- [ ] Boot Android 17 from UFS with a source-built vendor and working ADB.
+- [x] Cold-boot headless Android 17 from UFS with the project-built vendor, then connect working ADB. Trial 35 booted by power key with USB disconnected and passed enforcing/PID 1/UFS identity, local guard retention, the ADB soak and transfer. [Disconnected-start evidence](build/device/m1-disconnected-start-35-2026-11-14.json)
 - [ ] Repeat that boot on source-built board device trees and bring up the interactive desktop.
 - [ ] Qualify daily-use hardware and the update/recovery path. See [milestone acceptance](plan.md#milestones-and-acceptance).
 

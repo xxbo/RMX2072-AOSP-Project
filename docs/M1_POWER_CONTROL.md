@@ -191,6 +191,22 @@ the subsequent same-boot soak and 1 MiB transfer passed. The previous console
 and pmsg were absent after this power cycle, so no shutdown notifier log is
 claimed. This passes the operator-controlled disconnected-start test.
 
-Watchdog-triggered recovery must still be repeated on this changed kernel;
-trial 32's full recovery used the earlier kernel.
+Watchdog-triggered recovery was then repeated on this changed kernel, below.
 [Disconnected-start evidence](../build/device/m1-disconnected-start-35-2026-11-14.json)
+
+### Same-kernel automatic recovery passed
+
+The cold-start boot's injected lease expired at 44.062 seconds; ADB disappeared
+at 74.500 seconds. Recovery boot `73c4dbc8-f290-4e6c-9da6-ec1b2ea54db8`
+matched its expired journal and the 29-second pretimeout interval. Its helper
+disabled qcom_wdt at uptime 30.98, then the phone autonomously entered EDL at
+176.094 seconds. The prepared host captured Sahara without keys or any host
+reboot command.
+
+F.20 restoration passed all 17 super chunk readbacks, boot/DTBO readbacks,
+both LP slots, the full Android-side super digest and boot completion (boot
+`42805cb0-d7c6-49c8-95ad-62d1abfa15b4`). This qualifies the complete prepared-host
+recovery on the same `dc41c03c...` kernel used for disconnected startup. It
+does not qualify an unattended 45-second EDL hold or restoration without a
+computer. The identical candidate is then reinstalled for continued GSI work.
+[Recovery evidence](../build/device/m1-autonomous-recovery-35-2026-11-14.json)
