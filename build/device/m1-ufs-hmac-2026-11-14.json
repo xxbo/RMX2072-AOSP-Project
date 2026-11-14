@@ -270,6 +270,103 @@
           1
         ]
       }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-14",
+      "boot_id": "ba6b505f-385c-4d67-8c98-b0812002e9a8",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "outcome": "Stopped during the temporary-key probe before SELinux handoff; no probe return observed",
+      "mounts": {
+        "system": {
+          "seconds": 87.621913,
+          "source": "/dev/block/dm-14",
+          "mount_rc": 0,
+          "readonly": true
+        },
+        "vendor": {
+          "seconds": 87.715196,
+          "source": "/dev/block/dm-15",
+          "mount_rc": 0,
+          "readonly": true
+        }
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keymaster": {
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ],
+        "temporary_hmac_key": null
+      },
+      "diagnostic_clock": {
+        "boot_id": "ba6b505f-385c-4d67-8c98-b0812002e9a8",
+        "source": "USB host UTC",
+        "host_utc": "2026-11-14T03:47:36.715821+00:00",
+        "before_seconds": 83,
+        "after_seconds": 1794628056
+      },
+      "observer_retries": [
+        "Bionic tzdata stderr in date output",
+        "BusyBox inherited tzdata stderr",
+        "Literal percent-s required in host strftime"
+      ],
+      "selinux_handoff": "NOT REACHED",
+      "gsi_keystore2": "NOT RUN",
+      "maintenance": "NOT RUN",
+      "vdc_early_boot_ended": "NOT RUN",
+      "capture_limitations": [
+        "No intermediate SCM stage logging in this kernel",
+        "pmsg ECC reported 4 corrected bytes and 32 unrecoverable blocks; no Android identity inferred from pmsg"
+      ],
+      "raw_sha256": {
+        "acm.log": "d84067e7f5b8baa788c4aa84f12deda30e0e113d069787e6c0c39939227ac258",
+        "console-ramoops-0": "26d0adf8d34003171511210056ab89ae5c789bafd28fd1b1368abd76a9699311",
+        "pmsg-ramoops-0": "b212ba8454d64aeedce6bae3f77ea28fdb8f21957f8d638975bca78fe8f22805"
+      },
+      "build": {
+        "actions_run": 43549020561,
+        "kernel_source_commit": "384135fd163bbe6e31fbee025b61fd76e961b40f",
+        "artifact_id": 14097170353,
+        "artifact_digest": "sha256:97184dfc3963534daeab6b5fe08702091379c2a8b2f005d42f29e8bb0b3590c4",
+        "kernel_sha256": "1dca7f1a731d68c25a4c12aa7c7bc08d42885365e8014d8f7360279628990bbe",
+        "ramdisk_sha256": "765c18582beb53b323ca2916000290cf36c6486e802818dd76610f1f92bd4c8d",
+        "boot_sha256": "1ef84cbe50f05053eb13705daa5a127b7b9d64b2400e8eb2d49e2d6eb869c3f5"
+      },
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "35a40b92-9e3b-4243-8f24-f92c46852c3a",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
     }
   ]
 }
