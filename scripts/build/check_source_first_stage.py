@@ -39,6 +39,9 @@ def verify_source_first_stage(directory, binary):
     if (avf_sparse != ['/Android.bp', '/build/Android.bp', '/build/avf_flags.aconfig', '/libs/libavf_cc_flags/']
             or 'packages/modules/Virtualization' not in projects):
         raise ValueError('First-stage AVF flag source selection differs')
+    common_sparse = (directory / 'modules-common-sparse.txt').read_text().splitlines()
+    if common_sparse != ['/Android.bp', '/sdk/Android.bp'] or 'packages/modules/common' not in projects:
+        raise ValueError('First-stage mainline build defaults selection differs')
     for name in ('rmx2072_m2_init.mk', 'BoardConfig.mk', 'AndroidProducts.mk'):
         product = (directory / name).read_bytes().replace(b'\r\n', b'\n')
         expected = (repo / 'device/realme/bladerunner_48m/m2-init' / name).read_bytes().replace(b'\r\n', b'\n')
@@ -47,4 +50,5 @@ def verify_source_first_stage(directory, binary):
     return dict(origin='project-source-build', **pin, init_sha256=hashes['init'],
                 resolved_manifest_sha256=hashes['resolved-manifest.xml'], source_projects=len(projects),
                 sparse_projects={'frameworks/base': sparse, 'packages/services/Car': car_sparse,
-                                 'system/apex': apex_sparse, 'packages/modules/Virtualization': avf_sparse})
+                                 'system/apex': apex_sparse, 'packages/modules/Virtualization': avf_sparse,
+                                 'packages/modules/common': common_sparse})

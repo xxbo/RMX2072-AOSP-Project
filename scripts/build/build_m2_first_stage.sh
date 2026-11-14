@@ -27,6 +27,8 @@ git -C system/apex sparse-checkout list > "$ARTIFACT_DIR/apex-sparse.txt"
 git -C packages/modules/Virtualization sparse-checkout set --no-cone \
   /Android.bp /build/Android.bp /build/avf_flags.aconfig /libs/libavf_cc_flags/
 git -C packages/modules/Virtualization sparse-checkout list > "$ARTIFACT_DIR/avf-sparse.txt"
+git -C packages/modules/common sparse-checkout set --no-cone /Android.bp /sdk/Android.bp
+git -C packages/modules/common sparse-checkout list > "$ARTIFACT_DIR/modules-common-sparse.txt"
 repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
 test "$(git -C system/core rev-parse HEAD)" = 545d2487e38192a2ce25040897ced877cf6b4f53
 mkdir -p device/realme/rmx2072_m2
