@@ -81,4 +81,12 @@ if [ -r "$apps" ]; then
     else
         echo "M1EVENT qsee_lookup_read_failed=$?" > /dev/ttyGS0
     fi
+    version=${apps%/*}/version_info
+    if [ -r "$version" ]; then
+        if result=$(cat "$version"); then
+            echo "M1EVENT keymaster_version $result" > /dev/ttyGS0
+        else
+            echo "M1EVENT keymaster_version_read_failed=$?" > /dev/ttyGS0
+        fi
+    fi
 fi
