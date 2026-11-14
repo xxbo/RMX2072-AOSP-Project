@@ -109,6 +109,13 @@
     "return_status": 0,
     "observed_listener_callbacks": 0,
     "trigger": "Single controlled stock Keymaster service restart per capture",
-    "raw_sha256": "bb98d2059bcd7735c248a25be6a2cb15f8a03bbef5b8e17f3c5d3f9e7cc55154"
+    "raw_sha256": "bb98d2059bcd7735c248a25be6a2cb15f8a03bbef5b8e17f3c5d3f9e7cc55154",
+    "post_restart_key_control": {
+      "generate_status": 0,
+      "blob_bytes": 455,
+      "delete_status": 0,
+      "time_callback": 11,
+      "raw_sha256": "105a3dff13d08328c57def6972666b6ec4b52349d916ee2349451f1d351cf39f"
+    }
   }
 }

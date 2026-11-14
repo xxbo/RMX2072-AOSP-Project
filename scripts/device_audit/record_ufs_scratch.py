@@ -110,6 +110,11 @@ def extract(live, port_log, layout, *, console_tail=False):
     observations = keymaster_observations(serial, console, pid)
     if observations:
         trial['keymaster'] = observations
+    bridge = live/'shmbridge.txt'
+    if bridge.exists():
+        trial['shared_memory_startup'] = dict(
+            records=bridge.read_text().splitlines(),
+            raw_sha256=hashlib.sha256(bridge.read_bytes()).hexdigest())
     clock = live/'time-control.json'
     if clock.exists():
         control = json.loads(clock.read_text())
