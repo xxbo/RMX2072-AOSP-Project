@@ -32,6 +32,9 @@ def verify_source_first_stage(directory, binary):
     car_sparse = (directory / 'car-sparse.txt').read_text().splitlines()
     if car_sparse != ['/teams/Android.bp'] or 'packages/services/Car' not in projects:
         raise ValueError('First-stage automotive owner metadata selection differs')
+    apex_sparse = (directory / 'apex-sparse.txt').read_text().splitlines()
+    if apex_sparse != ['/*', '!/apexd/apexd_testdata/'] or 'system/apex' not in projects:
+        raise ValueError('First-stage APEX test-data exclusion differs')
     for name in ('rmx2072_m2_init.mk', 'BoardConfig.mk', 'AndroidProducts.mk'):
         product = (directory / name).read_bytes().replace(b'\r\n', b'\n')
         expected = (repo / 'device/realme/bladerunner_48m/m2-init' / name).read_bytes().replace(b'\r\n', b'\n')
@@ -39,4 +42,5 @@ def verify_source_first_stage(directory, binary):
             raise ValueError('First-stage product recipe differs: ' + name)
     return dict(origin='project-source-build', **pin, init_sha256=hashes['init'],
                 resolved_manifest_sha256=hashes['resolved-manifest.xml'], source_projects=len(projects),
-                sparse_projects={'frameworks/base': sparse, 'packages/services/Car': car_sparse})
+                sparse_projects={'frameworks/base': sparse, 'packages/services/Car': car_sparse,
+                                 'system/apex': apex_sparse})

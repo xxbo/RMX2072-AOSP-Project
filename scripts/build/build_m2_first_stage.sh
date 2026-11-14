@@ -16,6 +16,10 @@ git -C frameworks/base sparse-checkout set --no-cone /core/java/android/hardware
 git -C frameworks/base sparse-checkout list > "$ARTIFACT_DIR/frameworks-base-sparse.txt"
 git -C packages/services/Car sparse-checkout set --no-cone /teams/Android.bp
 git -C packages/services/Car sparse-checkout list > "$ARTIFACT_DIR/car-sparse.txt"
+# APEX Java test payloads require the full Android framework and are unrelated
+# to init's native libapexd_flags. Keep the implementation, omit only test data.
+git -C system/apex sparse-checkout set --no-cone '/*' '!/apexd/apexd_testdata/'
+git -C system/apex sparse-checkout list > "$ARTIFACT_DIR/apex-sparse.txt"
 repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
 test "$(git -C system/core rev-parse HEAD)" = 545d2487e38192a2ce25040897ced877cf6b4f53
 mkdir -p device/realme/rmx2072_m2
