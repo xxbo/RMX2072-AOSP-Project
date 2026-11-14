@@ -1,0 +1,7 @@
+service vendor.rmx-keymaster /vendor/bin/hw/rmx-keymaster-info-service
+    class early_hal
+    user root
+    group system
+    capabilities
+    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+    disabled

@@ -27,6 +27,73 @@ def usb_interfaces(port_log, live):
                 raw_sha256=hashlib.sha256(port_log.read_bytes()).hexdigest())
 
 
+def keymaster_observations(serial, console, keystore):
+    result = {}
+    sequence = []
+    for row in re.finditer(r'^M1EVENT keymaster_version(_before_listener|_before_temp_key)? (.+)$', serial, re.M):
+        fields = dict(re.findall(r'(\w+)=([^ ]+)', row[2]))
+        sequence.append(dict(stage={None: 'after_temp_key', '_before_listener': 'before_listener',
+                                    '_before_temp_key': 'before_temp_key'}[row[1]], **fields))
+    if sequence:
+        result['version_sequence'] = sequence
+    version = re.search(r'^M1EVENT keymaster_version transport_rc=(0) status=(0) '
+                        r'api=(\d+\.\d+) ta=(\d+\.\d+)$', serial, re.M)
+    if version:
+        result['version_transaction'] = dict(transport_rc=0, status=0, api=version[3], ta=version[4])
+    fields = ('id', 'register_rc', 'register_result', 'unregister_rc', 'unregister_result')
+    lifetime = r'^M1EVENT qsee_listener_lifetime ' + ' '.join(f + r'=(-?\d+)' for f in fields) + '$'
+    rows = [dict(zip(fields, map(int, row.groups()))) for row in re.finditer(lifetime, serial, re.M)]
+    if rows:
+        result['listener_lifetimes'] = rows
+    key_fields = ('rc', 'first', 'listener', 'command', 'callbacks', 'final', 'generate',
+                  'blob_bytes', 'delete', 'unregister')
+    key = re.search(r'^M1EVENT temporary_key ' + ' '.join(f + r'=(-?\d+)' for f in key_fields)
+                    + r'(?: configure=(-?\d+))?$',
+                    serial, re.M)
+    if key:
+        result['temporary_hmac_key'] = dict(zip(key_fields, map(int, key.groups()[:-1])))
+        if key.groups()[-1] is not None:
+            result['temporary_hmac_key']['configure'] = int(key.groups()[-1])
+    stages = [line for line in console.splitlines()
+              if re.match(r'^\[\s*[0-9.]+\]\[\s*T\d+\] rmx2072-temp-key: ', line)]
+    if stages:
+        result['temporary_key_stages'] = stages
+
+    # Match the init-launched service and client from the same boot. The log
+    # in getHardwareInfo runs after the HIDL service has invoked its reply.
+    service = re.search(r"^\[\s*([0-9.]+)\]\[\s*T1\] init: \.\.\. started service 'vendor.rmx-keymaster'"
+                        r" has pid (\d+)$", console, re.M)
+    if service:
+        pid = int(service[2])
+        prefix = rf'^\[\s*([0-9.]+)\]\[\s*T{pid}\] ks_log: [^\n]*? tag="RMXKeymaster" msg="'
+        registered = re.search(prefix + 'registered default"$', console[service.end():], re.M)
+        reply = re.search(prefix + rf'getHardwareInfo caller={keystore} level=(\w+) name=([^"]+)"$',
+                          console[service.end():], re.M)
+        if registered and reply and float(registered[1]) <= float(reply[1]):
+            result['gsi_hidl_reply'] = dict(instance='android.hardware.keymaster@4.0::IKeymasterDevice/default',
+                                            service_pid=pid, caller='keystore2', caller_pid=keystore,
+                                            registration_seconds=float(registered[1]), reply_seconds=float(reply[1]),
+                                            level=reply[2], name=reply[3])
+            after = console[service.end()+reply.end():]
+            parameters = re.search(prefix + rf'getHmacSharingParameters caller={keystore} status=(-?\d+)"$',
+                                   after, re.M)
+            if parameters:
+                result['hmac_parameter_reply'] = dict(service_pid=pid, caller_pid=keystore,
+                                                      seconds=float(parameters[1]), status=int(parameters[2]))
+            negotiation = re.search(r'^\[\s*([0-9.]+)\]\[\s*T\d+\] ks_buf: [^\n]* tag="keystore2" '
+                                    r'msg="[^\n]*ParameterRetrieval \{ e: Binder\(SERVICE_SPECIFIC, (-?\d+)\), '
+                                    r'p: Hidl \{ is_strongbox: false, version: \(4, 0\)',
+                                    console[service.end()+reply.end():], re.M)
+            if negotiation:
+                result['shared_secret_parameter_error'] = dict(seconds=float(negotiation[1]), rc=int(negotiation[2]))
+            computation = re.search(r'^\[\s*([0-9.]+)\]\[\s*T\d+\] ks_buf: [^\n]* tag="keystore2" '
+                                    r'msg="[^\n]*Computation \{ e: Binder\(SERVICE_SPECIFIC, (-?\d+)\)',
+                                    after, re.M)
+            if computation:
+                result['shared_secret_computation_error'] = dict(seconds=float(computation[1]), rc=int(computation[2]))
+    return result
+
+
 def extract(live, port_log, layout, *, console_tail=False):
     trial = record(live, layout, console_tail=console_tail)
     if console_tail:
@@ -47,6 +114,20 @@ def extract(live, port_log, layout, *, console_tail=False):
     trial['raw_sha256']['pmsg-ramoops-0'] = hashlib.sha256(pmsg).hexdigest()
     proc = match(r"^\[\s*([0-9.]+)\]\[\s*T1\] init: \.\.\. started service 'keystore2' has pid (\d+)$", console)
     pid = int(proc[2])
+    observations = keymaster_observations(serial, console, pid)
+    if observations:
+        trial['keymaster'] = observations
+    bridge = live/'shmbridge.txt'
+    if bridge.exists():
+        trial['shared_memory_startup'] = dict(
+            records=bridge.read_text().splitlines(),
+            raw_sha256=hashlib.sha256(bridge.read_bytes()).hexdigest())
+    clock = live/'time-control.json'
+    if clock.exists():
+        control = json.loads(clock.read_text())
+        if control['boot_id'] != trial['boot_id']:
+            raise ValueError('UTC observation belongs to a different boot')
+        trial['diagnostic_clock'] = control
     abort = re.search(rf"^\[\s*([0-9.]+)\]\[\s*T1\] init: Service 'keystore2' \(pid {pid}\) received SIGABRT$", console, re.M)
     trial['first_keystore_abort'] = None
     if abort:
@@ -84,6 +165,26 @@ def extract(live, port_log, layout, *, console_tail=False):
         ('apexd' in l and ('com.google.android.adbd' in l or 'Found bootstrap APEX' in l or 'Activated ' in l))
         or re.search(r"init: starting service '(adbd|apexd)'", l)]
     trial['keystore_sigabrt_count'] = len(re.findall(r"init: Service 'keystore2' \(pid \d+\) received SIGABRT",console))
+    # A successful vdc exit can coexist with a failed boot-level key creation.
+    # Retain the full cause chain so the exit cannot imply working key storage.
+    cache_error = re.search(r'^\[\s*[0-9.]+\]\[\s*T\d+\] ks_buf: [^\n]*'
+                            r'SUPER_KEY\.set_up_boot_level_cache failed:.*?'
+                            r'^\[\s*[0-9.]+\]\[\s*T\d+\] "$', console, re.M | re.S)
+    trial['boot_level_key_error'] = cache_error[0].splitlines() if cache_error else []
+    trial['apex_init_imports'] = [line for line in console.splitlines()
+                                if 'init: Parsing file /apex/com.android.adbd/etc/init.rc' in line]
+    trial['zygote_starts'] = [line for line in console.splitlines()
+                            if re.search(r"init: \.\.\. started service 'zygote(?:_secondary)?' has pid \d+$", line)]
+    trial['keystore_entropy_waits'] = [
+        re.sub(r'\([^)]*\)', '(probe)', line)
+        for line in console.splitlines()
+        if re.search(rf'ks_(?:random_wait|random_ready|getrandom|gotrandom): .*task="(?:keystore2|(?:Hw)?[Bb]inder:{pid}_[^\"]+)"', line)
+    ]
+    trial['keystore_compat_construction'] = [
+        re.sub(r'\([^)]*\)', '(probe)', line)
+        for line in console.splitlines()
+        if re.search(rf'ks_compat_(?:get|wrap|soft|patch)_(?:entry|return): .*task="(?:keystore2|(?:Hw)?[Bb]inder:{pid}_[^\"]+)"', line)
+    ]
     return trial
 
 

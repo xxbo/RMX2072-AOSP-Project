@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Opt-in PON candidate. Requires the separately tested PDC/SPMI binding.
+CONFIG_INPUT_PM8941_PWRKEY=y
+CONFIG_POWER_RESET_MSM=y

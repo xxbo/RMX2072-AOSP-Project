@@ -10,7 +10,7 @@ inst=$trace/instances/rmxlink
 stage=$1
 case "$(uname -r):$(cat /trial-id)" in 6.18.*:ufs-host-*) ;; *) exit 2 ;; esac
 [ "$(od -An -tx1 "$of/../oplus,dtsi_no" | xargs)" = '00 00 50 7f' ]
-[ "$(cat /sys/class/udc/*/state)" = configured ]
+if [ ! -f /m1-autoboot ]; then [ "$(cat /sys/class/udc/*/state)" = configured ]; fi
 [ "$(tr -d '\000' < "$of/ufshc@1d84000/compatible")" = realme,rmx2072-parked-ufs-host ]
 [ ! -L "$dev/1d84000.ufshc/driver" ]
 [ -d "$drv/ufshcd-qcom" ]

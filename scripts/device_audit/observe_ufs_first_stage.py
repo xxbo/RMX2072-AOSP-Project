@@ -21,10 +21,12 @@ def mark(output, event, boot_id):
                                   utc=datetime.now(timezone.utc).isoformat()))+'\n')
 
 
-def watch_adb(output, stop):
+def watch_adb(output, stop, retain=False, autonomous=False):
     """Record transport states, including offline and unauthorized, throughout the trial."""
     start = time.monotonic()
     previous = None
+    accepted = False
+    last_attempt = 0
     with (output/'adb.jsonl').open('x') as log:
         while not stop.is_set():
             try:
@@ -48,14 +50,27 @@ def watch_adb(output, stop):
                             entry.setdefault('identity', {})[fields[0]] = data.splitlines()
                         except (OSError, subprocess.SubprocessError) as error:
                             entry['identity_error'] = str(error)
+            if retain and not accepted and time.monotonic()-last_attempt > 3 and (autonomous or (output/'host-events.jsonl').exists()):
+                last_attempt = time.monotonic()
+                try:
+                    from gsi_adb_accept import accept, fetch_autonomous
+                    if any(row.startswith('RMX2072-M1') and row.split()[1]=='device' for row in state.get('transports', [])):
+                        if autonomous: original=fetch_autonomous(output)
+                        else:
+                            events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
+                            original = next(x['boot_id'] for x in events if x['event']=='handoff_requested')
+                        accept(output, original); accepted=True
+                except (OSError, subprocess.SubprocessError, ValueError, StopIteration) as error:
+                    entry['accept_error'] = str(error)
             previous = state
             log.write(json.dumps(entry)+'\n')
             log.flush()
             stop.wait(1)
 
 
-def previous_boot(trial, original, output, deadline):
+def previous_boot(trial, original, output, deadline, return_on_accepted=True, request_edl=True):
     while time.monotonic() < deadline:
+        if return_on_accepted and (output/'gsi-accepted.json').exists(): return
         ports = comports()
         if ports_with_id(ports, EDL):
             return
@@ -81,7 +96,24 @@ def previous_boot(trial, original, output, deadline):
                                 data = read_console_file(console, b'/run/previous.gz',
                                     b'gzip -c '+path+b' > /run/previous.gz; ')
                                 (output/name).write_bytes(gzip.decompress(data))
+                        providers = console_query(console, b'echo DEFERRED; cat /sys/kernel/debug/devices_deferred; echo SPMI; ls -l /sys/bus/spmi/devices; echo POWER; dmesg | grep -iE "spmi|pmic|psci|power.?off|pon@|pwrkey|M1AUTO"')
+                        (output/'recovery-providers.txt').write_bytes(providers)
+                        if not request_edl:
+                            until=min(deadline,time.monotonic()+40)
+                            while time.monotonic()<until:
+                                if console_query(console,b'grep -Eq "disable ioctl rc=0|^recovery watchdog|^M1RECOVERY (watchdog|unexpected)" /run/m1-recovery-watchdog.log 2>/dev/null && echo present')==b'present':
+                                    data=read_console_file(console,b'/run/recovery-watchdog.gz',b'gzip -c /run/m1-recovery-watchdog.log > /run/recovery-watchdog.gz; ')
+                                    (output/'recovery-watchdog.log').write_bytes(gzip.decompress(data))
+                                    break
+                                time.sleep(1)
+                            return
                         console.write(b'/bin/reboot-edl edl\n')
+                        console.flush()
+                        # Closing immediately can cancel the last USB write on Windows.
+                        until=time.monotonic()+3
+                        while time.monotonic()<until:
+                            try: console.read(1024)
+                            except SerialException: break
                         return
             except (SerialException, TimeoutError, ValueError) as error:
                 print('Recovery console:', error, flush=True)
@@ -105,6 +137,19 @@ def observe(trial, output, timeout):
         if identity['trial'] != trial:
             raise ValueError('Unexpected running trial')
         original = UUID(console_query(console, b'cat /proc/sys/kernel/random/boot_id').decode())
+        # Preserve the allocator's boot-time result before Android fills pstore.
+        bridge = console_query(console, b"dmesg | grep 'SHM Bridge'")
+        (output/'shmbridge.txt').write_bytes(bridge + b'\n')
+        if console_query(console, b'test -r /sys/module/qcom_scm/parameters/temp_hmac_key && echo present') == b'present':
+            before = int(console_query(console, b'/bin/busybox date -u +%s 2>/dev/null'))
+            now = datetime.now(timezone.utc)
+            command = now.strftime("/bin/busybox date -u -s '%Y-%m-%d %H:%M:%S' >/dev/null 2>&1 && /bin/busybox date -u +%%s 2>/dev/null")
+            after = int(console_query(console, command.encode()))
+            if abs(datetime.now(timezone.utc).timestamp() - after) > 5:
+                raise ValueError('Diagnostic UTC did not match the USB host')
+            (output/'time-control.json').write_text(json.dumps(dict(
+                boot_id=str(original), source='USB host UTC', host_utc=now.isoformat(),
+                before_seconds=before, after_seconds=after))+'\n')
         (output/'identity.json').write_text(json.dumps(identity, indent=2) + '\n')
         mark(output, 'handoff_requested', original)
         # Capture bootstrap failures too. A failed mount can stop PID 1 before
@@ -119,6 +164,7 @@ def observe(trial, output, timeout):
         with (output/'acm.log').open('xb') as capture:
             tail = b''
             while time.monotonic() < deadline:
+                if (output/'gsi-accepted.json').exists(): break
                 try:
                     data = console.read(16384)
                 except SerialException:
@@ -133,7 +179,7 @@ def observe(trial, output, timeout):
                     mark(output, 'post_install_window_end', original)
                     break
                 tail = tail[-64:]
-    previous_boot(trial, original, output, time.monotonic()+180)
+    previous_boot(trial, original, output, time.monotonic()+300)
 
 
 if __name__ == '__main__':
@@ -142,14 +188,21 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--wait', type=int, default=120)
     parser.add_argument('--observe-adb', action='store_true')
+    parser.add_argument('--retain-gsi', action='store_true')
+    parser.add_argument('--autonomous', action='store_true')
     args = parser.parse_args()
     stop = threading.Event()
     args.output.mkdir(parents=True, exist_ok=False)
     if args.observe_adb:
-        monitor = threading.Thread(target=watch_adb, args=(args.output, stop))
+        monitor = threading.Thread(target=watch_adb, args=(args.output, stop, args.retain_gsi, args.autonomous))
         monitor.start()
     try:
-        observe(args.trial, args.output, args.wait)
+        if args.autonomous:
+            deadline=time.monotonic()+400
+            while ports_with_id(comports(),EDL) and time.monotonic()<deadline: time.sleep(.25)
+            previous_boot(args.trial,UUID(int=0),args.output,deadline)
+        else:
+            observe(args.trial, args.output, args.wait)
     finally:
         stop.set()
         if args.observe_adb:

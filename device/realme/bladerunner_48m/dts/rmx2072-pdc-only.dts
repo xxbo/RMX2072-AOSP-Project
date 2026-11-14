@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Enable the already-built upstream IRQ provider; preserve all OEM resources.
+/dts-v1/;
+/plugin/;
+
+&pdc {
+    compatible = "qcom,sm8250-pdc", "qcom,pdc";
+};

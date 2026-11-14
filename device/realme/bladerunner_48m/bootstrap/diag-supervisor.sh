@@ -21,8 +21,9 @@ if [ -r /control-return-seconds ]; then
         /bin/reboot-edl edl > /dev/kmsg 2>&1
         record phase=control-return-failed
     ) &
+    echo $! > /control-return-pid
 fi
-if [ -x /bin/entry-carry ]; then
+if [ -x /bin/entry-carry ] && [ ! -f /m1-autoboot ]; then
     /bin/busybox mkdir -p /sys/fs/pstore
     /bin/busybox mount -t pstore pstore /sys/fs/pstore
     /bin/entry-carry --capture > /dev/kmsg 2>&1
@@ -30,7 +31,7 @@ if [ -x /bin/entry-carry ]; then
 fi
 # Keep provider snapshots separate from both the gadget child and return timer.
 # Missing USB must not prevent collecting driver binding / deferred-probe state.
-(
+if [ ! -f /m1-autoboot ]; then (
     delays="2 13 30 30"
     [ ! -r /snapshot-delays ] || delays="$(/bin/busybox cat /snapshot-delays)"
     for delay in $delays; do
@@ -38,8 +39,13 @@ fi
         /bin/busybox sh /diag-snapshot.sh < /dev/null > /dev/kmsg 2>&1
     done
 ) &
+fi
 if [ -x /bin/first-stage-witness ]; then
-    /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
+    if [ -f /m1-autoboot ]; then
+        /bin/busybox sh /m1-autoboot.sh < /dev/null > /dev/kmsg 2>&1 &
+    else
+        /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
+    fi
     while [ ! -f /run/m1/go ]; do /bin/busybox sleep 1; done
     record phase=android-first-stage-handoff
     exec /bin/first-stage-witness handoff < /dev/null > /dev/kmsg 2>&1

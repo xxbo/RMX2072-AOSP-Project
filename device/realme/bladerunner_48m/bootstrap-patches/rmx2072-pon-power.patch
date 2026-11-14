@@ -1,0 +1,120 @@
+--- a/drivers/input/misc/pm8941-pwrkey.c
++++ b/drivers/input/misc/pm8941-pwrkey.c
+@@ -82,6 +82,7 @@
+ 	ktime_t sw_debounce_end_time;
+ 	bool last_status;
+ 	const struct pm8941_data *data;
++	bool rmx2072_legacy;
+ };
+ 
+ static int pm8941_reboot_notify(struct notifier_block *nb,
+@@ -128,6 +129,10 @@
+ 		break;
+ 	}
+ 
++	if (pwrkey->rmx2072_legacy)
++		dev_info(pwrkey->dev, "RMX2072 PON action=%lu reset_type=%u\n",
++			 code, reset_type);
++
+ 	error = regmap_update_bits(pwrkey->regmap,
+ 				   pwrkey->baseaddr + PON_PS_HOLD_RST_CTL,
+ 				   PON_PS_HOLD_TYPE_MASK,
+@@ -243,6 +248,33 @@
+ static DEFINE_SIMPLE_DEV_PM_OPS(pm8941_pwr_key_pm_ops,
+ 				pm8941_pwrkey_suspend, pm8941_pwrkey_resume);
+ 
++/* Temporary M1 bridge for the measured F.20 node. Project DTs will use the
++ * upstream binding. Never claim the legacy secondary/modem PON instances. */
++static bool rmx2072_primary_pon(struct device_node *np)
++{
++	static const u32 expected_irqs[] = { 0, 8, 0, 3, 0, 8, 1, 3 };
++	struct device_node *parent = of_get_parent(np);
++	u32 board, reg[2], sid[2], irqs[8];
++	bool valid;
++
++	valid = of_machine_is_compatible("qcom,kona-mtp") &&
++		!of_property_read_u32(of_root, "oplus,dtsi_no", &board) &&
++		board == 20607 && parent &&
++		of_device_is_compatible(parent, "qcom,spmi-pmic") &&
++		of_property_read_bool(np, "qcom,system-reset") &&
++		of_property_count_u32_elems(parent, "reg") == 2 &&
++		!of_property_read_u32_array(parent, "reg", sid, 2) &&
++		sid[0] == 0 && sid[1] == 0 &&
++		of_property_count_u32_elems(np, "reg") == 2 &&
++		!of_property_read_u32_array(np, "reg", reg, 2) &&
++		reg[0] == 0x800 && reg[1] == 0x100 &&
++		of_property_count_u32_elems(np, "interrupts") == 8 &&
++		!of_property_read_u32_array(np, "interrupts", irqs, 8) &&
++		!memcmp(irqs, expected_irqs, sizeof(irqs));
++	of_node_put(parent);
++	return valid;
++}
++
+ static int pm8941_pwrkey_probe(struct platform_device *pdev)
+ {
+ 	struct pm8941_pwrkey *pwrkey;
+@@ -252,6 +284,11 @@
+ 	const __be32 *addr;
+ 	u32 req_delay, mask, delay_shift;
+ 	int error;
++	bool legacy = of_device_is_compatible(pdev->dev.of_node,
++					     "qcom,qpnp-power-on");
++
++	if (legacy && !rmx2072_primary_pon(pdev->dev.of_node))
++		return -ENODEV;
+ 
+ 	if (of_property_read_u32(pdev->dev.of_node, "debounce", &req_delay))
+ 		req_delay = 15625;
+@@ -268,6 +305,7 @@
+ 		return -ENOMEM;
+ 
+ 	pwrkey->dev = &pdev->dev;
++	pwrkey->rmx2072_legacy = legacy;
+ 	pwrkey->data = of_device_get_match_data(&pdev->dev);
+ 
+ 	parent = pdev->dev.parent;
+@@ -319,6 +357,15 @@
+ 		return error;
+ 	}
+ 
++	if (legacy) {
++		if (pwrkey->subtype != PON_SUBTYPE_GEN2_PRIMARY)
++			return dev_err_probe(&pdev->dev, -ENODEV,
++					     "unexpected RMX2072 PON subtype %u\n",
++					     pwrkey->subtype);
++		dev_info(&pdev->dev, "RMX2072 primary PON revision=%u subtype=%u; preserving pull/debounce\n",
++			 pwrkey->revision, pwrkey->subtype);
++	}
++
+ 	error = of_property_read_u32(pdev->dev.of_node, "linux,code",
+ 				     &pwrkey->code);
+ 	if (error) {
+@@ -395,6 +442,9 @@
+ 
+ 	if (pwrkey->data->supports_ps_hold_poff_config) {
+ 		pwrkey->reboot_notifier.notifier_call = pm8941_reboot_notify;
++		/* The board SCM notifier must select warm EDL before PON type. */
++		if (legacy)
++			pwrkey->reboot_notifier.priority = -128;
+ 		error = register_reboot_notifier(&pwrkey->reboot_notifier);
+ 		if (error) {
+ 			dev_err(&pdev->dev, "failed to register reboot notifier: %d\n",
+@@ -462,7 +512,18 @@
+ 	.wakeup_source_default = false,
+ };
+ 
++/* Preserve firmware pull/debounce settings. The upstream notifier alone
++ * programs PS_HOLD type on explicit shutdown/restart; no PMIC watchdog writes. */
++static const struct pm8941_data rmx2072_legacy_pwrkey_data = {
++	.status_bit = PON_KPDPWR_N_SET,
++	.name = "rmx2072_pwrkey",
++	.phys = "rmx2072_pwrkey/input0",
++	.supports_ps_hold_poff_config = true,
++	.wakeup_source_default = true,
++};
++
+ static const struct of_device_id pm8941_pwr_key_id_table[] = {
++	{ .compatible = "qcom,qpnp-power-on", .data = &rmx2072_legacy_pwrkey_data },
+ 	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
+ 	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
+ 	{ .compatible = "qcom,pmk8350-pwrkey", .data = &pon_gen3_pwrkey_data },

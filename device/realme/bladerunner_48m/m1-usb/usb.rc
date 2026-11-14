@@ -1,0 +1,52 @@
+# Engineering M1 USB profile; the GSI provides adbd and its property triggers.
+service vendor.rmx-m1-guard /vendor/bin/hw/rmx-m1-guard
+    class core
+    user root
+    group root
+    socket rmx_m1_guard stream 0660 root shell
+    disabled
+    oneshot
+
+on early-init
+    start vendor.rmx-m1-guard
+
+on init
+    write /config/usb_gadget/rmxdiag/UDC none
+    mkdir /config/usb_gadget/g1
+    write /config/usb_gadget/g1/idVendor 0x18d1
+    write /config/usb_gadget/g1/idProduct 0x4ee7
+    write /config/usb_gadget/g1/bcdUSB 0x0200
+    mkdir /config/usb_gadget/g1/strings/0x409
+    write /config/usb_gadget/g1/strings/0x409/serialnumber RMX2072-M1
+    write /config/usb_gadget/g1/strings/0x409/manufacturer RMX2072-Project
+    write /config/usb_gadget/g1/strings/0x409/product Android17-M1
+    mkdir /config/usb_gadget/g1/configs/b.1
+    mkdir /config/usb_gadget/g1/configs/b.1/strings/0x409
+    write /config/usb_gadget/g1/configs/b.1/MaxPower 100
+    write /config/usb_gadget/g1/os_desc/b_vendor_code 0x1
+    write /config/usb_gadget/g1/os_desc/qw_sign MSFT100
+    write /config/usb_gadget/g1/os_desc/use 1
+    symlink /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1
+    mkdir /config/usb_gadget/g1/functions/ffs.adb
+    mkdir /dev/usb-ffs 0775 shell shell
+    mkdir /dev/usb-ffs/adb 0770 shell shell
+    mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000,rmode=0770,fmode=0660
+    setprop sys.usb.controller a600000.usb
+    setprop sys.usb.configfs 1
+
+on property:apexd.status=activated
+    setprop sys.usb.config adb
+
+on boot
+    setprop sys.usb.config adb
+
+# Local readiness is independent of cable attachment or host authentication.
+# init bridges its service state into this vendor-owned engineering property.
+on property:sys.usb.state=adb && property:init.svc.adbd=running
+    setprop vendor.rmx.m1.usb_ready 1
+
+on property:init.svc.adbd=stopped
+    setprop vendor.rmx.m1.usb_ready 0
+
+on property:sys.usb.state=none
+    setprop vendor.rmx.m1.usb_ready 0

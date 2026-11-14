@@ -1,0 +1,34 @@
+{
+  "scope": "Offline PDC-only tree check; no phone test and no new image produced",
+  "overlay_sha256": "453d9e5e753cb0e6196e17e301c79c430bbd1f4541f62106c78c5c759d5c3519",
+  "baseline_sha256": "bfb4d8f788cb1d2e219100bde454d8a4caf62df561972a31f71e7ce6f76d0447",
+  "pdc_tree_sha256": "23c68c650b71d982556bbaa91efdc46c226574a6bd4ec819448819016add2209",
+  "pre_oem": {
+    "changed_path": "/soc/interrupt-controller@b220000",
+    "changed_properties": [
+      "compatible"
+    ],
+    "spmi_parent_pin": 1,
+    "spmi_gic_spi": 481,
+    "other_nodes_identical": true,
+    "primary_usb_sid_mask": [
+      0,
+      0
+    ]
+  },
+  "post_oem": {
+    "changed_path": "/soc/interrupt-controller@b220000",
+    "changed_properties": [
+      "compatible"
+    ],
+    "spmi_parent_pin": 1,
+    "spmi_gic_spi": 481,
+    "other_nodes_identical": true,
+    "primary_usb_sid_mask": [
+      0,
+      0
+    ]
+  },
+  "local_tests": "70 passed, zero skips",
+  "unchanged": "Every node/property except PDC compatible, including TLMM, SPMI resources, UFS and USB"
+}

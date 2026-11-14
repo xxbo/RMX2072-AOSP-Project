@@ -13,18 +13,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/xattr.h>
 #include <sys/mount.h>
 #include <sys/ptrace.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
+#include <sys/sysmacros.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "m1_autoboot_state.h"
 
 #define ROOT "/run/m1/root"
 #define PID_ONE 1
 
 static int events = -1, kmsg = -1, kernel_log = -1;
+
+static void publish_autoboot(void);
 
 
 /* One write per record, on the same device-to-host stream as GSI17 READ. */
@@ -173,6 +178,10 @@ static void post_install(void) {
             else report("enforce_read_rc=%d", n);
             previous = state;
         }
+        /* Enforcing can revoke this diagnostic process's proc/kmsg access.
+         * Stop retrying after that transition so repeated audit denials do not
+         * displace the Android service results in the persistent console. */
+        if (n == -EACCES || n == -EPERM) break;
         n = read_proc("/proc/1/cmdline", buf, sizeof(buf));
         if (!second_stage && n == sizeof(stage) && !memcmp(buf, stage, n)) {
             report("exec_pid=1 path=/system/bin/init arg=second_stage");
@@ -228,11 +237,14 @@ static int is_policy_setup(void) {
 }
 
 static void observe(int vendor_trial) {
+    int usb_guard = !access("/m1-usb-guard", F_OK);
+    int autonomous = !access("/m1-autoboot", F_OK);
     struct stat expected;
     int policy_fd = -1, opening = 0, writing = 0, watchdog = -1;
     unsigned long long count = 0;
     if (vendor_trial == 2) {
-        events = open("/dev/ttyGS0", O_WRONLY | O_NOCTTY | O_CLOEXEC);
+        events = open(autonomous ? "/run/m1-autoboot.events" : "/dev/ttyGS0",
+                      O_WRONLY | O_APPEND | O_NOCTTY | O_CLOEXEC);
         kmsg = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
         if (events < 0 || kmsg < 0) fail("live event sinks");
         kernel_log = open("/dev/kmsg", O_RDONLY | O_NONBLOCK | O_CLOEXEC);
@@ -295,6 +307,29 @@ static void observe(int vendor_trial) {
                         watchdog = open("/run/m1/watchdog", O_WRONLY | O_CLOEXEC);
                         if (watchdog < 0 || ioctl(watchdog, WDIOC_GETTIMEOUT, &timeout) < 0)
                             hold("watchdog-open-failed");
+                        if (usb_guard) {
+                            timeout = 30;
+                            int set_rc = ioctl(watchdog, WDIOC_SETTIMEOUT, &timeout);
+                            report("usb_guard_timeout requested=30 actual=%d rc=%d errno=%d", timeout, set_rc, set_rc ? errno : 0);
+                            if (set_rc || timeout != 30)
+                                hold("guard-timeout-failed");
+                            FILE *timer = fopen("/control-return-pid", "r");
+                            int timer_pid = 0;
+                            if (!timer || fscanf(timer, "%d", &timer_pid) != 1 || timer_pid <= 1)
+                                hold("guard-timer-pid-failed");
+                            fclose(timer);
+                            if (kill(timer_pid, SIGTERM)) hold("guard-timer-cancel-failed");
+                            report("usb_guard=handoff watchdog_seconds=%d old_timer_cancelled=1", timeout);
+                            if (autonomous) {
+                                publish_autoboot();
+                                /* The parent shell only waits for this observer. Stop it
+                                 * before enforcing, avoiding inherited diagnostic retries. */
+                                if (getppid() > 1) kill(getppid(), SIGTERM);
+                            }
+                            /* Release ownership without magic close; hardware remains armed.
+                             * Android's oneshot guard must reopen it within 30 seconds. */
+                            close(watchdog); watchdog = -1;
+                        }
                         if (lseek(kernel_log, 0, SEEK_END) < 0) fail("seek kernel log");
                         report("policy_open_entry path=%s watchdog_seconds=%d", path, timeout);
                         opening = 1;
@@ -312,6 +347,7 @@ static void observe(int vendor_trial) {
                 if (info.exit.rval <= 0 || (unsigned long long)info.exit.rval != count)
                     hold("policy-write-error");
                 if (ptrace(PTRACE_DETACH, PID_ONE, NULL, NULL)) fail("detach after policy write");
+                if (usb_guard) _exit(0);
                 post_install();
             } else if (info.op == PTRACE_SYSCALL_INFO_EXIT && in_mount) {
                 report("mount_pid=1 source=%s target=%s fs=%s flags=%#lx rc=%lld",
@@ -331,6 +367,41 @@ static void observe(int vendor_trial) {
     }
 }
 
+static void publish_file(const char *source, const char *name, int optional) {
+    const char label[] = "u:object_r:shell_data_file:s0";
+    char target[160];
+    snprintf(target, sizeof(target), "/proc/1/root/data/local/tmp/%s", name);
+    int in = open(source, O_RDONLY | O_CLOEXEC);
+    if (in < 0 && optional && errno == ENOENT) return;
+    if (in < 0) hold("autoboot-log-input");
+    int out = open(target, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0444);
+    if (out < 0) hold("autoboot-log-output");
+    char buf[4096]; ssize_t n; size_t size = 0;
+    while ((n = read(in, buf, sizeof(buf))) > 0) {
+        size += (size_t)n;
+        if (size > 2U*1024U*1024U+4096U || write(out, buf, n) != n) hold("autoboot-log-write");
+    }
+    if (n < 0 || fsetxattr(out, "security.selinux", label, sizeof(label), 0) || fsync(out))
+        hold("autoboot-log-sync");
+    close(in); close(out);
+}
+
+/* Snapshot mount/verity evidence while init is stopped before loading policy.
+ * Android shell can read this file on the disposable data volume after boot. */
+static void publish_autoboot(void) {
+    const char *dirs[] = {"/proc/1/root/data/local", "/proc/1/root/data/local/tmp"};
+    const char label[] = "u:object_r:shell_data_file:s0";
+    for (unsigned i = 0; i < sizeof(dirs)/sizeof(dirs[0]); i++) {
+        if (mkdir(dirs[i], 0771) && errno != EEXIST) hold("autoboot-log-directory");
+        if (chown(dirs[i], 2000, 2000) || setxattr(dirs[i], "security.selinux", label, sizeof(label), 0))
+            hold("autoboot-log-directory-label");
+    }
+    publish_file("/run/m1-autoboot.events", "rmx-m1-boot.txt", 0);
+    publish_file("/run/m1-power.txt", "rmx-m1-power.txt", 1);
+    publish_file("/sys/fs/pstore/console-ramoops-0", "rmx-m1-previous-console", 1);
+    publish_file("/sys/fs/pstore/pmsg-ramoops-0", "rmx-m1-previous-pmsg", 1);
+}
+
 /* Pin the checked loop node and init's current root before entering its
  * namespace. setns resets the caller's root to the namespace root. */
 static void scratch_mount(const char *name) {
@@ -338,6 +409,12 @@ static void scratch_mount(const char *name) {
     char source[64], target[64];
     snprintf(source, sizeof(source), "/run/m1-scratch/%s-loop", name);
     snprintf(target, sizeof(target), "/%s", name);
+    char key[768] = {0};
+    int key_bytes = 0;
+    if (!strcmp(name, "data") && !access("/m1-usb-guard", F_OK)) {
+        key_bytes = read_proc("/m1-adb-public-key", key, sizeof(key));
+        if (key_bytes <= 0 || key_bytes >= (int)sizeof(key)) fail("authorized public key");
+    }
     int loop = open(source, O_PATH | O_CLOEXEC);
     int root = open("/proc/1/root", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
     if (loop < 0 || root < 0) fail("pin scratch device and Android root");
@@ -358,10 +435,68 @@ static void scratch_mount(const char *name) {
     int fd = open(sentinel, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0600);
     if (fd < 0 || write(fd, "M1", 2) != 2 || fsync(fd) || close(fd) || unlink(sentinel))
         fail("verify RAM ext4 write");
+    if (key_bytes) {
+        static const char label[] = "u:object_r:adb_keys_file:s0";
+        if (mkdir("/data/misc/adb", 02750) || chown("/data/misc/adb", 1000, 2000) ||
+            chmod("/data/misc/adb", 02750) ||
+            setxattr("/data/misc/adb", "security.selinux", label, sizeof(label), 0))
+            fail("label adb directory");
+        fd = open("/data/misc/adb/adb_keys", O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC, 0640);
+        if (fd < 0 || write(fd, key, key_bytes) != key_bytes || fchown(fd, 1000, 2000) ||
+            fsetxattr(fd, "security.selinux", label, sizeof(label), 0) || fsync(fd) || close(fd))
+            fail("install authorized public key");
+    }
+}
+
+/* Only the diagnostic recovery boot may relinquish the AP watchdog immediately
+ * before EDL. The Android guard must never disarm its failed trial watchdog. */
+static int recovery_stop_watchdog(void) {
+    char device[256];
+    if (access("/m1-autoboot", F_OK) ||
+        !realpath("/sys/class/watchdog/watchdog0/device", device) ||
+        strcmp(device, "/sys/devices/platform/soc/17c10000.qcom,wdt")) {
+        fputs("M1RECOVERY watchdog scope mismatch\n", stderr); return 1;
+    }
+    /* Diagnostic /dev can be tmpfs: unlike Android, it has no ueventd. */
+    unsigned int major_number = 0, minor_number = 0;
+    FILE *devfile = fopen("/sys/class/watchdog/watchdog0/dev", "r");
+    if (!devfile) { perror("recovery watchdog dev"); return 1; }
+    int fields = fscanf(devfile, "%u:%u", &major_number, &minor_number);
+    fclose(devfile);
+    if (fields != 2 || !major_number || major_number > 4095 || minor_number) {
+        fputs("M1RECOVERY watchdog device number mismatch\n", stderr); return 1;
+    }
+    dev_t number = makedev(major_number, minor_number);
+    if (mknod("/dev/watchdog0", S_IFCHR | 0600, number) && errno != EEXIST) {
+        perror("recovery watchdog mknod"); return 1;
+    }
+    struct stat node;
+    if (lstat("/dev/watchdog0", &node) || !S_ISCHR(node.st_mode) || node.st_rdev != number) {
+        fputs("M1RECOVERY watchdog node mismatch\n", stderr); return 1;
+    }
+    int fd = open("/dev/watchdog0", O_WRONLY | O_CLOEXEC | O_NOFOLLOW);
+    int option = WDIOS_DISABLECARD;
+    struct watchdog_info info = {0};
+    if (fd < 0) { perror("recovery watchdog open"); return 1; }
+    if (ioctl(fd, WDIOC_GETSUPPORT, &info) ||
+        strncmp((const char *)info.identity, "qcom_wdt", sizeof(info.identity)) ||
+        !(info.options & WDIOF_MAGICCLOSE)) {
+        fputs("M1RECOVERY unexpected watchdog identity/options\n", stderr); close(fd); return 1;
+    }
+    /* The current kernel has WATCHDOG_SYSFS disabled. SETOPTIONS is the
+     * authoritative stop operation and rejects a driver enforcing nowayout. */
+    if (ioctl(fd, WDIOC_SETOPTIONS, &option)) {
+        perror("recovery watchdog disable"); close(fd); return 1;
+    }
+    close(fd);
+    puts("M1RECOVERY AP watchdog disable ioctl rc=0 identity=qcom_wdt");
+    return 0;
 }
 
 int main(int argc, char **argv) {
     setvbuf(stdout, NULL, _IONBF, 0);
+    if (argc == 3 && !strcmp(argv[1], "autoboot-state")) return autoboot_state(argv[2]);
+    if (argc == 2 && !strcmp(argv[1], "recovery-stop-watchdog")) return recovery_stop_watchdog();
     if (argc == 3 && !strcmp(argv[1], "scratch-mount")) scratch_mount(argv[2]);
     else if (argc == 2 && !strcmp(argv[1], "handoff")) handoff();
     else if (argc == 2 && !strcmp(argv[1], "observe")) observe(0);

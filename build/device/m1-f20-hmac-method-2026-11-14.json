@@ -1,0 +1,121 @@
+{
+  "device": "RMX2072",
+  "firmware": "RMX2072_11_F.20",
+  "boot_id": "95660abd-e7be-476a-94c0-7124ff583da7",
+  "official_android_q_driver": {
+    "commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+    "path": "drivers/misc/qseecom.c",
+    "sha256": "cb2cddf352bc051ed07b921ad0fab92575ad2c17d7f0adcf13be79526b7af865"
+  },
+  "methods": [
+    {
+      "operation": "getHmacSharingParameters",
+      "control_sha256": "71844d2532aefc295bbfb248b4c6b294c83b9cbda7ce4a01fd2368d9ed86d63f",
+      "captures": [
+        {
+          "sha256": "616d62cf31d7447389414815dd5ede7058f9edfcb81469a1a4667b4021d804a2",
+          "records": [
+            "getHmacSharingParameters rc=0",
+            "legacy method=526",
+            "sizes request=4 response=40956"
+          ]
+        },
+        {
+          "sha256": "616d62cf31d7447389414815dd5ede7058f9edfcb81469a1a4667b4021d804a2",
+          "records": [
+            "getHmacSharingParameters rc=0",
+            "legacy method=526",
+            "sizes request=4 response=40956"
+          ]
+        }
+      ]
+    },
+    {
+      "operation": "generateKey / deleteKey",
+      "control_sha256": "cf0d35c2bdc0b817a506ee1c48451e37cd76951b49d0056ee966ab925b9fc466",
+      "captures": [
+        {
+          "sha256": "0df4d21e7de2da84c54f286ca177123f71edb612e1f67ac3fbd8faa590e77f39",
+          "records": [
+            "generate status=0 blob_bytes=455",
+            "delete status=0",
+            "method=264 offset=12 count=6 request=84 response=40876",
+            "scm 0x1 0xb",
+            "scm 0x0",
+            "method=269 offset=12 count=455 request=467 response=40493",
+            "scm 0x0"
+          ]
+        },
+        {
+          "sha256": "0df4d21e7de2da84c54f286ca177123f71edb612e1f67ac3fbd8faa590e77f39",
+          "records": [
+            "generate status=0 blob_bytes=455",
+            "delete status=0",
+            "method=264 offset=12 count=6 request=84 response=40876",
+            "scm 0x1 0xb",
+            "scm 0x0",
+            "method=269 offset=12 count=455 request=467 response=40493",
+            "scm 0x0"
+          ]
+        }
+      ]
+    }
+  ],
+  "contiguous_buffer_control": {
+    "boot_id": "7d6004f1-9ad1-42a3-8e4a-b568fdd7ab00",
+    "generate_status": 0,
+    "blob_bytes": 455,
+    "delete_status": 0,
+    "time_callback": 11,
+    "requests": [
+      {
+        "method": 264,
+        "request_bytes": 84,
+        "response_bytes": 40876,
+        "response_offset_from_request": 84
+      },
+      {
+        "method": 269,
+        "request_bytes": 467,
+        "response_bytes": 40493,
+        "response_offset_from_request": 467
+      }
+    ],
+    "raw_sha256": "2495408cd21f70000bb5feb48c3348227272c4182db2901895112404691a5c9b"
+  },
+  "configure_control": {
+    "boot_id": "a35919f0-d87d-4b63-8dac-989854105004",
+    "method": 278,
+    "request_bytes": 48,
+    "response_bytes": 40912,
+    "parameter_offset": 12,
+    "parameters": [
+      {
+        "tag": "0x300002c1",
+        "name": "OS_VERSION",
+        "value": 120000
+      },
+      {
+        "tag": "0x300002c2",
+        "name": "OS_PATCHLEVEL",
+        "value": 202402
+      },
+      {
+        "tag": "0x300002ce",
+        "name": "VENDOR_PATCHLEVEL",
+        "value": 20240205
+      }
+    ],
+    "return_status": 0,
+    "observed_listener_callbacks": 0,
+    "trigger": "Single controlled stock Keymaster service restart per capture",
+    "raw_sha256": "bb98d2059bcd7735c248a25be6a2cb15f8a03bbef5b8e17f3c5d3f9e7cc55154",
+    "post_restart_key_control": {
+      "generate_status": 0,
+      "blob_bytes": 455,
+      "delete_status": 0,
+      "time_callback": 11,
+      "raw_sha256": "105a3dff13d08328c57def6972666b6ec4b52349d916ee2349451f1d351cf39f"
+    }
+  }
+}

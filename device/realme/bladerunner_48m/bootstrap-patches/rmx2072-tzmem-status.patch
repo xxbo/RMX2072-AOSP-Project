@@ -1,0 +1,14 @@
+--- a/drivers/firmware/qcom/qcom_tzmem.c
++++ b/drivers/firmware/qcom/qcom_tzmem.c
+@@ -100,8 +100,10 @@
+ 	if (ret == -EOPNOTSUPP)
+ 		goto notsupp;
+ 
+-	if (!ret)
++	if (!ret) {
+ 		qcom_tzmem_using_shm_bridge = true;
++		dev_info(qcom_tzmem_dev, "SHM Bridge enabled\n");
++	}
+ 
+ 	return ret;
+ 

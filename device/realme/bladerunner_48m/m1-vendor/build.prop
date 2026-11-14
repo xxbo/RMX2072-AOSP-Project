@@ -1,1 +1,4 @@
 ro.zygote=zygote64_32
+# This M1 engineering image has no declared vendor security patch level.
+# AOSP's KeyMint compatibility constructor waits for this property to exist.
+ro.vendor.build.security_patch=1970-01-01

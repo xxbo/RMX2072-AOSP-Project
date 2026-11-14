@@ -135,3 +135,371 @@ Each boot mounted the same 512 MiB data and 32 MiB metadata ext4 seeds on RAM-ba
 On trial 09, PID 1 entered enforcing at 47.670138 s and started second stage at 47.697350 s. Keystore2 registered `android.security.compat` with return code 0. Vold still requested maintenance at 84.980840 s. Init continued to wait for vdc PID 2018. The recorder counted zero keystore2 SIGABRTs. Bootstrap apexd found the adbd package and activated four other packages. The host recorded 93 ADB polls and 47 physical USB samples, with diagnostic ACM on the phone's port. M1 remains open.
 
 A callable hardware instance requires the 6.18 listener transport and a verified readiness producer. Qualify actual listener registration, the subsequent Keymaster app startup and HIDL service registration before using a maintenance result as an Android boot milestone. The reference ELF files and the engineering AVB private key remain local. [Per-boot records and rollback digests](../build/device/m1-ufs-keymaster-2026-11-13.json)
+
+### F.20 listener dependencies measured on November 14
+
+On one F.20 boot the stock daemon logged ten started listeners. A pair of repeat captures filtered SCM trace events to the Keymaster HAL threads. Both temporary TEE key generations requested time listener 11. In the second capture the continuation also requested GP cancellation listener 4352. The time worker handled command 770 (`GET_UTC_SEC`), obtained ATS_MODEM time and returned success. Both sign/verify operations completed with two SCM calls each. Neither sign/verify produced a listener request in the saved interval. The inventory and the callbacks observed for these particular operations have different scopes. [Per-operation records](../build/device/m1-f20-keymaster-listeners-2026-11-14.json)
+
+The [capture script](../scripts/device_audit/f20_listener_trace.sh) uses a uniquely named temporary key. It records SCM status and listener IDs without saving keys or payloads. For an independent client control, the project-built HIDL client on F.20 received security level 1, name `Keymaster HAL: 4` and author `QTI` from the stock service.
+
+The [info-only engineering service and client](../device/realme/bladerunner_48m/m1-keymaster-info) use the Android 11 platform HIDL ABI. The service requires a successful version reply from the resident `keymaster64` before registering. Key operations return `UNIMPLEMENTED`. Its vendor profile uses eight public AOSP VNDK libraries. The hardware version query follows Qualcomm's fixed [PFK version request and response](https://android.googlesource.com/kernel/msm/+/b5b536e7623678da36aa53853217e8d7d68cc268/security/pfe/pfk_ice.c). A version query measures the app transaction. Listener delivery and a GSI Binder return each require their own trace.
+
+For the engineering build, use [VNDK 30 arm64](https://android.googlesource.com/platform/prebuilts/vndk/v30/+/5f9884aa352825291757dfd6694b874ad8c1805e/arm64/) headers and shared libraries, [Bionic libc headers](https://android.googlesource.com/platform/bionic/+/673bb02eec857ef6b004e562ab41d6b3a0e21b8a/libc/include/) and NDK 28.2.13676358. Build both executables with `scripts/build/build_m1_keymaster_info.py`. Stage both and the eight pinned shared libraries in a directory passed to `build_m1_vendor.py --keymaster-info DIR`. Verify the resulting signed vendor using `prepare_ufs_verification.py --keymaster-info --vendor-report REPORT`. The default vendor profile and the earlier private F.20 comparison have separate inputs. [Input digests](../device/realme/bladerunner_48m/m1-keymaster-info/inputs.json)
+
+### Android 17 calls the source-built Keymaster service
+
+Trial 11 booted the Android 17 GSI and the signed project vendor from internal UFS on 6.18.32. The same disposable ext4 data and metadata volumes passed the write/fsync check. The fixed version query to the resident `keymaster64` returned transport 0, app status 0, API 4.0 and TA 4.546. With SELinux enforcing, init started GSI `keystore2` as PID 2027 and the project service as PID 2044. At 72.023776 s, the service logged its completed HIDL reply to PID 2027 with level `TEE` and name `RMX2072 keymaster64 API 4.0 TA 4.546`. At 72.024407 s the GSI logged `-100` during shared-secret parameter retrieval. Its only observed keystore Binder registration was `android.security.compat`. No exit from `vdc keymaster earlyBootEnded` or ADB transport was observed during the capture.
+
+The first host observer missed the initial USB connection. The replacement observer recovered the trial's console from persistent RAM and matched its boot ID to the live ACM capture. All 17 original super chunks, both LP metadata slots, the F.20 log-reader boot and stock DTBO matched after rollback. F.20 reported boot completion over ADB. [Handset observations and image digests](../build/device/m1-ufs-keymaster-info-2026-11-14.json)
+
+Trial 12 measured the listener lifetime on the same handset and signed vendor. Both the SCM transport and secure-world results were zero for registration and teardown of time service 11 and GP request cancellation 4352. Each listener was removed before the version query. On this boot the TA again returned API 4.0 and TA 4.546. GSI keystore2 PID 2019 received the project HAL's hardware information at 48.790201 s. The GSI reported shared-secret parameter error `-100` at 48.790915 s. During the 96-second host observation there was no ADB transport.
+
+The outstanding listener test is a Keymaster request that returns `INCOMPLETE`, dispatches the named listener, and resumes to a final TA status. The version command in these runs completed directly. The pinned ACK SCM path currently warns on incomplete and blocked calls. F.20's time worker reported `ATS_MODEM` for the observed key generation. Trial 12's kernel has neither QRTR nor the PM8xxx RTC driver enabled. Qualcomm also publishes a UTC listener implementation using the OS real-time clock. A callback test needs a verified source of UTC on this boot and a record of the actual dispatch and continuation. [ACK SCM](https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/drivers/firmware/qcom/qcom_scm.c) · [Qualcomm UTC listener](https://github.com/qualcomm/minkipc/blob/ff9eaf92d357ec35a54a7bf5d2465a5f818d73ea/listeners/libtimeservice/atime.c)
+
+After trial 12 the full F.20 recovery checks passed again. On that restored boot the separate source-built HIDL client called the stock `getHmacSharingParameters` at uptimes 102.16 s and 104.08 s. Both calls returned OK. Each capture shows one direct SCM completion and zero listener callbacks in the stock HAL thread. The client discards the returned parameters. This gives the next GSI method its own positive stock control, independent of the key generation callback trace. [F.20 control captures](../build/device/m1-f20-keymaster-listeners-2026-11-14.json)
+
+### Keymaster HMAC parameters and a disposable signing key
+
+The F.20 stock HIDL client selected the legacy HMAC parameter method twice. The project HAL passes the board driver's typed TEE reply to the GSI. The read-only interface accepts a single fixed-size read and is labeled for the Keymaster process. The signed vendor comes from the same source ABI and public AOSP VNDK inputs used for trial 12. Logs record the Binder caller and status. Neither seed nor nonce is recorded.
+
+The stock temporary-key control calls HIDL to generate a 256-bit HMAC/SHA-256 signing key, then deletes the returned blob. Repeating the control produced a time callback on each generation and a direct completion on each deletion. Its six key authorizations, request lengths, return codes and output sizes are reproducible without saving the blob. [Stock observations](../build/device/m1-f20-hmac-method-2026-11-14.json)
+
+The 6.18 engineering probe repeats those fixed authorizations once per boot. The realme Q driver dispatches an incomplete call to the listener named by secure world and resumes that call after its response. The F.20 trace selected the response variant with a scatter/gather table. This time listener supplies an empty table because its buffer contains no external addresses. In the USB-attached test, the host explicitly initializes and checks the diagnostic OS UTC clock before first-stage handoff. That clock source follows Qualcomm’s normal OS-clock time listener implementation. The modem time source used by F.20 remains a separate porting task. [Official realme Q driver](https://github.com/realme-kernel-opensource/realmeX50Pro-5GPlay_AndroidQ-kernel-source/blob/24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4/drivers/misc/qseecom.c) · [Qualcomm time service](https://github.com/qualcomm/minkipc/blob/ff9eaf92d357ec35a54a7bf5d2465a5f818d73ea/listeners/libtimeservice/atime.c)
+
+Trial 13 booted that signed vendor and the fixed HMAC method on 6.18.32. At 50.621543 s the project HAL returned HMAC parameters with status 0 to GSI keystore2 PID 2021. The next GSI trace recorded a shared-secret computation error of -100, followed by its negotiation worker's completion log. The trace contains only the compat Binder registration, and the observed earlyBootEnded process did not exit. The kernel/HAL parameter path passed, while keystore service initialization remains incomplete. The full F.20 partition and Android recovery checks passed after collection. [Trial 13 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+Trial 14 mounted both UFS partitions and the same writable scratch volumes, then stopped inside the temporary-key control before the SELinux handoff. Listener 11 and 4352 each passed the preceding registration/teardown control. The capture has no return from the key probe and cannot locate its internal stopping point. Three observer UTC-formatting failures were corrected on the same boot before this attempt. The console has no ECC errors. The pmsg record reports 32 unrecoverable blocks and is excluded from Android identity and execution claims. All original partition digests, both LP slots and F.20 boot completion passed after recovery. [Trial 14 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+The follow-up kernel records the lookup, allocation, registration, app submission and listener-continuation stages. Its ramdisk requests blocked-task and CPU stacks if the temporary-key read lasts five seconds. The official board's QSEECom node sets `qcom,no-clock-support`, which must be considered before attributing this stop to driver clock enables. [Official 20607 board configuration](https://github.com/realme-kernel-opensource/realmeX50Pro-5GPlay_AndroidQ-kernel-source/blob/24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4/arch/arm64/boot/dts/20607/kona.dtsi)
+
+Trial 15 returned from the temporary-key app call at 47.852913 s. The transport completed successfully and the TA returned `KEYMASTER_NOT_CONFIGURED` (-64). No listener callback occurred. Listener teardown returned 0. The last serial command was the wait for the background stack monitor, so this run provides no subsequent GSI service result. The ramdisk now lets that monitor exit after checking a completion marker. F.20 restoration, both LP slots and full partition readback passed. [Trial 15 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+The next kernel adds the legacy CONFIGURE command before the disposable-key operation. Its fixed engineering parameters come from the verified CP3A.260905.010 system properties, with Android 17 encoded as 170000 and the September 2026 patch level encoded as 202609. The ramdisk checks these properties before invoking the control. The configuration and its status are part of the temporary-key experiment. General HAL configuration remains future work. App submissions also use the scatter/gather variant observed in F.20 (`0x70000006`). These changes require their own handset result.
+
+Trial 16 reused trial 15's kernel with the monitor-wait change. Generation again returned -64, with zero callbacks and successful listener teardown. At 44.526760 s the next QSEE call returned transport error -22. The serial stream stopped before the version reply and SELinux handoff. Removing the monitor wait therefore left the interruption unresolved. F.20 boot completion and all recovery digests passed. A separate GSI control uses the earlier HMAC-only kernel to observe keystore initialization while the configured-key kernel builds. [Trial 16 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+Trial 18 ran that GSI control using the trial 13 kernel and the same signed UFS images and scratch seeds. Under enforcing, the project HAL returned HMAC parameters with status 0 to GSI keystore2 PID 2020 at 49.364646 s. The trace again recorded shared-secret computation error -100 and compat registration 0, with no maintenance registration or matching earlyBootEnded exit. The entropy probes installed successfully and recorded no event matching the `keystore2` task name. Binder worker names were outside this filter, so this capture cannot resolve the entropy-wait hypothesis. The next ramdisk includes worker names and the recorder associates them with the same keystore process. F.20 restoration and both LP metadata checks passed. [Trial 18 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+
+Trial 17 stopped after submitting the 36-byte CONFIGURE request at 45.318217 s through the whitelist SCM command. TIME listener registration returned success beforehand. The capture has no CONFIGURE return, generation result or listener callback. Both UFS mounts and scratch write checks passed before this call. Android handoff was not reached. Console ECC was clean, while pmsg reported 32 unrecoverable blocks. F.20 restoration verified every partition digest and both LP slots. A fresh source-built stock HIDL control then generated and deleted its temporary 455-byte blob successfully, and maintenance was registered. [Trial 17 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+The official Q driver allocates its scatter/gather tables through QTEE shared memory. Its bridge initializer enables the mechanism and registers the default pool. The tested 6.18 kernel selected generic TZ memory allocation. The next engineering build selects ACK's SHMBRIDGE allocator and logs successful initialization. This is a shared-memory hypothesis awaiting a handset result. F.20 exposes the bridge symbols, but its kernel has no kprobe_events interface, so the attempted runtime flag probe collected no enabled value. [Official Q shared-memory bridge](https://github.com/realme-kernel-opensource/realmeX50Pro-5GPlay_AndroidQ-kernel-source/blob/24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4/drivers/soc/qcom/qtee_shmbridge.c)
+
+
+The GSI KeyMint compatibility constructor calls `GetVendorPatchlevel()`. The pinned GSI library imports `WaitForPropertyCreation`, and the AOSP implementation waits for `ro.vendor.build.security_patch`. The project vendor previously supplied only `ro.zygote` in build.prop. The M1 engineering image now supplies the epoch date `1970-01-01` to represent an undeclared vendor patch level. Its date is a development placeholder and carries no security-patch validation claim. The handset comparison must establish whether the compatibility constructor returns and maintenance registers after this property is present. [AOSP property wait](https://android.googlesource.com/platform/system/keymaster/+/55cf90f07311695353ac110c7428e1a6cca42644/android_keymaster/keymaster_configuration.cpp)
+
+
+Trial 20 repeated the HMAC-only kernel with syscall-boundary random-read probes. Six keystore getrandom entries had matching returns for their requested byte counts. At 137.033289 s, the project HAL returned HMAC parameters with status 0 to keystore2 PID 2277. Compat registration succeeded, while maintenance registration and the matching earlyBootEnded exit remained absent. The first host observer launch lacked its local pyserial dependency. It was restarted on the same diagnostic boot, delaying Android handoff. The console retained the subsequent service evidence without ECC errors. Full F.20 restoration, both LP slots and the Android-side super digest passed. The private flashing harness now imports the serial dependency during preflight. [Trial 20 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+
+Trial 21 used the signed vendor containing that property and the HMAC-only 6.18 kernel. APEX activation advanced to 43 packages at 57.202467 s, and init imported `/apex/com.android.adbd/etc/init.rc` at 57.270773 s. The host observed no ADB transport. The console had wrapped and began at 50.253333 s, after the initial keystore and vdc results. Those earliest results remain unverified in this capture. The pmsg record reported ECC errors. Recovery verified F.20 boot completion, all partition digests and both LP slots. The observer now stops its proc-access retries when enforcing denies access, to preserve service evidence in the persistent console. [Trial 21 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+Trial 19 selected `CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y` and used the earlier vendor without the patch-level property. The initial bridge-status log had rolled out of the console, leaving runtime activation unverified. CONFIGURE returned transport -22 at 47.765535 s. Generation and listener continuation did not run. Android subsequently entered enforcing and second stage, but HMAC retrieval returned -49 to keystore2. The compatibility-constructor probes reached `GetVendorPatchlevel()` without recording its return. All recovery hashes, both LP slots and F.20 boot completion passed. The host observer now saves the early bridge-status log before Android handoff. [Trial 19 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+On the restored F.20 boot, a fresh temporary-key control returned generation 0, a 455-byte wrapped blob and deletion 0. The QSEECom entry probe measured a response pointer exactly 84 bytes after the generation request and 467 bytes after the deletion request. In both cases request and response capacities totaled 40 KiB. The revised 6.18 control uses this contiguous layout, moves the returned blob with overlap-safe copying and clears the shared allocation after terminal completion. Its hardware result is pending. [Stock buffer-layout control](../build/device/m1-f20-hmac-method-2026-11-14.json)
+
+### Trial 22 · Maintenance registration and earlyBootEnded return
+
+Boot `b5fcb72c-c9a8-4cc2-b56a-4704622ce223` used the HMAC-only 6.18 kernel, the vendor with the patch-level property and the same writable data/metadata seeds. The quieter observer preserved the complete service sequence in the console, which reports no ECC errors. The pmsg record has unrecoverable blocks and is excluded from these service observations. [Trial 22 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+| Time since boot | Observed result |
+| ---: | --- |
+| 51.131446 s | Keystore2's `GetVendorPatchlevel()` returned, followed by the compatibility constructors. |
+| 51.132934 s | Project HAL returned HMAC parameters with status 0 to GSI keystore2 PID 2020. |
+| 51.139268 s | The same process returned 0 from registering `android.security.maintenance`. |
+| 51.140915 s | Keystore2 logged successful service registration and joined its thread pool. |
+| 51.159918 s | Boot-level key creation failed with UNIMPLEMENTED from the project HAL. |
+| 51.163362 s | The observed vdc PID 2027 exited with status 0 after a 0.185-second wait. |
+| 58.927777 s | Apexd activated 43 packages. |
+| 58.985348 s | Init imported `/apex/com.android.adbd/etc/init.rc`. |
+
+The trace still reports UNIMPLEMENTED in shared-secret computation. The successful vdc exit coexists with the failed boot-level key creation. The host observed diagnostic ACM and no ADB interface or transport. Init launched zygote processes that subsequently restarted. This trial's kernel contains the HMAC parameter path and omits the temporary-key callback control. The next kernel tests the contiguous request/response buffer on the same vendor and writable seeds.
+
+Recovery returned F.20 to boot `a35919f0-d87d-4b63-8dac-989854105004` with `sys.boot_completed=1`. Full readback matched all 17 original super chunks, the F.20 log-reader boot and original DTBO. Both LP slots and the Android-side super hash also matched the recovery baseline.
+
+Two controlled stock Keymaster service restarts on that boot captured CONFIGURE returning 0 without a listener callback. A probe at the verified library's legacy-configure call site recorded a 48-byte request with three scalar parameters, OS_VERSION 120000, OS_PATCHLEVEL 202402 and VENDOR_PATCHLEVEL 20240205. Trial 23 retains the two OS parameters to measure the contiguous-buffer change. The following candidate adds VENDOR_PATCHLEVEL 19700101, matching the engineering vendor property, and checks that property before invoking the control. A subsequent stock temporary key generated and deleted successfully with the time listener exercised. [Stock CONFIGURE record](../build/device/m1-f20-hmac-method-2026-11-14.json)
+
+Run the CONFIGURE collector as root on the pinned F.20 build. It verifies both library digests, restarts `keymaster-4-0` once, records the three scalar configuration fields and command lengths, and checks the replacement service PID. After collection it disables its private trace instance and removes its probes. Keep the raw stdout with the local capture and publish the normalized fields and digest. [CONFIGURE collector](../scripts/device_audit/f20_keymaster_configure.sh)
+
+### Trial 23 · CONFIGURE reaches the trusted application
+
+On boot `49453ec5-6eae-402e-b00a-41f892a53ad6`, the early host capture saved `SHM Bridge enabled` at 0.604557 s. With the contiguous buffer, the 36-byte CONFIGURE call returned SCM transport 0 and secure completion 0 at 45.931227 s. Its TA status was INVALID_ARGUMENT (-38). TIME listener teardown succeeded, and the generation/deletion stages remained unexecuted. Their -61 values are the probe's ENODATA sentinel. [Trial 23 evidence](../build/device/m1-ufs-hmac-2026-11-14.json) · [Keymaster error codes](https://android.googlesource.com/platform/hardware/interfaces/+/refs/heads/main/keymaster/4.0/types.hal)
+
+The following version transaction returned transport -22. Android entered enforcing and second stage, but 30 project HAL attempts logged `TEE version unavailable`. The GSI registered compat and kept waiting in vdc. The successful HMAC/maintenance/vdc sequence remains recorded in trial 22's earlier kernel. The next configured-key comparison supplies the third vendor patch-level parameter and also checks these later service results.
+
+### Trial 24 · Temporary key and TIME listener continuation
+
+Boot `e479c140-e432-4c59-9ab6-cdbee31f767a` used the same signed UFS images and writable scratch seeds. The three-parameter CONFIGURE matched the GSI OS version/month and the project's engineering vendor patch date. The early capture recorded SHM Bridge enabled. USB-host UTC was set and checked before handoff. The persistent console has no ECC errors. [Trial 24 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+| Time since boot | Kernel probe result |
+| ---: | --- |
+| 46.035243 s | CONFIGURE returned 0 with OS_VERSION 170000, OS_PATCHLEVEL 202609 and VENDOR_PATCHLEVEL 19700101. |
+| 46.036650 s | Generation returned INCOMPLETE with listener ID 11. |
+| 46.036744 s | The TIME buffer contained command 770. |
+| 46.045664 s | Sending the time response resumed the transaction with transport 0 and secure completion 0. |
+| 46.045848 s | The probe submitted deletion of the returned 455-byte blob. |
+| 46.051760 s | Deletion completed with transport 0 and secure completion 0. |
+
+The final control record reports generation 0, deletion 0, one callback, final result 0 and listener teardown 0. The fixed kernel control exercised the resident TEE app directly. The project's HIDL `generateKey` method still returns UNIMPLEMENTED.
+
+The next version query returned transport -22, and 30 project service attempts logged `TEE version unavailable`. This boot registered compat and retained the vdc wait. The HMAC/maintenance/vdc successes from trial 22 and this callback transaction still need to work together in one kernel. Compare the normal version/HMAC transport and buffer layout with the tested whitelist path before attributing the regression to a specific cause. The pmsg record again has 32 unrecoverable ECC blocks and is excluded from these service claims.
+
+After trial 24, recovery verified the full original super, F.20 log-reader boot, stock DTBO and both LP slots. F.20 completed boot `d6e4a951-6c64-4c7b-8673-3d43193e7413`, and its own full super digest matched the baseline. A fresh stock temporary-key control then generated a 455-byte blob through TIME listener 11 and deleted it with status 0.
+
+### Follow-up candidate · One Keymaster transport
+
+The version and HMAC readers now use the same whitelist SCM command and contiguous 40 KiB request/response allocation as the trial 24 temporary-key control. The helper accepts only the two fixed query methods and exact response sizes. It shares the QSEE transaction lock, wipes completed buffers, and refuses subsequent requests if a transaction leaves secure-world ownership uncertain. It does not cache a version result or substitute HMAC bytes. The observer records version queries before listener lifetime tests, before the temporary-key transaction and after it.
+
+The command and allocation layout changed together; the earlier evidence does not isolate which difference caused `-22`. The acceptance sequence is the temporary-key callback, subsequent HAL registration/HMAC, maintenance and the matching vdc exit on one boot. Trial 25 below supplies that physical result.
+
+The user removed the private local work directories to recover disk space. Reacquire the original F.20 recovery bytes before another write. Keep one verified recovery set and one current candidate, stream large acquisitions directly into their final chunks, and remove duplicate readbacks only after recording their verified digests. Preserve source and sanitized logs in Git. A usable API 37 ADB connection should permit continued debugging in GSI; do not schedule unconditional F.20 restoration for that successful case.
+
+The recovery set was subsequently reacquired from the running handset. A read-only EDL control verified boot, DTBO and all 17 super chunks against that set, then verified a fresh F.20 boot and both LP metadata slots. No partition was programmed during this control. Each temporary EDL readback was removed immediately after digest validation. [Reacquisition record](../build/device/m1-recovery-reacquired-2026-11-14.json)
+
+`backup_f20_recovery.py` saves the one original set. `build_ufs_candidate.py` builds and validates the candidate directly in its final chunks, including retained partitions in both LP views. `pack_reacquired_ufs_boot.py` reconstructs the previously measured G3 DTB bundle from the F.20 reader and the three pinned project overlays; it requires bundle digest `40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758`. Historical intermediate boot images are no longer required. `run_ufs_trial.py` records per-readback digests and retains no duplicate raw readbacks. Its ADB identity check includes API 37, the kernel release and the same boot ID. If that check passes, it retains the candidate layout after the bounded watchdog return instead of writing F.20; sustained GSI operation still requires cancelling the diagnostic return timer and handing off the watchdog.
+
+The recovered scratch seeds and rebuilt HAL/vendor filesystem match the previous hashes. The deleted private engineering signing key was replaced, so the signed vendor footer and its public key differ even though the filesystem is identical. The first-stage profile verifies that new key. Local validation with DTC available completed 59 tests without skips. Kernel build [43574920850](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43574920850) compiled the unified transport from commit `b45b1f1820fcd7a97280cadb507c28a81c7d394a` successfully; physical acceptance remains separate from that build result.
+
+
+### Trial 25 · Listener continuation and GSI HAL on one kernel
+
+Boot `36f78fb1-b358-4aac-996e-a65775b23da6` used kernel build `43574920850`, the unchanged GSI and HAL/vendor filesystem, and the same writable data/metadata seeds. The replacement engineering key signed the vendor footer. First-stage init verified and mounted system/vendor from internal UFS; PID 1 entered enforcing at 49.401883 s and second stage at 49.428002 s. Both scratch volumes passed write/fsync/unlink. The kernel console has no ECC errors; pmsg reports 32 unrecoverable blocks and is excluded from Android service claims. [Normalized record](../build/device/m1-ufs-keymaster-transport-2026-11-14.json)
+
+| Same-boot observation | Result |
+| --- | --- |
+| Version before listener registration, before temporary key and after deletion | Transport 0, status 0, API 4.0, TA 4.546 at all three checkpoints. |
+| CONFIGURE / temporary generation / deletion / listener teardown | All 0; 455-byte temporary blob deleted without logging its bytes. |
+| TIME listener 11, command 770 | One callback at 47.386699 s; continuation completed at 47.396373 s. |
+| Project HIDL service PID 2070 | Registered default at 50.812354 s; returned hardware information to GSI keystore2 PID 2053. |
+| getHmacSharingParameters | TEE-backed status 0 at 50.816489 s to the same keystore2 process. |
+| android.security.maintenance | Binder registration returned 0. |
+| vdc keymaster earlyBootEnded | PID 2059 exited 0 at 50.844207 s; wait 0.169 s. |
+| APEX | 43 activated at 58.666016 s; adbd init imported at 58.736605 s. |
+| Android ADB | No transport in 87 polls over 90.047 s; 55 physical USB samples showed diagnostic ACM only. |
+
+This establishes that the trial 22 GSI service path and trial 24 listener transaction can coexist in the unified kernel. It is one successful bounded boot. Shared-secret computation still returns -100 and boot-level key creation still fails with UNIMPLEMENTED because the HAL's key methods are unfinished. The kernel's fixed temporary-key control does not implement general HIDL key generation. Neither framework boot completion nor full key storage is claimed.
+
+The console records `sys.usb.config=none && sys.usb.configfs=0` at 60.442504 s, a failed legacy android_usb write, and `init.svc.adbd=stopped`. There is no adbd service start in the saved console. Inspecting the pinned GSI shows `ro.secure=1`, `ro.adb.secure=1`, `ro.debuggable=0`; its generic USB rules expect the vendor to prepare gadget `g1`, FunctionFS and `sys.usb.controller`. The current project vendor has no such setup, and diagnostic ACM already owns the controller. The next USB trial must provide that handoff, an authorized host public key in scratch data, and explicit watchdog/return-timer ownership. A successful ADB shell alone would not cancel the existing bounded return.
+
+The harness read back the complete candidate before boot. With no API 37 ADB observed, it automatically returned through the diagnostic recovery path and restored the original set. All 17 original super chunks, the log-reader boot and original DTBO matched; both LP metadata slots and the Android-side full super digest matched. F.20 completed boot `54f8df06-4b4b-4679-9959-2f7f97a47152`. The per-partition readbacks and final F.20 checks are recorded with the trial. Local storage retains one original recovery set and one current candidate; no historical boot/super versions or duplicate full readbacks are required.
+
+### Guarded ADB candidate after trial 25
+
+The optional project USB profile adds configfs/FunctionFS setup, the measured a600000.usb controller, authenticated scratch-volume ADB keys and a source-built watchdog owner. The host must pass same-boot Android identity checks and a renewable 190-second ADB soak before retaining GSI. Missing ADB or an expired lease is designed to return through the existing diagnostic/EDL recovery. Full GSI split-policy compilation passed with neverallow checks enabled; 65 local tests passed at candidate preparation. The physical outcomes follow below. See [the profile and recovery protocol](../device/realme/bladerunner_48m/m1-usb/README.md).
+
+### Trials 26–27 · Authenticated GSI ADB and retained watchdog
+
+Trial 26 stopped before policy installation: the KPSS watchdog rejected a
+120-second timeout. Its 0xFFFFF-tick counter at the measured 32764 Hz permits
+at most 32 seconds. Both the witness and Android guard now request 30 seconds
+and feed periodically for longer host windows. Trial 26 returned to 9008 and
+automatically restored F.20. Independent full super/boot/DTBO readbacks, both
+LP slots, the Android-side super digest and boot completion passed on boot
+`54425c28-3298-47f6-ae31-8bf11242cea3`. No policy installation or GSI ADB result
+is attributed to that failed trial.
+
+Trial 27 booted `7cb8f75f-a65f-4bfb-9a37-d4cb732370be` using the same unified
+6.18 kernel, GSI and writable test-volume seeds. The complete candidate was
+independently read back before boot. The witness recorded both verified UFS
+mounts, successful temporary-key listener continuation and subsequent version
+query, then `requested=30 actual=30 rc=0 errno=0` and cancellation of the old
+return timer. The kernel accepted all 706125 policy bytes. The vendor USB
+rules released diagnostic ACM and prepared `g1`, FunctionFS and the measured
+`a600000.usb` controller for GSI adbd. The host observed 18d1:4ee7 and an
+authenticated `RMX2072-M1` transport.
+
+| Check | Trial 27 result |
+| --- | --- |
+| Android identity | API 37; `6.18.32-android17-5-maybe-dirty-4k`; PID 1 `/system/bin/init second_stage`; enforcing; same boot ID. |
+| UFS system/vendor | Live read-only ext4 mounts on dm-14/dm-15 match the independent same-boot witness, verity status and linear tables backed by UFS sda10. |
+| ADB authentication | Existing host public key only in the live scratch data; `ro.adb.secure=1`, `ro.debuggable=0`, shell UID 2000. |
+| Guard | 192.563-second same-boot lease soak completed; final state `retained`. A wrong-boot keep command was rejected. |
+| File transfer | 1 MiB push and pull passed before and after retention. Device and returned SHA-256 both `fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83`; temporary files removed. |
+| Writable volumes | Mountinfo reports data 7:0 and metadata 7:1; original userdata was not mounted. |
+| GSI services | ADB `service check` finds `android.security.maintenance`; logcat records successful TEE earlyBootEnded and adbd APEX activation. This capture does not independently trace vdc process exit. |
+| End state | Phone left running GSI; no F.20 restoration after trial 27. |
+
+The first host validator incorrectly required shell-readable vendor init
+status and `sysfs_dm`. The production GSI denies both. Same-boot keep commands
+preserved the running trial while the host validator was corrected; no phone
+image or policy changed during this correction. Acceptance uses the
+boot-bound guard response and independent ACM UFS evidence matched to live
+mounts. The final stricter checks also passed after retention. A fresh boot
+with the final host scripts is still untested. There are now 67 passing local
+tests, including rejection of mismatched witness boot IDs, backing devices,
+verity chains and mount identities.
+
+The current image still needs a host request to start Android from diagnostic
+init. Disconnected autonomous cold boot remains M1 work. The new guard's
+missing-ACK and expired-lease reset paths have not been fault-injected on the
+handset; trial 26 separately establishes automatic recovery from a pre-policy
+failure. Retained GSI uses volatile data/metadata. Its framework has not
+completed boot: SurfaceFlinger aborts because no OpenGL ES implementation is
+available, audioserver receives SIGSEGV, and the project HAL still leaves
+shared-secret computation and key generation unimplemented. Logcat and
+process captures are now available directly through Android ADB.
+
+Keep one F.20 recovery set and one current candidate, plus their pinned build
+inputs. Rebuild in place only over recognized current output files; retain
+digest manifests and small trial logs instead of historical partition images.
+The current large files total about 22.1 GB, primarily the two 8.87 GB super
+sets and the 3.95 GB GSI input. Raw readbacks are removed only after matching
+the expected digest. [Machine-readable trials, hashes and limitations](../build/device/m1-gsi-adb-2026-11-14.json)
+
+### Trial 28 · Autonomous handoff passed; cold start and recovery failed
+
+The image entered Android from internal UFS without a host handoff or host
+clock. Warm boot `60e66c01-facc-420e-97d4-1fc8df464188` passed enforcing,
+API 37, the exact 6.18 release, second-stage PID 1, matching verified UFS mounts,
+a 190-second soak and hash-checked ADB transfer.
+
+A subsequent physical power cycle did not pass the M1 cold criterion. The
+operator reported no reaction to the disconnected 2–3-second power press, and
+explicitly confirmed that reaction began only after USB was reconnected. The
+resulting charger-mode boot `05d41781-8d0a-484c-86e4-e3020854d6a7` again
+passed autonomous GSI startup and ADB checks. This proves USB-triggered boot,
+not disconnected power-key startup; shutdown completion was not independently
+observed while the cable was absent.
+
+Deliberate expiry changed the guard to `expired` at 45.438 seconds. ADB went
+away at 76.016 seconds, but at 123.031 seconds another GSI boot appeared instead
+of diagnostic recovery/EDL. The autonomous recovery test therefore **failed**.
+The saved pmsg contains entry-probe data and damaged journal text. The wrapper
+currently writes 4096 raw bytes into reserved pmsg data before ECC validation;
+that diagnostic probe must be retired before relying on pmsg for recovery.
+The exact pinned BusyBox grep matched the sample marker on F.20.
+
+The host issued ADB reboot-to-EDL and restored the original set. All 17 super
+chunks, boot and DTBO matched independent readbacks. F.20 completed boot
+`ffdb6dc3-5877-4dd3-a74b-b4f5dd23c02f`; both LP slots and the complete
+Android-side super hash matched. The phone is back in F.20.
+[Full evidence and limitations](../build/device/m1-autonomous-boot-2026-11-14.json)
+
+### Trial 29 · Local retention and recovery-marker survival
+
+The same kernel and DT bundle booted with the non-writing native alignment
+wrapper. Boot `fee5d118-d5ad-4191-83e0-ec6bd6736058` independently retained
+the watchdog through `local-adbd`, before any host keep command. Enforcing,
+API 37, second-stage PID 1, verified UFS mounts and maintenance passed. A
+194-second same-boot check and 1 MiB hash-checked transfer passed with the
+guard already retained. This is USB-attached startup, not disconnected cold
+acceptance.
+
+Fault injection reached `expired` at 45.203 seconds and lost ADB at 75.718
+seconds. The kernel pretimeout followed the expired marker by 29 seconds.
+Recovery boot `690518ae-9933-41f6-800c-f079d75a35a3` read that exact marker,
+selected diagnostics and automatically reached 9008 at 183.390 seconds. The
+1325-byte pmsg had no ECC errors. No host reboot command was sent during this
+part of the test.
+
+The full recovery nevertheless remains **unqualified**: 9008 was transient.
+While the newly started restore runner verified its original inputs, the
+handset returned to GSI boot `e964c1e5-c062-4c8a-b8bb-f452cf064855`, whose
+previous guard was `none`. Its previous pstore was damaged across the EDL
+cycle. The host then requested EDL explicitly; the already waiting restore
+runner captured Sahara and began the original restore. The cause of the
+short EDL window is not established. For the next complete fault rehearsal,
+validate and arm the host recovery runner **before** stopping the guard lease,
+and require automatic Sahara capture plus verified F.20 boot. Reaching 9008
+alone is not full rollback acceptance.
+
+[Trial 29 raw-log digests and results](../build/device/m1-autonomous-recovery-29-2026-11-14.json)
+
+The subsequent trial 29 manual recovery completed: F.20 boot
+`ba59a60f-7165-4115-af80-fcaba4c859be`, all 17 original super chunks, boot,
+DTBO, both LP slots and the complete Android-side super digest matched.
+This verifies restoration, while retaining the failed automatic capture result.
+
+### Trial 30 and the recovery API correction
+
+Trial 30 boot `9d9585b2-a24a-4117-8390-fb2a29e471a1` passed local-adbd
+retention, enforcing/API 37/second-stage PID 1, maintenance, verified UFS
+mounts, a 193.687-second same-boot soak and a hash-checked ADB transfer.
+Before injecting failure, live inspection and the kernel configuration showed
+that WATCHDOG_SYSFS is disabled; state/nowayout files do not exist. The proposed
+recovery helper would therefore reject the device. No trial 30 fault was
+injected. Trial 31 uses GETSUPPORT and SETOPTIONS to check and stop the AP
+watchdog, then waits two watchdog intervals before EDL. A boot-only update
+retains the existing verified container and scratch seeds.
+[Trial 30 evidence](../build/device/m1-autonomous-recovery-30-2026-11-14.json)
+
+### Trial 31 · Boot-only update and diagnostic node failure
+
+A retained GSI was updated by programming only boot after independent reads
+verified its old boot, original DTBO and all 17 unchanged candidate super
+chunks. New boot `cea43da0-c26b-4667-a7b8-5a523c9f650a` again passed
+local-adbd retention, enforcing, maintenance and the full ADB soak/transfer.
+Lease expiry reset it into recovery boot
+`8a40c470-5f00-4b4a-81ed-9cc20cbf2120`. The journal matched and kernel
+pretimeout followed guard expiry by 29 seconds.
+
+Automatic disarm failed with ENOENT because diagnostic /dev had no watchdog0
+node. Host intervention created the node from sysfs (240:0); the same helper
+then returned `AP watchdog disable ioctl rc=0 identity=qcom_wdt`. Despite
+this, EDL disappeared again and GSI restarted as
+`2f056517-6895-49e3-aa65-58cb960ecb0b`. The manual EDL monitor began after
+EDL entry, so its 2-second observation is not the total EDL lifetime. An
+explicit ADB EDL request let the prepared runner capture Sahara and restore
+F.20. All 17 super chunks, boot, DTBO, both LP slots, the full Android-side
+super digest and boot completion passed; restored boot was `2b1bb7ba-b546-4eb2-9f8f-f8ddf285f8e5`.
+
+Trial 32 creates and validates the recovery device node automatically. It
+qualifies immediate capture by the prepared host, separately from stable
+unattended EDL. Kernel, device tree, vendor, GSI and scratch seeds remain
+unchanged; the ramdisk also publishes read-only power-provider evidence for
+the later PDC-only control.
+[Trial 31 evidence](../build/device/m1-autonomous-recovery-31-2026-11-14.json)
+
+### Trial 32 · Autonomous EDL captured by a prepared host
+
+Boot `182b2715-fbcc-41f0-81ec-61213cfe1034` passed local retention and the
+same-boot enforcing/UFS/ADB soak. Expiry was observed at 45.094 seconds and
+ADB disappeared at 75.609 seconds. Recovery boot
+`021b671a-8ce6-42ef-b76f-9a2ed5873701` created its own watchdog node and
+reported successful qcom_wdt disable at uptime 31.00. The observer correlated
+the old expired journal and 29-second kernel pretimeout, then released the
+prepared host to wait for EDL.
+
+The phone independently entered EDL at 183.203 seconds and the waiting host
+captured Sahara and began original restoration. No host reboot command or
+physical key was used. Full original restoration, 17 super chunk readbacks, boot/DTBO readbacks,
+both LP slots, the Android-side full super digest and F.20 boot completion
+all passed. Restored boot was `314ead02-b23b-4636-85a0-5f76ba18973d`.
+This establishes complete automatic recovery with the prepared computer.
+This immediate-capture test makes no 45-second unattended EDL claim. The
+early read-only power snapshot confirms SPMI v5 remains deferred with no
+PMIC devices; the next control changes only PDC compatibility in the DT.
+[Trial 32 evidence](../build/device/m1-autonomous-recovery-32-2026-11-14.json)
+
+### Trial 33 · PDC-only dependency control
+
+The same 6.18 kernel and unchanged signed system/vendor booted with the PDC
+compatible-only overlay (original DTBO preserved). Boot
+`78202cbf-6e86-46fd-bb95-24e2d731b27c` passed enforcing, maintenance, local
+retention and 193.891 seconds of ADB/transfer checks. SPMI now enumerates ten
+addresses; primary SID 00 and seven other addresses bind pmic-spmi. PON and
+PS_HOLD remain unbound, matching the disabled driver configuration. The phone
+is retained on GSI while the separate PON/poweroff kernel builds. No cold-start
+pass is claimed. [Evidence](../build/device/m1-pdc-spmi-33-2026-11-14.json)
+
+### Trials 34–35 · PON kernel and disconnected headless startup
+
+The optional upstream PON/PS_HOLD build (`dc41c03c...`) reached diagnostics
+and identified the primary PON in trial 34, but rejected a damaged previous
+boot journal before Android. The original F.20 restore was fully verified.
+Trial 35 retried the same kernel from F.20 and passed autonomous GSI startup,
+primary PON and PS_HOLD driver bindings, enforcing, maintenance, a
+193.781-second soak and the 1 MiB ADB transfer.
+
+After the scheduled shutdown, USB remained disconnected while the operator
+pressed power and saw the realme logo. The reconnect observer accepted new
+GSI boot `9e7b6ff1-f413-4f79-a0df-d91d0c3f9de9`, which uptime places at
+least 138.771 seconds before ADB reconnection. Local guard acceptance, Android
+PID 1, API 37, exact kernel release, enforcing and UFS-backed system/vendor
+passed again, followed by the full soak and transfer. This passes M1's
+disconnected headless-start acceptance on the recorded factory-derived tree
+and original DTBO; M2 still replaces those trees and the emulator-derived
+first-stage init. Framework boot completion and persistent encrypted userdata
+remain separate work.
+[Power investigation](M1_POWER_CONTROL.md) ·
+[Disconnected-start record](../build/device/m1-disconnected-start-35-2026-11-14.json)

@@ -1,0 +1,220 @@
+{
+  "device": "RMX2072",
+  "date": "2026-11-14",
+  "fault": {
+    "boot_id": "7cb8f75f-a65f-4bfb-9a37-d4cb732370be",
+    "utc": "2026-11-14T11:22:34.784967+00:00",
+    "monotonic": 39001.093,
+    "injection": "Authenticated guard rollback command stops feeding; no reboot syscall in guard",
+    "timeout_seconds": 30
+  },
+  "before": [
+    "37",
+    "6.18.32-android17-5-maybe-dirty-4k",
+    "7cb8f75f-a65f-4bfb-9a37-d4cb732370be",
+    "Enforcing",
+    "running",
+    "",
+    "retained",
+    "adb"
+  ],
+  "recovery_boot": {
+    "boot_id": "803d5a34-1960-4295-a3a2-e0bd348fd7ab",
+    "identity": {
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "trial": "ufs-host-g3-gsi17-firststage-ufs-27",
+      "udc": "configured",
+      "uptime_seconds": 22.61,
+      "timer_seconds": 180
+    }
+  },
+  "first_adb_disappearance": 36.594,
+  "first_diagnostic_acm": 62.594,
+  "kernel_evidence": [
+    "[ 4637.691934][ T1837] RMX-M1-GUARD state=rollback",
+    "[ 4637.692152][ T1837] watchdog: watchdog0: watchdog did not stop!",
+    "[ 4666.692001][    C0] watchdog0: pretimeout event"
+  ],
+  "restored": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "5721d2d7-f097-421b-a987-0559dd813698",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
+  "independent_restore_readbacks": [
+    {
+      "label": "restored-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "utc": "2026-11-14T11:29:41.495617+00:00"
+    },
+    {
+      "label": "restored-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "utc": "2026-11-14T11:29:42.235979+00:00"
+    },
+    {
+      "label": "restored-super-00",
+      "lun": 0,
+      "start_sector": 193032,
+      "sectors": 131072,
+      "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e",
+      "utc": "2026-11-14T11:29:54.699710+00:00"
+    },
+    {
+      "label": "restored-super-01",
+      "lun": 0,
+      "start_sector": 324104,
+      "sectors": 131072,
+      "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145",
+      "utc": "2026-11-14T11:30:07.228946+00:00"
+    },
+    {
+      "label": "restored-super-02",
+      "lun": 0,
+      "start_sector": 455176,
+      "sectors": 131072,
+      "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54",
+      "utc": "2026-11-14T11:30:19.780494+00:00"
+    },
+    {
+      "label": "restored-super-03",
+      "lun": 0,
+      "start_sector": 586248,
+      "sectors": 131072,
+      "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda",
+      "utc": "2026-11-14T11:30:32.341873+00:00"
+    },
+    {
+      "label": "restored-super-04",
+      "lun": 0,
+      "start_sector": 717320,
+      "sectors": 131072,
+      "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39",
+      "utc": "2026-11-14T11:30:44.904637+00:00"
+    },
+    {
+      "label": "restored-super-05",
+      "lun": 0,
+      "start_sector": 848392,
+      "sectors": 131072,
+      "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5",
+      "utc": "2026-11-14T11:30:57.442129+00:00"
+    },
+    {
+      "label": "restored-super-06",
+      "lun": 0,
+      "start_sector": 979464,
+      "sectors": 131072,
+      "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+      "utc": "2026-11-14T11:31:09.948081+00:00"
+    },
+    {
+      "label": "restored-super-07",
+      "lun": 0,
+      "start_sector": 1110536,
+      "sectors": 131072,
+      "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+      "utc": "2026-11-14T11:31:22.471221+00:00"
+    },
+    {
+      "label": "restored-super-08",
+      "lun": 0,
+      "start_sector": 1241608,
+      "sectors": 131072,
+      "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+      "utc": "2026-11-14T11:31:35.035050+00:00"
+    },
+    {
+      "label": "restored-super-09",
+      "lun": 0,
+      "start_sector": 1372680,
+      "sectors": 131072,
+      "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+      "utc": "2026-11-14T11:31:47.610635+00:00"
+    },
+    {
+      "label": "restored-super-10",
+      "lun": 0,
+      "start_sector": 1503752,
+      "sectors": 131072,
+      "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64",
+      "utc": "2026-11-14T11:32:00.155846+00:00"
+    },
+    {
+      "label": "restored-super-11",
+      "lun": 0,
+      "start_sector": 1634824,
+      "sectors": 131072,
+      "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+      "utc": "2026-11-14T11:32:12.800115+00:00"
+    },
+    {
+      "label": "restored-super-12",
+      "lun": 0,
+      "start_sector": 1765896,
+      "sectors": 131072,
+      "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf",
+      "utc": "2026-11-14T11:32:25.434414+00:00"
+    },
+    {
+      "label": "restored-super-13",
+      "lun": 0,
+      "start_sector": 1896968,
+      "sectors": 131072,
+      "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4",
+      "utc": "2026-11-14T11:32:38.046422+00:00"
+    },
+    {
+      "label": "restored-super-14",
+      "lun": 0,
+      "start_sector": 2028040,
+      "sectors": 131072,
+      "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+      "utc": "2026-11-14T11:32:50.656884+00:00"
+    },
+    {
+      "label": "restored-super-15",
+      "lun": 0,
+      "start_sector": 2159112,
+      "sectors": 131072,
+      "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+      "utc": "2026-11-14T11:33:03.191575+00:00"
+    },
+    {
+      "label": "restored-super-16",
+      "lun": 0,
+      "start_sector": 2290184,
+      "sectors": 67584,
+      "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+      "utc": "2026-11-14T11:33:09.820738+00:00"
+    }
+  ],
+  "raw_sha256": {
+    "before.json": "879b8df6d26591d9556445c5f3213dd3544cae6fe357dd2ef4313d83b2d68733",
+    "completion.json": "8ec790096dc5316ca1c5b7e1392985b4a3f129620d8da4418169e74c4ce67e7a",
+    "console-ramoops-0": "2cef0bd303d9502726747b16321e48c898a5e5a8ac41ff71abf8e6a137ccafaf",
+    "fault.json": "a163518548ad16db2dc2e9e872b5ca72f90ca67a37dd89e09b5b77d72fc76042",
+    "host-events.jsonl": "cf4fb65b182df3986143007700bf63e081423d1ecaf5cb702012319357b4ab16",
+    "intermediate-boot.json": "3f7552d935e2bc96f38bf5c2299a5a37c488b4f873faded00523c13f0811991d",
+    "pmsg-ramoops-0": "28e1270db575986bd0fe2c122195b5f71d047acdee1682e03d51fe9dac6afc88",
+    "transport.jsonl": "2cf79b172d470b38256364483313503bae87f6d541b07a94461c200c2b7c6dbd"
+  },
+  "notes": [
+    "Authenticated stop-feeding injection on retained trial 27; guard contains no reboot syscall.",
+    "Kernel watchdog pretimeout occurred 29 seconds after the unexpected close; a different diagnostic boot followed.",
+    "EDL was not confirmed after the initial serial request. A later diagnostic boot was observed and the host repeated the EDL command with flush/drain before Sahara succeeded. The observer now drains the serial write before closing. No physical keys were required.",
+    "The original F20 super and reader boot were restored, independently read back, and verified from Android. This is watchdog/host recovery evidence, not autonomous cold-boot acceptance."
+  ]
+}
