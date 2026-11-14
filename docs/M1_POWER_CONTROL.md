@@ -210,3 +210,14 @@ recovery on the same `dc41c03c...` kernel used for disconnected startup. It
 does not qualify an unattended 45-second EDL hold or restoration without a
 computer. The identical candidate is then reinstalled for continued GSI work.
 [Recovery evidence](../build/device/m1-autonomous-recovery-35-2026-11-14.json)
+
+### Final state: identical GSI candidate retained
+
+After the recovery rehearsal, the exact same boot (`8abbd8ff...`), kernel,
+system/vendor container and scratch seeds were reinstalled and independently
+read back. New boot `2e26c4dd-3cab-41a9-8396-7912c0a0ffac` again passed
+local retention, enforcing/API 37/PID 1/UFS identity, primary PON/PS_HOLD
+binding, maintenance, a 193.687-second soak and the 1 MiB transfer. The phone
+was left running this GSI; no further fault was injected into this final boot.
+Only the original recovery set and current candidate image versions remain.
+[Final retained GSI](../build/device/m1-gsi-retained-35-2026-11-14.json)

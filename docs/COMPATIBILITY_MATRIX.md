@@ -28,7 +28,7 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Display / brightness / refresh rate | Unknown | |
 | Touch / gestures | Unknown | |
 | USB / ADB / MTP | Authenticated ADB after disconnected startup passed | Trial 35 passed exact 6.18/API 37/enforcing/PID 1/UFS identity, soak and 1 MiB transfer after power-key startup without USB. The older trial 28 failure remains recorded separately. MTP remains untested. [Trial 35](../build/device/m1-disconnected-start-35-2026-11-14.json) |
-| UFS | Hardware-tested (warm, read-only on 6.18) | Two-lane HS-G3 and six LUNs. First-stage init verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
+| UFS | Warm HS-G3 reads and cold verified GSI mounts hardware-tested | Earlier direct reads established two-lane HS-G3 and six LUNs. Trial 35's disconnected start verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
 | Encrypted userdata | Open | Writable RAM-backed ext4 data and metadata passed write and fsync checks. Persistent encrypted UFS userdata across reboot remains untested. [Scratch volumes](M1_UFS_FIRST_STAGE.md#writable-data-and-metadata-trial) |
 | SIM / calls / SMS / mobile data | Unknown | |
 | Wi-Fi | Unknown | |
