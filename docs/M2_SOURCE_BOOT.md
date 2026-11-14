@@ -172,3 +172,13 @@ its Git revision remains in the resolved manifest and the sparse path is saved
 with the build evidence. This avoids making unrelated framework modules part
 of the partial workspace. No init or library implementation is taken from that
 sparse project, and no team declaration is fabricated.
+
+Kernel run 43619212111 succeeded after the disk-space fix. The selected artifact
+members, raw Image, source patches, resolved common source and required built-in
+configuration passed local verification. The raw Image digest is
+`96631ce06d589f82267aa6f833fd1bb86dfabced4aba3a92a03bf518f720b487`.
+`build/device/m2-source-kernel-build-2026-11-15.json` records the result. Source-init
+run 43621938934 remains pending; the handset still runs the accepted M1 image.
+No M2 boot has been flashed. Before any candidate write, the runner requires the
+current raw kernel, ramdisk, boot and build records to agree, rejecting an
+incomplete component refresh before entering EDL.

@@ -39,6 +39,32 @@
       ],
       "job_log_sha256": "1a25713973cff18d3e52ce51716612d4d7b4a02caa68d011cdf1e606c8df1f00",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43617966430,
+      "source_commit": "3494c6c05c97012070b2af5ebe67ebbac00bad43",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing kernel-config-soong-rules",
+      "selected_log": [
+        "2026-11-14T17:08:56.3068873Z Added pinned dependencies: toolchain/pgo-profiles",
+        "2026-11-14T17:08:58.4397503Z error: hardware/interfaces/compatibility_matrices/build/Android.bp:24:1: \"vintf-compatibility-matrix-soong-rules\" depends on undefined module \"kernel-config-soong-rules\". Did you mean [\"blueprint-bootstrap-bpdoc\" \"partner-bpfix-extensions\"]?",
+        "2026-11-14T17:08:58.5062613Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "045ac16caae1872bde3add4214580036e549908acc0a13cc718e7d61a49291f7",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43619675442,
+      "source_commit": "1dbaa090528e9a1fd450a03c96679dca097a6f96",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing trendy_team_webapps_cros_android owner metadata",
+      "selected_log": [
+        "2026-11-14T17:27:08.0799336Z Added pinned dependencies: prebuilts/siso",
+        "2026-11-14T17:28:27.9783058Z error: frameworks/native/services/serialservice/Android.bp:15:1: \"//frameworks/native/services/serialservice\" depends on undefined module \"trendy_team_webapps_cros_android\".",
+        "2026-11-14T17:28:28.1910318Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "41544a8b8a2023127408e1df6d37e66ea0b4c1429309d225dc44e1f41afbe2ab",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -46,14 +72,37 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "source_init_run": 43617966430,
-    "source_init_commit": "3494c6c05c97012070b2af5ebe67ebbac00bad43",
-    "source_pon_kernel_run": 43613974200
+    "source_init_run": 43621938934,
+    "source_init_commit": "b2b390fb4e8af4896be3a13e32429eb81d394a47"
   },
   "host_tests": {
     "total": 81,
     "passed": 81,
     "method": "77 passed in full discovery, then 4 DTC-dependent tests passed with the checked compiler on PATH"
   },
-  "phone_state": "Accepted M1 trial 35 GSI; M2 not flashed"
+  "phone_state": "Accepted M1 trial 35 GSI; M2 not flashed",
+  "source_kernel": {
+    "run_id": 43619212111,
+    "result": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_CHECKS",
+    "record": "m2-source-kernel-build-2026-11-15.json"
+  },
+  "superseded_runs": [
+    {
+      "run_id": 43620790326,
+      "phase": "queued"
+    },
+    {
+      "run_id": 43620882985,
+      "phase": "source-sync"
+    },
+    {
+      "run_id": 43621416554,
+      "phase": "queued"
+    },
+    {
+      "run_id": 43621827711,
+      "phase": "source-sync"
+    }
+  ],
+  "superseded_reason": "Combine verified target dependencies and the sparse owner-metadata checkout; no image was produced or flashed by these attempts."
 }
