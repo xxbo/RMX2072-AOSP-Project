@@ -14,11 +14,15 @@ class UfsInitReadTest(unittest.TestCase):
         console = """[ 8.0][ T1] init: ... started service 'vendor.rmx-keymaster' has pid 32
 [ 9.0][ T32] ks_log: (uprobe) tag="RMXKeymaster" msg="registered default"
 [ 9.1][ T32] ks_log: (uprobe) tag="RMXKeymaster" msg="getHardwareInfo caller=21 level=TEE name=test"
+[ 9.2][ T32] ks_log: (uprobe) tag="RMXKeymaster" msg="getHmacSharingParameters caller=99 status=0"
+[ 9.3][ T32] ks_log: (uprobe) tag="RMXKeymaster" msg="getHmacSharingParameters caller=21 status=-49"
 """
         self.assertEqual(keymaster_observations('', console, 22), {})
         self.assertEqual(keymaster_observations('', console.replace('T32]', 'T31]'), 21), {})
         reply = keymaster_observations('', console, 21)['gsi_hidl_reply']
         self.assertEqual((reply['caller_pid'], reply['service_pid'], reply['name']), (21, 32, 'test'))
+        parameters = keymaster_observations('', console, 21)['hmac_parameter_reply']
+        self.assertEqual((parameters['seconds'], parameters['status']), (9.3, -49))
 
     def test_read_requires_pid_device_count_and_post_stage_timestamp(self):
         def row(when, pid=1, device=266338318, result=5675):
