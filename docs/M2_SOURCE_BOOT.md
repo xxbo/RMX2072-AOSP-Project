@@ -213,5 +213,17 @@ The project is now sparse to those original files, its root package metadata,
 and the build directory's flag declaration; these exact paths are also verified
 on artifact installation. The missing-path parser now recognizes question-mark
 punctuation in diagnostics and its regression tests pass. Source preparation
-and target compilation are separate workflow steps. Run 43627891448 is pending;
+and target compilation are separate workflow steps. Run 43627891448 reached the next global graph error;
 no M2 image has been flashed.
+
+Run 43627891448 passed source preparation, then the upstream Rust aconfig
+generator panicked on `libaconfig_android_hardware_biometrics_rust`, an unused
+keystore2 module whose framework declaration is absent. Selecting all `system/`
+projects was pulling server, networking and security components into a static
+init build. The manifest now explicitly selects the native init/storage/base
+libraries and required build-tool projects: 115 initial projects instead of 152.
+The real init dependency graph is still built, and missing dependencies of the
+requested target remain fatal. No Rust generator or init implementation is
+patched. This workspace change does not alter the handset GSI, project HAL or
+vendor. Run 43629741053 is building the bounded selection; handset M2 acceptance
+remains unrun.

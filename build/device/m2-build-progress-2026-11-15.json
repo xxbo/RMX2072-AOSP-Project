@@ -106,6 +106,19 @@
       ],
       "job_log_sha256": "d08bc9f05ab70ef157a34ec2f161f1c8bfcc40dad288ac5e621bc4b423be19db",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43627891448,
+      "source_commit": "55c007b35b7a369c5e08fe82ff540088b385aa92",
+      "result": "FAIL_BUILD",
+      "first_failure": "Soong Rust aconfig generator panicked on unused keystore2 biometrics flags with absent framework declaration",
+      "selected_log": [
+        "2026-11-14T18:56:18.5426226Z internal error: panic in GenerateBuildActions for module \"libaconfig_android_hardware_biometrics_rust\" variant \"android_arm64_armv8-a_source\"",
+        "2026-11-14T18:56:18.5428878Z Exactly one aconfig_declarations property required",
+        "2026-11-14T18:56:18.7155993Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "9c4142eec36cfdd1cf328a555a1962cb459d9fa39f505ec4928a55935a618c3d",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -113,8 +126,9 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "source_init_run": 43627891448,
-    "source_init_commit": "55c007b35b7a369c5e08fe82ff540088b385aa92"
+    "source_init_run": 43629741053,
+    "source_init_commit": "973a464c5b6e9fd82c7900ef7ee4ee6f817a3ce1",
+    "selected_projects": 115
   },
   "host_tests": {
     "total": 81,
