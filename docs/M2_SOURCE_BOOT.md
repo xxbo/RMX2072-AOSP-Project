@@ -125,3 +125,10 @@ Run 43617659636 was superseded during sync; run 43617966430 includes those libc
 dependencies. Host checks passed all 81 cases, including the four DTC-dependent
 checks run after adding the checked compiler to PATH. M2 acceptance also rejects
 a missing, duplicated or writable LUN in the six-disk same-boot witness.
+
+Kernel run 43613974200 failed when the hosted runner exhausted disk space,
+including its own worker log. GitHub's check annotation reports
+`System.IO.IOException: No space left on device`; no artifact or job log was
+available. This is a host failure, not evidence of a compiler or handset failure.
+The bootstrap workflow now removes unused hosted SDK/tool caches before syncing
+the pinned Kleaf toolchains and records free space before building.

@@ -25,6 +25,9 @@ jobs:
           persist-credentials: false
       - name: Install build dependencies
         run: |
+          # Kleaf brings its own pinned toolchains on this ephemeral runner.
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/share/swift /opt/hostedtoolcache
+          df -h /
           sudo apt-get update
           sudo apt-get install -y bc bison build-essential curl flex git gnupg gperf libdw-dev libelf-dev libncurses-dev libssl-dev python3 rsync unzip zip zlib1g-dev
       - name: Build SM8250 early-boot platform drivers
