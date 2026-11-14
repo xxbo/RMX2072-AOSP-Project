@@ -1389,6 +1389,300 @@
           1
         ]
       }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-19",
+      "boot_id": "29e87e01-997a-4323-bff9-cad5ffc708d2",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+      "mounts": {
+        "system": {
+          "node": "dm-14",
+          "device": "254:14",
+          "linear_device": "254:0",
+          "super": "8:10",
+          "extents": 16,
+          "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+          "avb_at_seconds": 25.433376,
+          "verity_status": "0 7599128 verity V 0",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        },
+        "vendor": {
+          "node": "dm-15",
+          "device": "254:15",
+          "linear_device": "254:1",
+          "super": "8:10",
+          "extents": 1,
+          "root_sha256": "a12c313120abbee43adfaf8d72dfc76650f292f0a79f8040cc16236a0c37f4be",
+          "avb_at_seconds": 25.521194,
+          "verity_status": "0 32768 verity V -",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        }
+      },
+      "enforcing_seconds": 49.804472,
+      "second_stage_seconds": 49.831482,
+      "file_reads": {
+        "/system/build.prop": {
+          "at_seconds": 49.880324,
+          "pid": 1,
+          "inode": 659,
+          "device": "254:14",
+          "requested_bytes": 5675,
+          "returned_bytes": 5675
+        },
+        "/system/etc/init/hw/init.rc": {
+          "at_seconds": 49.906977,
+          "pid": 1,
+          "inode": 757,
+          "device": "254:14",
+          "requested_bytes": 56913,
+          "returned_bytes": 56913
+        }
+      },
+      "raw_sha256": {
+        "acm.log": "663ad4049a6573276b3e5d76cba0cc8403f7c7e6ef9bbdf694d91d6787bb84c3",
+        "console-ramoops-0": "acdbb4025200c5b85d8c07cc5dcc6573631c79ec35ba85ebc9df2a913f743e08",
+        "pmsg-ramoops-0": "c1086bf34ff65fc0730404cbed40359984ac96bdcc94344cabe4307df1059e21"
+      },
+      "zygote_imports": {
+        "/system/etc/init/hw/init.zygote64_32.rc": {
+          "at_seconds": 49.914328,
+          "pid": 1,
+          "inode": 762,
+          "device": "254:14",
+          "requested_bytes": 620,
+          "returned_bytes": 620,
+          "parsing_seconds": 49.914002
+        },
+        "/system/etc/init/hw/init.zygote64.rc": {
+          "at_seconds": 49.915217,
+          "pid": 1,
+          "inode": 761,
+          "device": "254:14",
+          "requested_bytes": 901,
+          "returned_bytes": 901,
+          "parsing_seconds": 49.914805
+        },
+        "/system/etc/init/hw/init.boringssl.zygote64_32.rc": {
+          "at_seconds": 49.915808,
+          "pid": 1,
+          "inode": 756,
+          "device": "254:14",
+          "requested_bytes": 392,
+          "returned_bytes": 392,
+          "parsing_seconds": 49.915492
+        }
+      },
+      "vold_fstab": {
+        "at_seconds": 50.740466,
+        "pid": 2032,
+        "inode": 18,
+        "device": "254:15",
+        "requested_bytes": 220,
+        "returned_bytes": 220,
+        "service": "vold",
+        "domain": "u:r:vold:s0",
+        "service_start_seconds": 50.650091,
+        "domain_evidence": "Caller(pid=2032,uid=0,sid=u:r:vold:s0)"
+      },
+      "adb": {
+        "result": "NO_TRANSPORT_OBSERVED",
+        "samples": 95,
+        "errors": 0,
+        "transport_states": [],
+        "interval_seconds": 98.344,
+        "maximum_sample_gap_seconds": 1.047,
+        "diagnostic_acm_seen": true,
+        "raw_sha256": {
+          "adb.jsonl": "907e4a28415c6d64cdc5ca6c54a5e9f61fffe62a00b6b9db3d71943406fa08a8",
+          "host-events.jsonl": "81ba070e968da882a92025c0469e8ca2908186308e82dd492bc42dbe814311b3"
+        }
+      },
+      "keymaster": {
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ],
+        "temporary_hmac_key": {
+          "rc": -22,
+          "first": 18446744073709551615,
+          "listener": 0,
+          "command": 0,
+          "callbacks": 0,
+          "final": 18446744073709551615,
+          "generate": -61,
+          "blob_bytes": 0,
+          "delete": -61,
+          "unregister": -61,
+          "configure": -61
+        },
+        "temporary_key_stages": [
+          "[   47.762929][ T1868] rmx2072-temp-key: lookup",
+          "[   47.763311][ T1868] rmx2072-temp-key: allocating buffers",
+          "[   47.764515][ T1868] rmx2072-temp-key: registering time listener",
+          "[   47.764686][ T1868] rmx2072-temp-key: registered rc=0 result=0",
+          "[   47.764844][ T1868] rmx2072-temp-key: send method=278 bytes=36",
+          "[   47.765535][ T1868] rmx2072-temp-key: send rc=-22 result=18446744073709551615 listener=0"
+        ],
+        "gsi_hidl_reply": {
+          "instance": "android.hardware.keymaster@4.0::IKeymasterDevice/default",
+          "service_pid": 2057,
+          "caller": "keystore2",
+          "caller_pid": 2040,
+          "registration_seconds": 51.088897,
+          "reply_seconds": 51.08983,
+          "level": "TEE",
+          "name": "RMX2072 keymaster64 API 4.0 TA 4.546"
+        },
+        "hmac_parameter_reply": {
+          "service_pid": 2057,
+          "caller_pid": 2040,
+          "seconds": 51.09215,
+          "status": -49
+        },
+        "shared_secret_parameter_error": {
+          "seconds": 51.092309,
+          "rc": -49
+        }
+      },
+      "diagnostic_clock": {
+        "boot_id": "29e87e01-997a-4323-bff9-cad5ffc708d2",
+        "source": "USB host UTC",
+        "host_utc": "2026-11-14T06:24:09.467893+00:00",
+        "before_seconds": 21,
+        "after_seconds": 1794637449
+      },
+      "first_keystore_abort": null,
+      "keystore_registrations": [
+        {
+          "tid": 2040,
+          "name": "android.security.compat",
+          "rc": 0
+        }
+      ],
+      "qsee_app_lookup_rc": {
+        "keymaster": -2,
+        "keymaster64": 0
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keystore_add_service_attempts": [
+        "android.security.compat"
+      ],
+      "maintenance_last_lookup_failure": "[   88.016028][    T1] init: Control message: Could not find 'aidl/android.security.maintenance' for ctl.interface_start from pid: 2018 (/system/bin/servicemanager)",
+      "vdc": {
+        "pid": 2046,
+        "start": "[   50.942520][    T1] init: SVC_EXEC service 'exec 5 (/system/bin/vdc keymaster earlyBootEnded)' pid 2046 (uid 1000 gid 1000+0 context default) started; waiting...",
+        "exit_record": null
+      },
+      "usb": {
+        "samples": 45,
+        "device_ids": [
+          "VID_1D6B&PID_0104",
+          "VID_1D6B&PID_0104&MI_00"
+        ],
+        "interface_ids": [
+          "USB\\Class_02",
+          "USB\\Class_02&SubClass_02",
+          "USB\\Class_02&SubClass_02&Prot_01"
+        ],
+        "adb_interface_seen": false,
+        "max_gap_seconds": 2.299,
+        "raw_sha256": "a9130ccf01b3688173c3e261873e5bd7aec97d47a731557b0075f431521f68e5"
+      },
+      "apex_observations": [
+        "[   50.076311][ T1899] apexd-bootstrap: Found pre-installed APEX /system/apex/com.google.android.adbd.capex",
+        "[   50.112783][ T1899] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.virt.apex",
+        "[   50.112968][ T1899] apexd-bootstrap: Found bootstrap APEX /system/apex/com.google.android.tzdata6.apex",
+        "[   50.113178][ T1899] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.i18n.apex",
+        "[   50.113284][ T1899] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.runtime.apex",
+        "[   50.191315][ T1899] apexd-bootstrap: Activated 4 packages. duration=38ms"
+      ],
+      "keystore_sigabrt_count": 0,
+      "keystore_entropy_waits": [
+        "[   50.875373][ T2040] ks_getrandom: (probe) task=\"keystore2\" bytes=40 flags=1",
+        "[   50.875497][ T2040] ks_gotrandom: (probe) task=\"keystore2\" rc=40",
+        "[   50.988951][ T2040] ks_getrandom: (probe) task=\"keystore2\" bytes=40 flags=1",
+        "[   50.989069][ T2040] ks_gotrandom: (probe) task=\"keystore2\" rc=40",
+        "[   50.989475][ T2040] ks_getrandom: (probe) task=\"keystore2\" bytes=4 flags=1",
+        "[   50.989630][ T2040] ks_gotrandom: (probe) task=\"keystore2\" rc=4",
+        "[   50.989778][ T2040] ks_getrandom: (probe) task=\"keystore2\" bytes=4 flags=1",
+        "[   50.989920][ T2040] ks_gotrandom: (probe) task=\"keystore2\" rc=4",
+        "[   50.999428][ T2040] ks_getrandom: (probe) task=\"keystore2\" bytes=16 flags=4",
+        "[   50.999814][ T2040] ks_gotrandom: (probe) task=\"keystore2\" rc=16",
+        "[   51.000213][ T2049] ks_getrandom: (probe) task=\"keystore2\" bytes=16 flags=4",
+        "[   51.000753][ T2049] ks_gotrandom: (probe) task=\"keystore2\" rc=16"
+      ],
+      "keystore_compat_construction": [
+        "[   51.003052][ T2040] ks_compat_get_entry: (probe) task=\"keystore2\"",
+        "[   51.090072][ T2040] ks_compat_wrap_entry: (probe) task=\"keystore2\"",
+        "[   51.090286][ T2040] ks_compat_soft_entry: (probe) task=\"keystore2\"",
+        "[   51.090718][ T2040] ks_compat_patch_entry: (probe) task=\"keystore2\""
+      ],
+      "outcome": "SHMBRIDGE-configured kernel returned transport -22 on CONFIGURE; no key generation or listener callback completed",
+      "shared_memory": {
+        "config": "CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y",
+        "runtime_enabled": "unobserved because early console wrapped"
+      },
+      "console_ecc": "ECC: No errors detected",
+      "pmsg_ecc": "ECC: 4 Corrected bytes, 32 unrecoverable blocks",
+      "capture_limitations": [
+        "SHM Bridge runtime status rolled out of the console; selected build configuration alone does not establish firmware activation",
+        "GSI received HMAC error -49 after the failing control; successful HMAC evidence belongs to the separate HMAC-only boots"
+      ],
+      "build": {
+        "actions_run": 43562166101,
+        "kernel_source_commit": "0a5a660fec263ec62858a4badf43cb547cdf6673",
+        "artifact_id": 14102056272,
+        "artifact_digest": "sha256:67b4bd2f5301122b70df5e193e4f949ddc28f404f2ef99262aea2b8664a9c0e5",
+        "kernel_sha256": "2c2d883cabb617c8dd75e0d2c0166b91dcd2e09da674ec42f79b9f0043a7de99",
+        "ramdisk_sha256": "f9250e39ca131f247b590ad813795ba8f373d60e1f79c61797ed4765cf5a1d1b",
+        "boot_sha256": "6d805b0dfe40bf16c1e6075d3802e72b3826e047708f4c6cf06e1513fe452949"
+      },
+      "vendor_sha256": "475a331d6211d203d90e670980d55cdb7d1304a209896512c74849b475e94f79",
+      "super_sha256": "68a5f6dba9ad1b2a274a93cec0b676ab44f96254527bbdadca46c1356d15e779",
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "7d6004f1-9ad1-42a3-8e4a-b568fdd7ab00",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
     }
   ]
 }

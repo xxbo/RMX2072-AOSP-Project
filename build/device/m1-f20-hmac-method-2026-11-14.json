@@ -60,5 +60,27 @@
         }
       ]
     }
-  ]
+  ],
+  "contiguous_buffer_control": {
+    "boot_id": "7d6004f1-9ad1-42a3-8e4a-b568fdd7ab00",
+    "generate_status": 0,
+    "blob_bytes": 455,
+    "delete_status": 0,
+    "time_callback": 11,
+    "requests": [
+      {
+        "method": 264,
+        "request_bytes": 84,
+        "response_bytes": 40876,
+        "response_offset_from_request": 84
+      },
+      {
+        "method": 269,
+        "request_bytes": 467,
+        "response_bytes": 40493,
+        "response_offset_from_request": 467
+      }
+    ],
+    "raw_sha256": "2495408cd21f70000bb5feb48c3348227272c4182db2901895112404691a5c9b"
+  }
 }
