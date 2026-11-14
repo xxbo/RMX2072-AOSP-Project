@@ -6,6 +6,10 @@ on:
         description: Build the separately qualified RMX2072 PON/poweroff candidate
         type: boolean
         default: false
+      source_pon:
+        description: Use M2 upstream PON binding instead of the temporary legacy alias
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -26,6 +30,7 @@ jobs:
       - name: Build SM8250 early-boot platform drivers
         env:
           RMX2072_PON_POWER: ${{ inputs.pon_power && '1' || '0' }}
+          RMX2072_SOURCE_PON: ${{ inputs.source_pon && '1' || '0' }}
         run: bash scripts/kernel_research/build_sm8250_bootstrap.sh
       - uses: actions/upload-artifact@v4
         if: always()

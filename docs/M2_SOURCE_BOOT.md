@@ -36,3 +36,11 @@ factory blob is not the source replacement being pursued here.
 The new components are not flashed until their inputs, selected board IDs,
 reserved memory, interrupt routing and boot/recovery packaging are checked.
 Only the original recovery set and current candidate image versions are kept.
+
+The source-tree kernel option enables `CONFIG_POWER_RESET_QCOM_PON` for the
+upstream `qcom,pm8998-pon` parent and `qcom,pm8941-pwrkey` child. It does not
+apply M1's `qcom,qpnp-power-on` alias patch. The separate small patch logs the
+actual PON revision/subtype and preserves the proven board-specific notifier
+ordering: SCM selects warm EDL before the power-key driver selects reset type.
+Legacy and source-tree PON build options are mutually exclusive. Source-tree
+PON must pass its own warm, disconnected-start and fault-recovery tests.
