@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import re
 
-from record_ufs_first_stage import match, record, vendor_services
+from record_ufs_first_stage import adb_observations, match, record, vendor_services
 
 
 def usb_interfaces(port_log, live):
@@ -27,9 +27,13 @@ def usb_interfaces(port_log, live):
                 raw_sha256=hashlib.sha256(port_log.read_bytes()).hexdigest())
 
 
-def extract(live, port_log, layout):
-    trial = record(live, layout)
-    trial.update(vendor_services(live, trial))
+def extract(live, port_log, layout, *, console_tail=False):
+    trial = record(live, layout, console_tail=console_tail)
+    if console_tail:
+        trial['adb'] = adb_observations(live, trial)
+        trial['console_start_missing'] = True
+    else:
+        trial.update(vendor_services(live, trial))
     console = (live/'console-ramoops-0').read_bytes().decode('utf8', errors='replace').replace('\r','')
     serial = (live/'acm.log').read_bytes().decode('utf8', errors='replace').replace('\r','')
     pmsg = (live/'pmsg-ramoops-0').read_bytes()
@@ -43,20 +47,35 @@ def extract(live, port_log, layout):
     trial['raw_sha256']['pmsg-ramoops-0'] = hashlib.sha256(pmsg).hexdigest()
     proc = match(r"^\[\s*([0-9.]+)\]\[\s*T1\] init: \.\.\. started service 'keystore2' has pid (\d+)$", console)
     pid = int(proc[2])
-    abort = match(rf"^\[\s*([0-9.]+)\]\[\s*T1\] init: Service 'keystore2' \(pid {pid}\) received SIGABRT$", console)
-    before = console[proc.start():abort.start()]
-    # printk prepends the same timestamp and TID to each line of a Rust panic.
-    # Keep the full multiline cause chain, plus the registration entry and return.
-    logs = [re.sub(r'\(0x[0-9a-f]+(?: <- 0x[0-9a-f]+)?\)', '(uprobe)', line)
-            for line in before.splitlines() if re.match(rf'^\[\s*[0-9.]+\]\[\s*T{pid}\] ', line)]
-    if not any('panicked at' in l for l in logs):
-        raise ValueError('First SIGABRT captured without its matching panic log')
-    trial['first_keystore_abort'] = dict(pid=pid, start_seconds=float(proc[1]), sigabrt_seconds=float(abort[1]),
-                                         first_process_log=logs)
+    abort = re.search(rf"^\[\s*([0-9.]+)\]\[\s*T1\] init: Service 'keystore2' \(pid {pid}\) received SIGABRT$", console, re.M)
+    trial['first_keystore_abort'] = None
+    if abort:
+        before = console[proc.start():abort.start()]
+        # printk prepends the same timestamp and TID to each line of a Rust panic.
+        # Keep the full multiline cause chain, plus the registration entry and return.
+        logs = [re.sub(r'\(0x[0-9a-f]+(?: <- 0x[0-9a-f]+)?\)', '(uprobe)', line)
+                for line in before.splitlines() if re.match(rf'^\[\s*[0-9.]+\]\[\s*T{pid}\] ', line)]
+        if not any('panicked at' in l for l in logs):
+            raise ValueError('First SIGABRT captured without its matching panic log')
+        trial['first_keystore_abort'] = dict(pid=pid, start_seconds=float(proc[1]), sigabrt_seconds=float(abort[1]),
+                                             first_process_log=logs)
     attempted = sorted(set(re.findall(r'ks_add: .* task="keystore2" name="([^"]+)"',console)))
     missing = [l for l in console.splitlines() if "Could not find 'aidl/android.security.maintenance'" in l]
     vdc = match(r"^.*SVC_EXEC service '(exec \d+ \(/system/bin/vdc keymaster earlyBootEnded\))' pid (\d+).*waiting\.\.\.$",console)
     end = re.search(r"^.*init: Service '"+re.escape(vdc[1])+r"' \(pid "+vdc[2]+r"\) .+$",console[vdc.end():],re.M)
+    registrations = []
+    pending = {}
+    for line in console.splitlines():
+        entry = re.search(r'\[\s*T(\d+)\] ks_add: .* task="keystore2" name="([^"]+)"', line)
+        if entry:
+            pending[entry[1]] = entry[2]
+        ret = re.search(r'\[\s*T(\d+)\] ks_added: .* task="keystore2" rc=(-?\d+)', line)
+        if ret and ret[1] in pending:
+            registrations.append(dict(tid=int(ret[1]), name=pending.pop(ret[1]), rc=int(ret[2])))
+    trial['keystore_registrations'] = registrations
+    lookup = re.search(r'^M1EVENT qsee_lookup keymaster=(-?\d+) keymaster64=(-?\d+)$', serial, re.M)
+    if lookup:
+        trial['qsee_app_lookup_rc'] = dict(keymaster=int(lookup[1]), keymaster64=int(lookup[2]))
     trial.update(scratch_mounts=volumes, keystore_add_service_attempts=attempted,
                  maintenance_last_lookup_failure=missing[-1] if missing else None,
                  vdc=dict(pid=int(vdc[2]),start=vdc[0], exit_record=end[0] if end else None),
@@ -72,5 +91,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ['capture','usb','layout']:
         parser.add_argument('--'+name, type=Path, required=True)
+    parser.add_argument('--console-tail', action='store_true', help='Early timestamps and file reads rolled out of the console')
     args = parser.parse_args()
-    print(json.dumps(extract(args.capture, args.usb, json.loads(args.layout.read_text())), indent=2))
+    print(json.dumps(extract(args.capture, args.usb, json.loads(args.layout.read_text()), console_tail=args.console_tail), indent=2))

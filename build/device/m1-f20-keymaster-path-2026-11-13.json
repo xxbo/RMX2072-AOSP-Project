@@ -1,0 +1,79 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "kernel": "4.19.157-perf+",
+  "boot_id": "714bc753-3d76-4bfc-b01c-8319ebb9cf9b",
+  "interface": "android.hardware.keymaster@4.0::IKeymasterDevice/default",
+  "transport": "hwbinder",
+  "init_service": "keymaster-4-0",
+  "pid": 677,
+  "domain": "u:r:vendor_hal_keymaster_qti:s0",
+  "devices": [
+    "/dev/binderfs/hwbinder",
+    "/dev/qseecom",
+    "/dev/ion"
+  ],
+  "driver": "/sys/bus/platform/drivers/qseecom/82400000.qseecom",
+  "interface_libraries": [
+    "libqtikeymaster4.so",
+    "libkeymasterdeviceutils.so",
+    "libkeymasterutils.so",
+    "libQSEEComAPI.so"
+  ],
+  "stock_scm_trace": {
+    "filter": "common_pid == 677",
+    "idle_seconds": 1,
+    "idle": [
+      0,
+      0
+    ],
+    "tee_generate_exit": 0,
+    "generate_starts": 5,
+    "generate_ends": 5,
+    "delete_exit": 0
+  },
+  "app_loaded_query": {
+    "keymaster": "absent",
+    "keymaster64": "loaded",
+    "ro.boot.keymaster": "1",
+    "keymaster_partition": "/dev/block/sde10"
+  },
+  "maintenance": "found",
+  "vdc": {
+    "pid": 769,
+    "start_seconds": 5.012492,
+    "exit_seconds": 5.029418,
+    "exit_status": 0
+  },
+  "gsi_hidl_manager_max_fcm": 8,
+  "gsi_highest_matrix_listing_keymaster_4_0": 7,
+  "stock_listener_reference": {
+    "boot_id": "2e726e41-e381-48d5-94d1-91cee758dcfc",
+    "init_service": "running",
+    "property": "true",
+    "qseecomd_pid": 655,
+    "qseecom_fds": 10,
+    "mapped_vendor_libraries": [
+      "/vendor/lib64/libGPreqcancel.so",
+      "/vendor/lib64/libGPreqcancel_svc.so",
+      "/vendor/lib64/libQSEEComAPI.so",
+      "/vendor/lib64/libStDrvInt.so",
+      "/vendor/lib64/libdiag.so",
+      "/vendor/lib64/libdisplayconfig.qti.so",
+      "/vendor/lib64/libdrm.so",
+      "/vendor/lib64/libdrmfs.so",
+      "/vendor/lib64/libdrmtime.so",
+      "/vendor/lib64/libops.so",
+      "/vendor/lib64/libqisl.so",
+      "/vendor/lib64/librpmb.so",
+      "/vendor/lib64/libsecureui.so",
+      "/vendor/lib64/libsecureui_svcsock.so",
+      "/vendor/lib64/libspl.so",
+      "/vendor/lib64/libssd.so",
+      "/vendor/lib64/libtime_genoff.so",
+      "/vendor/lib64/vendor.display.config@1.0.so",
+      "/vendor/lib64/vendor.display.config@2.0.so",
+      "/vendor/lib64/vendor.qti.hardware.tui_comm@1.0.so"
+    ],
+    "init_rc": "/vendor/etc/init/qseecomd.rc:7:    start vendor.qseecomd\n/vendor/etc/init/qseecomd.rc:9:service vendor.qseecomd /vendor/bin/qseecomd"
+  }
+}

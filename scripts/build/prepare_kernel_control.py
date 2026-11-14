@@ -22,7 +22,10 @@ def replace_kernel(source, kernel, probe):
             or word(24) or word(1632) or image_id(source) != source[576:608]):
         raise ValueError('Requires an intact boot-v2 image with a 4K page and no second/recovery payload')
     old = source[4096:4096 + word(8)]
-    if sha(old) != '1e206ad78485b825ffba9bd427023adc9f53f12f54e666041b2bb377701ba793':
+    if sha(old) not in {
+        '1e206ad78485b825ffba9bd427023adc9f53f12f54e666041b2bb377701ba793',
+        'd69c31c01cfa58f434ba622d20c7d8e8a4b101babb0cf3f3d8ced024662c536c',
+    }:
         raise ValueError('Expected the physically tested native entry-probe kernel')
     wrapped = wrap(kernel, probe)
     ramdisk_start = 4096 + align(len(old))

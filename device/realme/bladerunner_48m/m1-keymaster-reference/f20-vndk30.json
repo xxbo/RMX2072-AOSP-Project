@@ -1,0 +1,14 @@
+{
+  "/lib64/android.hardware.keymaster@3.0.so": "c954f76ec3d5beaaac141f7d1630af683bfc0474e55fc5f88c28715e75681188",
+  "/lib64/android.hardware.keymaster@4.0.so": "36bd16ef32e497085136acf073fa03f52b7d5dd56d6b2650d053b82ad73fa3c0",
+  "/lib64/android.hardware.keymaster@4.1.so": "d39f8bbbdd5df46b9eaa7b4016e4eb58ce0f8fe8e522e5662e7b825b150e42cf",
+  "/lib64/libbase.so": "cdd289c19504a8ddc2e32e9b2458d5d1ade6223b4f422b48984e389372c1b73c",
+  "/lib64/libc++.so": "86890aeca517788bdab911d479bb24516e0da28495c2fe0ebe3298c01f23fdff",
+  "/lib64/libcrypto.so": "03c2f0a6643766368733d9d72cad5c9c2492c28a00301816a0795b5effb03a46",
+  "/lib64/libcutils.so": "d03edb8e3751e162054b2780c63726f7b5ecbe0faa035c194046925281bb6e33",
+  "/lib64/libhardware.so": "81ce6e9fbf60a70cef4955c3032eac0d48fd8fd1723940f6710b1314acc7de4c",
+  "/lib64/libhidlbase.so": "b41542c60ffaf814df03aa4b1a73d707d8e0acf60a3eb62f37b2f3810eb0712c",
+  "/lib64/libion.so": "d47844de58903d19caa5947f198f937bfc3e8884a4056299d30f80312c96698e",
+  "/lib64/libprocessgroup.so": "a8b53de178bc6c3b5ff3623062e9008415d77cf2386ea463da5284b5d5f1ca13",
+  "/lib64/libutils.so": "6c43412b878df2d5f4517b131cf2bf91d5d883b5198d9ee20bba62d0a0e004ec"
+}

@@ -1,0 +1,10 @@
+<manifest version="1.0" type="device" target-level="7">
+    <hal format="hidl">
+        <name>android.hardware.keymaster</name>
+        <transport>hwbinder</transport>
+        <fqname>@4.0::IKeymasterDevice/default</fqname>
+    </hal>
+    <sepolicy>
+        <version>202604</version>
+    </sepolicy>
+</manifest>

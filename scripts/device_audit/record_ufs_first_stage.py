@@ -28,7 +28,7 @@ def full_read(console, inode, device, size, stage, pid=1):
     raise ValueError(f'No complete post-stage read of inode {inode} on {device}')
 
 
-def record(directory, layout):
+def record(directory, layout, *, console_tail=False):
     def read(name):
         return (directory/name).read_bytes().decode('ascii', errors='replace').replace('\r', '')
     serial, console = read('acm.log'), read('console-ramoops-0')
@@ -74,13 +74,21 @@ def record(directory, layout):
         mounts[name] = dict(node=node, device=device, linear_device=table[4], super=backing[2],
                             extents=len(actual), root_sha256=tree['root_digest'], avb_at_seconds=avb_seconds,
                             verity_status=status, pid=1, filesystem='ext4', readonly=True, mount_rc=0)
-    enforcing = float(match(r'^\[\s*([0-9.]+)\].+ enforcing=1 old_enforcing=0 .* res=1$', console)[1])
-    second = float(match(r'^\[\s*([0-9.]+)\]\[\s*T1\] init: init second stage started!$', console)[1])
-    if second < enforcing:
-        raise ValueError('Second-stage record precedes enforcing')
-    ref = json.loads((ROOT/'build/device/gsi17-mount-reference.json').read_text())
-    reads = {path: full_read(console, inode, mounts['system']['device'],
-                             ref['files'][path.lstrip('/')]['size'], second) for path, inode in FILES.items()}
+    if console_tail:
+        # The circular console may start after second stage on a verbose HAL trial.
+        match(r'^\[\s*([0-9.]+)\]\[\s*T1\] init:', console)
+        if 'init second stage started!' in console or 'permissive=0' not in console:
+            raise ValueError('Expected a post-handoff console tail with enforcing evidence')
+        enforcing = second = None
+        reads = {}
+    else:
+        enforcing = float(match(r'^\[\s*([0-9.]+)\].+ enforcing=1 old_enforcing=0 .* res=1$', console)[1])
+        second = float(match(r'^\[\s*([0-9.]+)\]\[\s*T1\] init: init second stage started!$', console)[1])
+        if second < enforcing:
+            raise ValueError('Second-stage record precedes enforcing')
+        ref = json.loads((ROOT/'build/device/gsi17-mount-reference.json').read_text())
+        reads = {path: full_read(console, inode, mounts['system']['device'],
+                                 ref['files'][path.lstrip('/')]['size'], second) for path, inode in FILES.items()}
     return dict(id=identity['trial'], boot_id=boot, kernel=identity['kernel'], ufs_super=backing[1],
                 mounts=mounts, enforcing_seconds=enforcing, second_stage_seconds=second, file_reads=reads,
                 raw_sha256={f: hashlib.sha256((directory/f).read_bytes()).hexdigest()
