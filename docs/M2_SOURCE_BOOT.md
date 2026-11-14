@@ -44,3 +44,39 @@ actual PON revision/subtype and preserves the proven board-specific notifier
 ordering: SCM selects warm EDL before the power-key driver selects reset type.
 Legacy and source-tree PON build options are mutually exclusive. Source-tree
 PON must pass its own warm, disconnected-start and fault-recovery tests.
+
+## Candidate preparation on November 15
+
+`build_m2_device_tree.py` compiles the full official 20607 base and MTP overlay,
+then applies the project's source USB SID0, watchdog, UFS HS-G3 and PDC overlays.
+The generator reads pinned Git blobs, resolving the input-event header symlink
+on Windows without modifying the upstream checkout. It checks USB, watchdog,
+UFS resources and PDC routing before and after the full board overlay.
+
+The project adds the measured boot-firmware log and ECC ramoops reservations,
+retains the F.20 WLAN allocation size and renames the board selector explicitly.
+A reviewed source patch replaces only SID 0's legacy PON with an upstream PON
+parent and power-key child; SID 0 peripheral addresses use the upstream one-cell
+form. Secondary/modem PON instances remain inactive. No resin or PMIC watchdog
+driver is enabled by this change.
+
+Each new container has one exact 20607 entry and contains no OEM binary trees.
+The complete source board overlay supplies PMIC and board hardware content.
+The earlier no-op/premerged failures do not establish that this new pair boots;
+bootloader selection and actual runtime markers remain physical acceptance
+items. The packer retains measured boot load metadata and original AVB envelopes
+for the unlocked engineering trial; those envelopes do not sign the new payload.
+
+The trial runner now reads back the paired DTBO and restores the original DTBO
+alongside boot and all super chunks on failure. A new pre-policy witness records
+both source-tree markers, the actual FDT digest, first-stage init digest and boot
+UUID. ADB retention requires those values to match the candidate. Power checks
+separately require both upstream PON parent and power-key child to bind and to
+report primary subtype 4 on the same boot.
+
+The first source-init build (run 43612987811) synchronized successfully but lacked
+Soong's `external/pogreb` project. The manifest now includes that pinned project.
+A bounded build retry can add other missing paths only when they name projects
+in the pinned upstream manifest; it never creates substitute source or libraries.
+Source-init and source-PON kernel builds are still in progress. No M2 handset
+boot, cold-start or recovery result is claimed at this stage.

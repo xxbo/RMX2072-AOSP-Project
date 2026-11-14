@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Board 20607 source, with the measured F.20 memory reservations for M2.
+#include "kona-v2.1.dts"
+
+/ {
+    /delete-property/ oppo,dtsi_no;
+    oplus,dtsi_no = <20607>;
+    realme,m2-base-source = "20607-q-24a15224-m2";
+
+    reserved-memory {
+        // Boot firmware owns this region; never allocate it to Linux.
+        kboot_uboot_logmem@0x9FE00000 {
+            reg = <0 0x9fe00000 0 0x200000>;
+            no-map;
+        };
+        ramoops@0xB0000000 {
+            compatible = "ramoops";
+            reg = <0 0xb0000000 0 0x400000>;
+            record-size = <0x40000>;
+            console-size = <0x40000>;
+            ftrace-size = <0>;
+            pmsg-size = <0x200000>;
+            devinfo-size = <0>;
+            ecc-size = <16>;
+        };
+    };
+};
+
+// Preserve the allocator reservation even though WLAN is not enabled in M2.
+&cnss_wlan_mem { size = <0 0x18b0000>; };
+// Retain the legacy timing property as measured; the upstream driver uses
+// the independently configured watchdog timeout through its standard API.
+&wdog { qcom,bark-time = <22000>; };
