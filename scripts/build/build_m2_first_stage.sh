@@ -10,6 +10,10 @@ repo init -u https://android.googlesource.com/platform/manifest -b android-17.0.
 cp "$ARTIFACT_DIR/selected.xml" .repo/manifests/rmx2072-minimal.xml
 ln -sfn manifests/rmx2072-minimal.xml .repo/manifest.xml
 repo sync -c -j4 --no-tags --no-clone-bundle 2>&1 | tee "$ARTIFACT_DIR/sync.log"
+# This project supplies one owner declaration referenced by frameworks/native.
+# Keep its actual pinned Git blob, without parsing unrelated framework targets.
+git -C frameworks/base sparse-checkout set --no-cone /core/java/android/hardware/serial/Android.bp
+git -C frameworks/base sparse-checkout list > "$ARTIFACT_DIR/frameworks-base-sparse.txt"
 repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
 test "$(git -C system/core rev-parse HEAD)" = 545d2487e38192a2ce25040897ced877cf6b4f53
 mkdir -p device/realme/rmx2072_m2

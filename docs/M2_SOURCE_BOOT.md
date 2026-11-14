@@ -166,3 +166,9 @@ The exact upstream definition is in
 workspace now includes its source project rather than synthesizing that module.
 This check is global to the partial workspace even though serialservice is not
 part of the requested init target.
+
+`frameworks/base` is sparsely checked out to that original metadata file only;
+its Git revision remains in the resolved manifest and the sparse path is saved
+with the build evidence. This avoids making unrelated framework modules part
+of the partial workspace. No init or library implementation is taken from that
+sparse project, and no team declaration is fabricated.
