@@ -451,7 +451,8 @@
       "maintenance": "NOT RUN",
       "vdc_early_boot_ended": "NOT RUN",
       "capture_limitations": [
-        "Last serial command is wait for the background stack monitor; no subsequent version or Android handoff was captured"
+        "Last serial command is wait for the background stack monitor; no subsequent version or Android handoff was captured",
+        "Pmsg ECC errors exclude it from Android execution claims"
       ],
       "raw_sha256": {
         "acm.log": "5e17fe9f696a3d5c02e5993d1773500c950489d819f08c08e448f5405f92fec1",
@@ -472,6 +473,124 @@
         "firmware": "RMX2072_11_F.20",
         "sys_boot_completed": 1,
         "boot_id": "0d901e30-e0b9-4ce9-bba8-f5ae4919bf0d",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-16",
+      "boot_id": "7cf9e938-9c54-44ca-bbde-47cbcd7cc241",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "outcome": "Generation again returned KEYMASTER_NOT_CONFIGURED (-64); a subsequent QSEE call failed with -22 before Android handoff",
+      "mounts": {
+        "system": {
+          "seconds": 25.48472,
+          "source": "/dev/block/dm-14",
+          "mount_rc": 0,
+          "readonly": true
+        },
+        "vendor": {
+          "seconds": 25.578095,
+          "source": "/dev/block/dm-15",
+          "mount_rc": 0,
+          "readonly": true
+        }
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keymaster": {
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ],
+        "temporary_hmac_key": {
+          "rc": 0,
+          "first": 0,
+          "listener": 0,
+          "command": 0,
+          "callbacks": 0,
+          "final": 0,
+          "generate": -64,
+          "blob_bytes": 0,
+          "delete": -61,
+          "unregister": 0
+        },
+        "temporary_key_stages": [
+          "[   44.496166][ T1685] rmx2072-temp-key: lookup",
+          "[   44.496587][ T1685] rmx2072-temp-key: allocating buffers",
+          "[   44.497180][ T1685] rmx2072-temp-key: registering time listener",
+          "[   44.497476][ T1685] rmx2072-temp-key: registered rc=0 result=0",
+          "[   44.497574][ T1685] rmx2072-temp-key: send method=264 bytes=84",
+          "[   44.499911][ T1685] rmx2072-temp-key: send rc=0 result=0 listener=1",
+          "[   44.500001][ T1685] rmx2072-temp-key: unregistering"
+        ]
+      },
+      "diagnostic_clock": {
+        "boot_id": "7cf9e938-9c54-44ca-bbde-47cbcd7cc241",
+        "source": "USB host UTC",
+        "host_utc": "2026-11-14T04:48:37.611177+00:00",
+        "before_seconds": 21,
+        "after_seconds": 1794631717
+      },
+      "observer_retries": [],
+      "selinux_handoff": "NOT REACHED",
+      "gsi_keystore2": "NOT RUN",
+      "maintenance": "NOT RUN",
+      "vdc_early_boot_ended": "NOT RUN",
+      "capture_limitations": [
+        "Capture stopped after the temporary-key result despite removal of the monitor wait",
+        "No subsequent version result or Android handoff was captured",
+        "Pmsg ECC errors exclude it from Android execution claims"
+      ],
+      "raw_sha256": {
+        "acm.log": "b66f4d5c1b943a56e472ca59f9f80d258092d5088ea14e67a22d03f10dcd5351",
+        "console-ramoops-0": "ef40e317e8a76eaa452d9de7cb7da9636a19f9c4e11904c454f382bd0cc4df21",
+        "pmsg-ramoops-0": "306afbe6131f49e51853f651aef104c0175e7a479f8299a01ab44f40f4f0a639"
+      },
+      "pmsg_ecc": "ECC: 4 Corrected bytes, 32 unrecoverable blocks",
+      "qsee_errors": [
+        "[   44.526760][ T1687] qcom_scm firmware:scm: qseecom: scm call failed with error -22"
+      ],
+      "build": {
+        "actions_run": 43553673564,
+        "kernel_source_commit": "bf806ae58d7ce87f58e5c60f06cb522e87aa6180",
+        "artifact_id": 14097753531,
+        "artifact_digest": "sha256:2373093f10bd464e7386d6870210d8c720129030ad596e8d10676531ba5ed6d0",
+        "kernel_sha256": "a6df011f90c3b97f685dbbfe706da99212e196d7d95b649dc73326c3f58d5216",
+        "ramdisk_sha256": "7b6424171a0a129da65bb82aaba025917133c271568c38f827bff0217f514999",
+        "boot_sha256": "40db7000b32cfe91930a2148ddc3ef4061fb94662e544138861b588cd49e9f74"
+      },
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "b2cb20e4-806f-468c-a2ba-48dcde249cbf",
         "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
         "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
         "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
