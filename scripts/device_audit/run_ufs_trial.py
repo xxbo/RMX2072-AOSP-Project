@@ -158,7 +158,7 @@ def main():
      while time.monotonic()<until:
       if args.retain_gsi and (dest/'live/gsi-accepted.json').exists():
        from gsi_adb_accept import soak_and_retain
-       event('Authenticated API 37 ADB accepted; checking renewable watchdog lease for 190 seconds')
+       event('Authenticated API 37 ADB accepted; checking same-boot watchdog stability for 190 seconds')
        try:
         soak_and_retain(dest/'live');retained=True
        except (OSError,subprocess.SubprocessError,ValueError) as error:

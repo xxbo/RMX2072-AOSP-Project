@@ -96,6 +96,8 @@ def previous_boot(trial, original, output, deadline, return_on_accepted=True, re
                                 data = read_console_file(console, b'/run/previous.gz',
                                     b'gzip -c '+path+b' > /run/previous.gz; ')
                                 (output/name).write_bytes(gzip.decompress(data))
+                        providers = console_query(console, b'echo DEFERRED; cat /sys/kernel/debug/devices_deferred; echo SPMI; ls -l /sys/bus/spmi/devices; echo POWER; dmesg | grep -iE "spmi|pmic|psci|power.?off|pon@|pwrkey|M1AUTO"')
+                        (output/'recovery-providers.txt').write_bytes(providers)
                         if not request_edl: return
                         console.write(b'/bin/reboot-edl edl\n')
                         console.flush()
