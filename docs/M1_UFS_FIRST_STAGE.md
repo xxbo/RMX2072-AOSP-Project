@@ -345,3 +345,32 @@ digest manifests and small trial logs instead of historical partition images.
 The current large files total about 22.1 GB, primarily the two 8.87 GB super
 sets and the 3.95 GB GSI input. Raw readbacks are removed only after matching
 the expected digest. [Machine-readable trials, hashes and limitations](../build/device/m1-gsi-adb-2026-11-14.json)
+
+### Trial 28 · Autonomous handoff passed; cold start and recovery failed
+
+The image entered Android from internal UFS without a host handoff or host
+clock. Warm boot `60e66c01-facc-420e-97d4-1fc8df464188` passed enforcing,
+API 37, the exact 6.18 release, second-stage PID 1, matching verified UFS mounts,
+a 190-second soak and hash-checked ADB transfer.
+
+A subsequent physical power cycle did not pass the M1 cold criterion. The
+operator reported no reaction to the disconnected 2–3-second power press, and
+explicitly confirmed that reaction began only after USB was reconnected. The
+resulting charger-mode boot `05d41781-8d0a-484c-86e4-e3020854d6a7` again
+passed autonomous GSI startup and ADB checks. This proves USB-triggered boot,
+not disconnected power-key startup; shutdown completion was not independently
+observed while the cable was absent.
+
+Deliberate expiry changed the guard to `expired` at 45.438 seconds. ADB went
+away at 76.016 seconds, but at 123.031 seconds another GSI boot appeared instead
+of diagnostic recovery/EDL. The autonomous recovery test therefore **failed**.
+The saved pmsg contains entry-probe data and damaged journal text. The wrapper
+currently writes 4096 raw bytes into reserved pmsg data before ECC validation;
+that diagnostic probe must be retired before relying on pmsg for recovery.
+The exact pinned BusyBox grep matched the sample marker on F.20.
+
+The host issued ADB reboot-to-EDL and restored the original set. All 17 super
+chunks, boot and DTBO matched independent readbacks. F.20 completed boot
+`ffdb6dc3-5877-4dd3-a74b-b4f5dd23c02f`; both LP slots and the complete
+Android-side super hash matched. The phone is back in F.20.
+[Full evidence and limitations](../build/device/m1-autonomous-boot-2026-11-14.json)
