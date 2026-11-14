@@ -470,3 +470,14 @@ This immediate-capture test makes no 45-second unattended EDL claim. The
 early read-only power snapshot confirms SPMI v5 remains deferred with no
 PMIC devices; the next control changes only PDC compatibility in the DT.
 [Trial 32 evidence](../build/device/m1-autonomous-recovery-32-2026-11-14.json)
+
+### Trial 33 · PDC-only dependency control
+
+The same 6.18 kernel and unchanged signed system/vendor booted with the PDC
+compatible-only overlay (original DTBO preserved). Boot
+`78202cbf-6e86-46fd-bb95-24e2d731b27c` passed enforcing, maintenance, local
+retention and 193.891 seconds of ADB/transfer checks. SPMI now enumerates ten
+addresses; primary SID 00 and seven other addresses bind pmic-spmi. PON and
+PS_HOLD remain unbound, matching the disabled driver configuration. The phone
+is retained on GSI while the separate PON/poweroff kernel builds. No cold-start
+pass is claimed. [Evidence](../build/device/m1-pdc-spmi-33-2026-11-14.json)

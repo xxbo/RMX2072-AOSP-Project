@@ -53,13 +53,17 @@ done
     ls -l /sys/bus/spmi/devices
     for device in /sys/bus/spmi/devices/*; do
         [ -e "$device" ] || continue
-        printf 'DEVICE=%s DRIVER=%s\n' "${device##*/}" "$(readlink -f "$device/driver")"
+        driver=unbound
+        [ ! -L "$device/driver" ] || driver=$(readlink -f "$device/driver")
+        printf 'DEVICE=%s DRIVER=%s\n' "${device##*/}" "$driver"
         cat "$device/uevent"
     done
     echo POWER_LOG
     for device in /sys/bus/platform/devices/*power-on* /sys/bus/platform/devices/*restart*; do
         [ -e "$device" ] || continue
-        printf 'PLATFORM=%s DRIVER=%s\n' "${device##*/}" "$(readlink -f "$device/driver")"
+        driver=unbound
+        [ ! -L "$device/driver" ] || driver=$(readlink -f "$device/driver")
+        printf 'PLATFORM=%s DRIVER=%s\n' "${device##*/}" "$driver"
     done
     dmesg | grep -iE 'spmi|pmic|pdc|psci|power.?off|pon@|pwrkey' || true
 } > /run/m1-power.txt 2>&1 || true

@@ -66,8 +66,8 @@ A PDC-only control is prepared with `rebuild_m1_usb_trial.py --autonomous-ufs
 that every node/property except PDC's compatible remains identical. It checks
 the captured register ranges, GIC parent and SPMI PDC pin 1 (GIC SPI 481).
 Synthetic negative tests reject changed TLMM, routing, IRQ or status. The
-actual retained board tree also passed both checks. No PDC image has been
-boot-tested yet, and this does not supply the missing PON poweroff driver.
+actual retained board tree also passed both checks. The subsequent trial 33 below records the physical result. This compatible
+change does not supply the missing PON poweroff driver.
 [Offline validation](../build/device/m1-pdc-only-preflight-2026-11-14.json)
 
 The pinned upstream [PM8150 tree](https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/arch/arm64/boot/dts/qcom/pm8150.dtsi)
@@ -102,3 +102,33 @@ EDL selector. This is a separate compile candidate, not included in trials
 31/32 and not yet a hardware-verified shutdown fix. First qualify PDC/SPMI
 with the existing kernel, then inspect the new driver binding and notifier
 logs before repeating the physical disconnected start.
+
+## Trial 33: PDC-only binding verified on the handset
+
+The existing kernel (`fce98221...`) and original DTBO booted with only PDC's
+compatible changed in the selected base tree. Boot
+`78202cbf-6e86-46fd-bb95-24e2d731b27c` passed local ADB retention, enforcing,
+verified UFS system/vendor, maintenance, a 193.891-second soak and the 1 MiB
+hash-checked transfer. It remains running GSI.
+
+SPMI no longer appears among deferred probes. Addresses 00, 01, 02, 03, 04,
+05, 08, 09, 0a and 0b enumerate; eight bind pmic-spmi, including primary SID
+00. SID 03 and 09 have no driver in the early snapshot. The primary PON and
+PS_HOLD platform nodes still have no driver, as expected with the current
+kernel configuration. This establishes the dependency needed for the separate
+PON/poweroff candidate; it does not establish shutdown or disconnected start.
+[Physical evidence](../build/device/m1-pdc-spmi-33-2026-11-14.json)
+
+For the next physical shutdown, use `schedule_gsi_poweroff.py
+--require-power-drivers`: it requires a same-boot snapshot, primary PMIC
+binding, the primary pm8941 PON driver, MSM PS_HOLD binding and a successful
+GEN2_PRIMARY revision/subtype read. A stale or unbound snapshot is rejected
+before any shutdown is scheduled.
+
+`fetch_current_kernel.py` downloads only the needed artifact members, checks
+the successful pinned workflow/commit, source patch digests and dist SHA256SUMS
+(including the decompressed Image), then replaces the current kernel inputs.
+It does not retain a full archive or an old image version. Its verify-only
+path was exercised against the existing successful kernel artifact and
+reproduced the current Image hash without replacing inputs. Whole-archive
+digest verification is explicitly not claimed for range downloads.

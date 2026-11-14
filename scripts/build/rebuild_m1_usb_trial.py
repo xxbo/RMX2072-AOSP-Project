@@ -14,6 +14,8 @@ if a.pdc_only and not a.autonomous_ufs:p.error('Use the autonomous recovery path
 if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}',a.trial):p.error('Expected the recorded UFS trial naming')
 w=a.workspace.resolve();current=w/'current';repo=Path(__file__).resolve().parents[2];build=repo/'scripts/build'
 ndk=a.ndk.resolve();tool=ndk/'toolchains/llvm/prebuilt/windows-x86_64/bin'
+recipe_commit=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
+recipe_dirty=bool(subprocess.check_output(['git','-C',str(repo),'status','--porcelain'],text=True).strip())
 def run(*args):subprocess.run([str(x) for x in args],check=True)
 def sha(path):
  with path.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
@@ -30,6 +32,7 @@ run(sys.executable,avb,'add_hashtree_footer','--image',current/'vendor-signed.im
 run(sys.executable,build/'prepare_ufs_verification.py','--system',current/'system.img','--vendor',current/'vendor-signed.img','--vendor-key',current/'vendor.avbpubkey','--vendor-report',current/'vendor/vendor.json','--keymaster-info','--usb-guard',current/'rmx-m1-guard','--output',current/'verified-profile')
 run(sys.executable,build/'build_diag_ramdisk.py','--busybox',current/'busybox','--reboot-helper',current/'reboot-edl','--entry-carrier',current/'entry-carry','--return-to-edl-after',180,'--gadget-bind-delay',20,'--trial-id',a.trial,'--ufs-host-g3-test','--super-tools-apks',current/'apks','--android-first-stage',current/'init','--first-stage-witness',current/'first-stage-witness','--ufs-first-stage',current/'verified-profile','--scratch-volumes',current/'volumes','--adb-public-key',a.adb_public_key.resolve(),'--output',current/'ramdisk',*(['--autonomous-ufs'] if a.autonomous_ufs else []))
 kernel=json.loads((current/'kernel/provenance.json').read_text())
+assert not kernel.get('installing'), 'Kernel inputs are incomplete; finish the checked artifact install'
 pdc=[]
 if a.pdc_only:
  config=(current/'kernel/sm8250_bootstrap_dot_config').read_text()
@@ -47,5 +50,5 @@ if a.reuse_super:
  assert [x['sha256'] for x in verify(current/'candidate',candidate['sha256'])['parts']]==candidate['parts']
 else:
  run(sys.executable,repo/'scripts/device_audit/build_ufs_candidate.py','--stock',w/'recovery/f20','--system',current/'system.img','--vendor',current/'vendor-signed.img','--profile',current/'verified-profile','--output',current/'candidate')
-(current/'usb-build.json').write_text(json.dumps(dict(trial=a.trial,kernel=kernel['image_sha256'],guard=sha(current/'rmx-m1-guard'),witness=sha(current/'first-stage-witness'),vendor_unsigned=report['sha256'],vendor_signed=sha(current/'vendor-signed.img'),engineering_key='reused trial25 key',adb_public_key_sha256=json.loads((current/'ramdisk/ramdisk-provenance.json').read_text())['adb_public_key_sha256']),indent=2)+'\n')
+(current/'usb-build.json').write_text(json.dumps(dict(trial=a.trial,recipe_commit=recipe_commit,recipe_dirty=recipe_dirty,kernel=kernel['image_sha256'],guard=sha(current/'rmx-m1-guard'),witness=sha(current/'first-stage-witness'),vendor_unsigned=report['sha256'],vendor_signed=sha(current/'vendor-signed.img'),engineering_key='reused trial25 key',adb_public_key_sha256=json.loads((current/'ramdisk/ramdisk-provenance.json').read_text())['adb_public_key_sha256']),indent=2)+'\n')
 print('Current guarded USB candidate rebuilt and validated.',flush=True)
