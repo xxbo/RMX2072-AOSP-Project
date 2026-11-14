@@ -404,3 +404,8 @@ and require automatic Sahara capture plus verified F.20 boot. Reaching 9008
 alone is not full rollback acceptance.
 
 [Trial 29 raw-log digests and results](../build/device/m1-autonomous-recovery-29-2026-11-14.json)
+
+The subsequent trial 29 manual recovery completed: F.20 boot
+`ba59a60f-7165-4115-af80-fcaba4c859be`, all 17 original super chunks, boot,
+DTBO, both LP slots and the complete Android-side super digest matched.
+This verifies restoration, while retaining the failed automatic capture result.

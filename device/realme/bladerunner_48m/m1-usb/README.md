@@ -115,3 +115,26 @@ host EDL request. The observer now flushes and drains that serial request.
 Use `--reuse-super` only when system and signed vendor are unchanged. The
 builder checks their manifests, hashes and every existing candidate chunk
 before reusing them for a ramdisk-only change.
+
+## Complete fault recovery qualification
+
+Trial 29 reached EDL autonomously, but EDL disappeared before a late-started
+restore runner could capture Sahara. The complete recovery was therefore not
+accepted; a manual ADB EDL request allowed the waiting runner to restore F.20.
+The recovered original super, boot, DTBO, both LP slots and boot completion
+were fully verified.
+
+The next candidate tests explicit AP-watchdog disarming only in the recovery
+ramdisk, immediately before EDL. It checks the exact AP watchdog device,
+requires nowayout=0, disables through the watchdog API and verifies inactive
+state. It does not change the failed Android guard's stop-feeding behavior.
+The pinned qcom-wdt driver adopts running firmware watchdogs and has no
+shutdown callback; whether that explains the transient EDL needs measurement.
+
+Before injecting expiry, start the restore runner with `--restore-only` and
+`--recovery-gate PATH` and wait for its `recovery-ready.json`. Run the fault
+observer with the same gate and `--edl-hold-seconds 45`. Only after continuous
+EDL observation does it atomically release the prepared restore runner.
+Require the independent original readbacks and F.20 boot verification too.
+A fault or vanished EDL does not release the gate; inspect the device and
+record any explicit manual recovery separately. Use fresh trial record paths.

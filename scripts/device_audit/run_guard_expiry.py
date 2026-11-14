@@ -15,7 +15,11 @@ def main():
     p.add_argument('--evidence',type=Path,required=True)
     p.add_argument('--trial',required=True)
     p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--edl-hold-seconds',type=int,default=0)
+    p.add_argument('--recovery-gate',type=Path,help='Atomically release a preverified restore runner after EDL qualification')
     a=p.parse_args();sys.path.insert(0,str(a.workspace.resolve()/'serial-deps'))
+    assert 0<=a.edl_hold_seconds<=120
+    assert not a.recovery_gate or not a.recovery_gate.exists()
     from serial.tools.list_ports import comports
     from observe_ufs_first_stage import previous_boot
     from usb_edl_return import ACM,EDL,ports_with_id
@@ -27,19 +31,30 @@ def main():
     start=time.monotonic()
     (a.output/'fault.json').write_text(json.dumps(dict(boot_id=boot,utc=datetime.now(timezone.utc).isoformat(),command='expire-lease',lease_seconds=45,hardware_seconds=30,host_reboot_commands=False),indent=2)+'\n')
     assert shell('/vendor/bin/hw/rmx-m1-control --expire-lease '+boot).strip()=='lease'
-    captured=False;last=None
+    captured=False;last=None;edl_since=None
     with (a.output/'transport.jsonl').open('w') as log:
-        while time.monotonic()-start<300:
+        while time.monotonic()-start<300+a.edl_hold_seconds:
             ports=comports()
             row=dict(elapsed=round(time.monotonic()-start,3),ports=[dict(device=x.device,vid=x.vid,pid=x.pid) for x in ports if (x.vid,x.pid) in (ACM,EDL)])
             if ports_with_id(ports,EDL):
+                if edl_since is None:edl_since=time.monotonic()
+                row['edl_continuous_seconds']=round(time.monotonic()-edl_since,3)
                 row['automatic_edl']=True;log.write(json.dumps(row)+'\n');log.flush()
+                if time.monotonic()-edl_since<a.edl_hold_seconds:
+                    time.sleep(.5);continue
                 console=(a.output/'console-ramoops-0').read_text(errors='replace')
                 journal=(a.output/'pmsg-ramoops-0').read_bytes()
                 assert ('RMX-M1-AUTO boot='+boot+' state=expired').encode() in journal
                 assert 'watchdog0: pretimeout event' in console
-                (a.output/'result.json').write_text(json.dumps(dict(boot_id=boot,automatic_edl=True,elapsed=row['elapsed'],journal_expired=True,kernel_pretimeout=True,host_reboot_commands=False),indent=2)+'\n')
+                (a.output/'result.json').write_text(json.dumps(dict(boot_id=boot,automatic_edl=True,elapsed=row['elapsed'],edl_continuous_seconds=row['edl_continuous_seconds'],journal_expired=True,kernel_pretimeout=True,host_reboot_commands=False),indent=2)+'\n')
+                if a.recovery_gate:
+                    pending=a.recovery_gate.with_suffix('.tmp')
+                    pending.write_text(json.dumps(dict(trial=a.trial,allow_recovery=True,automatic_edl=True,boot_id=boot,edl_continuous_seconds=row['edl_continuous_seconds']))+'\n')
+                    pending.replace(a.recovery_gate)
                 print('Lease expiry and autonomous EDL fallback verified',flush=True);return
+            if edl_since is not None:
+                (a.output/'edl-window-failure.json').write_text(json.dumps(dict(result='FAIL_EDL_HOLD',automatic_edl_observed=True,held_seconds=round(time.monotonic()-edl_since,3),required_seconds=a.edl_hold_seconds),indent=2)+'\n')
+                raise RuntimeError('EDL disappeared before the required recovery window')
             if ports_with_id(ports,ACM) and not captured:
                 previous_boot(a.trial,UUID(boot),a.output,time.monotonic()+60,return_on_accepted=False,request_edl=False)
                 captured=True

@@ -25,6 +25,7 @@ if [ "$previous" != none ] && [ "${previous##*state=}" != retained ]; then
     # same image enters EDL on its own after this bounded capture window.
     /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
     sleep 90
+    /bin/first-stage-witness recovery-stop-watchdog
     exec /bin/reboot-edl edl
 fi
 mark attempt

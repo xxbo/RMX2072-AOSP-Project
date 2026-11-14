@@ -446,9 +446,37 @@ static void scratch_mount(const char *name) {
     }
 }
 
+/* Only the diagnostic recovery boot may relinquish the AP watchdog immediately
+ * before EDL. The Android guard must never disarm its failed trial watchdog. */
+static int recovery_stop_watchdog(void) {
+    char device[256], value[64] = {0};
+    if (access("/m1-autoboot", F_OK) ||
+        !realpath("/sys/class/watchdog/watchdog0/device", device) ||
+        strcmp(device, "/sys/devices/platform/soc/17c10000.qcom,wdt") ||
+        read_proc("/sys/class/watchdog/watchdog0/nowayout", value, sizeof(value)) != 2 ||
+        strcmp(value, "0\n")) {
+        fputs("M1RECOVERY watchdog scope/nowayout mismatch\n", stderr); return 1;
+    }
+    int fd = open("/dev/watchdog0", O_WRONLY | O_CLOEXEC);
+    int option = WDIOS_DISABLECARD;
+    if (fd < 0) { perror("recovery watchdog open"); return 1; }
+    if (ioctl(fd, WDIOC_SETOPTIONS, &option)) {
+        perror("recovery watchdog disable"); close(fd); return 1;
+    }
+    close(fd);
+    memset(value, 0, sizeof(value));
+    if (read_proc("/sys/class/watchdog/watchdog0/state", value, sizeof(value)) != 9 ||
+        strcmp(value, "inactive\n")) {
+        fputs("M1RECOVERY watchdog not confirmed inactive\n", stderr); return 1;
+    }
+    puts("M1RECOVERY AP watchdog confirmed inactive before EDL");
+    return 0;
+}
+
 int main(int argc, char **argv) {
     setvbuf(stdout, NULL, _IONBF, 0);
     if (argc == 3 && !strcmp(argv[1], "autoboot-state")) return autoboot_state(argv[2]);
+    if (argc == 2 && !strcmp(argv[1], "recovery-stop-watchdog")) return recovery_stop_watchdog();
     if (argc == 3 && !strcmp(argv[1], "scratch-mount")) scratch_mount(argv[2]);
     else if (argc == 2 && !strcmp(argv[1], "handoff")) handoff();
     else if (argc == 2 && !strcmp(argv[1], "observe")) observe(0);

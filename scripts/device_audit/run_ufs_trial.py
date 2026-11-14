@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--workspace', type=Path, required=True)
     parser.add_argument('--trial', required=True)
     parser.add_argument('--restore-only', action='store_true')
+    parser.add_argument('--recovery-gate', type=Path, help='Restore only: validate now, wait for this explicit JSON handoff before capturing EDL')
     parser.add_argument('--retain-gsi', action='store_true')
     parser.add_argument('--record-suffix', default='', help='New evidence directory for repeating the exact current image')
     args = parser.parse_args()
@@ -35,6 +36,7 @@ def main():
     w=args.workspace.resolve();p=w/'current';stock=w/'recovery/f20';tools=w/'recovery/OplusEdlTool/Tools';loader=w/'recovery/tools/devprg_865_1';audit=Path(__file__).resolve().parent
     trial=args.trial;assert re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}',trial)
     restore_only=args.restore_only
+    assert not args.recovery_gate or restore_only
     assert not args.record_suffix or re.fullmatch(r'[a-z0-9-]{1,32}',args.record_suffix)
     dest=w/'records'/(trial+('-'+args.record_suffix if args.record_suffix else '')+('-restore' if restore_only else ''));dest.mkdir(parents=True,exist_ok=False)
     orig=json.loads((stock/'acquisition.json').read_text());candidate={} if restore_only else json.loads((p/'candidate/candidate.json').read_text());boot={} if restore_only else json.loads((p/'boot/control.json').read_text())
@@ -116,6 +118,12 @@ def main():
     if restore_only:
      (dest/'recovery-ready.json').write_text(json.dumps(dict(original_images_verified=True,utc=datetime.now(timezone.utc).isoformat()))+'\n')
      event('Original recovery inputs verified; waiting for EDL')
+     if args.recovery_gate:
+      end=time.monotonic()+600
+      while not args.recovery_gate.exists() and time.monotonic()<end:time.sleep(.2)
+      gate=json.loads(args.recovery_gate.read_text())
+      assert gate['trial']==trial and gate['allow_recovery'] is True
+      event('Recovery gate released: '+json.dumps(gate))
      enter('recovery-entry');restore();sys.exit(0)
     assert sha(p/'boot/boot-diag.img')==boot['boot_sha256']
     assert [x['sha256'] for x in verify(p/'candidate',candidate['sha256'])['parts']]==candidate['parts']

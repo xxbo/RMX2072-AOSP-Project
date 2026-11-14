@@ -915,7 +915,7 @@
     }
   ],
   "disconnected_cold_start": "NOT RUN on this artifact",
-  "current_mode": "See fault/restore records; warm retention is historical",
+  "current_mode": "F.20 restored and verified",
   "fault": {
     "boot_id": "fee5d118-d5ad-4191-83e0-ec6bd6736058",
     "utc": "2026-11-14T12:31:11.947373+00:00",
@@ -2313,6 +2313,172 @@
     "RMX-M1-AUTO boot=fee5d118-d5ad-4191-83e0-ec6bd6736058 state=expired"
   ],
   "recovery_providers": "DEFERRED0.gpio-regulator\t1.gpio-regulator\t2.gpio-regulator\tsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO3.gpio-regulator\t4.gpio-regulator\t5.gpio-regulator\t6.gpio-regulator\t7.gpio-regulator\tc440000.qcom,spmi\tsoc:gpio_keys\tSPMItotal 0POWER[    0.000000][    T0] psci: probing for conduit method from DT.[    0.000000][    T0] psci: PSCIv1.1 detected in firmware.[    0.000000][    T0] psci: Using standard PSCI v0.2 function IDs[    0.000000][    T0] psci: MIGRATE_INFO_TYPE not supported.[    0.000000][    T0] psci: SMC Calling Convention v1.1[    0.000000][    T0] psci: OSI mode supported.[    0.000000][    T0] psci: [Firmware Bug]: failed to set PC mode: -3[    0.738296][    T1] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    0.792760][   T14] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    0.853082][   T14] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    0.854665][   T14] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[    0.959616][  T132] M1AUTO boot=690518ae-9933-41f6-800c-f079d75a35a3 previous=RMX-M1-AUTO boot=fee5d118-d5ad-4191-83e0-ec6bd6736058 state=expired[   10.988634][   T14] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)[   10.990081][   T50] platform c440000.qcom,spmi: deferred probe pending: (reason unknown)[   21.171784][  T237] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k value=c440000.qcom,spmi\t[   21.591606][   T14] spmi_pmic_arb c440000.qcom,spmi: PMIC arbiter version v5 (0x50010000)",
+  "restored": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "ba59a60f-7165-4115-af80-fcaba4c859be",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
+  "restore_readbacks": [
+    {
+      "label": "restored-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "utc": "2026-11-14T12:43:37.151307+00:00"
+    },
+    {
+      "label": "restored-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "utc": "2026-11-14T12:43:37.844410+00:00"
+    },
+    {
+      "label": "restored-super-00",
+      "lun": 0,
+      "start_sector": 193032,
+      "sectors": 131072,
+      "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e",
+      "utc": "2026-11-14T12:43:50.554984+00:00"
+    },
+    {
+      "label": "restored-super-01",
+      "lun": 0,
+      "start_sector": 324104,
+      "sectors": 131072,
+      "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145",
+      "utc": "2026-11-14T12:44:03.312789+00:00"
+    },
+    {
+      "label": "restored-super-02",
+      "lun": 0,
+      "start_sector": 455176,
+      "sectors": 131072,
+      "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54",
+      "utc": "2026-11-14T12:44:16.077852+00:00"
+    },
+    {
+      "label": "restored-super-03",
+      "lun": 0,
+      "start_sector": 586248,
+      "sectors": 131072,
+      "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda",
+      "utc": "2026-11-14T12:44:28.863552+00:00"
+    },
+    {
+      "label": "restored-super-04",
+      "lun": 0,
+      "start_sector": 717320,
+      "sectors": 131072,
+      "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39",
+      "utc": "2026-11-14T12:44:41.637875+00:00"
+    },
+    {
+      "label": "restored-super-05",
+      "lun": 0,
+      "start_sector": 848392,
+      "sectors": 131072,
+      "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5",
+      "utc": "2026-11-14T12:44:54.392911+00:00"
+    },
+    {
+      "label": "restored-super-06",
+      "lun": 0,
+      "start_sector": 979464,
+      "sectors": 131072,
+      "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+      "utc": "2026-11-14T12:45:07.153211+00:00"
+    },
+    {
+      "label": "restored-super-07",
+      "lun": 0,
+      "start_sector": 1110536,
+      "sectors": 131072,
+      "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+      "utc": "2026-11-14T12:45:19.883318+00:00"
+    },
+    {
+      "label": "restored-super-08",
+      "lun": 0,
+      "start_sector": 1241608,
+      "sectors": 131072,
+      "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+      "utc": "2026-11-14T12:45:32.690777+00:00"
+    },
+    {
+      "label": "restored-super-09",
+      "lun": 0,
+      "start_sector": 1372680,
+      "sectors": 131072,
+      "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+      "utc": "2026-11-14T12:45:45.461062+00:00"
+    },
+    {
+      "label": "restored-super-10",
+      "lun": 0,
+      "start_sector": 1503752,
+      "sectors": 131072,
+      "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64",
+      "utc": "2026-11-14T12:45:58.196487+00:00"
+    },
+    {
+      "label": "restored-super-11",
+      "lun": 0,
+      "start_sector": 1634824,
+      "sectors": 131072,
+      "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+      "utc": "2026-11-14T12:46:10.989948+00:00"
+    },
+    {
+      "label": "restored-super-12",
+      "lun": 0,
+      "start_sector": 1765896,
+      "sectors": 131072,
+      "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf",
+      "utc": "2026-11-14T12:46:23.759741+00:00"
+    },
+    {
+      "label": "restored-super-13",
+      "lun": 0,
+      "start_sector": 1896968,
+      "sectors": 131072,
+      "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4",
+      "utc": "2026-11-14T12:46:36.448476+00:00"
+    },
+    {
+      "label": "restored-super-14",
+      "lun": 0,
+      "start_sector": 2028040,
+      "sectors": 131072,
+      "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+      "utc": "2026-11-14T12:46:49.107637+00:00"
+    },
+    {
+      "label": "restored-super-15",
+      "lun": 0,
+      "start_sector": 2159112,
+      "sectors": 131072,
+      "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+      "utc": "2026-11-14T12:47:01.714240+00:00"
+    },
+    {
+      "label": "restored-super-16",
+      "lun": 0,
+      "start_sector": 2290184,
+      "sectors": 67584,
+      "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+      "utc": "2026-11-14T12:47:08.342350+00:00"
+    }
+  ],
   "raw_sha256": {
     "ufs-host-g3-gsi17-firststage-ufs-29/before-boot.log": "2eb8e57bc34c59e186e49952959f80c627f3ca23536f486c97e4e9d777e2a4d6",
     "ufs-host-g3-gsi17-firststage-ufs-29/before-boot.xml": "e772a7be032c07e454fac39c734dd2ff0761ef1e1ceea93feeebd99c0c9af557",
@@ -2399,10 +2565,54 @@
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/recovery-providers.txt": "39ed8ceff9a100afeca8580d2f7419a966b0b940b505b6fa4063d43ff325bf52",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/result.json": "4f9a5de6ad3ca3145efdedcdb0c8169292f3f42b30431931b95de41fd1d98714",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry/transport.jsonl": "88e99f762941594f06d1abaa734218a8806b74f17645d6bf261ad4c8d5709720",
-    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/port_trace.txt": "faaacfcf233bb4336bb4cbb6df5a38295633f44836b81ad57a1242c8f47e11f6",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/port_trace.txt": "a9683b558782108e52de25f03b291c1ec3d7c14488b6125aec9dbe64021fd561",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/readbacks.jsonl": "75b7e66b668e91f24e7dfb82752d360b2cb5743c07601b07aa15919e533d815c",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/recovery-entry.log": "b857edd6b1fbf4c2a62985245c9906380894e802b8b2ccc9e41d12fb5ba5b49b",
-    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restore-super.log": "4b92e6a138acaf5c80d0d158260ad880c5bc95d26ca621accf470c8734f68057",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restore-boot.log": "a0c960a83355901558341b4468a6c9abeb2acaa937f7bd63782a3983f7707cce",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restore-boot.xml": "5668385cd35d3a334cfffe0ba27dbe32d7b5f278c76b88a53112de268bc142cb",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restore-super.log": "312eaae661a16b3d29a193cfdc1db6175080c9125a685d7038206596bbfce63e",
     "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restore-super.xml": "5a1b918a6873a90404f3ca0a7fd91449e67c129865779873fdafbec2f2b8c5d4",
-    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/timeline.jsonl": "852303aebba5f0ac2b1fda816ead7e3583955367d26e2d9db55cb77efe9f00fb"
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-boot.log": "9f7ec39b5045c61df9e07c89b9dac371ce1ac54bfcb546ef43b2d787e5610bd1",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-boot.xml": "e772a7be032c07e454fac39c734dd2ff0761ef1e1ceea93feeebd99c0c9af557",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-dtbo.log": "d2f4e0ecbcb213a733f64b57be4f111d37839d635230f4679f65e77acd3a863c",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-dtbo.xml": "ad233dacebca856fc993967a1271ea06b173beb14a41eccc18c2b47921fd9ce4",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-00.log": "ceec3319a920688e71e22c34033dc9ea424486df6a8cebd1d0b8d72182c57ae4",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-00.xml": "fbb1c21780b3c9d378f4517c9308bd9bae2cc4c91ea9478b8a19272e0b2cd668",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-01.log": "aa8809867fc6ec67b3cdb0aab098298eac826189ccbb2898920d1ec9d7c64cc2",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-01.xml": "a1fbbfcdd5899bcd09c9f2911e15048d3464308109cca18963c763469c3cab27",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-02.log": "bf44db52a766fc934dcafe84700e78e125c0d2a9914104a9da210de2ec06ae55",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-02.xml": "431a080b4c5822dd624ec63aa6f1f51ef6532d67ec1646d8ec0d0394aab8760a",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-03.log": "30ea3db2c8a6c823d9fba8c9e49cd040a0069bd30285c98ddc8e12e64a8febb8",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-03.xml": "639c3db5960d17dfea2b4ac08a843a3db00edc4b350cab9c756ef529ef185fdb",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-04.log": "33fb2c8407f181da6987ce69d44c9c52b95734096f892e5a2587602671978382",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-04.xml": "a48e6d434fbbab87a5cab4de1aa963de6391f1d164d9b7e5db0adf274ab4b883",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-05.log": "8c812f54f5b27dfa32faefea9ca8499ff5283ca1c6fd1d283a552d4f727a23ef",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-05.xml": "e94542e28ac2367120f2f0fd5a4c356519e69ce8a97e55ab84cab5938eb0b0d5",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-06.log": "c50c48c0e78c6bb82cad42e6244f3e2fb06f7014f5dc78f1c1bf16741051a076",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-06.xml": "5bf76f4b334eb5414b82b05860f1f8f69724d44fe2451e9d250edfd3dd299623",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-07.log": "f821e93316a62c14fad62cbd54ae358da1e42ad5501b62fae83d21c9e312bc5a",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-07.xml": "d8b02662ed1876b9b99d36a149273182472fb4d4b964010d098e0c5fefe874b6",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-08.log": "7250ae324da50b235e6b5d2e920e851c7e99407ce80611d5d4a1225644a852a4",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-08.xml": "265be38fd6daca7e69ad9a86a2fd0b3ac15cecb5dbb810f3559c7dbf05a71111",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-09.log": "93c1bf824c5fd6537c48062a411137270f49d25ad3af53cdc39ba7fec460a796",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-09.xml": "372f3bdca3e94d68e7f5e10e1029a928ad0828062cfbf6b6d81a688c65e180b6",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-10.log": "a890b6c516a640604ef5c76b3c62d4965cc844700ef2136ced3bb1c43c4a76f2",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-10.xml": "ab1d50ba9962bc8f87ebfaaa59a7fc44b4c2b50753f3ae77d8af8fc73cd0015a",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-11.log": "cb49e1739cb328a0cf5df0b97aca6e55efa99bcd50fac1c3d819a63fe1888826",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-11.xml": "42e4c3c706acdda9e0721794e910191fbf90c929b65f2dbcd854559a7282e7df",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-12.log": "d565f7c6cf04f77dd1ab2996b1490cbc0d6a18691a3fce76deb7925f7b99de06",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-12.xml": "cb4a0096bed13508415d9b32d6f2bb40dc3c8fc3cd5fc8b67e0656665a2cfcdc",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-13.log": "39d7419d70c4d8c9ae3509145c2ae1ab809171983095b60459313107e1d58274",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-13.xml": "4d2f652a4c8a6a7235638693b0ffac1c5f6bab116775503769da4d1646e08545",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-14.log": "48e68cbdb02221f5063f33d722eccfaa2e1781b2f720c36cfdec19e4335e5e93",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-14.xml": "50c533eeb6bc3cf7825cea04c4369f54e5947dbde468246cb7d0241fc72a615c",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-15.log": "76c13a45ce309bcd147c19351e0e00162565e34e97866bfde6be20766b17e2d4",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-15.xml": "09f911f5c00bc060b7fc3ca2ee8c2401a434192f1acc8379a0fb98ba5e63adec",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-16.log": "b7a76d802e954b58bae8d8bb681efea6d4da61bc9bc68bcbecd3851ba8dd97ae",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored-super-16.xml": "f882fb1d54f078ccf4de679e9580f9e8cc2067a52babb1361f1dfcd218a8a44a",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/restored.json": "fa2fe67fb17d9cdd9b2c1675ff32b1c7fa30b40f1556d28962a7635069481727",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/stock-reset.log": "ad00685bf3103acc11adcdbdb4db33a01aadf488aff0e2eb7ffb4de07772900c",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/stock-reset.xml": "9e78d4e9e210f991b14a749b4826e5077479f174093c678d3bfdc29828d8ed59",
+    "ufs-host-g3-gsi17-firststage-ufs-29-expiry-restore/timeline.jsonl": "c5f68aa7b1657590075e337ced19a64727200ff21d88eaebf99db69a37b43c31"
   }
 }
