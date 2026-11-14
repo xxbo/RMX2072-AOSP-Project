@@ -27,6 +27,7 @@ def main():
     parser.add_argument('--trial', required=True)
     parser.add_argument('--restore-only', action='store_true')
     parser.add_argument('--retain-gsi', action='store_true')
+    parser.add_argument('--record-suffix', default='', help='New evidence directory for repeating the exact current image')
     args = parser.parse_args()
     sys.path.insert(0, str(args.workspace.resolve()/'serial-deps'))
     from serial.tools.list_ports import comports
@@ -34,7 +35,8 @@ def main():
     w=args.workspace.resolve();p=w/'current';stock=w/'recovery/f20';tools=w/'recovery/OplusEdlTool/Tools';loader=w/'recovery/tools/devprg_865_1';audit=Path(__file__).resolve().parent
     trial=args.trial;assert re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}',trial)
     restore_only=args.restore_only
-    dest=w/'records'/(trial+('-restore' if restore_only else ''));dest.mkdir(parents=True,exist_ok=False)
+    assert not args.record_suffix or re.fullmatch(r'[a-z0-9-]{1,32}',args.record_suffix)
+    dest=w/'records'/(trial+('-'+args.record_suffix if args.record_suffix else '')+('-restore' if restore_only else ''));dest.mkdir(parents=True,exist_ok=False)
     orig=json.loads((stock/'acquisition.json').read_text());candidate={} if restore_only else json.loads((p/'candidate/candidate.json').read_text());boot={} if restore_only else json.loads((p/'boot/control.json').read_text())
     port=None;configured=False
     def sha(path):

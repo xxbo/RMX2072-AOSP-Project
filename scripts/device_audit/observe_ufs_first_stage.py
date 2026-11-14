@@ -68,7 +68,7 @@ def watch_adb(output, stop, retain=False, autonomous=False):
             stop.wait(1)
 
 
-def previous_boot(trial, original, output, deadline, return_on_accepted=True):
+def previous_boot(trial, original, output, deadline, return_on_accepted=True, request_edl=True):
     while time.monotonic() < deadline:
         if return_on_accepted and (output/'gsi-accepted.json').exists(): return
         ports = comports()
@@ -96,6 +96,7 @@ def previous_boot(trial, original, output, deadline, return_on_accepted=True):
                                 data = read_console_file(console, b'/run/previous.gz',
                                     b'gzip -c '+path+b' > /run/previous.gz; ')
                                 (output/name).write_bytes(gzip.decompress(data))
+                        if not request_edl: return
                         console.write(b'/bin/reboot-edl edl\n')
                         console.flush()
                         # Closing immediately can cancel the last USB write on Windows.
