@@ -108,3 +108,9 @@ power-provider evidence before retention. Missing source markers, mismatched ini
 or power-provider evidence requests guarded rollback. The existing M1 cold-start
 record remains valid under the extended checker. A disconnected power-key start
 and a separate watchdog expiry/recovery run are still required on the new pair.
+
+Run 43616087095 reached the next product check and required explicit 64-bit app
+support for the arm64-only target. The project now declares the same ABI support
+flags as upstream `core_64_bit_only.mk`, without adding an Android image build.
+The hosted runner also releases unused preinstalled SDK space before AOSP sync;
+the previous host had only 24 GiB free after fetching the selected sources.
