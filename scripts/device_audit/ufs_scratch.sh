@@ -129,6 +129,7 @@ if [ -r "$apps" ]; then
     if [ -r "$temp_key" ]; then
         grep -qx 'ro.build.version.release=17' "$root/system/build.prop"
         grep -qx 'ro.build.version.security_patch=2026-09-05' "$root/system/build.prop"
+        grep -qx 'ro.vendor.build.security_patch=1970-01-01' "$root/vendor/build.prop"
         key_done=/run/m1-temp-key-complete
         (sleep 5
          if [ ! -e "$key_done" ]; then

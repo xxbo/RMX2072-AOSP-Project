@@ -171,9 +171,11 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 	};
 	/* Engineering control for the verified CP3A.260905.010 GSI only.
 	 * Its build.prop specifies Android 17 and security patch 2026-09-05.
-	 * Keymaster CONFIGURE uses OS_VERSION and monthly OS_PATCHLEVEL. */
+	 * The project vendor declares the engineering epoch patch date.
+	 * F.20 CONFIGURE also serializes the daily VENDOR_PATCHLEVEL tag. */
 	static const u32 configure[] = {
-		0x116, 12, 2, 0x300002c1, 170000, 0, 0x300002c2, 202609, 0,
+		0x116, 12, 3, 0x300002c1, 170000, 0, 0x300002c2, 202609, 0,
+		0x300002ce, 19700101, 0,
 	};
 	const size_t capacity = SZ_32K + SZ_8K;
 	struct qcom_scm_qseecom_resp resp = {};
@@ -223,7 +225,7 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		goto unregister;
 	reply = t.reply;
 	configure_status = (s32)le32_to_cpu(reply[0]);
-	pr_info("rmx2072-temp-key: configure status=%d os_version=170000 os_patchlevel=202609\n",
+	pr_info("rmx2072-temp-key: configure status=%d os_version=170000 os_patchlevel=202609 vendor_patchlevel=19700101\n",
 		configure_status);
 	if (configure_status)
 		goto unregister;
