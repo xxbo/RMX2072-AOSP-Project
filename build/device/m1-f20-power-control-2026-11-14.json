@@ -1,0 +1,58 @@
+{
+  "device": "RMX2072",
+  "result": "PASS_F20_DISCONNECTED_UI_SHUTDOWN_AND_POWER_KEY_START",
+  "observed_utc": "2026-11-14T12:57:38.927534+00:00",
+  "before": {
+    "utc": "2026-11-14T12:48:51.296873+00:00",
+    "identity": [
+      "RMX2072_11_F.20",
+      "1",
+      "ba59a60f-7165-4115-af80-fcaba4c859be",
+      "99.12 529.36"
+    ],
+    "method": "Operator UI shutdown with USB physically disconnected, then power-key start"
+  },
+  "after_identity": [
+    "RMX2072_11_F.20",
+    "1",
+    "4.19.157-perf+",
+    "6783f265-27da-49aa-9e2c-286c62f18d69",
+    "132.75 862.64",
+    "shutdown,userrequested",
+    "shutdown,userrequested"
+  ],
+  "operator_events": [
+    {
+      "event": "usb_unplug_confirmed",
+      "utc": "2026-11-14T12:53:53.619333+00:00",
+      "operator_reply": "ok",
+      "host_adb_devices": [],
+      "host_matching_usb_devices": [],
+      "qualification": "User report plus current host enumeration; exact unplug time not asserted"
+    },
+    {
+      "event": "operator_confirmed_stock_ui_poweroff",
+      "utc": "2026-11-14T12:55:01.905676+00:00",
+      "operator_reply": "ok",
+      "host_adb_devices": [],
+      "qualification": "Operator confirmation of requested UI shutdown; host cannot directly measure power rails"
+    },
+    {
+      "event": "operator_observed_disconnected_power_key_start",
+      "utc": "2026-11-14T12:56:01.694833+00:00",
+      "operator_reply": "\u51fa\u73b0\u9707\u52a8\u6216 realme \u6807\u5fd7",
+      "requested_hold_seconds": 3,
+      "host_adb_devices": [],
+      "qualification": "Operator observed vibration/logo before USB connection; F20 boot completion and new boot ID still pending"
+    }
+  ],
+  "power_log": [],
+  "qualification": "Operator reported vibration/logo while USB was absent. After reconnect, a different F20 boot ID and boot completion were verified. This does not validate 6.18 shutdown or cold start.",
+  "raw_sha256": {
+    "after.txt": "5c9bf9f2a60cc237aa7b770fecedd03e2ea9badb4e3668492ed9196608f945d1",
+    "before.json": "ac8b5b1601338dd3efec6e38792f9310d979bf7078978dcbf74cedc4e167bcc2",
+    "cmdline.txt": "f3a95500ecc52e38d97af3f65e0e46c61b0f3889849e40f6f51f56379e81d7e5",
+    "dmesg.txt": "d5f918370cf1b1579ba1b34a4b2c247e005134d67cd6ac0bdd7eb36ef00f287b",
+    "operator.jsonl": "dbd941ff86ac26926e4eced16f4a1186878064774a70f2d291291b51cdcf9b93"
+  }
+}
