@@ -49,3 +49,14 @@ a missing binding before PMIC children can appear. A PDC-only correction must
 be tested independently of the earlier combined TLMM/PDC probe. The short EDL
 window has not been attributed to PMIC watchdog behavior without further
 measurements.
+
+## F.20 physical control
+
+With USB disconnected, the operator shut down through F.20's power menu,
+then held power for about 3 seconds and observed vibration/the realme logo
+before reconnecting USB. ADB subsequently verified F.20/4.19.157, boot
+completion and new boot `6783f265-27da-49aa-9e2c-286c62f18d69`; both reported
+boot-reason properties were `shutdown,userrequested`. Thus disconnected
+power-key startup works in the stock control. This does not prove that the
+earlier 6.18 `reboot -p` completed its shutdown sequence.
+[Operator and device evidence](../build/device/m1-f20-power-control-2026-11-14.json)
