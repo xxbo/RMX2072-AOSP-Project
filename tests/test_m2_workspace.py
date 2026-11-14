@@ -23,3 +23,4 @@ class WorkspaceCompletionTest(unittest.TestCase):
 
     def test_successful_output_and_similar_prefix_are_ignored(self):
         self.assertEqual(missing_projects('Compiled external/pogreb\nexternal/pogreb-extra: not found', self.manifest, set()), [])
+        self.assertEqual(missing_projects('Warning: completion file external/pogreb/foo not found', self.manifest, set()), [])

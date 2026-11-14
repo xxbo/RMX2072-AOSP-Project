@@ -16,6 +16,8 @@ def missing_projects(log, upstream, selected):
     projects = {p.get('path', p.get('name')): p for p in upstream.findall('project')}
     found = set()
     for line in log.splitlines():
+        if line.lstrip().startswith('Warning:'):
+            continue
         if not re.search(r'not exist|not found|no such file|does not exist|cannot find|missing|failed to find', line, re.I):
             continue
         for path in projects.keys() - selected:
