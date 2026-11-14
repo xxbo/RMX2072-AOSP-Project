@@ -156,7 +156,7 @@ def extract(live, port_log, layout, *, console_tail=False):
     trial['keystore_entropy_waits'] = [
         re.sub(r'\([^)]*\)', '(probe)', line)
         for line in console.splitlines()
-        if re.search(rf'ks_random_(wait|ready): .*task="(?:keystore2|(?:Hw)?[Bb]inder:{pid}_[^\"]+)"', line)
+        if re.search(rf'ks_(?:random_wait|random_ready|getrandom|gotrandom): .*task="(?:keystore2|(?:Hw)?[Bb]inder:{pid}_[^\"]+)"', line)
     ]
     return trial
 

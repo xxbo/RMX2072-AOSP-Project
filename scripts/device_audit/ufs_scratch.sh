@@ -52,6 +52,17 @@ if echo 'p:m1ks/ks_random_wait wait_for_random_bytes task=$comm' >> "$t/kprobe_e
     fi
 fi
 
+# The syscall boundary remains observable when the helper is inlined by LTO.
+# Capture only requested byte count, flags and return status.
+if echo 'p:m1ks/ks_getrandom __arm64_sys_getrandom task=$comm bytes=+8($arg1):u64 flags=+16($arg1):u64' >> "$t/kprobe_events"; then
+    if echo 'r:m1ks/ks_gotrandom __arm64_sys_getrandom task=$comm rc=$retval:s64' >> "$t/kprobe_events"; then
+        for name in ks_getrandom ks_gotrandom; do
+            echo 'task == "keystore2" || task ~ "*inder:*"' > "$events/$name/filter"
+            echo 1 > "$events/$name/enable"
+        done
+    fi
+fi
+
 # File offsets of exported AArch64 functions in the pinned CP3A.260905.010 GSI.
 # Read only Android log calls tagged keystore2 and binder registrations by that process.
 echo 1 > "$events/enable"
