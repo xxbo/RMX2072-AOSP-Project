@@ -3,6 +3,7 @@
 #include <linux/firmware/qcom/qcom_scm.h>
 #include <linux/firmware/qcom/qcom_tzmem.h>
 #include <linux/moduleparam.h>
+#include <linux/kobject.h>
 #include <linux/of.h>
 #include <linux/sysfs.h>
 #include "qcom_scm.h"
@@ -78,3 +79,61 @@ static const struct kernel_param_ops rmx2072_version_ops = {
 	.get = rmx2072_keymaster_version,
 };
 module_param_cb(version_info, &rmx2072_version_ops, NULL, 0400);
+
+/* F.20 Keymaster 4.0/default uses its legacy get-sharing-parameters ABI.
+ * Only the fixed HIDL result crosses this read-only board interface.
+ */
+struct rmx2072_hmac_reply {
+	__le32 status;
+	u8 seed[32];
+	u8 nonce[32];
+};
+
+static ssize_t rmx2072_hmac_read(struct file *file, struct kobject *kobj,
+				 const struct bin_attribute *attr, char *buf,
+				 loff_t off, size_t count)
+{
+	const size_t rsp_bytes = 40956; /* Capacity passed by the F.20 client. */
+	struct rmx2072_hmac_reply *rsp __free(qcom_tzmem) = NULL;
+	__le32 *req __free(qcom_tzmem) = NULL;
+	struct qcom_tzmem_pool *pool;
+	u32 id;
+	int ret;
+
+	if (off || count != sizeof(*rsp))
+		return -EINVAL;
+	pool = qcom_scm_get_tzmem_pool();
+	if (!pool)
+		return -EAGAIN;
+	ret = qcom_scm_qseecom_app_get_id("keymaster64", &id);
+	if (ret)
+		return ret;
+	req = qcom_tzmem_alloc(pool, sizeof(*req), GFP_KERNEL);
+	rsp = qcom_tzmem_alloc(pool, rsp_bytes, GFP_KERNEL);
+	if (!req || !rsp)
+		return -ENOMEM;
+	*req = cpu_to_le32(0x20e);
+	memset(rsp, 0, rsp_bytes);
+	rsp->status = cpu_to_le32((u32)-1000);
+	ret = qcom_scm_qseecom_app_send(id, req, sizeof(*req), rsp, rsp_bytes);
+	if (!ret) {
+		memset(buf, 0, sizeof(*rsp));
+		memcpy(buf, rsp, rsp->status ? sizeof(rsp->status) : sizeof(*rsp));
+	}
+	memzero_explicit(rsp, rsp_bytes);
+	return ret ? ret : sizeof(*rsp);
+}
+
+static const struct bin_attribute rmx2072_hmac_attr = {
+	.attr = { .name = "rmx2072_hmac_parameters", .mode = 0400 },
+	.size = sizeof(struct rmx2072_hmac_reply),
+	.read = rmx2072_hmac_read,
+};
+
+static int __init rmx2072_hmac_init(void)
+{
+	if (!rmx2072_keymaster_board())
+		return 0;
+	return sysfs_create_bin_file(firmware_kobj, &rmx2072_hmac_attr);
+}
+late_initcall(rmx2072_hmac_init);
