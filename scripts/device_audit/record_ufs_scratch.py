@@ -38,6 +38,12 @@ def keymaster_observations(serial, console, keystore):
     rows = [dict(zip(fields, map(int, row.groups()))) for row in re.finditer(lifetime, serial, re.M)]
     if rows:
         result['listener_lifetimes'] = rows
+    key_fields = ('rc', 'first', 'listener', 'command', 'callbacks', 'final', 'generate',
+                  'blob_bytes', 'delete', 'unregister')
+    key = re.search(r'^M1EVENT temporary_key ' + ' '.join(f + r'=(-?\d+)' for f in key_fields) + '$',
+                    serial, re.M)
+    if key:
+        result['temporary_hmac_key'] = dict(zip(key_fields, map(int, key.groups())))
 
     # Match the init-launched service and client from the same boot. The log
     # in getHardwareInfo runs after the HIDL service has invoked its reply.
@@ -54,6 +60,12 @@ def keymaster_observations(serial, console, keystore):
                                             service_pid=pid, caller='keystore2', caller_pid=keystore,
                                             registration_seconds=float(registered[1]), reply_seconds=float(reply[1]),
                                             level=reply[2], name=reply[3])
+            after = console[service.end()+reply.end():]
+            parameters = re.search(prefix + rf'getHmacSharingParameters caller={keystore} status=(-?\d+)"$',
+                                   after, re.M)
+            if parameters:
+                result['hmac_parameter_reply'] = dict(service_pid=pid, caller_pid=keystore,
+                                                      seconds=float(parameters[1]), status=int(parameters[2]))
             negotiation = re.search(r'^\[\s*([0-9.]+)\]\[\s*T\d+\] ks_buf: [^\n]* tag="keystore2" '
                                     r'msg="[^\n]*ParameterRetrieval \{ e: Binder\(SERVICE_SPECIFIC, (-?\d+)\), '
                                     r'p: Hidl \{ is_strongbox: false, version: \(4, 0\)',
@@ -86,6 +98,12 @@ def extract(live, port_log, layout, *, console_tail=False):
     observations = keymaster_observations(serial, console, pid)
     if observations:
         trial['keymaster'] = observations
+    clock = live/'time-control.json'
+    if clock.exists():
+        control = json.loads(clock.read_text())
+        if control['boot_id'] != trial['boot_id']:
+            raise ValueError('UTC observation belongs to a different boot')
+        trial['diagnostic_clock'] = control
     abort = re.search(rf"^\[\s*([0-9.]+)\]\[\s*T1\] init: Service 'keystore2' \(pid {pid}\) received SIGABRT$", console, re.M)
     trial['first_keystore_abort'] = None
     if abort:
