@@ -173,6 +173,10 @@ static void post_install(void) {
             else report("enforce_read_rc=%d", n);
             previous = state;
         }
+        /* Enforcing can revoke this diagnostic process's proc/kmsg access.
+         * Stop retrying after that transition so repeated audit denials do not
+         * displace the Android service results in the persistent console. */
+        if (n == -EACCES || n == -EPERM) break;
         n = read_proc("/proc/1/cmdline", buf, sizeof(buf));
         if (!second_stage && n == sizeof(stage) && !memcmp(buf, stage, n)) {
             report("exec_pid=1 path=/system/bin/init arg=second_stage");
