@@ -29,6 +29,13 @@ def usb_interfaces(port_log, live):
 
 def keymaster_observations(serial, console, keystore):
     result = {}
+    sequence = []
+    for row in re.finditer(r'^M1EVENT keymaster_version(_before_listener|_before_temp_key)? (.+)$', serial, re.M):
+        fields = dict(re.findall(r'(\w+)=([^ ]+)', row[2]))
+        sequence.append(dict(stage={None: 'after_temp_key', '_before_listener': 'before_listener',
+                                    '_before_temp_key': 'before_temp_key'}[row[1]], **fields))
+    if sequence:
+        result['version_sequence'] = sequence
     version = re.search(r'^M1EVENT keymaster_version transport_rc=(0) status=(0) '
                         r'api=(\d+\.\d+) ta=(\d+\.\d+)$', serial, re.M)
     if version:
