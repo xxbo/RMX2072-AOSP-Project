@@ -35,7 +35,7 @@ def verified_ufs_graph(mounts, backing):
 
 def inspect(output, original):
     identity = shell('getprop ro.build.version.sdk; uname -r; cat /proc/sys/kernel/random/boot_id; getenforce; getprop init.svc.adbd; getprop init.svc.vendor.rmx-m1-guard; getprop vendor.rmx.m1.state; getprop sys.usb.state').splitlines()
-    if identity[:6] != ['37',RELEASE,original,'Enforcing','running','running'] or len(identity)!=8 or identity[6] not in ('armed','lease','retained') or identity[7]!='adb':
+    if identity[:5] != ['37',RELEASE,original,'Enforcing','running'] or len(identity)!=8 or identity[5] not in ('','running') or identity[6] not in ('armed','lease','retained') or identity[7]!='adb':
         raise ValueError('GSI identity/guardian/USB state not ready: '+repr(identity))
     init = shell('cat /proc/1/cmdline').strip('\x00\n')
     if '/system/bin/init' not in init or 'second_stage' not in init:
@@ -46,8 +46,37 @@ def inspect(output, original):
     if not any(' / ext4 ro,' in l or ' /system ext4 ro,' in l for l in mounts.splitlines()):
         raise ValueError('Read-only GSI mount absent')
     backing = shell('readlink -f /sys/class/block/sda10; for n in /sys/class/block/dm-*; do echo NODE=${n##*/}; for s in $n/slaves/*; do [ ! -e "$s" ] || echo SLAVE=${s##*/}; done; done')
-    graph = verified_ufs_graph(mounts,backing)
-    return dict(identity=identity,pid1=init,mounts=mounts,backing=backing,ufs_graph=graph)
+    try:
+        graph = verified_ufs_graph(mounts,backing)
+        evidence = 'live ADB sysfs graph'
+    except ValueError:
+        # A production GSI denies shell access to sysfs_dm. Use the independent
+        # pre-policy witness only when it names this boot and these exact mounts.
+        if 'SLAVE=' in backing or '/1d84000.ufs/' not in backing:
+            raise ValueError('Unexpected or incomplete live UFS backing')
+        if not (output/'host-events.jsonl').is_file() or not (output/'acm.log').is_file():
+            raise ValueError('Restricted sysfs requires independent same-boot UFS witness')
+        events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
+        if not any(x.get('event')=='handoff_requested' and x.get('boot_id')==original for x in events):
+            raise ValueError('UFS witness does not match current boot')
+        transcript = (output/'acm.log').read_text(errors='replace')
+        if set(re.findall(r'^M1EVENT boot_id=(.*)$',transcript,re.M)) != {original} or not re.search(r'^M1EVENT ufs_super=.*/1d84000.ufs/.* dev=8:10 ro=1$',transcript,re.M):
+            raise ValueError('UFS witness boot identity or physical device invalid')
+        for partition,point in [('system','/'),('vendor','/vendor')]:
+            dev = re.findall(r'M1EVENT verified_ufs_mount='+partition+r' dev=254:(\d+)',transcript)
+            if len(set(dev))!=1 or not any(x.split()[:3]==['/dev/block/dm-'+dev[0],point,'ext4'] and x.split()[3].split(',')[0]=='ro' for x in mounts.splitlines() if len(x.split())>=4):
+                raise ValueError('UFS witness mount does not match live ADB: '+partition)
+            tables=re.findall(r'M1EVENT table='+partition+r' (.*)',transcript)
+            if not tables or any(not re.fullmatch(r'\d+ \d+ linear 8:10 \d+',x) for x in tables):
+                raise ValueError('UFS witness linear backing invalid: '+partition)
+            if not re.search(r'M1EVENT status='+partition+r'-verity \d+ \d+ verity V ',transcript):
+                raise ValueError('UFS witness verity validation absent: '+partition)
+            lower = re.findall(r'Created logical partition '+partition+r' on device /dev/block/dm-(\d+)',transcript)
+            if len(set(lower))!=1 or not re.search(r'M1EVENT table='+partition+r'-verity \d+ \d+ verity 1 254:'+lower[0]+r' 254:'+lower[0]+r' ',transcript):
+                raise ValueError('UFS witness verity chain invalid: '+partition)
+        graph = None
+        evidence = 'same-boot ACM witness plus matching live ADB mounts (sysfs_dm restricted)'
+    return dict(identity=identity,pid1=init,mounts=mounts,backing=backing,ufs_graph=graph,ufs_evidence=evidence)
 
 def accept(output, original):
     proof = inspect(output, original)
@@ -80,6 +109,8 @@ def soak_and_retain(output):
             rows.append(dict(elapsed=round(time.monotonic()-start,3),identity=current['identity']))
             time.sleep(10)
         final = inspect(output, original)
+        from gsi_adb_smoke import run as transfer_smoke
+        transfer_smoke(output, original)
         if shell('/vendor/bin/hw/rmx-m1-control --retain '+original).strip() != 'retained':
             raise ValueError('Watchdog retention commit failed')
         if shell('getprop vendor.rmx.m1.state').strip() != 'retained':

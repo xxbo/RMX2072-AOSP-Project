@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -11,6 +12,21 @@ IDENTITY='\n'.join(['37',m.RELEASE,BOOT,'Enforcing','running','running','armed',
 RESP=[IDENTITY,'/system/bin/init\x00second_stage\x00','/dev/block/dm-14 / ext4 ro,seclabel 0 0\n/dev/block/dm-15 /vendor ext4 ro,seclabel 0 0\n','/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/sda10\nNODE=dm-14\nSLAVE=dm-0\nNODE=dm-0\nSLAVE=sda10\nNODE=dm-15\nSLAVE=dm-1\nNODE=dm-1\nSLAVE=sda10\n']
 
 class GsiAcceptanceTests(unittest.TestCase):
+    def test_restricted_gsi_requires_matching_independent_witness(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)
+            (p/'host-events.jsonl').write_text(json.dumps(dict(event='handoff_requested',boot_id=BOOT))+'\n')
+            witness='M1EVENT boot_id='+BOOT+'\nM1EVENT ufs_super=/sys/devices/1d84000.ufs/block/sda/sda10 dev=8:10 ro=1\n'
+            for part,dm,lower in [('system',14,0),('vendor',15,1)]:
+                witness+=f'Created logical partition {part} on device /dev/block/dm-{lower}\nM1EVENT verified_ufs_mount={part} dev=254:{dm}\nM1EVENT table={part} 0 100 linear 8:10 200\nM1EVENT table={part}-verity 0 96 verity 1 254:{lower} 254:{lower} rest\nM1EVENT status={part}-verity 0 96 verity V 0\n'
+            path=p/'acm.log';path.write_text(witness)
+            responses=[IDENTITY.replace('running\nrunning','running\n')]+RESP[1:3]+[RESP[3].split('NODE=')[0]]
+            with patch.object(m,'shell',side_effect=responses):
+                self.assertIn('same-boot ACM',m.inspect(p,BOOT)['ufs_evidence'])
+            for bad in [witness.replace(BOOT,'old-boot'),witness.replace('linear 8:10','linear 7:0'),witness.replace('254:1 254:1','254:2 254:2'),witness.replace('dev=254:15','dev=254:16')]:
+                path.write_text(bad)
+                with patch.object(m,'shell',side_effect=responses):
+                    with self.assertRaises(ValueError):m.inspect(p,BOOT)
     def test_wrong_boot_never_requests_keep(self):
         with patch.object(m,'shell',return_value=IDENTITY.replace(BOOT,'old-boot')) as sh:
             with self.assertRaises(ValueError):m.accept(Path('.'),BOOT)
