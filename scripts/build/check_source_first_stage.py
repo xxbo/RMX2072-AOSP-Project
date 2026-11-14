@@ -29,6 +29,9 @@ def verify_source_first_stage(directory, binary):
     sparse = (directory / 'frameworks-base-sparse.txt').read_text().splitlines()
     if sparse != ['/core/java/android/hardware/serial/Android.bp'] or 'frameworks/base' not in projects:
         raise ValueError('First-stage metadata source selection differs')
+    car_sparse = (directory / 'car-sparse.txt').read_text().splitlines()
+    if car_sparse != ['/teams/Android.bp'] or 'packages/services/Car' not in projects:
+        raise ValueError('First-stage automotive owner metadata selection differs')
     for name in ('rmx2072_m2_init.mk', 'BoardConfig.mk', 'AndroidProducts.mk'):
         product = (directory / name).read_bytes().replace(b'\r\n', b'\n')
         expected = (repo / 'device/realme/bladerunner_48m/m2-init' / name).read_bytes().replace(b'\r\n', b'\n')
@@ -36,4 +39,4 @@ def verify_source_first_stage(directory, binary):
             raise ValueError('First-stage product recipe differs: ' + name)
     return dict(origin='project-source-build', **pin, init_sha256=hashes['init'],
                 resolved_manifest_sha256=hashes['resolved-manifest.xml'], source_projects=len(projects),
-                sparse_projects={'frameworks/base': sparse})
+                sparse_projects={'frameworks/base': sparse, 'packages/services/Car': car_sparse})
