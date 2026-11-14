@@ -71,7 +71,7 @@ soft=$root/system/lib64/libkeymint_fake_latest.so
 [ "$(sha256sum "$soft" | cut -d' ' -f1)" = bf28380fca916238d61aa344fb3aa373932528cd679edc3c23e264b4cfa5843f ]
 # The compatibility service constructs its software helper before returning
 # the TEE wrapper. Observe entry/exit without reading keys or object pointers.
-for site in "get:$compat:0x2cb0c" "wrap:$compat:0x2b03c" "soft:$soft:0x16844"; do
+for site in "get:$compat:0x2cb0c" "wrap:$compat:0x2b03c" "soft:$soft:0x16844" "patch:$soft:0x1fcb4"; do
     name=${site%%:*}
     location=${site#*:}
     printf '%s\n' "p:m1ks/ks_compat_${name}_entry $location task=\$comm" \
