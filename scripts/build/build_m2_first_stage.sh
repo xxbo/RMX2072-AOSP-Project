@@ -24,9 +24,6 @@ cp "$ROOT_DIR/device/realme/bladerunner_48m/m2-init/"* device/realme/rmx2072_m2/
 # dependencies of init_first_stage itself remain fatal Ninja build edges.
 export ALLOW_MISSING_DEPENDENCIES=true
 export SOONG_UI_NINJA_ARGS=-v
-# Hosted runners have about 16 GiB RAM. Bound the Go graph builder's soft
-# memory limit, leaving space for the two native compiler jobs and the OS.
-export GOMEMLIMIT="${GOMEMLIMIT:-10GiB}"
 for attempt in $(seq 1 12); do
   # Run each attempt in a subshell so envsetup cannot retain a failed product.
   set +e
