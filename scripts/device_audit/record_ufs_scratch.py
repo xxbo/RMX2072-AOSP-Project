@@ -72,6 +72,11 @@ def keymaster_observations(serial, console, keystore):
                                     console[service.end()+reply.end():], re.M)
             if negotiation:
                 result['shared_secret_parameter_error'] = dict(seconds=float(negotiation[1]), rc=int(negotiation[2]))
+            computation = re.search(r'^\[\s*([0-9.]+)\]\[\s*T\d+\] ks_buf: [^\n]* tag="keystore2" '
+                                    r'msg="[^\n]*Computation \{ e: Binder\(SERVICE_SPECIFIC, (-?\d+)\)',
+                                    after, re.M)
+            if computation:
+                result['shared_secret_computation_error'] = dict(seconds=float(computation[1]), rc=int(computation[2]))
     return result
 
 
@@ -141,6 +146,10 @@ def extract(live, port_log, layout, *, console_tail=False):
         ('apexd' in l and ('com.google.android.adbd' in l or 'Found bootstrap APEX' in l or 'Activated ' in l))
         or re.search(r"init: starting service '(adbd|apexd)'", l)]
     trial['keystore_sigabrt_count'] = len(re.findall(r"init: Service 'keystore2' \(pid \d+\) received SIGABRT",console))
+    trial['keystore_entropy_waits'] = [
+        re.sub(r'\([^)]*\)', '(probe)', line)
+        for line in console.splitlines() if re.search(r'ks_random_(wait|ready): .*task="keystore2"', line)
+    ]
     return trial
 
 
