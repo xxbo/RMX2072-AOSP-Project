@@ -26,8 +26,6 @@ for name in data metadata; do
     echo "M1EVENT scratch_backing=/$name file=$(cat "$sys/loop/backing_file")" > /dev/ttyGS0
 done
 
-# File offsets of exported AArch64 functions in the pinned CP3A.260905.010 GSI.
-# Read only Android log calls tagged keystore2 and binder registrations by that process.
 log=$root/system/lib64/liblog.so
 binder=$root/system/lib64/libbinder_ndk.so
 [ "$(sha256sum "$log" | cut -d' ' -f1)" = 8dab885114a41c63e2c4451dfb59ec745610418faeead26c7607173eaf57e8c4 ]
@@ -44,6 +42,18 @@ done
 for name in ks_add ks_added; do
     echo 'task == "keystore2"' > "$events/$name/filter"
 done
+# Record a possible entropy wait in keystore2 without recording random bytes.
+if echo 'p:m1ks/ks_random_wait wait_for_random_bytes task=$comm' >> "$t/kprobe_events"; then
+    if echo 'r:m1ks/ks_random_ready wait_for_random_bytes task=$comm rc=$retval:s32' >> "$t/kprobe_events"; then
+        for name in ks_random_wait ks_random_ready; do
+            echo 'task == "keystore2"' > "$events/$name/filter"
+            echo 1 > "$events/$name/enable"
+        done
+    fi
+fi
+
+# File offsets of exported AArch64 functions in the pinned CP3A.260905.010 GSI.
+# Read only Android log calls tagged keystore2 and binder registrations by that process.
 echo 1 > "$events/enable"
 echo 'M1EVENT keystore_trace=armed' > /dev/ttyGS0
 
