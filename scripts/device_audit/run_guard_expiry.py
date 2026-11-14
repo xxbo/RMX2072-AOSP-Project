@@ -3,7 +3,7 @@
 No reboot command is sent. Recovery-console reads only capture old pstore.
 Restore the verified original set after this check before further qualification.
 """
-import argparse,json,subprocess,sys,time
+import argparse,hashlib,json,subprocess,sys,time
 from datetime import datetime,timezone
 from pathlib import Path
 from uuid import UUID
@@ -29,6 +29,12 @@ def main():
     assert proof['identity'][6]=='retained'
     a.output.mkdir(parents=True,exist_ok=False)
     (a.output/'before.json').write_text(json.dumps(proof,indent=2)+'\n')
+    audit=Path(__file__).resolve().parent
+    (a.output/'host-tools.json').write_text(json.dumps(dict(
+        source_commit=subprocess.check_output(['git','-C',str(audit.parents[1]),'rev-parse','HEAD'],text=True).strip(),
+        sha256={name:hashlib.sha256((audit/name).read_bytes()).hexdigest() for name in
+                ('run_guard_expiry.py','observe_ufs_first_stage.py','run_ufs_trial.py','gsi_adb_accept.py')}
+    ),indent=2)+'\n')
     start=time.monotonic()
     (a.output/'fault.json').write_text(json.dumps(dict(boot_id=boot,utc=datetime.now(timezone.utc).isoformat(),command='expire-lease',lease_seconds=45,hardware_seconds=30,host_reboot_commands=False),indent=2)+'\n')
     assert shell('/vendor/bin/hw/rmx-m1-control --expire-lease '+boot).strip()=='lease'
