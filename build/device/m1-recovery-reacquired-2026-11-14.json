@@ -1,0 +1,253 @@
+{
+  "device": "RMX2072",
+  "acquisition": {
+    "schema_version": 1,
+    "utc": "2026-11-14T08:12:10.379091+00:00",
+    "identity": [
+      "RMX2072",
+      "RMX2072_11_F.20",
+      "1",
+      "d6e4a951-6c64-4c7b-8673-3d43193e7413"
+    ],
+    "acquisition": "read-only Android ADB",
+    "edl_independent_verification": false,
+    "partitions": {
+      "boot": {
+        "bytes": 100663296,
+        "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "device_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3"
+      },
+      "dtbo": {
+        "bytes": 25165824,
+        "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "device_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+      },
+      "super": {
+        "bytes": 8866758656,
+        "sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "parts": [
+          {
+            "bytes": 536870912,
+            "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+          },
+          {
+            "bytes": 536870912,
+            "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+          },
+          {
+            "bytes": 276824064,
+            "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+          }
+        ],
+        "device_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+      }
+    }
+  },
+  "edl_control": {
+    "utc": "2026-11-14T08:24:44.515979+00:00",
+    "writes": [],
+    "reads": [
+      {
+        "label": "boot",
+        "lun": 4,
+        "start_sector": 79366,
+        "sectors": 24576,
+        "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3"
+      },
+      {
+        "label": "dtbo",
+        "lun": 4,
+        "start_sector": 104298,
+        "sectors": 6144,
+        "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+      },
+      {
+        "label": "super-00",
+        "lun": 0,
+        "start_sector": 193032,
+        "sectors": 131072,
+        "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e"
+      },
+      {
+        "label": "super-01",
+        "lun": 0,
+        "start_sector": 324104,
+        "sectors": 131072,
+        "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145"
+      },
+      {
+        "label": "super-02",
+        "lun": 0,
+        "start_sector": 455176,
+        "sectors": 131072,
+        "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54"
+      },
+      {
+        "label": "super-03",
+        "lun": 0,
+        "start_sector": 586248,
+        "sectors": 131072,
+        "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda"
+      },
+      {
+        "label": "super-04",
+        "lun": 0,
+        "start_sector": 717320,
+        "sectors": 131072,
+        "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39"
+      },
+      {
+        "label": "super-05",
+        "lun": 0,
+        "start_sector": 848392,
+        "sectors": 131072,
+        "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5"
+      },
+      {
+        "label": "super-06",
+        "lun": 0,
+        "start_sector": 979464,
+        "sectors": 131072,
+        "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f"
+      },
+      {
+        "label": "super-07",
+        "lun": 0,
+        "start_sector": 1110536,
+        "sectors": 131072,
+        "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf"
+      },
+      {
+        "label": "super-08",
+        "lun": 0,
+        "start_sector": 1241608,
+        "sectors": 131072,
+        "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6"
+      },
+      {
+        "label": "super-09",
+        "lun": 0,
+        "start_sector": 1372680,
+        "sectors": 131072,
+        "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7"
+      },
+      {
+        "label": "super-10",
+        "lun": 0,
+        "start_sector": 1503752,
+        "sectors": 131072,
+        "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64"
+      },
+      {
+        "label": "super-11",
+        "lun": 0,
+        "start_sector": 1634824,
+        "sectors": 131072,
+        "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70"
+      },
+      {
+        "label": "super-12",
+        "lun": 0,
+        "start_sector": 1765896,
+        "sectors": 131072,
+        "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf"
+      },
+      {
+        "label": "super-13",
+        "lun": 0,
+        "start_sector": 1896968,
+        "sectors": 131072,
+        "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4"
+      },
+      {
+        "label": "super-14",
+        "lun": 0,
+        "start_sector": 2028040,
+        "sectors": 131072,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+      },
+      {
+        "label": "super-15",
+        "lun": 0,
+        "start_sector": 2159112,
+        "sectors": 131072,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+      },
+      {
+        "label": "super-16",
+        "lun": 0,
+        "start_sector": 2290184,
+        "sectors": 67584,
+        "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+      }
+    ],
+    "loader_sha256": "9955d332f67bd610621d092520fa65626743e10a5b781c4f2ae532b99934dea9",
+    "stock_boot_id": "d6e4a951-6c64-4c7b-8673-3d43193e7413",
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "final_boot_id": "cacc8632-a29e-4203-827e-a5e108d41fcd",
+    "independent_edl_reads_verified": true
+  },
+  "retention": {
+    "original_recovery_sets": 1,
+    "current_candidate_sets": 1,
+    "readback_scratch_files_retained": 0,
+    "phone_partition_writes_during_reacquisition": 0
+  }
+}
