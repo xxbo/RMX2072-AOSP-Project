@@ -80,3 +80,18 @@ A bounded build retry can add other missing paths only when they name projects
 in the pinned upstream manifest; it never creates substitute source or libraries.
 Source-init and source-PON kernel builds are still in progress. No M2 handset
 boot, cold-start or recovery result is claimed at this stage.
+
+The live retained M1 boot `2e26c4dd-3cab-41a9-8396-7912c0a0ffac` supplies the
+bound-platform-device list. `m2-m1-resource-reference.json` records 79 validation
+nodes covering those active devices, their regulator children, interrupt/timer
+providers and reserved memory. References are compared by provider path and
+argument cells, not numerical phandle equality. The source tree passes this
+comparison; the explicitly replaced PON is checked against its new parent/child
+binding. This measurement file is a validation input only, never used to
+construct the source device tree. It does not qualify inactive display, audio,
+radio or other unported hardware.
+
+Source-init run 43614577780 passed the previous dependency failure, then rejected
+the obsolete `BOARD_BUILD_SYSTEM_ROOT_IMAGE` product variable. That variable and
+the deprecated 64-bit Binder setting were removed for Android 17. The build
+continues with the same pinned upstream sources and project product.

@@ -11,6 +11,8 @@
         // Boot firmware owns this region; never allocate it to Linux.
         kboot_uboot_logmem@0x9FE00000 {
             reg = <0 0x9fe00000 0 0x200000>;
+            compatible = "oplus,xbl_uefi_kbootlog";
+            xbluefi-offset = <0x1f7000>;
             no-map;
         };
         ramoops@0xB0000000 {

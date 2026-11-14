@@ -21,6 +21,7 @@ from check_usb_stream import require_sid0
 from check_watchdog import check_watchdog_control
 from check_ufs_host import check_ufs_host
 from check_pdc import check_pdc_control
+from check_m2_resources import check_m2_resources
 from inspect_boot_dt import fdt
 
 OVERLAYS = ('rmx2072-legacy-usb-scm-sid0', 'rmx2072-sid0-watchdog',
@@ -110,11 +111,18 @@ def main():
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
     ack_include = output / 'ack-include'
     ack_inputs = {}
+    header_lock = json.loads((repo / 'build/m2-dt-bindings.json').read_text())
+    if header_lock['ack_commit'] != ack['commit']:
+        raise ValueError('DT binding header lock does not match the kernel source')
     for header in ACK_HEADERS:
         rel = 'include/dt-bindings/' + header
         url = 'https://android.googlesource.com/kernel/common/+/' + ack['commit'] + '/' + rel + '?format=TEXT'
-        data = base64.b64decode(opener.open(url, timeout=60).read(), validate=True)
         target = ack_include / 'dt-bindings' / header
+        data = target.read_bytes() if target.is_file() else b''
+        if sha(data) != header_lock['files'][rel]:
+            data = base64.b64decode(opener.open(url, timeout=60).read(), validate=True)
+        if sha(data) != header_lock['files'][rel]:
+            raise ValueError('Pinned DT header digest mismatch: ' + rel)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
         ack_inputs[rel] = sha(data)
@@ -148,6 +156,7 @@ def main():
         checks['usb_' + suffix] = require_sid0(trees[4], legacy_base=True)
     final = stages[-1]
     effective = lib.apply(final, overlay)
+    checks['m1_resource_reference'] = check_m2_resources(effective)
     expected = json.loads((repo / 'build/device/stock-dt-selection.json').read_text())
     for data, entry in ((final, expected['boot']['selected']), (overlay, expected['dtbo']['selected'])):
         # The early selection inventory omitted the base's OEM property;
