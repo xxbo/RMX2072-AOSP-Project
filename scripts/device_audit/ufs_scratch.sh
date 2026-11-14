@@ -65,6 +65,18 @@ fi
 
 # File offsets of exported AArch64 functions in the pinned CP3A.260905.010 GSI.
 # Read only Android log calls tagged keystore2 and binder registrations by that process.
+compat=$root/system/lib64/libkm_compat.so
+soft=$root/system/lib64/libkeymint_fake_latest.so
+[ "$(sha256sum "$compat" | cut -d' ' -f1)" = dfde5a83f98e231a5fe130711fc92e351c26218d3f2c439f132985bfee126c6d ]
+[ "$(sha256sum "$soft" | cut -d' ' -f1)" = bf28380fca916238d61aa344fb3aa373932528cd679edc3c23e264b4cfa5843f ]
+# The compatibility service constructs its software helper before returning
+# the TEE wrapper. Observe entry/exit without reading keys or object pointers.
+for site in "get:$compat:0x2cb0c" "wrap:$compat:0x2b03c" "soft:$soft:0x16844"; do
+    name=${site%%:*}
+    location=${site#*:}
+    printf '%s\n' "p:m1ks/ks_compat_${name}_entry $location task=\$comm" \
+        "r:m1ks/ks_compat_${name}_return $location task=\$comm" >> "$t/uprobe_events"
+done
 echo 1 > "$events/enable"
 echo 'M1EVENT keystore_trace=armed' > /dev/ttyGS0
 
