@@ -104,11 +104,15 @@ if [ -r "$apps" ]; then
     done
     temp_key=/sys/module/qcom_scm/parameters/temp_hmac_key
     if [ -r "$temp_key" ]; then
+        (sleep 5; echo w > /proc/sysrq-trigger; echo l > /proc/sysrq-trigger) &
+        key_monitor=$!
         if result=$(cat "$temp_key"); then
             echo "M1EVENT temporary_key $result" > /dev/ttyGS0
         else
             echo "M1EVENT temporary_key_read_failed=$?" > /dev/ttyGS0
         fi
+        kill "$key_monitor" 2>/dev/null || true
+        wait "$key_monitor" 2>/dev/null || true
     fi
     if [ -r "$version" ]; then
         if result=$(cat "$version"); then
