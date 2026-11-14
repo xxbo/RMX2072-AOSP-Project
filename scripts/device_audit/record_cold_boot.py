@@ -66,6 +66,13 @@ def main():
         watchdog_recovery_on_this_kernel='NOT RUN',current_mode='Android 17 GSI retained',
         raw_sha256={str(p.relative_to(root)).replace('\\','/'):hashlib.sha256(p.read_bytes()).hexdigest()
             for d in (root,live) for p in d.iterdir() if p.is_file() and p.stat().st_size<10000000})
+    if result['warm_inputs']['boot'].get('source_device_trees'):
+        from check_m2_boot import check_m2_boot
+        components=check_m2_boot((live/'m2-components.txt').read_text(),boot,
+            result['warm_inputs']['ramdisk']['first_stage_init_sha256'],stable['identity'][1])
+        assert components==load(live/'m2-components.json')
+        assert power_check['binding']=='upstream-pon-parent-pwrkey-child'
+        result['source_boot_components']=components
     a.output.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     print(result['result'],boot,round(before_usb,3))
 

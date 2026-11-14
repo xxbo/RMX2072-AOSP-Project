@@ -4,6 +4,10 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 WORKSPACE="${RUNNER_TEMP:-/tmp}/android17-gki-618"
 ARTIFACT_DIR="$ROOT_DIR/artifacts/sm8250-bootstrap"
 mkdir -p "$ARTIFACT_DIR/dist"
+if [[ "${RMX2072_PON_POWER:-0}" == 1 && "${RMX2072_SOURCE_PON:-0}" == 1 ]]; then
+  echo 'Select legacy PON or source-tree PON, never both' >&2
+  exit 1
+fi
 GKI_SYNC_ONLY=1 bash "$ROOT_DIR/scripts/kernel_research/build_gki_618_kleaf.sh"
 EDL_PATCH="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-patches/rmx2072-scm-edl.patch"
 git -C "$WORKSPACE/common" apply --check "$EDL_PATCH"
@@ -48,6 +52,13 @@ if [[ "${RMX2072_PON_POWER:-0}" == 1 ]]; then
   sha256sum "$PON_PATCH" > "$ARTIFACT_DIR/pon-power-patch.sha256"
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_pon.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
 fi
+if [[ "${RMX2072_SOURCE_PON:-0}" == 1 ]]; then
+  PON_PATCH="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-patches/rmx2072-source-pon.patch"
+  git -C "$WORKSPACE/common" apply --check "$PON_PATCH"
+  git -C "$WORKSPACE/common" apply "$PON_PATCH"
+  sha256sum "$PON_PATCH" > "$ARTIFACT_DIR/source-pon-patch.sha256"
+  cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_source_pon.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
+fi
 cd "$WORKSPACE"
 tools/bazel --output_user_root="${RUNNER_TEMP:-/tmp}/bazel-output-root" run \
   --jobs=2 --local_resources=cpu=2 --local_resources=memory=5500 --verbose_failures \
@@ -61,6 +72,11 @@ if [[ "${RMX2072_PON_POWER:-0}" == 1 ]]; then
   python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
     --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
     --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_pon.fragment"
+fi
+if [[ "${RMX2072_SOURCE_PON:-0}" == 1 ]]; then
+  python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
+    --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
+    --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_source_pon.fragment"
 fi
 python3 "$ROOT_DIR/scripts/device_audit/audit_bootstrap_config.py" \
   --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \

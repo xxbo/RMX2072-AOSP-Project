@@ -14,7 +14,9 @@ def main():
     p.add_argument('--previous-boot',type=UUID,required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--timeout',type=int,default=900)
+    p.add_argument('--warm-record',type=Path,help='Require the same M2 source components as the accepted warm trial')
     a=p.parse_args();a.output.mkdir(parents=True,exist_ok=False)
+    warm=json.loads((a.warm_record/'inputs.json').read_text()) if a.warm_record else None
     start=time.monotonic();last=None
     (a.output/'observer.json').write_text(json.dumps(dict(previous_boot=str(a.previous_boot),utc=datetime.now(timezone.utc).isoformat(),starts_android=False,sets_clock=False),indent=2)+'\n')
     with (a.output/'transports.jsonl').open('w') as log:
@@ -26,8 +28,32 @@ def main():
                 if any(x.startswith(SERIAL) and x.split()[1]=='device' for x in row['transports']):
                     boot=shell('cat /proc/sys/kernel/random/boot_id').strip();UUID(boot);row['boot_id']=boot
                     if boot!=str(a.previous_boot):
+                        before=time.monotonic()
+                        identity=shell('cat /proc/sys/kernel/random/boot_id; cat /proc/uptime; uname -r; getprop ro.build.version.sdk; getenforce; getprop vendor.rmx.m1.state; getprop vendor.rmx.m1.accepted_by; getprop vendor.rmx.m1.usb_ready; service check android.security.maintenance').splitlines()
+                        arrival=dict(utc=datetime.now(timezone.utc).isoformat(),monotonic_start=before,monotonic_end=time.monotonic(),identity=identity)
+                        if len(identity)!=9 or identity[0]!=boot or identity[5:8]!=['retained','local-adbd','1']:
+                            raise ValueError('New boot has not yet passed local readiness')
+                        (a.output/'arrival-identity.json').write_text(json.dumps(arrival,indent=2)+'\n')
                         assert fetch_autonomous(a.output)==boot
-                        proof=accept(a.output,boot)
+                        try:
+                            if warm and warm['boot'].get('source_device_trees'):
+                                from check_m2_boot import check_m2_boot
+                                text=shell('cat /data/local/tmp/rmx-m2-boot.txt')
+                                components=check_m2_boot(text,boot,warm['ramdisk']['first_stage_init_sha256'],identity[2])
+                                (a.output/'m2-components.txt').write_text(text)
+                                (a.output/'m2-components.json').write_text(json.dumps(components,indent=2)+'\n')
+                            from check_power_ready import check_power_ready
+                            power=shell('cat /data/local/tmp/rmx-m1-power.txt')
+                            checked=check_power_ready(power,boot)
+                            (a.output/'power-providers.txt').write_text(power)
+                            (a.output/'power-driver-check.json').write_text(json.dumps(checked,indent=2)+'\n')
+                        except (OSError,subprocess.SubprocessError,ValueError) as error:
+                            try:
+                                shell('/vendor/bin/hw/rmx-m1-control --rollback '+boot)
+                            except (OSError,subprocess.SubprocessError):
+                                pass
+                            raise RuntimeError('Cold-start source/power evidence failed; guarded rollback requested') from error
+                        accept(a.output,boot)
                         print('Accepted new autonomous GSI boot '+boot,flush=True)
                         log.write(json.dumps(row)+'\n');log.flush()
                         result=soak_and_retain(a.output)

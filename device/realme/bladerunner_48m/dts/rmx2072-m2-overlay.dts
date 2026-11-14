@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Keep the complete source board overlay; no empty/no-op DTBO is used.
+#include "kona-mtp-overlay.dts"
+
+/ {
+    /delete-property/ oppo,dtsi_no;
+    oplus,dtsi_no = <20607>;
+    fragment@m2-source {
+        target-path = "/";
+        __overlay__ {
+            realme,m2-overlay-source = "20607-q-24a15224-m2";
+        };
+    };
+};

@@ -3,7 +3,7 @@
 Workspace layout: recovery/f20, recovery/tools, recovery/OplusEdlTool/Tools,
 serial-deps, current/{boot,kernel,candidate,volumes}, and records. All large
 readback files are removed only after their expected digest matches. No
-partition outside boot and super is programmed. Original userdata is untouched.
+partition outside boot, DTBO and super is programmed. Original userdata is untouched.
 The guarded profile keeps GSI running only after authenticated identity checks,
 a renewable watchdog lease and a 190-second ADB soak; failures recover to F.20.
 """
@@ -45,7 +45,7 @@ def main():
     parser.add_argument('--restore-only', action='store_true')
     parser.add_argument('--recovery-gate', type=Path, help='Restore only: validate now, wait for this explicit JSON handoff before capturing EDL')
     parser.add_argument('--retain-gsi', action='store_true')
-    parser.add_argument('--boot-only-from', type=Path, help='Previous retained trial record; read all super bytes, then program only boot')
+    parser.add_argument('--boot-only-from', type=Path, help='Previous retained trial record; read all super bytes, then program boot and its paired DTBO')
     parser.add_argument('--record-suffix', default='', help='New evidence directory for repeating the exact current image')
     args = parser.parse_args()
     sys.path.insert(0, str(args.workspace.resolve()/'serial-deps'))
@@ -102,9 +102,9 @@ def main():
      with (dest/'readbacks.jsonl').open('a') as out:out.write(json.dumps(row)+'\n')
      assert path.resolve().parent==dest.resolve() and path.name=='readback.bin'
      path.unlink()
-    def read_boot(label,expected):
+    def read_boot(label,expected,dtbo_expected=None):
      read(label+'-boot',4,79366,24576,expected)
-     read(label+'-dtbo',4,104298,6144,orig['partitions']['dtbo']['sha256'])
+     read(label+'-dtbo',4,104298,6144,dtbo_expected or orig['partitions']['dtbo']['sha256'])
     def read_super(label,parts):
      for i,(_,start,sectors) in enumerate(chunks()):
       read(label+'-'+str(i).zfill(2),0,start,sectors,parts[i]);event(label+' verified '+str(i+1)+'/17')
@@ -112,10 +112,15 @@ def main():
      assert sha(path)==expected
      root=ET.Element('data');ET.SubElement(root,'program',dict(SECTOR_SIZE_IN_BYTES='4096',physical_partition_number='4',start_sector='79366',num_partition_sectors='24576',filename=path.name,label='boot'))
      fh(label,root,path.parent)
+    def write_dtbo(label,path,expected):
+     assert path.stat().st_size==25165824 and sha(path)==expected
+     root=ET.Element('data');ET.SubElement(root,'program',dict(SECTOR_SIZE_IN_BYTES='4096',physical_partition_number='4',start_sector='104298',num_partition_sectors='6144',filename=path.name,label='dtbo'))
+     fh(label,root,path.parent)
     def restore():
-     event('Restoring the verified original super and F.20 reader boot')
+     event('Restoring the verified original super, DTBO and F.20 reader boot')
      fh('restore-super',ET.parse(stock/'stock-super-restore.xml').getroot(),stock)
      write_boot('restore-boot',stock/'boot.img',orig['partitions']['boot']['sha256'])
+     write_dtbo('restore-dtbo',stock/'dtbo.img',orig['partitions']['dtbo']['sha256'])
      read_boot('restored',orig['partitions']['boot']['sha256'])
      read_super('restored-super',[x['sha256'] for x in orig['partitions']['super']['parts']])
      reset('stock-reset');end=time.monotonic()+210
@@ -145,6 +150,11 @@ def main():
       event('Recovery gate released: '+json.dumps(gate))
      enter('recovery-entry');restore();sys.exit(0)
     assert sha(p/'boot/boot-diag.img')==boot['boot_sha256']
+    candidate_dtbo_sha=boot['dtbo_sha256']
+    if candidate_dtbo_sha!=orig['partitions']['dtbo']['sha256']:
+     assert boot.get('source_device_trees') is True
+     assert sha(p/'boot/dtbo-diag.img')==candidate_dtbo_sha
+     assert (p/'boot/dtbo-diag.img').stat().st_size==25165824
     assert [x['sha256'] for x in verify(p/'candidate',candidate['sha256'])['parts']]==candidate['parts']
     expected_rows=ET.fromstring(stock_restore_xml())
     for row in list(expected_rows):
@@ -154,6 +164,7 @@ def main():
     assert [(x.tag,x.attrib) for x in ET.parse(stock/'stock-super-restore.xml').getroot()]==[(x.tag,x.attrib) for x in ET.fromstring(stock_restore_xml())]
     assert json.loads((w/'recovery/edl-verification/verification.json').read_text())['independent_edl_reads_verified']
     previous_boot_sha=orig['partitions']['boot']['sha256']
+    previous_dtbo_sha=orig['partitions']['dtbo']['sha256']
     if args.boot_only_from:
      from gsi_adb_accept import inspect
      prior=args.boot_only_from.resolve()
@@ -162,6 +173,8 @@ def main():
      stable=json.loads((prior/'live/gsi-stable.json').read_text())
      proof=inspect(prior/'live',stable['identity'][2])
      previous_boot_sha=validate_boot_only(previous,stable,candidate,json.loads((p/'volumes/scratch.json').read_text()),proof)
+     previous_dtbo_sha=previous['boot']['dtbo_sha256']
+     assert re.fullmatch(r'[0-9a-f]{64}',previous_dtbo_sha)
      (dest/'boot-only-source.json').write_text(json.dumps(dict(previous_record=prior.name,previous_boot_sha256=previous_boot_sha,live=proof),indent=2)+'\n')
     else:
      info=phone('getprop ro.product.model; getprop ro.build.display.id; getprop sys.boot_completed; getprop ro.boot.flash.locked').splitlines()
@@ -177,11 +190,14 @@ def main():
     event(('Retained GSI identity and unchanged container/volumes' if args.boot_only_from else 'F.20 identity and geometry')+'; complete recovery and candidate inputs verified')
     enter('entry',True)
     try:
-     read_boot('before',previous_boot_sha)
+     read_boot('before',previous_boot_sha,previous_dtbo_sha)
      if args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
      write_boot('test-boot',p/'boot/boot-diag.img',boot['boot_sha256'])
+     if candidate_dtbo_sha!=previous_dtbo_sha:
+      path=stock/'dtbo.img' if candidate_dtbo_sha==orig['partitions']['dtbo']['sha256'] else p/'boot/dtbo-diag.img'
+      write_dtbo('test-dtbo',path,candidate_dtbo_sha)
      if not args.boot_only_from:fh('candidate-super',ET.parse(p/'candidate/candidate.xml').getroot(),p/'candidate')
-     read_boot('candidate',boot['boot_sha256'])
+     read_boot('candidate',boot['boot_sha256'],candidate_dtbo_sha)
      if not args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
     except BaseException:
      restore();raise
@@ -203,12 +219,23 @@ def main():
        from gsi_adb_accept import soak_and_retain
        event('Authenticated API 37 ADB accepted; checking same-boot watchdog stability for 190 seconds')
        try:
+        if boot.get('source_device_trees'):
+         from check_m2_boot import check_m2_boot
+         from gsi_adb_accept import shell
+         accepted=json.loads((dest/'live/gsi-accepted.json').read_text())
+         text=shell('cat /data/local/tmp/rmx-m2-boot.txt')
+         checked=check_m2_boot(text,accepted['identity'][2],rd['first_stage_init_sha256'],accepted['identity'][1])
+         (dest/'live/m2-components.txt').write_text(text)
+         (dest/'live/m2-components.json').write_text(json.dumps(checked,indent=2)+'\n')
         soak_and_retain(dest/'live');retained=True
        except (OSError,subprocess.SubprocessError,ValueError) as error:
-        event('ADB soak failed; watchdog lease will expire: '+str(error))
+        event('GSI acceptance failed; requesting guarded rollback: '+str(error))
         from observe_ufs_first_stage import previous_boot
+        from gsi_adb_accept import shell
         from uuid import UUID
         original=json.loads((dest/'live/gsi-accepted.json').read_text())['identity'][2]
+        try:shell('/vendor/bin/hw/rmx-m1-control --rollback '+original)
+        except (OSError,subprocess.SubprocessError):pass
         previous_boot(trial,UUID(original),dest/'live',time.monotonic()+300,return_on_accepted=False)
        break
       if any((x.vid,x.pid)==(0x05c6,0x9008) for x in comports()):break
@@ -222,7 +249,9 @@ def main():
      (dest/'gsi-retained.json').write_text(json.dumps(dict(current_mode='Android 17 GSI',candidate_super_retained=True,stock_restored=False,stable=json.loads((dest/'live/gsi-stable.json').read_text())),indent=2)+'\n')
      event('GSI ADB stable across old timers; guardian retained and phone left running Android 17')
      return
-    read_boot('return',boot['boot_sha256'])
+    try:read_boot('return',boot['boot_sha256'],candidate_dtbo_sha)
+    except BaseException:
+     restore();raise
     adb_log=dest/'live/adb.jsonl'
     identities=[]
     event_path=dest/'live/host-events.jsonl'

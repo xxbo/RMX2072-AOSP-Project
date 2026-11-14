@@ -40,6 +40,19 @@ printf 'M1EVENT boot_usb_state=%s\n' "$(cat /sys/class/udc/*/state 2>/dev/null |
 # A real RTC is not yet available. Do not supply invented UTC to the optional
 # TIME listener key probe; the Android HAL path still runs normally.
 printf 'M1EVENT clock_source=unavailable fixed_time_probe=skipped\n' >> /run/m1-autoboot.events
+if [ -f /m2-source-boot ]; then
+    {
+        printf 'M2BOOT boot_id=%s\n' "$boot"
+        printf 'M2BOOT kernel_release=%s\n' "$(uname -r)"
+        for component in base overlay; do
+            marker=$(tr -d '\000' < "/sys/firmware/devicetree/base/realme,m2-$component-source")
+            [ "$marker" = 20607-q-24a15224-m2 ]
+            printf 'M2BOOT %s_source=%s\n' "$component" "$marker"
+        done
+        printf 'M2BOOT runtime_fdt_sha256=%s\n' "$(sha256sum /sys/firmware/fdt | cut -d' ' -f1)"
+        printf 'M2BOOT first_stage_init_sha256=%s\n' "$(sha256sum /android-first-stage | cut -d' ' -f1)"
+    } > /run/m2-boot.txt
+fi
 for attempt in $(seq 1 30); do
     if /bin/ufs-host-test preflight > /run/m1-preflight.log 2>&1; then break; fi
     sleep 1
@@ -59,7 +72,7 @@ done
         cat "$device/uevent"
     done
     echo POWER_LOG
-    for device in /sys/bus/platform/devices/*power-on* /sys/bus/platform/devices/*restart*; do
+    for device in /sys/bus/platform/devices/*power-on* /sys/bus/platform/devices/*pon@* /sys/bus/platform/devices/*restart*; do
         [ -e "$device" ] || continue
         driver=unbound
         [ ! -L "$device/driver" ] || driver=$(readlink -f "$device/driver")

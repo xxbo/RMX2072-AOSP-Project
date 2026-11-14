@@ -1,0 +1,2095 @@
+{
+  "boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+  "m1_record": "m1-gsi-retained-35-2026-11-14.json",
+  "baseline_effective_dtb_sha256": "7f36c9cc8715e1151e710c0ea6f945d05cb2f42fc82a6bd82b5f4e50aaf1138c",
+  "source": "M1 packed DT plus original board overlay, selected by live bound-device paths; validation only, never a DT generator input",
+  "nodes": {
+    "/cpu-pmu": {
+      "compatible": [
+        "arm,armv8-pmuv3"
+      ],
+      "qcom,irq-is-percpu": [],
+      "interrupts": [
+        1,
+        7,
+        4
+      ]
+    },
+    "/firmware/scm": {
+      "#reset-cells": [
+        1
+      ],
+      "compatible": [
+        "qcom,scm-sm8250",
+        "qcom,scm"
+      ]
+    },
+    "/memory": {
+      "device_type": [
+        "memory"
+      ],
+      "reg": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "/psci": {
+      "compatible": [
+        "arm,psci-1.0"
+      ],
+      "method": [
+        "smc"
+      ]
+    },
+    "/reserved-memory": {
+      "#address-cells": [
+        2
+      ],
+      "#size-cells": [
+        2
+      ],
+      "ranges": []
+    },
+    "/reserved-memory/adsp_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        12582912
+      ]
+    },
+    "/reserved-memory/cdsp_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        4194304
+      ]
+    },
+    "/reserved-memory/cdsp_secure_heap@94100000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2484076544,
+        0,
+        73400320
+      ]
+    },
+    "/reserved-memory/cnss_wlan_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        25886720
+      ]
+    },
+    "/reserved-memory/cont_splash_region@9c000000": {
+      "reg": [
+        0,
+        2617245696,
+        0,
+        36700160
+      ],
+      "label": [
+        "cont_splash_region"
+      ]
+    },
+    "/reserved-memory/dfps_data_region@9e300000": {
+      "reg": [
+        0,
+        2653945856,
+        0,
+        1048576
+      ],
+      "label": [
+        "dfps_data_region"
+      ]
+    },
+    "/reserved-memory/disp_rdump_region@9c000000": {
+      "reg": [
+        0,
+        2617245696,
+        0,
+        8388608
+      ],
+      "label": [
+        "disp_rdump_region"
+      ]
+    },
+    "/reserved-memory/hyp_region@80000000": {
+      "no-map": [],
+      "reg": [
+        0,
+        2147483648,
+        0,
+        6291456
+      ]
+    },
+    "/reserved-memory/kboot_uboot_logmem@0x9FE00000": {
+      "reg": [
+        0,
+        2682257408,
+        0,
+        2097152
+      ],
+      "compatible": [
+        "oplus,xbl_uefi_kbootlog"
+      ],
+      "xbluefi-offset": [
+        2060288
+      ],
+      "no-map": []
+    },
+    "/reserved-memory/linux,cma": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        33554432
+      ],
+      "linux,cma-default": []
+    },
+    "/reserved-memory/mailbox_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "no-map": [],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        131072
+      ]
+    },
+    "/reserved-memory/mem_dump_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "size": [
+        0,
+        41943040
+      ]
+    },
+    "/reserved-memory/pil_adsp_region@91b00000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2444230656,
+        0,
+        38797312
+      ]
+    },
+    "/reserved-memory/pil_camera_region@8dc00000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2378170368,
+        0,
+        5242880
+      ]
+    },
+    "/reserved-memory/pil_cdsp_region@8f200000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2401239040,
+        0,
+        20971520
+      ]
+    },
+    "/reserved-memory/pil_cvp_region@8ed00000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2395996160,
+        0,
+        5242880
+      ]
+    },
+    "/reserved-memory/pil_gpu_region@8e21a000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2384568320,
+        0,
+        8192
+      ]
+    },
+    "/reserved-memory/pil_ipa_fw_region@8e200000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2384461824,
+        0,
+        65536
+      ]
+    },
+    "/reserved-memory/pil_ipa_gsi_region@8e210000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2384527360,
+        0,
+        40960
+      ]
+    },
+    "/reserved-memory/pil_npu_region@8e300000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2385510400,
+        0,
+        5242880
+      ]
+    },
+    "/reserved-memory/pil_slpi_region@90600000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2422210560,
+        0,
+        22020096
+      ]
+    },
+    "/reserved-memory/pil_spss_region@94000000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2483027968,
+        0,
+        1048576
+      ]
+    },
+    "/reserved-memory/pil_video_region@8e800000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2390753280,
+        0,
+        5242880
+      ]
+    },
+    "/reserved-memory/pil_wlan_fw_region@8e100000": {
+      "compatible": [
+        "removed-dma-pool"
+      ],
+      "no-map": [],
+      "reg": [
+        0,
+        2383413248,
+        0,
+        1048576
+      ]
+    },
+    "/reserved-memory/qseecom_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        20971520
+      ]
+    },
+    "/reserved-memory/qseecom_ta_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        16777216
+      ]
+    },
+    "/reserved-memory/ramoops@0xB0000000": {
+      "compatible": [
+        "ramoops"
+      ],
+      "reg": [
+        0,
+        2952790016,
+        0,
+        4194304
+      ],
+      "record-size": [
+        262144
+      ],
+      "console-size": [
+        262144
+      ],
+      "ftrace-size": [
+        0
+      ],
+      "pmsg-size": [
+        2097152
+      ],
+      "devinfo-size": [
+        0
+      ],
+      "ecc-size": [
+        16
+      ]
+    },
+    "/reserved-memory/removed_region@80b00000": {
+      "no-map": [],
+      "reg": [
+        0,
+        2159017984,
+        0,
+        214958080
+      ]
+    },
+    "/reserved-memory/reserved-memory@80860000": {
+      "reg": [
+        0,
+        2156265472,
+        0,
+        131072
+      ],
+      "compatible": [
+        "qcom,cmd-db"
+      ],
+      "no-map": []
+    },
+    "/reserved-memory/sdsp_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        8388608
+      ]
+    },
+    "/reserved-memory/secure_display_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        171966464
+      ]
+    },
+    "/reserved-memory/smem_region@80900000": {
+      "no-map": [],
+      "reg": [
+        0,
+        2156920832,
+        0,
+        2097152
+      ]
+    },
+    "/reserved-memory/sp_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        16777216
+      ]
+    },
+    "/reserved-memory/user_contig_region": {
+      "compatible": [
+        "shared-dma-pool"
+      ],
+      "alloc-ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "reusable": [],
+      "alignment": [
+        0,
+        4194304
+      ],
+      "size": [
+        0,
+        16777216
+      ]
+    },
+    "/reserved-memory/xbl_aop_region@80700000": {
+      "no-map": [],
+      "reg": [
+        0,
+        2154823680,
+        0,
+        1441792
+      ]
+    },
+    "/soc": {
+      "#address-cells": [
+        1
+      ],
+      "#size-cells": [
+        1
+      ],
+      "ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "compatible": [
+        "simple-bus"
+      ]
+    },
+    "/soc/apps-smmu@15000000": {
+      "dma-coherent": [],
+      "compatible": [
+        "qcom,sm8250-smmu-500",
+        "qcom,smmu-500",
+        "arm,mmu-500"
+      ],
+      "reg": [
+        352321536,
+        1048576,
+        353902592,
+        32
+      ],
+      "reg-names": [
+        "base",
+        "tcu-base"
+      ],
+      "#iommu-cells": [
+        2
+      ],
+      "qcom,skip-init": [],
+      "qcom,use-3-lvl-tables": [],
+      "#global-interrupts": [
+        2
+      ],
+      "#size-cells": [
+        1
+      ],
+      "#address-cells": [
+        1
+      ],
+      "ranges": [],
+      "interrupts": [
+        0,
+        64,
+        4,
+        0,
+        65,
+        4,
+        0,
+        97,
+        4,
+        0,
+        98,
+        4,
+        0,
+        99,
+        4,
+        0,
+        100,
+        4,
+        0,
+        101,
+        4,
+        0,
+        102,
+        4,
+        0,
+        103,
+        4,
+        0,
+        104,
+        4,
+        0,
+        105,
+        4,
+        0,
+        106,
+        4,
+        0,
+        107,
+        4,
+        0,
+        108,
+        4,
+        0,
+        109,
+        4,
+        0,
+        110,
+        4,
+        0,
+        111,
+        4,
+        0,
+        112,
+        4,
+        0,
+        113,
+        4,
+        0,
+        114,
+        4,
+        0,
+        115,
+        4,
+        0,
+        116,
+        4,
+        0,
+        117,
+        4,
+        0,
+        118,
+        4,
+        0,
+        181,
+        4,
+        0,
+        182,
+        4,
+        0,
+        183,
+        4,
+        0,
+        184,
+        4,
+        0,
+        185,
+        4,
+        0,
+        186,
+        4,
+        0,
+        187,
+        4,
+        0,
+        188,
+        4,
+        0,
+        189,
+        4,
+        0,
+        190,
+        4,
+        0,
+        191,
+        4,
+        0,
+        192,
+        4,
+        0,
+        315,
+        4,
+        0,
+        316,
+        4,
+        0,
+        317,
+        4,
+        0,
+        318,
+        4,
+        0,
+        319,
+        4,
+        0,
+        320,
+        4,
+        0,
+        321,
+        4,
+        0,
+        322,
+        4,
+        0,
+        323,
+        4,
+        0,
+        324,
+        4,
+        0,
+        325,
+        4,
+        0,
+        326,
+        4,
+        0,
+        327,
+        4,
+        0,
+        328,
+        4,
+        0,
+        329,
+        4,
+        0,
+        330,
+        4,
+        0,
+        331,
+        4,
+        0,
+        332,
+        4,
+        0,
+        333,
+        4,
+        0,
+        334,
+        4,
+        0,
+        335,
+        4,
+        0,
+        336,
+        4,
+        0,
+        337,
+        4,
+        0,
+        338,
+        4,
+        0,
+        339,
+        4,
+        0,
+        340,
+        4,
+        0,
+        341,
+        4,
+        0,
+        342,
+        4,
+        0,
+        343,
+        4,
+        0,
+        344,
+        4,
+        0,
+        345,
+        4,
+        0,
+        395,
+        4,
+        0,
+        396,
+        4,
+        0,
+        397,
+        4,
+        0,
+        398,
+        4,
+        0,
+        399,
+        4,
+        0,
+        400,
+        4,
+        0,
+        401,
+        4,
+        0,
+        402,
+        4,
+        0,
+        403,
+        4,
+        0,
+        404,
+        4,
+        0,
+        405,
+        4,
+        0,
+        406,
+        4,
+        0,
+        407,
+        4,
+        0,
+        408,
+        4,
+        0,
+        409,
+        4,
+        0,
+        412,
+        4,
+        0,
+        418,
+        4,
+        0,
+        419,
+        4,
+        0,
+        421,
+        4,
+        0,
+        423,
+        4,
+        0,
+        424,
+        4,
+        0,
+        425,
+        4,
+        0,
+        690,
+        4,
+        0,
+        691,
+        4,
+        0,
+        692,
+        4,
+        0,
+        693,
+        4,
+        0,
+        694,
+        4,
+        0,
+        695,
+        4,
+        0,
+        696,
+        4,
+        0,
+        697,
+        4,
+        0,
+        707,
+        4
+      ],
+      "qcom,msm-bus,name": [
+        "apps_smmu"
+      ],
+      "qcom,msm-bus,num-cases": [
+        2
+      ],
+      "qcom,msm-bus,active-only": [],
+      "qcom,msm-bus,num-paths": [
+        1
+      ],
+      "qcom,msm-bus,vectors-KBps": [
+        161,
+        627,
+        0,
+        0,
+        161,
+        627,
+        0,
+        1000
+      ],
+      "qcom,actlr": [
+        2048,
+        1023,
+        259,
+        3072,
+        1023,
+        259,
+        8192,
+        1023,
+        259,
+        9216,
+        1023,
+        259,
+        4225,
+        1024,
+        259,
+        4226,
+        1024,
+        259,
+        4229,
+        1024,
+        259,
+        4257,
+        1024,
+        259,
+        4258,
+        1024,
+        259,
+        4261,
+        1024,
+        259
+      ]
+    },
+    "/soc/clock-controller@100000": {
+      "clock-names": [
+        "bi_tcxo",
+        "bi_tcxo_ao",
+        "sleep_clk"
+      ],
+      "clocks": [
+        {
+          "target": "/soc/rsc@18200000/diag-clock-controller",
+          "args": [
+            0
+          ]
+        },
+        {
+          "target": "/soc/rsc@18200000/diag-clock-controller",
+          "args": [
+            1
+          ]
+        },
+        {
+          "target": "/diag-sleep-clock",
+          "args": []
+        }
+      ],
+      "#power-domain-cells": [
+        1
+      ],
+      "#reset-cells": [
+        1
+      ],
+      "#clock-cells": [
+        1
+      ],
+      "reg": [
+        1048576,
+        2031616
+      ],
+      "compatible": [
+        "qcom,gcc-sm8250"
+      ]
+    },
+    "/soc/display_gpio_regulator@1": {
+      "regulator-boot-on": [],
+      "enable-active-high": [],
+      "regulator-enable-ramp-delay": [
+        233
+      ],
+      "regulator-max-microvolt": [
+        5500000
+      ],
+      "regulator-min-microvolt": [
+        5500000
+      ],
+      "regulator-name": [
+        "display_panel_avdd"
+      ],
+      "compatible": [
+        "regulator-fixed"
+      ]
+    },
+    "/soc/hwlock": {
+      "compatible": [
+        "qcom,tcsr-mutex"
+      ],
+      "syscon": [
+        {
+          "target": "/soc/syscon@1f40000",
+          "args": [
+            0,
+            4096
+          ]
+        }
+      ],
+      "#hwlock-cells": [
+        1
+      ]
+    },
+    "/soc/interrupt-controller@17a00000": {
+      "compatible": [
+        "arm,gic-v3"
+      ],
+      "#interrupt-cells": [
+        3
+      ],
+      "interrupt-controller": [],
+      "#redistributor-regions": [
+        1
+      ],
+      "redistributor-stride": [
+        0,
+        131072
+      ],
+      "reg": [
+        396361728,
+        65536,
+        396754944,
+        1048576
+      ],
+      "interrupts": [
+        1,
+        9,
+        4
+      ]
+    },
+    "/soc/interrupt-controller@b220000": {
+      "compatible": [
+        "qcom,sm8250-pdc",
+        "qcom,pdc"
+      ],
+      "reg": [
+        186777600,
+        196608,
+        398459120,
+        96
+      ],
+      "qcom,pdc-ranges": [
+        0,
+        480,
+        94,
+        94,
+        609,
+        31,
+        125,
+        63,
+        1,
+        126,
+        716,
+        12
+      ],
+      "#interrupt-cells": [
+        2
+      ],
+      "interrupt-parent": [
+        {
+          "target": "/soc/interrupt-controller@17a00000",
+          "args": []
+        }
+      ],
+      "interrupt-controller": []
+    },
+    "/soc/phy@88e3000": {
+      "vdda33-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/ldo2",
+          "args": []
+        }
+      ],
+      "vdda18-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/ldo12",
+          "args": []
+        }
+      ],
+      "vdda-pll-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/ldo5",
+          "args": []
+        }
+      ],
+      "resets": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            27
+          ]
+        }
+      ],
+      "clock-names": [
+        "ref"
+      ],
+      "clocks": [
+        {
+          "target": "/soc/rsc@18200000/diag-clock-controller",
+          "args": [
+            0
+          ]
+        }
+      ],
+      "#phy-cells": [
+        0
+      ],
+      "reg": [
+        143536128,
+        1024
+      ],
+      "compatible": [
+        "qcom,sm8250-usb-hs-phy",
+        "qcom,usb-snps-hs-7nm-phy"
+      ]
+    },
+    "/soc/qcom,smem": {
+      "compatible": [
+        "qcom,smem"
+      ],
+      "memory-region": [
+        {
+          "target": "/reserved-memory/smem_region@80900000",
+          "args": []
+        }
+      ],
+      "hwlocks": [
+        {
+          "target": "/soc/hwlock",
+          "args": [
+            3
+          ]
+        }
+      ]
+    },
+    "/soc/qcom,spmi@c440000": {
+      "compatible": [
+        "qcom,spmi-pmic-arb"
+      ],
+      "reg": [
+        205783040,
+        4352,
+        207618048,
+        33554432,
+        241172480,
+        1048576,
+        242221056,
+        655360,
+        205561856,
+        155648
+      ],
+      "reg-names": [
+        "core",
+        "chnls",
+        "obsrvr",
+        "intr",
+        "cnfg"
+      ],
+      "interrupt-names": [
+        "periph_irq"
+      ],
+      "interrupts-extended": [
+        {
+          "target": "/soc/interrupt-controller@b220000",
+          "args": [
+            1,
+            4
+          ]
+        }
+      ],
+      "qcom,ee": [
+        0
+      ],
+      "qcom,channel": [
+        0
+      ],
+      "#address-cells": [
+        2
+      ],
+      "#size-cells": [
+        0
+      ],
+      "interrupt-controller": [],
+      "#interrupt-cells": [
+        4
+      ],
+      "cell-index": [
+        0
+      ]
+    },
+    "/soc/qcom,wdt@17c10000": {
+      "clocks": [
+        {
+          "target": "/diag-sleep-clock",
+          "args": []
+        }
+      ],
+      "compatible": [
+        "qcom,apss-wdt-sm8250",
+        "qcom,kpss-wdt"
+      ],
+      "reg": [
+        398524416,
+        4096
+      ],
+      "reg-names": [
+        "wdt-base"
+      ],
+      "interrupts": [
+        0,
+        0,
+        1
+      ],
+      "qcom,bark-time": [
+        22000
+      ],
+      "qcom,pet-time": [
+        9360
+      ],
+      "qcom,wakeup-enable": [],
+      "qcom,ipi-ping": []
+    },
+    "/soc/qfprom@780000": {
+      "compatible": [
+        "qcom,qfprom"
+      ],
+      "reg": [
+        7880704,
+        12288
+      ],
+      "#address-cells": [
+        1
+      ],
+      "#size-cells": [
+        1
+      ],
+      "read-only": [],
+      "ranges": []
+    },
+    "/soc/restart@c264000": {
+      "compatible": [
+        "qcom,pshold"
+      ],
+      "reg": [
+        203833344,
+        4,
+        33370112,
+        4
+      ],
+      "reg-names": [
+        "pshold-base",
+        "tcsr-boot-misc-detect"
+      ]
+    },
+    "/soc/rsc@18200000": {
+      "label": [
+        "apps_rsc"
+      ],
+      "compatible": [
+        "qcom,rpmh-rsc"
+      ],
+      "reg": [
+        404750336,
+        65536,
+        404815872,
+        65536,
+        404881408,
+        65536
+      ],
+      "reg-names": [
+        "drv-0",
+        "drv-1",
+        "drv-2"
+      ],
+      "interrupts": [
+        0,
+        3,
+        4,
+        0,
+        4,
+        4,
+        0,
+        5,
+        4
+      ],
+      "qcom,tcs-offset": [
+        3328
+      ],
+      "qcom,drv-id": [
+        2
+      ],
+      "qcom,tcs-config": [
+        2,
+        2,
+        0,
+        3,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    "/soc/rsc@18200000/diag-clock-controller": {
+      "clock-names": [
+        "xo"
+      ],
+      "clocks": [
+        {
+          "target": "/diag-xo-clock",
+          "args": []
+        }
+      ],
+      "#clock-cells": [
+        1
+      ],
+      "compatible": [
+        "qcom,sm8250-rpmh-clk"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators": {
+      "qcom,pmic-id": [
+        "a"
+      ],
+      "compatible": [
+        "qcom,pm8150-rpmh-regulators"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators/ldo12": {
+      "regulator-max-microvolt": [
+        1800000
+      ],
+      "regulator-min-microvolt": [
+        1800000
+      ],
+      "regulator-name": [
+        "diag_pm8150_l12"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators/ldo17": {
+      "regulator-always-on": [],
+      "regulator-max-microvolt": [
+        2504000
+      ],
+      "regulator-min-microvolt": [
+        2504000
+      ],
+      "regulator-name": [
+        "diag_pm8150_l17"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators/ldo2": {
+      "regulator-max-microvolt": [
+        3072000
+      ],
+      "regulator-min-microvolt": [
+        3072000
+      ],
+      "regulator-name": [
+        "diag_pm8150_l2"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators/ldo5": {
+      "regulator-max-microvolt": [
+        880000
+      ],
+      "regulator-min-microvolt": [
+        880000
+      ],
+      "regulator-name": [
+        "diag_pm8150_l5"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators/ldo6": {
+      "regulator-always-on": [],
+      "regulator-max-microvolt": [
+        1200000
+      ],
+      "regulator-min-microvolt": [
+        1200000
+      ],
+      "regulator-name": [
+        "diag_pm8150_l6"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators/ldo9": {
+      "regulator-max-microvolt": [
+        1200000
+      ],
+      "regulator-min-microvolt": [
+        1200000
+      ],
+      "regulator-name": [
+        "diag_pm8150_l9"
+      ]
+    },
+    "/soc/rsc@18200000/diag-regulators/smps4": {
+      "regulator-always-on": [],
+      "regulator-max-microvolt": [
+        1800000
+      ],
+      "regulator-min-microvolt": [
+        1800000
+      ],
+      "regulator-name": [
+        "diag_pm8150_s4"
+      ]
+    },
+    "/soc/rsc@18200000/ufs-bcm-voter": {
+      "compatible": [
+        "qcom,bcm-voter"
+      ]
+    },
+    "/soc/rsc@af20000": {
+      "label": [
+        "disp_rsc"
+      ],
+      "compatible": [
+        "qcom,rpmh-rsc"
+      ],
+      "reg": [
+        183631872,
+        65536
+      ],
+      "reg-names": [
+        "drv-0"
+      ],
+      "interrupts": [
+        0,
+        129,
+        4
+      ],
+      "qcom,tcs-offset": [
+        7168
+      ],
+      "qcom,drv-id": [
+        0
+      ],
+      "qcom,tcs-config": [
+        2,
+        0,
+        0,
+        1,
+        1,
+        1,
+        3,
+        0
+      ]
+    },
+    "/soc/timer": {
+      "compatible": [
+        "arm,armv8-timer"
+      ],
+      "interrupts": [
+        1,
+        13,
+        65288,
+        1,
+        14,
+        65288,
+        1,
+        11,
+        65288,
+        1,
+        12,
+        65288
+      ],
+      "clock-frequency": [
+        19200000
+      ]
+    },
+    "/soc/timer@17c20000": {
+      "#address-cells": [
+        1
+      ],
+      "#size-cells": [
+        1
+      ],
+      "ranges": [],
+      "compatible": [
+        "arm,armv7-timer-mem"
+      ],
+      "reg": [
+        398589952,
+        4096
+      ],
+      "clock-frequency": [
+        19200000
+      ]
+    },
+    "/soc/ufs-fabric-lab": {
+      "ranges": [],
+      "#size-cells": [
+        1
+      ],
+      "#address-cells": [
+        1
+      ],
+      "compatible": [
+        "realme,rmx2072-diag-ufs-phy-bus"
+      ]
+    },
+    "/soc/ufs-fabric-lab/interconnect@1500000": {
+      "qcom,bcm-voters": [
+        {
+          "target": "/soc/rsc@18200000/ufs-bcm-voter",
+          "args": []
+        }
+      ],
+      "#interconnect-cells": [
+        2
+      ],
+      "reg": [
+        22020096,
+        42368
+      ],
+      "compatible": [
+        "qcom,sm8250-config-noc"
+      ]
+    },
+    "/soc/ufs-fabric-lab/interconnect@1620000": {
+      "qcom,bcm-voters": [
+        {
+          "target": "/soc/rsc@18200000/ufs-bcm-voter",
+          "args": []
+        }
+      ],
+      "#interconnect-cells": [
+        2
+      ],
+      "reg": [
+        23199744,
+        115200
+      ],
+      "compatible": [
+        "qcom,sm8250-system-noc"
+      ]
+    },
+    "/soc/ufs-fabric-lab/interconnect@163d000": {
+      "qcom,bcm-voters": [
+        {
+          "target": "/soc/rsc@18200000/ufs-bcm-voter",
+          "args": []
+        }
+      ],
+      "#interconnect-cells": [
+        2
+      ],
+      "reg": [
+        23318528,
+        4096
+      ],
+      "compatible": [
+        "qcom,sm8250-mc-virt"
+      ]
+    },
+    "/soc/ufs-fabric-lab/interconnect@16e0000": {
+      "qcom,bcm-voters": [
+        {
+          "target": "/soc/rsc@18200000/ufs-bcm-voter",
+          "args": []
+        }
+      ],
+      "#interconnect-cells": [
+        2
+      ],
+      "reg": [
+        23986176,
+        127360
+      ],
+      "compatible": [
+        "qcom,sm8250-aggre1-noc"
+      ]
+    },
+    "/soc/ufs-fabric-lab/interconnect@9100000": {
+      "qcom,bcm-voters": [
+        {
+          "target": "/soc/rsc@18200000/ufs-bcm-voter",
+          "args": []
+        }
+      ],
+      "#interconnect-cells": [
+        2
+      ],
+      "reg": [
+        152043520,
+        737280
+      ],
+      "compatible": [
+        "qcom,sm8250-gem-noc"
+      ]
+    },
+    "/soc/ufs-host-lab": {
+      "ranges": [],
+      "#size-cells": [
+        1
+      ],
+      "#address-cells": [
+        1
+      ],
+      "compatible": [
+        "realme,rmx2072-diag-ufs-phy-bus"
+      ]
+    },
+    "/soc/ufs-host-lab/ufs@1d84000": {
+      "vccq2-max-microamp": [
+        800000
+      ],
+      "vccq-max-microamp": [
+        800000
+      ],
+      "vcc-max-microamp": [
+        800000
+      ],
+      "vccq2-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/smps4",
+          "args": []
+        }
+      ],
+      "vccq-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/ldo6",
+          "args": []
+        }
+      ],
+      "vcc-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/ldo17",
+          "args": []
+        }
+      ],
+      "interconnect-names": [
+        "ufs-ddr",
+        "cpu-ufs"
+      ],
+      "interconnects": [
+        {
+          "target": "/soc/ufs-fabric-lab/interconnect@16e0000",
+          "args": [
+            7,
+            0
+          ]
+        },
+        {
+          "target": "/soc/ufs-fabric-lab/interconnect@163d000",
+          "args": [
+            1,
+            0
+          ]
+        },
+        {
+          "target": "/soc/ufs-fabric-lab/interconnect@9100000",
+          "args": [
+            2,
+            0
+          ]
+        },
+        {
+          "target": "/soc/ufs-fabric-lab/interconnect@1500000",
+          "args": [
+            45,
+            0
+          ]
+        }
+      ],
+      "freq-table-hz": [
+        37500000,
+        300000000,
+        0,
+        0,
+        0,
+        0,
+        37500000,
+        300000000,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "clocks": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            162
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            6
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            161
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            171
+          ]
+        },
+        {
+          "target": "/soc/rsc@18200000/diag-clock-controller",
+          "args": [
+            0
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            170
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            168
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            169
+          ]
+        }
+      ],
+      "clock-names": [
+        "core_clk",
+        "bus_aggr_clk",
+        "iface_clk",
+        "core_clk_unipro",
+        "ref_clk",
+        "tx_lane0_sync_clk",
+        "rx_lane0_sync_clk",
+        "rx_lane1_sync_clk"
+      ],
+      "limit-hs-gear": [
+        3
+      ],
+      "lanes-per-direction": [
+        2
+      ],
+      "iommus": [
+        {
+          "target": "/soc/apps-smmu@15000000",
+          "args": [
+            224,
+            0
+          ]
+        },
+        {
+          "target": "/soc/apps-smmu@15000000",
+          "args": [
+            1248,
+            0
+          ]
+        }
+      ],
+      "power-domains": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            4
+          ]
+        }
+      ],
+      "reset-names": [
+        "rst"
+      ],
+      "resets": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            33
+          ]
+        }
+      ],
+      "#reset-cells": [
+        1
+      ],
+      "phy-names": [
+        "ufsphy"
+      ],
+      "phys": [
+        {
+          "target": "/soc/ufs-phy-lab/phy@1d87000",
+          "args": []
+        }
+      ],
+      "interrupts": [
+        0,
+        265,
+        4
+      ],
+      "interrupt-parent": [
+        {
+          "target": "/soc/interrupt-controller@17a00000",
+          "args": []
+        }
+      ],
+      "reg": [
+        30949376,
+        12288
+      ],
+      "compatible": [
+        "qcom,sm8250-ufshc",
+        "qcom,ufshc",
+        "jedec,ufs-2.0"
+      ]
+    },
+    "/soc/ufs-phy-lab": {
+      "ranges": [],
+      "#size-cells": [
+        1
+      ],
+      "#address-cells": [
+        1
+      ],
+      "compatible": [
+        "realme,rmx2072-diag-ufs-phy-bus"
+      ]
+    },
+    "/soc/ufs-phy-lab/phy@1d87000": {
+      "reset-names": [
+        "ufsphy"
+      ],
+      "resets": [
+        {
+          "target": "/soc/ufs-host-lab/ufs@1d84000",
+          "args": [
+            0
+          ]
+        }
+      ],
+      "vdda-pll-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/ldo9",
+          "args": []
+        }
+      ],
+      "vdda-phy-supply": [
+        {
+          "target": "/soc/rsc@18200000/diag-regulators/ldo5",
+          "args": []
+        }
+      ],
+      "power-domains": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            4
+          ]
+        }
+      ],
+      "clock-names": [
+        "ref",
+        "ref_aux",
+        "qref"
+      ],
+      "clocks": [
+        {
+          "target": "/soc/rsc@18200000/diag-clock-controller",
+          "args": [
+            0
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            166
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            148
+          ]
+        }
+      ],
+      "#phy-cells": [
+        0
+      ],
+      "reg": [
+        30961664,
+        4096
+      ],
+      "compatible": [
+        "qcom,sm8250-qmp-ufs-phy"
+      ]
+    },
+    "/soc/usb@a600000": {
+      "iommus": [
+        {
+          "target": "/soc/apps-smmu@15000000",
+          "args": [
+            0,
+            0
+          ]
+        }
+      ],
+      "snps,dis-u2-entry-quirk": [],
+      "snps,dis-u1-entry-quirk": [],
+      "snps,dis_enblslpm_quirk": [],
+      "snps,dis_u2_susphy_quirk": [],
+      "qcom,select-utmi-as-pipe-clk": [],
+      "phy-names": [
+        "usb2-phy"
+      ],
+      "phys": [
+        {
+          "target": "/soc/phy@88e3000",
+          "args": []
+        }
+      ],
+      "maximum-speed": [
+        "high-speed"
+      ],
+      "dr_mode": [
+        "peripheral"
+      ],
+      "interrupt-names": [
+        "dwc_usb3",
+        "pwr_event",
+        "hs_phy_irq"
+      ],
+      "interrupts": [
+        0,
+        133,
+        4,
+        0,
+        130,
+        4,
+        0,
+        131,
+        4
+      ],
+      "power-domains": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            5
+          ]
+        }
+      ],
+      "resets": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            34
+          ]
+        }
+      ],
+      "assigned-clock-rates": [
+        19200000,
+        200000000
+      ],
+      "assigned-clocks": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            175
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            173
+          ]
+        }
+      ],
+      "clock-names": [
+        "cfg_noc",
+        "core",
+        "iface",
+        "sleep",
+        "mock_utmi",
+        "xo"
+      ],
+      "clocks": [
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            14
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            173
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            7
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            178
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            175
+          ]
+        },
+        {
+          "target": "/soc/clock-controller@100000",
+          "args": [
+            190
+          ]
+        }
+      ],
+      "reg": [
+        174063616,
+        1048576
+      ],
+      "compatible": [
+        "qcom,sm8250-dwc3",
+        "qcom,snps-dwc3"
+      ]
+    },
+    "/vendor": {
+      "#address-cells": [
+        1
+      ],
+      "#size-cells": [
+        1
+      ],
+      "ranges": [
+        0,
+        0,
+        0,
+        4294967295
+      ],
+      "compatible": [
+        "simple-bus"
+      ]
+    }
+  }
+}

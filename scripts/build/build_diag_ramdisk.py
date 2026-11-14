@@ -46,7 +46,8 @@ def main():
     p.add_argument('--gsi-usb-reader', type=pathlib.Path,
                    help='Static ARM64 dm-user reader for the read-only Android 17 GSI trial')
     p.add_argument('--trial-id')
-    p.add_argument('--android-first-stage', type=pathlib.Path, help='Pinned API 37 generic ramdisk /init')
+    p.add_argument('--android-first-stage', type=pathlib.Path, help='Verified API 37 static first-stage /init')
+    p.add_argument('--first-stage-source-build', type=pathlib.Path, help='M2 source build artifact directory with resolved manifest and digests')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
     p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
     p.add_argument('--ufs-first-stage', type=pathlib.Path, metavar='PROFILE',
@@ -66,6 +67,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.first_stage_source_build and not a.android_first_stage:
+        p.error('Source build evidence requires the first-stage binary')
     if a.autonomous_ufs and not (a.adb_public_key and a.ufs_first_stage and a.entry_carrier):
         p.error('Autonomous UFS requires the guarded signed profile and recovery evidence carrier')
     if a.adb_public_key and not a.scratch_volumes:
@@ -162,9 +165,14 @@ def main():
         if a.android_first_stage:
             first = read_static_arm64(a.android_first_stage)
             first_hash = hashlib.sha256(first).hexdigest()
-            source = json.loads((root/'build/device/android17-first-stage-source.json').read_text())
-            if first_hash != source['init_sha256']:
-                raise ValueError('Unexpected API 37 first-stage init')
+            if a.first_stage_source_build:
+                from check_source_first_stage import verify_source_first_stage
+                source = verify_source_first_stage(a.first_stage_source_build, first)
+                add('m2-source-boot', 0o100444, b'1\n')
+            else:
+                source = json.loads((root/'build/device/android17-first-stage-source.json').read_text())
+                if first_hash != source['init_sha256']:
+                    raise ValueError('Unexpected API 37 first-stage init')
             add('android-first-stage', 0o100755, first)
             witness = read_static_arm64(a.first_stage_witness)
             add('bin/first-stage-witness', 0o100755, witness)
@@ -346,7 +354,8 @@ def main():
                       policy_probe_sha256=hashlib.sha256(probe).hexdigest())
     if a.android_first_stage:
         report.update(scope='Android API 37 first-stage init as global PID 1 with read-only USB-backed GSI',
-                      first_stage_init_sha256=first_hash, witness_sha256=hashlib.sha256(witness).hexdigest())
+                      first_stage_init_sha256=first_hash, first_stage_source=source,
+                      witness_sha256=hashlib.sha256(witness).hexdigest())
     if a.ufs_first_stage:
         report.update(scope='Android API 37 first-stage init on internal UFS',
                       public_keys={k: v['key_sha256'] for k, v in profile.items()})
