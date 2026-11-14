@@ -46,7 +46,7 @@ done
 if echo 'p:m1ks/ks_random_wait wait_for_random_bytes task=$comm' >> "$t/kprobe_events"; then
     if echo 'r:m1ks/ks_random_ready wait_for_random_bytes task=$comm rc=$retval:s32' >> "$t/kprobe_events"; then
         for name in ks_random_wait ks_random_ready; do
-            echo 'task == "keystore2"' > "$events/$name/filter"
+            echo 'task == "keystore2" || task ~ "*inder:*"' > "$events/$name/filter"
             echo 1 > "$events/$name/enable"
         done
     fi

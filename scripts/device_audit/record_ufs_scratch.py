@@ -155,7 +155,8 @@ def extract(live, port_log, layout, *, console_tail=False):
     trial['keystore_sigabrt_count'] = len(re.findall(r"init: Service 'keystore2' \(pid \d+\) received SIGABRT",console))
     trial['keystore_entropy_waits'] = [
         re.sub(r'\([^)]*\)', '(probe)', line)
-        for line in console.splitlines() if re.search(r'ks_random_(wait|ready): .*task="keystore2"', line)
+        for line in console.splitlines()
+        if re.search(rf'ks_random_(wait|ready): .*task="(?:keystore2|(?:Hw)?[Bb]inder:{pid}_[^\"]+)"', line)
     ]
     return trial
 
