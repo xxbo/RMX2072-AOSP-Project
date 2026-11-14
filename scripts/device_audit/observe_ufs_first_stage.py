@@ -105,6 +105,16 @@ def observe(trial, output, timeout):
         if identity['trial'] != trial:
             raise ValueError('Unexpected running trial')
         original = UUID(console_query(console, b'cat /proc/sys/kernel/random/boot_id').decode())
+        if console_query(console, b'test -r /sys/module/qcom_scm/parameters/temp_hmac_key && echo present') == b'present':
+            before = int(console_query(console, b'date -u +%s'))
+            now = datetime.now(timezone.utc)
+            command = now.strftime("date -u -s '%Y-%m-%d %H:%M:%S' >/dev/null && date -u +%s")
+            after = int(console_query(console, command.encode()))
+            if abs(datetime.now(timezone.utc).timestamp() - after) > 5:
+                raise ValueError('Diagnostic UTC did not match the USB host')
+            (output/'time-control.json').write_text(json.dumps(dict(
+                boot_id=str(original), source='USB host UTC', host_utc=now.isoformat(),
+                before_seconds=before, after_seconds=after))+'\n')
         (output/'identity.json').write_text(json.dumps(identity, indent=2) + '\n')
         mark(output, 'handoff_requested', original)
         # Capture bootstrap failures too. A failed mount can stop PID 1 before

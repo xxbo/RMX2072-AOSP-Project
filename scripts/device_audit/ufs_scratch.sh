@@ -92,6 +92,14 @@ if [ -r "$apps" ]; then
             fi
         fi
     done
+    temp_key=/sys/module/qcom_scm/parameters/temp_hmac_key
+    if [ -r "$temp_key" ]; then
+        if result=$(cat "$temp_key"); then
+            echo "M1EVENT temporary_key $result" > /dev/ttyGS0
+        else
+            echo "M1EVENT temporary_key_read_failed=$?" > /dev/ttyGS0
+        fi
+    fi
     if [ -r "$version" ]; then
         if result=$(cat "$version"); then
             echo "M1EVENT keymaster_version $result" > /dev/ttyGS0

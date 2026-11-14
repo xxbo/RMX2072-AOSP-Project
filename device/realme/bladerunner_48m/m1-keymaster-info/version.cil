@@ -5,3 +5,10 @@
 (typeattributeset sysfs_type (rmx_keymaster_version))
 (genfscon sysfs "/module/rmx2072_keymaster_lookup/parameters/version_info" (u object_r rmx_keymaster_version ((s0) (s0))))
 (allow rmx_keymaster rmx_keymaster_version (file (getattr open read)))
+
+(type rmx_keymaster_parameters)
+(roletype object_r rmx_keymaster_parameters)
+(typeattributeset fs_type (rmx_keymaster_parameters))
+(typeattributeset sysfs_type (rmx_keymaster_parameters))
+(genfscon sysfs "/firmware/rmx2072_hmac_parameters" (u object_r rmx_keymaster_parameters ((s0) (s0))))
+(allow rmx_keymaster rmx_keymaster_parameters (file (getattr open read)))

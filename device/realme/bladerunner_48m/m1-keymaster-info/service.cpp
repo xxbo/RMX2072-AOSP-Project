@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
-// Engineering info-only instance. Keystore operations fail closed.
+// RMX2072 engineering Keymaster instance backed by the resident TEE app.
 #include <android/hardware/keymaster/4.0/IKeymasterDevice.h>
 #include <android/log.h>
 #include <hidl/HidlTransportSupport.h>
 #include <hwbinder/IPCThreadState.h>
 #include <cstdio>
+#include <cstring>
+#include <fcntl.h>
+#include <unistd.h>
 
 using android::hardware::hidl_vec;
 using android::hardware::Return;
@@ -14,6 +17,11 @@ namespace {
 using Bytes = hidl_vec<uint8_t>;
 using Params = hidl_vec<KeyParameter>;
 constexpr auto unsupported = ErrorCode::UNIMPLEMENTED;
+
+void clearBuffer(void* buffer, size_t size) {
+    auto* bytes = static_cast<volatile uint8_t*>(buffer);
+    for (size_t i = 0; i < size; ++i) bytes[i] = 0;
+}
 
 class InfoDevice final : public IKeymasterDevice {
 public:
@@ -30,7 +38,33 @@ public:
     }
 
     Return<void> getHmacSharingParameters(getHmacSharingParameters_cb cb) override {
-        cb(unsupported, {}); return {};
+        struct Reply {
+            int32_t status;
+            uint8_t seed[32];
+            uint8_t nonce[32];
+        } reply{};
+        static_assert(sizeof(Reply) == 68);
+        ErrorCode error = ErrorCode::SECURE_HW_COMMUNICATION_FAILED;
+        int fd = open("/sys/firmware/rmx2072_hmac_parameters", O_RDONLY | O_CLOEXEC);
+        if (fd >= 0) {
+            ssize_t n = TEMP_FAILURE_RETRY(read(fd, &reply, sizeof(reply)));
+            close(fd);
+            if (n == sizeof(reply)) error = static_cast<ErrorCode>(reply.status);
+        }
+        HmacSharingParameters parameters{};
+        if (error == ErrorCode::OK) {
+            parameters.seed.setToExternal(reply.seed, sizeof(reply.seed));
+            memcpy(parameters.nonce.data(), reply.nonce, sizeof(reply.nonce));
+        }
+        int caller = android::hardware::IPCThreadState::self()->getCallingPid();
+        cb(error, parameters);
+        char message[96];
+        snprintf(message, sizeof(message), "getHmacSharingParameters caller=%d status=%d",
+                 caller, static_cast<int>(error));
+        __android_log_write(ANDROID_LOG_INFO, "RMXKeymaster", message);
+        clearBuffer(&reply, sizeof(reply));
+        clearBuffer(parameters.nonce.data(), parameters.nonce.size());
+        return {};
     }
     Return<void> computeSharedHmac(const hidl_vec<HmacSharingParameters>&,
                                    computeSharedHmac_cb cb) override {
