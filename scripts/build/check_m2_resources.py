@@ -51,6 +51,9 @@ def check_m2_resources(data):
                 differences.append(f'{path}/{key}: {actual.get(key)!r} != {value!r}')
     if differences:
         raise ValueError('M1 resource mismatch:\n' + '\n'.join(differences))
+    if (tree[''].get('compatible') != ['qcom,kona-mtp', 'qcom,kona', 'qcom,mtp']
+            or tree[''].get('oplus,dtsi_no') != [20607]):
+        raise ValueError('Effective source tree does not identify the board for SCM/PON guards')
     primary = '/soc/qcom,spmi@c440000/qcom,pm8150@0'
     if tree[primary].get('#address-cells') != [1] or tree[primary].get('#size-cells') != [0]:
         raise ValueError('Primary PMIC is not in the upstream peripheral-address form')
@@ -65,5 +68,5 @@ def check_m2_resources(data):
         raise ValueError('M2 must use the project ramdisk fstab, without a legacy DT fstab')
     return dict(reference_boot_id=reference['boot_id'], checked_nodes=len(reference['nodes']),
                 phandles_resolved_to_paths=True, source_pon='upstream-parent-child',
-                pon_reboot_modes=[], first_stage_fstab='project-ramdisk',
+                pon_reboot_modes=[], first_stage_fstab='project-ramdisk', recovery_board_identity=True,
                 scope='M1 bound platform devices and reserved memory; does not qualify inactive hardware')

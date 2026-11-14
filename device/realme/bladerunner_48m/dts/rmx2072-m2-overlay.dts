@@ -8,6 +8,11 @@
     fragment@m2-source {
         target-path = "/";
         __overlay__ {
+            // Root DTBO selectors are not payload in a standard FDT overlay.
+            // Preserve the board identity used by SCM recovery/PON guards even
+            // when the bootloader does not copy selector properties itself.
+            compatible = "qcom,kona-mtp", "qcom,kona", "qcom,mtp";
+            oplus,dtsi_no = <20607>;
             realme,m2-overlay-source = "20607-q-24a15224-m2";
         };
     };

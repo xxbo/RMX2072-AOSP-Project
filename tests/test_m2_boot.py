@@ -10,7 +10,8 @@ class M2BootTests(unittest.TestCase):
         boot='78202cbf-6e86-46fd-bb95-24e2d731b27c'
         init='a'*64
         values=dict(boot_id=boot,kernel_release='6.18-test',base_source='20607-q-24a15224-m2',
-                    overlay_source='20607-q-24a15224-m2',first_stage_init_sha256=init,runtime_fdt_sha256='b'*64)
+                    overlay_source='20607-q-24a15224-m2',first_stage_init_sha256=init,runtime_fdt_sha256='b'*64,
+                    board_id_hex='0000507f',root_compatible='qcom,kona-mtp qcom,kona qcom,mtp ')
         text=''.join(f'M2BOOT {k}={v}\n' for k,v in values.items())
         events='M1EVENT boot_id='+boot+'\n'+''.join(f'M1EVENT disk=sd{n} ro=1\n' for n in 'abcdef')
         self.assertEqual(check_m2_boot(text,boot,init,'6.18-test',events),dict(values,read_only_ufs_luns=['sd'+n for n in 'abcdef']))

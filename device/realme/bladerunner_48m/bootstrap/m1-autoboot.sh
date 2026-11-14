@@ -44,6 +44,8 @@ if [ -f /m2-source-boot ]; then
     {
         printf 'M2BOOT boot_id=%s\n' "$boot"
         printf 'M2BOOT kernel_release=%s\n' "$(uname -r)"
+        printf 'M2BOOT root_compatible=%s\n' "$(tr '\000' ' ' < /sys/firmware/devicetree/base/compatible)"
+        printf 'M2BOOT board_id_hex=%s\n' "$(od -An -tx1 /sys/firmware/devicetree/base/oplus,dtsi_no | tr -d ' \n')"
         for component in base overlay; do
             marker=$(tr -d '\000' < "/sys/firmware/devicetree/base/realme,m2-$component-source")
             [ "$marker" = 20607-q-24a15224-m2 ]
