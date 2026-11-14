@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-14",
+  "device": "RMX2072",
+  "scope": "Pre-flash build and policy validation only; hardware result recorded separately",
+  "source_commit": "efe594d",
+  "kernel_unchanged_from_trial25": true,
+  "host_tests": {
+    "passed": 65,
+    "skipped": 0
+  },
+  "policy": {
+    "compiler": "Pinned GSI secilc, executed via its linker/libc on F.20",
+    "gsi": "CP3A.260905.010",
+    "neverallow_enabled": true,
+    "loaded_into_running_f20": false,
+    "result": "SECILC_RC=0",
+    "inputs": {
+      "libc.so": "4ff19962145f3e471ae73d68bd30136164c7bafa5950d0410cc55792ed080425",
+      "libdl.so": "a9d3405f5147e195921896ab6a8d6e58fb7970311d55b60bad4c14de27bc2582",
+      "libm.so": "13d07a2b075741050cef837a6f20fcb51e8fa4bd0b1d5564693e44b3be87a98d",
+      "linker64": "85d1af1629f0a4577acf98ea18d9cedacb962c2087f54ed3bbffebb39e6c67fb",
+      "plat_pub_versioned.cil": "b0ebe55553d5e1533e939cbd049d1a1b5693fdd5251f77d382b1431041e28f49",
+      "plat_sepolicy.cil": "f6422dd5853e815d340f2e9c4dcba2bb1016b55ffc2a073fc916ac23dfe66fc2",
+      "product_sepolicy.cil": "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014",
+      "secilc": "ace5b9b5b26f28e0c81a070ac2be0106269f6a9f3912c80ea48663706444fac1",
+      "system_ext_sepolicy.cil": "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014",
+      "vendor_sepolicy.cil": "7826a4d6d9814be1b0772f5c4a160809563bae37c087efe48e71111a8e55387d"
+    },
+    "preflight_working_directory": "/data/local/tmp/rmx-m1-policy26",
+    "rejected_designs": [
+      "Direct shell write to vendor property violated the core/vendor property boundary.",
+      "Direct shell-to-vendor socket connection violated the core/vendor socket boundary."
+    ],
+    "implemented_boundary": "Source-built control client uses existing vendor_shell transition; socket peer UID must be 2000 and command must match the current boot ID."
+  },
+  "build": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-26",
+    "kernel": "fce9822138a0f763a9661d84c5679fcc13d92e4f5f6983e19e45572c1bcdcaab",
+    "guard": "55207a3a62b228102533c2f3f4ea97e80801e509d4a30c98abad0212a9a3e7a7",
+    "witness": "f789310e4770f54df069e36ed90cf0f2752abafb1231431139ef2cba07c71af6",
+    "vendor_unsigned": "c7096f82d883c8c576808fb484227f9f43d6c7aa70aa852fb8db2fce5ae165cb",
+    "vendor_signed": "d0210f1ff1671e02e761db5c879cc4cfcf7921fcc980138f8f483482ab38f5f5",
+    "engineering_key": "reused trial25 key",
+    "adb_public_key_sha256": "fa92ad018ac1d01317a6731be6172cb4e34753489f7e4a521ae4df25c583dc29"
+  },
+  "retention": {
+    "recovery_sets": 1,
+    "current_candidate_sets": 1,
+    "readback": "single transient chunk deleted only after digest validation"
+  }
+}
