@@ -26,10 +26,14 @@ def verify_source_first_stage(directory, binary):
         raise ValueError('First-stage system/core revision differs')
     if not projects or any(not re.fullmatch('[0-9a-f]{40}', r or '') for r in projects.values()):
         raise ValueError('First-stage source manifest must resolve every project commit')
+    sparse = (directory / 'frameworks-base-sparse.txt').read_text().splitlines()
+    if sparse != ['/core/java/android/hardware/serial/Android.bp'] or 'frameworks/base' not in projects:
+        raise ValueError('First-stage metadata source selection differs')
     for name in ('rmx2072_m2_init.mk', 'BoardConfig.mk', 'AndroidProducts.mk'):
         product = (directory / name).read_bytes().replace(b'\r\n', b'\n')
         expected = (repo / 'device/realme/bladerunner_48m/m2-init' / name).read_bytes().replace(b'\r\n', b'\n')
         if product != expected:
             raise ValueError('First-stage product recipe differs: ' + name)
     return dict(origin='project-source-build', **pin, init_sha256=hashes['init'],
-                resolved_manifest_sha256=hashes['resolved-manifest.xml'], source_projects=len(projects))
+                resolved_manifest_sha256=hashes['resolved-manifest.xml'], source_projects=len(projects),
+                sparse_projects={'frameworks/base': sparse})
