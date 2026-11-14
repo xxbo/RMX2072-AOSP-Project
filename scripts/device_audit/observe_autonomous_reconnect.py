@@ -39,7 +39,7 @@ def main():
                             if warm and warm['boot'].get('source_device_trees'):
                                 from check_m2_boot import check_m2_boot
                                 text=shell('cat /data/local/tmp/rmx-m2-boot.txt')
-                                components=check_m2_boot(text,boot,warm['ramdisk']['first_stage_init_sha256'],identity[2])
+                                components=check_m2_boot(text,boot,warm['ramdisk']['first_stage_init_sha256'],identity[2],(a.output/'boot-events.txt').read_text())
                                 (a.output/'m2-components.txt').write_text(text)
                                 (a.output/'m2-components.json').write_text(json.dumps(components,indent=2)+'\n')
                             from check_power_ready import check_power_ready

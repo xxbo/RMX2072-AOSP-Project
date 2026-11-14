@@ -69,7 +69,7 @@ def main():
     if result['warm_inputs']['boot'].get('source_device_trees'):
         from check_m2_boot import check_m2_boot
         components=check_m2_boot((live/'m2-components.txt').read_text(),boot,
-            result['warm_inputs']['ramdisk']['first_stage_init_sha256'],stable['identity'][1])
+            result['warm_inputs']['ramdisk']['first_stage_init_sha256'],stable['identity'][1],(live/'boot-events.txt').read_text())
         assert components==load(live/'m2-components.json')
         assert power_check['binding']=='upstream-pon-parent-pwrkey-child'
         result['source_boot_components']=components

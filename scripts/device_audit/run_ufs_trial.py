@@ -224,7 +224,7 @@ def main():
          from gsi_adb_accept import shell
          accepted=json.loads((dest/'live/gsi-accepted.json').read_text())
          text=shell('cat /data/local/tmp/rmx-m2-boot.txt')
-         checked=check_m2_boot(text,accepted['identity'][2],rd['first_stage_init_sha256'],accepted['identity'][1])
+         checked=check_m2_boot(text,accepted['identity'][2],rd['first_stage_init_sha256'],accepted['identity'][1],(dest/'live/boot-events.txt').read_text())
          (dest/'live/m2-components.txt').write_text(text)
          (dest/'live/m2-components.json').write_text(json.dumps(checked,indent=2)+'\n')
         soak_and_retain(dest/'live');retained=True

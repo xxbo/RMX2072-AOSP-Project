@@ -3,7 +3,7 @@ import re
 from uuid import UUID
 
 
-def check_m2_boot(text, boot, init_sha256, release):
+def check_m2_boot(text, boot, init_sha256, release, boot_events):
     UUID(boot)
     rows = re.findall(r'^M2BOOT ([a-z_0-9]+)=(.*)$', text, re.M)
     values = dict(rows)
@@ -14,4 +14,8 @@ def check_m2_boot(text, boot, init_sha256, release):
                     first_stage_init_sha256=init_sha256)
     if any(values.get(k) != v for k, v in expected.items()) or not re.fullmatch('[0-9a-f]{64}', values.get('runtime_fdt_sha256', '')):
         raise ValueError('Source DT/init witness does not match the candidate and current boot')
-    return values
+    disks = re.findall(r'^M1EVENT disk=(\S+) ro=(\S+)$', boot_events, re.M)
+    if (set(re.findall(r'^M1EVENT boot_id=(.*)$', boot_events, re.M)) != {boot}
+            or sorted(disks) != [(name, '1') for name in ('sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf')]):
+        raise ValueError('Six read-only UFS LUNs are not proven on this boot')
+    return dict(values, read_only_ufs_luns=[name for name, _ in sorted(disks)])
