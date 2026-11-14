@@ -114,3 +114,7 @@ support for the arm64-only target. The project now declares the same ABI support
 flags as upstream `core_64_bit_only.mk`, without adding an Android image build.
 The hosted runner also releases unused preinstalled SDK space before AOSP sync;
 the previous host had only 24 GiB free after fetching the selected sources.
+
+An upstream `bionic/libc/Android.bp` dependency audit additionally identified
+`libscudo`, `gwp_asan` and `gwp_asan_headers` in static libc. Their pinned
+`external/scudo` and `external/gwp_asan` projects are included explicitly.

@@ -11,10 +11,10 @@ EXACT = '''bionic bootable/recovery device/common device/generic/arm64
 device/generic/common external/avb external/boringssl external/brotli
 external/bzip2 external/e2fsprogs external/fec external/fmtlib external/gflags
 external/go-cmp external/golang-protobuf external/google-benchmark
-external/googletest external/jsoncpp external/libcap external/libcxx
+external/googletest external/gwp_asan external/jsoncpp external/libcap external/libcxx
 external/libcxxabi external/libevent external/liburing external/libxml2
 external/lz4 external/lzma external/pcre external/pogreb external/protobuf external/selinux
-external/sqlite external/starlark-go external/tinyxml2 external/zlib external/zstd
+external/scudo external/sqlite external/starlark-go external/tinyxml2 external/zlib external/zstd
 external/rust/android-crates-io external/rust/cxx
 frameworks/native frameworks/libs/native_bridge_support frameworks/libs/modules-utils
 frameworks/proto_logging hardware/libhardware hardware/libhardware_legacy
