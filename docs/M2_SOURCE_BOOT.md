@@ -51,6 +51,13 @@ notifier invokes the hardware write only for a nonzero mode. Thus the new parent
 does not add reboot-mode register writes in this configuration. This source
 audit does not replace the physical EDL/reset ordering test.
 
+The official Q source comments out the legacy device-tree vendor fstab; the
+measured F.20 tree contains that entry. M2 deliberately uses the already accepted
+project ramdisk fstab. The source checker requires the absence of the legacy DT
+fstab and extra PON mode properties. Firmware vbmeta partition names and PSCI
+properties match the measured baseline; the obsolete `kasan_multi_shot` DT
+bootarg is absent from the Q source.
+
 ## Candidate preparation on November 15
 
 `build_m2_device_tree.py` compiles the full official 20607 base and MTP overlay,

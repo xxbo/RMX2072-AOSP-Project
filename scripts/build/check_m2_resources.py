@@ -58,9 +58,12 @@ def check_m2_resources(data):
     key = pon + '/pwrkey'
     expected = {'compatible': ['qcom,pm8941-pwrkey'], 'interrupts': [0, 8, 0, 3],
                 'debounce': [15625], 'bias-pull-up': [], 'linux,code': [116]}
-    if (tree[pon].get('compatible') != ['qcom,pm8998-pon'] or tree[pon].get('reg') != [0x800]
+    if (normalized_node(tree, pon) != {'compatible': ['qcom,pm8998-pon'], 'reg': [0x800]}
             or normalized_node(tree, key) != expected or primary + '/qcom,power-on@800' in tree):
         raise ValueError('Unexpected source PON binding or duplicate legacy PON')
+    if any(p == '/firmware/android/fstab' or p.startswith('/firmware/android/fstab/') for p in tree):
+        raise ValueError('M2 must use the project ramdisk fstab, without a legacy DT fstab')
     return dict(reference_boot_id=reference['boot_id'], checked_nodes=len(reference['nodes']),
                 phandles_resolved_to_paths=True, source_pon='upstream-parent-child',
+                pon_reboot_modes=[], first_stage_fstab='project-ramdisk',
                 scope='M1 bound platform devices and reserved memory; does not qualify inactive hardware')
