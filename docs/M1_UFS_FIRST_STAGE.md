@@ -197,3 +197,22 @@ Trial 21 used the signed vendor containing that property and the HMAC-only 6.18 
 Trial 19 selected `CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y` and used the earlier vendor without the patch-level property. The initial bridge-status log had rolled out of the console, leaving runtime activation unverified. CONFIGURE returned transport -22 at 47.765535 s. Generation and listener continuation did not run. Android subsequently entered enforcing and second stage, but HMAC retrieval returned -49 to keystore2. The compatibility-constructor probes reached `GetVendorPatchlevel()` without recording its return. All recovery hashes, both LP slots and F.20 boot completion passed. The host observer now saves the early bridge-status log before Android handoff. [Trial 19 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
 
 On the restored F.20 boot, a fresh temporary-key control returned generation 0, a 455-byte wrapped blob and deletion 0. The QSEECom entry probe measured a response pointer exactly 84 bytes after the generation request and 467 bytes after the deletion request. In both cases request and response capacities totaled 40 KiB. The revised 6.18 control uses this contiguous layout, moves the returned blob with overlap-safe copying and clears the shared allocation after terminal completion. Its hardware result is pending. [Stock buffer-layout control](../build/device/m1-f20-hmac-method-2026-11-14.json)
+
+### Trial 22 · Maintenance registration and earlyBootEnded return
+
+Boot `b5fcb72c-c9a8-4cc2-b56a-4704622ce223` used the HMAC-only 6.18 kernel, the vendor with the patch-level property and the same writable data/metadata seeds. The quieter observer preserved the complete service sequence in the console, which reports no ECC errors. The pmsg record has unrecoverable blocks and is excluded from these service observations. [Trial 22 evidence](../build/device/m1-ufs-hmac-2026-11-14.json)
+
+| Time since boot | Observed result |
+| ---: | --- |
+| 51.131446 s | Keystore2's `GetVendorPatchlevel()` returned, followed by the compatibility constructors. |
+| 51.132934 s | Project HAL returned HMAC parameters with status 0 to GSI keystore2 PID 2020. |
+| 51.139268 s | The same process returned 0 from registering `android.security.maintenance`. |
+| 51.140915 s | Keystore2 logged successful service registration and joined its thread pool. |
+| 51.159918 s | Boot-level key creation failed with UNIMPLEMENTED from the project HAL. |
+| 51.163362 s | The observed vdc PID 2027 exited with status 0 after a 0.185-second wait. |
+| 58.927777 s | Apexd activated 43 packages. |
+| 58.985348 s | Init imported `/apex/com.android.adbd/etc/init.rc`. |
+
+The trace still reports UNIMPLEMENTED in shared-secret computation. The successful vdc exit coexists with the failed boot-level key creation. The host observed diagnostic ACM and no ADB interface or transport. Init launched zygote processes that subsequently restarted. This trial's kernel contains the HMAC parameter path and omits the temporary-key callback control. The next kernel tests the contiguous request/response buffer on the same vendor and writable seeds.
+
+Recovery returned F.20 to boot `a35919f0-d87d-4b63-8dac-989854105004` with `sys.boot_completed=1`. Full readback matched all 17 original super chunks, the F.20 log-reader boot and original DTBO. Both LP slots and the Android-side super hash also matched the recovery baseline.

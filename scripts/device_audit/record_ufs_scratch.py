@@ -153,6 +153,16 @@ def extract(live, port_log, layout, *, console_tail=False):
         ('apexd' in l and ('com.google.android.adbd' in l or 'Found bootstrap APEX' in l or 'Activated ' in l))
         or re.search(r"init: starting service '(adbd|apexd)'", l)]
     trial['keystore_sigabrt_count'] = len(re.findall(r"init: Service 'keystore2' \(pid \d+\) received SIGABRT",console))
+    # A successful vdc exit can coexist with a failed boot-level key creation.
+    # Retain the full cause chain so the exit cannot imply working key storage.
+    cache_error = re.search(r'^\[\s*[0-9.]+\]\[\s*T\d+\] ks_buf: [^\n]*'
+                            r'SUPER_KEY\.set_up_boot_level_cache failed:.*?'
+                            r'^\[\s*[0-9.]+\]\[\s*T\d+\] "$', console, re.M | re.S)
+    trial['boot_level_key_error'] = cache_error[0].splitlines() if cache_error else []
+    trial['apex_init_imports'] = [line for line in console.splitlines()
+                                if 'init: Parsing file /apex/com.android.adbd/etc/init.rc' in line]
+    trial['zygote_starts'] = [line for line in console.splitlines()
+                            if re.search(r"init: \.\.\. started service 'zygote(?:_secondary)?' has pid \d+$", line)]
     trial['keystore_entropy_waits'] = [
         re.sub(r'\([^)]*\)', '(probe)', line)
         for line in console.splitlines()
