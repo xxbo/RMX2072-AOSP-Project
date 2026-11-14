@@ -94,6 +94,18 @@
       ],
       "job_log_sha256": "d208be269f5515b8d3853bc0f9af292ac7464565c01133aca8e50a1554aae0fb",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43625784408,
+      "source_commit": "b953ee88707d049f1016ae87d11508e4a8cf562b",
+      "result": "FAIL_BUILD",
+      "first_failure": "Unrelated framework-virtualization Java module requires Error Prone configuration",
+      "selected_log": [
+        "2026-11-14T18:36:55.7055653Z error: packages/modules/Virtualization/libs/framework-virtualization/Android.bp:5:1: module \"framework-virtualization.impl\" variant \"android_common\" (created by module \"framework-virtualization\" variant \"android_common\"): cannot build with Error Prone, missing external/error_prone?",
+        "2026-11-14T18:36:55.9418078Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "d08bc9f05ab70ef157a34ec2f161f1c8bfcc40dad288ac5e621bc4b423be19db",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -101,13 +113,17 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "source_init_run": 43625784408,
-    "source_init_commit": "b953ee88707d049f1016ae87d11508e4a8cf562b"
+    "source_init_run": 43627891448,
+    "source_init_commit": "55c007b35b7a369c5e08fe82ff540088b385aa92"
   },
   "host_tests": {
     "total": 81,
     "passed": 81,
-    "method": "77 passed in full discovery, then 4 DTC-dependent tests passed with the checked compiler on PATH"
+    "method": "77 passed in full discovery, then 4 DTC-dependent tests passed with the checked compiler on PATH",
+    "additional_checks": [
+      "M2 board-identity witness regression passed",
+      "Five bounded workspace-completion tests passed, including question-mark path punctuation"
+    ]
   },
   "phone_state": "Accepted M1 trial 35 GSI; M2 not flashed",
   "source_kernel": {

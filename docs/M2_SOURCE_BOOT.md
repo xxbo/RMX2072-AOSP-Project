@@ -204,4 +204,14 @@ dex jar in this native-only workspace. `system/apex` now keeps all implementatio
 sources while sparse checkout excludes only `apexd/apexd_testdata/`. The exact
 exclusion and pinned project revision accompany the artifact and are validated
 locally. No init source, target dependency implementation or build-tool validation
-is patched. Run 43625784408 is building this scoped workspace.
+is patched. Run 43625784408 passed this test-data error.
+
+Run 43625784408 next reported an Error Prone requirement from the unrelated
+`framework-virtualization.impl` Java module. Upstream init only consumes
+Virtualization's `libavf_cc_flags` headers and `avf_build_flags_cc` defaults.
+The project is now sparse to those original files, its root package metadata,
+and the build directory's flag declaration; these exact paths are also verified
+on artifact installation. The missing-path parser now recognizes question-mark
+punctuation in diagnostics and its regression tests pass. Source preparation
+and target compilation are separate workflow steps. Run 43627891448 is pending;
+no M2 image has been flashed.
