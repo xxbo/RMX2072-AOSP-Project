@@ -75,6 +75,8 @@ sample() {
 sample idle sleep 1
 worker_start=$(date +%s)
 if [ "$#" = 1 ]; then
+    printf 'HMAC_CONTROL_UPTIME '
+    cut -d' ' -f1 /proc/uptime
     sample hmac_parameters env LD_LIBRARY_PATH=/vendor/lib64:/apex/com.android.vndk.v30/lib64 "$control"
 else
     key_created=1

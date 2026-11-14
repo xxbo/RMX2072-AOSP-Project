@@ -247,6 +247,239 @@
           1
         ]
       }
+    },
+    {
+      "id": "ufs-host-g3-gsi17-firststage-ufs-12",
+      "boot_id": "85a56eb4-25df-41d8-8657-9b036f34e373",
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "ufs_super": "/sys/devices/platform/soc/soc:ufs-host-lab/1d84000.ufs/host0/target0:0:0/0:0:0:0/block/sda/sda10",
+      "mounts": {
+        "system": {
+          "node": "dm-14",
+          "device": "254:14",
+          "linear_device": "254:0",
+          "super": "8:10",
+          "extents": 16,
+          "root_sha256": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+          "avb_at_seconds": 26.408723,
+          "verity_status": "0 7599128 verity V 0",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        },
+        "vendor": {
+          "node": "dm-15",
+          "device": "254:15",
+          "linear_device": "254:1",
+          "super": "8:10",
+          "extents": 1,
+          "root_sha256": "a78837a6ad976c4ff493f5ee81609cc66de7f4a99801ea2ffc06806bde6c6135",
+          "avb_at_seconds": 26.488293,
+          "verity_status": "0 32768 verity V -",
+          "pid": 1,
+          "filesystem": "ext4",
+          "readonly": true,
+          "mount_rc": 0
+        }
+      },
+      "enforcing_seconds": 47.458048,
+      "second_stage_seconds": 47.484419,
+      "file_reads": {
+        "/system/build.prop": {
+          "at_seconds": 47.534805,
+          "pid": 1,
+          "inode": 659,
+          "device": "254:14",
+          "requested_bytes": 5675,
+          "returned_bytes": 5675
+        },
+        "/system/etc/init/hw/init.rc": {
+          "at_seconds": 47.56098,
+          "pid": 1,
+          "inode": 757,
+          "device": "254:14",
+          "requested_bytes": 56913,
+          "returned_bytes": 56913
+        }
+      },
+      "raw_sha256": {
+        "acm.log": "a9d17b7d6a1b95189aec086b5059abf8cc56bf5cb183a72f6052d90a7635a18a",
+        "console-ramoops-0": "da61a0c155778d3e1a3da3f31a6d268592a5c6744112cac6daa9027ba33f9aab",
+        "pmsg-ramoops-0": "324f9283c3385bb73676353a4a84c4511f49ea7ef3059b9108936439242f30e0"
+      },
+      "zygote_imports": {
+        "/system/etc/init/hw/init.zygote64_32.rc": {
+          "at_seconds": 47.569132,
+          "pid": 1,
+          "inode": 762,
+          "device": "254:14",
+          "requested_bytes": 620,
+          "returned_bytes": 620,
+          "parsing_seconds": 47.568702
+        },
+        "/system/etc/init/hw/init.zygote64.rc": {
+          "at_seconds": 47.570109,
+          "pid": 1,
+          "inode": 761,
+          "device": "254:14",
+          "requested_bytes": 901,
+          "returned_bytes": 901,
+          "parsing_seconds": 47.569582
+        },
+        "/system/etc/init/hw/init.boringssl.zygote64_32.rc": {
+          "at_seconds": 47.570809,
+          "pid": 1,
+          "inode": 756,
+          "device": "254:14",
+          "requested_bytes": 392,
+          "returned_bytes": 392,
+          "parsing_seconds": 47.570414
+        }
+      },
+      "vold_fstab": {
+        "at_seconds": 48.457283,
+        "pid": 2011,
+        "inode": 18,
+        "device": "254:15",
+        "requested_bytes": 220,
+        "returned_bytes": 220,
+        "service": "vold",
+        "domain": "u:r:vold:s0",
+        "service_start_seconds": 48.362338,
+        "domain_evidence": "Caller(pid=2011,uid=0,sid=u:r:vold:s0)"
+      },
+      "adb": {
+        "result": "NO_TRANSPORT_OBSERVED",
+        "samples": 93,
+        "errors": 0,
+        "transport_states": [],
+        "interval_seconds": 96.156,
+        "maximum_sample_gap_seconds": 1.047,
+        "diagnostic_acm_seen": true,
+        "raw_sha256": {
+          "adb.jsonl": "9d02b3ed2600afa6d9e23deb1d74e14e7f9a82a4f2427f6fe17466786bf27420",
+          "host-events.jsonl": "6d5d7101f7d2b8e0c94b3e62437105abecc37b6ea2b32b36321f59069e139698"
+        }
+      },
+      "keymaster": {
+        "version_transaction": {
+          "transport_rc": 0,
+          "status": 0,
+          "api": "4.0",
+          "ta": "4.546"
+        },
+        "listener_lifetimes": [
+          {
+            "id": 11,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          },
+          {
+            "id": 4352,
+            "register_rc": 0,
+            "register_result": 0,
+            "unregister_rc": 0,
+            "unregister_result": 0
+          }
+        ],
+        "gsi_hidl_reply": {
+          "instance": "android.hardware.keymaster@4.0::IKeymasterDevice/default",
+          "service_pid": 2036,
+          "caller": "keystore2",
+          "caller_pid": 2019,
+          "registration_seconds": 48.789247,
+          "reply_seconds": 48.790201,
+          "level": "TEE",
+          "name": "RMX2072 keymaster64 API 4.0 TA 4.546"
+        },
+        "shared_secret_parameter_error": {
+          "seconds": 48.790915,
+          "rc": -100
+        }
+      },
+      "first_keystore_abort": null,
+      "keystore_registrations": [
+        {
+          "tid": 2019,
+          "name": "android.security.compat",
+          "rc": 0
+        }
+      ],
+      "qsee_app_lookup_rc": {
+        "keymaster": -2,
+        "keymaster64": 0
+      },
+      "scratch_mounts": {
+        "data": {
+          "device": "7:0",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/data.ext4",
+          "write_fsync_unlink": "PASS"
+        },
+        "metadata": {
+          "device": "7:1",
+          "filesystem": "ext4",
+          "backing": "/run/m1-scratch/metadata.ext4",
+          "write_fsync_unlink": "PASS"
+        }
+      },
+      "keystore_add_service_attempts": [
+        "android.security.compat"
+      ],
+      "maintenance_last_lookup_failure": "[   85.687773][    T1] init: Control message: Could not find 'aidl/android.security.maintenance' for ctl.interface_start from pid: 1997 (/system/bin/servicemanager)",
+      "vdc": {
+        "pid": 2025,
+        "start": "[   48.618785][    T1] init: SVC_EXEC service 'exec 5 (/system/bin/vdc keymaster earlyBootEnded)' pid 2025 (uid 1000 gid 1000+0 context default) started; waiting...",
+        "exit_record": null
+      },
+      "usb": {
+        "samples": 45,
+        "device_ids": [
+          "VID_1D6B&PID_0104",
+          "VID_1D6B&PID_0104&MI_00"
+        ],
+        "interface_ids": [
+          "USB\\Class_02",
+          "USB\\Class_02&SubClass_02",
+          "USB\\Class_02&SubClass_02&Prot_01"
+        ],
+        "adb_interface_seen": false,
+        "max_gap_seconds": 2.257,
+        "raw_sha256": "7f258cc5fba4975dd58f98e6d3acb00d5d4212d0b65e4130a8ffcf21796fc442"
+      },
+      "apex_observations": [
+        "[   47.728074][ T1878] apexd-bootstrap: Found pre-installed APEX /system/apex/com.google.android.adbd.capex",
+        "[   47.762725][ T1878] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.virt.apex",
+        "[   47.762917][ T1878] apexd-bootstrap: Found bootstrap APEX /system/apex/com.google.android.tzdata6.apex",
+        "[   47.763102][ T1878] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.i18n.apex",
+        "[   47.763280][ T1878] apexd-bootstrap: Found bootstrap APEX /system/apex/com.android.runtime.apex",
+        "[   47.876768][ T1878] apexd-bootstrap: Activated 4 packages. duration=72ms"
+      ],
+      "keystore_sigabrt_count": 0,
+      "build": {
+        "actions_run": 43543457520,
+        "kernel_source_commit": "0081f04d9a0361cdcbd1d7231887fb11e8ac33b4",
+        "artifact_id": 14093109687,
+        "artifact_digest": "sha256:ce347376a0fb1320fbf7624acfef8236379d5c0378654e6884ea378c467258af",
+        "kernel_sha256": "60a39368954c1d01867a37a989ecfbf7dac475213e65428cd50ad73acb8e354f",
+        "ramdisk_sha256": "445b2aff04a13ec8e136c09fd8673188ef9fa70103516870a21e6991e9a429ba",
+        "boot_sha256": "1951a0ed9719fc95eee1e09ee19dc0cf37c5340e7ae517d69981d7898d9cd5ce"
+      },
+      "restoration": {
+        "firmware": "RMX2072_11_F.20",
+        "sys_boot_completed": 1,
+        "boot_id": "95660abd-e7be-476a-94c0-7124ff583da7",
+        "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+        "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "lp_slots": [
+          0,
+          1
+        ]
+      }
     }
   ]
 }

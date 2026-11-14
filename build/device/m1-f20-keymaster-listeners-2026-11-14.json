@@ -151,5 +151,43 @@
     "name": "Keymaster HAL: 4",
     "author": "QTI",
     "source_client_sha256": "3a2cf7e3689104587a48c7592ccc3603dbede63b2e1e119b39efd636c13bf964"
+  },
+  "hmac_parameter_control": {
+    "interface": "android.hardware.keymaster@4.0::IKeymasterDevice/default",
+    "method": "getHmacSharingParameters",
+    "boot_id": "95660abd-e7be-476a-94c0-7124ff583da7",
+    "client_sha256": "71844d2532aefc295bbfb248b4c6b294c83b9cbda7ce4a01fd2368d9ed86d63f",
+    "captures": [
+      {
+        "uptime_seconds": 102.16,
+        "raw_sha256": "3ba530146254127e951e6c07afca2c483d491953d0b078b0f7e550745260ad44",
+        "hal_pid": 654,
+        "qseecomd_pid": 670,
+        "client_exit": 0,
+        "hidl_status": 0,
+        "scm_calls": [
+          {
+            "function": "0x70000006",
+            "result": 0
+          }
+        ],
+        "maintenance": "found"
+      },
+      {
+        "uptime_seconds": 104.08,
+        "raw_sha256": "e4f08581d594f77d182ee84ef5127f5c110a3e688e631684db970e0d9874f5a5",
+        "hal_pid": 654,
+        "qseecomd_pid": 670,
+        "client_exit": 0,
+        "hidl_status": 0,
+        "scm_calls": [
+          {
+            "function": "0x70000006",
+            "result": 0
+          }
+        ],
+        "maintenance": "found"
+      }
+    ]
   }
 }
