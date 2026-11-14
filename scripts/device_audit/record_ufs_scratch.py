@@ -44,6 +44,10 @@ def keymaster_observations(serial, console, keystore):
                     serial, re.M)
     if key:
         result['temporary_hmac_key'] = dict(zip(key_fields, map(int, key.groups())))
+    stages = [line for line in console.splitlines()
+              if re.match(r'^\[\s*[0-9.]+\]\[\s*T\d+\] rmx2072-temp-key: ', line)]
+    if stages:
+        result['temporary_key_stages'] = stages
 
     # Match the init-launched service and client from the same boot. The log
     # in getHardwareInfo runs after the HIDL service has invoked its reply.
