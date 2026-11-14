@@ -7,8 +7,10 @@ p.add_argument('--ndk',type=Path,required=True)
 p.add_argument('--adb-public-key',type=Path,required=True)
 p.add_argument('--trial',required=True)
 p.add_argument('--autonomous-ufs',action='store_true')
+p.add_argument('--pdc-only',action='store_true',help='Apply only the measured upstream PDC compatible, preserving TLMM and all resources')
 p.add_argument('--reuse-super',action='store_true',help='Reuse verified current chunks only when both signed images are unchanged')
 a=p.parse_args()
+if a.pdc_only and not a.autonomous_ufs:p.error('Use the autonomous recovery path for the PDC-only trial')
 if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}',a.trial):p.error('Expected the recorded UFS trial naming')
 w=a.workspace.resolve();current=w/'current';repo=Path(__file__).resolve().parents[2];build=repo/'scripts/build'
 ndk=a.ndk.resolve();tool=ndk/'toolchains/llvm/prebuilt/windows-x86_64/bin'
@@ -28,7 +30,13 @@ run(sys.executable,avb,'add_hashtree_footer','--image',current/'vendor-signed.im
 run(sys.executable,build/'prepare_ufs_verification.py','--system',current/'system.img','--vendor',current/'vendor-signed.img','--vendor-key',current/'vendor.avbpubkey','--vendor-report',current/'vendor/vendor.json','--keymaster-info','--usb-guard',current/'rmx-m1-guard','--output',current/'verified-profile')
 run(sys.executable,build/'build_diag_ramdisk.py','--busybox',current/'busybox','--reboot-helper',current/'reboot-edl','--entry-carrier',current/'entry-carry','--return-to-edl-after',180,'--gadget-bind-delay',20,'--trial-id',a.trial,'--ufs-host-g3-test','--super-tools-apks',current/'apks','--android-first-stage',current/'init','--first-stage-witness',current/'first-stage-witness','--ufs-first-stage',current/'verified-profile','--scratch-volumes',current/'volumes','--adb-public-key',a.adb_public_key.resolve(),'--output',current/'ramdisk',*(['--autonomous-ufs'] if a.autonomous_ufs else []))
 kernel=json.loads((current/'kernel/provenance.json').read_text())
-run(sys.executable,build/'pack_reacquired_ufs_boot.py','--stock-boot',w/'recovery/f20/boot.img','--stock-dtbo',w/'recovery/f20/dtbo.img','--overlays',current/'dt','--libfdt',current/'dtc-tools/libfdt-1.dll','--kernel',current/'kernel/Image','--expected-kernel-sha256',kernel['image_sha256'],'--ramdisk',current/'ramdisk/ramdisk.cpio.gz','--output',current/'boot',*([] if a.autonomous_ufs else ['--entry-probe',current/'native-entry-probe.bin']))
+pdc=[]
+if a.pdc_only:
+ config=(current/'kernel/sm8250_bootstrap_dot_config').read_text()
+ assert all(x+'=y\n' in config for x in ('CONFIG_QCOM_PDC','CONFIG_SPMI_MSM_PMIC_ARB','CONFIG_MFD_SPMI_PMIC'))
+ run(current/'dtc-tools/dtc.exe','-q','-@','-I','dts','-O','dtb','-o',current/'dt/rmx2072-pdc-only.dtb',repo/'device/realme/bladerunner_48m/dts/rmx2072-pdc-only.dts')
+ pdc=['--pdc-overlay',current/'dt/rmx2072-pdc-only.dtb']
+run(sys.executable,build/'pack_reacquired_ufs_boot.py','--stock-boot',w/'recovery/f20/boot.img','--stock-dtbo',w/'recovery/f20/dtbo.img','--overlays',current/'dt','--libfdt',current/'dtc-tools/libfdt-1.dll','--kernel',current/'kernel/Image','--expected-kernel-sha256',kernel['image_sha256'],'--ramdisk',current/'ramdisk/ramdisk.cpio.gz','--output',current/'boot',*([] if a.autonomous_ufs else ['--entry-probe',current/'native-entry-probe.bin']),*pdc)
 if a.reuse_super:
  sys.path.insert(0,str(repo/'scripts/device_audit'))
  from check_super_chunks import verify

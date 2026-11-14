@@ -17,6 +17,7 @@ from wrap_native_image import wrap
 from pack_diag_boot import validate_pstore_layout
 from check_watchdog import check_watchdog_control
 from check_ufs_host import check_ufs_host
+from check_pdc import check_pdc_control
 from check_usb_stream import require_sid0
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'device_audit'))
 from inspect_boot_dt import inspect, fdt
@@ -33,7 +34,7 @@ def sha(data):
 
 
 def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha256,
-         ramdisk, output, entry_probe=None):
+         ramdisk, output, entry_probe=None, pdc_overlay=None):
     repo = Path(__file__).resolve().parents[2]
     if output.resolve().is_relative_to(repo):
         raise ValueError('Keep private images outside the repository')
@@ -110,6 +111,17 @@ def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha25
     bundle = b''.join(blobs)
     if sha(bundle) != '40860552644099158f121f2b14c3d92d26c85bf55b2fd4988fc1faa9a9c27758':
         raise ValueError('Rebuilt bundle differs from the previously tested G3 bundle')
+    extra_overlays = {}
+    if pdc_overlay:
+        overlay = pdc_overlay.read_bytes()
+        if sha(overlay) != '453d9e5e753cb0e6196e17e301c79c430bbd1f4541f62106c78c5c759d5c3519':
+            raise ValueError('Unexpected PDC-only overlay')
+        changed = apply(blobs[12], overlay)
+        checks['pdc_pre_oem'] = check_pdc_control(blobs[12], changed)
+        checks['pdc_post_oem'] = check_pdc_control(apply(blobs[12], oem), apply(changed, oem))
+        blobs[12] = changed
+        bundle = b''.join(blobs)
+        extra_overlays['pdc_only'] = sha(overlay)
     for at, value in ((8, len(wrapped)), (16, len(rd)), (1648, len(bundle))):
         struct.pack_into('<I', header, at, value)
     raw = header + wrapped + bytes(-len(wrapped)%4096) + rd + bytes(-len(rd)%4096) + bundle
@@ -128,7 +140,8 @@ def pack(stock_boot, stock_dtbo, overlays, libfdt, kernel, expected_kernel_sha25
     record = dict(source_boot_sha256=sha(source), dtbo_sha256=sha(dtbo), boot_sha256=sha(result),
                   kernel_sha256=sha(raw_kernel), entry_probe=bool(entry_probe),
                   ramdisk_sha256=sha(rd), dtb_bundle_sha256=sha(bundle),
-                  selected_base_sha256=sha(stages[3]), other_24_trees_identical=True,
+                  selected_base_sha256=sha(blobs[12]), other_24_trees_identical=True,
+                  extra_overlays=extra_overlays,
                   overlays=OVERLAYS, checks=checks, cmdline=command.decode(), avb_envelope=envelope,
                   status='packaged-not-device-tested')
     (output/'control.json').write_text(json.dumps(record, indent=2)+'\n')
@@ -140,5 +153,6 @@ if __name__ == '__main__':
     for name in ('stock-boot', 'stock-dtbo', 'overlays', 'libfdt', 'kernel', 'ramdisk', 'output'):
         parser.add_argument('--'+name, type=Path, required=True)
     parser.add_argument('--entry-probe', type=Path)
+    parser.add_argument('--pdc-overlay', type=Path, help='Independently checked PDC-only binding control')
     parser.add_argument('--expected-kernel-sha256', required=True)
     pack(**vars(parser.parse_args()))

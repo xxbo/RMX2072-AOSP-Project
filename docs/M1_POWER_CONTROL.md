@@ -60,3 +60,12 @@ boot-reason properties were `shutdown,userrequested`. Thus disconnected
 power-key startup works in the stock control. This does not prove that the
 earlier 6.18 `reboot -p` completed its shutdown sequence.
 [Operator and device evidence](../build/device/m1-f20-power-control-2026-11-14.json)
+
+A PDC-only control is prepared with `rebuild_m1_usb_trial.py --autonomous-ufs
+--pdc-only`. Before and after applying OEM overlay 17, its checker requires
+that every node/property except PDC's compatible remains identical. It checks
+the captured register ranges, GIC parent and SPMI PDC pin 1 (GIC SPI 481).
+Synthetic negative tests reject changed TLMM, routing, IRQ or status. The
+actual retained board tree also passed both checks. No PDC image has been
+boot-tested yet, and this does not supply the missing PON poweroff driver.
+[Offline validation](../build/device/m1-pdc-only-preflight-2026-11-14.json)
