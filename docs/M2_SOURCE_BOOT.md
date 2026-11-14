@@ -118,3 +118,10 @@ the previous host had only 24 GiB free after fetching the selected sources.
 An upstream `bionic/libc/Android.bp` dependency audit additionally identified
 `libscudo`, `gwp_asan` and `gwp_asan_headers` in static libc. Their pinned
 `external/scudo` and `external/gwp_asan` projects are included explicitly.
+
+The first three failed build logs are indexed by run, source revision, first
+failure and full-log digest in `build/device/m2-build-progress-2026-11-15.json`.
+Run 43617659636 was superseded during sync; run 43617966430 includes those libc
+dependencies. Host checks passed all 81 cases, including the four DTC-dependent
+checks run after adding the checked compiler to PATH. M2 acceptance also rejects
+a missing, duplicated or writable LUN in the six-disk same-boot witness.

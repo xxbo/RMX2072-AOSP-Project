@@ -1,0 +1,59 @@
+{
+  "attempts": [
+    {
+      "run_id": 43612987811,
+      "source_commit": "022b01957df59148719941395511dece931cf9ef",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing external/pogreb",
+      "selected_log": [
+        "2026-11-14T16:11:20.5126013Z repo sync has finished successfully.",
+        "2026-11-14T16:11:28.4378968Z Failed to find deps of android/soong/cmd/soong_ui: Error parsing directory \"/home/runner/work/_temp/rmx2072-m2-aosp/external/pogreb\": open /home/runner/work/_temp/rmx2072-m2-aosp/external/pogreb: no such file or directory"
+      ],
+      "job_log_sha256": "a407f5829fb4ad63664c5fecb1fb844364391f11a9607cf621fa30e3c8ab5083",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43614577780,
+      "source_commit": "73005e44bca1e8bad245e83451347b259d026927",
+      "result": "FAIL_BUILD",
+      "first_failure": "Obsolete BOARD_BUILD_SYSTEM_ROOT_IMAGE",
+      "selected_log": [
+        "2026-11-14T16:29:47.5104783Z repo sync has finished successfully.",
+        "2026-11-14T16:29:58.1947865Z device/realme/rmx2072_m2/BoardConfig.mk:10: error: BOARD_BUILD_SYSTEM_ROOT_IMAGE is obsolete.",
+        "2026-11-14T16:29:59.3553528Z repo sync has finished successfully.",
+        "2026-11-14T16:29:59.6702421Z device/realme/rmx2072_m2/BoardConfig.mk:10: error: BOARD_BUILD_SYSTEM_ROOT_IMAGE is obsolete.",
+        "2026-11-14T16:29:59.7017044Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "0eabfd242192041a699fbc50f3d9113bdfd09c2261f22b64150c150684f80cbe",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43616087095,
+      "source_commit": "fbdfaefe82026ca7aa2b0a6e8f8246f35af3969c",
+      "result": "FAIL_BUILD",
+      "first_failure": "arm64 product did not declare TARGET_SUPPORTS_64_BIT_APPS",
+      "selected_log": [
+        "2026-11-14T16:47:16.4956988Z repo sync has finished successfully.",
+        "2026-11-14T16:47:30.4604263Z build/make/core/board_config.mk:344: error: Building a 32-bit-app-only product on a 64-bit device. If this is intentional, set TARGET_SUPPORTS_64_BIT_APPS := false.",
+        "2026-11-14T16:47:30.5055949Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "1a25713973cff18d3e52ce51716612d4d7b4a02caa68d011cdf1e606c8df1f00",
+      "hardware_test": "NOT RUN"
+    }
+  ],
+  "cancelled_run": {
+    "run_id": 43617659636,
+    "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
+  },
+  "pending": {
+    "source_init_run": 43617966430,
+    "source_init_commit": "3494c6c05c97012070b2af5ebe67ebbac00bad43",
+    "source_pon_kernel_run": 43613974200
+  },
+  "host_tests": {
+    "total": 81,
+    "passed": 81,
+    "method": "77 passed in full discovery, then 4 DTC-dependent tests passed with the checked compiler on PATH"
+  },
+  "phone_state": "Accepted M1 trial 35 GSI; M2 not flashed"
+}
