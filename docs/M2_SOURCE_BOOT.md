@@ -45,6 +45,12 @@ ordering: SCM selects warm EDL before the power-key driver selects reset type.
 Legacy and source-tree PON build options are mutually exclusive. Source-tree
 PON must pass its own warm, disconnected-start and fault-recovery tests.
 
+The source PON parent has no `mode-*` properties. In the pinned ACK
+`drivers/power/reset/reboot-mode.c`, an unmatched mode returns zero and the
+notifier invokes the hardware write only for a nonzero mode. Thus the new parent
+does not add reboot-mode register writes in this configuration. This source
+audit does not replace the physical EDL/reset ordering test.
+
 ## Candidate preparation on November 15
 
 `build_m2_device_tree.py` compiles the full official 20607 base and MTP overlay,
