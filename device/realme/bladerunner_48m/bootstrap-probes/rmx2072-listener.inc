@@ -163,10 +163,16 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		0x108, 12, 6, 0x10000002, 128, 0, 0x30000003, 256, 0,
 		0x20000001, 2, 0, 0x20000005, 4, 0, 0x30000008, 256, 0, 0x700001f7, 1, 0,
 	};
+	/* Engineering control for the verified CP3A.260905.010 GSI only.
+	 * Its build.prop specifies Android 17 and security patch 2026-09-05.
+	 * Keymaster CONFIGURE uses OS_VERSION and monthly OS_PATCHLEVEL. */
+	static const u32 configure[] = {
+		0x116, 12, 2, 0x300002c1, 170000, 0, 0x300002c2, 202609, 0,
+	};
 	const size_t capacity = SZ_32K + SZ_8K;
 	struct qcom_scm_qseecom_resp resp = {};
 	struct rmx2072_key_test t = {};
-	s32 generate_status = -ENODATA, delete_status = -ENODATA;
+	s32 configure_status = -ENODATA, generate_status = -ENODATA, delete_status = -ENODATA;
 	u32 board, offset, blob_len = 0, i;
 	int rc, teardown = -ENODATA;
 	u64 first = U64_MAX, final = U64_MAX;
@@ -205,6 +211,18 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 		rc = rc ?: -EIO;
 		goto out;
 	}
+	for (i = 0; i < ARRAY_SIZE(configure); ++i)
+		req[i] = cpu_to_le32(configure[i]);
+	memset(reply, 0, capacity);
+	reply[0] = cpu_to_le32((u32)-1000);
+	rc = rmx2072_key_call(&t, sizeof(configure), &terminal);
+	if (rc)
+		goto unregister;
+	configure_status = (s32)le32_to_cpu(reply[0]);
+	pr_info("rmx2072-temp-key: configure status=%d os_version=170000 os_patchlevel=202609\n",
+		configure_status);
+	if (configure_status)
+		goto unregister;
 	for (i = 0; i < ARRAY_SIZE(generate); ++i)
 		req[i] = cpu_to_le32(generate[i]);
 	memset(reply, 0, capacity);
@@ -259,9 +277,9 @@ out:
 		}
 	}
 	mutex_unlock(&qcom_scm_qseecom_call_lock);
-	return sysfs_emit(buf, "rc=%d first=%llu listener=%u command=%u callbacks=%u final=%llu generate=%d blob_bytes=%u delete=%d unregister=%d\n",
+	return sysfs_emit(buf, "rc=%d first=%llu listener=%u command=%u callbacks=%u final=%llu generate=%d blob_bytes=%u delete=%d unregister=%d configure=%d\n",
 			  rc, first, t.last_listener, t.time_command, t.callbacks, final,
-			  generate_status, blob_len, delete_status, teardown);
+			  generate_status, blob_len, delete_status, teardown, configure_status);
 }
 
 static const struct kernel_param_ops rmx2072_temp_key_ops = { .get = rmx2072_temp_key };

@@ -40,10 +40,13 @@ def keymaster_observations(serial, console, keystore):
         result['listener_lifetimes'] = rows
     key_fields = ('rc', 'first', 'listener', 'command', 'callbacks', 'final', 'generate',
                   'blob_bytes', 'delete', 'unregister')
-    key = re.search(r'^M1EVENT temporary_key ' + ' '.join(f + r'=(-?\d+)' for f in key_fields) + '$',
+    key = re.search(r'^M1EVENT temporary_key ' + ' '.join(f + r'=(-?\d+)' for f in key_fields)
+                    + r'(?: configure=(-?\d+))?$',
                     serial, re.M)
     if key:
-        result['temporary_hmac_key'] = dict(zip(key_fields, map(int, key.groups())))
+        result['temporary_hmac_key'] = dict(zip(key_fields, map(int, key.groups()[:-1])))
+        if key.groups()[-1] is not None:
+            result['temporary_hmac_key']['configure'] = int(key.groups()[-1])
     stages = [line for line in console.splitlines()
               if re.match(r'^\[\s*[0-9.]+\]\[\s*T\d+\] rmx2072-temp-key: ', line)]
     if stages:

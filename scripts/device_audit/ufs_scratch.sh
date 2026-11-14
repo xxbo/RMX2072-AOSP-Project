@@ -104,15 +104,20 @@ if [ -r "$apps" ]; then
     done
     temp_key=/sys/module/qcom_scm/parameters/temp_hmac_key
     if [ -r "$temp_key" ]; then
-        (sleep 5; echo w > /proc/sysrq-trigger; echo l > /proc/sysrq-trigger) &
-        key_monitor=$!
+        grep -qx 'ro.build.version.release=17' "$root/system/build.prop"
+        grep -qx 'ro.build.version.security_patch=2026-09-05' "$root/system/build.prop"
+        key_done=/run/m1-temp-key-complete
+        (sleep 5
+         if [ ! -e "$key_done" ]; then
+             echo w > /proc/sysrq-trigger
+             echo l > /proc/sysrq-trigger
+         fi) &
         if result=$(cat "$temp_key"); then
             echo "M1EVENT temporary_key $result" > /dev/ttyGS0
         else
             echo "M1EVENT temporary_key_read_failed=$?" > /dev/ttyGS0
         fi
-        kill "$key_monitor" 2>/dev/null || true
-        wait "$key_monitor" 2>/dev/null || true
+        touch "$key_done"
     fi
     if [ -r "$version" ]; then
         if result=$(cat "$version"); then
