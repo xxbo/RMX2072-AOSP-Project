@@ -151,3 +151,10 @@ repair added the real `toolchain/pgo-profiles` project. Blueprint then required
 `kernel-config-soong-rules`, declared in the pinned `kernel/configs/build/Android.bp`.
 Both projects are now explicit workspace dependencies. This is still a source
 workspace failure before compiling the target executable.
+
+The static target dependency audit also follows modern protobuf into
+`external/abseil-cpp`, and `libsnapshot_init` into `external/libchrome` with its
+`external/modp_b64` and `libnativehelper` dependencies. These real upstream
+projects are selected explicitly. Host Python launchers/stdlib are already
+provided by the pinned build-tools project; no replacement libraries or stubs
+are introduced.

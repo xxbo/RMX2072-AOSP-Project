@@ -8,17 +8,17 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 EXACT = '''bionic bootable/recovery device/common device/generic/arm64
-device/generic/common external/avb external/boringssl external/brotli
+device/generic/common external/abseil-cpp external/avb external/boringssl external/brotli
 external/bzip2 external/e2fsprogs external/fec external/fmtlib external/gflags
 external/go-cmp external/golang-protobuf external/google-benchmark
-external/googletest external/gwp_asan external/jsoncpp external/libcap external/libcxx
+external/googletest external/gwp_asan external/jsoncpp external/libcap external/libchrome external/libcxx
 external/libcxxabi external/libevent external/liburing external/libxml2
-external/lz4 external/lzma external/pcre external/pogreb external/protobuf external/selinux
+external/lz4 external/lzma external/modp_b64 external/pcre external/pogreb external/protobuf external/selinux
 external/scudo external/sqlite external/starlark-go external/tinyxml2 external/zlib external/zstd
 external/rust/android-crates-io external/rust/cxx
 frameworks/native frameworks/libs/native_bridge_support frameworks/libs/modules-utils
 frameworks/proto_logging hardware/libhardware hardware/libhardware_legacy
-hardware/interfaces kernel/configs packages/modules/Virtualization packages/modules/adb
+hardware/interfaces kernel/configs libnativehelper packages/modules/Virtualization packages/modules/adb
 prebuilts/build-tools prebuilts/clang-tools prebuilts/clang/host/linux-x86
 prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8
 prebuilts/go/linux-x86 prebuilts/jdk/jdk21 prebuilts/jdk/jdk25
