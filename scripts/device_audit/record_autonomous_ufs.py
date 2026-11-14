@@ -45,6 +45,11 @@ def main():
         source=load(trial/'boot-only-source.json')
         record['boot_only_update']={key:source[key] for key in ('previous_record','previous_boot_sha256')}
     if (live/'power-providers.txt').exists():record['early_power_providers']=(live/'power-providers.txt').read_text()
+    if (live/'power-driver-check.json').exists():
+        from check_power_ready import check_power_ready
+        checked=check_power_ready((live/'power-provider-live.txt').read_text(),boot)
+        assert checked==load(live/'power-driver-check.json')
+        record['power_drivers']=checked
     if (restore/'restored.json').exists():
         record['restored']=load(restore/'restored.json')
         record['restore_readbacks']=[json.loads(x) for x in (restore/'readbacks.jsonl').read_text().splitlines()]

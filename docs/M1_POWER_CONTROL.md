@@ -158,3 +158,19 @@ watchdog recovery pass. GSI acceptance, PS_HOLD binding
 and disconnected power-key startup were not tested on this boot. Retry this
 same kernel from the stock baseline without relaxing the journal parser.
 [Trial 34 evidence](../build/device/m1-pon-journal-rejection-34-2026-11-14.json)
+
+## Trial 35: primary PON and PS_HOLD bound in Android
+
+The same `dc41c03c...` kernel was retried from the verified F.20 baseline.
+Boot `17f1c747-bf6f-4d94-a92f-059090ed9aea` reported `previous_guard=none`
+and autonomously entered Android 17. Its same-boot power snapshot passed
+`check_power_ready`: primary SID 0 binds pmic-spmi, the primary PON binds
+pm8941-pwrkey with revision 1/subtype 4, and c264000.restart binds msm-restart.
+The secondary/modem PON nodes remain unbound as intended by the narrow alias.
+
+Local adbd readiness retained the guard before host acceptance. Enforcing,
+verified UFS system/vendor and the maintenance service remain available.
+The 193.781-second same-boot soak and 1 MiB hash-checked ADB transfer passed.
+This verifies driver binding in GSI; physical disconnected shutdown and
+power-key startup still require operator testing.
+[Trial 35 evidence](../build/device/m1-pon-gsi-35-2026-11-14.json)
