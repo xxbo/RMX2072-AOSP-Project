@@ -150,6 +150,13 @@ def main():
       event('Recovery gate released: '+json.dumps(gate))
      enter('recovery-entry');restore();sys.exit(0)
     assert sha(p/'boot/boot-diag.img')==boot['boot_sha256']
+    # Reject a partially refreshed current directory before entering EDL.
+    assert sha(p/'kernel/Image')==boot['kernel_sha256']
+    assert json.loads((p/'kernel/provenance.json').read_text())['image_sha256']==boot['kernel_sha256']
+    assert sha(p/'ramdisk/ramdisk.cpio.gz')==boot['ramdisk_sha256']
+    assert json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())['gzip_sha256']==boot['ramdisk_sha256']
+    if args.retain_gsi:
+     assert json.loads((p/'usb-build.json').read_text())['kernel']==boot['kernel_sha256']
     candidate_dtbo_sha=boot['dtbo_sha256']
     if candidate_dtbo_sha!=orig['partitions']['dtbo']['sha256']:
      assert boot.get('source_device_trees') is True
