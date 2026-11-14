@@ -24,8 +24,13 @@ if [ "$previous" != none ] && [ "${previous##*state=}" != retained ]; then
     # Allow the host to retrieve the failed boot's pstore. Without a host the
     # same image enters EDL on its own after this bounded capture window.
     /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
-    sleep 90
-    /bin/first-stage-witness recovery-stop-watchdog
+    sleep 30
+    printf 'M1RECOVERY boot=%s uptime=%s\n' "$boot" "$(cat /proc/uptime)" > /run/m1-recovery-watchdog.log
+    /bin/first-stage-witness recovery-stop-watchdog >> /run/m1-recovery-watchdog.log 2>&1
+    cat /run/m1-recovery-watchdog.log > /dev/kmsg
+    mark edl-watchdog-disabled
+    # Observe two full 30-second AP-watchdog periods without userspace feeding.
+    sleep 60
     exec /bin/reboot-edl edl
 fi
 mark attempt

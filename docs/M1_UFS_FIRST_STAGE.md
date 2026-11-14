@@ -409,3 +409,16 @@ The subsequent trial 29 manual recovery completed: F.20 boot
 `ba59a60f-7165-4115-af80-fcaba4c859be`, all 17 original super chunks, boot,
 DTBO, both LP slots and the complete Android-side super digest matched.
 This verifies restoration, while retaining the failed automatic capture result.
+
+### Trial 30 and the recovery API correction
+
+Trial 30 boot `9d9585b2-a24a-4117-8390-fb2a29e471a1` passed local-adbd
+retention, enforcing/API 37/second-stage PID 1, maintenance, verified UFS
+mounts, a 193.687-second same-boot soak and a hash-checked ADB transfer.
+Before injecting failure, live inspection and the kernel configuration showed
+that WATCHDOG_SYSFS is disabled; state/nowayout files do not exist. The proposed
+recovery helper would therefore reject the device. No trial 30 fault was
+injected. Trial 31 uses GETSUPPORT and SETOPTIONS to check and stop the AP
+watchdog, then waits two watchdog intervals before EDL. A boot-only update
+retains the existing verified container and scratch seeds.
+[Trial 30 evidence](../build/device/m1-autonomous-recovery-30-2026-11-14.json)

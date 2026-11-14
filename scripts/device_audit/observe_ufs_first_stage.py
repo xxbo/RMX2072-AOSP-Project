@@ -98,7 +98,15 @@ def previous_boot(trial, original, output, deadline, return_on_accepted=True, re
                                 (output/name).write_bytes(gzip.decompress(data))
                         providers = console_query(console, b'echo DEFERRED; cat /sys/kernel/debug/devices_deferred; echo SPMI; ls -l /sys/bus/spmi/devices; echo POWER; dmesg | grep -iE "spmi|pmic|psci|power.?off|pon@|pwrkey|M1AUTO"')
                         (output/'recovery-providers.txt').write_bytes(providers)
-                        if not request_edl: return
+                        if not request_edl:
+                            until=min(deadline,time.monotonic()+40)
+                            while time.monotonic()<until:
+                                if console_query(console,b'test -s /run/m1-recovery-watchdog.log && echo present')==b'present':
+                                    data=read_console_file(console,b'/run/recovery-watchdog.gz',b'gzip -c /run/m1-recovery-watchdog.log > /run/recovery-watchdog.gz; ')
+                                    (output/'recovery-watchdog.log').write_bytes(gzip.decompress(data))
+                                    break
+                                time.sleep(1)
+                            return
                         console.write(b'/bin/reboot-edl edl\n')
                         console.flush()
                         # Closing immediately can cancel the last USB write on Windows.

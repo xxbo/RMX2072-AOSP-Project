@@ -19,6 +19,23 @@ import shlex
 import subprocess
 import sys
 import time
+from uuid import UUID
+
+
+def validate_boot_only(previous, stable, candidate, scratch, live):
+    """Require an unchanged container/volume seed and a retained same-boot GSI."""
+    if previous['candidate'] != candidate or previous['scratch'] != scratch:
+        raise ValueError('Boot-only update requires identical super and scratch inputs')
+    boot = stable['identity'][2]
+    UUID(boot)
+    if (stable.get('guardian') != 'retained' or stable.get('seconds', 0) < 190 or
+        stable['identity'][6] != 'retained' or live['identity'][2] != boot or
+        live['identity'][6] != 'retained'):
+        raise ValueError('Boot-only update requires the accepted retained boot')
+    digest = previous['boot']['boot_sha256']
+    if not re.fullmatch(r'[0-9a-f]{64}', digest):
+        raise ValueError('Previous boot digest invalid')
+    return digest
 
 
 def main():
@@ -28,6 +45,7 @@ def main():
     parser.add_argument('--restore-only', action='store_true')
     parser.add_argument('--recovery-gate', type=Path, help='Restore only: validate now, wait for this explicit JSON handoff before capturing EDL')
     parser.add_argument('--retain-gsi', action='store_true')
+    parser.add_argument('--boot-only-from', type=Path, help='Previous retained trial record; read all super bytes, then program only boot')
     parser.add_argument('--record-suffix', default='', help='New evidence directory for repeating the exact current image')
     args = parser.parse_args()
     sys.path.insert(0, str(args.workspace.resolve()/'serial-deps'))
@@ -37,6 +55,7 @@ def main():
     trial=args.trial;assert re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}',trial)
     restore_only=args.restore_only
     assert not args.recovery_gate or restore_only
+    assert not args.boot_only_from or (args.retain_gsi and not restore_only)
     assert not args.record_suffix or re.fullmatch(r'[a-z0-9-]{1,32}',args.record_suffix)
     dest=w/'records'/(trial+('-'+args.record_suffix if args.record_suffix else '')+('-restore' if restore_only else ''));dest.mkdir(parents=True,exist_ok=False)
     orig=json.loads((stock/'acquisition.json').read_text());candidate={} if restore_only else json.loads((p/'candidate/candidate.json').read_text());boot={} if restore_only else json.loads((p/'boot/control.json').read_text())
@@ -52,7 +71,7 @@ def main():
      with (dest/(label+'.log')).open('xb') as out:subprocess.run([str(a) for a in args],stdout=out,stderr=subprocess.STDOUT,check=True,timeout=timeout,cwd=dest)
     def enter(label,initial=False,timeout=400):
      nonlocal port,configured
-     if initial:subprocess.run(['adb','-s','3c8304a6','reboot','edl'],check=True,timeout=15)
+     if initial:subprocess.run(['adb','-s','RMX2072-M1' if args.boot_only_from else '3c8304a6','reboot','edl'],check=True,timeout=15)
      end=time.monotonic()+timeout
      while time.monotonic()<end:
       ports=[x.device for x in comports() if (x.vid,x.pid)==(0x05c6,0x9008)]
@@ -134,23 +153,36 @@ def main():
     assert [(x.tag,x.attrib) for x in actual_rows]==[(x.tag,x.attrib) for x in expected_rows]
     assert [(x.tag,x.attrib) for x in ET.parse(stock/'stock-super-restore.xml').getroot()]==[(x.tag,x.attrib) for x in ET.fromstring(stock_restore_xml())]
     assert json.loads((w/'recovery/edl-verification/verification.json').read_text())['independent_edl_reads_verified']
-    info=phone('getprop ro.product.model; getprop ro.build.display.id; getprop sys.boot_completed; getprop ro.boot.flash.locked').splitlines()
-    assert info==['RMX2072','RMX2072_11_F.20','1','0']
-    assert int(phone('cat /sys/class/power_supply/battery/capacity'))>=25
-    assert phone('sha256sum /dev/block/by-name/super',240).split()[0]==candidate['source_sha256']
-    geometry=phone('readlink -f /dev/block/by-name/super; cat /sys/class/block/sda10/start /sys/class/block/sda10/size /sys/class/block/sda/queue/logical_block_size').splitlines()
-    assert geometry==['/dev/block/sda10','1544256','17317888','4096']
+    previous_boot_sha=orig['partitions']['boot']['sha256']
+    if args.boot_only_from:
+     from gsi_adb_accept import inspect
+     prior=args.boot_only_from.resolve()
+     assert prior.parent==w/'records' and prior!=dest
+     previous=json.loads((prior/'inputs.json').read_text())
+     stable=json.loads((prior/'live/gsi-stable.json').read_text())
+     proof=inspect(prior/'live',stable['identity'][2])
+     previous_boot_sha=validate_boot_only(previous,stable,candidate,json.loads((p/'volumes/scratch.json').read_text()),proof)
+     (dest/'boot-only-source.json').write_text(json.dumps(dict(previous_record=prior.name,previous_boot_sha256=previous_boot_sha,live=proof),indent=2)+'\n')
+    else:
+     info=phone('getprop ro.product.model; getprop ro.build.display.id; getprop sys.boot_completed; getprop ro.boot.flash.locked').splitlines()
+     assert info==['RMX2072','RMX2072_11_F.20','1','0']
+     assert int(phone('cat /sys/class/power_supply/battery/capacity'))>=25
+     assert phone('sha256sum /dev/block/by-name/super',240).split()[0]==candidate['source_sha256']
+     geometry=phone('readlink -f /dev/block/by-name/super; cat /sys/class/block/sda10/start /sys/class/block/sda10/size /sys/class/block/sda/queue/logical_block_size').splitlines()
+     assert geometry==['/dev/block/sda10','1544256','17317888','4096']
     if args.retain_gsi:
      rd=json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())
      assert rd.get('guarded_adb') and rd['trial_id']==trial
     (dest/'inputs.json').write_text(json.dumps(dict(trial=trial,source_commit=subprocess.check_output(['git','-C',str(audit.parents[1]),'rev-parse','HEAD'],text=True).strip(),kernel=json.loads((p/'kernel/provenance.json').read_text()),boot=boot,candidate=candidate,scratch=json.loads((p/'volumes/scratch.json').read_text()),usb_build=json.loads((p/'usb-build.json').read_text()) if args.retain_gsi else None,ramdisk=json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())),indent=2)+'\n')
-    event('F.20 identity, geometry, complete original and candidate images verified')
-    enter('entry',True);read_boot('before',orig['partitions']['boot']['sha256'])
+    event(('Retained GSI identity and unchanged container/volumes' if args.boot_only_from else 'F.20 identity and geometry')+'; complete recovery and candidate inputs verified')
+    enter('entry',True)
     try:
+     read_boot('before',previous_boot_sha)
+     if args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
      write_boot('test-boot',p/'boot/boot-diag.img',boot['boot_sha256'])
-     fh('candidate-super',ET.parse(p/'candidate/candidate.xml').getroot(),p/'candidate')
+     if not args.boot_only_from:fh('candidate-super',ET.parse(p/'candidate/candidate.xml').getroot(),p/'candidate')
      read_boot('candidate',boot['boot_sha256'])
-     read_super('candidate-super-read',candidate['parts'])
+     if not args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
     except BaseException:
      restore();raise
     event('Candidate boot and full super readback passed; starting physical test')

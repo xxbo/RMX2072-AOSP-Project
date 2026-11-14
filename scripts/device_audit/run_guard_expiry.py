@@ -16,6 +16,7 @@ def main():
     p.add_argument('--trial',required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--edl-hold-seconds',type=int,default=0)
+    p.add_argument('--require-watchdog-disarm',action='store_true')
     p.add_argument('--recovery-gate',type=Path,help='Atomically release a preverified restore runner after EDL qualification')
     a=p.parse_args();sys.path.insert(0,str(a.workspace.resolve()/'serial-deps'))
     assert 0<=a.edl_hold_seconds<=120
@@ -46,6 +47,11 @@ def main():
                 journal=(a.output/'pmsg-ramoops-0').read_bytes()
                 assert ('RMX-M1-AUTO boot='+boot+' state=expired').encode() in journal
                 assert 'watchdog0: pretimeout event' in console
+                if a.require_watchdog_disarm:
+                    disarm=(a.output/'recovery-watchdog.log').read_text()
+                    recovery=json.loads((a.output/'intermediate-boot.json').read_text())['boot_id']
+                    assert 'M1RECOVERY boot='+recovery+' ' in disarm
+                    assert 'AP watchdog disable ioctl rc=0 identity=qcom_wdt' in disarm
                 (a.output/'result.json').write_text(json.dumps(dict(boot_id=boot,automatic_edl=True,elapsed=row['elapsed'],edl_continuous_seconds=row['edl_continuous_seconds'],journal_expired=True,kernel_pretimeout=True,host_reboot_commands=False),indent=2)+'\n')
                 if a.recovery_gate:
                     pending=a.recovery_gate.with_suffix('.tmp')

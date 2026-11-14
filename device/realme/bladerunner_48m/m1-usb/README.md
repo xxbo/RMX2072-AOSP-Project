@@ -125,16 +125,29 @@ The recovered original super, boot, DTBO, both LP slots and boot completion
 were fully verified.
 
 The next candidate tests explicit AP-watchdog disarming only in the recovery
-ramdisk, immediately before EDL. It checks the exact AP watchdog device,
-requires nowayout=0, disables through the watchdog API and verifies inactive
-state. It does not change the failed Android guard's stop-feeding behavior.
+ramdisk. Trial 30 passed its 194-second GSI check, but pre-injection inspection
+found that WATCHDOG_SYSFS is disabled; its state/nowayout file checks could
+never pass, so no fault was injected. Trial 31 checks the exact AP device and
+GETSUPPORT identity/options, then requires SETOPTIONS(DISABLECARD) success.
+The ioctl enforces nowayout itself. Recovery waits another 60 seconds without
+feeding before EDL; the observer captures the boot-bound disarm result.
+It does not change the failed Android guard's stop-feeding behavior.
 The pinned qcom-wdt driver adopts running firmware watchdogs and has no
 shutdown callback; whether that explains the transient EDL needs measurement.
 
 Before injecting expiry, start the restore runner with `--restore-only` and
 `--recovery-gate PATH` and wait for its `recovery-ready.json`. Run the fault
-observer with the same gate and `--edl-hold-seconds 45`. Only after continuous
+observer with the same gate, `--edl-hold-seconds 45` and
+`--require-watchdog-disarm`. Only after continuous
 EDL observation does it atomically release the prepared restore runner.
 Require the independent original readbacks and F.20 boot verification too.
 A fault or vanished EDL does not release the gate; inspect the device and
 record any explicit manual recovery separately. Use fresh trial record paths.
+
+For a ramdisk/kernel-only update from retained GSI, use
+`run_ufs_trial.py --retain-gsi --boot-only-from PREVIOUS_RECORD`. It requires
+identical super and scratch manifests, a completed 190-second previous soak
+and live same-boot acceptance. EDL verifies the previous boot, original DTBO
+and every candidate super chunk before programming only boot. The new boot
+and unchanged DTBO are read back before startup. Failure restores the verified
+original recovery set. This avoids rewriting an unchanged system/vendor.

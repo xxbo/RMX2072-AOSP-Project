@@ -449,27 +449,28 @@ static void scratch_mount(const char *name) {
 /* Only the diagnostic recovery boot may relinquish the AP watchdog immediately
  * before EDL. The Android guard must never disarm its failed trial watchdog. */
 static int recovery_stop_watchdog(void) {
-    char device[256], value[64] = {0};
+    char device[256];
     if (access("/m1-autoboot", F_OK) ||
         !realpath("/sys/class/watchdog/watchdog0/device", device) ||
-        strcmp(device, "/sys/devices/platform/soc/17c10000.qcom,wdt") ||
-        read_proc("/sys/class/watchdog/watchdog0/nowayout", value, sizeof(value)) != 2 ||
-        strcmp(value, "0\n")) {
-        fputs("M1RECOVERY watchdog scope/nowayout mismatch\n", stderr); return 1;
+        strcmp(device, "/sys/devices/platform/soc/17c10000.qcom,wdt")) {
+        fputs("M1RECOVERY watchdog scope mismatch\n", stderr); return 1;
     }
     int fd = open("/dev/watchdog0", O_WRONLY | O_CLOEXEC);
     int option = WDIOS_DISABLECARD;
+    struct watchdog_info info = {0};
     if (fd < 0) { perror("recovery watchdog open"); return 1; }
+    if (ioctl(fd, WDIOC_GETSUPPORT, &info) ||
+        strncmp((const char *)info.identity, "qcom_wdt", sizeof(info.identity)) ||
+        !(info.options & WDIOF_MAGICCLOSE)) {
+        fputs("M1RECOVERY unexpected watchdog identity/options\n", stderr); close(fd); return 1;
+    }
+    /* The current kernel has WATCHDOG_SYSFS disabled. SETOPTIONS is the
+     * authoritative stop operation and rejects a driver enforcing nowayout. */
     if (ioctl(fd, WDIOC_SETOPTIONS, &option)) {
         perror("recovery watchdog disable"); close(fd); return 1;
     }
     close(fd);
-    memset(value, 0, sizeof(value));
-    if (read_proc("/sys/class/watchdog/watchdog0/state", value, sizeof(value)) != 9 ||
-        strcmp(value, "inactive\n")) {
-        fputs("M1RECOVERY watchdog not confirmed inactive\n", stderr); return 1;
-    }
-    puts("M1RECOVERY AP watchdog confirmed inactive before EDL");
+    puts("M1RECOVERY AP watchdog disable ioctl rc=0 identity=qcom_wdt");
     return 0;
 }
 
