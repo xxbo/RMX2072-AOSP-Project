@@ -3,6 +3,11 @@
  * Included alongside the QSEECOM lock so registration and teardown are serialized
  * with the existing SCM callers. No secure memory is exposed to userspace.
  */
+#include "rmx2072-keymaster-transport.h"
+
+/* An unfinished app call must not be followed by another request this boot. */
+static bool rmx2072_keymaster_blocked;
+
 static int rmx2072_listener_change(u32 id, void *shared, struct qcom_scm_qseecom_resp *resp)
 {
 	struct qcom_scm_desc desc = {
@@ -147,7 +152,7 @@ static int rmx2072_key_call(struct rmx2072_key_test *test, size_t len, bool *ter
 	test->first_result = resp.result;
 	while (!rc && resp.result == QSEECOM_RESULT_INCOMPLETE) {
 		test->last_listener = resp.data;
-		if (resp.data != 11 || ++test->callbacks > 8)
+		if (resp.data != 11 || !test->listener || ++test->callbacks > 8)
 			return -EOPNOTSUPP;
 		rc = rmx2072_resume_time(test, &resp);
 		pr_info("rmx2072-temp-key: resumed rc=%d result=%llu listener=%llu\n",
@@ -158,6 +163,59 @@ static int rmx2072_key_call(struct rmx2072_key_test *test, size_t len, bool *ter
 		return rc;
 	*terminal = resp.result == QSEECOM_RESULT_SUCCESS || resp.result == QSEECOM_RESULT_FAILURE;
 	return resp.result == QSEECOM_RESULT_SUCCESS ? 0 : -EIO;
+}
+
+int rmx2072_keymaster_query(u32 app_id, u32 method, void *reply, size_t bytes)
+{
+	const size_t capacity = SZ_32K + SZ_8K;
+	struct rmx2072_key_test t = { .app_id = app_id };
+
+	bool terminal = true;
+	u32 board;
+	int rc = -ENOMEM;
+
+	if (!of_machine_is_compatible("qcom,kona-mtp") ||
+	    of_property_read_u32(of_root, "oplus,dtsi_no", &board) || board != 20607 ||
+	    !qcom_scm_is_available())
+		return -ENODEV;
+	if (!reply || !((method == 0x200 && bytes == 20) ||
+			(method == 0x20e && bytes == 68)))
+		return -EINVAL;
+	memset(reply, 0, bytes);
+	mutex_lock(&qcom_scm_qseecom_call_lock);
+	if (rmx2072_keymaster_blocked) {
+		rc = -EBUSY;
+		goto out;
+	}
+	t.request = qcom_tzmem_alloc(__scm->mempool, capacity, GFP_KERNEL);
+	t.sglist = qcom_tzmem_alloc(__scm->mempool, 32, GFP_KERNEL);
+	if (!t.request || !t.sglist)
+		goto out;
+	memset(t.request, 0, capacity);
+	memset(t.sglist, 0, 32);
+	*(__le32 *)t.request = cpu_to_le32(method);
+	/* Same whitelist command and contiguous 40 KiB client layout as the
+	 * temporary-key path. These two fixed methods require no listener. */
+	rc = rmx2072_key_call(&t, sizeof(__le32), &terminal);
+	if (!rc)
+		memcpy(reply, t.reply, bytes);
+	pr_info("rmx2072-keymaster: query method=%u rc=%d terminal=%u\n",
+		method, rc, terminal);
+out:
+	if (terminal) {
+		if (t.request) {
+			memzero_explicit(t.request, capacity);
+			qcom_tzmem_free(t.request);
+		}
+		if (t.sglist)
+			qcom_tzmem_free(t.sglist);
+	} else {
+		/* Secure world may still own both buffers. Retain them until reset
+		 * and refuse further app calls instead of reusing uncertain state. */
+		rmx2072_keymaster_blocked = true;
+	}
+	mutex_unlock(&qcom_scm_qseecom_call_lock);
+	return rc;
 }
 
 static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
@@ -196,9 +254,9 @@ static int rmx2072_temp_key(char *buf, const struct kernel_param *kp)
 	if (rc)
 		return rc;
 	mutex_lock(&qcom_scm_qseecom_call_lock);
-	if (attempted) {
+	if (attempted || rmx2072_keymaster_blocked) {
 		mutex_unlock(&qcom_scm_qseecom_call_lock);
-		return -EALREADY;
+		return attempted ? -EALREADY : -EBUSY;
 	}
 	attempted = true;
 	pr_info("rmx2072-temp-key: allocating buffers\n");
@@ -274,6 +332,8 @@ out:
 			memzero_explicit(req, capacity);
 			qcom_tzmem_free(req);
 		}
+	} else {
+		rmx2072_keymaster_blocked = true;
 	}
 	mutex_unlock(&qcom_scm_qseecom_call_lock);
 	return sysfs_emit(buf, "rc=%d first=%llu listener=%u command=%u callbacks=%u final=%llu generate=%d blob_bytes=%u delete=%d unregister=%d configure=%d\n",

@@ -115,6 +115,13 @@ if [ -r "$apps" ]; then
         echo "M1EVENT qsee_lookup_read_failed=$?" > /dev/ttyGS0
     fi
     version=${apps%/*}/version_info
+    if [ -r "$version" ]; then
+        if result=$(cat "$version"); then
+            echo "M1EVENT keymaster_version_before_listener $result" > /dev/ttyGS0
+        else
+            echo "M1EVENT keymaster_version_before_listener_read_failed=$?" > /dev/ttyGS0
+        fi
+    fi
     for listener in time cancel; do
         node=/sys/module/qcom_scm/parameters/listener_${listener}_lifetime
         if [ -r "$node" ]; then
@@ -127,6 +134,11 @@ if [ -r "$apps" ]; then
     done
     temp_key=/sys/module/qcom_scm/parameters/temp_hmac_key
     if [ -r "$temp_key" ]; then
+        if result=$(cat "$version"); then
+            echo "M1EVENT keymaster_version_before_temp_key $result" > /dev/ttyGS0
+        else
+            echo "M1EVENT keymaster_version_before_temp_key_read_failed=$?" > /dev/ttyGS0
+        fi
         grep -qx 'ro.build.version.release=17' "$root/system/build.prop"
         grep -qx 'ro.build.version.security_patch=2026-09-05' "$root/system/build.prop"
         grep -qx 'ro.vendor.build.security_patch=1970-01-01' "$root/vendor/build.prop"

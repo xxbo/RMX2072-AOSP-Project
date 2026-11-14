@@ -21,6 +21,9 @@ KM_PROBE="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-probes/rmx2072-keyma
 cp "$KM_PROBE" "$WORKSPACE/common/drivers/firmware/qcom/"
 printf '\nobj-$(CONFIG_QCOM_QSEECOM) += rmx2072-keymaster-lookup.o\n' >> "$WORKSPACE/common/drivers/firmware/qcom/Makefile"
 sha256sum "$KM_PROBE" > "$ARTIFACT_DIR/keymaster-lookup.sha256"
+KM_TRANSPORT="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-probes/rmx2072-keymaster-transport.h"
+cp "$KM_TRANSPORT" "$WORKSPACE/common/drivers/firmware/qcom/"
+sha256sum "$KM_TRANSPORT" > "$ARTIFACT_DIR/keymaster-transport.sha256"
 LISTENER="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-probes/rmx2072-listener.inc"
 cp "$LISTENER" "$WORKSPACE/common/drivers/firmware/qcom/"
 python3 - "$WORKSPACE/common/drivers/firmware/qcom/qcom_scm.c" <<'PY'

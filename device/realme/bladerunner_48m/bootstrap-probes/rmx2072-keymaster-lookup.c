@@ -7,6 +7,7 @@
 #include <linux/of.h>
 #include <linux/sysfs.h>
 #include "qcom_scm.h"
+#include "rmx2072-keymaster-transport.h"
 
 static bool rmx2072_keymaster_board(void)
 {
@@ -44,27 +45,18 @@ struct km_version_response {
 
 static int rmx2072_keymaster_version(char *buf, const struct kernel_param *param)
 {
-	struct qcom_tzmem_pool *pool;
-	struct km_version_response *rsp __free(qcom_tzmem) = NULL;
-	__le32 *req __free(qcom_tzmem) = NULL;
+	struct km_version_response response, *rsp = &response;
 	u32 id;
 	int ret;
 
 	if (!rmx2072_keymaster_board())
 		return -ENODEV;
-	pool = qcom_scm_get_tzmem_pool();
-	if (!pool)
+	if (!qcom_scm_is_available())
 		return -EAGAIN;
 	ret = qcom_scm_qseecom_app_get_id("keymaster64", &id);
 	if (ret)
 		return sysfs_emit(buf, "lookup_rc=%d\n", ret);
-	req = qcom_tzmem_alloc(pool, sizeof(*req), GFP_KERNEL);
-	rsp = qcom_tzmem_alloc(pool, sizeof(*rsp), GFP_KERNEL);
-	if (!req || !rsp)
-		return -ENOMEM;
-	*req = cpu_to_le32(0x200); /* KEYMASTER_GET_VERSION */
-	memset(rsp, 0xff, sizeof(*rsp));
-	ret = qcom_scm_qseecom_app_send(id, req, sizeof(*req), rsp, sizeof(*rsp));
+	ret = rmx2072_keymaster_query(id, 0x200, rsp, sizeof(*rsp));
 	if (ret)
 		return sysfs_emit(buf, "transport_rc=%d\n", ret);
 	if (rsp->status || !rsp->ta_major || rsp->ta_major == cpu_to_le32(U32_MAX))
@@ -93,34 +85,23 @@ static ssize_t rmx2072_hmac_read(struct file *file, struct kobject *kobj,
 				 const struct bin_attribute *attr, char *buf,
 				 loff_t off, size_t count)
 {
-	const size_t rsp_bytes = 40956; /* Capacity passed by the F.20 client. */
-	struct rmx2072_hmac_reply *rsp __free(qcom_tzmem) = NULL;
-	__le32 *req __free(qcom_tzmem) = NULL;
-	struct qcom_tzmem_pool *pool;
+	struct rmx2072_hmac_reply response, *rsp = &response;
 	u32 id;
 	int ret;
 
 	if (off || count != sizeof(*rsp))
 		return -EINVAL;
-	pool = qcom_scm_get_tzmem_pool();
-	if (!pool)
+	if (!qcom_scm_is_available())
 		return -EAGAIN;
 	ret = qcom_scm_qseecom_app_get_id("keymaster64", &id);
 	if (ret)
 		return ret;
-	req = qcom_tzmem_alloc(pool, sizeof(*req), GFP_KERNEL);
-	rsp = qcom_tzmem_alloc(pool, rsp_bytes, GFP_KERNEL);
-	if (!req || !rsp)
-		return -ENOMEM;
-	*req = cpu_to_le32(0x20e);
-	memset(rsp, 0, rsp_bytes);
-	rsp->status = cpu_to_le32((u32)-1000);
-	ret = qcom_scm_qseecom_app_send(id, req, sizeof(*req), rsp, rsp_bytes);
+	ret = rmx2072_keymaster_query(id, 0x20e, rsp, sizeof(*rsp));
 	if (!ret) {
 		memset(buf, 0, sizeof(*rsp));
 		memcpy(buf, rsp, rsp->status ? sizeof(rsp->status) : sizeof(*rsp));
 	}
-	memzero_explicit(rsp, rsp_bytes);
+	memzero_explicit(rsp, sizeof(*rsp));
 	return ret ? ret : sizeof(*rsp);
 }
 

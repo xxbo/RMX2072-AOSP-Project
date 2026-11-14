@@ -244,4 +244,12 @@ The final control record reports generation 0, deletion 0, one callback, final r
 
 The next version query returned transport -22, and 30 project service attempts logged `TEE version unavailable`. This boot registered compat and retained the vdc wait. The HMAC/maintenance/vdc successes from trial 22 and this callback transaction still need to work together in one kernel. Compare the normal version/HMAC transport and buffer layout with the tested whitelist path before attributing the regression to a specific cause. The pmsg record again has 32 unrecoverable ECC blocks and is excluded from these service claims.
 
+### Follow-up candidate · One Keymaster transport
+
+The version and HMAC readers now use the same whitelist SCM command and contiguous 40 KiB request/response allocation as the trial 24 temporary-key control. The helper accepts only the two fixed query methods and exact response sizes. It shares the QSEE transaction lock, wipes completed buffers, and refuses subsequent requests if a transaction leaves secure-world ownership uncertain. It does not cache a version result or substitute HMAC bytes. The observer records version queries before listener lifetime tests, before the temporary-key transaction and after it.
+
+This is a candidate fix, with no new handset pass claimed. The previous evidence does not isolate whether the command, allocation layout or secure-world state caused `-22`. Acceptance requires the temporary-key callback, subsequent HAL registration/HMAC, maintenance and the matching vdc exit on the same boot.
+
+The user removed the private local work directories to recover disk space. Reacquire the original F.20 recovery bytes before another write. Keep one verified recovery set and one current candidate, stream large acquisitions directly into their final chunks, and remove duplicate readbacks only after recording their verified digests. Preserve source and sanitized logs in Git. A usable API 37 ADB connection should permit continued debugging in GSI; do not schedule unconditional F.20 restoration for that successful case.
+
 Recovery verified the full original super, F.20 log-reader boot, stock DTBO and both LP slots. F.20 completed boot `d6e4a951-6c64-4c7b-8673-3d43193e7413`, and its own full super digest matched the baseline. A fresh stock temporary-key control then generated a 455-byte blob through TIME listener 11 and deleted it with status 0.
