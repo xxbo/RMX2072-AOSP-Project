@@ -21,6 +21,16 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def filesystem_size(files):
+    # Room for directory/xattr metadata and growth, rounded to 4 MiB. Keep the
+    # graphics payload bounded well below the verified super free-space budget.
+    payload = sum(map(len, files.values()))
+    size = max(16 << 20, ((payload * 5 // 4 + (8 << 20) + (4 << 20) - 1) // (4 << 20)) * (4 << 20))
+    if size > 256 << 20:
+        raise ValueError('Graphics vendor exceeds the bounded 256 MiB profile')
+    return size
+
+
 def compose(info, guard, graphics):
     files, pinned = inventory(True, guard)
     for path, digest in pinned.items():

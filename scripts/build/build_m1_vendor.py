@@ -14,11 +14,21 @@ EPOCH = 1230768000
 UUID = '896e7471-c34c-40c8-b854-8efe96b80533'
 
 
-def build(output, reference=None, info=None, usb_guard=None):
+def build(output, reference=None, info=None, usb_guard=None, graphics=None):
     output = output.resolve()
     if ROOT in output.parents or output == ROOT:
         raise ValueError('Select an output outside the checkout')
     output.mkdir(parents=True, exist_ok=True)
+    if graphics:
+        from stage_m3_graphics import compose, filesystem_size
+        files, _ = compose(info, usb_guard, graphics)
+        with tempfile.TemporaryDirectory(dir=output) as tmp:
+            source = Path(tmp) / 'vendor'
+            for name, data in files.items():
+                target = source/name.lstrip('/')
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+            return build_image(source, output, filesystem_size(files))
     if reference or info:
         from stage_keymaster_reference import stage
         with tempfile.TemporaryDirectory(dir=output) as tmp:
@@ -31,6 +41,7 @@ def build(output, reference=None, info=None, usb_guard=None):
 def build_image(source, output, size):
     env = dict(os.environ, LC_ALL='C', TZ='UTC', E2FSPROGS_FAKE_TIME=str(EPOCH))
     paths = sorted(source.rglob('*'))
+    inodes = max(128, ((len(paths) + 64 + 31) // 32) * 32)
     contexts = []
     for row in (source/'etc/selinux/vendor_file_contexts').read_text().splitlines():
         pattern, label = row.split()
@@ -40,7 +51,7 @@ def build_image(source, output, size):
         image = stage/'vendor.img'
         image.write_bytes(bytes(size))
         subprocess.run(['mke2fs', '-q', '-F', '-t', 'ext4', '-b', '4096', '-I', '256',
-                        '-N', '128', '-m', '0', '-L', 'rmx-m1-vendor', '-U', UUID,
+                        '-N', str(inodes), '-m', '0', '-L', 'rmx-m1-vendor', '-U', UUID,
                         '-O', 'none,extent,filetype,ext_attr,sparse_super',
                         '-E', 'root_owner=0:0,lazy_itable_init=0,hash_seed='+UUID, image],
                        check=True, env=env)
@@ -103,6 +114,9 @@ if __name__ == '__main__':
     group.add_argument('--keymaster-reference', type=Path, help='Directory of pinned private F.20 ELF inputs')
     group.add_argument('--keymaster-info', type=Path, help='Project info HAL and pinned AOSP VNDK libraries')
     parser.add_argument('--usb-guard', type=Path, help='Source-built M1 watchdog/ADB guardian')
+    parser.add_argument('--graphics', type=Path, help='Fully verified source-built M3 graphics payload')
     args = parser.parse_args()
     if args.usb_guard and not args.keymaster_info: parser.error('--usb-guard requires --keymaster-info')
-    print(build(args.output, args.keymaster_reference, args.keymaster_info, args.usb_guard))
+    if args.graphics and not (args.keymaster_info and args.usb_guard):
+        parser.error('--graphics requires --keymaster-info and --usb-guard')
+    print(build(args.output, args.keymaster_reference, args.keymaster_info, args.usb_guard, args.graphics))

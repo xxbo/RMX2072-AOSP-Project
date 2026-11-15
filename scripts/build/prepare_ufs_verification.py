@@ -33,7 +33,7 @@ def image_profile(path, name, key_digest):
     return key, dict(sha256=full, key_sha256=key_digest, bytes=size, tree=tree)
 
 
-def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False, keymaster_info=False, usb_guard=None):
+def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False, keymaster_info=False, usb_guard=None, graphics=None, graphics_keymaster_info=None):
     reference = json.loads((ROOT/'build/device/gsi17-mount-reference.json').read_text())
     inputs = [('system', system, reference['key_sha256']),
               ('vendor', vendor, hashlib.sha256(vendor_key.read_bytes()).hexdigest())]
@@ -43,7 +43,15 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
     if records['system']['sha256'] != reference['image_sha256'] or records['system']['tree'] != reference['hashtree']:
         raise ValueError('GSI differs from the pinned image')
     payload_bytes = records['vendor']['tree']['image_bytes']
-    if payload_bytes != (16 if keymaster_reference or keymaster_info else 2) * 1024 * 1024:
+    graphics_files = None
+    expected_size = (16 if keymaster_reference or keymaster_info else 2) * 1024 * 1024
+    if graphics:
+        if not vendor_report or not graphics_keymaster_info or not usb_guard or keymaster_reference or keymaster_info:
+            raise ValueError('M3 requires a source image report, exact Keymaster inputs and USB guardian')
+        from stage_m3_graphics import compose, filesystem_size
+        graphics_files, _ = compose(graphics_keymaster_info, usb_guard, graphics)
+        expected_size = filesystem_size(graphics_files)
+    if payload_bytes != expected_size:
         raise ValueError('Unexpected project vendor filesystem size')
     with vendor.open('rb') as image:
         payload = hashlib.sha256(image.read(payload_bytes)).hexdigest()
@@ -57,6 +65,8 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
             from stage_keymaster_reference import inventory
             project, blobs = inventory(keymaster_info, usb_guard)
             files = {path: hashlib.sha256(data).hexdigest() for path, data in project.items()} | blobs
+        if graphics_files is not None:
+            files = {path: hashlib.sha256(data).hexdigest() for path, data in graphics_files.items()}
         if files != report['files']:
             raise ValueError('Vendor report differs from the project sources')
         expected = report['sha256']
@@ -82,9 +92,11 @@ if __name__ == '__main__':
     group.add_argument('--keymaster-reference', action='store_true', help='Check the pinned private F.20 comparison inventory')
     group.add_argument('--keymaster-info', action='store_true', help='Check source-built info HAL and AOSP VNDK hashes')
     parser.add_argument('--usb-guard', type=Path)
+    parser.add_argument('--graphics', type=Path, help='Verified M3 graphics payload; validate the exact composed vendor inventory')
+    parser.add_argument('--graphics-keymaster-info', type=Path)
     args = parser.parse_args()
-    if args.usb_guard and not args.keymaster_info: parser.error('--usb-guard requires --keymaster-info')
+    if args.usb_guard and not (args.keymaster_info or args.graphics): parser.error('--usb-guard requires a Keymaster or M3 profile')
     if (args.keymaster_reference or args.keymaster_info) and not args.vendor_report:
         parser.error('A Keymaster profile requires its image report')
     prepare(args.system, args.vendor, args.vendor_key, args.output, args.vendor_report,
-            args.keymaster_reference, args.keymaster_info, args.usb_guard)
+            args.keymaster_reference, args.keymaster_info, args.usb_guard, args.graphics, args.graphics_keymaster_info)
