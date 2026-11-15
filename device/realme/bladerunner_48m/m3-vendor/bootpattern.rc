@@ -1,0 +1,6 @@
+# Temporary display diagnostic through the unchanged GSI BootAnimation.
+# /oem is an existing empty mount point. The source is the verified read-only
+# project vendor filesystem; no system image, stock partition or data is written.
+# Remove this bind and the generated archive after physical pixel isolation.
+on post-fs
+    mount none /vendor/etc/rmx-m3-oem /oem bind

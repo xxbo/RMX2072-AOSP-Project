@@ -1,0 +1,27 @@
+{
+  "purpose": "Static diagnostic image through GSI BootAnimation, not a boot-completion indicator",
+  "size": [
+    1080,
+    2400
+  ],
+  "frames": 2,
+  "fps": 1,
+  "frames_identical": true,
+  "archive_bytes": 56784,
+  "archive_sha256": "bafe09ef830c1d1f541c6ab819b8e666dcbf627f714902dcaccca449d48582e0",
+  "png_sha256": "a92b72b4a2ce1f87ec39438ff4ad9f2238614900a5f37768388ad320afaa3774",
+  "validation": "PNG fully decoded, archive stored entries checked, exact primary/secondary color and orientation samples passed; two generator runs byte-identical",
+  "gsi_bootanimation_source": "https://android.googlesource.com/platform/frameworks/base/+/94b4c163b7dfe5ce3607f7bb8456f9573f7de57d/cmds/bootanimation/BootAnimation.cpp",
+  "mount": "Read-only project vendor subtree at pre-existing /oem; no modification of GSI bytes",
+  "device_result": "NOT RUN",
+  "source_sha256": "24435900529ebfae34967242ff913f9061f11c3b5ded51fc2fa6af714c81f9d6",
+  "policy": {
+    "result": "PASS_STRICT_COMPILE_ONLY",
+    "reference": "m3-graphics-policy-2026-11-15.json",
+    "compiled_policy_sha256": "c98506143c383e9046b8084843234e7f1416209fc13c58c7e7a39dde60e220f0",
+    "labels": "oemfs directories and bootanim_oem_file archive; existing platform BootAnimation read rules",
+    "added_access": "vendor_init getattr/search/mounton for oemfs directories only",
+    "rejected_attempt": "Custom vendor_file_type asset read by bootanim failed the platform Treble neverallow; no such grant is retained."
+  },
+  "engineering_scope": "Temporary OEM-labelled read-only subtree within the project vendor, mounted on the existing empty /oem. Not a production OEM partition layout or VTS file-context acceptance. Remove after pixel isolation."
+}

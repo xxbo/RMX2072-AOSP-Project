@@ -6,6 +6,13 @@
 (allow surfaceflinger self (process (execmem)))
 (allow bootanim self (process (execmem)))
 
+; Temporary, generated known-color input to the GSI BootAnimation. The source
+; lives on verified read-only vendor and is bind-mounted at the existing /oem.
+; Use the existing OEM directory/archive labels and platform BootAnimation read
+; rules. Do not grant this core process generic vendor-file read access.
+; No new executable, property control or writable graphics access is added.
+(allow vendor_init oemfs (dir (getattr search mounton)))
+
 ; A public, nonsecret vendor configuration read by in-process mapper clients.
 (type rmx_graphics_config_prop)
 (roletype object_r rmx_graphics_config_prop)

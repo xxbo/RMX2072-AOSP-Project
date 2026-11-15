@@ -749,3 +749,23 @@ and physical output, then choose the next graphics/DSI fix. Kernel 29 and the
 source graphics payload stay fixed for that comparison. Missing Health HAL
 is still the separately recorded SystemServer blocker. No cold-start or
 watchdog fault injection was run. [Trial 56](../build/device/m3-display-56-2026-11-15.json).
+
+### Known-color BootAnimation input prepared for trial 57
+
+The project generates a 1080x2400 static six-color pattern with a white border,
+top band and asymmetric top-left marker. Two identical frames at 1 fps avoid
+intentional flashing. The ZIP contains stored entries as required by the
+pinned GSI BootAnimation parser. PNG decoding, primary/secondary color samples,
+orientation markers and repeatable archive generation pass locally.
+
+The verified read-only vendor subtree `/vendor/etc/rmx-m3-oem` is bound onto
+the existing empty `/oem` at post-fs. It supplies the standard
+`/oem/media/bootanimation.zip` input without modifying the GSI. OEM directory
+and animation labels use existing platform BootAnimation read rules; the only
+new rule permits vendor_init to mount that OEM directory. An attempted custom
+vendor-file read was rejected by the Treble neverallow and removed. Strict
+compilation now passes with neverallows enabled; no compiled policy is loaded
+into the running trial 56. This temporary mount is an engineering diagnostic,
+not a release partition layout or VTS file-context result. Remove it after
+pixel isolation. Runtime loading and correct physical pixels remain untested.
+[Input validation](../build/device/m3-bootpattern-input-2026-11-15.json).
