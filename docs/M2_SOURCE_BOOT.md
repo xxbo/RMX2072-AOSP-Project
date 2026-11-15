@@ -309,3 +309,20 @@ record: `build/device/m2-source-candidate-36-2026-11-15.json`. No M2 image has y
 been flashed. The M1 boot changed while the build ran; the user confirmed manual
 restart/power-button operation, so the replacement boot is being requalified
 before the physical boot-only update.
+
+## Source boot accepted; desktop priority
+
+Trial 36 boot `efd2f392-667a-4cf6-b252-4c76bfc5e4a9` used the source DTB, full
+source DTBO and verified source init. Six UFS LUNs were read-only; first-stage
+init verified and mounted system/vendor, entered enforcing GSI second-stage
+PID 1, and exposed authenticated ADB and maintenance. Source PON parent/child
+binding and PS_HOLD were observed. The 193.906-second soak and 1 MiB transfer
+passed. Boot/DTBO and all 17 super readbacks matched; the phone remains in GSI.
+
+The user cancelled further disconnected-start and watchdog fault-injection
+repeats and directed work toward the real AOSP desktop. Neither cancelled
+check is claimed passed for M2. No new power-off was scheduled or fault injected.
+`build/device/m2-source-boot-36-2026-11-15.json` preserves the accepted source-boot
+evidence. `build/device/m3-desktop-blockers-2026-11-15.json` records the actual
+first graphics blockers: SurfaceFlinger cannot load an OpenGL ES implementation,
+and the kernel has no enabled MSM driver or exposed DRM/framebuffer device.

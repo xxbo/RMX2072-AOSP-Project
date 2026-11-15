@@ -173,9 +173,12 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "status": "PACKAGING_SOURCE_BOOT_CANDIDATE",
-    "source_init_run": null,
-    "next": "Regenerate source DTB/DTBO and ramdisk with verified source init; repeat handset acceptance"
+    "status": "SOURCE_BOOT_ACCEPTED_DESKTOP_PRIORITY",
+    "next": "Build source graphics userspace and enable the physical display path",
+    "cancelled_by_user": [
+      "disconnected cold-start repeat",
+      "watchdog fault-injection repeat"
+    ]
   },
   "host_tests": {
     "total": 81,
@@ -186,7 +189,7 @@
       "Five bounded workspace-completion tests passed, including question-mark path punctuation"
     ]
   },
-  "phone_state": "Reconnected M1 trial 35 GSI passed 203.047-second same-boot reobservation and 1 MiB authenticated transfer; M2 not flashed",
+  "phone_state": "M2 source candidate 36 retained in GSI; warm acceptance record m2-source-boot-36-2026-11-15.json",
   "source_kernel": {
     "run_id": 43619212111,
     "result": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_CHECKS",
