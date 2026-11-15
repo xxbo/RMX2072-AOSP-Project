@@ -22,7 +22,10 @@ command sequence into a DRM MIPI-DSI panel. Its source is
 at realme commit `24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4`. The importer verifies
 the Git blob SHA-256 and preserves all packet types, payload bytes, LP/HS mode
 and delays: 28 initialization packets, four display-on packets and four off
-packets. The filename says 2340; the selected mode actually specifies 1080x2400.
+packets in the generated reference table. The prepared DSC repair replaces only
+the runtime `0x9e` PPS payload with the host encoder's calculated parameters;
+its handset validation is still pending. The filename says 2340; the selected
+mode actually specifies 1080x2400.
 Only the 60 Hz mode is exposed initially: RGB888, four lanes, DSC 1.1 at
 8 bits per component / 8 bits per pixel, two 540x48 slices. Brightness is capped
 at the source's normal range (1023), with default 400; no HBM command is used.
