@@ -161,7 +161,7 @@
       "local_record": "live/allocator-denials.txt"
     }
   },
-  "retention_seconds": 184.062,
+  "retention_seconds": 197.39,
   "result": "Native color bars and enforcing GSI ADB; composer and maintenance registered; allocator blocked by wrong DRM node labels; SurfaceFlinger service absent",
   "next_change": "Label only /dev/dri/card[0-9]+ and /dev/dri/renderD[0-9]+ as gpu_device; use existing narrow GPU permissions; no policy allow added"
 }
