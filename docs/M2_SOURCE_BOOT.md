@@ -298,3 +298,14 @@ It replaces the emulator init in the single current candidate directory.
 The accepted host ADB key is unchanged after normalization. See
 `build/device/m2-source-init-build-2026-11-15.json`. This is build acceptance;
 M2 hardware tests have not yet run.
+
+Candidate 36 is now packaged from the verified source kernel, source DTB/full
+board DTBO and source init. Boot SHA-256 is
+`df5c30403d8c1ed0b5f3131c85344357e9202089d203d908c30c1b22f5f037bd`;
+the paired DTBO partition image is
+`e109d669d633e45978cb3fd41a15a82cb374ad44c321ce27807c7e2709fa6d3f`.
+GSI, vendor, candidate super and writable test seeds remain identical. Packaging
+record: `build/device/m2-source-candidate-36-2026-11-15.json`. No M2 image has yet
+been flashed. The M1 boot changed while the build ran; the user confirmed manual
+restart/power-button operation, so the replacement boot is being requalified
+before the physical boot-only update.
