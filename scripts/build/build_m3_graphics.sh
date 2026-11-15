@@ -8,6 +8,13 @@ case "$PHASE" in prepare|build|all) ;; *) exit 2 ;; esac
 mkdir -p "$ARTIFACT_DIR"
 if [[ "$PHASE" != build ]]; then
   RMX2072_GRAPHICS=1 bash "$ROOT_DIR/scripts/build/build_m2_first_stage.sh" prepare
+  # The VINTF tool inspects media interface metadata, which imports the real
+  # HardwareBuffer parcelable. Preserve its upstream module and license.
+  git -C "$SOURCE_DIR/frameworks/base" sparse-checkout set --no-cone \
+    /Android.bp /NOTICE /core/java/Android.bp \
+    /core/java/android/hardware/HardwareBuffer.aidl \
+    /core/java/android/hardware/serial/Android.bp
+  git -C "$SOURCE_DIR/frameworks/base" sparse-checkout list > "$ARTIFACT_DIR/frameworks-base-sparse.txt"
   # assemble_vintf is a real install dependency of the HAL fragments. Keep its
   # two native support libraries without analyzing unrelated GKI/VTS targets.
   git -C "$SOURCE_DIR/packages/modules/Gki" sparse-checkout set --no-cone /libkver/

@@ -26,8 +26,14 @@
     {
       "run": 43672280150,
       "commit": "1a3c4fbed870889a3a16114a8aba74f3f4e45e20",
-      "result": "IN PROGRESS",
-      "source_projects": 137
+      "result": "FAIL",
+      "source_projects": 137,
+      "command_count": 8446,
+      "missing_edges": [
+        "android.hardware.media.bufferpool2_interface -> HardwareBuffer_aidl",
+        "android.hardware.media.c2_interface -> HardwareBuffer_aidl"
+      ],
+      "fix": "Include the pinned frameworks/base HardwareBuffer AIDL, upstream build declarations and license in the M3 sparse checkout. Target closure still requires zero missing edges."
     }
   ],
   "physical_installation": "NOT RUN",

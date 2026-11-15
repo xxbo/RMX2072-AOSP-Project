@@ -105,7 +105,11 @@ The first graphics source build failed on the upstream libdisplay-info
 visibility boundary. A narrow project-package fix resolved it. The second
 build generated a 7,652-command target closure and identified two missing
 libraries for the real VINTF fragment tool. Their pinned AOSP Gki and
-vts-testcase/hal source projects are now included; build 43672280150 is running.
+vts-testcase/hal source projects are now included. Build 43672280150 generated
+an 8,446-command closure and identified HardwareBuffer_aidl as the remaining
+missing module through media interface metadata used by assemble_vintf. The
+M3 sparse checkout now includes its pinned frameworks/base AIDL, original build
+declarations and license. The next source build is pending.
 No missing-library stubs or skipped target checks are used.
 [Build evidence](../build/device/m3-graphics-build-2026-11-15.json).
 These build issues are independent of the early kernel regression: graphics
