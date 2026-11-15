@@ -1,0 +1,15 @@
+{
+  "result": "PASS_STRICT_COMPILE_ONLY",
+  "command": "secilc -m -M true -G -c 30, with neverallow checks enabled",
+  "device_result": [
+    "0",
+    "0b9f2b780e9a8cc758b46ed99ed0598492193de390b3e05121c137fbaadc92ba  /data/local/tmp/rmx-m3-policy/policy",
+    "efd2f392-667a-4cf6-b252-4c76bfc5e4a9",
+    "Enforcing"
+  ],
+  "combined_vendor_policy_sha256": "5711aed6b5a9d56c2f76143b08cd4f4eee7030882e445491d38f626fb0bacac4",
+  "cil_statements_match_current_sources": true,
+  "compiled_policy_sha256": "0b9f2b780e9a8cc758b46ed99ed0598492193de390b3e05121c137fbaadc92ba",
+  "loaded": false,
+  "scope": "Compiler executed through the live GSI ADB shell; no policy installation and no new graphics HAL run"
+}

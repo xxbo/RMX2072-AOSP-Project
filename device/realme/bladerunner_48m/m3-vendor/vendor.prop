@@ -1,0 +1,6 @@
+# First physical-display integration uses CPU rendering, not Adreno acceleration.
+ro.sf.lcd_density=420
+ro.hardware.egl=angle
+ro.hardware.vulkan=pastel
+ro.hardware.gralloc=minigbm
+ro.hwui.renderer=skiagl

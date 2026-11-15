@@ -5,10 +5,12 @@ import hashlib
 import io
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
 import time
+import tarfile
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -28,7 +30,7 @@ def main():
     p.add_argument('--run-id', type=int, required=True)
     p.add_argument('--artifact-id', type=int, required=True)
     p.add_argument('--commit', required=True)
-    p.add_argument('--kind', choices=('kernel', 'init'), required=True)
+    p.add_argument('--kind', choices=('kernel', 'init', 'graphics'), required=True)
     p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     a = p.parse_args()
     if a.display and a.kind != 'kernel':
@@ -64,6 +66,66 @@ def main():
         url = error.headers['Location']
     provenance = dict(run_id=a.run_id, source_commit=a.commit, artifact_id=a.artifact_id,
                       artifact_archive_digest=artifact['digest'], archive_digest_verified=False)
+    if a.kind == 'graphics':
+        if run['path'] != '.github/workflows/m3-graphics.yml' or artifact['size_in_bytes'] > 512*1024*1024:
+            raise ValueError('Unexpected graphics build or oversized artifact')
+        plain = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with plain.open(url, timeout=120) as response:
+            archive = response.read(512*1024*1024+1)
+        if len(archive) > 512*1024*1024 or 'sha256:'+digest(archive) != artifact['digest']:
+            raise ValueError('Graphics archive digest/size mismatch')
+        wanted = {'graphics-vendor.tar.gz', 'vendor-files.sha256', 'resolved-manifest.xml',
+                  'SHA256SUMS', 'project-commit.txt', 'target-dependencies.json', 'STATUS.txt'}
+        with zipfile.ZipFile(io.BytesIO(archive)) as z:
+            files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
+        if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
+            raise ValueError('Incomplete graphics artifact provenance')
+        closure = json.loads(files['target-dependencies.json'])
+        if closure['missing_dependency_commands'] or closure['command_count'] < 1:
+            raise ValueError('Graphics dependency closure is incomplete')
+        sums = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
+                for line in files['SHA256SUMS'].decode().splitlines()}
+        for name in ('graphics-vendor.tar.gz', 'resolved-manifest.xml'):
+            if digest(files[name]) != sums[name]:
+                raise ValueError('Graphics member digest mismatch: '+name)
+        expected = {}
+        for line in files['vendor-files.sha256'].decode().splitlines():
+            sha256, name = line.split(maxsplit=1)
+            prefix = 'out/target/product/rmx2072_m3/vendor/'
+            if not name.startswith(prefix):
+                raise ValueError('Non-vendor file in graphics manifest')
+            expected['/'+name[len(prefix):]] = sha256
+        payload = {}
+        with tarfile.open(fileobj=io.BytesIO(files['graphics-vendor.tar.gz']), mode='r:gz') as tar:
+            for member in tar:
+                if member.isdir():
+                    continue
+                name = member.name.removeprefix('./')
+                if (not member.isfile() or not re.fullmatch(r'[a-zA-Z0-9+@/_.-]+', name)
+                        or Path(name).is_absolute() or '..' in Path(name).parts
+                        or '/'+name in payload or member.size > 128*1024*1024):
+                    raise ValueError('Unsafe or unexpected graphics payload member')
+                data = tar.extractfile(member).read()
+                payload['/'+name] = data
+                if sum(map(len, payload.values())) > 512*1024*1024 or len(payload) > 2048:
+                    raise ValueError('Graphics payload exceeds staging bounds')
+        if {n:digest(data) for n,data in payload.items()} != expected:
+            raise ValueError('Graphics files differ from build manifest')
+        output = work/'current/graphics'
+        if output.exists():
+            raise ValueError('Current graphics payload already exists; reconcile it before replacing')
+        for name,data in payload.items():
+            target = output/'vendor'/name.lstrip('/')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        for name,data in files.items():
+            if name != 'graphics-vendor.tar.gz':
+                (output/name).write_bytes(data)
+        provenance.update(source_verified=True, archive_digest_verified=True, files=expected,
+                          target_closure=closure, payload_bytes=sum(map(len,payload.values())))
+        (output/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n')
+        print('Installed verified source graphics payload:', len(payload), 'files')
+        return
     if a.kind == 'init':
         plain = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         archive = plain.open(url, timeout=120).read()
