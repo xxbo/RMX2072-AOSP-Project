@@ -1,0 +1,112 @@
+"""Compose and sign the sole M3 graphics candidate from verified source artifacts.
+
+This prepares local images only. It never changes the connected handset.
+The pinned GSI, Keymaster inputs, USB guardian and scratch seeds remain fixed.
+"""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+
+from stage_m3_graphics import compose, filesystem_size
+
+
+def sha(path):
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    for name in ('workspace', 'ndk', 'adb-public-key', 'board-source'):
+        p.add_argument('--'+name, type=Path, required=True)
+    p.add_argument('--trial', required=True)
+    a = p.parse_args()
+    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
+        p.error('Use the recorded handset trial naming')
+    repo = Path(__file__).resolve().parents[2]
+    if subprocess.check_output(['git', '-C', repo, 'status', '--porcelain']):
+        raise ValueError('Commit the complete graphics recipe before packaging')
+    work = a.workspace.resolve()
+    if work.is_relative_to(repo):
+        raise ValueError('Keep generated images outside the public checkout')
+    current = work/'current'
+    build = repo/'scripts/build'
+    graphics = current/'graphics'
+    prior = json.loads((current/'usb-build.json').read_text())
+    if sha(current/'rmx-m1-guard') != prior['guard']:
+        raise ValueError('USB guardian differs from the retained input')
+    seeds = json.loads((current/'volumes/scratch.json').read_text())
+    system_sha = sha(current/'system.img')
+    reference = json.loads((repo/'build/device/gsi17-mount-reference.json').read_text())
+    if system_sha != reference['image_sha256']:
+        raise ValueError('GSI changed')
+    files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics)
+    policy = json.loads((repo/'build/device/m3-graphics-policy-2026-11-15.json').read_text())
+    cil_sha = hashlib.sha256(files['/etc/selinux/vendor_sepolicy.cil']).hexdigest()
+    if policy['result'] != 'PASS_STRICT_COMPILE_ONLY' or cil_sha != policy['combined_vendor_policy_sha256']:
+        raise ValueError('Compile the exact new split policy with neverallow checks before packaging')
+    # The strict compile proof is reused only for byte-identical CIL and GSI.
+    payload_size = filesystem_size(files)
+    del files
+    avb = current/'avbtool.py'
+    if sha(avb) != 'e5a664a38db623da00f080219bc0ee60a640a9dc4a872803616fae4938ac749b':
+        raise ValueError('AVB tool differs from the pinned input')
+    os.environ['PATH'] = str(current/'fs-tools')+os.pathsep+os.environ['PATH']
+    def run(*args):
+        subprocess.run([str(x) for x in args], check=True)
+    run(sys.executable, build/'build_m1_vendor.py', '--output', current/'vendor',
+        '--keymaster-info', current/'info-input', '--usb-guard', current/'rmx-m1-guard',
+        '--graphics', graphics)
+    report = json.loads((current/'vendor/vendor.json').read_text())
+    unsigned = current/'vendor/vendor.img'
+    if unsigned.stat().st_size != payload_size or sha(unsigned) != report['sha256']:
+        raise ValueError('Vendor image differs from checked source inventory')
+    # Ask avbtool for its real tree/metadata budget, rather than assuming the
+    # old 17 MiB partition is sufficient for a source graphics payload.
+    signed_size = payload_size
+    while signed_size <= payload_size+(8 << 20):
+        signed_size += 1 << 20
+        limit = int(subprocess.check_output([sys.executable, str(avb), 'add_hashtree_footer',
+            '--partition_size', str(signed_size), '--calc_max_image_size', '--do_not_generate_fec']))
+        if limit >= payload_size:
+            break
+    else:
+        raise ValueError('AVB metadata exceeds the bounded graphics budget')
+    shutil.copyfile(unsigned, current/'vendor-signed.img')
+    run(sys.executable, avb, 'add_hashtree_footer', '--image', current/'vendor-signed.img',
+        '--partition_name', 'vendor', '--partition_size', signed_size,
+        '--algorithm', 'SHA256_RSA4096', '--key', current/'engineering-vendor.pem',
+        '--hash_algorithm', 'sha256', '--salt', report['sha256'], '--do_not_generate_fec')
+    run(sys.executable, build/'prepare_ufs_verification.py', '--system', current/'system.img',
+        '--vendor', current/'vendor-signed.img', '--vendor-key', current/'vendor.avbpubkey',
+        '--vendor-report', current/'vendor/vendor.json', '--graphics', graphics,
+        '--graphics-keymaster-info', current/'info-input', '--usb-guard', current/'rmx-m1-guard',
+        '--output', current/'verified-profile')
+    run(sys.executable, repo/'scripts/device_audit/build_ufs_candidate.py',
+        '--stock', work/'recovery/f20', '--system', current/'system.img',
+        '--vendor', current/'vendor-signed.img', '--profile', current/'verified-profile',
+        '--output', current/'candidate')
+    staged = dict(prior, vendor_unsigned=report['sha256'], vendor_signed=sha(current/'vendor-signed.img'),
+                  graphics_source_commit=provenance['source_commit'], graphics_device_result='NOT RUN')
+    (current/'usb-build.json').write_text(json.dumps(staged, indent=2)+'\n')
+    run(sys.executable, build/'rebuild_m2_source_trial.py', '--workspace', work,
+        '--ndk', a.ndk.resolve(), '--adb-public-key', a.adb_public_key.resolve(),
+        '--board-source', a.board_source.resolve(), '--trial', a.trial, '--display')
+    if sha(current/'system.img') != system_sha or json.loads((current/'volumes/scratch.json').read_text()) != seeds:
+        raise ValueError('GSI or scratch seed manifest changed during preparation')
+    result = dict(trial=a.trial, graphics_source=provenance, vendor_payload_bytes=payload_size,
+                  vendor_signed_bytes=signed_size, vendor_signed_sha256=staged['vendor_signed'],
+                  strict_policy_cil_sha256=cil_sha, policy_proof_reused_for_identical_input=True,
+                  source_gsi_sha256=system_sha, scratch=seeds, handset_write='NOT RUN')
+    (current/'graphics-candidate.json').write_text(json.dumps(result, indent=2)+'\n')
+    print('Signed source graphics candidate prepared and verified; handset unchanged.')
+
+
+if __name__ == '__main__':
+    main()
