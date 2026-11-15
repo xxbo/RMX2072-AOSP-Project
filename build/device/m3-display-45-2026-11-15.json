@@ -155,5 +155,22 @@
     "physical_sequence": "PLL locks during orphan clock registration; DSI host resets PHY; software pll_on and CCF references remain nonzero while PLL_CNTRL is zero. No fresh PLL prepare occurs before failed transfer."
   },
   "panel_transfer_length_fix": "Built and installed; positive-return path not reached because first transfer still times out.",
-  "next_candidate": "Opt six DSI0 byte/pixel clocks out of boot-state holding with native CLK_DONT_HOLD_STATE; verify zero pre-modeset references, post-reset PLL prepare/lock and panel commands."
+  "next_candidate": "Opt six DSI0 byte/pixel clocks out of boot-state holding with native CLK_DONT_HOLD_STATE; verify zero pre-modeset references, post-reset PLL prepare/lock and panel commands.",
+  "source_explanation": {
+    "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+    "files": {
+      "drivers/clk/clk.c": "6b14c9047d0047d2588d874ea06aaad9c22633e530a104efc4e074b29d45d57d",
+      "drivers/clk/qcom/common.c": "803e0f09194777208b64a56ec3a5451aadfc6232464ef80961ac75f25fcadc8e",
+      "drivers/clk/qcom/gdsc.c": "a4da19a3939d4464f37d28c102764350be6895d3aa6421d404e490013512f227",
+      "drivers/pmdomain/core.c": "4832ea7e8fb162a601385445b074e5602bfd756b5824a6c1011aada8f7f507b8",
+      "include/linux/device.h": "c5e98194a4b09aa447abf1149362991bd8695c46fed3d90322dffac8a11b57e5"
+    },
+    "chain": "DISPCC qcom_cc_really_probe -> gdsc_register -> of_genpd_add_provider_onecell installs genpd_sync_state on the clock provider driver. ACK CCF dev_has_sync_state sees this callback and creates boot clock holds; that callback only synchronizes power domains, not clk_sync_state. The measured orphan-hold stacks and persistent DSI references match this source interaction.",
+    "qualification": "Callback installation is source-derived; the held references, PLL lock before reset and disabled hardware after reset are measured in trial45."
+  },
+  "next_kernel_build": {
+    "run": 43688126825,
+    "source_commit": "25ca13ba7c3a180862eba6a2f75c0ba8b05ac465",
+    "status": "IN_PROGRESS"
+  }
 }

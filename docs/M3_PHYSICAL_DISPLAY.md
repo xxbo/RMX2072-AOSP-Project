@@ -397,3 +397,12 @@ The flag prevents creating boot-held references; it does not manually edit
 CCF counters or write PLL registers. The next trial must demonstrate zero
 references before modeset, a new post-reset PLL lock and successful DCS/frame
 progress. This candidate is not yet a hardware pass.
+
+
+Pinned-source inspection explains the otherwise surprising CCF hold:
+DISPCC registers its GDSC through `of_genpd_add_provider_onecell()`, which
+installs `genpd_sync_state` on the provider driver. ACK CCF treats the presence
+of that callback as a reason to preserve boot clock state. That callback
+synchronizes power domains, without calling `clk_sync_state()`. The physical
+orphan-hold stacks and persistent references match this source interaction.
+The next kernel is run `43688126825` at `25ca13ba7c3a180862eba6a2f75c0ba8b05ac465`.
