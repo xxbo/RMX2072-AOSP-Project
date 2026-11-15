@@ -159,6 +159,13 @@
       ],
       "job_log_sha256": "a3a35258924d3d0cf0c834b1941564de9899c11efae2ef7dc7bc25614282ed3a",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43663703953,
+      "source_commit": "50b553bda01c429823d56174c3555f51c0957673",
+      "result": "PASS_SOURCE_BUILD_AND_LOCAL_ARTIFACT_VALIDATION",
+      "record": "m2-source-init-build-2026-11-15.json",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -166,11 +173,9 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "status": "RESUMED_BY_USER",
-    "source_init_run": 43663703953,
-    "selected_projects": 120,
-    "change": "Include pinned LLVM libc, Highway and Arm optimized routines providers found by the init dependency closure",
-    "source_init_commit": "50b553bda01c429823d56174c3555f51c0957673"
+    "status": "PACKAGING_SOURCE_BOOT_CANDIDATE",
+    "source_init_run": null,
+    "next": "Regenerate source DTB/DTBO and ramdisk with verified source init; repeat handset acceptance"
   },
   "host_tests": {
     "total": 81,

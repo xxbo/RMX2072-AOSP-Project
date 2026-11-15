@@ -287,3 +287,14 @@ its guard lease. Expected image inputs are inherited from the previous verified
 flash; the boot-only writer still requires physical boot/DTBO/super readback.
 This is a resumed-session baseline, not a claimed new disconnected cold-start
 test. See `build/device/m2-pretest-baseline-2026-11-15.json`.
+
+Run **43663703953** succeeded on project commit
+`50b553bda01c429823d56174c3555f51c0957673`. Its 120-project resolved manifest
+and 3,271-command init dependency closure have no missing edges. The complete
+artifact archive digest, unmodified AOSP source pin, product recipes, sparse
+selections and static AArch64 executable were verified locally. The source init
+SHA-256 is `76236d035fcd6afdd208b7812f74a91724e77ef59e837a2e40dc0640b4e453ad`.
+It replaces the emulator init in the single current candidate directory.
+The accepted host ADB key is unchanged after normalization. See
+`build/device/m2-source-init-build-2026-11-15.json`. This is build acceptance;
+M2 hardware tests have not yet run.
