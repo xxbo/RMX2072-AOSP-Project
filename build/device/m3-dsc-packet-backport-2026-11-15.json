@@ -12,7 +12,7 @@
     "upstream-msm-dsi-dsc-slices-per-packet.patch": "e33e3bd9eb0ad19af2d7be3695dbb812aed0fdd7fda8734184ed1072ff2d67cd",
     "rmx2072-dsc-packet-trace.patch": "c352bcb1f4a5a8d593e0c948cf35e118017b1b4aaacbcb806ef7ff8f971a5df8"
   },
-  "hardware_result": "NOT BUILT OR RUN; same known pattern retained on trial 58",
+  "hardware_result": "Kernel 30 builds and selected artifact/source digests verify; physical trial 59 pending",
   "factory": {
     "commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
     "path": "arch/arm64/boot/dts/20607/dsi-panel-rm19795samsung-ams641rw01_1080_2340.dtsi",
