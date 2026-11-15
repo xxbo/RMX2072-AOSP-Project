@@ -1,6 +1,6 @@
 # RMX2072 development plan
 
-Updated 2026-11-14 for the realme X50 Pro Player Edition (RMX2072, Snapdragon 865 / SM8250). This plan defines progress by what the handset can boot and operate. The [earlier M0–M8 plan](https://github.com/xxbo/RMX2072-AOSP-Project/blob/dfd17d95f25a0cda113af939adaa2be14142d798/plan.md) preserves the source research, legacy builds and original checklists.
+Updated 2026-11-15 for the realme X50 Pro Player Edition (RMX2072, Snapdragon 865 / SM8250). This plan defines progress by what the handset can boot and operate. The [earlier M0–M8 plan](https://github.com/xxbo/RMX2072-AOSP-Project/blob/dfd17d95f25a0cda113af939adaa2be14142d798/plan.md) preserves the source research, legacy builds and original checklists.
 
 ## Target system
 
@@ -34,8 +34,8 @@ The November 10–12 records come from the [bring-up PR stack](https://github.co
 | Milestone | Status | Evidence required on RMX2072 |
 | --- | --- | --- |
 | M1 · Headless Android 17 from UFS | **Passed on the recorded trial 35 artifacts.** Disconnected power-key startup, later authenticated ADB, enforcing/PID 1/UFS identity and same-boot soak/transfer passed. The same new kernel then passed watchdog-triggered EDL capture and fully verified F.20 restoration without keys or host reboot commands. Factory-derived trees, original DTBO, emulator first-stage init and secure firmware remain explicit M2/release dependencies. [Cold start](build/device/m1-disconnected-start-35-2026-11-14.json) · [Recovery](build/device/m1-autonomous-recovery-35-2026-11-14.json) | Cold-boot with the image-serving computer disconnected. After boot, connect ADB and record the 6.18 kernel release, Android API 37, Android init as PID 1, first- and second-stage init logs, and the UFS-backed sources of system and the project-built vendor. Record any factory boot/DT or firmware dependencies still in use. |
-| M2 · Project-built board description | In progress; source DTB/DTBO compile, 79-node M1 resource comparison and source-PON kernel build passed offline. Source first-stage init is still building; no M2 handset result yet. [Build and acceptance record](docs/M2_SOURCE_BOOT.md) | Boot with source-built board DTB/DTBO and ramdisk. Record packaged and selected tree identities. Reproduce cold boot, six UFS LUNs, verified partition reads, USB diagnostics and recovery. Repeat M1 on these exact artifacts. |
-| M3 · Interactive Android desktop | Open. Panel and touch work can start on the diagnostic kernel. | Show a test pattern on the physical panel and record GT9886 input events. Integrate the allocator, graphics composer and SurfaceFlinger with the project vendor. Record the launcher rendering, a physical tap opening an app and Android boot completion on the same build. |
+| M2 · Project-built board description | Source boot passed on trial 36: source DTB/DTBO and AOSP first-stage init, six read-only UFS LUNs, verified GSI/vendor mounts, enforcing second-stage PID 1, ADB, upstream PON and 193.906-second soak/transfer. Cold-start and watchdog repeats were cancelled by the user to prioritize the desktop; they are not claimed passed. [Handset record](build/device/m2-source-boot-36-2026-11-15.json) | Boot with source-built board DTB/DTBO and ramdisk. Record packaged and selected tree identities. Reproduce cold boot, six UFS LUNs, verified partition reads, USB diagnostics and recovery. Repeat M1 on these exact artifacts. |
+| M3 · Interactive Android desktop | Active priority: physical AOSP desktop on the retained trial 36 GSI. SurfaceFlinger aborts for missing OpenGL ES; DRM/MSM and graphics vendor services are absent. Build the source graphics stack and connect the real display pipeline. [Initial blockers](build/device/m3-desktop-blockers-2026-11-15.json) | Show a test pattern on the physical panel and record GT9886 input events. Integrate the allocator, graphics composer and SurfaceFlinger with the project vendor. Record the launcher rendering, a physical tap opening an app and Android boot completion on the same build. |
 | M4 · Daily-use hardware and release | Open. Validate each subsystem independently. | Exercise calls and mobile data, Wi-Fi/Bluetooth, audio, camera, sensors and biometrics. Verify charging, thermal control, suspend/wake and encrypted userdata across reboot. Publish hardware results, remaining firmware dependencies, build inputs, image hashes and a tested update/recovery procedure. |
 
 ## Automated handset testing
@@ -57,7 +57,11 @@ CI builds the artifacts and checks the project vendor for reproducibility. On th
 
 See [VTS for HALs and kernels](https://source.android.com/docs/core/tests/vts), [CTS execution and retry](https://source.android.com/docs/compatibility/cts/run), [UI Automator](https://developer.android.com/training/testing/other-components/ui-automator) and [Monkey](https://developer.android.com/studio/test/other-testing-tools/monkey).
 
-## Next work after M1 headless acceptance
+## Current priority: physical AOSP desktop
+
+On November 15 the user cancelled further unplug/power-key and watchdog fault-injection repeats. Keep the accepted source-boot GSI running and prioritize graphics userspace, display/panel and framework/launcher startup. Repeat recovery work only when a real failure requires it. The omitted M2 qualification checks remain explicitly unrun.
+
+## Earlier work sequence after M1 headless acceptance
 
 The [November 13 UFS trial](docs/M1_UFS_FIRST_STAGE.md) reached Android second-stage init on 6.18 with the GSI and project vendor on internal storage. PID 1 verified and mounted both logical partitions and read the complete system build properties and main init script under enforcing.
 
