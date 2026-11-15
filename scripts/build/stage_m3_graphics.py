@@ -74,6 +74,8 @@ def compose(info, guard, graphics):
     files['/etc/selinux/vendor_property_contexts'] += (
         b'vendor.minigbm.debug u:object_r:rmx_graphics_config_prop:s0 exact string\n')
     labels = [
+        '/dev/dri/card[0-9]+ u:object_r:gpu_device:s0',
+        '/dev/dri/renderD[0-9]+ u:object_r:gpu_device:s0',
         '/vendor/bin/hw/android\\.hardware\\.graphics\\.allocator-service\\.minigbm u:object_r:rmx_graphics_allocator_exec:s0',
         '/vendor/bin/hw/android\\.hardware\\.composer\\.hwc3-service\\.rmx2072 u:object_r:rmx_graphics_composer_exec:s0',
     ]

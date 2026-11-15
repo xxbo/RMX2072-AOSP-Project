@@ -47,5 +47,14 @@
   },
   "selinux_policy_changed": false,
   "library_bytes_changed": false,
-  "device_result": "NOT RUN"
+  "device_result": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-48",
+    "boot_id": "10daf3a7-41a4-4f66-b345-a86eed9ab0cd",
+    "enforcing": true,
+    "maintenance_registered": true,
+    "service_process_domain": "u:r:rmx_keymaster:s0",
+    "adb_retained": true,
+    "reference": "m3-display-48-2026-11-15.json",
+    "limitation": "Direct getHardwareInfo/HMAC/earlyBootEnded lines absent from the collected late log ring; not independently re-claimed in this trial"
+  }
 }

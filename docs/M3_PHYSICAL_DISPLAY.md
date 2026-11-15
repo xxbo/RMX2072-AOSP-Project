@@ -477,3 +477,30 @@ pending. [Trial 47](../build/device/m3-display-47-2026-11-15.json) and
 
 Pinned linker source: [environment handling](https://android.googlesource.com/platform/bionic/+/06356e41c5ed7b12220b24c05ba4fdb873b126a7/linker/linker_main.cpp)
 and [library resolution](https://android.googlesource.com/platform/bionic/+/06356e41c5ed7b12220b24c05ba4fdb873b126a7/linker/linker.cpp).
+
+### Trial 48: Keymaster restored; allocator blocked by device labels
+
+Boot `10daf3a7-41a4-4f66-b345-a86eed9ab0cd` runs API 37 on 6.18.32 under
+enforcing. The private-runtime source fix restores the Keymaster process in
+`rmx_keymaster`, maintenance registration and retained GSI ADB. Direct HMAC and
+earlyBootEnded log lines have rolled out of the collected ring, so this record
+does not independently re-claim those calls. The source composer service is
+registered. Native panel commands and four advancing frame events pass; the
+operator reports flashing color bars after the realme logo, then black.
+
+SurfaceFlinger loads the new graphics libraries but cannot obtain the allocator.
+Both `/dev/dri/card0` and `renderD128` have correct system/graphics ownership and
+0660 permissions, but carry `u:object_r:device:s0`. Enforcing denies allocator
+read/write access. Its repeated exits also trigger SurfaceFlinger restarts.
+No registered SurfaceFlinger service, working Android frame or desktop is claimed.
+
+The next candidate adds only the two DRM node patterns to vendor file contexts
+with `gpu_device`. Existing allocator/composer policy already grants access to
+that type; the composed CIL hash remains identical to the strict-compile proof.
+There is no broad permission for generic devices and no permissive-mode change.
+Pinned Android 17 ueventd relabels existing nodes when coldboot encounters
+EEXIST, so the nodes created by the early diagnostic are covered too.
+The next objective is allocator registration, real EGL buffer rendering and
+stable SurfaceFlinger, then the AOSP launcher. No manual cold-start or watchdog
+fault-injection test was run. [Trial 48](../build/device/m3-display-48-2026-11-15.json)
+and [pinned ueventd](https://android.googlesource.com/platform/system/core/+/545d2487e38192a2ce25040897ced877cf6b4f53/init/devices.cpp).
