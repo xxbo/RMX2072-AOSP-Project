@@ -48,10 +48,17 @@ def main():
         raise ValueError('GSI changed')
     files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics)
     policy = json.loads((repo/'build/device/m3-graphics-policy-2026-11-15.json').read_text())
-    cil_sha = hashlib.sha256(files['/etc/selinux/vendor_sepolicy.cil']).hexdigest()
-    if policy['result'] != 'PASS_STRICT_COMPILE_ONLY' or cil_sha != policy['combined_vendor_policy_sha256']:
+    cil = files['/etc/selinux/vendor_sepolicy.cil']
+    cil_sha = hashlib.sha256(cil).hexdigest()
+    compiled_input = (current/'policy-check/m3-vendor.cil').read_bytes()
+    statements = lambda data: [line.strip() for line in data.splitlines()
+                               if line.strip() and not line.lstrip().startswith(b';')]
+    if (policy['result'] != 'PASS_STRICT_COMPILE_ONLY'
+            or hashlib.sha256(compiled_input).hexdigest() != policy['combined_vendor_policy_sha256']
+            or statements(cil) != statements(compiled_input)):
         raise ValueError('Compile the exact new split policy with neverallow checks before packaging')
-    # The strict compile proof is reused only for byte-identical CIL and GSI.
+    # Reuse the proof only for the same GSI and identical statements. Full-line
+    # comments and surrounding whitespace do not alter CIL semantics.
     payload_size = filesystem_size(files)
     del files
     avb = current/'avbtool.py'
@@ -69,9 +76,8 @@ def main():
         raise ValueError('Vendor image differs from checked source inventory')
     # Ask avbtool for its real tree/metadata budget, rather than assuming the
     # old 17 MiB partition is sufficient for a source graphics payload.
-    signed_size = payload_size
-    while signed_size <= payload_size+(8 << 20):
-        signed_size += 1 << 20
+    for padding_mib in range(1, 9):
+        signed_size = payload_size+(padding_mib << 20)
         limit = int(subprocess.check_output([sys.executable, str(avb), 'add_hashtree_footer',
             '--partition_size', str(signed_size), '--calc_max_image_size', '--do_not_generate_fec']))
         if limit >= payload_size:
@@ -102,7 +108,9 @@ def main():
         raise ValueError('GSI or scratch seed manifest changed during preparation')
     result = dict(trial=a.trial, graphics_source=provenance, vendor_payload_bytes=payload_size,
                   vendor_signed_bytes=signed_size, vendor_signed_sha256=staged['vendor_signed'],
-                  strict_policy_cil_sha256=cil_sha, policy_proof_reused_for_identical_input=True,
+                  composed_vendor_cil_sha256=cil_sha,
+                  strict_compile_input_sha256=policy['combined_vendor_policy_sha256'],
+                  policy_proof_reused_for_identical_statements=True,
                   source_gsi_sha256=system_sha, scratch=seeds, handset_write='NOT RUN')
     (current/'graphics-candidate.json').write_text(json.dumps(result, indent=2)+'\n')
     print('Signed source graphics candidate prepared and verified; handset unchanged.')
