@@ -10,11 +10,11 @@ for p in /sys/class/drm/* /sys/class/backlight/*; do
     done
 done
 for d in /sys/bus/platform/devices/*; do
-    case "$d" in *ae00000*|*ae01000*|*ae94000*|*ae94400*|*af00000*|*f100000*|*1740000*)
+    case "$d" in *ae00000*|*ae01000*|*ae94000*|*ae94400*|*af00000*|*f100000*|*1740000*|*88e7000*)
         echo "DEVICE=$d DRIVER=$(readlink "$d/driver")" ;;
     esac
 done
 echo DEFERRED
 cat /sys/kernel/debug/devices_deferred
 echo DISPLAY_LOG
-dmesg | grep -iE 'drm|dpu|dsi|mdss|display|rm19795|dispcc|pinctrl|rpmhpd|mmcx|smmu.*fault' | tail -180
+dmesg | grep -iE 'drm|dpu|dsi|mdss|display|rm19795|dispcc|refgen|pinctrl|rpmhpd|mmcx|smmu.*fault' | tail -180

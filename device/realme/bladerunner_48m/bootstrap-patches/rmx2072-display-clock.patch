@@ -5,8 +5,8 @@ The DISPCC flag change is from upstream acf7a91d0b0e9e3ef374944021de62062125b7e4
 (Val Packett, clk: qcom: dispcc-sm8250: Enable parents for pixel clocks).
 Link: https://lore.kernel.org/r/20260312112321.370983-9-val@packett.cool
 
-RMX2072 trial 42 times out updating the pixel RCG before its parent PLL is
-prepared. The companion project change reuses ACK's 6g_v2_9 clock acquisition
+RMX2072 trial 42 times out updating the pixel RCG. Missing parent preparation
+was one candidate cause. The project change reuses ACK's 6g_v2_9 clock acquisition
 and deferred-parent logic for an SM8250 node with explicit source clocks.
 The matching project DTS removes assigned-clock-parents: parent selection
 then runs from host power_on after dsi_mgr_phy_enable, rather than probe.
@@ -15,7 +15,7 @@ Parent errors now propagate, instead of proceeding with an invalid source.
 
 This avoids applying the proposed 7nm DIGTOP bias change, which has an open
 SM8350 boot-regression report. No new PHY register values are introduced.
-Hardware result remains unqualified until the next recorded handset trial.
+Trial 43 still timed out; these changes alone did not repair the display.
 
 diff --git a/drivers/clk/qcom/dispcc-sm8250.c b/drivers/clk/qcom/dispcc-sm8250.c
 --- a/drivers/clk/qcom/dispcc-sm8250.c

@@ -22,6 +22,7 @@
 &mdss_dsi_phy1 { status = "disabled"; };
 &mdss_dsi0_pll { status = "disabled"; };
 &mdss_dsi1_pll { status = "disabled"; };
+&refgen { status = "disabled"; };
 
 &{/soc/rsc@18200000/diag-regulators} {
     m3_l14a: ldo14 {
@@ -106,6 +107,12 @@
         #size-cells = <1>;
         ranges;
 #endif
+    // Same SM8250 REFGEN resource as the official board; native ACK driver.
+    m3_refgen: regulator@88e7000 {
+        compatible = "qcom,sm8250-refgen-regulator";
+        reg = <0x088e7000 0x84>;
+        regulator-name = "m3_dsi_refgen";
+    };
     m3_mmss: interconnect@1740000 {
         compatible = "qcom,sm8250-mmss-noc";
         reg = <0x01740000 0x1f080>;
@@ -200,6 +207,7 @@
             power-domains = <&m3_rpmhpd RPMHPD_MMCX>;
             phys = <&m3_dsi0_phy>;
             vdda-supply = <&diag_ufs_l9>;
+            refgen-supply = <&m3_refgen>;
             pinctrl-names = "default";
             pinctrl-0 = <&m3_panel_te>;
             #address-cells = <1>;

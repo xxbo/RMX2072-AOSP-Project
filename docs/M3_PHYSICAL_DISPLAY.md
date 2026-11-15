@@ -290,6 +290,25 @@ unprepared parent from a hardware clock/transport failure while the pipeline
 is still active. No clock registers are written by the probe. The static ARM64
 probe compiles with warnings treated as errors; physical results are pending.
 
+### Next candidate: native DSI REFGEN supply
+
+Trial 43 also reports `supply refgen not found, using dummy regulator`.
+The official board's `kona-regulators.dtsi` defines REFGEN at `0x088e7000`,
+size `0x84`, and its DSI controller consumes that supply. The pinned ACK
+already has `qcom-refgen-regulator.c` with the native SM8250 implementation,
+but the candidate had neither its Kconfig option nor a native supply node.
+Upstream commit `3aedde1859f341f0f631330928872c535769e20b` adds the same
+[SM8250 DSI dependency](https://www.spinics.net/lists/kernel/msg5852544.html).
+
+The next kernel enables the existing ACK regulator driver; the project DT
+disables the legacy provider, places its native replacement in the staged
+display-fabric group and connects DSI's `refgen-supply`. No private MMIO
+sequence or fabricated fixed regulator is added. Full effective-DT resource
+checks pass and enforce the provider, address and consumer link. Artifact
+import and boot packaging require the driver to be built in. This repairs a
+verified missing dependency; whether it resolves the observed clock/DCS
+timeout still requires the next hardware test.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and

@@ -52,6 +52,8 @@ def main():
         if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
             raise ValueError('Display DT requires the matching deferred DSI clock-parent kernel patch')
     config = (kernel_dir / 'sm8250_bootstrap_dot_config').read_text().splitlines()
+    if dt.get('display') and 'CONFIG_REGULATOR_QCOM_REFGEN=y' not in config:
+        raise ValueError('Display DT requires the native REFGEN regulator driver')
     if any('CONFIG_' + name + '=y' not in config for name in ('INPUT_PM8941_PWRKEY', 'POWER_RESET_MSM', 'POWER_RESET_QCOM_PON')):
         raise ValueError('Upstream PON/PS_HOLD drivers are not built in')
     rd = (current / 'ramdisk/ramdisk.cpio.gz').read_bytes()

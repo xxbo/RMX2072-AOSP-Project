@@ -27,6 +27,7 @@ def check_m3_display(data, staged=False):
         base+'/phy@ae94400': ('qcom,dsi-phy-7nm', [0xae94400, 0x200, 0xae94600, 0x280, 0xae94900, 0x260]),
         prefixes['fabric']+'/clock-controller@af00000': ('qcom,sm8250-dispcc', [0xaf00000, 0x10000]),
         prefixes['fabric']+'/interconnect@1740000': ('qcom,sm8250-mmss-noc', [0x1740000, 0x1f080]),
+        prefixes['fabric']+'/regulator@88e7000': ('qcom,sm8250-refgen-regulator', [0x88e7000, 0x84]),
         pins: ('qcom,sm8250-pinctrl', [0xf100000, 0x300000, 0xf500000, 0x300000, 0xf900000, 0x300000]),
     }
     for path, (compatible, reg) in expected.items():
@@ -47,7 +48,8 @@ def check_m3_display(data, staged=False):
     legacy = ['pinctrl@f000000', 'qcom,dispcc@af00000', 'qcom,mdss_mdp@ae00000',
               'qcom,mdss_dsi_ctrl0@ae94000', 'qcom,mdss_dsi_ctrl1@ae96000',
               'qcom,mdss_dsi_phy0@ae94400', 'qcom,mdss_dsi_phy1@ae96400',
-              'qcom,mdss_dsi_pll@ae94900', 'qcom,mdss_dsi_pll@ae96900']
+              'qcom,mdss_dsi_pll@ae94900', 'qcom,mdss_dsi_pll@ae96900',
+              'refgen-regulator@88e7000']
     for name in legacy:
         if tree['/soc/'+name].get('status') != ['disabled']:
             raise ValueError('OEM overlay re-enabled an overlapping display provider: ' + name)
@@ -71,6 +73,9 @@ def check_m3_display(data, staged=False):
     if any(sources.get(name) != value for name, value in expected_sources.items()):
         raise ValueError('Deferred DSI source clocks differ from the SM8250 providers')
     ids = {n['phandle'][0]: p for p, n in tree.items() if 'phandle' in n}
+    refgen = tree[base+'/dsi@ae94000'].get('refgen-supply', [])
+    if len(refgen) != 1 or ids.get(refgen[0]) != prefixes['fabric']+'/regulator@88e7000':
+        raise ValueError('DSI must use the native SM8250 REFGEN, not a dummy supply')
     endpoints = {p: ids.get(n['remote-endpoint'][0]) for p,n in tree.items()
                  if p.startswith(base+'/') and 'remote-endpoint' in n}
     if len(endpoints) != 4 or any(endpoints.get(other) != path for path,other in endpoints.items()):

@@ -219,7 +219,8 @@ def main():
         if 'CONFIG_' + key + '=y' not in config:
             raise ValueError('Missing kernel configuration: ' + key)
     if a.display:
-        for key in ('DRM_MSM', 'DRM_MSM_DPU', 'DRM_MSM_DSI', 'DRM_MSM_DSI_7NM_PHY', 'DRM_PANEL_RMX2072_RM19795'):
+        for key in ('DRM_MSM', 'DRM_MSM_DPU', 'DRM_MSM_DSI', 'DRM_MSM_DSI_7NM_PHY',
+                    'DRM_PANEL_RMX2072_RM19795', 'REGULATOR_QCOM_REFGEN'):
             if 'CONFIG_' + key + '=y' not in config:
                 raise ValueError('Missing display configuration: ' + key)
     output = work / 'current/kernel'
