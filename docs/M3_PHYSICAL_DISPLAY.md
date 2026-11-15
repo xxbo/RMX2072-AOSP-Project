@@ -55,6 +55,23 @@ source first-stage init and writable test-volume seeds stay fixed.
 
 ## Stage acceptance
 
+### Trial 37: early boot regression
+
+The source display kernel build passed and its selected artifact members and
+panel-source digests were verified. Trial 37 preserved the GSI, vendor, DTBO and
+test seeds, read back the complete current super, and verified the new boot
+write. The operator observed repeated reboots. Neither diagnostic ACM nor GSI
+ADB appeared, so no KMS result or physical panel output was established.
+The cause is not yet identified. Operator volume keys returned the phone to
+EDL; stock restoration is in progress. The next diagnostic is the preserved
+panic/console record, not another run of the same candidate.
+[Trial evidence](../build/device/m3-display-37-2026-11-15.json).
+
+The first graphics source build failed on the upstream libdisplay-info
+visibility boundary. A narrow project-package visibility fix is committed;
+the next source build is running. This build issue is independent of the
+early kernel regression: graphics userspace was not installed in trial 37.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and
