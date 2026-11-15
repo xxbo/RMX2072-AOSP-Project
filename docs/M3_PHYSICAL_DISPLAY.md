@@ -431,3 +431,14 @@ validate allocator/composer registration and real EGL buffer rendering, then
 reach stable SurfaceFlinger and Launcher. The initial mode does not establish
 sustained refresh rate, brightness-range qualification, Adreno or real touch.
 [Trial 46 evidence](../build/device/m3-display-46-2026-11-15.json).
+
+
+The corrected graphics run `43682875528` has now completed compilation and
+packaging. Artifact `14153035910` contains 44 verified files, 40,252,275 payload
+bytes, and 8,455 dependency commands with zero missing edges. The importer
+verified the complete archive SHA-256, payload inventory, source revision and
+pinned HardwareBuffer declarations. Its eight external library names exist in
+the active GSI; actual symbol loading and SELinux access still need the next
+trial. Composing this payload with the established Keymaster/USB vendor requires
+a 60 MiB unsigned filesystem. Trial 47 will reuse the proven trial 46 kernel,
+GSI and scratch seeds, and install the newly signed project graphics vendor.
