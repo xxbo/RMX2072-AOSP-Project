@@ -34,8 +34,25 @@
         "android.hardware.media.c2_interface -> HardwareBuffer_aidl"
       ],
       "fix": "Include the pinned frameworks/base HardwareBuffer AIDL, upstream build declarations and license in the M3 sparse checkout. Target closure still requires zero missing edges."
+    },
+    {
+      "run": 43673925967,
+      "commit": "7ba7405b3cebd4d84fbf6ac79f31505b4c95db71",
+      "result": "IN PROGRESS",
+      "source_projects": 137
     }
   ],
   "physical_installation": "NOT RUN",
-  "surfaceflinger": "NOT VERIFIED with the new source payload"
+  "surfaceflinger": "NOT VERIFIED with the new source payload",
+  "cpu_scanout_source_audit": {
+    "scope": "Source-only compatibility check; not a device allocation or display pass",
+    "minigbm_driver": "Tries render nodes then card nodes; MSM backend allocates scanout GEM objects without a GPU-ID query",
+    "swiftshader_usage": "vkGetSwapchainGrallocUsageANDROID requests GRALLOC_USAGE_SW_WRITE_OFTEN; minigbm excludes software-use buffers from UBWC combinations",
+    "sources": {
+      "minigbm-msm.c": "0c62535bc940ef69207606c1ffa0326f74fdb6a02248d5c818a34c273a58f080",
+      "minigbm-cros_gralloc-cros_gralloc_driver.cc": "98e9054d5f98c3d107c25be6ac240c0b4bb858717860657641479595d3ec3103",
+      "swiftshader-libVulkan.cpp": "1019c39d2820b3bee933a3aefdf28c800087055d6194c74eb9787d45c0cf1e45"
+    },
+    "tag": "android-17.0.0_r1"
+  }
 }
