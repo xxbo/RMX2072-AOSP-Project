@@ -161,6 +161,8 @@ def observe(trial, output, timeout, staged_display=False):
             if ready != str(original).encode():
                 (output/'display-gate-not-ready.txt').write_bytes(console_query(console, b'dmesg | tail -100'))
                 raise ValueError('Display gate is not ready for this boot; no display bind requested')
+            (output/'display-previous-guard.txt').write_bytes(console_query(
+                console, b'cat /run/m3-display-previous-guard 2>/dev/null') + b'\n')
             mark(output, 'display_gate_requested', original)
             # Start the independent stream before allowing any display bind.
             # The host records the entire kernel stream, including fatal stacks.

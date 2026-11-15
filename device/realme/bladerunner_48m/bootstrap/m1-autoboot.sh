@@ -19,7 +19,17 @@ mark() { printf 'RMX-M1-AUTO boot=%s state=%s\n' "$boot" "$1" > /dev/pmsg0; }
 # attempt must enter recovery rather than repeatedly start the same Android.
 previous=$(/bin/first-stage-witness autoboot-state /sys/fs/pstore/pmsg-ramoops-0) || previous=unreadable
 printf 'M1AUTO boot=%s previous=%s\n' "$boot" "$previous" > /dev/kmsg
-if [ "$previous" != none ] && [ "${previous##*state=}" != retained ]; then
+# A staged display experiment is explicitly started by the host after image
+# readback, even if the previous RAM journal is damaged. It never starts
+# Android by itself. Preserve the journal decision rather than treating it as
+# retained. The outer 180-second supervisor still bounds an absent host.
+if [ -f /m3-display-staged ]; then
+    printf '%s\n' "$boot" > /run/m3-display-gate-ready
+    printf '%s\n' "$previous" > /run/m3-display-previous-guard
+    /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
+    while [ ! -f /run/m3-display-start ]; do sleep 1; done
+    [ "$(cat /run/m3-display-start)" = "$boot" ]
+elif [ "$previous" != none ] && [ "${previous##*state=}" != retained ]; then
     mark recovery
     # Allow the host to retrieve the failed boot's pstore. Without a host the
     # same image enters EDL on its own after this bounded capture window.
@@ -34,14 +44,6 @@ if [ "$previous" != none ] && [ "${previous##*state=}" != retained ]; then
     exec /bin/reboot-edl edl
 fi
 mark attempt
-# Display diagnosis deliberately waits for the host to preserve live logs.
-# The unchanged supervisor timer still returns to EDL if no host arrives.
-if [ -f /m3-display-staged ]; then
-    printf '%s\n' "$boot" > /run/m3-display-gate-ready
-    /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
-    while [ ! -f /run/m3-display-start ]; do sleep 1; done
-    [ "$(cat /run/m3-display-start)" = "$boot" ]
-fi
 autonomous=1
 [ ! -f /m3-display-staged ] || autonomous=0
 printf 'M1EVENT autonomous=%s\nM1EVENT boot_id=%s\n' "$autonomous" "$boot" > /run/m1-autoboot.events

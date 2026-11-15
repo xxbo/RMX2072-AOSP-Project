@@ -168,6 +168,26 @@ kernel, source trees, GSI, vendor and writable test-volume seeds. The next
 physical result must come from the KMS probe, with screen observation reported
 separately. No cold-start test or watchdog fault injection is planned.
 
+### Trial 41: previous RAM journal prevented the display experiment
+
+The unchanged super and new boot readbacks passed. Boot
+`e710c03b-bb4f-4654-a98b-9a31f597cfd0` entered diagnostic recovery because the
+previous trial 40 pmsg had 92 corrected bytes and 112 unrecoverable ECC blocks.
+The marker parser returned `unreadable`. No display bind or modeset ran; the
+observer correctly refused a missing gate. The prior console and pmsg were
+preserved before the phone entered EDL without keys. F.20 restoration began.
+This reproduces the prior RAM-journal limitation described in the trial 34
+power record; it is not evidence of a new panel failure.
+
+The next staged profile waits for a matching, one-boot host gate before
+attempting Android, independently of the previous journal decision. The host
+has already verified the candidate image readbacks; it preserves the old
+journal decision and starts the serial stream before releasing the gate.
+No host means no display bind and no Android attempt, with the existing
+180-second supervisor still active. Normal autonomous boots keep their
+unchanged fail-closed journal decision. This diagnostic profile remains
+explicitly `autonomous=0`, and does not count as a cold-start result.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and
