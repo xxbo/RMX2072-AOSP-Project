@@ -161,12 +161,19 @@
     "files": {
       "drivers/clk/clk.c": "6b14c9047d0047d2588d874ea06aaad9c22633e530a104efc4e074b29d45d57d",
       "drivers/clk/qcom/common.c": "803e0f09194777208b64a56ec3a5451aadfc6232464ef80961ac75f25fcadc8e",
-      "drivers/clk/qcom/gdsc.c": "a4da19a3939d4464f37d28c102764350be6895d3aa6421d404e490013512f227",
+      "drivers/clk/qcom/gdsc.c": "7a7d49dd634aed099b5707ff3adab7bb0b4751dbbf19fa8cf234688fd329f093",
       "drivers/pmdomain/core.c": "4832ea7e8fb162a601385445b074e5602bfd756b5824a6c1011aada8f7f507b8",
       "include/linux/device.h": "c5e98194a4b09aa447abf1149362991bd8695c46fed3d90322dffac8a11b57e5"
     },
     "chain": "DISPCC qcom_cc_really_probe -> gdsc_register -> of_genpd_add_provider_onecell installs genpd_sync_state on the clock provider driver. ACK CCF dev_has_sync_state sees this callback and creates boot clock holds; that callback only synchronizes power domains, not clk_sync_state. The measured orphan-hold stacks and persistent DSI references match this source interaction.",
-    "qualification": "Callback installation is source-derived; the held references, PLL lock before reset and disabled hardware after reset are measured in trial45."
+    "qualification": "Callback installation is source-derived; the held references, PLL lock before reset and disabled hardware after reset are measured in trial45.",
+    "verified_mirror_git_blobs": {
+      "drivers/clk/clk.c": "c074c69e9a0e8231c701508ab898a005cd038fe8",
+      "drivers/clk/qcom/common.c": "eec369d2173b5ce24bc1ca860d2ac1bbdce04524",
+      "drivers/clk/qcom/gdsc.c": "7deabf8400cf664764336f2e18ce88c30241e078",
+      "drivers/pmdomain/core.c": "8adc78d62d05f1f7432a154c7d71ce0ade3f406a",
+      "include/linux/device.h": "26eb9a0157f836be303513eb2ffda7d492ca40ff"
+    }
   },
   "next_kernel_build": {
     "run": 43688126825,
