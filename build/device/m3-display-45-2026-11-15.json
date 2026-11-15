@@ -178,6 +178,12 @@
   "next_kernel_build": {
     "run": 43688126825,
     "source_commit": "25ca13ba7c3a180862eba6a2f75c0ba8b05ac465",
-    "status": "IN_PROGRESS"
+    "status": "COMPILE_PASS_IMPORTED_NOT_YET_TESTED",
+    "artifact_id": 14152410794,
+    "image_sha256": "0e53b322a7894f1c3982aaf8d02b6aa5eeb63474ab71eefeb3735f51cfa4b37c",
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "archive_digest_verified": false,
+    "build_actions": 788
   }
 }
