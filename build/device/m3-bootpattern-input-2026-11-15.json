@@ -13,7 +13,7 @@
   "validation": "PNG fully decoded, archive stored entries checked, exact primary/secondary color and orientation samples passed; two generator runs byte-identical",
   "gsi_bootanimation_source": "https://android.googlesource.com/platform/frameworks/base/+/94b4c163b7dfe5ce3607f7bb8456f9573f7de57d/cmds/bootanimation/BootAnimation.cpp",
   "mount": "Read-only project vendor subtree at pre-existing /oem; no modification of GSI bytes",
-  "device_result": "Trial 57: archive byte verification passes, but init mounton is denied; BootAnimation logs No animation file. Known-color rendering not tested.",
+  "device_result": "Trial 58: read-only OEM bind mounted; BootAnimation loads /oem/media/bootanimation.zip successfully and plays part0. Captured pattern structure is correct, but operator corrects physical screen as different. Full physical acceptance NOT PASSED.",
   "source_sha256": "24435900529ebfae34967242ff913f9061f11c3b5ded51fc2fa6af714c81f9d6",
   "policy": {
     "result": "PASS_STRICT_COMPILE_ONLY",

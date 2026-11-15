@@ -803,3 +803,43 @@ The corrected rule passes strict compilation on retained trial 57 with all
 neverallows enabled. Compiled policy SHA-256:
 `60c1de23837e7dc1789f9dc1aecb29da0f97d0c4d56c6f6e58887e60a288f22e`.
 It was not loaded into the running device; trial 58 will validate startup.
+
+### Trial 58: known CPU pixels, corrected physical mismatch
+
+Boot `7d750f14-c07c-4145-b9c5-5305af9c83f1` runs the same kernel 29,
+graphics payload, GSI and scratch seeds. Only the OEM mount permission is
+corrected. Mountinfo shows the vendor subtree bound read-only at `/oem`;
+BootAnimation explicitly loads the archive at 77.974 seconds and plays part0.
+The fixed graphics-group capture completes in 36.91 seconds, producing a
+16,038-byte 1080x2400 RGBA PNG. Its complete six-color pattern and orientation
+markers are visible. Of 2,592,000 pixels, 2,584,196 match the source exactly;
+the other 7,804 differ by at most 5/255 per channel, all near reference edges.
+The small differences' origin is not established. This is CPU composition,
+not a DPU scanout readback.
+
+The operator first reports regular color bars, then visible black/white
+markers, but explicitly corrects: **不对不对，和你截图的不一样！** The assistant's
+premature display-pass statement was withdrawn. The current result is
+**physical mismatch; full display acceptance NOT PASSED**, pending a more
+specific description. Do not silently promote partial shape recognition to
+matching output or desktop readiness. Health HAL work remains deferred.
+
+The new read-only `collect_android_frame.py` verifies boot identity, completed
+capture status, file size, full PNG decode and optional decoded-pixel reference.
+Only one completed capture is counted here. A later host retry precondition
+check rejected an empty service-state property before triggering anything;
+the subsequent collector re-read the same file, not a second capture.
+
+Next: use this loaded known pattern to isolate scanout/DSI differences.
+The factory two-slices-per-packet setting and later upstream support are
+source candidates, not an established root cause or applied fix. No cold-start
+or watchdog fault injection is run. GSI ADB remains available.
+[Trial 58](../build/device/m3-display-58-2026-11-15.json).
+
+The subsequent original photograph (`70d6083bf9ea734b39275b504fe2ffd1d888bcd65e9cd16771b28fa465b556c4`)
+confirms severe corruption: intact horizontal color/marker bands alternate
+with dense noisy regions. This is now a confirmed physical failure, not a
+pending visual comparison. Original image bytes stay in the local trial
+record; the public JSON records its digest and observation. Photo-space red
+band centers are about 242–251 pixels apart; perspective is not calibrated,
+so no exact panel scanline period or DSC cause is claimed from that count.
