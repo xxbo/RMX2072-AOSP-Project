@@ -58,6 +58,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for key in ('source', 'output', 'cpp', 'dtc', 'libfdt'):
         p.add_argument('--' + key, required=True, type=Path)
+    p.add_argument('--display', action='store_true', help='Add the M3 native display bindings')
     a = p.parse_args()
     repo = Path(__file__).resolve().parents[2]
     source, output = a.source.resolve(), a.output.resolve()
@@ -114,7 +115,9 @@ def main():
     header_lock = json.loads((repo / 'build/m2-dt-bindings.json').read_text())
     if header_lock['ack_commit'] != ack['commit']:
         raise ValueError('DT binding header lock does not match the kernel source')
-    for header in ACK_HEADERS:
+    headers = ACK_HEADERS + (('clock/qcom,dispcc-sm8250.h', 'clock/qcom,dsi-phy-28nm.h',
+                              'power/qcom,rpmhpd.h', 'power/qcom-rpmpd.h', 'gpio/gpio.h') if a.display else ())
+    for header in headers:
         rel = 'include/dt-bindings/' + header
         url = 'https://android.googlesource.com/kernel/common/+/' + ack['commit'] + '/' + rel + '?format=TEXT'
         target = ack_include / 'dt-bindings' / header
@@ -155,7 +158,14 @@ def main():
         checks['pstore_' + suffix] = validate_pstore_layout(trees[4])
         checks['usb_' + suffix] = require_sid0(trees[4], legacy_base=True)
     final = stages[-1]
+    if a.display:
+        display = compile('rmx2072-m3-display', (ack_include, project))
+        final = lib.apply(final, display)
+        overlays['rmx2072-m3-display'] = display
     effective = lib.apply(final, overlay)
+    if a.display:
+        from check_m3_display import check_m3_display
+        checks['display'] = check_m3_display(effective)
     checks['m1_resource_reference'] = check_m2_resources(effective)
     expected = json.loads((repo / 'build/device/stock-dt-selection.json').read_text())
     for data, entry in ((final, expected['boot']['selected']), (overlay, expected['dtbo']['selected'])):
@@ -186,6 +196,7 @@ def main():
                   outputs={name: dict(size_bytes=len(data), sha256=sha(data)) for name, data in blobs.items()},
                   overlays={name: sha(data) for name, data in overlays.items()}, checks=checks,
                   factory_binary_inputs=False, status='source-built-not-device-tested')
+    report['display'] = a.display
     (output / 'source.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report['outputs'], indent=2))
 

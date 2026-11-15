@@ -66,6 +66,13 @@ for part in /sys/class/block/sd*; do
     [ "$(cat "$part/ro")" = 1 ]
     rm "$base/ro-node"
 done
+if [ -x /bin/drm-panel-smoke ]; then
+    # Only the explicitly selected display trial can modeset. A missing or
+    # failing display must not prevent the existing GSI/ADB diagnostics.
+    echo "M3DISPLAY boot_id=$(cat /proc/sys/kernel/random/boot_id)" > /run/m3-display.txt
+    timeout 15 /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
+    /bin/busybox sh /bin/display-snapshot >> /run/m3-display.txt 2>&1 || true
+fi
 # Check that the trace sees the correct exec before permitting the handoff.
 if [ "${2:-}" = install ]; then
     [ "$mode" = observe-vendor ]

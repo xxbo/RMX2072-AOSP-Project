@@ -14,6 +14,7 @@ def main():
     for name in ('workspace', 'ndk', 'adb-public-key', 'board-source'):
         p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--display', action='store_true', help='Build the M3 DRM candidate and physical KMS probe')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial naming')
@@ -47,7 +48,13 @@ def main():
         raise ValueError('M2 GSI/vendor/container differ from the verified profile')
     run(sys.executable, build / 'build_m2_device_tree.py', '--source', a.board_source.resolve(),
         '--output', current / 'source-dt', '--cpp', tools / 'clang.exe',
-        '--dtc', current / 'dtc-tools/dtc.exe', '--libfdt', current / 'dtc-tools/libfdt-1.dll')
+        '--dtc', current / 'dtc-tools/dtc.exe', '--libfdt', current / 'dtc-tools/libfdt-1.dll',
+        *(['--display'] if a.display else []))
+    if a.display:
+        if not kernel.get('display'):
+            raise ValueError('Install the checked DRM/panel kernel before packaging M3')
+        run(sys.executable, build / 'build_display_smoke.py', '--ndk', a.ndk.resolve(),
+            '--output', current / 'display-smoke')
     run(tools / 'aarch64-linux-android35-clang.cmd', '-static', '-O2', '-Wall', '-Wextra', '-Werror',
         repo / 'scripts/device_audit/first_stage_witness.c', '-o', current / 'first-stage-witness')
     run(tools / 'llvm-strip.exe', '--strip-all', current / 'first-stage-witness')
@@ -58,11 +65,13 @@ def main():
         '--android-first-stage', current / 'init', '--first-stage-source-build', current / 'init-build',
         '--first-stage-witness', current / 'first-stage-witness',
         '--ufs-first-stage', current / 'verified-profile', '--scratch-volumes', current / 'volumes',
-        '--adb-public-key', a.adb_public_key.resolve(), '--output', current / 'ramdisk', '--autonomous-ufs')
+        '--adb-public-key', a.adb_public_key.resolve(), '--output', current / 'ramdisk', '--autonomous-ufs',
+        *(['--display-smoke', current / 'display-smoke/drm-panel-smoke'] if a.display else []))
     run(sys.executable, build / 'pack_m2_source_boot.py', '--workspace', work)
     record = dict(previous, trial=a.trial, recipe_commit=commit, recipe_dirty=False,
                   kernel=kernel['image_sha256'], witness=sha(current / 'first-stage-witness'),
                   source_first_stage=init, source_device_trees=True,
+                  display=a.display,
                   adb_public_key_sha256=json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())['adb_public_key_sha256'])
     (current / 'usb-build.json').write_text(json.dumps(record, indent=2) + '\n')
     print('M2 source candidate prepared; original GSI/vendor/container and scratch seeds retained.')

@@ -49,6 +49,7 @@ def main():
     p.add_argument('--android-first-stage', type=pathlib.Path, help='Verified API 37 static first-stage /init')
     p.add_argument('--first-stage-source-build', type=pathlib.Path, help='M2 source build artifact directory with resolved manifest and digests')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
+    p.add_argument('--display-smoke', type=pathlib.Path, help='Static physical DRM test; run before Android policy')
     p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
     p.add_argument('--ufs-first-stage', type=pathlib.Path, metavar='PROFILE',
                    help='UFS first-stage profile with signed system and vendor public keys')
@@ -69,6 +70,8 @@ def main():
     a = p.parse_args()
     if a.first_stage_source_build and not a.android_first_stage:
         p.error('Source build evidence requires the first-stage binary')
+    if a.display_smoke and not a.autonomous_ufs:
+        p.error('Display smoke requires autonomous UFS and the pre-policy witness')
     if a.autonomous_ufs and not (a.adb_public_key and a.ufs_first_stage and a.entry_carrier):
         p.error('Autonomous UFS requires the guarded signed profile and recovery evidence carrier')
     if a.adb_public_key and not a.scratch_volumes:
@@ -176,6 +179,10 @@ def main():
             add('android-first-stage', 0o100755, first)
             witness = read_static_arm64(a.first_stage_witness)
             add('bin/first-stage-witness', 0o100755, witness)
+            if a.display_smoke:
+                add('bin/drm-panel-smoke', 0o100755, read_static_arm64(a.display_smoke))
+                add('bin/display-snapshot', 0o100755,
+                    (root/'scripts/device_audit/display_snapshot.sh').read_bytes().replace(b'\r\n', b'\n'))
             stage_script = (root/'scripts/device_audit/first_stage_mount.sh').read_bytes().replace(b'\r\n', b'\n')
             add('bin/first-stage-mount', 0o100755, stage_script)
             if a.trace_init_fault:

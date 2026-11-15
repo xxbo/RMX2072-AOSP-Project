@@ -29,7 +29,10 @@ def main():
     p.add_argument('--artifact-id', type=int, required=True)
     p.add_argument('--commit', required=True)
     p.add_argument('--kind', choices=('kernel', 'init'), required=True)
+    p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     a = p.parse_args()
+    if a.display and a.kind != 'kernel':
+        p.error('--display requires a kernel artifact')
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
     if work.is_relative_to(repo):
@@ -105,6 +108,8 @@ def main():
                'listener.sha256': 'bootstrap-probes/rmx2072-listener.inc'}
     wanted = set(patches) | {'Image.gz', 'sm8250_bootstrap_dot_config', 'kernel.release',
                              'SHA256SUMS', 'build-metadata.txt', 'resolved-manifest.xml'}
+    if a.display:
+        wanted.add('display-source.sha256')
     with RemoteZip(url, session=session, timeout=120, support_suffix_range=False) as z:
         files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
     if files.keys() != wanted:
@@ -114,6 +119,16 @@ def main():
             a.commit + ':device/realme/bladerunner_48m/' + path])
         if digest(data) != files[name].decode().split()[0]:
             raise ValueError('Kernel source patch mismatch: ' + name)
+    if a.display:
+        rows = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
+                for line in files['display-source.sha256'].decode().splitlines()}
+        if set(rows) != {'panel-samsung-rm19795.c', 'rm19795-commands.h'}:
+            raise ValueError('Incomplete panel source manifest')
+        for name, expected in rows.items():
+            data = subprocess.check_output(['git', '-C', repo, 'show',
+                a.commit + ':device/realme/bladerunner_48m/display/' + name])
+            if digest(data) != expected:
+                raise ValueError('Panel source mismatch: ' + name)
     sums = {Path(line.split(maxsplit=1)[1]).name: line.split()[0] for line in files['SHA256SUMS'].decode().splitlines()}
     for name in ('Image.gz', 'sm8250_bootstrap_dot_config', 'kernel.release'):
         if digest(files[name]) != sums[name]:
@@ -130,6 +145,10 @@ def main():
     for key in ('POWER_RESET_QCOM_PON', 'INPUT_PM8941_PWRKEY', 'POWER_RESET_MSM', 'QCOM_TZMEM_MODE_SHMBRIDGE'):
         if 'CONFIG_' + key + '=y' not in config:
             raise ValueError('Missing kernel configuration: ' + key)
+    if a.display:
+        for key in ('DRM_MSM', 'DRM_MSM_DPU', 'DRM_MSM_DSI', 'DRM_MSM_DSI_7NM_PHY', 'DRM_PANEL_RMX2072_RM19795'):
+            if 'CONFIG_' + key + '=y' not in config:
+                raise ValueError('Missing display configuration: ' + key)
     output = work / 'current/kernel'
     provenance.update(installing=True)
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
@@ -141,7 +160,7 @@ def main():
     old = output / 'pon-power-patch.sha256'
     if old.is_file():
         old.unlink()
-    provenance.update(installing=False, source_pon=True, source_digests_verified=True,
+    provenance.update(installing=False, source_pon=True, display=a.display, source_digests_verified=True,
                       dist_digests_verified=True, image_sha256=digest(raw),
                       selected_member_sha256={n: digest(d) for n, d in files.items()})
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
