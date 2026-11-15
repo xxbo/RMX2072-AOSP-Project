@@ -40,7 +40,16 @@
     "source_pon": true,
     "pon_power": false,
     "display": true,
-    "result": "IN_PROGRESS"
+    "result": "CANCELLED_BEFORE_INSTALLATION",
+    "reason": "Superseded by the panel return-length fix and bounded native PLL state diagnostics."
   },
-  "causality_limit": "This is a verified missing board dependency, not proof it caused the observed RCG/DCS timeout."
+  "causality_limit": "This is a verified missing board dependency, not proof it caused the observed RCG/DCS timeout.",
+  "superseding_build": {
+    "run": 43684993723,
+    "commit": "aa1c6e3cd0c83fcd950124ba1700ade0e7d782fe",
+    "source_pon": true,
+    "pon_power": false,
+    "display": true,
+    "result": "IN_PROGRESS"
+  }
 }
