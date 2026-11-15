@@ -16,6 +16,9 @@ Parent errors now propagate, instead of proceeding with an invalid source.
 This avoids applying the proposed 7nm DIGTOP bias change, which has an open
 SM8350 boot-regression report. No new PHY register values are introduced.
 Trial 43 still timed out; these changes alone did not repair the display.
+Trial 44 also failed with nonzero CCF prepare/enable references. Add bounded
+read-only PHY/PLL state diagnostics at existing driver transitions to compare
+software references with the physical PLL control and lock bits.
 
 diff --git a/drivers/clk/qcom/dispcc-sm8250.c b/drivers/clk/qcom/dispcc-sm8250.c
 --- a/drivers/clk/qcom/dispcc-sm8250.c
@@ -119,3 +122,66 @@ diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_ho
  	return dsi_link_clk_set_rate_6g(msm_host);
  }
  
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+@@ -109,6 +109,19 @@
+  * mode, where the master PLL's clk_ops needs access the slave's private data
+  */
+ static struct dsi_pll_7nm *pll_7nm_list[DSI_MAX];
++
++/* Bounded M3 diagnostics; no register writes or clock API recursion. */
++static void dsi_pll_7nm_trace_state(struct dsi_pll_7nm *pll, const char *stage)
++{
++	struct msm_dsi_phy *phy = pll->phy;
++
++	DBG("M3 DSI%d %s pll_on=%u bias_refs=%d ctrl0=%#x pll_ctrl=%#x cfg1=%#x lock=%#x",
++	    phy->id, stage, READ_ONCE(phy->pll_on), READ_ONCE(pll->pll_enable_cnt),
++	    readl(phy->base + REG_DSI_7nm_PHY_CMN_CTRL_0),
++	    readl(phy->base + REG_DSI_7nm_PHY_CMN_PLL_CNTRL),
++	    readl(phy->base + REG_DSI_7nm_PHY_CMN_CLK_CFG1),
++	    readl(phy->pll_base + REG_DSI_7nm_PHY_PLL_COMMON_STATUS_ONE));
++}
+ 
+ static void dsi_pll_enable_pll_bias(struct dsi_pll_7nm *pll);
+ static void dsi_pll_disable_pll_bias(struct dsi_pll_7nm *pll);
+@@ -367,6 +380,7 @@
+ 	dsi_pll_config_hzindep_reg(pll_7nm);
+ 
+ 	dsi_pll_ssc_commit(pll_7nm, &config);
++	dsi_pll_7nm_trace_state(pll_7nm, "set-rate");
+ 
+ 	dsi_pll_disable_pll_bias(pll_7nm);
+ 	/* flush, ensure all register writes are done*/
+@@ -533,6 +547,7 @@
+ 		writel(0x1, pll_7nm->slave->phy->base + REG_DSI_7nm_PHY_CMN_RBUF_CTRL);
+ 
+ error:
++	dsi_pll_7nm_trace_state(pll_7nm, "prepare-result");
+ 	return rc;
+ }
+ 
+@@ -561,6 +576,7 @@
+ 	/* flush, ensure all register writes are done */
+ 	wmb();
+ 	pll_7nm->phy->pll_on = false;
++	dsi_pll_7nm_trace_state(pll_7nm, "unprepare");
+ }
+ 
+ static unsigned long dsi_pll_7nm_vco_recalc_rate(struct clk_hw *hw,
+@@ -981,6 +997,7 @@
+ 		return -EINVAL;
+ 	}
+ 
++	dsi_pll_7nm_trace_state(to_pll_7nm(phy->vco_hw), "phy-enable-entry");
+ 	if (dsi_phy_hw_v4_0_is_pll_on(phy))
+ 		pr_warn("PLL turned on before configuring PHY\n");
+ 
+@@ -1178,6 +1195,7 @@
+ 	/* DSI lane settings */
+ 	dsi_phy_hw_v4_0_lane_settings(phy);
+ 
++	dsi_pll_7nm_trace_state(to_pll_7nm(phy->vco_hw), "phy-enable-exit");
+ 	DBG("DSI%d PHY enabled", phy->id);
+ 
+ 	return 0;

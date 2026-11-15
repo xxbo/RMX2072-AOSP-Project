@@ -53,7 +53,8 @@ static int rm19795_send(struct rm19795 *ctx, const struct rm19795_cmd *cmd,
 				i, cmd[i].data[0], ret);
 			return ret;
 		}
-		if (ret != cmd[i].len)
+		/* MSM returns its padded DMA packet length, including the header. */
+		if (ret < cmd[i].len)
 			return -EIO;
 		if (cmd[i].wait_ms)
 			msleep(cmd[i].wait_ms);
@@ -65,6 +66,9 @@ static int rm19795_prepare(struct drm_panel *panel)
 {
 	struct rm19795 *ctx = container_of(panel, struct rm19795, panel);
 	int i, ret;
+
+	if (ctx->prepared)
+		return 0;
 
 	for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
 		ret = regulator_enable(ctx->supplies[i].consumer);
@@ -96,7 +100,11 @@ disable:
 static int rm19795_enable(struct drm_panel *panel)
 {
 	struct rm19795 *ctx = container_of(panel, struct rm19795, panel);
-	int ret = rm19795_send(ctx, rm19795_cmd_enable, ARRAY_SIZE(rm19795_cmd_enable), false);
+	int ret;
+
+	if (!ctx->prepared)
+		return -EPERM;
+	ret = rm19795_send(ctx, rm19795_cmd_enable, ARRAY_SIZE(rm19795_cmd_enable), false);
 
 	if (!ret)
 		dev_info(&ctx->dsi->dev, "RM19795 display-on commands accepted\n");
@@ -107,6 +115,9 @@ static int rm19795_unprepare(struct drm_panel *panel)
 {
 	struct rm19795 *ctx = container_of(panel, struct rm19795, panel);
 	int ret;
+
+	if (!ctx->prepared)
+		return 0;
 
 	ret = rm19795_send(ctx, rm19795_cmd_off, ARRAY_SIZE(rm19795_cmd_off), false);
 	ctx->prepared = false;

@@ -328,6 +328,22 @@ trial 44's pre-existing software references without writing clock rates,
 enables or hardware registers. Trace setup failure is recorded and does not
 prevent the existing GSI handoff.
 
+Source review also found a separate panel error: `rm19795_send()` required
+the host's returned byte count to equal the payload size. The pinned MSM
+`dsi_cmds2buf_tx()` instead returns the DMA packet length, including its header
+and padding (8 bytes for the first 3-byte panel payload). A successful transfer
+would therefore have become `-EIO`. Accept a return at least as large as the
+payload, while preserving negative errors and short-transfer rejection.
+Prepare/unprepare are idempotent, and display-on is refused after a failed
+prepare. This is a deterministic source fix; it does not explain trial 44's
+earlier `-ETIMEDOUT` transport failure and has not yet passed on hardware.
+
+The next kernel also logs native 7nm PLL control, lock and bias-reference
+state at its existing set-rate, prepare, unprepare and PHY-enable transitions.
+These bounded read-only diagnostics use the driver's mapped registers and
+existing DRM debug gate; they add no register writes or clock API calls.
+The build that predates these fixes is superseded before device installation.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and
