@@ -344,6 +344,17 @@ These bounded read-only diagnostics use the driver's mapped registers and
 existing DRM debug gate; they add no register writes or clock API calls.
 The build that predates these fixes is superseded before device installation.
 
+`graphics_buffer_smoke.c` is a separate GSI userspace diagnostic, built with
+the recorded NDK. It creates a real EGL/GLES context, allocates a 64x64 Android
+hardware buffer through the installed allocator/mapper, imports it as an EGL
+image, renders a known RGBA color, and compares both GLES and CPU readback.
+Run it from the existing enforcing ADB shell with a 20-second limit after
+installing the graphics vendor. It never acquires DRM master or modesets.
+A pass establishes this buffer/render path in the shell domain only; composer,
+SurfaceFlinger permissions, physical output and acceleration need their own
+evidence. Before graphics installation, trial 44 aborts at EGL loading with
+the same missing-implementation error as SurfaceFlinger.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and

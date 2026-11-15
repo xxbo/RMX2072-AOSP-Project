@@ -1,0 +1,24 @@
+{
+  "utc": "2026-11-15T06:27:56.023021+00:00",
+  "goal": "GSI allocator/EGL buffer path toward SurfaceFlinger and physical desktop",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-44",
+  "boot_id": "c0756d90-97b4-41f6-b74e-0181a32d4884",
+  "build": {
+    "ndk_revision": "28.2.13676358",
+    "api": 35,
+    "arch": "arm64",
+    "source_sha256": "dcb4cbffc88caacccb4e678f5678bdc3fe858c25c60f3ca141d7313652eeb13f",
+    "binary_sha256": "0d8b624d3597434ebff798d82769b68860f957f44e076853238c068515588d51",
+    "device_result": "NOT RUN"
+  },
+  "context": "u:r:shell:s0",
+  "enforcing": true,
+  "timeout_seconds": 20,
+  "result": "BLOCKED_MISSING_EGL_IMPLEMENTATION",
+  "shell_exit": 134,
+  "buffer_allocation": "NOT REACHED",
+  "rendering": "NOT REACHED",
+  "physical_display": "NOT TESTED",
+  "record_sha256": "3cfd6f3c84b2193378e3028ba962c76215d1245dd09dff7c0ce98cbf8f5eccc5",
+  "transcript": "c0756d90-97b4-41f6-b74e-0181a32d4884\nu:r:shell:s0\nGFXTEST begin=egl-display physical_display=NOT_TESTED\ncouldn't find an OpenGL ES implementation, make sure one of persist.graphics.egl, ro.hardware.egl and ro.board.platform is set\nGFXTEST_shell_exit=134\n"
+}
