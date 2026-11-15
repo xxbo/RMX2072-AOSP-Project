@@ -26,6 +26,7 @@ def main():
     for name in ('workspace', 'ndk', 'adb-public-key', 'board-source'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--openssl', type=Path, help='OpenSSL executable; defaults to the executable on PATH')
     p.add_argument('--display-staged', action='store_true', help='Keep the diagnostic USB gate and native staged display paths')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
@@ -33,6 +34,13 @@ def main():
     repo = Path(__file__).resolve().parents[2]
     if subprocess.check_output(['git', '-C', repo, 'status', '--porcelain']):
         raise ValueError('Commit the complete graphics recipe before packaging')
+    openssl = a.openssl or shutil.which('openssl')
+    if not openssl:
+        p.error('Provide --openssl or install OpenSSL on PATH before composing images')
+    openssl = Path(openssl).resolve()
+    if not openssl.is_file() or openssl.name.lower() not in ('openssl', 'openssl.exe'):
+        p.error('--openssl must name the OpenSSL executable used by avbtool')
+    openssl_version = subprocess.check_output([str(openssl), 'version'], text=True).strip()
     work = a.workspace.resolve()
     if work.is_relative_to(repo):
         raise ValueError('Keep generated images outside the public checkout')
@@ -65,7 +73,7 @@ def main():
     avb = current/'avbtool.py'
     if sha(avb) != 'e5a664a38db623da00f080219bc0ee60a640a9dc4a872803616fae4938ac749b':
         raise ValueError('AVB tool differs from the pinned input')
-    os.environ['PATH'] = str(current/'fs-tools')+os.pathsep+os.environ['PATH']
+    os.environ['PATH'] = os.pathsep.join((str(current/'fs-tools'), str(openssl.parent), os.environ['PATH']))
     def run(*args):
         subprocess.run([str(x) for x in args], check=True)
     run(sys.executable, build/'build_m1_vendor.py', '--output', current/'vendor',
@@ -114,6 +122,7 @@ def main():
                   strict_compile_input_sha256=policy['combined_vendor_policy_sha256'],
                   policy_proof_reused_for_identical_statements=True,
                   source_gsi_sha256=system_sha, scratch=seeds, display_staged=a.display_staged,
+                  openssl_version=openssl_version,
                   handset_write='NOT RUN')
     (current/'graphics-candidate.json').write_text(json.dumps(result, indent=2)+'\n')
     print('Signed source graphics candidate prepared and verified; handset unchanged.')
