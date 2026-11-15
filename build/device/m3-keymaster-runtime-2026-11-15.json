@@ -56,5 +56,14 @@
     "adb_retained": true,
     "reference": "m3-display-48-2026-11-15.json",
     "limitation": "Direct getHardwareInfo/HMAC/earlyBootEnded lines absent from the collected late log ring; not independently re-claimed in this trial"
+  },
+  "followup_trial49": {
+    "boot_id": "f35092d2-e241-44db-875c-7ffc871e0428",
+    "reference": "m3-display-49-2026-11-15.json",
+    "registered": true,
+    "hardware_info": "TEE; RMX2072 keymaster64 API 4.0 TA 4.546",
+    "hmac_status": 0,
+    "earlyBootEnded_TEE": "succeeded",
+    "maintenance_registered": true
   }
 }

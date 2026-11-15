@@ -504,3 +504,29 @@ The next objective is allocator registration, real EGL buffer rendering and
 stable SurfaceFlinger, then the AOSP launcher. No manual cold-start or watchdog
 fault-injection test was run. [Trial 48](../build/device/m3-display-48-2026-11-15.json)
 and [pinned ueventd](https://android.googlesource.com/platform/system/core/+/545d2487e38192a2ce25040897ced877cf6b4f53/init/devices.cpp).
+
+### Trial 49: allocator registered; native mapper discovery denied
+
+Boot `f35092d2-e241-44db-875c-7ffc871e0428` confirms both DRM nodes now carry
+`gpu_device`. The source minigbm allocator and DRM HWC3 services register and
+remain alive under enforcing. Native panel commands and advancing KMS events
+still pass; no separate physical-screen observation was collected for this trial.
+GSI ADB returns. The early log also preserves the source Keymaster registration,
+TEE hardware information, HMAC status 0 and successful TEE earlyBootEnded.
+
+SurfaceFlinger now aborts with `gralloc-mapper is missing`. The preceding error
+is servicemanager denying `find` for `mapper/minigbm`, which has fallen back to
+`default_android_service`. The real mapper ELF, labeled `same_process_hal_file`,
+and its native VINTF 5.0 entry are present. The shell-domain buffer diagnostic
+independently reaches the same mapper error and exits 134 before EGL initialization.
+This is not a rendered-buffer success.
+
+The next candidate provides `mapper/minigbm` as `hal_graphics_mapper_service`
+in vendor service contexts and labels the context file
+`vendor_service_contexts_file`. Both types and the allocator-client discovery
+allow already exist in the actual GSI policy; composed CIL remains byte-identical
+to the strict proof. SurfaceFlinger's captured stack uses the GSI's bundled
+ANGLE library; the packaged source vendor ANGLE is not claimed as its loaded
+implementation. Initial rendering still targets SwiftShader, with no Adreno
+acceleration claim. Next: get beyond mapper discovery, verify a real rendered
+HardwareBuffer and stabilize Android composition. [Trial 49](../build/device/m3-display-49-2026-11-15.json).

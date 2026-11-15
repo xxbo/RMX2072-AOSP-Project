@@ -73,9 +73,14 @@ def compose(info, guard, graphics):
     files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'graphics.cil').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_property_contexts'] += (
         b'vendor.minigbm.debug u:object_r:rmx_graphics_config_prop:s0 exact string\n')
+    # Stable-C mapper discovery uses servicemanager's isDeclared permission
+    # check even though the mapper itself is an in-process native library.
+    files['/etc/selinux/vendor_service_contexts'] = (
+        b'mapper/minigbm u:object_r:hal_graphics_mapper_service:s0\n')
     labels = [
         '/dev/dri/card[0-9]+ u:object_r:gpu_device:s0',
         '/dev/dri/renderD[0-9]+ u:object_r:gpu_device:s0',
+        '/vendor/etc/selinux/vendor_service_contexts u:object_r:vendor_service_contexts_file:s0',
         '/vendor/bin/hw/android\\.hardware\\.graphics\\.allocator-service\\.minigbm u:object_r:rmx_graphics_allocator_exec:s0',
         '/vendor/bin/hw/android\\.hardware\\.composer\\.hwc3-service\\.rmx2072 u:object_r:rmx_graphics_composer_exec:s0',
     ]
