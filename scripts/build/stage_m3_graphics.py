@@ -39,11 +39,11 @@ def compose(info, guard, graphics):
             raise ValueError('Accepted Keymaster input changed: '+path)
         target = path.replace('/lib64/', '/lib64/rmx-keymaster/')
         files[target] = data
-    rc = files['/etc/init/keymaster.rc']
-    if rc.count(b'    class early_hal\n') != 1:
-        raise ValueError('Keymaster service definition changed')
-    files['/etc/init/keymaster.rc'] = rc.replace(b'    class early_hal\n',
-        b'    class early_hal\n    setenv LD_LIBRARY_PATH /vendor/lib64/rmx-keymaster\n')
+    # The source HAL/client carry a RUNPATH and the full private DT_NEEDED
+    # closure. Do not depend on an environment path discarded by AT_SECURE.
+    for name in ('service', 'client'):
+        if b'/vendor/lib64/rmx-keymaster\0' not in files['/bin/hw/rmx-keymaster-info-' + name]:
+            raise ValueError('Rebuild the source Keymaster binaries with the private runtime path')
     build = json.loads((graphics/'provenance.json').read_text())
     if not build.get('source_verified') or not build.get('archive_digest_verified'):
         raise ValueError('Source graphics artifact is not fully verified')

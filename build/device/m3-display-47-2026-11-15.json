@@ -1,0 +1,219 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-47",
+  "boot_id": "4ec0f75a-a814-4f7c-aba8-b2f11d960c56",
+  "goal": "Source graphics and SurfaceFlinger on the proven native display",
+  "kernel": {
+    "run_id": 43688126825,
+    "source_commit": "25ca13ba7c3a180862eba6a2f75c0ba8b05ac465",
+    "artifact_id": 14152410794,
+    "artifact_archive_digest": "sha256:a4f95f1a43484d7f97c49883091d34fc1347159ecde6b38a97d87f5b1cbd72c4",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "0e53b322a7894f1c3982aaf8d02b6aa5eeb63474ab71eefeb3735f51cfa4b37c",
+    "selected_member_sha256": {
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "SHA256SUMS": "26c93de6b3e5661349ba68d60c0ea1030dba431e9f203c275e57b528a2c5b481",
+      "build-metadata.txt": "ec295ebaf27e93be94a7cbaa6cefa6d085ecde9ec7c1fd38e0c74fb8e00adc41",
+      "display-source.sha256": "87e8ea025af369caa5e5b86cf0edc4169f650e5f1abe436181438a0308d25761",
+      "display-clock-patch.sha256": "d61a6e071f4d95e1b4b78523f1aa0d0fe30d21380e845490921bd96baebfccd1",
+      "Image.gz": "34dcdda8ed1b10e1c3976fc549e8310b65f677dec899a7945ba2d8cc8b3477b3",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "4b00d7b70feb80e4a80176cb10c73291b013c1da54cefc70693dbfa19c97a998",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+    }
+  },
+  "boot_sha256": "55ee6cdd2c361be7fc5383fb7423c7dd49381dd49bb3e75bf29635252bbddef7",
+  "dtbo_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "system": {
+    "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+    "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+    "bytes": 3953213440,
+    "tree": {
+      "version": 1,
+      "image_bytes": 3890753536,
+      "tree_offset": 3890753536,
+      "tree_bytes": 30642176,
+      "data_block_bytes": 4096,
+      "hash_block_bytes": 4096,
+      "fec_roots": 2,
+      "fec_offset": 3921395712,
+      "fec_bytes": 31006720,
+      "algorithm": "sha256",
+      "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+      "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+      "flags": 0
+    }
+  },
+  "vendor": {
+    "sha256": "59a7d461b3314a571b7e8a0d9f13a80bf048cf4301d7cccc2fd2292d062b8631",
+    "key_sha256": "0d4dd0f2fc523adbf286204adfa27dbae6d2b2c280ed58208f5f60cbdf439d6e",
+    "bytes": 63963136,
+    "tree": {
+      "version": 1,
+      "image_bytes": 62914560,
+      "tree_offset": 62914560,
+      "tree_bytes": 495616,
+      "data_block_bytes": 4096,
+      "hash_block_bytes": 4096,
+      "fec_roots": 0,
+      "fec_offset": 0,
+      "fec_bytes": 0,
+      "algorithm": "sha256",
+      "salt": "ff9cea53d75510014505f6742e07d910cda46175dd41f2359072135b73fd3885",
+      "root_digest": "314982b1f1e6c005d733b3d115fa13df65f9787a9d8616967a8bd7f34809f507",
+      "flags": 0
+    }
+  },
+  "graphics": {
+    "run_id": 43682875528,
+    "source_commit": "3c55d7b3ded65a04ddc099b5e0c8f7df8f58dd7c",
+    "artifact_id": 14153035910,
+    "artifact_archive_digest": "sha256:eb96701bc6534d2bda4ebb7c27e539233f8b091d74ba44d29d8320806692b3c2",
+    "archive_digest_verified": true,
+    "source_verified": true,
+    "files": {
+      "/bin/hw/android.hardware.composer.hwc3-service.rmx2072": "3ab314384da364e959523f3c81e10f073357ba847971642affc9dd6230d0cff1",
+      "/bin/hw/android.hardware.graphics.allocator-service.minigbm": "24acb3d759385bbef95f5dbca7ce56a67f26314566b183fd249a13c97fec0aab",
+      "/etc/init/allocator.rc": "6399fd2e6ab2b4297a64eac9d3593d9c4dd9c0cfd12094ac75f3858f1ff7ad4e",
+      "/etc/init/composer.rc": "07d70c1802a360fc80952bc6a96894db70a806189bd020a82e68b26b9e76bfd9",
+      "/etc/vintf/manifest/allocator.xml": "7f2924173b7b9a4ec765986032fda70c67dba08bc1b1241505be2aaa3f20454a",
+      "/etc/vintf/manifest/hwc3-drm.xml": "1eec97669217d852e61f9bb04b933332ed543205a36af70d537540c6abf35b06",
+      "/etc/vintf/manifest/mapper.minigbm.xml": "89ea599e25d05f4316d88982b4ea9aa817add552da1817895d5e104e3a33d4c6",
+      "/lib64/android.hardware.common-V2-ndk.so": "7c2a094273c7bd1d01f53acdcd849cae0655bf7a9a39a2057b36b0e33ffb235f",
+      "/lib64/android.hardware.drm.common-V1-ndk.so": "0c23c8fa31fd28ee1a5dc4db9545fd809c660921c88d6d8a30587e9682db447d",
+      "/lib64/android.hardware.graphics.allocator-V2-ndk.so": "c215c6b2f7f65af429db247486bd3b1d45e2a97afc147b8cf67571c2ffef3eda",
+      "/lib64/android.hardware.graphics.allocator-V3-ndk.so": "535c02c354526bc282a2bc502a41d907db9a03b986ec51b7631c7eb9c62e8399",
+      "/lib64/android.hardware.graphics.allocator@2.0.so": "1741350e28c9e67eb4f939286cdc87231e59fa640e3b76c22e1ca35e1c668940",
+      "/lib64/android.hardware.graphics.allocator@3.0.so": "bcdfc8318d3203cbe3f46051c945e25a2e9bcc9d3d0fdbe4bb8306005e31cc64",
+      "/lib64/android.hardware.graphics.allocator@4.0.so": "d15153702eac8af7f7b9f461fb96297c13d231b3538d95f855c662d940e0b322",
+      "/lib64/android.hardware.graphics.common-V7-ndk.so": "5051e1f92fa884fce0ceb9837586989173eb7dd328934a271d49827b2c3e26bd",
+      "/lib64/android.hardware.graphics.common@1.0.so": "d4e4ebca2bf6eaff22a6ca40e5a0f5fdd36861f08b4b374cd6a4700ed90f86b5",
+      "/lib64/android.hardware.graphics.common@1.1.so": "58dc09697e9622714c0c826905883902efd4abb5a59b2796f7d9777cd25235ce",
+      "/lib64/android.hardware.graphics.common@1.2.so": "2971758b206e4b92905a7d57b6d8a840580edb31cf0b491c25479c864dd3152e",
+      "/lib64/android.hardware.graphics.composer3-V5-ndk.so": "05c63df99dee655d6fbb24bef9c3534bc018d4aa6c10c087f5a5360739337e90",
+      "/lib64/android.hardware.graphics.mapper@2.0.so": "83bd577013802c4464ff88289e4af719aabb1cfc67551d7af077d9cf99f0d6a9",
+      "/lib64/android.hardware.graphics.mapper@2.1.so": "e6e972530bfcc924448d21019ec72446725daf72720cd576223e4b8dd3de2d14",
+      "/lib64/android.hardware.graphics.mapper@3.0.so": "4a5262cc7299a177e5a253a02dce017b5ae38d50e5bc043a5920dde79b19acfc",
+      "/lib64/android.hardware.graphics.mapper@4.0.so": "bf7b961d9c2e7bfe241127ca4c58969e86ed3d5c3fbc7ff5c39060d5f552ae77",
+      "/lib64/drm_hwcomposer_atom_reporter.so": "95d84a39a086ac432287a035dca7de65d3400694fe3e744c20d0a5c523e3becb",
+      "/lib64/egl/libEGL_angle.so": "f61e6dae0cf6ec9f3c2c6668b59df7c3b9e6b1eaea47b7bd6d30ba1a09695f4f",
+      "/lib64/egl/libGLESv1_CM_angle.so": "02b3caf070748baf10a0015e1940bccad7dae8655ed7f89b8d89f314aeccd9b9",
+      "/lib64/egl/libGLESv2_angle.so": "e0f0cbf31f33041d956fd9c64311e54cbac2f5ca2e76e20624e249d4a186a636",
+      "/lib64/hw/gralloc.minigbm.so": "5635a0fb628dcda7f068e794a64b9b8c397b53a442da8eb6e1bbf5d625acee0f",
+      "/lib64/hw/mapper.minigbm.so": "bd18eda4f6c4573bd1ddd074aa02ce2d97687e05d648af9ac78b9812d4a0ed56",
+      "/lib64/hw/vulkan.pastel.so": "a98bda4e50484a4e307f5bffd34378fb7afdd90363ff328a8d14440334d784a3",
+      "/lib64/libaconfig_storage_read_api_cc.so": "e85b69405c2945a4f72ef0dbb8eb5c8d62430a4ee60a4cbb5cdce5c770687e68",
+      "/lib64/libbase.so": "79cc9c2b80cb9d91ee866f9995552d53ce35e3fa6671c2687c6af38f1101eff1",
+      "/lib64/libc++.so": "cb118e98c74d3454858921123b9b51ba13df9cad7dfa141dd892c453661a4d78",
+      "/lib64/libcutils.so": "aa3fd0306f880a56a54b0149aa0fa8a9ac85ed39e6d6ae412fadc6539831e073",
+      "/lib64/libdmabufheap.so": "95b4958be3de9341c43f8c0bfa0f8a0a0b1142690060b23ebbb434490f681f0e",
+      "/lib64/libdrm.so": "5a65194db7e8f329a6998f74fb794ec0f81f8b313192e499021f9edfe35dad6d",
+      "/lib64/libgralloctypes.so": "a9b601184ff0c3ad7d87c55130519343a8300a7265623a9098d8f36a1a04fdee",
+      "/lib64/libhardware.so": "e62c7686b2c0802e44cd69a2cd8c9d4c9e8f01fc3802f00a54e4ef432524ca7a",
+      "/lib64/libhidlbase.so": "d698905bc0cc67c2ca2c670157ec3a49e77c92e02b0d6ce7468f3f021c7bfe1f",
+      "/lib64/libminigbm_gralloc.so": "dfd9bac12b806310a89a1a55dc4dfa0203bb2525c517f5e510b65d625d0c4364",
+      "/lib64/libminigbm_gralloc4_utils.so": "443697b3c3612db5607b7b594f5038bdf608757bb8e8145d0584c2bf74231df7",
+      "/lib64/libui.so": "7d28f1f1ac3a919d158f1c38bfa6eb3260204f0c112f837394e326672c2f60a2",
+      "/lib64/libutils.so": "b3c2d00e186d8340548f5bb4ef5974fdba0e6c89cb9bb78761555803c41e7687",
+      "/lib64/libz.so": "618c480774eccce44cd928d586714782fe9472f204a227c1c005a635ba29f8e5"
+    },
+    "target_closure": {
+      "target": "libEGL_angle libGLESv1_CM_angle libGLESv2_angle vulkan.pastel android.hardware.graphics.allocator-service.minigbm mapper.minigbm gralloc.minigbm android.hardware.composer.hwc3-service.rmx2072",
+      "graph": "out/combined-rmx2072_m3_graphics.ninja",
+      "method": "ninja -t commands (read only)",
+      "command_count": 8455,
+      "commands_sha256": "634689fc2f1163d60d19518d1546a351de0b7af4d04fdef9e9ca5e9b03703919",
+      "missing_dependency_commands": []
+    },
+    "payload_bytes": 40252275
+  },
+  "physical_screen_observation": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-47",
+    "operator_statement": "\u5728realme\u753b\u9762\u505c\u7559\u4e00\u6bb5\u65f6\u95f4\u540e\u51fa\u73b0\u4e86\u95ea\u52a8\u7684\u5f69\u5c4f\uff0c\u7136\u540e\u5c31\u9ed1\u5c4f\u4e86",
+    "result": "BRIEF_FLASHING_COLOR_THEN_BLACK",
+    "scope": "Operator observation; no Android animation or desktop confirmed",
+    "boot_id": "4ec0f75a-a814-4f7c-aba8-b2f11d960c56"
+  },
+  "drm_kms_result": "FRAME_EVENTS_NOT_COLLECTED_BEFORE_ROLLBACK",
+  "panel_events": [
+    "6,3983,32697540,-,caller=T1444;panel-samsung-rm19795 ae94000.dsi.0: RM19795 prepared 1080x2400@60 DSC 540x48",
+    "6,4027,32707632,-,caller=T1444;panel-samsung-rm19795 ae94000.dsi.0: RM19795 display-on commands accepted"
+  ],
+  "gsi_adb": "NOT OBSERVED",
+  "surfaceflinger": "NOT VERIFIED; boot blocked before maintenance/APEX/ADB readiness",
+  "keymaster": {
+    "secure_transition": [
+      "[  141.415236][ T1792] type=1400 audit(141.395:171): avc:  denied  { noatsecure } for  comm=\"init\" scontext=u:r:init:s0 tcontext=u:r:rmx_keymaster:s0 tclass=process permissive=0",
+      "[  142.416267][ T1792] type=1400 audit(142.399:173): avc:  denied  { noatsecure } for  comm=\"init\" scontext=u:r:init:s0 tcontext=u:r:rmx_keymaster:s0 tclass=process permissive=0",
+      "[  143.418272][ T1792] type=1400 audit(143.399:175): avc:  denied  { noatsecure } for  comm=\"init\" scontext=u:r:init:s0 tcontext=u:r:rmx_keymaster:s0 tclass=process permissive=0"
+    ],
+    "exit_status": [
+      "[  141.431506][    T1] init: Service 'vendor.rmx-keymaster' (pid 2131) exited with status 1",
+      "[  142.424527][    T1] init: Service 'vendor.rmx-keymaster' (pid 2135) exited with status 1",
+      "[  143.434884][    T1] init: Service 'vendor.rmx-keymaster' (pid 2139) exited with status 1"
+    ],
+    "maintenance_wait": [
+      "[  141.451337][ T1795] libbinder.ServiceManagerCppClient: Waited one second for android.security.maintenance (is service started? Number of threads started in the threadpool: 17. Are binder threads started and available?)",
+      "[  142.453359][ T1795] libbinder.ServiceManagerCppClient: Waited one second for android.security.maintenance (is service started? Number of threads started in the threadpool: 17. Are binder threads started and available?)",
+      "[  143.455179][ T1795] libbinder.ServiceManagerCppClient: Waited one second for android.security.maintenance (is service started? Number of threads started in the threadpool: 17. Are binder threads started and available?)"
+    ]
+  },
+  "recovery": {
+    "automatic": true,
+    "fault_injection": false,
+    "guard_journal": [
+      "RMX-M1-AUTO boot=4ec0f75a-a814-4f7c-aba8-b2f11d960c56 state=attempt",
+      "RMX-M1-AUTO boot=4ec0f75a-a814-4f7c-aba8-b2f11d960c56 state=armed",
+      "RMX-M1-AUTO boot=4ec0f75a-a814-4f7c-aba8-b2f11d960c56 state=expired"
+    ],
+    "intermediate": {
+      "boot_id": "d02888d5-7189-4bcd-95ab-e9fdbc435842",
+      "identity": {
+        "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+        "trial": "ufs-host-g3-gsi17-firststage-ufs-47",
+        "udc": "configured",
+        "uptime_seconds": 22.55,
+        "timer_seconds": 180
+      }
+    },
+    "stock": {
+      "firmware": "RMX2072_11_F.20",
+      "sys_boot_completed": 1,
+      "boot_id": "c80dec7f-8a3a-4598-b604-c0ddddc3306b",
+      "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+      "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "lp_slots": [
+        0,
+        1
+      ]
+    }
+  },
+  "log_sha256": {
+    "acm.log": "1aa53dac64a65be5ae3c9bd5b38192927e75f72ad037e4bb69288622e72c2459",
+    "console-ramoops-0": "3d90f14ffe9962c945f197d73a88fde22e4f793ef97ee38bd67a3c5dd634a05f",
+    "pmsg-ramoops-0": "dc69a7dfd8fc451b0d9a7045aca67d3fd58e45b4c8a04b1f40f82de217452134"
+  },
+  "cold_start_test": "NOT RUN",
+  "handset_left": "Verified restored F.20",
+  "cause": {
+    "observed": "Keymaster repeatedly exits with status 1; secure domain transitions deny noatsecure. Its pinned libraries moved to a private directory, selected only by LD_LIBRARY_PATH.",
+    "source_inference": "Pinned Bionic ignores LD_LIBRARY_PATH with AT_SECURE. This explains failure to find private libraries, but a direct linker stderr message did not survive the ring buffer.",
+    "bionic_commit": "06356e41c5ed7b12220b24c05ba4fdb873b126a7",
+    "sources": {
+      "linker_main.cpp": "30a674309ae69d0b6b7876d7ebc9f269e4d564a33239b8b909d09b6c2c465892",
+      "linker.cpp": "b7bf38b2f8a3708c42e57bebd5844a40fc1afcac6929d1aaa183c22a7568016b"
+    }
+  },
+  "next_fix": "Source-build the same HAL/client with immutable vendor DT_RUNPATH and all eight accepted private runtime libraries as direct DT_NEEDED entries. Remove LD_LIBRARY_PATH from init service; preserve SELinux policy and original library bytes."
+}

@@ -442,3 +442,38 @@ the active GSI; actual symbol loading and SELinux access still need the next
 trial. Composing this payload with the established Keymaster/USB vendor requires
 a 60 MiB unsigned filesystem. Trial 47 will reuse the proven trial 46 kernel,
 GSI and scratch seeds, and install the newly signed project graphics vendor.
+
+
+### Trial 47: graphics vendor exposes a Keymaster loader regression
+
+The 61 MiB signed graphics vendor passed complete storage readback, AVB and
+first-stage mounting. The operator saw a brief flashing color screen, then
+black. Native panel prepare/display-on still complete; KMS event details were
+not collected before rollback, and no Android interface is confirmed.
+GSI ADB did not enumerate. The existing guard expired and automatically returned
+to diagnostics/EDL, preserving console and pmsg evidence. Original F.20 boot,
+both LP metadata slots and the complete original super digest were restored and
+verified. This recovery followed a real startup failure; no fault was injected.
+
+The recovered console repeatedly shows the project Keymaster exiting with
+status 1 while vold waits for android.security.maintenance. The secure domain
+transition denies noatsecure. Graphics staging moved the eight accepted VNDK
+runtime libraries into /vendor/lib64/rmx-keymaster and relied on an init
+LD_LIBRARY_PATH setting. The pinned Android 17 Bionic linker ignores that
+variable under AT_SECURE. This supports the loader-path diagnosis; the direct
+linker stderr text did not survive the ring buffer. This is not evidence of a
+new TEE transaction failure.
+
+The next source HAL/client use DT_RUNPATH for that immutable vendor directory.
+Because RUNPATH is not transitive, all eight existing private libraries are
+explicit direct DT_NEEDED dependencies. Bionic searches a parent's RUNPATH
+before namespace default directories and processes the executable's direct
+load tasks before appended indirect tasks. The init environment workaround is
+removed. Neither SELinux policy nor the library bytes are changed. A baseline
+rebuild reproduced both previous executable hashes exactly; the new binaries
+pass ELF RUNPATH and dependency-closure checks. Hardware validation remains
+pending. [Trial 47](../build/device/m3-display-47-2026-11-15.json) and
+[source link proof](../build/device/m3-keymaster-runtime-2026-11-15.json).
+
+Pinned linker source: [environment handling](https://android.googlesource.com/platform/bionic/+/06356e41c5ed7b12220b24c05ba4fdb873b126a7/linker/linker_main.cpp)
+and [library resolution](https://android.googlesource.com/platform/bionic/+/06356e41c5ed7b12220b24c05ba4fdb873b126a7/linker/linker.cpp).
