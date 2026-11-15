@@ -406,3 +406,28 @@ of that callback as a reason to preserve boot clock state. That callback
 synchronizes power domains, without calling `clk_sync_state()`. The physical
 orphan-hold stacks and persistent references match this source interaction.
 The next kernel is run `43688126825` at `25ca13ba7c3a180862eba6a2f75c0ba8b05ac465`.
+
+
+### Trial 46: first confirmed physical color bars
+
+Kernel run `43688126825` completed all 788 actions; selected source and image
+hashes were verified before installation. The GSI, project vendor and writable
+test-volume seeds remain unchanged. Boot `a4da9689-cea2-48a0-869c-585973f1c035`
+shows zero DSI0 prepare/enable references before modeset. At PHY enable the
+software PLL state and bias count are both zero. After the reset, a fresh prepare
+at 33.438 seconds sets PLL control to 1 and lock status to 0x51.
+
+The panel reports successful prepare and display-on. The KMS probe obtains four
+advancing sequence/timestamp pairs: 7/34.597659, 12/35.598416, 17/36.599101 and
+22/37.599771. No RCG-update, DMA-command or frame-completion error appears in the
+display evidence. The operator independently reports: "短暂出现了彩条"
+(brief color bars appeared). The previous orphan-held clock stack is absent.
+This establishes real native DPU/DSI panel output, rather than ioctl success
+alone. The probe intentionally releases its buffers and display before Android.
+
+GSI ADB returns, but the unchanged vendor still lacks EGL and SurfaceFlinger
+restarts. The next objective is to install the verified source graphics payload,
+validate allocator/composer registration and real EGL buffer rendering, then
+reach stable SurfaceFlinger and Launcher. The initial mode does not establish
+sustained refresh rate, brightness-range qualification, Adreno or real touch.
+[Trial 46 evidence](../build/device/m3-display-46-2026-11-15.json).
