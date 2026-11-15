@@ -167,9 +167,10 @@
   },
   "pending": {
     "status": "RESUMED_BY_USER",
-    "source_init_run": null,
+    "source_init_run": 43663703953,
     "selected_projects": 120,
-    "change": "Include pinned LLVM libc, Highway and Arm optimized routines providers found by the init dependency closure"
+    "change": "Include pinned LLVM libc, Highway and Arm optimized routines providers found by the init dependency closure",
+    "source_init_commit": "50b553bda01c429823d56174c3555f51c0957673"
   },
   "host_tests": {
     "total": 81,
@@ -180,7 +181,7 @@
       "Five bounded workspace-completion tests passed, including question-mark path punctuation"
     ]
   },
-  "phone_state": "Accepted M1 trial 35 GSI received reboot -p at user request; ADB and matching USB interfaces absent on repeated host checks. Physical power state not independently observed.",
+  "phone_state": "Reconnected M1 trial 35 GSI passed 203.047-second same-boot reobservation and 1 MiB authenticated transfer; M2 not flashed",
   "source_kernel": {
     "run_id": 43619212111,
     "result": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_CHECKS",
@@ -225,6 +226,7 @@
   },
   "resume": {
     "utc": "2026-11-15T01:34:07.372078+00:00",
-    "phone_connection": "No ADB or matching USB interface at initial check; operator reconnection requested"
+    "phone_connection": "No ADB or matching USB interface at initial check; operator reconnection requested",
+    "baseline_record": "m2-pretest-baseline-2026-11-15.json"
   }
 }

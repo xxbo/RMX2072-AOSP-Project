@@ -277,3 +277,13 @@ original `Android.bp`. The workspace initially contains 120 projects; no AOSP
 implementation or dependency checks were bypassed. The initial host check found
 no handset interface, so reconnection was requested while the source build
 continues. Physical M2 tests remain pending a successful complete candidate.
+
+The reconnected M1 GSI boot `358ee643-516d-422d-b7fc-fdd34386cfde` passed
+203.047 seconds of observation and a 1 MiB authenticated ADB round trip. API 37,
+enforcing, second-stage PID 1, maintenance, local retention, verified UFS mounts
+and the same-boot primary PON/PS_HOLD evidence were observed. The new
+`recheck_retained_boot.py` observer did not reboot the handset or renew/change
+its guard lease. Expected image inputs are inherited from the previous verified
+flash; the boot-only writer still requires physical boot/DTBO/super readback.
+This is a resumed-session baseline, not a claimed new disconnected cold-start
+test. See `build/device/m2-pretest-baseline-2026-11-15.json`.

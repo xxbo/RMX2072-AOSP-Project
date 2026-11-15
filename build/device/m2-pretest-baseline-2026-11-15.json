@@ -1,0 +1,87 @@
+{
+  "result": "PASS_RETAINED_GSI_REOBSERVATION",
+  "utc": "2026-11-15T01:40:56.961261+00:00",
+  "boot_id": "358ee643-516d-422d-b7fc-fdd34386cfde",
+  "previous_record": "ufs-host-g3-gsi17-firststage-ufs-35-returned-gsi",
+  "expected_inputs_sha256": "9ad325313be0544271227122510b8db096070d8c506c34035828241bed96d7e2",
+  "physical_image_hashes": "Still require EDL readback before any boot-only update",
+  "cold_start": "NOT CLAIMED: no timed operator power-cycle evidence",
+  "reboot_requested": false,
+  "guard_lease_changed": false,
+  "soak_seconds": 203.047,
+  "identity": [
+    "37",
+    "6.18.32-android17-5-maybe-dirty-4k",
+    "358ee643-516d-422d-b7fc-fdd34386cfde",
+    "Enforcing",
+    "running",
+    "",
+    "retained",
+    "adb"
+  ],
+  "pid1": "/system/bin/init\u0000second_stage",
+  "ufs_evidence": "same-boot autonomous device witness plus matching live ADB mounts (sysfs_dm restricted)",
+  "power_drivers": {
+    "boot_id": "358ee643-516d-422d-b7fc-fdd34386cfde",
+    "primary_spmi_sid": 0,
+    "pon_revision": 1,
+    "pon_subtype": 4,
+    "pon_driver": "pm8941-pwrkey",
+    "poweroff_driver": "msm-restart"
+  },
+  "adb_smoke": {
+    "boot_id": "358ee643-516d-422d-b7fc-fdd34386cfde",
+    "bytes": 1048576,
+    "identity": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "358ee643-516d-422d-b7fc-fdd34386cfde",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "data_mountinfo": [
+      "67 57 7:0 / /data rw,nosuid,nodev,relatime shared:9 - ext4 /proc/self/fd/3 rw,seclabel",
+      "68 57 7:1 / /metadata rw,nosuid,nodev,relatime shared:10 - ext4 /proc/self/fd/3 rw,seclabel"
+    ],
+    "push": "C:\\Users\\xiaob\\AppData\\Local\\Temp\\rmx-m1-adb-yiw2elj_\\probe.bin: 1 file pushed, 0 skipped. 615.4 MB/s (1048576 bytes in 0.002s)",
+    "push_seconds": 0.047,
+    "pull": "/data/local/tmp/rmx-m1-adb-f901761a44534257ab106ff70929b66a/probe.bin: 1 file pulled, 0 skipped. 31.6 MB/s (1048576 bytes in 0.032s)",
+    "pull_seconds": 0.062,
+    "device_sha256": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83",
+    "returned_sha256": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83",
+    "maintenance": "Service android.security.maintenance: found",
+    "shell_identity": "uid=2000(shell) gid=2000(shell) groups=2000(shell),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs) context=u:r:shell:s0",
+    "uptime": "505.24 3755.95",
+    "boot_completed": "",
+    "wrong_boot_rejected": true,
+    "after": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "358ee643-516d-422d-b7fc-fdd34386cfde",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "temporary_files_removed": true
+  },
+  "m2_flashed": false,
+  "raw_sha256": {
+    "inputs.json": "9ad325313be0544271227122510b8db096070d8c506c34035828241bed96d7e2",
+    "reobservation.json": "8ba96e4f68917a4484a9b8c5cf227edad23b319fcf25992b831321811d9dce87",
+    "live/adb-smoke.json": "84b09d5f06e9fbbbe43d141ffa13bbfc887d7e90d3418e18435e5b42ae5dceb4",
+    "live/boot-events.txt": "1e3e098266e711246b850edb264b90e89776c92a0d4a5b67964dfa0c64ac16fc",
+    "live/gsi-stable.json": "99bcf008ed7971739342ab17ed78f3e758547a447219701366c6cdf4ff2e7489",
+    "live/host-events.jsonl": "35b54c9338c6376e3139c56bc3c5602bbb3c738d8df13e8590ba98b7d0931f3a",
+    "live/logcat.txt": "fe3cf3d9d127c574076bb5834f9ad400b22868d04da87fd1e96d6603a6ce5e59",
+    "live/power-driver-check.json": "8f5d7d74d4fc9fe6016da8435d2df71d4b881ee37c11446ff10bb98a7ffba95f",
+    "live/power-providers.txt": "b15f797402c280eb89f117bbeaa120bcb42b0fb36a0b6d40974c0f4bd70b9679",
+    "live/processes.txt": "eaf62f63ecee3e13c377054f593e6e3d2e2fad42196fede32f3541163d862fab",
+    "live/properties.txt": "c7fa556335c2466b46513a7cb3393c3633f7103ed4df6fe70ac71a8b38368e5b",
+    "live/watchdog.txt": "b508095007fdf0351332a5364aedcc8778d07f6e94effc34f27129d4947236d8"
+  }
+}
