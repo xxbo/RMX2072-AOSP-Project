@@ -288,7 +288,18 @@ and flags through native debugfs files. These counts do not prove PLL lock,
 and rates may be cached; the purpose is to distinguish an unselected or
 unprepared parent from a hardware clock/transport failure while the pipeline
 is still active. No clock registers are written by the probe. The static ARM64
-probe compiles with warnings treated as errors; physical results are pending.
+probe compiles with warnings treated as errors. Trial 44 completed on boot
+`c0756d90-97b4-41f6-b74e-0181a32d4884`. Before modeset, the DSI parents were
+already selected and the VCO prepare/enable counts were both 1; byte/pixel
+branches also had nonzero counts. After modeset, these references remained
+and CCF reported about 52.704 MHz byte / 70.272 MHz pixel clocks, but the RCG,
+first DCS packet and frame completion still failed. The second stale event
+was rejected. This rules out the simple missing-parent-reference explanation,
+not a physical PLL failure. The next trace must identify the early clock
+enable caller and its relationship to PHY reset. No additional operator
+screen observation was requested for this failed transport test. Enforcing
+GSI ADB remained stable and was retained.
+[Trial 44 evidence](../build/device/m3-display-44-2026-11-15.json).
 
 ### Next candidate: native DSI REFGEN supply
 
