@@ -17,7 +17,8 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Community kernel | SM8250-Common 4.19.325 | Build-tested | [Legacy build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/42228243866) |
 | ACK/GKI | Android 17 6.18.32 generic ARM64 | Generic distribution build-tested | [Kleaf build](GKI_618_BUILD.md) |
 | Platform kernel | 6.18.32 with factory-derived G3 DTB and original DTBO | Disconnected headless GSI cold boot passed | Trial 35 adds the measured PDC binding and narrowly scoped upstream PON/PS_HOLD support; primary revision/subtype and driver bindings passed in GSI. M2 requires reproducing M1 with source-built trees and ramdisk. [Power evidence](M1_POWER_CONTROL.md) |
-| Board DTB/DTBO | Source-built RMX2072 trees | Open | Repeat cold boot, USB, UFS, recovery and headless Android tests. |
+| Board DTB/DTBO | Source-built RMX2072 trees | M2 headless boot verified; M3 display extension blocked | Trial 36 reached retained GSI ADB with project trees and source first-stage init. The user cancelled further cold-start and watchdog rehearsals; the active target is physical display and desktop. Trial 37's display extension rebooted early; F.20 was restored. [M3 evidence](M3_PHYSICAL_DISPLAY.md) |
+| Graphics userspace | Source ANGLE / SwiftShader / minigbm / DRM HWC3 | Build in progress | The retained M2 GSI has no EGL implementation and SurfaceFlinger restarts. The M3 native payload is not installed or qualified yet. Initial CPU rendering does not establish Adreno acceleration. [M3 integration](M3_PHYSICAL_DISPLAY.md) |
 | Device-specific modules | Built for the project kernel | Per driver | Record module load and hardware results by subsystem. |
 
 ## Hardware test matrix
@@ -25,7 +26,7 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 | Feature | Status | Test evidence / notes |
 | --- | --- | --- |
 | Boot / reboot | Disconnected power-key headless startup passed | Trial 35's new kernel boot began at least 138.771 seconds before ADB reconnection. Same-boot enforcing/PID 1/UFS identity, local guard retention and soak passed. Framework boot completion remains open. [Power-cycle record](../build/device/m1-disconnected-start-35-2026-11-14.json) |
-| Display / brightness / refresh rate | Unknown | |
+| Display / brightness / refresh rate | Blocked | Source DRM/MSM and RM19795 DSC panel kernel compiled. Trial 37 failed before USB; preserved console shows MDSS `-22` from missing UBWC platform matching. The SoC-compatible fix is committed; screen output and page flips remain unproven. [Trial 37](../build/device/m3-display-37-2026-11-15.json) |
 | Touch / gestures | Unknown | |
 | USB / ADB / MTP | Authenticated ADB after disconnected startup passed | Trial 35 passed exact 6.18/API 37/enforcing/PID 1/UFS identity, soak and 1 MiB transfer after power-key startup without USB. The older trial 28 failure remains recorded separately. MTP remains untested. [Trial 35](../build/device/m1-disconnected-start-35-2026-11-14.json) |
 | UFS | Warm HS-G3 reads and cold verified GSI mounts hardware-tested | Earlier direct reads established two-lane HS-G3 and six LUNs. Trial 35's disconnected start verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
