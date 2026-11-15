@@ -8,7 +8,9 @@
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
 #include <linux/regulator/consumer.h>
+#include <linux/string.h>
 #include <drm/display/drm_dsc.h>
+#include <drm/display/drm_dsc_helper.h>
 #include <drm/drm_mipi_dsi.h>
 #include <drm/drm_modes.h>
 #include <drm/drm_panel.h>
@@ -37,6 +39,8 @@ static int rm19795_send(struct rm19795 *ctx, const struct rm19795_cmd *cmd,
 	size_t i;
 
 	for (i = 0; i < count; i++) {
+		struct drm_dsc_picture_parameter_set pps;
+		u8 pps_cmd[89];
 		struct mipi_dsi_msg msg = {
 			.channel = ctx->dsi->channel,
 			.type = cmd[i].type,
@@ -45,6 +49,25 @@ static int rm19795_send(struct rm19795 *ctx, const struct rm19795_cmd *cmd,
 			.tx_buf = cmd[i].data,
 		};
 		ssize_t ret;
+
+		/* The OEM 0x9e packet contains downstream DSC rate-control values.
+		 * MSM 6.18 calculates different encoder values before panel prepare
+		 * (prepare_prev_first). Send those same values to the decoder, using
+		 * the panel's original vendor command and 88-byte DSC 1.1 payload.
+		 * Keep the imported OEM table intact as the comparison reference.
+		 */
+		if (cmd[i].data[0] == 0x9e) {
+			if (cmd[i].type != 0x39 || cmd[i].len != sizeof(pps_cmd) ||
+			    ctx->dsc.dsc_version_major != 1 || ctx->dsc.dsc_version_minor != 1 ||
+			    ctx->dsc.pic_width != 1080 || ctx->dsc.pic_height != 2400 ||
+			    !ctx->dsc.rc_model_size || !ctx->dsc.slice_chunk_size)
+				return dev_err_probe(&ctx->dsi->dev, -EINVAL,
+						     "encoder DSC config not ready for panel PPS\n");
+			drm_dsc_pps_payload_pack(&pps, &ctx->dsc);
+			pps_cmd[0] = 0x9e;
+			memcpy(pps_cmd + 1, &pps, sizeof(pps_cmd) - 1);
+			msg.tx_buf = pps_cmd;
+		}
 
 		/* Preserve the OEM's long-write packets even for two-byte payloads. */
 		ret = ctx->dsi->host->ops->transfer(ctx->dsi->host, &msg);
@@ -56,6 +79,9 @@ static int rm19795_send(struct rm19795 *ctx, const struct rm19795_cmd *cmd,
 		/* MSM returns its padded DMA packet length, including the header. */
 		if (ret < cmd[i].len)
 			return -EIO;
+		if (cmd[i].data[0] == 0x9e)
+			dev_info(&ctx->dsi->dev, "encoder-matched DSC PPS accepted: %*phN\n",
+				 (int)sizeof(pps_cmd) - 1, pps_cmd + 1);
 		if (cmd[i].wait_ms)
 			msleep(cmd[i].wait_ms);
 	}

@@ -640,3 +640,21 @@ It uses existing platform executables and shell SELinux permissions, has a
 `/data/local/tmp`. Adbd and DRM device modes are unchanged. This is intended to
 separate composed-image corruption from downstream scanout corruption before
 choosing a fix. No valid Android frame is claimed. [Trial 53](../build/device/m3-display-53-2026-11-15.json).
+
+### Encoder/decoder DSC parameter mismatch found during trial 54 preparation
+
+The imported OEM DCS `0x9e` packet programs the panel decoder with fixed
+downstream rate-control values. ACK's `dsi_populate_dsc_params()` instead calls
+`drm_dsc_setup_rc_params(..., DRM_DSC_1_1_PRE_SCR)` for the DPU encoder. At 8 bpc
+and 8 bpp, the encoder table sets first_line_bpg_offset to 12; the panel's fixed
+PPS byte 27 is 15. The fixed rate-control ranges also differ. Thus copying the
+OEM packet byte-for-byte does not keep the 6.18 encoder and decoder consistent.
+
+The prepared panel fix packs the already calculated host DSC configuration at
+panel prepare. It retains the original DCS long-write type, vendor command
+`0x9e` and 88-byte DSC 1.1 payload length. It rejects an unpopulated configuration
+and logs the exact accepted PPS. The generated OEM table remains unchanged for
+comparison. This is a source-level mismatch and a candidate repair, not yet a
+hardware-verified explanation of trial 53's corruption. Trial 54 still runs
+kernel 27 and only adds the one-shot screenshot; the new kernel requires its
+own build and handset validation.
