@@ -8,6 +8,12 @@ case "$PHASE" in prepare|build|all) ;; *) exit 2 ;; esac
 mkdir -p "$ARTIFACT_DIR"
 if [[ "$PHASE" != build ]]; then
   RMX2072_GRAPHICS=1 bash "$ROOT_DIR/scripts/build/build_m2_first_stage.sh" prepare
+  # assemble_vintf is a real install dependency of the HAL fragments. Keep its
+  # two native support libraries without analyzing unrelated GKI/VTS targets.
+  git -C "$SOURCE_DIR/packages/modules/Gki" sparse-checkout set --no-cone /libkver/
+  git -C "$SOURCE_DIR/test/vts-testcase/hal" sparse-checkout set --no-cone /treble/vintf/libvts_vintf_test_common/
+  git -C "$SOURCE_DIR/packages/modules/Gki" sparse-checkout list > "$ARTIFACT_DIR/gki-sparse.txt"
+  git -C "$SOURCE_DIR/test/vts-testcase/hal" sparse-checkout list > "$ARTIFACT_DIR/vts-hal-sparse.txt"
   cp "$ROOT_DIR/artifacts/m2-first-stage/selected"*.xml "$ARTIFACT_DIR/"
   mkdir -p "$SOURCE_DIR/device/realme/rmx2072_m3"
   cp "$ROOT_DIR/device/realme/bladerunner_48m/m3-graphics/"* "$SOURCE_DIR/device/realme/rmx2072_m3/"
