@@ -51,6 +51,15 @@
       "compile_duration": "01:11:04",
       "failure": "Archive script assumed out/target/product/rmx2072_m3/vendor; AOSP installed real ARM64 payload under out/target/product/rmx2072_m3/system/vendor. No installable artifact was archived.",
       "fix": "Query TARGET_OUT_VENDOR from the selected AOSP product and record/verify its exact prefix. Rebuild required because the ephemeral runner completed."
+    },
+    {
+      "run": 43682875528,
+      "job": 132717077727,
+      "commit": "3c55d7b3ded65a04ddc099b5e0c8f7df8f58dd7c",
+      "result": "IN_PROGRESS",
+      "build_step_started_utc": "2026-11-15T06:05:02Z",
+      "last_observed_utc": "2026-11-15T07:46:29Z",
+      "change": "Query and verify the selected product TARGET_OUT_VENDOR; preserve the compiled ARM64 graphics payload."
     }
   ],
   "physical_installation": "NOT RUN",
@@ -82,5 +91,6 @@
     },
     "aidl_implementation": "unmodified upstream HardwareBuffer.aidl",
     "omitted_scope": "Unrelated Java framework product declarations only"
-  }
+  },
+  "physical_scanout_reference": "m3-display-46-2026-11-15.json"
 }
