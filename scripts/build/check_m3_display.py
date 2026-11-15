@@ -4,7 +4,7 @@ from check_m2_resources import check_m2_resources, normalized_node
 
 
 def check_m3_display(data):
-    preserved = check_m2_resources(data)
+    preserved = check_m2_resources(data, display=True)
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
     base = '/soc/display-subsystem@ae00000'
     expected = {

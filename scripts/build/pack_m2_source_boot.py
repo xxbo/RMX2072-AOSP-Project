@@ -72,6 +72,10 @@ def main():
                'panic=30 androidboot.hardware=qcom '
                'androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs '
                'tp_printk tp_printk_stop_on_boot')
+    if dt.get('display'):
+        cmdline += ' initcall_debug'
+    if len(cmdline.encode()) >= 512:
+        raise ValueError('Diagnostic command line exceeds the boot header field')
     header[64:576] = cmdline.encode().ljust(512, b'\0')
     header[608:1632] = bytes(1024)
     for offset, value in ((8, len(wrapped)), (16, len(rd)), (1648, len(tree))):

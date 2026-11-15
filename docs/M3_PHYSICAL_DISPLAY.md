@@ -62,9 +62,19 @@ panel-source digests were verified. Trial 37 preserved the GSI, vendor, DTBO and
 test seeds, read back the complete current super, and verified the new boot
 write. The operator observed repeated reboots. Neither diagnostic ACM nor GSI
 ADB appeared, so no KMS result or physical panel output was established.
-The cause is not yet identified. Operator volume keys returned the phone to
-EDL; stock restoration is in progress. The next diagnostic is the preserved
-panic/console record, not another run of the same candidate.
+Operator volume keys returned the phone to EDL. F.20 restoration, boot
+completion, both LP metadata slots and the complete physical super digest
+passed. The recovered console identifies `Couldn't find UBWC config data for
+this platform!` followed by MDSS probe error `-22` at 0.706972 seconds. ACK's
+UBWC database matches `qcom,sm8250`; the retained legacy root compatibles do
+not include it. The M3 source overlay now appends this upstream SoC identity
+while preserving all measured board identities used by SCM/PON guards.
+
+This is a confirmed display probe blocker, not a complete explanation of the
+reboot loop. The console stops at 0.813605 seconds and reports 28 unrecoverable
+ECC blocks. No complete panic stack was recovered. The next candidate enables
+`initcall_debug` to identify any remaining early initialization stall, using
+the same compiled kernel, GSI and test seeds. No screen output is claimed.
 [Trial evidence](../build/device/m3-display-37-2026-11-15.json).
 
 The first graphics source build failed on the upstream libdisplay-info

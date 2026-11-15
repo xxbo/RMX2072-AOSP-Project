@@ -11,7 +11,13 @@
             // Root DTBO selectors are not payload in a standard FDT overlay.
             // Preserve the board identity used by SCM recovery/PON guards even
             // when the bootloader does not copy selector properties itself.
+#ifdef RMX2072_M3_DISPLAY
+            // ACK 6.18's UBWC database matches the upstream SoC compatible.
+            // Keep all measured board identities for SCM/PON matching.
+            compatible = "qcom,kona-mtp", "qcom,kona", "qcom,mtp", "qcom,sm8250";
+#else
             compatible = "qcom,kona-mtp", "qcom,kona", "qcom,mtp";
+#endif
             oplus,dtsi_no = <20607>;
             realme,m2-overlay-source = "20607-q-24a15224-m2";
         };

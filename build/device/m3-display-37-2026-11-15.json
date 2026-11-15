@@ -60,9 +60,33 @@
   "diagnostic_acm_observed": false,
   "kms_result": "BLOCKED: no pre-policy display evidence recovered yet",
   "surfaceflinger": "NOT RUN with M3 userspace; source graphics build pending",
-  "root_cause": "UNDETERMINED; await preserved panic/console evidence",
-  "recovery": "Operator volume keys reached EDL; stock restoration in progress",
+  "root_cause": "Confirmed MDSS probe blocker: effective root lacks qcom,sm8250 required by ACK qcom_ubwc_config_get_data. Reboot-loop cause remains unresolved; recovered console stops at 0.813605 seconds.",
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "9c4bfbd3-7037-4a84-8881-d6d239dc77cb",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
   "cold_start_test": "NOT RUN",
   "watchdog_fault_injection": "NOT RUN",
-  "next": "Recover F.20, capture preserved crash evidence, fix the first native-display boot failure"
+  "next": "Add the upstream SoC compatible while preserving measured SCM/PON identities; enable initcall_debug to locate any remaining early boot stall. Keep the same kernel binary, GSI and test-volume seeds.",
+  "preserved_console": {
+    "sha256": "615d11713fcc042b394d66ec058d9deaa015fffdee1425bb9abaa2e1fe94dc50",
+    "bytes": 77345,
+    "archive_sha256": "00f183debccb3239728125f6a769f85ab880309f39c6ed85f31c9a57fe6c4a31",
+    "integrity": "1208 corrected bytes, 28 unrecoverable blocks; damaged lines are not reconstructed",
+    "last_complete_line": "[    0.813605][   T87] Freeing initrd memory: 8236K",
+    "display_failure": [
+      "[    0.706854][    T1] Couldn't find UBWC config data for this platform!",
+      "[    0.706972][    T1] msm-mdss ae00000.display-subsystem: probe with driver msm-mdss failed with error -22"
+    ],
+    "panic_trace": "No complete panic/Oops trace recovered"
+  },
+  "source_reference": "https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/drivers/soc/qcom/ubwc_config.c"
 }

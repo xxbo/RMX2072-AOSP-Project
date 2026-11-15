@@ -134,6 +134,7 @@ def main():
         expanded = output / (name + '.expanded.dts')
         cmd = [str(a.cpp.resolve()), '-E', '-P', '-x', 'assembler-with-cpp',
                '-nostdinc', '-undef', '-D__DTS__', *['-I' + str(d) for d in dirs],
+               *(['-DRMX2072_M3_DISPLAY=1'] if a.display else []),
                str(project / (name + '.dts'))]
         with expanded.open('wb') as out:
             subprocess.run(cmd, stdout=out, check=True)
@@ -166,7 +167,7 @@ def main():
     if a.display:
         from check_m3_display import check_m3_display
         checks['display'] = check_m3_display(effective)
-    checks['m1_resource_reference'] = check_m2_resources(effective)
+    checks['m1_resource_reference'] = check_m2_resources(effective, display=a.display)
     expected = json.loads((repo / 'build/device/stock-dt-selection.json').read_text())
     for data, entry in ((final, expected['boot']['selected']), (overlay, expected['dtbo']['selected'])):
         # The early selection inventory omitted the base's OEM property;
