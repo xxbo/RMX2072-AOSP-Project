@@ -865,3 +865,34 @@ Keep the trial 58 pattern and graphics payload fixed. No PPS, clock, DPU RC
 table or Health HAL change is mixed into this candidate. The physical photo
 supports investigating the transfer path, but does not prove this packet
 mismatch is the cause. [Source check](../build/device/m3-dsc-packet-backport-2026-11-15.json).
+
+### Trial 59: packet change applied, physical corruption unchanged
+
+Kernel build 30 passed and its selected artifact members and source manifests
+were verified. Boot `ec0f3713-797f-4339-95c8-8947213842ee` uses that kernel with
+the same GSI, vendor, pattern and scratch seeds as trial 58. Full super readback
+passed before the boot-only replacement; boot and paired DTBO readback passed.
+Android 17 ADB, enforcing and graphics services are retained.
+
+The pre-Android modeset trace at 33.377991 seconds reports:
+
+```text
+RMXDSC packet slices=2 per_pkt=2 chunk=540 clk_width=360 compression=0x39003901 compression2=0x21c stream=0x4390039 total=0x9600168
+```
+
+The pinned register XML decodes stream0 compression enabled, type `0x39`,
+one packet per line, chunk 540, word count 1081 and stream dimensions
+360 clocks by 2400 lines. This proves the intended packet programming occurred;
+it is not a live Android DPU readback. The fixed capture takes 37.81 seconds
+and produces the same 16,038-byte PNG and SHA-256 as trial 58.
+
+The operator explicitly reports **实际显示没有变化，还是和之前发的照片一样**.
+There is no new photograph for trial 59; the comparison refers to the saved
+trial 58 photo. **Physical acceptance FAILED.** Two-slice packet support is
+insufficient to fix the fault and is not established as its root cause.
+
+Next: obtain actual DPU DSC, pixel-format and pitch programming before another
+hardware configuration change. Keep the known pattern and defer Health HAL.
+No cold-start or watchdog fault-injection test was run. The phone stays in GSI.
+[Trial 59](../build/device/m3-display-59-2026-11-15.json) ·
+[Kernel build](../build/device/m3-dsc-packet-kernel-build-2026-11-15.json).

@@ -12,7 +12,7 @@
     "display": true
   },
   "build_status": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_VERIFICATION",
-  "hardware_status": "NOT RUN; preparing trial 59, phone still retains trial 58",
+  "hardware_status": "Trial 59 booted and retained GSI. Two-slice packet registers confirmed; operator reports unchanged corrupted physical output. Physical acceptance FAILED.",
   "change": "Upstream two-slices-per-packet support plus bounded read-only register trace; same PPS, clocks, GSI, pattern and graphics payload",
   "source_check": "m3-dsc-packet-backport-2026-11-15.json",
   "kernel": {
@@ -49,5 +49,6 @@
     }
   },
   "archive_scope": "Selected members and source manifests verified; complete ZIP digest not verified",
-  "image_retention": "Replaced sole current kernel input; no image history added"
+  "image_retention": "Replaced sole current kernel input; no image history added",
+  "hardware_record": "m3-display-59-2026-11-15.json"
 }
