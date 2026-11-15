@@ -562,3 +562,28 @@ The updated combined policy passed the actual GSI compiler with neverallow
 checks enabled on trial 50. Compiled digest:
 `6dafb8272f54804fae1f30efd6378d5ec8b34403bd9f7863b0830a3829f96ed7`.
 This was an isolated compile; the running phone's policy was not replaced.
+
+### Trial 51: composer client created; allocator-client role missing
+
+Boot `fd7c0a70-1df7-436f-af35-6d80bdaf5a52` resolves the hotplug socket failure.
+SurfaceFlinger initializes GLES 3.1 and logs `Loaded AIDL composer3 HAL service`.
+Composer then reaches mapper setup, where servicemanager denies discovery of
+`android.hardware.graphics.allocator.IAllocator/default` to
+`rmx_graphics_composer`. It subsequently aborts with `gralloc-mapper is missing`.
+The allocator remains registered and enforcing GSI ADB remains available, but
+SurfaceFlinger has no registered service and no Android frame is confirmed.
+
+The next change applies the actual Android 17 full-Treble
+`hal_client_domain(rmx_graphics_composer, hal_graphics_allocator)` expansion:
+client-domain membership, the allocator-client attribute, and the macro's
+scoped bidirectional memfd mapping permissions. Existing platform policy then
+supplies allocator/mapper discovery and Binder/FD transfer rules. This uses the
+standard HAL client role instead of adding isolated service-manager allows.
+The non-Treble passthrough rules do not apply. Strict compilation is required
+before packaging. [Trial 51](../build/device/m3-display-51-2026-11-15.json) ·
+[Pinned client macro](https://android.googlesource.com/platform/system/sepolicy/+/e066568e98d86db31a9346d30977f3632fa7073c/public/te_macros).
+
+The full client-role expansion passed strict compilation on this retained GSI,
+with neverallow checks enabled. Compiled policy digest:
+`45d8ca9b6c6cf9da9c916274cc7d99607f3855a4227dee4815e24b3a9f9e29e2`.
+The running policy was unchanged; the next signed vendor carries the update.

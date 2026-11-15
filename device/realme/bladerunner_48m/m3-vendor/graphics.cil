@@ -37,6 +37,12 @@
 (typeattributeset halserverdomain (rmx_graphics_composer))
 (typeattributeset hal_graphics_composer (rmx_graphics_composer))
 (typeattributeset hal_graphics_composer_server (rmx_graphics_composer))
+; Android 17 hal_client_domain(rmx_graphics_composer, hal_graphics_allocator)
+; for a full-Treble device: discover/call allocator and map its shared memfds.
+(typeattributeset halclientdomain (rmx_graphics_composer))
+(typeattributeset hal_graphics_allocator_client (rmx_graphics_composer))
+(allow rmx_graphics_composer hal_graphics_allocator (memfd_file (read write getattr map)))
+(allow hal_graphics_allocator rmx_graphics_composer (memfd_file (read write getattr map)))
 (typeattributeset file_type (rmx_graphics_composer_exec))
 (typeattributeset exec_type (rmx_graphics_composer_exec))
 (typeattributeset vendor_file_type (rmx_graphics_composer_exec))
