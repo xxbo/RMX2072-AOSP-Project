@@ -188,6 +188,8 @@ def main():
                     (root/'scripts/device_audit/display_snapshot.sh').read_bytes().replace(b'\r\n', b'\n'))
                 if a.display_staged:
                     add('m3-display-staged', 0o100444, b'1\n')
+                    add('bin/display-clock-trace', 0o100755,
+                        (root/'scripts/device_audit/display_clock_trace.sh').read_bytes().replace(b'\r\n', b'\n'))
                     add('bin/display-bind', 0o100755,
                         (root/'scripts/device_audit/display_bind.sh').read_bytes().replace(b'\r\n', b'\n'))
             stage_script = (root/'scripts/device_audit/first_stage_mount.sh').read_bytes().replace(b'\r\n', b'\n')

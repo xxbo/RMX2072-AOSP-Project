@@ -320,6 +320,14 @@ import and boot packaging require the driver to be built in. This repairs a
 verified missing dependency; whether it resolves the observed clock/DCS
 timeout still requires the next hardware test.
 
+The same next trial also arms a separate 64 KiB-per-CPU clock trace before
+display provider registration, filters it to DSI0 VCO/byte/pixel sources and
+branches, and captures at most 16 prepare call stacks. It stops before Android
+handoff and publishes at most 1,200 lines. This measures the caller behind
+trial 44's pre-existing software references without writing clock rates,
+enables or hardware registers. Trace setup failure is recorded and does not
+prevent the existing GSI handoff.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and
