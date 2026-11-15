@@ -39,5 +39,5 @@
     "id": 43703892858,
     "cause": "Dispatch selected mutually exclusive legacy and source PON inputs; no compilation ran."
   },
-  "handset_validation": "PENDING_TRIAL_55"
+  "handset_validation": "TRIAL_55: matching PPS prefix accepted; GSI ADB retained; operator still reports corrupted output. See m3-display-55-2026-11-15.json."
 }

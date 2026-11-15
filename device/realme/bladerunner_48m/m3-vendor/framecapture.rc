@@ -3,14 +3,20 @@
 # membership. Give only this bounded process that group; keep adbd, device modes
 # and SELinux unchanged. No DRM master, modeset or arbitrary command endpoint.
 # Init expands properties before exec; $$ passes a literal $ to the shell.
-service vendor.rmx-m3-capture /system/bin/sh -c "sleep 15; { cat /proc/sys/kernel/random/boot_id; id; timeout 20 /system/bin/screencap -p /data/local/tmp/rmx-m3-frame.png; echo capture_exit=$$?; ls -l /data/local/tmp/rmx-m3-frame.png; } > /data/local/tmp/rmx-m3-capture.txt 2>&1"
+# Trial 55 takes 28.425 s on the CPU renderer. Capture to stdout to avoid
+# screencap's filename-triggered media-scanner broadcast before ActivityManager.
+service vendor.rmx-m3-capture /system/bin/sh -c "sleep 5; { cat /proc/sys/kernel/random/boot_id; id; cat /proc/uptime; timeout 90 /system/bin/screencap -p > /data/local/tmp/rmx-m3-frame.png; echo capture_exit=$$?; cat /proc/uptime; wc -c /data/local/tmp/rmx-m3-frame.png; } > /data/local/tmp/rmx-m3-capture.txt 2>&1"
     class late_start
     user shell
     group shell graphics
     seclabel u:r:shell:s0
     disabled
     oneshot
-    timeout_period 40
+    timeout_period 110
 
 on property:sys.usb.state=adb
+    start vendor.rmx-m3-capture
+
+# Repeat only this fixed diagnostic on the current boot, without USB changes.
+on property:debug.rmx.m3.capture=1
     start vendor.rmx-m3-capture

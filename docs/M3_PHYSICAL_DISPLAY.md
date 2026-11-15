@@ -685,3 +685,45 @@ accepted device configuration. Neither failed build nor the prepared PPS fix
 was flashed in trial 54. Next: verify the newly built panel driver and capture
 actual composed pixels on the same boot, then return to the missing Health HAL
 desktop blocker. [Trial 54](../build/device/m3-display-54-2026-11-15.json).
+
+### Trial 55: PPS correction accepted; physical corruption remains
+
+Boot `22228212-45b7-4e4b-bc67-219da87e60a5` runs verified kernel build 29.
+The panel logs a 64-byte accepted PPS prefix matching the pinned helper
+calculation (the kernel hex formatter caps the requested dump). That is a
+pre-Android command witness, not a complete hardware encoder register dump.
+The operator explicitly reports **仍然花屏**. The DSC correction is therefore
+not sufficient to establish correct physical output.
+
+SurfaceFlinger, composer, allocator and GSI ADB remain alive under enforcing.
+The corrected fixed capture runs as shell with supplementary graphics but
+times out after 20 seconds and produces no PNG. Early SurfaceFlinger logs show
+a captureDisplayById transaction lasting 28.425 seconds and a dead reply after
+the client timeout. A bounded same-UID probe of a separate ordinary-shell
+screencap child finds the main thread waiting on a libc++ future, with its
+binder thread in the thread pool. It has not reached pixel locking at the
+sampled point. Ordinary shell lacks the service's graphics group, so this
+probe alone cannot validate buffer import. The child is reaped and the
+diagnostic executable removed; no root, policy change or reboot is used.
+
+Next: resolve capture completion and compare actual Android pixels with the
+physical image before choosing another DSI change. The missing Health HAL
+remains the separately recorded SystemServer/desktop blocker. No cold-start
+or watchdog fault-injection test was run. [Trial 55](../build/device/m3-display-55-2026-11-15.json).
+
+Follow-up callback logs for ordinary-shell PIDs 6235 and 6758 show
+`GraphicBufferMapper importBuffer` failing with 5; the one-way callback is
+discarded before the future is fulfilled. A 90-second ordinary-shell capture
+still yields no bytes. This explains that diagnostic wait, not the physical
+corruption, and does not duplicate the graphics-group service's credentials.
+The next candidate gives that fixed service 90 seconds and captures to stdout,
+avoiding screencap's filename-triggered media-scanner broadcast while
+ActivityManager is unavailable. `debug.rmx.m3.capture=1` retries only this fixed
+service without a reboot or USB change. The expanded command passes GSI `sh -n`.
+Kernel 29, graphics payload, GSI, test seeds and policy stay unchanged.
+
+The bounded `scripts/device_audit/capture_wait_probe.c` was built using NDK
+28.2.13676358, `aarch64-linux-android35-clang -O2 -Wall -Wextra -Werror`.
+It executes only `/system/bin/screencap -p`, samples that same-UID child's
+threads after three seconds, then reaps it; a 15-second alarm bounds failure.
+It is an on-host-invoked diagnostic, not installed as a privileged service.
