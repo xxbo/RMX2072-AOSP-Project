@@ -65,6 +65,12 @@ if [[ "${RMX2072_DISPLAY:-0}" == 1 ]]; then
   git -C "$WORKSPACE/common" apply --check "$CLOCK_PATCH"
   git -C "$WORKSPACE/common" apply "$CLOCK_PATCH"
   sha256sum "$CLOCK_PATCH" > "$ARTIFACT_DIR/display-clock-patch.sha256"
+  for DSC_PATCH_NAME in upstream-dsi-dsc-all-slices-flag upstream-msm-dsi-dsc-slices-per-packet rmx2072-dsc-packet-trace; do
+    DSC_PATCH="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-patches/$DSC_PATCH_NAME.patch"
+    git -C "$WORKSPACE/common" apply --check "$DSC_PATCH"
+    git -C "$WORKSPACE/common" apply "$DSC_PATCH"
+    sha256sum "$DSC_PATCH" > "$ARTIFACT_DIR/$DSC_PATCH_NAME.sha256"
+  done
   PANEL_DIR="$ROOT_DIR/device/realme/bladerunner_48m/display"
   cp "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" "$WORKSPACE/common/drivers/gpu/drm/panel/"
   cat >> "$WORKSPACE/common/drivers/gpu/drm/panel/Kconfig" <<'EOF'

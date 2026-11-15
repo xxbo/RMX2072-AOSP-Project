@@ -211,7 +211,9 @@ static int rm19795_probe(struct mipi_dsi_device *dsi)
 	dsi->lanes = 4;
 	dsi->format = MIPI_DSI_FMT_RGB888;
 	/* Command mode; on commands explicitly use LP, off/brightness use HS. */
-	dsi->mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS;
+	/* OEM qcom,mdss-dsc-slice-per-pkt = <2>: both 540-pixel slices. */
+	dsi->mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS |
+			  MIPI_DSI_MODE_DSC_ALL_SLICES_IN_PKT;
 	dsi->dsc = &ctx->dsc;
 	ctx->dsc.dsc_version_major = 1;
 	ctx->dsc.dsc_version_minor = 1;

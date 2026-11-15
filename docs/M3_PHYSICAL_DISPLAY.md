@@ -843,3 +843,25 @@ pending visual comparison. Original image bytes stay in the local trial
 record; the public JSON records its digest and observation. Photo-space red
 band centers are about 242–251 pixels apart; perspective is not calibrated,
 so no exact panel scanline period or DSC cause is claimed from that count.
+
+### Next transport candidate: two DSC slices per packet
+
+The locked factory `20607` RM19795 timing@0 source explicitly sets
+`qcom,mdss-dsc-slice-per-pkt = <2>` (line 77); ACK 6.18 currently fixes this
+at one slice per packet. Backport upstream `ffa88de8ddb64` (mode flag) and
+`ce73a5db44e3` (MSM host support), preserving original authors and sign-offs.
+The latter requires only two trailing context lines to match the older ACK
+attach function; its added/removed code is unchanged. Enable the flag only
+in the project RM19795 panel, whose two slices are initialized before attach.
+
+For 540-byte chunks this changes packet count per line from two to one and
+command word count from 541 to 1081. A bounded modeset witness reads back
+compression and stream registers after their existing writes. The existing
+clock patch, both upstream patches and trace patch apply together to the
+pinned source. CI must compile them, and artifact import must verify all
+three additional source digests. Source application is not hardware success.
+
+Keep the trial 58 pattern and graphics payload fixed. No PPS, clock, DPU RC
+table or Health HAL change is mixed into this candidate. The physical photo
+supports investigating the transfer path, but does not prove this packet
+mismatch is the cause. [Source check](../build/device/m3-dsc-packet-backport-2026-11-15.json).

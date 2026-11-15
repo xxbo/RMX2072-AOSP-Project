@@ -179,6 +179,17 @@ def main():
                'listener.sha256': 'bootstrap-probes/rmx2072-listener.inc'}
     if a.display:
         patches['display-clock-patch.sha256'] = 'bootstrap-patches/rmx2072-display-clock.patch'
+        # Require every packet patch present at the selected source commit.
+        # Earlier artifacts remain verifiable against their own original source.
+        for name in ('upstream-dsi-dsc-all-slices-flag',
+                     'upstream-msm-dsi-dsc-slices-per-packet',
+                     'rmx2072-dsc-packet-trace'):
+            path = 'bootstrap-patches/' + name + '.patch'
+            exists = subprocess.run(['git', '-C', str(repo), 'cat-file', '-e',
+                a.commit + ':device/realme/bladerunner_48m/' + path],
+                capture_output=True).returncode == 0
+            if exists:
+                patches[name + '.sha256'] = path
     wanted = set(patches) | {'Image.gz', 'sm8250_bootstrap_dot_config', 'kernel.release',
                              'SHA256SUMS', 'build-metadata.txt', 'resolved-manifest.xml'}
     if a.display:

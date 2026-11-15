@@ -1,0 +1,67 @@
+{
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "result": "PASS_SOURCE_APPLY_ONLY",
+  "order": [
+    "rmx2072-display-clock.patch",
+    "upstream-dsi-dsc-all-slices-flag.patch",
+    "upstream-msm-dsi-dsc-slices-per-packet.patch",
+    "rmx2072-dsc-packet-trace.patch"
+  ],
+  "patch_sha256": {
+    "upstream-dsi-dsc-all-slices-flag.patch": "cd474787b316bf1230a1822be547bf7a9796b7c1bf61ebab0b49f40c52227b24",
+    "upstream-msm-dsi-dsc-slices-per-packet.patch": "e33e3bd9eb0ad19af2d7be3695dbb812aed0fdd7fda8734184ed1072ff2d67cd",
+    "rmx2072-dsc-packet-trace.patch": "c352bcb1f4a5a8d593e0c948cf35e118017b1b4aaacbcb806ef7ff8f971a5df8"
+  },
+  "hardware_result": "NOT BUILT OR RUN; same known pattern retained on trial 58",
+  "factory": {
+    "commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+    "path": "arch/arm64/boot/dts/20607/dsi-panel-rm19795samsung-ams641rw01_1080_2340.dtsi",
+    "sha256": "219f47d58006b129d9f46628389c161283debc5e04892e88ad6ff02a12074372",
+    "timing": "timing@0 60 Hz",
+    "lines": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "slice_width": 540,
+    "slice_height": 48,
+    "slices_per_packet": 2,
+    "bpc": 8,
+    "bpp": 8
+  },
+  "upstream": [
+    {
+      "commit": "ffa88de8ddb64067df49e4d9f253d09a9c247059",
+      "url": "https://github.com/torvalds/linux/commit/ffa88de8ddb64067df49e4d9f253d09a9c247059",
+      "backport": "unchanged patch"
+    },
+    {
+      "commit": "ce73a5db44e3d5f9c0c061f0868ae209b59605f1",
+      "url": "https://github.com/torvalds/linux/commit/ce73a5db44e3d5f9c0c061f0868ae209b59605f1",
+      "backport": "Only two trailing attach-hunk context lines adapted for ACK 6.18; added and removed code unchanged"
+    }
+  ],
+  "derived_command_geometry": {
+    "slice_chunk_bytes": 540,
+    "old": {
+      "slices_per_packet": 1,
+      "packets_per_line": 2,
+      "word_count": 541
+    },
+    "candidate": {
+      "slices_per_packet": 2,
+      "packets_per_line": 1,
+      "word_count": 1081
+    },
+    "scope": "Source-derived; actual register readback and physical outcome pending"
+  },
+  "dpu_review": {
+    "source_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+    "configuration": "DPU obtains the same DSI drm_dsc_config pointer; available DSC blocks determine encoder count and merge mode. No DPU encoder math or RC table changed.",
+    "scope": "Source review only, not proof of current DPU register values."
+  },
+  "unchanged": "DSC PPS calculation, panel command bytes/delays, DPU RC math, clocks, board trees, graphics payload, GSI, pattern and scratch seeds",
+  "acceptance": "Capture packet register witness and the same known Android pattern on one boot; compare physical photo with screenshot. Do not claim success from register math or KMS events alone."
+}
