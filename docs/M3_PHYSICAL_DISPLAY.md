@@ -727,3 +727,25 @@ The bounded `scripts/device_audit/capture_wait_probe.c` was built using NDK
 It executes only `/system/bin/screencap -p`, samples that same-UID child's
 threads after three seconds, then reaps it; a 15-second alarm bounds failure.
 It is an on-host-invoked diagnostic, not installed as a privileged service.
+
+### Trial 56: repeatable black screenshots, physical corruption persists
+
+Boot `449ec599-2f61-4559-8cad-4ce57c722e4a` retains the same kernel 29,
+graphics payload, GSI, board trees and scratch seeds. Only the fixed capture
+recipe changes. The first capture succeeds after 37.22 seconds, and a
+`debug.rmx.m3.capture=1` retry on the same boot succeeds after 1.56 seconds.
+Both return zero and produce the same 15,580-byte PNG. Full PNG decoding gives
+1080x2400 RGBA, all 2,592,000 pixels exactly `(0,0,0,255)`.
+
+The operator again reports **仍然花屏**. These are CPU-composited screenshots,
+not DPU readback, and black output does not establish correct nonblack
+rendering. GSI BootAnimation stays alive and presents buffers; it logs no
+animation archive and uses its fallback. Both fallback logo assets exist in
+the actual framework-res.apk. The hardware acceptance remains failed.
+
+Next: use BootAnimation's existing `/oem/media/bootanimation.zip` input for a
+deterministic project diagnostic pattern, compare actual screenshot pixels
+and physical output, then choose the next graphics/DSI fix. Kernel 29 and the
+source graphics payload stay fixed for that comparison. Missing Health HAL
+is still the separately recorded SystemServer blocker. No cold-start or
+watchdog fault injection was run. [Trial 56](../build/device/m3-display-56-2026-11-15.json).
