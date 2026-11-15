@@ -58,8 +58,9 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
     if vendor_report:
         report = json.loads(vendor_report.read_text())
         source = ROOT/'device/realme/bladerunner_48m/m1-vendor'
+        from build_m1_vendor import source_bytes
         files = {'/'+p.relative_to(source).as_posix():
-                 hashlib.sha256(p.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+                 hashlib.sha256(source_bytes(p)).hexdigest()
                  for p in source.rglob('*') if p.is_file()}
         if keymaster_reference or keymaster_info:
             from stage_keymaster_reference import inventory

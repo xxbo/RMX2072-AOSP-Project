@@ -14,6 +14,15 @@ EPOCH = 1230768000
 UUID = '896e7471-c34c-40c8-b854-8efe96b80533'
 
 
+def source_bytes(path):
+    """Canonicalize known text inputs; preserve every byte of binary payloads."""
+    data = path.read_bytes()
+    if (path.suffix.lower() in {'.rc', '.prop', '.cil', '.txt', '.xml', '.json', '.sh', '.conf'}
+            or path.name.startswith('fstab.') or path.name.endswith('_contexts')):
+        return data.replace(b'\r\n', b'\n')
+    return data
+
+
 def build(output, reference=None, info=None, usb_guard=None, graphics=None):
     output = output.resolve()
     if ROOT in output.parents or output == ROOT:
@@ -63,9 +72,7 @@ def build_image(source, output, size):
             if not re.fullmatch(r'/[a-zA-Z0-9+@/_.-]*', name) or path.is_symlink():
                 raise ValueError('Unexpected vendor source '+name)
             if path.is_file():
-                data = path.read_bytes()
-                if not data.startswith(b'\x7fELF'):
-                    data = data.replace(b'\r\n', b'\n')
+                data = source_bytes(path)
                 local = 'input-'+str(index)
                 (stage/local).write_bytes(data)
                 commands.extend([f'cd {Path(name).parent.as_posix()}', f'write {local} {path.name}', 'cd /'])

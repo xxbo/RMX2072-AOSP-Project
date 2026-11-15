@@ -769,3 +769,11 @@ into the running trial 56. This temporary mount is an engineering diagnostic,
 not a release partition layout or VTS file-context result. Remove it after
 pixel isolation. Runtime loading and correct physical pixels remain untested.
 [Input validation](../build/device/m3-bootpattern-input-2026-11-15.json).
+
+The first local pattern package was rejected before any handset write: the
+vendor builder normalized CRLF in every non-ELF file, corrupting the animation
+archive. Only that new ZIP differed from the source inventory. The builder now
+normalizes known text formats only, and the verifier uses the same rule for
+baseline text inputs. Regression checks cover stored ZIP CRC/content, unknown
+binary public-key bytes and existing init text normalization. The full image
+readback/hash verification remains mandatory during the next build.

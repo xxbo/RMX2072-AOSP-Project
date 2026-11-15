@@ -23,5 +23,15 @@
     "added_access": "vendor_init getattr/search/mounton for oemfs directories only",
     "rejected_attempt": "Custom vendor_file_type asset read by bootanim failed the platform Treble neverallow; no such grant is retained."
   },
-  "engineering_scope": "Temporary OEM-labelled read-only subtree within the project vendor, mounted on the existing empty /oem. Not a production OEM partition layout or VTS file-context acceptance. Remove after pixel isolation."
+  "engineering_scope": "Temporary OEM-labelled read-only subtree within the project vendor, mounted on the existing empty /oem. Not a production OEM partition layout or VTS file-context acceptance. Remove after pixel isolation.",
+  "packaging_regression": {
+    "stage": "Local prepare_ufs_verification rejected the first build; no handset write",
+    "only_mismatching_payload": "/etc/rmx-m3-oem/media/bootanimation.zip",
+    "source_sha256": "bafe09ef830c1d1f541c6ab819b8e666dcbf627f714902dcaccca449d48582e0",
+    "broken_image_payload_sha256": "1dd65525dffe9e6c04cbff122e6634b19552421843758102fc92d103613fbc9b",
+    "embedded_crlf_pairs": 2,
+    "cause": "Old builder normalized CRLF in every non-ELF payload, corrupting stored PNG bytes and ZIP structure",
+    "fix": "Normalize only named text formats; preserve ZIP, PNG, public keys and unknown binary payloads byte-for-byte",
+    "verification": "Two regression tests pass: stored ZIP CRC/content preserved, unknown binary preserved, existing rc text normalized. Full image readback verification follows in rebuild."
+  }
 }
