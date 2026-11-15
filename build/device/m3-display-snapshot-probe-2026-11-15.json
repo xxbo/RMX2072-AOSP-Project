@@ -1,0 +1,33 @@
+{
+  "goal": "Read actual DPU/DSI configuration while the native CRTC is active; physical output remains unaccepted",
+  "trial": 60,
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "source_hashes": {
+    "drivers/gpu/drm/msm/msm_debugfs.c": "70d63ab0e2dbf49b511d8ea15d5cfb05f9542b23b60c3d85012e884d5116d965",
+    "drivers/gpu/drm/msm/disp/msm_disp_snapshot.c": "0f503990aa83e003b6732f3229e818ff7b51a34b9298d90947fa9e5967e9a676",
+    "drivers/gpu/drm/msm/disp/msm_disp_snapshot_util.c": "0db851a26e0c84f86f3c9b9f1fa0c0f5bf744ec1c432a8fb149892b744586f17",
+    "drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c": "34daaac23ebebb0baa473959bde7ac0fff08201df03ec29212df01692aa906ad",
+    "drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c": "c0bf3b62f41e24b9c45a4ce91d52447dea4377e776ccc31559ec9dc099420881",
+    "drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c": "aea15087abd6de3ec38bb721b6240a34c73c4e33ef4001beb72e753484dc0998"
+  },
+  "probe_build": {
+    "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+    "headers": {
+      "drm.h": "c6227b9338cc4b5f4d68e166b4620d7534bf040d401a3a343a90cf5d6b162e36",
+      "drm_mode.h": "d05ebad55fc3d3639dca75d58fd7a149e2efdd5ef8aaaf3c8e673e779fd6b39b"
+    },
+    "source_sha256": "7022241e1a898fb0292370eaa45bd53e7de5f0c5bcd040da93efd52ed1fa2df2",
+    "binary_sha256": "359229b4173822922063a45c0ee92a831d3d76b5a1a141bc260c16f387c3ed17"
+  },
+  "runtime_status": "NOT RUN",
+  "scope": "Pre-Android native KMS state, not Android scanout or physical acceptance",
+  "changes": "Bounded read of existing kms, state and fb debugfs files after four advancing native flips. Same kernel 30, PPS, display clocks, GSI, vendor, pattern and test-volume seeds.",
+  "limits": {
+    "kms_bytes": 524288,
+    "state_bytes": 65536,
+    "fb_bytes": 65536,
+    "existing_whole_probe_timeout_seconds": 15
+  },
+  "interface_review": "MSM kms debugfs open serializes with dump_mutex and calls synchronous snapshot; DPU and DSI own runtime PM references. DPU snapshot includes DSC/SSPP/CTL/PP/LM, plus atomic state. No writes to debug controls and no GPU snapshot.",
+  "physical_result": "NOT EXPECTED TO CHANGE: measurement only"
+}

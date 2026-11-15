@@ -896,3 +896,20 @@ hardware configuration change. Keep the known pattern and defer Health HAL.
 No cold-start or watchdog fault-injection test was run. The phone stays in GSI.
 [Trial 59](../build/device/m3-display-59-2026-11-15.json) ·
 [Kernel build](../build/device/m3-dsc-packet-kernel-build-2026-11-15.json).
+
+### Trial 60 measurement candidate: existing kernel snapshot
+
+The pinned MSM driver exposes read-only `dri/0/kms`, which takes the display
+snapshot mutex, captures DSI and DPU with their runtime-PM references, and
+copies atomic state. The DPU snapshot includes the DSC and SSPP register banks.
+The running GSI shell has no mounted debugfs; no policy or shell privilege
+change is needed. Extend the existing pre-policy native KMS probe to read
+`kms`, `state` and `fb` after four advancing flips, before disabling its CRTC.
+The read limits total 640 KiB, below the witness publication limit. The existing
+15-second whole-probe timeout remains. Compilation with NDK 28 and
+`-Wall -Wextra -Werror` passes. Runtime collection is pending.
+
+This is a measurement-only ramdisk change: retain kernel 30 and the same
+GSI/vendor/test seeds. It will describe native KMS, not prove the Android
+scanout state or correct physical output. No visual improvement is expected
+from adding this reader. [Source and build checks](../build/device/m3-display-snapshot-probe-2026-11-15.json).

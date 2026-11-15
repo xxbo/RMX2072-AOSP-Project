@@ -29,6 +29,47 @@ static int call(int fd, unsigned long op, void *arg, const char *name)
 
 struct buffer { struct drm_mode_create_dumb dumb; uint32_t fb; void *map; };
 
+/* Read the existing MSM snapshot only with our CRTC enabled. The pinned
+ * driver's kms reader owns display runtime-PM references and snapshots
+ * DSI/DPU registers and atomic state. No debug register writes or GPU snapshot.
+ * The enclosing initramfs caller bounds this entire probe to 15 s.
+ * Keep output below the witness's 2 MiB publication limit.
+ */
+static void kms_snapshot(void)
+{
+	static const struct { const char *name; size_t limit; } files[] = {
+		{"kms", 512 * 1024}, {"state", 64 * 1024}, {"fb", 64 * 1024},
+	};
+	for (size_t i = 0; i < sizeof(files) / sizeof(files[0]); i++) {
+		char path[128], buf[4096];
+		size_t total = 0;
+		int error = 0;
+		snprintf(path, sizeof(path), "/sys/kernel/debug/dri/0/%s", files[i].name);
+		printf("DRMSNAPSHOT begin=%s phase=after-flips\n", files[i].name);
+		int fd = open(path, O_RDONLY | O_CLOEXEC);
+		if (fd < 0) {
+			printf("DRMSNAPSHOT end=%s open_errno=%d\n", files[i].name, errno);
+			continue;
+		}
+		while (total < files[i].limit) {
+			size_t count = files[i].limit - total;
+			if (count > sizeof(buf)) count = sizeof(buf);
+			ssize_t n = read(fd, buf, count);
+			if (n < 0 && errno == EINTR) continue;
+			if (n < 0) { error = errno; break; }
+			if (!n) break;
+			if (fwrite(buf, 1, (size_t)n, stdout) != (size_t)n) {
+				error = EIO;
+				break;
+			}
+			total += (size_t)n;
+		}
+		close(fd);
+		printf("\nDRMSNAPSHOT end=%s bytes=%zu limit_reached=%d read_errno=%d\n",
+		       files[i].name, total, total == files[i].limit, error);
+	}
+}
+
 /* Read the CCF's own diagnostics while the modeset still owns the clocks.
  * Rates may be cached by CCF; counts are software references, not PLL-lock
  * or physical-output proof. Never write clock/debug registers from this test.
@@ -185,6 +226,7 @@ int main(void)
 		}
 		last_sequence = event.sequence; last_event_us = event_us;
 	}
+	kms_snapshot();
 	puts("DRMTEST kms_events=PASS physical_observation=REQUIRED"); result = 0;
 out:
 	if (active) {
