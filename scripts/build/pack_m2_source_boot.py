@@ -80,7 +80,8 @@ def main():
                'androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs '
                'tp_printk tp_printk_stop_on_boot')
     if dt.get('display'):
-        cmdline += ' initcall_debug'
+        # MSM's DBG clock/PHY messages use DRM_UT_DRIVER (bit 1).
+        cmdline += ' initcall_debug drm.debug=0x2'
     if len(cmdline.encode()) >= 512:
         raise ValueError('Diagnostic command line exceeds the boot header field')
     header[64:576] = cmdline.encode().ljust(512, b'\0')

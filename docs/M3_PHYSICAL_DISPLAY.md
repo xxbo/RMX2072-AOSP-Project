@@ -257,7 +257,8 @@ The build emits a separate clock-patch digest; artifact import verifies it
 against the exact source commit. Boot packaging rejects a new display DT
 paired with the old kernel. Effective-DT checks require all four explicit
 source-clock references and reject early assigned parents. The next physical
-trial also includes the corrected advancing-event KMS probe. The GSI and test
+trial also includes the corrected advancing-event KMS probe and DRM driver
+logging (`drm.debug=0x2`) for the actual PHY/link rates. The GSI and test
 volume seeds stay fixed; no cold-start or watchdog qualification is added.
 
 1. Native display bindings and panel source compile; unchanged boot/storage
