@@ -1,0 +1,18 @@
+{
+  "utc": "2026-11-15T12:40:43.233780+00:00",
+  "goal": "Correct physical Android pattern before Health HAL and desktop",
+  "run_id": 43714849555,
+  "run_number": 30,
+  "job_id": 132814039709,
+  "source_commit": "9a9b85f67d82d159f9f82f7b36b456de7492a749",
+  "url": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43714849555",
+  "inputs": {
+    "pon_power": false,
+    "source_pon": true,
+    "display": true
+  },
+  "build_status": "IN_PROGRESS",
+  "hardware_status": "NOT RUN; phone retains trial 58 with photograph-confirmed horizontal corruption",
+  "change": "Upstream two-slices-per-packet support plus bounded read-only register trace; same PPS, clocks, GSI, pattern and graphics payload",
+  "source_check": "m3-dsc-packet-backport-2026-11-15.json"
+}
