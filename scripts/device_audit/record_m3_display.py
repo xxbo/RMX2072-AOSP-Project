@@ -47,6 +47,8 @@ def main():
         'drm-live.txt': 'ls -l /dev/dri; for p in /sys/class/drm/card*-DSI-*; do echo CONNECTOR=$p; cat $p/status $p/enabled $p/modes; done',
         'surfaceflinger.txt': 'dumpsys SurfaceFlinger',
         'graphics-logcat.txt': 'logcat -b all -d -s SurfaceFlinger libEGL RenderEngine drmhwc minigbm DEBUG',
+        'graphics-services.txt': 'getprop ro.hardware.egl; getprop ro.hardware.vulkan; getprop ro.hardware.gralloc; getprop vendor.minigbm.debug; getprop ro.sf.lcd_density; getprop ro.zygote; ps -AZ | grep -E "surfaceflinger|composer|allocator|zygote|system_server"; ls -lZ /dev/dri /vendor/bin/hw /vendor/lib64/egl /vendor/lib64/hw; service list | grep -E "graphics|SurfaceFlinger|activity|package"',
+        'graphics-startup-logcat.txt': 'logcat -b all -d -t 1500 -s init servicemanager hwservicemanager linker auditd libc AndroidRuntime',
     }
     observations = {}
     for name,command in commands.items():
