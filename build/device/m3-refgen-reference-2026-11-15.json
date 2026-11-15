@@ -1,0 +1,46 @@
+{
+  "goal": "Native physical DSI output on 6.18, then SurfaceFlinger and AOSP desktop",
+  "official_commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "sources": {
+    "official_regulators": {
+      "path": "arch/arm64/boot/dts/20607/kona-regulators.dtsi",
+      "sha256": "e63aa0f82c88cbf3b03449324b7944128ce5f301a47c8bedc9b7abba7f0c167a"
+    },
+    "official_dsi": {
+      "path": "arch/arm64/boot/dts/20607/kona-sde.dtsi",
+      "sha256": "cb8685879b541acdcd61a118ec49df753885d8ee5f87142d28e7bc8fed0eebe3"
+    },
+    "ack_refgen_driver": {
+      "path": "drivers/regulator/qcom-refgen-regulator.c",
+      "sha256": "14f4fe6675c626bf44484ea11d1bbb71569e346f09179b1ad503e6a361cac956"
+    },
+    "ack_binding": {
+      "path": "Documentation/devicetree/bindings/regulator/qcom,sdm845-refgen-regulator.yaml",
+      "sha256": "56baa5f1f1cedfab9e64ba4a37ecb360be405349f5eb6d1a1040702005c8aa33"
+    }
+  },
+  "upstream_dts_commit": "3aedde1859f341f0f631330928872c535769e20b",
+  "upstream_patch": "https://www.spinics.net/lists/kernel/msg5852544.html",
+  "physical_resource": {
+    "base": "0x088e7000",
+    "bytes": "0x84",
+    "native_compatible": "qcom,sm8250-refgen-regulator",
+    "consumer": "DSI0 refgen-supply"
+  },
+  "current_trial_44": "Missing native provider and CONFIG_REGULATOR_QCOM_REFGEN; DSI used a dummy regulator.",
+  "candidate_commit": "42325825a524289791e785895129095e58b048c9",
+  "candidate_check": "Full effective-DTB checks passed; require native supply and disable legacy overlap. Runtime result pending.",
+  "build_dispatch_rejected": {
+    "run": 43683402577,
+    "reason": "Both legacy and source PON flags accidentally selected; existing mutual-exclusion guard stopped before kernel build."
+  },
+  "corrected_build": {
+    "run": 43683538708,
+    "source_pon": true,
+    "pon_power": false,
+    "display": true,
+    "result": "IN_PROGRESS"
+  },
+  "causality_limit": "This is a verified missing board dependency, not proof it caused the observed RCG/DCS timeout."
+}
