@@ -53,6 +53,14 @@ storage. The initramfs publishes its result and display probe/deferred-driver
 logs into the existing scratch `/data` for ADB. A KMS return of success alone
 is not recorded as operator-confirmed screen output.
 
+The previously captured F.20 boot explicitly reports `iris chip enable: false`,
+`soft iris enable: false` and `is_pxlw_iris5: false` for the selected RM19795
+panel. Its saved log digest matches the original acquisition record. This
+supports continuing the direct native DSI path despite Iris properties in the
+shared board DTS; it does not warrant enabling additional GPIOs or inventing
+an Iris dependency. [Stock display evidence](../build/device/m3-stock-display-reference-2026-11-15.json).
+No additional stock boot was performed for this comparison.
+
 ## Graphics implementation
 
 The bounded Android 17 source product builds ANGLE EGL/GLES, SwiftShader Vulkan,
@@ -61,6 +69,15 @@ metadata rather than a downstream SDM/KGSL backend. These are native ARM64
 libraries and HALs for the actual device. Initial CPU rendering is an explicit
 intermediate dependency; this does not claim Adreno 650 support. The GSI itself,
 source first-stage init and writable test-volume seeds stay fixed.
+
+The CPU-rendered vendor sets the upstream `vendor.minigbm.debug=nocompression`
+option and gives it an exact public vendor-property label. The pinned MSM
+allocator otherwise offers higher-priority UBWC layouts that its CPU mapping
+path rejects. Its software-renderer detection does not pass the augmented use
+flags to format resolution in this tag. The existing option keeps allocations
+linear without modifying the graphics binaries or enabling Adreno.
+[Source analysis](../build/device/m3-linear-buffer-reference-2026-11-15.json).
+Actual allocation and presentation remain pending device integration.
 
 ## Stage acceptance
 

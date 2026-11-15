@@ -71,6 +71,8 @@ def compose(info, guard, graphics):
         raise ValueError('Graphics inventory differs from verified artifact')
     files['/build.prop'] += b'\n'+(SOURCE/'vendor.prop').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'graphics.cil').read_bytes().replace(b'\r\n', b'\n')
+    files['/etc/selinux/vendor_property_contexts'] += (
+        b'vendor.minigbm.debug u:object_r:rmx_graphics_config_prop:s0 exact string\n')
     labels = [
         '/vendor/bin/hw/android\\.hardware\\.graphics\\.allocator-service\\.minigbm u:object_r:rmx_graphics_allocator_exec:s0',
         '/vendor/bin/hw/android\\.hardware\\.composer\\.hwc3-service\\.rmx2072 u:object_r:rmx_graphics_composer_exec:s0',

@@ -4,3 +4,5 @@ ro.hardware.egl=angle
 ro.hardware.vulkan=pastel
 ro.hardware.gralloc=minigbm
 ro.hwui.renderer=skiagl
+# SwiftShader maps buffers on the CPU; the MSM allocator must use linear storage.
+vendor.minigbm.debug=nocompression

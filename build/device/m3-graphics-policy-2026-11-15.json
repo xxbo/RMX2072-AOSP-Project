@@ -1,6 +1,6 @@
 {
   "result": "PASS_STRICT_COMPILE_ONLY",
-  "utc": "2026-11-15T04:59:33.314776+00:00",
+  "utc": "2026-11-15T05:17:26.224829+00:00",
   "command": "/system/bin/timeout 180 /system/bin/linker64 /data/local/tmp/rmx-m3-policy/secilc -m -M true -G -c 30 /system/etc/selinux/plat_sepolicy.cil /system/etc/selinux/mapping/202604.cil /system_ext/etc/selinux/system_ext_sepolicy.cil /product/etc/selinux/product_sepolicy.cil /vendor/etc/selinux/plat_pub_versioned.cil /data/local/tmp/rmx-m3-policy/m3-vendor.cil /system/etc/selinux/plat_sepolicy_genfs_202604.cil -o /data/local/tmp/rmx-m3-policy/policy -f /data/local/tmp/rmx-m3-policy/contexts",
   "boot_id": "9e44af1e-8841-4eb7-8bc2-ddc67fc34e2d",
   "trial": "ufs-host-g3-gsi17-firststage-ufs-42",
@@ -12,12 +12,12 @@
     "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014  /system_ext/etc/selinux/system_ext_sepolicy.cil",
     "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014  /product/etc/selinux/product_sepolicy.cil",
     "b0ebe55553d5e1533e939cbd049d1a1b5693fdd5251f77d382b1431041e28f49  /vendor/etc/selinux/plat_pub_versioned.cil",
-    "8d181ec8e17d2289cab7e83acbd7204582edc90b59aba5d488f564ddc1dd13b8  /data/local/tmp/rmx-m3-policy/m3-vendor.cil",
+    "630a4584e1a3f62893bc54e5ab2308e4e449581b9a9edc0b3edee4b556caad2b  /data/local/tmp/rmx-m3-policy/m3-vendor.cil",
     "3bdfcfba699936cb12d007fee7bca2feb1a88c75cc947f98b14c55fe4932b0d3  /system/etc/selinux/plat_sepolicy_genfs_202604.cil"
   ],
   "compiler_matches_pinned_gsi": true,
-  "combined_vendor_policy_sha256": "8d181ec8e17d2289cab7e83acbd7204582edc90b59aba5d488f564ddc1dd13b8",
-  "compiled_policy_sha256": "621ce4d2938259c16b0933fadcfd8e6afda39d28ffc701755f1640ce3137ab4e",
+  "combined_vendor_policy_sha256": "630a4584e1a3f62893bc54e5ab2308e4e449581b9a9edc0b3edee4b556caad2b",
+  "compiled_policy_sha256": "4bfe1ef506738a513376c9b5cdf903b5ed91e5fd326446f340e100e542141db9",
   "cil_statements_match_current_sources": true,
   "loaded": false,
   "scope": "Strict compiler through GSI ADB; neverallow checks enabled; no policy load or enforcing change"

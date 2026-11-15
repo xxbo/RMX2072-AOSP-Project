@@ -1,0 +1,81 @@
+{
+  "goal": "Use CPU-mappable linear MSM allocations for ANGLE/SwiftShader",
+  "source_tag": "android-17.0.0_r1",
+  "source_files": [
+    {
+      "path": "drv.c",
+      "url": "https://android.googlesource.com/platform/external/minigbm/+/android-17.0.0_r1/drv.c",
+      "sha256": "0bca874fb74e25fa21b96cf099fb359a4499467006dd59ae59bf38e614fec50e",
+      "evidence": [
+        {
+          "line": 22,
+          "text": "#define MINIGBM_DEBUG \"vendor.minigbm.debug\""
+        },
+        {
+          "line": 24,
+          "text": "#define MINIGBM_DEBUG \"MINIGBM_DEBUG\""
+        },
+        {
+          "line": 130,
+          "text": "\tdrv->compression ="
+        },
+        {
+          "line": 131,
+          "text": "\t    (minigbm_debug == NULL) || (strstr(minigbm_debug, \"nocompression\") == NULL);"
+        }
+      ]
+    },
+    {
+      "path": "msm.c",
+      "url": "https://android.googlesource.com/platform/external/minigbm/+/android-17.0.0_r1/msm.c",
+      "sha256": "0c62535bc940ef69207606c1ffa0326f74fdb6a02248d5c818a34c273a58f080",
+      "evidence": [
+        {
+          "line": 225,
+          "text": "static int msm_init(struct driver *drv)"
+        },
+        {
+          "line": 279,
+          "text": "\tif (should_avoid_ubwc() || !drv->compression)"
+        },
+        {
+          "line": 284,
+          "text": "\tmetadata.modifier = DRM_FORMAT_MOD_QCOM_COMPRESSED;"
+        },
+        {
+          "line": 361,
+          "text": "\tif (bo->meta.format_modifier)"
+        }
+      ]
+    },
+    {
+      "path": "cros_gralloc/cros_gralloc_driver.cc",
+      "url": "https://android.googlesource.com/platform/external/minigbm/+/android-17.0.0_r1/cros_gralloc/cros_gralloc_driver.cc",
+      "sha256": "98e9054d5f98c3d107c25be6ac240c0b4bb858717860657641479595d3ec3103",
+      "evidence": [
+        {
+          "line": 161,
+          "text": "static bool is_running_with_software_rendering()"
+        },
+        {
+          "line": 167,
+          "text": "\t\t\t\t\t     strstr(vulkan_driver, \"pastel\") != nullptr));"
+        },
+        {
+          "line": 172,
+          "text": "      is_running_with_software_rendering_(is_running_with_software_rendering())"
+        },
+        {
+          "line": 200,
+          "text": "\tdrv_resolve_format_and_use_flags(drv_.get(), descriptor->drm_format, descriptor->use_flags,"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "MSM enables higher-priority UBWC combinations by default; mapping a buffer with a nonzero modifier fails.",
+    "The Android driver recognizes pastel as software rendering, but this pinned resolver still passes descriptor->use_flags, not its local augmented use_flags.",
+    "Use the existing vendor.minigbm.debug=nocompression option, with an exact property label, for this CPU-rendered profile. No graphics source patch or Adreno enable is required."
+  ],
+  "physical_result": "NOT RUN; allocator/composer artifacts are still building"
+}

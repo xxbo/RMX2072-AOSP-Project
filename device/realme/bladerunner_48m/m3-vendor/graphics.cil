@@ -1,4 +1,14 @@
 ; Native graphics services on the existing Android 17 platform split policy.
+; A public, nonsecret vendor configuration read by in-process mapper clients.
+(type rmx_graphics_config_prop)
+(roletype object_r rmx_graphics_config_prop)
+(typeattributeset property_type (rmx_graphics_config_prop))
+(typeattributeset vendor_property_type (rmx_graphics_config_prop))
+(typeattributeset vendor_public_property_type (rmx_graphics_config_prop))
+(allow init rmx_graphics_config_prop (property_service (set)))
+(allow vendor_init rmx_graphics_config_prop (property_service (set)))
+(allow domain rmx_graphics_config_prop (file (getattr open read map)))
+
 (type rmx_graphics_allocator)
 (type rmx_graphics_allocator_exec)
 (roletype r rmx_graphics_allocator)
