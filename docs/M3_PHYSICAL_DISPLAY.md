@@ -913,3 +913,38 @@ This is a measurement-only ramdisk change: retain kernel 30 and the same
 GSI/vendor/test seeds. It will describe native KMS, not prove the Android
 scanout state or correct physical output. No visual improvement is expected
 from adding this reader. [Source and build checks](../build/device/m3-display-snapshot-probe-2026-11-15.json).
+
+### Trial 60 result: native configuration read back, Android comparison open
+
+Boot `205712fa-efd4-4d0c-ab13-53913bd96b24` retains the exact kernel 30,
+GSI/vendor/pattern, DTBO/effective tree and scratch seeds. Only the pre-policy
+probe gains the reader. Full container, new boot and paired DTBO readbacks pass.
+The reader finishes before Android with complete `kms` (152,976 bytes),
+`state` (3,436) and `fb` (454) payloads. None hits its cap or reports a read
+error. The native KMS probe exits zero and GSI ADB/graphics remain available.
+
+Both `dsc_0` and `dsc_1` read back the calculated PPS parameters: 1080x2400,
+540x48 slices, chunk 540, 8 bpc/8 bpp, delay 512/526, the buffer thresholds
+and all 15 rate-control ranges. All decoded shared PPS fields match the
+pinned-helper reference. Common mode is 3, initial lines 3 and last group 2.
+This comparison does not read the panel's internal decoder registers.
+
+Atomic state selects native framebuffer 91, XRGB8888, linear modifier, on
+`sspp_0`. Its 4352-byte pitch equals the actual SSPP stride; source/output
+dimensions are 1080x2400 and UBWC is off. DSI stream/compression values agree
+with trial 59. These are native pre-Android measurements, **not evidence that
+the later Android buffer uses the same pitch/offset/format**. Nonzero unused
+register banks can contain stale state; active attribution uses atomic state.
+
+A new Android CPU capture completes in 38.63 seconds and is byte-identical
+to the published trial 59 PNG. No new physical observation was requested for
+this measurement-only run. The last explicit operator report, trial 59,
+remains unchanged corruption. No physical fix or desktop acceptance is claimed.
+
+Next: capture the actual BootAnimation framebuffer/plane at Android's first
+commit and compare its pitch, offset, format and synchronization with native
+KMS and DPU readback. The SurfaceFlinger dump shows DEVICE composition; its
+separate FramebufferSurface allocation is not a substitute for the directly
+scanned BootAnimation buffer's metadata. Do not change PPS or clocks without
+new evidence. Health HAL remains deferred; no cold-start or fault injection.
+[Trial 60](../build/device/m3-display-60-2026-11-15.json).

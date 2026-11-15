@@ -19,7 +19,7 @@
     "source_sha256": "7022241e1a898fb0292370eaa45bd53e7de5f0c5bcd040da93efd52ed1fa2df2",
     "binary_sha256": "359229b4173822922063a45c0ee92a831d3d76b5a1a141bc260c16f387c3ed17"
   },
-  "runtime_status": "NOT RUN",
+  "runtime_status": "Trial 60 collected complete kms=152976, state=3436 and fb=454 byte payloads without read errors or truncation. Native KMS probe exited 0; GSI retained.",
   "scope": "Pre-Android native KMS state, not Android scanout or physical acceptance",
   "changes": "Bounded read of existing kms, state and fb debugfs files after four advancing native flips. Same kernel 30, PPS, display clocks, GSI, vendor, pattern and test-volume seeds.",
   "limits": {
@@ -29,5 +29,6 @@
     "existing_whole_probe_timeout_seconds": 15
   },
   "interface_review": "MSM kms debugfs open serializes with dump_mutex and calls synchronous snapshot; DPU and DSI own runtime PM references. DPU snapshot includes DSC/SSPP/CTL/PP/LM, plus atomic state. No writes to debug controls and no GPU snapshot.",
-  "physical_result": "NOT EXPECTED TO CHANGE: measurement only"
+  "physical_result": "NOT RECHECKED; no display fix claimed. Latest operator observation in trial 59 remains a failure.",
+  "hardware_record": "m3-display-60-2026-11-15.json"
 }
