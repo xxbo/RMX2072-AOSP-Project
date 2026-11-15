@@ -85,6 +85,22 @@ ECC blocks. No complete panic stack was recovered. The next candidate enables
 the same compiled kernel, GSI and test seeds. No screen output is claimed.
 [Trial evidence](../build/device/m3-display-37-2026-11-15.json).
 
+### Trial 38: corrected SoC identity, unresolved early reboot
+
+Trial 38 appended the upstream compatible and enabled initcall tracing while
+retaining the compiled kernel, GSI, vendor and test seeds. The operator again
+observed repeated reboots before ACM or ADB. F.20 restoration, full super
+readback and device-side hash, both LP slots and boot completion passed.
+The preserved console reaches approximately 1.07 seconds near deferred driver
+probing, but reports 905 corrected bytes and 1,673 unrecoverable blocks. It
+cannot establish a last failing driver or a complete panic stack. The lack of
+an intact UBWC error in this damaged record is not proof of a successful bind.
+[Trial evidence](../build/device/m3-display-38-2026-11-15.json).
+
+Trial 39 restores the known TLMM valid-GPIO restriction described above. It
+exposes only display TE 66 and reset 75. This corrects a missed historical
+constraint; physical boot and display results remain pending.
+
 The first graphics source build failed on the upstream libdisplay-info
 visibility boundary. A narrow project-package fix resolved it. The second
 build generated a 7,652-command target closure and identified two missing
