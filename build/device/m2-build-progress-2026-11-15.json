@@ -1,0 +1,240 @@
+{
+  "attempts": [
+    {
+      "run_id": 43612987811,
+      "source_commit": "022b01957df59148719941395511dece931cf9ef",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing external/pogreb",
+      "selected_log": [
+        "2026-11-14T16:11:20.5126013Z repo sync has finished successfully.",
+        "2026-11-14T16:11:28.4378968Z Failed to find deps of android/soong/cmd/soong_ui: Error parsing directory \"/home/runner/work/_temp/rmx2072-m2-aosp/external/pogreb\": open /home/runner/work/_temp/rmx2072-m2-aosp/external/pogreb: no such file or directory"
+      ],
+      "job_log_sha256": "a407f5829fb4ad63664c5fecb1fb844364391f11a9607cf621fa30e3c8ab5083",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43614577780,
+      "source_commit": "73005e44bca1e8bad245e83451347b259d026927",
+      "result": "FAIL_BUILD",
+      "first_failure": "Obsolete BOARD_BUILD_SYSTEM_ROOT_IMAGE",
+      "selected_log": [
+        "2026-11-14T16:29:47.5104783Z repo sync has finished successfully.",
+        "2026-11-14T16:29:58.1947865Z device/realme/rmx2072_m2/BoardConfig.mk:10: error: BOARD_BUILD_SYSTEM_ROOT_IMAGE is obsolete.",
+        "2026-11-14T16:29:59.3553528Z repo sync has finished successfully.",
+        "2026-11-14T16:29:59.6702421Z device/realme/rmx2072_m2/BoardConfig.mk:10: error: BOARD_BUILD_SYSTEM_ROOT_IMAGE is obsolete.",
+        "2026-11-14T16:29:59.7017044Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "0eabfd242192041a699fbc50f3d9113bdfd09c2261f22b64150c150684f80cbe",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43616087095,
+      "source_commit": "fbdfaefe82026ca7aa2b0a6e8f8246f35af3969c",
+      "result": "FAIL_BUILD",
+      "first_failure": "arm64 product did not declare TARGET_SUPPORTS_64_BIT_APPS",
+      "selected_log": [
+        "2026-11-14T16:47:16.4956988Z repo sync has finished successfully.",
+        "2026-11-14T16:47:30.4604263Z build/make/core/board_config.mk:344: error: Building a 32-bit-app-only product on a 64-bit device. If this is intentional, set TARGET_SUPPORTS_64_BIT_APPS := false.",
+        "2026-11-14T16:47:30.5055949Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "1a25713973cff18d3e52ce51716612d4d7b4a02caa68d011cdf1e606c8df1f00",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43617966430,
+      "source_commit": "3494c6c05c97012070b2af5ebe67ebbac00bad43",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing kernel-config-soong-rules",
+      "selected_log": [
+        "2026-11-14T17:08:56.3068873Z Added pinned dependencies: toolchain/pgo-profiles",
+        "2026-11-14T17:08:58.4397503Z error: hardware/interfaces/compatibility_matrices/build/Android.bp:24:1: \"vintf-compatibility-matrix-soong-rules\" depends on undefined module \"kernel-config-soong-rules\". Did you mean [\"blueprint-bootstrap-bpdoc\" \"partner-bpfix-extensions\"]?",
+        "2026-11-14T17:08:58.5062613Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "045ac16caae1872bde3add4214580036e549908acc0a13cc718e7d61a49291f7",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43619675442,
+      "source_commit": "1dbaa090528e9a1fd450a03c96679dca097a6f96",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing trendy_team_webapps_cros_android owner metadata",
+      "selected_log": [
+        "2026-11-14T17:27:08.0799336Z Added pinned dependencies: prebuilts/siso",
+        "2026-11-14T17:28:27.9783058Z error: frameworks/native/services/serialservice/Android.bp:15:1: \"//frameworks/native/services/serialservice\" depends on undefined module \"trendy_team_webapps_cros_android\".",
+        "2026-11-14T17:28:28.1910318Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "41544a8b8a2023127408e1df6d37e66ea0b4c1429309d225dc44e1f41afbe2ab",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43621938934,
+      "source_commit": "b2b390fb4e8af4896be3a13e32429eb81d394a47",
+      "result": "FAIL_BUILD",
+      "first_failure": "Missing trendy_team_aaos_vac_triage owner metadata",
+      "selected_log": [
+        "2026-11-14T17:52:21.9463730Z error: hardware/interfaces/automotive/vehicle/aidl/impl/3/default_config/test/Android.bp:17:1: \"//hardware/interfaces/automotive/vehicle/aidl/impl/3/default_config/test\" depends on undefined module \"trendy_team_aaos_vac_triage\".",
+        "2026-11-14T17:52:21.9465413Z error: hardware/interfaces/automotive/vehicle/aidl/aidl_test/Android.bp:17:1: \"//hardware/interfaces/automotive/vehicle/aidl/aidl_test\" depends on undefined module \"trendy_team_aaos_vac_triage\".",
+        "2026-11-14T17:52:21.9467033Z error: hardware/interfaces/automotive/vehicle/aidl/impl/3/fake_impl/hardware/test/Android.bp:17:1: \"//hardware/interfaces/automotive/vehicle/aidl/impl/3/fake_impl/hardware/test\" depends on undefined module \"trendy_team_aaos_vac_triage\".",
+        "2026-11-14T17:52:22.1667968Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "08074f477477ed554b0a8369eb3c3964cf9351bcc9c4b8be0e0692b13e226e16",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43623644069,
+      "source_commit": "aa3a9c33164ed46802f02a8d155d00bd82696325",
+      "result": "FAIL_BUILD",
+      "first_failure": "Unrelated APEX Java test payload has no framework dex jar in the native init workspace",
+      "selected_log": [
+        "2026-11-14T18:14:55.2883032Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.2886212Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.2890297Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.2891481Z error: system/apex/apexd/apexd_testdata/Android.bp:562:1: module \"apex.apexd_test_bootclasspath-fragment\" variant \"android_common\": dependency test_framework-apexd{os:android,arch:common} does not provide a dex jar: ",
+        "2026-11-14T18:14:55.4742391Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "d208be269f5515b8d3853bc0f9af292ac7464565c01133aca8e50a1554aae0fb",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43625784408,
+      "source_commit": "b953ee88707d049f1016ae87d11508e4a8cf562b",
+      "result": "FAIL_BUILD",
+      "first_failure": "Unrelated framework-virtualization Java module requires Error Prone configuration",
+      "selected_log": [
+        "2026-11-14T18:36:55.7055653Z error: packages/modules/Virtualization/libs/framework-virtualization/Android.bp:5:1: module \"framework-virtualization.impl\" variant \"android_common\" (created by module \"framework-virtualization\" variant \"android_common\"): cannot build with Error Prone, missing external/error_prone?",
+        "2026-11-14T18:36:55.9418078Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "d08bc9f05ab70ef157a34ec2f161f1c8bfcc40dad288ac5e621bc4b423be19db",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43627891448,
+      "source_commit": "55c007b35b7a369c5e08fe82ff540088b385aa92",
+      "result": "FAIL_BUILD",
+      "first_failure": "Soong Rust aconfig generator panicked on unused keystore2 biometrics flags with absent framework declaration",
+      "selected_log": [
+        "2026-11-14T18:56:18.5426226Z internal error: panic in GenerateBuildActions for module \"libaconfig_android_hardware_biometrics_rust\" variant \"android_arm64_armv8-a_source\"",
+        "2026-11-14T18:56:18.5428878Z Exactly one aconfig_declarations property required",
+        "2026-11-14T18:56:18.7155993Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "9c4142eec36cfdd1cf328a555a1962cb459d9fa39f505ec4928a55935a618c3d",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43629741053,
+      "source_commit": "973a464c5b6e9fd82c7900ef7ee4ee6f817a3ce1",
+      "result": "FAIL_BUILD",
+      "first_failure": "ADB APEX lacked inherited minimum SDK because upstream mainline defaults were not selected",
+      "selected_log": [
+        "2026-11-14T19:17:18.4597498Z error: packages/modules/adb/apex/Android.bp:35:1: module \"com.android.adbd\" variant \"android_common_com.android.adbd\": updatable: updatable APEXes should set min_sdk_version as well",
+        "2026-11-14T19:17:18.7336279Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "8925a82b546795e806f01e801cae1853a3153c0079c793b550103b525e3a386f",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43631673665,
+      "source_commit": "ac911af296f373715175aa21f7d8ab1c93e8f313",
+      "result": "FAIL_BUILD",
+      "first_failure": "Native compilation reached 44%; host SQLite is missing real ICU libraries",
+      "selected_log": [
+        "2026-11-14T19:45:14.1749633Z prebuilts/build-tools/path/linux-x86/echo 'module libsqlite missing dependencies: libicui18n, libicuuc' && false",
+        "2026-11-14T19:45:14.1775733Z module libsqlite missing dependencies: libicui18n, libicuuc"
+      ],
+      "job_log_sha256": "90c9940c093b10c4c4b59b2fabf198eb462a66d11790399364cba355ab3cafa3",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43634685622,
+      "source_commit": "bb2b9bef8101efbdacf6e2f1feff5124fb1d8f29",
+      "result": "FAIL_BUILD",
+      "first_failure": "Read-only Ninja closure check exposed missing Bionic LLVM libc, Highway headers and Arm optimized math; bounded resolver added paths but Arm math module still missing",
+      "selected_log": [
+        "2026-11-14T20:14:03.3943559Z prebuilts/build-tools/path/linux-x86/echo 'module libc_bionic missing dependencies: //external/llvm-libc:llvmlibc' && false",
+        "2026-11-14T20:14:03.3945008Z prebuilts/build-tools/path/linux-x86/echo 'module libc_bionic_portable_simd_arm64_neon_mte missing dependencies: //external/google-highway:hwy_headers_only' && false",
+        "2026-11-14T20:14:03.3946131Z prebuilts/build-tools/path/linux-x86/echo 'module libc_bionic_portable_simd_arm64_neon_no_mte missing dependencies: //external/google-highway:hwy_headers_only' && false",
+        "2026-11-14T20:14:03.3947094Z prebuilts/build-tools/path/linux-x86/echo 'module libm missing dependencies: libarm-optimized-routines-math' && false",
+        "2026-11-14T20:15:39.5833455Z prebuilts/build-tools/path/linux-x86/echo 'module libm missing dependencies: libarm-optimized-routines-math' && false",
+        "2026-11-14T20:15:40.9215662Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "a3a35258924d3d0cf0c834b1941564de9899c11efae2ef7dc7bc25614282ed3a",
+      "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43663703953,
+      "source_commit": "50b553bda01c429823d56174c3555f51c0957673",
+      "result": "PASS_SOURCE_BUILD_AND_LOCAL_ARTIFACT_VALIDATION",
+      "record": "m2-source-init-build-2026-11-15.json",
+      "hardware_test": "NOT RUN"
+    }
+  ],
+  "cancelled_run": {
+    "run_id": 43617659636,
+    "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
+  },
+  "pending": {
+    "status": "SOURCE_BOOT_ACCEPTED_DESKTOP_PRIORITY",
+    "next": "Build source graphics userspace and enable the physical display path",
+    "cancelled_by_user": [
+      "disconnected cold-start repeat",
+      "watchdog fault-injection repeat"
+    ]
+  },
+  "host_tests": {
+    "total": 81,
+    "passed": 81,
+    "method": "77 passed in full discovery, then 4 DTC-dependent tests passed with the checked compiler on PATH",
+    "additional_checks": [
+      "M2 board-identity witness regression passed",
+      "Five bounded workspace-completion tests passed, including question-mark path punctuation"
+    ]
+  },
+  "phone_state": "M2 source candidate 36 retained in GSI; warm acceptance record m2-source-boot-36-2026-11-15.json",
+  "source_kernel": {
+    "run_id": 43619212111,
+    "result": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_CHECKS",
+    "record": "m2-source-kernel-build-2026-11-15.json"
+  },
+  "superseded_runs": [
+    {
+      "run_id": 43620790326,
+      "phase": "queued"
+    },
+    {
+      "run_id": 43620882985,
+      "phase": "source-sync"
+    },
+    {
+      "run_id": 43621416554,
+      "phase": "queued"
+    },
+    {
+      "run_id": 43621827711,
+      "phase": "source-sync"
+    }
+  ],
+  "superseded_reason": "Combine verified target dependencies and the sparse owner-metadata checkout; no image was produced or flashed by these attempts.",
+  "pause": {
+    "requested_by_user": true,
+    "utc": "2026-11-15T01:08:11.299201+00:00",
+    "prior_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+    "prior_state": [
+      "retained",
+      "adbd running"
+    ],
+    "shutdown_command": "/system/bin/reboot -p",
+    "reply": "Done",
+    "post_shutdown_adb": [],
+    "post_shutdown_matching_usb": [],
+    "active_build": false,
+    "last_run_conclusion": "failure",
+    "cancel_request": "HTTP 409 because run had already completed",
+    "m2_flashed": false,
+    "physical_power_state": "not independently observed"
+  },
+  "resume": {
+    "utc": "2026-11-15T01:34:07.372078+00:00",
+    "phone_connection": "No ADB or matching USB interface at initial check; operator reconnection requested",
+    "baseline_record": "m2-pretest-baseline-2026-11-15.json"
+  }
+}

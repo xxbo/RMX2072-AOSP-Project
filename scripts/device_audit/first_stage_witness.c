@@ -398,6 +398,7 @@ static void publish_autoboot(void) {
     }
     publish_file("/run/m1-autoboot.events", "rmx-m1-boot.txt", 0);
     publish_file("/run/m1-power.txt", "rmx-m1-power.txt", 1);
+    publish_file("/run/m2-boot.txt", "rmx-m2-boot.txt", 1);
     publish_file("/sys/fs/pstore/console-ramoops-0", "rmx-m1-previous-console", 1);
     publish_file("/sys/fs/pstore/pmsg-ramoops-0", "rmx-m1-previous-pmsg", 1);
 }

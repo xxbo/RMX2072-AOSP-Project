@@ -1,0 +1,63 @@
+"""Validate the actual static init build artifact and its resolved source pins."""
+import hashlib
+import json
+from pathlib import Path
+import re
+import xml.etree.ElementTree as ET
+
+
+def verify_source_first_stage(directory, binary):
+    repo = Path(__file__).resolve().parents[2]
+    pin = json.loads((repo / 'build/m2-first-stage-source.json').read_text())
+    if json.loads((directory / 'source.json').read_text()) != pin:
+        raise ValueError('First-stage build source pin differs from the project lock')
+    hashes = {}
+    for line in (directory / 'SHA256SUMS').read_text().splitlines():
+        digest, name = line.split(maxsplit=1)
+        name = Path(name.lstrip('*')).name
+        if name in hashes or not re.fullmatch('[0-9a-f]{64}', digest):
+            raise ValueError('Invalid first-stage build digest manifest')
+        hashes[name] = digest
+    manifest = (directory / 'resolved-manifest.xml').read_bytes()
+    if hashes.get('init') != hashlib.sha256(binary).hexdigest() or hashes.get('resolved-manifest.xml') != hashlib.sha256(manifest).hexdigest():
+        raise ValueError('First-stage binary/source manifest digest mismatch')
+    projects = {p.get('path', p.get('name')): p.get('revision') for p in ET.fromstring(manifest).findall('project')}
+    if projects.get('system/core') != pin['system_core_commit']:
+        raise ValueError('First-stage system/core revision differs')
+    if not projects or any(not re.fullmatch('[0-9a-f]{40}', r or '') for r in projects.values()):
+        raise ValueError('First-stage source manifest must resolve every project commit')
+    sparse = (directory / 'frameworks-base-sparse.txt').read_text().splitlines()
+    if sparse != ['/core/java/android/hardware/serial/Android.bp'] or 'frameworks/base' not in projects:
+        raise ValueError('First-stage metadata source selection differs')
+    car_sparse = (directory / 'car-sparse.txt').read_text().splitlines()
+    if car_sparse != ['/teams/Android.bp'] or 'packages/services/Car' not in projects:
+        raise ValueError('First-stage automotive owner metadata selection differs')
+    apex_sparse = (directory / 'apex-sparse.txt').read_text().splitlines()
+    if apex_sparse != ['/*', '!/apexd/apexd_testdata/'] or 'system/apex' not in projects:
+        raise ValueError('First-stage APEX test-data exclusion differs')
+    avf_sparse = (directory / 'avf-sparse.txt').read_text().splitlines()
+    if (avf_sparse != ['/Android.bp', '/build/Android.bp', '/build/avf_flags.aconfig', '/libs/libavf_cc_flags/']
+            or 'packages/modules/Virtualization' not in projects):
+        raise ValueError('First-stage AVF flag source selection differs')
+    common_sparse = (directory / 'modules-common-sparse.txt').read_text().splitlines()
+    if common_sparse != ['/Android.bp', '/sdk/Android.bp'] or 'packages/modules/common' not in projects:
+        raise ValueError('First-stage mainline build defaults selection differs')
+    icu_sparse = (directory / 'icu-sparse.txt').read_text().splitlines()
+    if (icu_sparse != ['/Android.bp', '/LICENSE', '/icu.aconfig', '/icu4c/', '/android_icu4c/', '/libandroidicuinit/']
+            or 'external/icu' not in projects):
+        raise ValueError('First-stage native ICU source selection differs')
+    dependencies = json.loads((directory / 'target-dependencies.json').read_text())
+    if (dependencies.get('target') != 'init_first_stage'
+            or dependencies.get('missing_dependency_commands') != []
+            or dependencies.get('command_count', 0) <= 0):
+        raise ValueError('First-stage target dependency closure was not checked')
+    for name in ('rmx2072_m2_init.mk', 'BoardConfig.mk', 'AndroidProducts.mk'):
+        product = (directory / name).read_bytes().replace(b'\r\n', b'\n')
+        expected = (repo / 'device/realme/bladerunner_48m/m2-init' / name).read_bytes().replace(b'\r\n', b'\n')
+        if product != expected:
+            raise ValueError('First-stage product recipe differs: ' + name)
+    return dict(origin='project-source-build', **pin, init_sha256=hashes['init'],
+                resolved_manifest_sha256=hashes['resolved-manifest.xml'], source_projects=len(projects),
+                sparse_projects={'frameworks/base': sparse, 'packages/services/Car': car_sparse,
+                                 'system/apex': apex_sparse, 'packages/modules/Virtualization': avf_sparse,
+                                 'packages/modules/common': common_sparse, 'external/icu': icu_sparse})

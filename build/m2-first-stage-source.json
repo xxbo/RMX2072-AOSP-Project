@@ -1,0 +1,9 @@
+{
+  "aosp_manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
+  "aosp_tag": "android-17.0.0_r1",
+  "system_core_commit": "545d2487e38192a2ce25040897ced877cf6b4f53",
+  "target": "init_first_stage",
+  "product": "rmx2072_m2_init",
+  "variant": "user",
+  "scope": "Build the unmodified AOSP Android first-stage binary from pinned source; retain the existing GSI second-stage init. No system, vendor, userdata or firmware image is built here."
+}

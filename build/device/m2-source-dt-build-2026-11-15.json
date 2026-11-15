@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "project_commit": "b0e721fd7ac0a13a518985154359047d2660f636",
+  "project_dirty": false,
+  "tools": {
+    "cpp": "7d31c6f6fad98987b6c9d21b800afaa8b3e37f052e94aaddc941d42ff2a35579",
+    "dtc": "e19af986181d7d19d3f8b02716f9cd860623313f90b2fcd997f6b600fd694c1f",
+    "libfdt": "f5cfc89c258fee56229290d331c29e98ae230312ff063bfa0a5377750c6cdda5"
+  },
+  "outputs": {
+    "rmx2072.dtb": {
+      "size_bytes": 516551,
+      "sha256": "3999d81ca8bd1f07f30d5e2dcab220cb6a5c2bfd377488cd241846db5cb43ff3"
+    },
+    "rmx2072.dtbo": {
+      "size_bytes": 351147,
+      "sha256": "3a5a44dfc2009dfdcbae2bdc07ff4fac6e7f37c0f8d3d2ec9835041cad7640c6"
+    },
+    "dtbo.img": {
+      "size_bytes": 356352,
+      "sha256": "2476aa6352b1568307fa711ef32d37e799d0d188567a0740ad43d2d516117080"
+    },
+    "effective.dtb": {
+      "size_bytes": 823116,
+      "sha256": "dc2d231ca444e9d9f4877dfd1c5e2c3177c3158a167c573c13a748c5b085a9b1"
+    }
+  },
+  "overlays": {
+    "rmx2072-legacy-usb-scm-sid0": "1005264c3bc6a07c753e99088358f0465e49b2621243a426e51a0f975ff030e4",
+    "rmx2072-sid0-watchdog": "4bd8ef4974d2160f2ba230259e7058bf50beecd9698e382ed7d464ac2bb40e7a",
+    "rmx2072-ufs-host-g3": "5937aeb644b5784dc20e354e9f3a8b87eaf4cf30e8ab3e3a1680394f25e5ea59",
+    "rmx2072-pdc-only": "453d9e5e753cb0e6196e17e301c79c430bbd1f4541f62106c78c5c759d5c3519"
+  },
+  "checks": {
+    "watchdog_base": {
+      "path": "/soc/qcom,wdt@17c10000",
+      "reg": [
+        398524416,
+        4096
+      ],
+      "interrupts": [
+        0,
+        0,
+        1
+      ],
+      "gic": "/soc/interrupt-controller@17a00000",
+      "sleep_clock_hz": 32764,
+      "changed_properties": [
+        "clocks",
+        "compatible",
+        "interrupts"
+      ],
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "ufs_base": {
+      "host": "/soc/ufs-host-lab/ufs@1d84000",
+      "parked": "/soc/ufshc@1d84000",
+      "phy": "/soc/ufs-phy-lab/phy@1d87000",
+      "board_xo_hz": 38400000,
+      "max_core_hz": 300000000,
+      "interconnect_providers": 5,
+      "smmu_stream_ids": [
+        224,
+        1248
+      ],
+      "relocated_reference_cells": 0,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pdc_base": {
+      "changed_path": "/soc/interrupt-controller@b220000",
+      "changed_properties": [
+        "compatible"
+      ],
+      "spmi_parent_pin": 1,
+      "spmi_gic_spi": 481,
+      "other_nodes_identical": true,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pstore_base": {
+      "reg": [
+        0,
+        2952790016,
+        0,
+        4194304
+      ],
+      "record-size": [
+        262144
+      ],
+      "console-size": [
+        262144
+      ],
+      "pmsg-size": [
+        2097152
+      ],
+      "ftrace-size": [
+        0
+      ],
+      "ecc-size": [
+        16
+      ]
+    },
+    "usb_base": [
+      0,
+      0
+    ],
+    "watchdog_board": {
+      "path": "/soc/qcom,wdt@17c10000",
+      "reg": [
+        398524416,
+        4096
+      ],
+      "interrupts": [
+        0,
+        0,
+        1
+      ],
+      "gic": "/soc/interrupt-controller@17a00000",
+      "sleep_clock_hz": 32764,
+      "changed_properties": [
+        "clocks",
+        "compatible",
+        "interrupts"
+      ],
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "ufs_board": {
+      "host": "/soc/ufs-host-lab/ufs@1d84000",
+      "parked": "/soc/ufshc@1d84000",
+      "phy": "/soc/ufs-phy-lab/phy@1d87000",
+      "board_xo_hz": 38400000,
+      "max_core_hz": 300000000,
+      "interconnect_providers": 5,
+      "smmu_stream_ids": [
+        224,
+        1248
+      ],
+      "relocated_reference_cells": 556,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pdc_board": {
+      "changed_path": "/soc/interrupt-controller@b220000",
+      "changed_properties": [
+        "compatible"
+      ],
+      "spmi_parent_pin": 1,
+      "spmi_gic_spi": 481,
+      "other_nodes_identical": true,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pstore_board": {
+      "reg": [
+        0,
+        2952790016,
+        0,
+        4194304
+      ],
+      "record-size": [
+        262144
+      ],
+      "console-size": [
+        262144
+      ],
+      "pmsg-size": [
+        2097152
+      ],
+      "ftrace-size": [
+        0
+      ],
+      "ecc-size": [
+        16
+      ]
+    },
+    "usb_board": [
+      0,
+      0
+    ],
+    "m1_resource_reference": {
+      "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+      "checked_nodes": 79,
+      "phandles_resolved_to_paths": true,
+      "source_pon": "upstream-parent-child",
+      "pon_reboot_modes": [],
+      "first_stage_fstab": "project-ramdisk",
+      "recovery_board_identity": true,
+      "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+    }
+  },
+  "factory_binary_inputs": false,
+  "status": "source-built-not-device-tested",
+  "official_source": {
+    "id": "realme-player-android-q-kernel",
+    "category": "official-kernel",
+    "repository": "realme-kernel-opensource/realmeX50Pro-5GPlay_AndroidQ-kernel-source",
+    "url": "https://github.com/realme-kernel-opensource/realmeX50Pro-5GPlay_AndroidQ-kernel-source",
+    "ref_type": "branch",
+    "ref": "master",
+    "commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+    "commit_date": "2020-06-30T09:02:06Z",
+    "kernel_version": "4.19.81",
+    "github_size_kb": 190438,
+    "license_evidence": "Repository API: NOASSERTION. Root COPYING states GPL-2.0 WITH Linux-syscall-note; per-file SPDX identifiers and other licenses may apply.",
+    "status": "pinned-source-reviewed",
+    "notes": [
+      "Official X50 Pro 5G Play / player-edition kernel source.",
+      "Only master branch was returned by the branches API."
+    ]
+  },
+  "ack_source": {
+    "id": "android17-gki-618",
+    "category": "official-ack-gki",
+    "repository": "kernel/common",
+    "url": "https://android.googlesource.com/kernel/common",
+    "ref_type": "tag",
+    "ref": "android17-6.18-2026-09_r13",
+    "commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+    "tag_object": "910ab23e44c4d44c8c12a767c0d8ee9537c633f2",
+    "commit_date": "2026-11-04T11:21:48Z",
+    "kernel_version": "6.18",
+    "status": "pinned-official-gki-source-and-repository-snapshot",
+    "notes": [
+      "Official Android 17 GKI release tag dated 2026-11-05.",
+      "This is a reference kernel baseline, not a device-ready RMX2072 kernel.",
+      "Repository-owned source snapshot branch: mirror/android17-6.18-2026-09_r13.",
+      "Snapshot commit cfa72fb3d7f89372c7e449a4de2477551ea4c29c maps to this upstream commit; the mirror is source-only and intentionally omits upstream Git history.",
+      "The official Android kernel manifest, Kleaf, Clang, Rust toolchain and Bazel dependencies remain synced from their pinned upstream repositories."
+    ],
+    "mirror_branch": "mirror/android17-6.18-2026-09_r13",
+    "mirror_commit": "cfa72fb3d7f89372c7e449a4de2477551ea4c29c"
+  },
+  "source_report_sha256": "138d57595660b234d6a5a11498a8d64ce221958f4b76896d5a039cd7f42f1532",
+  "recovery_preflight": {
+    "utc": "2026-11-14T16:41:37.273259+00:00",
+    "original_super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "original_boot_dtbo_sha256": {
+      "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef"
+    },
+    "live_m1_identity": [
+      "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "37",
+      "Enforcing",
+      "retained"
+    ],
+    "m2_flashed": false
+  },
+  "hardware_acceptance": "NOT RUN: first-stage source build pending"
+}

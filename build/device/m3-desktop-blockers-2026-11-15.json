@@ -1,0 +1,28 @@
+{
+  "utc": "2026-11-15T02:21:35.961758+00:00",
+  "boot_id": "efd2f392-667a-4cf6-b252-4c76bfc5e4a9",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-36",
+  "priority": "Physical AOSP launcher desktop; operator cold-start and fault-injection repeats cancelled by user",
+  "surfaceflinger": "restarting; fatal missing OpenGL ES implementation",
+  "zygote": "restarting; SurfaceFlinger init rule restarts running zygote on SF restart; no separate Zygote fatal identified yet",
+  "framework_services": {
+    "SurfaceFlinger": "not found",
+    "activity": "not found",
+    "window": "not found"
+  },
+  "kernel_drm_msm": false,
+  "drm_devices": false,
+  "framebuffer_devices": false,
+  "graphics_vendor_present": false,
+  "selected_log": [
+    "01-01 00:00:39.399  1627  1654 F libEGL  : couldn't find an OpenGL ES implementation, make sure one of persist.graphics.egl, ro.hardware.egl and ro.board.platform is set",
+    "01-01 00:00:39.585  1663  1663 F DEBUG   : Abort message: 'couldn't find an OpenGL ES implementation, make sure one of persist.graphics.egl, ro.hardware.egl and ro.board.platform is set'",
+    "01-01 00:00:44.296  1730  1753 F libEGL  : couldn't find an OpenGL ES implementation, make sure one of persist.graphics.egl, ro.hardware.egl and ro.board.platform is set"
+  ],
+  "raw_sha256": {
+    "graphics-devices.txt": "9d9d325a80fc3217f15bf9b5c0934b231c789fd58d7d580218ff034ea13aaf54",
+    "graphics-services.txt": "8628ac696e28ab371b020eac3bd1e8fcef866de0a1013c08ddcf58793142e841",
+    "logcat.txt": "9337e7309f9de7c0d07fe86b49a4a62112f5d9db87667fd307b5649562b0a5e4",
+    "properties.txt": "8d89e4ac23632e7bf3126fb7a790a001eb6e770c1cfbe80ac41a5f94be469284"
+  }
+}

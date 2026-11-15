@@ -1,0 +1,62 @@
+{
+  "run_id": 43663703953,
+  "source_commit": "50b553bda01c429823d56174c3555f51c0957673",
+  "artifact_id": 14142108136,
+  "artifact_archive_digest": "sha256:48428b9d0e50e541e78f5182ce8c9d9a536329b8be9d1e98a658f365fc861346",
+  "archive_digest_verified": true,
+  "origin": "project-source-build",
+  "aosp_manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
+  "aosp_tag": "android-17.0.0_r1",
+  "system_core_commit": "545d2487e38192a2ce25040897ced877cf6b4f53",
+  "target": "init_first_stage",
+  "product": "rmx2072_m2_init",
+  "variant": "user",
+  "scope": "Build the unmodified AOSP Android first-stage binary from pinned source; retain the existing GSI second-stage init. No system, vendor, userdata or firmware image is built here.",
+  "init_sha256": "76236d035fcd6afdd208b7812f74a91724e77ef59e837a2e40dc0640b4e453ad",
+  "resolved_manifest_sha256": "7b16213bc45e6ab41f45a968951ea372874c10e56d959e5d98653795f2080b8d",
+  "source_projects": 120,
+  "sparse_projects": {
+    "frameworks/base": [
+      "/core/java/android/hardware/serial/Android.bp"
+    ],
+    "packages/services/Car": [
+      "/teams/Android.bp"
+    ],
+    "system/apex": [
+      "/*",
+      "!/apexd/apexd_testdata/"
+    ],
+    "packages/modules/Virtualization": [
+      "/Android.bp",
+      "/build/Android.bp",
+      "/build/avf_flags.aconfig",
+      "/libs/libavf_cc_flags/"
+    ],
+    "packages/modules/common": [
+      "/Android.bp",
+      "/sdk/Android.bp"
+    ],
+    "external/icu": [
+      "/Android.bp",
+      "/LICENSE",
+      "/icu.aconfig",
+      "/icu4c/",
+      "/android_icu4c/",
+      "/libandroidicuinit/"
+    ]
+  },
+  "result": "PASS_SOURCE_BUILD_AND_LOCAL_ARTIFACT_VALIDATION",
+  "utc": "2026-11-15T02:04:12.891446+00:00",
+  "bytes": 2728760,
+  "dependency_closure": {
+    "target": "init_first_stage",
+    "graph": "out/combined-rmx2072_m2_init.ninja",
+    "method": "ninja -t commands (read only)",
+    "command_count": 3271,
+    "commands_sha256": "9a289258040ac411664ca87be2c3878d2d5327209d4b6f7a792bb721def4b2d7",
+    "missing_dependency_commands": []
+  },
+  "elf_description": "out/target/product/rmx2072_m2/ramdisk/init: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[md5/uuid]=43ef45a75da419ab47b2e8ad85332e0e, stripped",
+  "job_log_sha256": "e2dea1b07372c0086d6855454162c175d84950bb9d5cfd622b8c319045d95874",
+  "hardware_test": "NOT RUN"
+}

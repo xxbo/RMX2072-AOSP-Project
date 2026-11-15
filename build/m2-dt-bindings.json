@@ -1,0 +1,10 @@
+{
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "files": {
+    "include/dt-bindings/clock/qcom,gcc-sm8250.h": "34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7",
+    "include/dt-bindings/clock/qcom,rpmh.h": "22b835f0cd23c489fa688e1fbe2a8ace0ad6fd3015eef15655dbbf1df4cfb267",
+    "include/dt-bindings/interrupt-controller/arm-gic.h": "80dc56e8aa61b3681ee42fb0bfd34bf35ea2578ac6d82f1fa972b963667e8ff7",
+    "include/dt-bindings/interrupt-controller/irq.h": "392400a309a54ea5b1a2ac2e52773d3ab68e07323109b9aed88a69fedc74e082",
+    "include/dt-bindings/interconnect/qcom,sm8250.h": "cb00fd45ec40cdc25a05f25ee1bc18582c3d72869df2fb2e20459a0af3e6e846"
+  }
+}

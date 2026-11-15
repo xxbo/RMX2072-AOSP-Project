@@ -26,7 +26,7 @@ def main():
     assert set(re.findall(r'^M1EVENT boot_id=(.*)$',events,re.M))=={boot}
     record=dict(trial=a.trial,record_name=name,inputs=load(trial/'inputs.json'),boot_id=boot,
                 identity=stable['identity'],pid1=stable['pid1'],ufs_evidence=stable['ufs_evidence'],
-                ufs_events=[line for line in events.splitlines() if re.match(r'M1EVENT (autonomous|previous_guard|ufs_super|linear_mapper|verified_ufs_mount|table=|status=|boot_usb_state|clock_source)',line)],
+                ufs_events=[line for line in events.splitlines() if re.match(r'M1EVENT (autonomous|previous_guard|ufs_super|disk=|linear_mapper|verified_ufs_mount|table=|status=|boot_usb_state|clock_source)',line)],
                 soak_seconds=stable['seconds'],soak=stable['soak'],
                 guard_mode=stable['guard_mode_during_soak'],adb_smoke=load(live/'adb-smoke.json'),
                 local_readiness=load(live/'local-readiness.json'),
@@ -52,6 +52,12 @@ def main():
         source=load(trial/'boot-only-source.json')
         record['boot_only_update']={key:source[key] for key in ('previous_record','previous_boot_sha256')}
     if (live/'power-providers.txt').exists():record['early_power_providers']=(live/'power-providers.txt').read_text()
+    if record['inputs']['boot'].get('source_device_trees'):
+        from check_m2_boot import check_m2_boot
+        checked=check_m2_boot((live/'m2-components.txt').read_text(),boot,
+            record['inputs']['ramdisk']['first_stage_init_sha256'],stable['identity'][1],events)
+        assert checked==load(live/'m2-components.json')
+        record['source_boot_components']=checked
     if (live/'power-driver-check.json').exists():
         from check_power_ready import check_power_ready
         checked=check_power_ready((live/'power-provider-live.txt').read_text(),boot)

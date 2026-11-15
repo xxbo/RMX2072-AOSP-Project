@@ -1,0 +1,41 @@
+{
+  "run_id": 43619212111,
+  "source_commit": "f5b8074d1c293a4c9c9dcb08dce312ceffc30299",
+  "artifact_id": 14124093745,
+  "artifact_archive_digest": "sha256:51764e373b1d540d986550d002d6c669bf937181a6551b45c185a5ba3e9fa1ee",
+  "archive_digest_verified": false,
+  "installing": false,
+  "source_pon": true,
+  "source_digests_verified": true,
+  "dist_digests_verified": true,
+  "image_sha256": "96631ce06d589f82267aa6f833fd1bb86dfabced4aba3a92a03bf518f720b487",
+  "selected_member_sha256": {
+    "SHA256SUMS": "62fb9c62638594c8f05700ac18a84732ba4cd141725ef0d916e780e24b05aadc",
+    "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+    "build-metadata.txt": "e0ba4641dc7312d83ea4de8e0a438d62cb4f5b4c0421027d9b5f9ebf338da6c6",
+    "Image.gz": "7ec6651a3f566263ec13767afbfbf3b7e3b5f378e60cde776186ce74c5697126",
+    "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+    "sm8250_bootstrap_dot_config": "1d5e60a1ece54186875df926d880819c8936e6046e0b8cb668f245ae7bf0c2c3",
+    "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+    "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+    "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+    "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+    "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+    "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+    "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+  },
+  "kernel_release": "6.18.32-android17-5-maybe-dirty-4k",
+  "config_selected": [
+    "CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y",
+    "CONFIG_INPUT_PM8941_PWRKEY=y",
+    "CONFIG_POWER_RESET_MSM=y",
+    "CONFIG_POWER_RESET_QCOM_PON=y"
+  ],
+  "result": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_CHECKS",
+  "hardware_test": "NOT RUN; waiting for source first-stage init",
+  "first_runner_failure": {
+    "run_id": 43613974200,
+    "message": "System.IO.IOException: No space left on device",
+    "artifacts": []
+  }
+}
