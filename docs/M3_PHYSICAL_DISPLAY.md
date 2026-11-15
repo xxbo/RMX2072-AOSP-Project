@@ -32,8 +32,9 @@ MMSS interconnect and RPMh MMCX domain. It uses real PM8150 L14 / PM8150L L2,L11
 regulators, TLMM75 reset and TLMM66 TE. The native TLMM node is separate from
 the inactive downstream node so unrelated OEM pin consumers are not enabled.
 The overlapping downstream display providers are disabled after the full board
-overlay; USB/UFS/PDC/PON resource checks remain required. The GPU is not enabled
-by this first display overlay. Any display bridge or firmware handoff dependency
+overlay; USB/UFS/PDC/PON resource checks remain required. The CPU-rendered profile now explicitly disables the inherited legacy GPU
+and GMU in the final source DTBO. Trials 37-39 did not enforce this boundary;
+trial 39 exposed the resulting GPU initialization BUG described below. Any display bridge or firmware handoff dependency
 still needs physical qualification; successful compilation does not establish it.
 
 Trials 37 and 38 omitted the previously established GPIO validity restriction.
@@ -104,8 +105,13 @@ constraint; physical boot and display results remain pending.
 ### Staged display diagnosis
 
 The GPIO-limited trial 39 still did not enumerate diagnostic USB or ADB.
-Recovery and preserved-log collection are in progress; no visible output is
-claimed. The next diagnostic profile uses `--display --display-staged` and
+F.20 restoration and complete readback/device-side verification passed.
+The preserved console contains an intact `a6xx_gpu.c:2658` BUG line. ACK MSM
+also matches the legacy KGSL compatible; the inherited GPU was still `ok` and
+lacked the upstream `qcom,gmu` link required by `a6xx_gpu_init`. The source
+DTBO now disables the unported GPU and GMU, and effective-tree checks reject
+any available matching node. No physical screen output is claimed.
+[Trial 39 evidence](../build/device/m3-display-39-2026-11-15.json). The next diagnostic profile uses `--display --display-staged` and
 keeps the same kernel binary. Three explicit population containers defer the
 native display GPIO provider, display fabric/clocks and MDSS/DPU/DSI until
 USB logging is connected. They reuse the already built, bounded platform

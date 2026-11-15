@@ -22,4 +22,17 @@
             realme,m2-overlay-source = "20607-q-24a15224-m2";
         };
     };
+#ifdef RMX2072_M3_DISPLAY
+    // MSM also matches the legacy KGSL compatible. The downstream node lacks
+    // the upstream qcom,gmu link and causes a6xx_gpu_init's BUG_ON(!node).
+    // The initial ANGLE/SwiftShader path requires physical DPU scanout only.
+    fragment@m3-disable-legacy-gpu {
+        target-path = "/soc/qcom,kgsl-3d0@3d00000";
+        __overlay__ { status = "disabled"; };
+    };
+    fragment@m3-disable-legacy-gmu {
+        target-path = "/soc/qcom,gmu@3d6a000";
+        __overlay__ { status = "disabled"; };
+    };
+#endif
 };

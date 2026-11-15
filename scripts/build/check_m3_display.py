@@ -6,6 +6,10 @@ from check_m2_resources import check_m2_resources, normalized_node
 def check_m3_display(data, staged=False):
     preserved = check_m2_resources(data, display=True)
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
+    for path, node in tree.items():
+        if any(c in node.get('compatible', []) for c in ('qcom,kgsl-3d0', 'qcom,adreno', 'qcom,adreno-3xx', 'qcom,gpu-gmu')):
+            if node.get('status') != ['disabled']:
+                raise ValueError('CPU-rendered display profile must not bind the unported GPU/GMU: '+path)
     prefixes = {part: '/soc'+('/display-'+part+'-lab' if staged else '') for part in ('pins', 'fabric', 'core')}
     if staged:
         for path in prefixes.values():
