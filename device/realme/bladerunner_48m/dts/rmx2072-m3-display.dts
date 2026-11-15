@@ -71,6 +71,10 @@
         gpio-controller;
         #gpio-cells = <2>;
         gpio-ranges = <&m3_tlmm 0 0 181>;
+        // gpiolib reads every valid GPIO's direction during registration.
+        // The November 9 unmasked probe rebooted this handset. Admit only
+        // the two panel pads; do not scan unrelated/firmware-owned GPIOs.
+        gpio-reserved-ranges = <0 66>, <67 8>, <76 105>;
         interrupt-controller;
         #interrupt-cells = <2>;
         wakeup-parent = <&pdc>;

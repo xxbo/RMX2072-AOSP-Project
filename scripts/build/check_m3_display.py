@@ -21,6 +21,16 @@ def check_m3_display(data):
         if (compatible not in node.get('compatible', []) or node.get('reg') != reg
                 or node.get('status', ['okay']) != ['okay']):
             raise ValueError('Native display resource mismatch: ' + path)
+    reserved = tree['/soc/pinctrl@f100000'].get('gpio-reserved-ranges', [])
+    if len(reserved) % 2:
+        raise ValueError('Malformed TLMM GPIO reservation')
+    valid = set(range(181))
+    for start, count in zip(reserved[::2], reserved[1::2]):
+        if count <= 0 or start + count > 181:
+            raise ValueError('TLMM GPIO reservation outside the physical provider')
+        valid.difference_update(range(start, start + count))
+    if valid != {66, 75}:
+        raise ValueError('Display TLMM must expose only TE 66 and reset 75; unmasked registration previously rebooted')
     legacy = ['pinctrl@f000000', 'qcom,dispcc@af00000', 'qcom,mdss_mdp@ae00000',
               'qcom,mdss_dsi_ctrl0@ae94000', 'qcom,mdss_dsi_ctrl1@ae96000',
               'qcom,mdss_dsi_phy0@ae94400', 'qcom,mdss_dsi_phy1@ae96400',
@@ -54,5 +64,5 @@ def check_m3_display(data):
     return dict(m1_resources=preserved, native_resources=list(expected),
                 overlapping_legacy_providers_disabled=legacy, reciprocal_endpoints=endpoints,
                 panel_mode='1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices',
-                reset='TLMM75 active-low', te='TLMM66 mdp_vsync',
+                reset='TLMM75 active-low', te='TLMM66 mdp_vsync', valid_gpio_offsets=sorted(valid),
                 hardware_result='NOT RUN; this is a source resource check')

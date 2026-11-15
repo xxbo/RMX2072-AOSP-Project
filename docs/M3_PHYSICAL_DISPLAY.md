@@ -36,6 +36,14 @@ overlay; USB/UFS/PDC/PON resource checks remain required. The GPU is not enabled
 by this first display overlay. Any display bridge or firmware handoff dependency
 still needs physical qualification; successful compilation does not establish it.
 
+Trials 37 and 38 omitted the previously established GPIO validity restriction.
+The [November 9 isolated TLMM comparison](RMX2072_EDL_AND_UFS.md#why-the-gpio-mask-matters)
+already showed that unrestricted registration rebooted, while exposing only
+the UFS pad registered successfully. Gpiolib reads each valid pin's direction
+during registration. The corrected display overlay exposes only TE 66 and
+reset 75, and its checker rejects any other valid offset. This avoids probing
+unrelated firmware-owned pins; it does not yet prove either display pin works.
+
 The static KMS probe uses DRM ioctls and driver-allocated dumb buffers. It finds
 a connected physical DSI connector with the expected mode, sets a colored test
 pattern and waits for four actual page-flip events. It releases DRM master and
