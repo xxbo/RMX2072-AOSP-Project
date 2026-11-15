@@ -20,15 +20,32 @@ Trial 44 also failed with nonzero CCF prepare/enable references. Add bounded
 read-only PHY/PLL state diagnostics at existing driver transitions to compare
 software references with the physical PLL control and lock bits.
 
+Trial 45 proves orphan clock registration keeps DSI0 boot references alive
+through the host PHY reset. Software pll_on stays true while PLL_CNTRL is 0;
+subsequent clk_prepare calls therefore do not restart the PLL. Mark only the
+six DSI0 byte/pixel source, divider and branch clocks CLK_DONT_HOLD_STATE.
+This board uses a complete native DSI reset, not continuous splash handoff.
+The next test must show zero pre-modeset references and a new locked PLL
+prepare after reset. Other display clock chains keep their original flags.
+
 diff --git a/drivers/clk/qcom/dispcc-sm8250.c b/drivers/clk/qcom/dispcc-sm8250.c
 --- a/drivers/clk/qcom/dispcc-sm8250.c
 +++ b/drivers/clk/qcom/dispcc-sm8250.c
+@@ -237,7 +237,7 @@
+ 		.name = "disp_cc_mdss_byte0_clk_src",
+ 		.parent_data = disp_cc_parent_data_2,
+ 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_PARENT | CLK_DONT_HOLD_STATE,
+ 		.ops = &clk_byte2_ops,
+ 	},
+ };
 @@ -578,7 +578,7 @@
  		.name = "disp_cc_mdss_pclk0_clk_src",
  		.parent_data = disp_cc_parent_data_6,
  		.num_parents = ARRAY_SIZE(disp_cc_parent_data_6),
 -		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
++		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE | CLK_DONT_HOLD_STATE,
  		.ops = &clk_pixel_ops,
  	},
  };
@@ -41,6 +58,41 @@ diff --git a/drivers/clk/qcom/dispcc-sm8250.c b/drivers/clk/qcom/dispcc-sm8250.c
  		.ops = &clk_pixel_ops,
  	},
  };
+@@ -646,6 +646,7 @@
+ 			&disp_cc_mdss_byte0_clk_src.clkr.hw,
+ 		},
+ 		.num_parents = 1,
++		.flags = CLK_DONT_HOLD_STATE,
+ 		.ops = &clk_regmap_div_ops,
+ 	},
+ };
+@@ -723,7 +724,7 @@
+ 				&disp_cc_mdss_byte0_clk_src.clkr.hw,
+ 			},
+ 			.num_parents = 1,
+-			.flags = CLK_SET_RATE_PARENT,
++			.flags = CLK_SET_RATE_PARENT | CLK_DONT_HOLD_STATE,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -741,7 +742,7 @@
+ 				&disp_cc_mdss_byte0_div_clk_src.clkr.hw,
+ 			},
+ 			.num_parents = 1,
+-			.flags = CLK_SET_RATE_PARENT,
++			.flags = CLK_SET_RATE_PARENT | CLK_DONT_HOLD_STATE,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1047,7 +1048,7 @@
+ 				&disp_cc_mdss_pclk0_clk_src.clkr.hw,
+ 			},
+ 			.num_parents = 1,
+-			.flags = CLK_SET_RATE_PARENT,
++			.flags = CLK_SET_RATE_PARENT | CLK_DONT_HOLD_STATE,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
 diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
 --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
 +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c

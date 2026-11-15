@@ -368,3 +368,32 @@ the same missing-implementation error as SurfaceFlinger.
 
 Code is tracked in [PR 22](https://github.com/xxbo/RMX2072-AOSP-Project/pull/22).
 Only the original recovery set and the current image candidate are retained.
+
+
+### Trial 45: boot-held clocks survive the PHY reset
+
+Kernel run `43684993723` passed and its selected image/config/source digests
+were checked. Trial 45 retained enforcing GSI ADB on boot
+`04f2a639-9633-4859-a3d0-da172d7693da`. The native REFGEN provider binds,
+but the first DCS command and advancing-frame check still fail. The successful
+panel-transfer return path remains untested because DMA still times out.
+No additional screen observation or cold-start/fault test was requested.
+[Trial 45 evidence](../build/device/m3-display-45-2026-11-15.json).
+
+The bounded trace shows PLL preparation during `of_clk_add_hw_provider()`:
+first temporary parent enable, then `__clk_core_update_orphan_hold_state()`
+retaining the DSI0 byte/pixel sources and branches. At 31.175 seconds the PLL
+control is 1 and lock status is 0x51. `msm_dsi_host_reset_phy()` runs at
+33.369 seconds. At PHY enable, software `pll_on=1` and bias references remain
+1, while physical PLL control and lock are both zero. PHY configuration and
+rate changes leave PLL control zero, and existing CCF references prevent a
+fresh prepare call. This is a measured mismatch, independent of REFGEN.
+
+The next candidate gives only six DSI0 clocks the native
+`CLK_DONT_HOLD_STATE` flag: byte source/divider/branch/interface and pixel
+source/branch. This project resets the DSI PHY and does not implement
+continuous splash handoff. Other display clock chains retain their flags.
+The flag prevents creating boot-held references; it does not manually edit
+CCF counters or write PLL registers. The next trial must demonstrate zero
+references before modeset, a new post-reset PLL lock and successful DCS/frame
+progress. This candidate is not yet a hardware pass.

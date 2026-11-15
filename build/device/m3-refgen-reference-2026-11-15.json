@@ -50,6 +50,8 @@
     "source_pon": true,
     "pon_power": false,
     "display": true,
-    "result": "IN_PROGRESS"
-  }
+    "result": "SUCCESS",
+    "image_sha256": "f7c05999e2b94d923124efb2a2827140eb18060f68647be88fafe6f944331440"
+  },
+  "hardware_followup": "Trial45 binds the native REFGEN provider; DSI still fails. PLL trace identifies boot-held references surviving the host PHY reset. See m3-display-45-2026-11-15.json."
 }
