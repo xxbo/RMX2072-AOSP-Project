@@ -78,6 +78,24 @@ if [ -x /bin/drm-panel-smoke ]; then
             }
         done
     fi
+    # This GKI profile has no devtmpfs. Android's later ueventd creates the
+    # device, but the pre-policy KMS probe must use its measured sysfs dev_t.
+    if [ ! -e /dev/dri/card0 ] && [ -r /sys/class/drm/card0/dev ]; then
+        card=$(readlink -f /sys/class/drm/card0/device)
+        case "$card" in */ae01000.display-controller)
+            if [ "$(tr -d '\000' < "$card/of_node/compatible")" = qcom,sm8250-dpu ]; then
+                number=$(cat /sys/class/drm/card0/dev)
+                case "$number" in *[!0-9:]*|:*) echo 'M3DISPLAY invalid_card_dev_t' >> /run/m3-display.txt ;;
+                *)
+                    mkdir -p /dev/dri && mknod /dev/dri/card0 c "${number%:*}" "${number#*:}" &&
+                        echo "M3DISPLAY created=/dev/dri/card0 dev=$number source=$card" >> /run/m3-display.txt ||
+                        echo 'M3DISPLAY card_node_creation_failed' >> /run/m3-display.txt
+                    ;;
+                esac
+            fi
+            ;;
+        esac
+    fi
     timeout 15 /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
     /bin/busybox sh /bin/display-snapshot >> /run/m3-display.txt 2>&1 || true
 fi
