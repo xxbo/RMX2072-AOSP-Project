@@ -1,4 +1,11 @@
 ; Native graphics services on the existing Android 17 platform split policy.
+; CPU-rendering bring-up only: the verified SwiftShader driver JITs shaders
+; inside these two observed clients. Trial 52 faults in swiftshader_jit after
+; execmem denials. Do not extend this to domain/system_server; remove these
+; exceptions when the hardware renderer replaces this engineering profile.
+(allow surfaceflinger self (process (execmem)))
+(allow bootanim self (process (execmem)))
+
 ; A public, nonsecret vendor configuration read by in-process mapper clients.
 (type rmx_graphics_config_prop)
 (roletype object_r rmx_graphics_config_prop)

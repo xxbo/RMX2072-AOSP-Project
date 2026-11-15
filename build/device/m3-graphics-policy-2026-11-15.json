@@ -1,9 +1,9 @@
 {
   "result": "PASS_STRICT_COMPILE_ONLY",
-  "utc": "2026-11-15T09:36:49.506685+00:00",
+  "utc": "2026-11-15T09:55:59.102827+00:00",
   "command": "/system/bin/timeout 180 /system/bin/linker64 /data/local/tmp/rmx-m3-policy/secilc -m -M true -G -c 30 /system/etc/selinux/plat_sepolicy.cil /system/etc/selinux/mapping/202604.cil /system_ext/etc/selinux/system_ext_sepolicy.cil /product/etc/selinux/product_sepolicy.cil /vendor/etc/selinux/plat_pub_versioned.cil /data/local/tmp/rmx-m3-policy/m3-vendor.cil /system/etc/selinux/plat_sepolicy_genfs_202604.cil -o /data/local/tmp/rmx-m3-policy/policy -f /data/local/tmp/rmx-m3-policy/contexts",
-  "boot_id": "fd7c0a70-1df7-436f-af35-6d80bdaf5a52",
-  "trial": "ufs-host-g3-gsi17-firststage-ufs-51",
+  "boot_id": "bbe2e856-3f30-4791-ab0c-4c7300999fe2",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-52",
   "source_gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
   "compiler_sha256": "ace5b9b5b26f28e0c81a070ac2be0106269f6a9f3912c80ea48663706444fac1",
   "input_sha256": [
@@ -12,12 +12,12 @@
     "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014  /system_ext/etc/selinux/system_ext_sepolicy.cil",
     "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014  /product/etc/selinux/product_sepolicy.cil",
     "b0ebe55553d5e1533e939cbd049d1a1b5693fdd5251f77d382b1431041e28f49  /vendor/etc/selinux/plat_pub_versioned.cil",
-    "9cc4c2550063689565ded0ca65fee70b7944a996fc0058e97caea3e72d485d1f  /data/local/tmp/rmx-m3-policy/m3-vendor.cil",
+    "4f732d00cc96b72160b2331354d3cd295628c18104d9c3618312939facbcbe2b  /data/local/tmp/rmx-m3-policy/m3-vendor.cil",
     "3bdfcfba699936cb12d007fee7bca2feb1a88c75cc947f98b14c55fe4932b0d3  /system/etc/selinux/plat_sepolicy_genfs_202604.cil"
   ],
   "compiler_matches_pinned_gsi": true,
-  "combined_vendor_policy_sha256": "9cc4c2550063689565ded0ca65fee70b7944a996fc0058e97caea3e72d485d1f",
-  "compiled_policy_sha256": "45d8ca9b6c6cf9da9c916274cc7d99607f3855a4227dee4815e24b3a9f9e29e2",
+  "combined_vendor_policy_sha256": "4f732d00cc96b72160b2331354d3cd295628c18104d9c3618312939facbcbe2b",
+  "compiled_policy_sha256": "2afd651ded35829e53678f56b2837dc7b4af970331cf64fecc424679b028191d",
   "cil_statements_match_current_sources": true,
   "loaded": false,
   "scope": "Strict compiler through GSI ADB; neverallow checks enabled; no policy load or enforcing change"

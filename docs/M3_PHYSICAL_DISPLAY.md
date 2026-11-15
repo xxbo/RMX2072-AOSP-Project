@@ -587,3 +587,32 @@ The full client-role expansion passed strict compilation on this retained GSI,
 with neverallow checks enabled. Compiled policy digest:
 `45d8ca9b6c6cf9da9c916274cc7d99607f3855a4227dee4815e24b3a9f9e29e2`.
 The running policy was unchanged; the next signed vendor carries the update.
+
+### Trial 52: real display attached; SwiftShader JIT execution denied
+
+Boot `bbe2e856-3f30-4791-ab0c-4c7300999fe2` validates the allocator-client role.
+DRM HWC discovers `DSI-1`, chooses the generic MSM backend and attaches the
+pipeline as primary display 0. SurfaceFlinger connects the physical display,
+completes power mode ON and reaches boot-animation startup. Composer and
+allocator remain available under enforcing, alongside GSI ADB.
+
+SurfaceFlinger subsequently receives `execmem` denials and SIGSEGV/SEGV_ACCERR.
+Its crash reports execution of non-executable memory at `[anon:swiftshader_jit]`,
+called by the source `vulkan.pastel.so` DrawCall worker. BootAnimation also
+receives `execmem` denial. Thus the renderer initializes, but its generated
+shader code cannot run; a persistent Android frame or desktop is not claimed.
+The separate backlight-class read denial leaves Android brightness control
+unverified and does not explain this instruction fault.
+
+The next engineering CPU-rendering profile adds JIT execution permission only
+for `surfaceflinger` and `bootanim`, the two observed clients. These are real
+per-domain execution exceptions, not a claim of unchanged security policy.
+Enforcing and strict neverallow compilation remain required. No domain-wide or
+system_server execmem exception is added. Remove the two exceptions when the
+hardware renderer replaces this CPU profile. [Trial 52](../build/device/m3-display-52-2026-11-15.json).
+
+The two-domain JIT policy passed the GSI's strict compiler with neverallow
+checks enabled; compiled digest:
+`2afd651ded35829e53678f56b2837dc7b4af970331cf64fecc424679b028191d`.
+This compile did not load or weaken the running policy. Runtime validation of
+the new per-domain permissions belongs to the next candidate.
