@@ -7,7 +7,9 @@ PHASE=${1:-all}
 case "$PHASE" in prepare|build|all) ;; *) exit 2 ;; esac
 mkdir -p "$SOURCE_DIR" "$ARTIFACT_DIR"
 if [[ "$PHASE" != build ]]; then
-python3 "$ROOT_DIR/scripts/build/prepare_m2_aosp_manifest.py" --output "$ARTIFACT_DIR/selected.xml"
+MANIFEST_ARGS=()
+if [[ "${RMX2072_GRAPHICS:-0}" == 1 ]]; then MANIFEST_ARGS+=(--graphics); fi
+python3 "$ROOT_DIR/scripts/build/prepare_m2_aosp_manifest.py" --output "$ARTIFACT_DIR/selected.xml" "${MANIFEST_ARGS[@]}"
 cd "$SOURCE_DIR"
 repo init -u https://android.googlesource.com/platform/manifest -b android-17.0.0_r1 --depth=1 --no-clone-bundle
 cp "$ARTIFACT_DIR/selected.xml" .repo/manifests/rmx2072-minimal.xml
