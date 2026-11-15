@@ -70,6 +70,7 @@ def compose(info, guard, graphics):
     if incoming != build['files']:
         raise ValueError('Graphics inventory differs from verified artifact')
     files['/build.prop'] += b'\n'+(SOURCE/'vendor.prop').read_bytes().replace(b'\r\n', b'\n')
+    files['/etc/init/rmx-m3-capture.rc'] = (SOURCE/'framecapture.rc').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'graphics.cil').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_property_contexts'] += (
         b'vendor.minigbm.debug u:object_r:rmx_graphics_config_prop:s0 exact string\n')

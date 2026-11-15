@@ -616,3 +616,27 @@ checks enabled; compiled digest:
 `2afd651ded35829e53678f56b2837dc7b4af970331cf64fecc424679b028191d`.
 This compile did not load or weaken the running policy. Runtime validation of
 the new per-domain permissions belongs to the next candidate.
+
+### Trial 53: SurfaceFlinger stable; sustained corrupted physical output
+
+Boot `540e191d-b8ec-4539-b53e-98f9760d3b19` validates the two JIT permissions.
+SurfaceFlinger PID 2032, composer PID 2027 and allocator PID 2026 stay available
+under enforcing. The active physical mode is 1080x2400, and BootAnimation submits
+DEVICE-composed frames with an identity display transform. This is not measured
+refresh-rate or correct-image validation: the operator explicitly reports
+"目前屏幕稳定在花屏" (sustained corrupted output).
+
+SystemServer separately crashes starting BatteryService because no IHealth
+default instance is available. Launcher and boot completion have not passed.
+The fixed 512 MiB test data filesystem is also nearly full; capacity must be
+reassessed before desktop acceptance, without touching stock userdata.
+
+The shell screenshot attempt returns zero but no image. Its captured minigbm
+import failure follows inability to initialize the DRM driver, matching the
+previously established shell DAC limitation. The next candidate adds a fixed
+one-shot screenshot process with shell UID and supplementary graphics group.
+It uses existing platform executables and shell SELinux permissions, has a
+40-second service timeout, and only writes its capture and status under
+`/data/local/tmp`. Adbd and DRM device modes are unchanged. This is intended to
+separate composed-image corruption from downstream scanout corruption before
+choosing a fix. No valid Android frame is claimed. [Trial 53](../build/device/m3-display-53-2026-11-15.json).

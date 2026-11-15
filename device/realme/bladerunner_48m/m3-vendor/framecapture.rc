@@ -1,0 +1,15 @@
+# Engineering-only, fixed one-shot capture of SurfaceFlinger's actual output.
+# The production GSI shell cannot import minigbm buffers without graphics DAC
+# membership. Give only this bounded process that group; keep adbd, device modes
+# and SELinux unchanged. No DRM master, modeset or arbitrary command endpoint.
+service vendor.rmx-m3-capture /system/bin/sh -c "sleep 15; { cat /proc/sys/kernel/random/boot_id; id; timeout 20 /system/bin/screencap -p /data/local/tmp/rmx-m3-frame.png; echo capture_exit=$?; ls -l /data/local/tmp/rmx-m3-frame.png; } > /data/local/tmp/rmx-m3-capture.txt 2>&1"
+    class late_start
+    user shell
+    group shell graphics
+    seclabel u:r:shell:s0
+    disabled
+    oneshot
+    timeout_period 40
+
+on property:sys.usb.state=adb
+    start vendor.rmx-m3-capture
