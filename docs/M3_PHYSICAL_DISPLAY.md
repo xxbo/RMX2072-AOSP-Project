@@ -234,7 +234,7 @@ was loaded. `check_m3_graphics_policy.py` records the live policy input hashes;
 the graphics candidate builder can preserve the staged diagnostic path.
 [Policy proof](../build/device/m3-graphics-policy-2026-11-15.json).
 
-### Next candidate: powered DSI parent selection
+### Trial 43: deferred DSI parent selection did not resolve the timeout
 
 The clock patch imports upstream `acf7a91d0b0e`'s `CLK_OPS_PARENT_ENABLE`
 for the two SM8250 pixel RCGs. The project companion uses the existing ACK
@@ -260,6 +260,26 @@ source-clock references and reject early assigned parents. The next physical
 trial also includes the corrected advancing-event KMS probe and DRM driver
 logging (`drm.debug=0x2`) for the actual PHY/link rates. The GSI and test
 volume seeds stay fixed; no cold-start or watchdog qualification is added.
+
+The paired kernel built successfully in run `43679894046`; patch/source and
+selected distribution digests passed verification. Trial 43 ran on boot
+`8cbdf30b-a078-41c3-a9e3-8938f6fe839f`, using kernel image SHA-256
+`1571dee26287393cf2572a314a1e1696ee58ca2eb0e855ed5e2857e82524cfd6`.
+The log confirms PHY enable, restored 660 MHz VCO, then a request for
+70.272 MHz pixel / 52.704 MHz byte clocks and an 843.264 MHz VCO. The pixel
+RCG update and first DCS packet still time out. The corrected KMS probe stops
+at the second repeated vblank event and returns failure, rather than a false
+PASS. The operator missed the brief test and saw black when checking later;
+there is no positive visual confirmation. Enforcing GSI ADB was retained.
+[Trial 43 evidence](../build/device/m3-display-43-2026-11-15.json).
+
+Graphics run `43675503669` completed 8,464 build steps successfully, but its
+archive stage assumed a separate `vendor` output while AOSP installed into
+`system/vendor`. No installable payload was saved. The archive script now
+queries `TARGET_OUT_VENDOR`, validates its product path and includes that path
+in the checked artifact manifest. The completed ephemeral runner cannot be
+reused, so this packaging correction requires a new build. SurfaceFlinger
+integration remains pending an actual verified archive.
 
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.

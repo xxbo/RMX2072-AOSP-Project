@@ -76,7 +76,7 @@ def main():
             raise ValueError('Graphics archive digest/size mismatch')
         wanted = {'graphics-vendor.tar.gz', 'vendor-files.sha256', 'resolved-manifest.xml',
                   'SHA256SUMS', 'project-commit.txt', 'target-dependencies.json', 'STATUS.txt',
-                  'hardwarebuffer-source.json'}
+                  'hardwarebuffer-source.json', 'vendor-output-path.txt'}
         with zipfile.ZipFile(io.BytesIO(archive)) as z:
             files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
         if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
@@ -90,13 +90,17 @@ def main():
             raise ValueError('Graphics dependency closure is incomplete')
         sums = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
                 for line in files['SHA256SUMS'].decode().splitlines()}
-        for name in ('graphics-vendor.tar.gz', 'resolved-manifest.xml'):
+        for name in ('graphics-vendor.tar.gz', 'resolved-manifest.xml', 'vendor-output-path.txt'):
             if digest(files[name]) != sums[name]:
                 raise ValueError('Graphics member digest mismatch: '+name)
+        vendor_output = files['vendor-output-path.txt'].decode().strip()
+        if vendor_output not in ('out/target/product/rmx2072_m3/vendor',
+                                 'out/target/product/rmx2072_m3/system/vendor'):
+            raise ValueError('Unexpected AOSP vendor output path')
         expected = {}
         for line in files['vendor-files.sha256'].decode().splitlines():
             sha256, name = line.split(maxsplit=1)
-            prefix = 'out/target/product/rmx2072_m3/vendor/'
+            prefix = vendor_output+'/'
             if not name.startswith(prefix):
                 raise ValueError('Non-vendor file in graphics manifest')
             expected['/'+name[len(prefix):]] = sha256

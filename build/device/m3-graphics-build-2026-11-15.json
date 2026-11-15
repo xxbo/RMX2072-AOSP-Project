@@ -42,6 +42,15 @@
       "source_projects": 137,
       "failure": "The full frameworks/base root declaration imports AconfigFlags.bp, ProtoLibraries.bp, TestProtoLibraries.bp and Ravenwood.bp outside the native sparse product.",
       "fix": "Select byte-identical pinned package/license and HardwareBuffer_aidl declarations; retain the real AIDL source. Independently verify input and selected-module SHA-256; still require zero missing target edges."
+    },
+    {
+      "run": 43675503669,
+      "commit": "3bba989fdd10b1f4b4235914181c68ec48623710",
+      "result": "COMPILE_PASS_PACKAGE_FAIL",
+      "compiled_steps": 8464,
+      "compile_duration": "01:11:04",
+      "failure": "Archive script assumed out/target/product/rmx2072_m3/vendor; AOSP installed real ARM64 payload under out/target/product/rmx2072_m3/system/vendor. No installable artifact was archived.",
+      "fix": "Query TARGET_OUT_VENDOR from the selected AOSP product and record/verify its exact prefix. Rebuild required because the ephemeral runner completed."
     }
   ],
   "physical_installation": "NOT RUN",

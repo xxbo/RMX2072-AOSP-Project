@@ -66,12 +66,21 @@ for attempt in $(seq 1 12); do
 done
 test "$result" == 0
 repo manifest -r -o "$ARTIFACT_DIR/resolved-manifest.xml"
-VENDOR=out/target/product/rmx2072_m3/vendor
+# A product without a separate vendor image installs into system/vendor.
+# Query the actual AOSP output instead of guessing the partition directory.
+VENDOR=$(bash -c 'source build/envsetup.sh >&2
+  lunch rmx2072_m3_graphics-aosp_current-user >&2
+  get_build_var TARGET_OUT_VENDOR')
+case "$VENDOR" in
+  out/target/product/rmx2072_m3/vendor|out/target/product/rmx2072_m3/system/vendor) ;;
+  *) echo "Unexpected vendor output: $VENDOR" >&2; exit 1 ;;
+esac
+printf '%s\n' "$VENDOR" > "$ARTIFACT_DIR/vendor-output-path.txt"
 test -s "$VENDOR/bin/hw/android.hardware.composer.hwc3-service.rmx2072"
 test -s "$VENDOR/lib64/egl/libEGL_angle.so"
 test -s "$VENDOR/lib64/hw/vulkan.pastel.so"
 find "$VENDOR" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DIR/vendor-files.sha256"
 tar -C "$VENDOR" -czf "$ARTIFACT_DIR/graphics-vendor.tar.gz" .
-sha256sum "$ARTIFACT_DIR/graphics-vendor.tar.gz" "$ARTIFACT_DIR/resolved-manifest.xml" > "$ARTIFACT_DIR/SHA256SUMS"
+sha256sum "$ARTIFACT_DIR/graphics-vendor.tar.gz" "$ARTIFACT_DIR/resolved-manifest.xml" "$ARTIFACT_DIR/vendor-output-path.txt" > "$ARTIFACT_DIR/SHA256SUMS"
 git -C "$ROOT_DIR" rev-parse HEAD > "$ARTIFACT_DIR/project-commit.txt"
 printf '%s\n' 'Source ARM64 graphics payload. CPU Vulkan rendering through SwiftShader/ANGLE; physical MSM DRM scanout. No Adreno acceleration claim. Device validation pending.' > "$ARTIFACT_DIR/STATUS.txt"
