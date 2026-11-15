@@ -63,6 +63,8 @@ int main(void)
 	struct drm_mode_crtc scanout = {0};
 	struct buffer buffers[2] = {0};
 	uint32_t crtc = 0, connector = 0;
+	uint32_t last_sequence = 0;
+	uint64_t last_event_us = 0;
 	int fd = -1, result = 1, active = 0;
 	setvbuf(stdout, NULL, _IONBF, 0);
 	for (int retry = 0; retry < 8; retry++) {
@@ -127,8 +129,15 @@ int main(void)
 		if (read(fd, &event, sizeof(event)) != sizeof(event) ||
 		    event.base.type != DRM_EVENT_FLIP_COMPLETE || event.user_data != (uint64_t)i) goto out;
 		printf("DRMTEST flip=%d sequence=%u time=%u.%06u\n", i, event.sequence, event.tv_sec, event.tv_usec);
+		uint64_t event_us = (uint64_t)event.tv_sec * 1000000 + event.tv_usec;
+		/* Timeout-generated completions can reuse stale vblank data. Trial 42
+		 * returned four events with identical sequence/time while DSI failed. */
+		if (i > 1 && ((int32_t)(event.sequence - last_sequence) <= 0 || event_us <= last_event_us)) {
+			puts("DRMTEST failure=non-advancing-vblank"); goto out;
+		}
+		last_sequence = event.sequence; last_event_us = event_us;
 	}
-	puts("DRMTEST kms_scanout=PASS physical_observation=REQUIRED"); result = 0;
+	puts("DRMTEST kms_events=PASS physical_observation=REQUIRED"); result = 0;
 out:
 	if (active) {
 		struct drm_mode_crtc disable = {.crtc_id = crtc};

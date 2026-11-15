@@ -26,6 +26,7 @@ def main():
     for name in ('workspace', 'ndk', 'adb-public-key', 'board-source'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--display-staged', action='store_true', help='Keep the diagnostic USB gate and native staged display paths')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial naming')
@@ -103,7 +104,8 @@ def main():
     (current/'usb-build.json').write_text(json.dumps(staged, indent=2)+'\n')
     run(sys.executable, build/'rebuild_m2_source_trial.py', '--workspace', work,
         '--ndk', a.ndk.resolve(), '--adb-public-key', a.adb_public_key.resolve(),
-        '--board-source', a.board_source.resolve(), '--trial', a.trial, '--display')
+        '--board-source', a.board_source.resolve(), '--trial', a.trial, '--display',
+        *(['--display-staged'] if a.display_staged else []))
     if sha(current/'system.img') != system_sha or json.loads((current/'volumes/scratch.json').read_text()) != seeds:
         raise ValueError('GSI or scratch seed manifest changed during preparation')
     result = dict(trial=a.trial, graphics_source=provenance, vendor_payload_bytes=payload_size,
@@ -111,7 +113,8 @@ def main():
                   composed_vendor_cil_sha256=cil_sha,
                   strict_compile_input_sha256=policy['combined_vendor_policy_sha256'],
                   policy_proof_reused_for_identical_statements=True,
-                  source_gsi_sha256=system_sha, scratch=seeds, handset_write='NOT RUN')
+                  source_gsi_sha256=system_sha, scratch=seeds, display_staged=a.display_staged,
+                  handset_write='NOT RUN')
     (current/'graphics-candidate.json').write_text(json.dumps(result, indent=2)+'\n')
     print('Signed source graphics candidate prepared and verified; handset unchanged.')
 

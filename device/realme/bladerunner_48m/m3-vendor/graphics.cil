@@ -45,6 +45,7 @@
 (typeattributeset fs_type (rmx_display_sysfs))
 (typeattributeset sysfs_type (rmx_display_sysfs))
 (genfscon sysfs "/devices/platform/soc/ae00000.display-subsystem" (u object_r rmx_display_sysfs ((s0) (s0))))
+(genfscon sysfs "/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem" (u object_r rmx_display_sysfs ((s0) (s0))))
 (allow rmx_graphics_composer rmx_display_sysfs (dir (getattr open read search)))
 (allow rmx_graphics_composer rmx_display_sysfs (file (getattr open read)))
 (allow rmx_graphics_composer rmx_display_sysfs (lnk_file (getattr read)))

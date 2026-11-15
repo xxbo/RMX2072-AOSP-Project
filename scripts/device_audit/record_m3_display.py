@@ -9,6 +9,22 @@ import subprocess
 from gsi_adb_accept import inspect, shell
 
 
+def evaluate_kms(snapshot):
+    flips = [tuple(map(int, row)) for row in re.findall(
+        r'^DRMTEST flip=(\d+) sequence=(\d+) time=(\d+)\.(\d{6})$', snapshot, re.M)]
+    advancing = len(flips) == 4 and [row[0] for row in flips] == [1, 2, 3, 4]
+    for before, after in zip(flips, flips[1:]):
+        advancing &= (0 < (after[1]-before[1]) % (1 << 32) < (1 << 31)
+                      and after[2:] > before[2:])
+    reported = bool(re.search(r'DRMTEST kms_(?:scanout|events)=PASS', snapshot))
+    errors = [line for line in snapshot.splitlines() if re.search(
+        r"rcg didn't update|cmd dma tx failed|packet \d+ .*failed:|frame done timeout|failed wait_for_idle|kickoff timeout",
+        line)]
+    return dict(drm_kms_result='PASS_EVENTS_ONLY' if reported and advancing and not errors else 'BLOCKED_OR_FAILED',
+                probe_reported_pass=reported, advancing_vblank_events=bool(advancing),
+                transport_errors=errors)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--record', type=Path, required=True)
@@ -48,18 +64,18 @@ def main():
     final_boot = shell('cat /proc/sys/kernel/random/boot_id').strip()
     if final_boot != boot:
         raise ValueError('Boot changed during display collection')
-    kms = 'PASS' if 'DRMTEST kms_scanout=PASS' in snapshot else 'BLOCKED_OR_FAILED'
+    kms = evaluate_kms(snapshot)
     result = dict(utc=datetime.now(timezone.utc).isoformat(), goal='Physical display, then SurfaceFlinger and AOSP desktop',
         trial=inputs['trial'], boot_id=boot, kernel=inputs['kernel'],
         boot_sha256=inputs['boot']['boot_sha256'], dtbo_sha256=inputs['boot']['dtbo_sha256'],
         effective_dtb=inputs['boot']['device_tree_build']['outputs']['effective.dtb'],
         system=inputs['candidate']['signed']['system'], vendor=inputs['candidate']['signed']['vendor'],
-        drm_kms_result=kms, physical_screen_observation='PENDING_OPERATOR; KMS success is not visual confirmation',
+        **kms, physical_screen_observation='PENDING_OPERATOR; KMS success is not visual confirmation',
         display_snapshot=snapshot, android_graphics=observations,
         cold_start_test='NOT RUN', watchdog_fault_injection='NOT RUN',
         handset_left='retained Android 17 GSI')
     a.output.write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8')
-    print(json.dumps(dict(trial=result['trial'], boot_id=boot, drm_kms_result=kms,
+    print(json.dumps(dict(trial=result['trial'], boot_id=boot, drm_kms_result=kms['drm_kms_result'],
                          physical_screen_observation=result['physical_screen_observation'])))
 
 

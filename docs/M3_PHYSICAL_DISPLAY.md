@@ -190,6 +190,33 @@ No host means no display bind and no Android attempt, with the existing
 unchanged fail-closed journal decision. This diagnostic profile remains
 explicitly `autonomous=0`, and does not count as a cold-start result.
 
+### Trial 42: first modeset exposed a DSI pixel-clock failure
+
+The host gate, native driver binding and measured `226:0` device node passed.
+The probe opened MSM DRM, found the connected 1080x2400 DSI mode and allocated
+two 10,444,800-byte dumb buffers. The kernel then warned that
+`disp_cc_mdss_pclk0_clk_src` did not update its configuration. The first panel
+packet (`0x39`, DCS `0x9f`) timed out with `-110`; DPU frame-done/kickoff also
+timed out. These are intact live-serial observations on boot
+`9e44af1e-8841-4eb7-8bc2-ddc67fc34e2d`.
+
+The initial probe incorrectly printed `kms_scanout=PASS`: the modeset ioctl
+returned success and four completion events arrived, but all four reused
+sequence `40` and timestamp `34.955539`. That is not advancing scanout. The
+recorder rejects this result, and the probe now requires increasing sequence
+and timestamps. Four focused regressions cover stale events, advancing events,
+transport errors and a missing device. The new ARM64 probe compiles; it has
+not yet run on the phone. Visible output remains awaiting operator observation.
+[Trial 42 evidence](../build/device/m3-display-42-2026-11-15.json).
+
+Android 17 still reached enforcing ADB and remained on the same GSI. The next
+driver work targets DSI pixel-clock/PLL sequencing. Graphics policy for both
+direct and staged display paths passed strict compilation on this retained
+boot, using a compiler verified byte-for-byte against the pinned GSI. No policy
+was loaded. `check_m3_graphics_policy.py` records the live policy input hashes;
+the graphics candidate builder can preserve the staged diagnostic path.
+[Policy proof](../build/device/m3-graphics-policy-2026-11-15.json).
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and
