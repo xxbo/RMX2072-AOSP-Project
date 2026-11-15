@@ -173,6 +173,8 @@ def main():
                'keymaster-lookup.sha256': 'bootstrap-probes/rmx2072-keymaster-lookup.c',
                'keymaster-transport.sha256': 'bootstrap-probes/rmx2072-keymaster-transport.h',
                'listener.sha256': 'bootstrap-probes/rmx2072-listener.inc'}
+    if a.display:
+        patches['display-clock-patch.sha256'] = 'bootstrap-patches/rmx2072-display-clock.patch'
     wanted = set(patches) | {'Image.gz', 'sm8250_bootstrap_dot_config', 'kernel.release',
                              'SHA256SUMS', 'build-metadata.txt', 'resolved-manifest.xml'}
     if a.display:

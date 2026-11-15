@@ -206,7 +206,7 @@ sequence `40` and timestamp `34.955539`. That is not advancing scanout. The
 recorder rejects this result, and the probe now requires increasing sequence
 and timestamps. Four focused regressions cover stale events, advancing events,
 transport errors and a missing device. The new ARM64 probe compiles; it has
-not yet run on the phone. Visible output remains awaiting operator observation.
+not yet run on the phone. The operator reported a black screen, with no color bars.
 [Trial 42 evidence](../build/device/m3-display-42-2026-11-15.json).
 
 Android 17 still reached enforcing ADB and remained on the same GSI. The next
@@ -216,6 +216,32 @@ boot, using a compiler verified byte-for-byte against the pinned GSI. No policy
 was loaded. `check_m3_graphics_policy.py` records the live policy input hashes;
 the graphics candidate builder can preserve the staged diagnostic path.
 [Policy proof](../build/device/m3-graphics-policy-2026-11-15.json).
+
+### Next candidate: powered DSI parent selection
+
+The clock patch imports upstream `acf7a91d0b0e`'s `CLK_OPS_PARENT_ENABLE`
+for the two SM8250 pixel RCGs. The project companion uses the existing ACK
+6g_v2_9 source-clock acquisition and parent-setting operations for SM8250
+nodes that explicitly supply those clocks. The source DT removes early
+`assigned-clock-parents`; host power-on selects the parents after the manager
+has enabled the PHY. Parent-setting errors propagate. Existing SM8250 DTs
+without the explicit source clocks retain their previous clock-init path.
+
+This is a testable sequencing hypothesis for trial 42's RCG timeout, not an
+established hardware fix. The upstream flag has a documented probe-time PLL
+regression with assigned parents. The proposed 7nm DIGTOP bias change also
+has an unresolved SM8350 HDK boot regression, so it is not included here.
+No PHY register values or panel commands are changed. References:
+[upstream clock patch](https://lore.kernel.org/r/20260312112321.370983-9-val@packett.cool),
+[probe-time regression](https://lkml.iu.edu/2606.2/04819.html),
+[DIGTOP follow-up](https://lkml.iu.edu/2610.0/02665.html).
+
+The build emits a separate clock-patch digest; artifact import verifies it
+against the exact source commit. Boot packaging rejects a new display DT
+paired with the old kernel. Effective-DT checks require all four explicit
+source-clock references and reject early assigned parents. The next physical
+trial also includes the corrected advancing-event KMS probe. The GSI and test
+volume seeds stay fixed; no cold-start or watchdog qualification is added.
 
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.

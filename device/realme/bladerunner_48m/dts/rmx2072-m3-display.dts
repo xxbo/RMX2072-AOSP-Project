@@ -190,10 +190,12 @@
             interrupts = <4>;
             clocks = <&m3_dispcc DISP_CC_MDSS_BYTE0_CLK>, <&m3_dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
                      <&m3_dispcc DISP_CC_MDSS_PCLK0_CLK>, <&m3_dispcc DISP_CC_MDSS_ESC0_CLK>,
-                     <&m3_dispcc DISP_CC_MDSS_AHB_CLK>, <&diag_gcc GCC_DISP_HF_AXI_CLK>;
-            clock-names = "byte", "byte_intf", "pixel", "core", "iface", "bus";
-            assigned-clocks = <&m3_dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>, <&m3_dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>;
-            assigned-clock-parents = <&m3_dsi0_phy DSI_BYTE_PLL_CLK>, <&m3_dsi0_phy DSI_PIXEL_PLL_CLK>;
+                     <&m3_dispcc DISP_CC_MDSS_AHB_CLK>, <&diag_gcc GCC_DISP_HF_AXI_CLK>,
+                     <&m3_dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>, <&m3_dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>,
+                     <&m3_dsi0_phy DSI_BYTE_PLL_CLK>, <&m3_dsi0_phy DSI_PIXEL_PLL_CLK>;
+            // The paired kernel patch selects these parents after PHY enable.
+            clock-names = "byte", "byte_intf", "pixel", "core", "iface", "bus",
+                          "byte_src", "pixel_src", "dsi_pll_byte", "dsi_pll_pixel";
             operating-points-v2 = <&m3_dsi_opps>;
             power-domains = <&m3_rpmhpd RPMHPD_MMCX>;
             phys = <&m3_dsi0_phy>;

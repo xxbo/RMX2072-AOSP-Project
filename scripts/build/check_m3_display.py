@@ -53,6 +53,23 @@ def check_m3_display(data, staged=False):
             raise ValueError('OEM overlay re-enabled an overlapping display provider: ' + name)
     if normalized_node(tree, base)['iommus'] != [dict(target='/soc/apps-smmu@15000000', args=[0x820, 0x402])]:
         raise ValueError('MDSS stream ID/mask differs from pinned SM8250')
+    dsi = normalized_node(tree, base+'/dsi@ae94000')
+    if 'assigned-clocks' in dsi or 'assigned-clock-parents' in dsi:
+        raise ValueError('DSI parents must be selected by the host after PHY enable')
+    names = dsi.get('clock-names', [])
+    clocks = dsi.get('clocks', [])
+    if len(names) != len(clocks) or len(set(names)) != len(names):
+        raise ValueError('DSI clock names and providers do not match')
+    sources = dict(zip(names, clocks))
+    dispcc = prefixes['fabric']+'/clock-controller@af00000'
+    expected_sources = {
+        'byte_src': dict(target=dispcc, args=[3]),
+        'pixel_src': dict(target=dispcc, args=[37]),
+        'dsi_pll_byte': dict(target=base+'/phy@ae94400', args=[0]),
+        'dsi_pll_pixel': dict(target=base+'/phy@ae94400', args=[1]),
+    }
+    if any(sources.get(name) != value for name, value in expected_sources.items()):
+        raise ValueError('Deferred DSI source clocks differ from the SM8250 providers')
     ids = {n['phandle'][0]: p for p, n in tree.items() if 'phandle' in n}
     endpoints = {p: ids.get(n['remote-endpoint'][0]) for p,n in tree.items()
                  if p.startswith(base+'/') and 'remote-endpoint' in n}

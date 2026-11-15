@@ -61,6 +61,10 @@ if [[ "${RMX2072_SOURCE_PON:-0}" == 1 ]]; then
 fi
 if [[ "${RMX2072_DISPLAY:-0}" == 1 ]]; then
   test "${RMX2072_SOURCE_PON:-0}" == 1
+  CLOCK_PATCH="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-patches/rmx2072-display-clock.patch"
+  git -C "$WORKSPACE/common" apply --check "$CLOCK_PATCH"
+  git -C "$WORKSPACE/common" apply "$CLOCK_PATCH"
+  sha256sum "$CLOCK_PATCH" > "$ARTIFACT_DIR/display-clock-patch.sha256"
   PANEL_DIR="$ROOT_DIR/device/realme/bladerunner_48m/display"
   cp "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" "$WORKSPACE/common/drivers/gpu/drm/panel/"
   cat >> "$WORKSPACE/common/drivers/gpu/drm/panel/Kconfig" <<'EOF'

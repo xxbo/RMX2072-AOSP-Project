@@ -46,6 +46,11 @@ def main():
     patch = (repo / 'device/realme/bladerunner_48m/bootstrap-patches/rmx2072-source-pon.patch').read_bytes().replace(b'\r\n', b'\n')
     if (kernel_dir / 'source-pon-patch.sha256').read_text().split()[0] != sha(patch):
         raise ValueError('Kernel does not contain the reviewed source-tree PON patch')
+    if dt.get('display'):
+        patch = (repo / 'device/realme/bladerunner_48m/bootstrap-patches/rmx2072-display-clock.patch').read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / 'display-clock-patch.sha256'
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Display DT requires the matching deferred DSI clock-parent kernel patch')
     config = (kernel_dir / 'sm8250_bootstrap_dot_config').read_text().splitlines()
     if any('CONFIG_' + name + '=y' not in config for name in ('INPUT_PM8941_PWRKEY', 'POWER_RESET_MSM', 'POWER_RESET_QCOM_PON')):
         raise ValueError('Upstream PON/PS_HOLD drivers are not built in')
