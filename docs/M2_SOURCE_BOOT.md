@@ -266,3 +266,14 @@ unplug USB to keep the device off. M2 work is paused with the existing recovery
 set and single current candidate retained. On resume, complete the pinned init
 dependencies first, then package and validate a matching kernel/DT/init set
 before the already planned warm boot, disconnected startup and recovery trials.
+
+## Resumed, 2026-11-15
+
+The user requested continuation. The manifest now explicitly selects the pinned
+`external/llvm-libc`, `external/google-highway` and
+`external/arm-optimized-routines` projects. The last one supplies the real
+`libarm-optimized-routines-math` static library in the Android 17 release's
+original `Android.bp`. The workspace initially contains 120 projects; no AOSP
+implementation or dependency checks were bypassed. The initial host check found
+no handset interface, so reconnection was requested while the source build
+continues. Physical M2 tests remain pending a successful complete candidate.

@@ -8,11 +8,11 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 EXACT = '''bionic bootable/recovery device/common device/generic/arm64
-device/generic/common external/abseil-cpp external/avb external/boringssl external/brotli
+device/generic/common external/abseil-cpp external/arm-optimized-routines external/avb external/boringssl external/brotli
 external/bzip2 external/e2fsprogs external/fec external/fmtlib external/gflags
-external/go-cmp external/golang-protobuf external/google-benchmark
+external/go-cmp external/golang-protobuf external/google-benchmark external/google-highway
 external/googletest external/gwp_asan external/icu external/jsoncpp external/libcap external/libchrome external/libcxx
-external/libcxxabi external/libevent external/liburing external/libxml2
+external/libcxxabi external/libevent external/liburing external/libxml2 external/llvm-libc
 external/lz4 external/lzma external/modp_b64 external/pcre external/pogreb external/protobuf external/selinux
 external/scudo external/sqlite external/starlark-go external/tinyxml2 external/zlib external/zstd
 external/rust/android-crates-io external/rust/cxx

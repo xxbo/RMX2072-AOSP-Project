@@ -166,9 +166,10 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
-    "status": "PAUSED_BY_USER",
+    "status": "RESUMED_BY_USER",
     "source_init_run": null,
-    "resume_from": "Add the pinned provider for libarm-optimized-routines-math and retain the two Bionic projects found by the closure check, then build and verify the complete candidate before hardware tests"
+    "selected_projects": 120,
+    "change": "Include pinned LLVM libc, Highway and Arm optimized routines providers found by the init dependency closure"
   },
   "host_tests": {
     "total": 81,
@@ -221,5 +222,9 @@
     "cancel_request": "HTTP 409 because run had already completed",
     "m2_flashed": false,
     "physical_power_state": "not independently observed"
+  },
+  "resume": {
+    "utc": "2026-11-15T01:34:07.372078+00:00",
+    "phone_connection": "No ADB or matching USB interface at initial check; operator reconnection requested"
   }
 }
