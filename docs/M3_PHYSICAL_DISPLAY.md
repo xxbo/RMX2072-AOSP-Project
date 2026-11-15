@@ -653,7 +653,7 @@ OEM packet byte-for-byte does not keep the 6.18 encoder and decoder consistent.
 The prepared panel fix packs the already calculated host DSC configuration at
 panel prepare. It retains the original DCS long-write type, vendor command
 `0x9e` and 88-byte DSC 1.1 payload length. It rejects an unpopulated configuration
-and logs the exact accepted PPS. The generated OEM table remains unchanged for
+and logs the accepted PPS prefix (the kernel hex formatter limits it to 64 bytes). The generated OEM table remains unchanged for
 comparison. This is a source-level mismatch and a candidate repair, not yet a
 hardware-verified explanation of trial 53's corruption. Trial 54 still runs
 kernel 27 and only adds the one-shot screenshot; the new kernel requires its
