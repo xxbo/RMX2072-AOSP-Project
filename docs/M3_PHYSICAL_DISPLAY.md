@@ -777,3 +777,29 @@ normalizes known text formats only, and the verifier uses the same rule for
 baseline text inputs. Regression checks cover stored ZIP CRC/content, unknown
 binary public-key bytes and existing init text normalization. The full image
 readback/hash verification remains mandatory during the next build.
+
+### Trial 57: archive validated, mount denied before rendering
+
+Boot `e7debf6c-7e25-42f3-9c0d-818c8b9ff8ea` retains GSI ADB,
+SurfaceFlinger, source composer and allocator under enforcing. Rebuilt vendor
+archive bytes and ZIP CRC pass, followed by full candidate UFS readback.
+However, at 64.487 seconds init is denied `oemfs:dir mounton` on `/oem`.
+The grant prepared above targeted vendor_init incorrectly. The pinned init
+builtin table marks mount as not running in the vendor subcontext, matching
+the observed `u:r:init:s0` denial. No pattern archive loads; BootAnimation logs
+`No animation file`. The capture succeeds in 37.13 seconds and is byte-identical
+to trial 56's black PNG. No new physical observation was requested because
+the intended comparison was blocked before rendering.
+
+The next candidate replaces the ineffective grant with only
+`(allow init oemfs (dir (mounton)))`. Strict compilation with neverallows and
+on-device archive loading remain required. Kernel 29, graphics binaries,
+GSI and scratch seeds stay fixed; DSC packet changes are deferred until
+the known-color comparison. Missing Health HAL still blocks SystemServer.
+No cold-start or watchdog fault injection is run.
+[Trial 57](../build/device/m3-display-57-2026-11-15.json).
+
+The corrected rule passes strict compilation on retained trial 57 with all
+neverallows enabled. Compiled policy SHA-256:
+`60c1de23837e7dc1789f9dc1aecb29da0f97d0c4d56c6f6e58887e60a288f22e`.
+It was not loaded into the running device; trial 58 will validate startup.

@@ -11,7 +11,9 @@
 ; Use the existing OEM directory/archive labels and platform BootAnimation read
 ; rules. Do not grant this core process generic vendor-file read access.
 ; No new executable, property control or writable graphics access is added.
-(allow vendor_init oemfs (dir (getattr search mounton)))
+; The mount builtin runs in init, including when declared by a vendor rc.
+; Trial 57 records init -> oemfs:dir mounton denial; no vendor_init grant needed.
+(allow init oemfs (dir (mounton)))
 
 ; A public, nonsecret vendor configuration read by in-process mapper clients.
 (type rmx_graphics_config_prop)
