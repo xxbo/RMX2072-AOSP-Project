@@ -281,6 +281,15 @@ in the checked artifact manifest. The completed ephemeral runner cannot be
 reused, so this packaging correction requires a new build. SurfaceFlinger
 integration remains pending an actual verified archive.
 
+Trial 44 keeps the trial-43 kernel and adds read-only CCF snapshots to the
+pre-policy KMS probe, immediately before and after modeset. It records the
+DSI PLL/byte/pixel chain's parent, rate, software prepare/enable references
+and flags through native debugfs files. These counts do not prove PLL lock,
+and rates may be cached; the purpose is to distinguish an unselected or
+unprepared parent from a hardware clock/transport failure while the pipeline
+is still active. No clock registers are written by the probe. The static ARM64
+probe compiles with warnings treated as errors; physical results are pending.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and

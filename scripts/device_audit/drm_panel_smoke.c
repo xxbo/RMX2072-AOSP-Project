@@ -29,6 +29,52 @@ static int call(int fd, unsigned long op, void *arg, const char *name)
 
 struct buffer { struct drm_mode_create_dumb dumb; uint32_t fb; void *map; };
 
+/* Read the CCF's own diagnostics while the modeset still owns the clocks.
+ * Rates may be cached by CCF; counts are software references, not PLL-lock
+ * or physical-output proof. Never write clock/debug registers from this test.
+ */
+static void clock_snapshot(const char *phase)
+{
+	static const char *const clocks[] = {
+		"dsi0vco_clk", "dsi0_pll_out_div_clk", "dsi0_pll_bit_clk",
+		"dsi0_pll_by_2_bit_clk", "dsi0_pclk_mux",
+		"dsi0_phy_pll_out_byteclk", "dsi0_phy_pll_out_dsiclk",
+		"disp_cc_mdss_byte0_clk_src", "disp_cc_mdss_byte0_clk",
+		"disp_cc_mdss_pclk0_clk_src", "disp_cc_mdss_pclk0_clk",
+	};
+	static const char *const fields[] = {
+		"clk_rate", "clk_parent", "clk_prepare_count", "clk_enable_count", "clk_flags",
+	};
+	for (size_t c = 0; c < sizeof(clocks) / sizeof(clocks[0]); c++) {
+		for (size_t f = 0; f < sizeof(fields) / sizeof(fields[0]); f++) {
+			char path[192], value[512];
+			snprintf(path, sizeof(path), "/sys/kernel/debug/clk/%s/%s", clocks[c], fields[f]);
+			int fd = open(path, O_RDONLY | O_CLOEXEC);
+			if (fd < 0) {
+				printf("DRMCLOCK phase=%s clock=%s field=%s open_errno=%d\n",
+				       phase, clocks[c], fields[f], errno);
+				continue;
+			}
+			ssize_t count;
+			do { count = read(fd, value, sizeof(value) - 1); } while (count < 0 && errno == EINTR);
+			int read_errno = errno;
+			close(fd);
+			if (count < 0) {
+				printf("DRMCLOCK phase=%s clock=%s field=%s read_errno=%d\n",
+				       phase, clocks[c], fields[f], read_errno);
+				continue;
+			}
+			int truncated = count == sizeof(value) - 1;
+			while (count && (value[count - 1] == '\n' || value[count - 1] == '\r')) count--;
+			value[count] = '\0';
+			for (ssize_t i = 0; i < count; i++)
+				if (value[i] == '\n' || value[i] == '\r' || value[i] == '\t') value[i] = ',';
+			printf("DRMCLOCK phase=%s clock=%s field=%s value=%s truncated=%d\n",
+			       phase, clocks[c], fields[f], value, truncated);
+		}
+	}
+}
+
 static int alloc_buffer(int fd, struct buffer *b, uint32_t width, uint32_t height, int alternate)
 {
 	struct drm_mode_map_dumb map = {0};
@@ -115,8 +161,10 @@ int main(void)
 		if (alloc_buffer(fd, &buffers[i], mode.hdisplay, mode.vdisplay, i)) goto out;
 	scanout.crtc_id = crtc; scanout.fb_id = buffers[0].fb; scanout.mode_valid = 1;
 	scanout.mode = mode; scanout.set_connectors_ptr = PTR(&connector); scanout.count_connectors = 1;
+	clock_snapshot("before-modeset");
 	if (call(fd, DRM_IOCTL_MODE_SETCRTC, &scanout, "set-crtc")) goto out;
 	active = 1;
+	clock_snapshot("after-modeset");
 	printf("DRMTEST modeset=PASS crtc=%u connector=%u mode=%ux%u clock=%u\n", crtc, connector, mode.hdisplay, mode.vdisplay, mode.clock);
 	for (int i = 1; i <= 4; i++) {
 		sleep(1);
