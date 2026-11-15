@@ -175,7 +175,9 @@ The unchanged super and new boot readbacks passed. Boot
 previous trial 40 pmsg had 92 corrected bytes and 112 unrecoverable ECC blocks.
 The marker parser returned `unreadable`. No display bind or modeset ran; the
 observer correctly refused a missing gate. The prior console and pmsg were
-preserved before the phone entered EDL without keys. F.20 restoration began.
+preserved before the phone entered EDL without keys. F.20 restoration passed
+complete super/boot/DTBO readback, both LP slots, device-side super hash and
+boot completion. [Trial 41 evidence](../build/device/m3-display-41-2026-11-15.json).
 This reproduces the prior RAM-journal limitation described in the trial 34
 power record; it is not evidence of a new panel failure.
 
