@@ -14,6 +14,19 @@ if [[ "$PHASE" != build ]]; then
 fi
 if [[ "$PHASE" == prepare ]]; then exit 0; fi
 cd "$SOURCE_DIR"
+# The generic DRM service defaults link this library, whose upstream visibility
+# lists only upstream board packages. Admit this one project service package.
+python3 - <<'PY'
+from pathlib import Path
+p = Path('external/libdisplay-info/Android.bp')
+text = p.read_text()
+anchor = '        "//external/drm_hwcomposer:__subpackages__",\n'
+entry = '        "//device/realme/rmx2072_m3",\n'
+if text.count(anchor) != 1:
+    raise ValueError('Pinned libdisplay_info visibility changed')
+if entry not in text:
+    p.write_text(text.replace(anchor, anchor + entry))
+PY
 export ALLOW_MISSING_DEPENDENCIES=true SOONG_UI_NINJA_ARGS=-v
 export M3_RECIPE_ROOT="$ROOT_DIR" M3_ARTIFACT_DIR="$ARTIFACT_DIR"
 for attempt in $(seq 1 12); do

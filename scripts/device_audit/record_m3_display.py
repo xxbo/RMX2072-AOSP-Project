@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 from gsi_adb_accept import inspect, shell
 
 
@@ -33,9 +34,14 @@ def main():
     }
     observations = {}
     for name,command in commands.items():
-        text = shell(command, 30)
+        try:
+            text = shell(command, 30)
+            status = 0
+        except subprocess.CalledProcessError as error:
+            text = error.output
+            status = error.returncode
         (live/name).write_text(text, encoding='utf-8')
-        observations[name] = dict(sha256=hashlib.sha256(text.encode()).hexdigest(), text=text)
+        observations[name] = dict(sha256=hashlib.sha256(text.encode()).hexdigest(), text=text, exit_status=status)
     final_boot = shell('cat /proc/sys/kernel/random/boot_id').strip()
     if final_boot != boot:
         raise ValueError('Boot changed during display collection')
