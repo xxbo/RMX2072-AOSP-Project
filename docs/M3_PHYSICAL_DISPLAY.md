@@ -145,6 +145,29 @@ No missing-library stubs or skipped target checks are used.
 These build issues are independent of the early kernel regression: graphics
 userspace was not installed in trials 37 or 38.
 
+### Trial 40: native DRM registered, GSI retained
+
+Disabling the inherited, unported KGSL/GMU nodes removed the identified trial
+39 panic. Trial 40 bound native TLMM, MMSS interconnect, DISPCC, MDSS, DPU,
+DSI and the source RM19795 panel. The intact serial stream records DPU revision
+`0x60000000` and `Initialized msm 1.13.0`. Android 17 reached enforcing and
+authenticated ADB on boot `7e5e1a20-264a-4a18-9e42-6b584307f8e4`; the phone
+remained on this GSI after the bounded same-boot acceptance check.
+
+The pre-policy KMS probe did **not** run a modeset: it returned
+`DRMTEST blocked=no-card0 errno=2`. DRM sysfs already exposed `226:0`, but the
+temporary `/dev` had no DRM node. Android ueventd created it later. A subsequent
+ADB-shell attempt returned `errno=13` under enforcing and also performed no
+modeset. SurfaceFlinger still aborts because the graphics vendor payload has
+not been installed. Visible output, page flips and desktop startup remain
+unproven. [Trial 40 evidence](../build/device/m3-display-40-2026-11-15.json).
+
+Trial 41 creates the early DRM character node only after verifying its native
+SM8250 DPU parent and reading its actual sysfs device number. It keeps the same
+kernel, source trees, GSI, vendor and writable test-volume seeds. The next
+physical result must come from the KMS probe, with screen observation reported
+separately. No cold-start test or watchdog fault injection is planned.
+
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.
 2. On the phone, capture DRM registration, panel prepare/enable, KMS mode and

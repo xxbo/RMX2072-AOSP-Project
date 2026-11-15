@@ -41,7 +41,10 @@ def main():
             text = error.output
             status = error.returncode
         (live/name).write_text(text, encoding='utf-8')
-        observations[name] = dict(sha256=hashlib.sha256(text.encode()).hexdigest(), text=text, exit_status=status)
+        excerpt = '\n'.join(text.splitlines()[:120])[:12000]
+        observations[name] = dict(sha256=hashlib.sha256(text.encode()).hexdigest(),
+            bytes=len(text.encode()), local_record='live/'+name, text=excerpt,
+            text_truncated=excerpt != text.rstrip('\n'), exit_status=status)
     final_boot = shell('cat /proc/sys/kernel/random/boot_id').strip()
     if final_boot != boot:
         raise ValueError('Boot changed during display collection')
