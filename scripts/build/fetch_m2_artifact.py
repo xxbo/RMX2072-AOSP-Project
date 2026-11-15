@@ -75,11 +75,16 @@ def main():
         if len(archive) > 512*1024*1024 or 'sha256:'+digest(archive) != artifact['digest']:
             raise ValueError('Graphics archive digest/size mismatch')
         wanted = {'graphics-vendor.tar.gz', 'vendor-files.sha256', 'resolved-manifest.xml',
-                  'SHA256SUMS', 'project-commit.txt', 'target-dependencies.json', 'STATUS.txt'}
+                  'SHA256SUMS', 'project-commit.txt', 'target-dependencies.json', 'STATUS.txt',
+                  'hardwarebuffer-source.json'}
         with zipfile.ZipFile(io.BytesIO(archive)) as z:
             files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
         if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
             raise ValueError('Incomplete graphics artifact provenance')
+        from prepare_m3_hardwarebuffer import PINNED, SELECTED_MODULES
+        hardwarebuffer = json.loads(files['hardwarebuffer-source.json'])
+        if hardwarebuffer['original_files'] != PINNED or hardwarebuffer['selected_modules'] != SELECTED_MODULES:
+            raise ValueError('Graphics source declaration selection differs from pinned upstream')
         closure = json.loads(files['target-dependencies.json'])
         if closure['missing_dependency_commands'] or closure['command_count'] < 1:
             raise ValueError('Graphics dependency closure is incomplete')

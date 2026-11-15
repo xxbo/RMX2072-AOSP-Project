@@ -15,6 +15,8 @@ if [[ "$PHASE" != build ]]; then
     /core/java/android/hardware/HardwareBuffer.aidl \
     /core/java/android/hardware/serial/Android.bp
   git -C "$SOURCE_DIR/frameworks/base" sparse-checkout list > "$ARTIFACT_DIR/frameworks-base-sparse.txt"
+  python3 "$ROOT_DIR/scripts/build/prepare_m3_hardwarebuffer.py" \
+    --source "$SOURCE_DIR/frameworks/base" --report "$ARTIFACT_DIR/hardwarebuffer-source.json"
   # assemble_vintf is a real install dependency of the HAL fragments. Keep its
   # two native support libraries without analyzing unrelated GKI/VTS targets.
   git -C "$SOURCE_DIR/packages/modules/Gki" sparse-checkout set --no-cone /libkver/

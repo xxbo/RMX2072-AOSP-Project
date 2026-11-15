@@ -128,7 +128,12 @@ vts-testcase/hal source projects are now included. Build 43672280150 generated
 an 8,446-command closure and identified HardwareBuffer_aidl as the remaining
 missing module through media interface metadata used by assemble_vintf. The
 M3 sparse checkout now includes its pinned frameworks/base AIDL, original build
-declarations and license. The next source build is pending.
+declarations and license. Build 43673925967 then exposed unrelated framework
+root build-file imports. The native product now selects the two original
+module blocks and package declarations byte-for-byte from pinned files, with
+independent SHA-256 checks on input files and selected modules. The real AIDL
+and license text stay unchanged; no implementation or dependency is stubbed.
+The next source build is pending.
 No missing-library stubs or skipped target checks are used.
 [Build evidence](../build/device/m3-graphics-build-2026-11-15.json).
 These build issues are independent of the early kernel regression: graphics

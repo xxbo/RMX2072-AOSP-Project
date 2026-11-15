@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/m3-graphics.yml'
       - 'scripts/build/build_m3_graphics.sh'
+      - 'scripts/build/prepare_m3_hardwarebuffer.py'
       - 'scripts/build/prepare_m2_aosp_manifest.py'
       - 'device/realme/bladerunner_48m/m3-graphics/**'
 permissions:
