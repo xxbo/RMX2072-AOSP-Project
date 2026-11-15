@@ -78,9 +78,14 @@ the same compiled kernel, GSI and test seeds. No screen output is claimed.
 [Trial evidence](../build/device/m3-display-37-2026-11-15.json).
 
 The first graphics source build failed on the upstream libdisplay-info
-visibility boundary. A narrow project-package visibility fix is committed;
-the next source build is running. This build issue is independent of the
-early kernel regression: graphics userspace was not installed in trial 37.
+visibility boundary. A narrow project-package fix resolved it. The second
+build generated a 7,652-command target closure and identified two missing
+libraries for the real VINTF fragment tool. Their pinned AOSP Gki and
+vts-testcase/hal source projects are now included; build 43672280150 is running.
+No missing-library stubs or skipped target checks are used.
+[Build evidence](../build/device/m3-graphics-build-2026-11-15.json).
+These build issues are independent of the early kernel regression: graphics
+userspace was not installed in trials 37 or 38.
 
 1. Native display bindings and panel source compile; unchanged boot/storage
    resources still validate. This is an offline result, not a hardware pass.

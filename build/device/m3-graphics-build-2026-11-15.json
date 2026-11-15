@@ -1,0 +1,35 @@
+{
+  "goal": "Real Android 17 graphics libraries and HALs for physical MSM DRM scanout",
+  "product": "rmx2072_m3_graphics",
+  "aosp_tag": "android-17.0.0_r1",
+  "manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
+  "rendering": "ANGLE over SwiftShader CPU Vulkan; Adreno is not enabled",
+  "attempts": [
+    {
+      "run": 43668957299,
+      "commit": "ade9010c34cc070ae293329d69487309dfdddfdb",
+      "result": "FAIL",
+      "failure": "libdisplay_info not visible to the project composer package",
+      "fix": "ac89941abde946bbd0acb80b0408ed627b01be4e; allow only //device/realme/rmx2072_m3"
+    },
+    {
+      "run": 43670631951,
+      "commit": "ac89941abde946bbd0acb80b0408ed627b01be4e",
+      "result": "FAIL",
+      "command_count": 7652,
+      "missing_edges": [
+        "assemble_vintf -> libvts_vintf_test_common",
+        "libvintf -> libkver"
+      ],
+      "fix": "1a3c4fbed870889a3a16114a8aba74f3f4e45e20; add pinned Gki and vts-testcase/hal native sources"
+    },
+    {
+      "run": 43672280150,
+      "commit": "1a3c4fbed870889a3a16114a8aba74f3f4e45e20",
+      "result": "IN PROGRESS",
+      "source_projects": 137
+    }
+  ],
+  "physical_installation": "NOT RUN",
+  "surfaceflinger": "NOT VERIFIED with the new source payload"
+}
