@@ -658,3 +658,27 @@ comparison. This is a source-level mismatch and a candidate repair, not yet a
 hardware-verified explanation of trial 53's corruption. Trial 54 still runs
 kernel 27 and only adds the one-shot screenshot; the new kernel requires its
 own build and handset validation.
+
+The exact ACK helper functions and tables were built as a pure arithmetic
+ARM64 probe using `scripts/build/build_dsc_reference.py` and run on the retained
+trial 54 GSI. All source inputs and the executable were hash-checked. The first
+88 bytes differ from the factory decoder PPS at 13 offsets, including initial
+decode delay 526 versus 594 and first-line BPG offset 12 versus 15. This is
+calculated configuration, not a register read. [Full comparison](../build/device/m3-dsc-pps-reference-2026-11-15.json).
+
+### Trial 54: screenshot launch error; graphics services still stable
+
+Boot `61647569-b8be-4d1b-a02e-3bfc0493492e` retains enforcing GSI ADB and all three
+graphics services. The screenshot process failed before exec: the init child
+SIGABRTs at uptime 77.231 seconds and produces no capture files. The pinned init
+argument expander rejects the unescaped shell `$?` as property syntax and calls
+LOG(FATAL). The next recipe uses `$$?`, which init expands to a literal `$?` for
+the shell. The resulting command passes the GSI shell syntax check; runtime
+capture is still unverified. No policy or DRM device-mode change is required.
+
+Kernel build 28 did not compile: its dispatch incorrectly enabled both legacy
+and source PON options. Build 29 corrects that to source PON only, matching the
+accepted device configuration. Neither failed build nor the prepared PPS fix
+was flashed in trial 54. Next: verify the newly built panel driver and capture
+actual composed pixels on the same boot, then return to the missing Health HAL
+desktop blocker. [Trial 54](../build/device/m3-display-54-2026-11-15.json).
