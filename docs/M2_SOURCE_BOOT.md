@@ -246,3 +246,23 @@ This read-only check does not execute those commands or bypass dependencies.
 Its report and exact ICU sparse selection are required during installation.
 No M2 image was produced or flashed by this failed run; live M1 GSI still has
 API 37, enforcing, retained ADB and the maintenance service.
+
+## User-requested pause, 2026-11-15
+
+Run 43634685622 passed source preparation and the native ICU graph. The new
+read-only target-closure check exposed Bionic dependencies on LLVM libc, Highway
+headers and `libarm-optimized-routines-math`. The bounded resolver added the two
+explicit source paths; the retry stopped on the remaining Arm math module.
+The job had already failed when the user requested a pause; no build is active.
+The full job log is retained locally and its digest and relevant lines are in
+`build/device/m2-build-progress-2026-11-15.json`. No successful source init or
+complete M2 candidate exists yet, and no M2 image has been flashed.
+
+At the user's request, the accepted M1 GSI boot received `/system/bin/reboot -p`
+and returned `Done`. Repeated ADB checks and a Windows USB inventory found no
+handset interface afterward. This confirms command acceptance and USB absence;
+physical power state was not independently observed. The user was asked to
+unplug USB to keep the device off. M2 work is paused with the existing recovery
+set and single current candidate retained. On resume, complete the pinned init
+dependencies first, then package and validate a matching kernel/DT/init set
+before the already planned warm boot, disconnected startup and recovery trials.

@@ -143,6 +143,22 @@
       ],
       "job_log_sha256": "90c9940c093b10c4c4b59b2fabf198eb462a66d11790399364cba355ab3cafa3",
       "hardware_test": "NOT RUN"
+    },
+    {
+      "run_id": 43634685622,
+      "source_commit": "bb2b9bef8101efbdacf6e2f1feff5124fb1d8f29",
+      "result": "FAIL_BUILD",
+      "first_failure": "Read-only Ninja closure check exposed missing Bionic LLVM libc, Highway headers and Arm optimized math; bounded resolver added paths but Arm math module still missing",
+      "selected_log": [
+        "2026-11-14T20:14:03.3943559Z prebuilts/build-tools/path/linux-x86/echo 'module libc_bionic missing dependencies: //external/llvm-libc:llvmlibc' && false",
+        "2026-11-14T20:14:03.3945008Z prebuilts/build-tools/path/linux-x86/echo 'module libc_bionic_portable_simd_arm64_neon_mte missing dependencies: //external/google-highway:hwy_headers_only' && false",
+        "2026-11-14T20:14:03.3946131Z prebuilts/build-tools/path/linux-x86/echo 'module libc_bionic_portable_simd_arm64_neon_no_mte missing dependencies: //external/google-highway:hwy_headers_only' && false",
+        "2026-11-14T20:14:03.3947094Z prebuilts/build-tools/path/linux-x86/echo 'module libm missing dependencies: libarm-optimized-routines-math' && false",
+        "2026-11-14T20:15:39.5833455Z prebuilts/build-tools/path/linux-x86/echo 'module libm missing dependencies: libarm-optimized-routines-math' && false",
+        "2026-11-14T20:15:40.9215662Z No missing pinned project can be inferred from this failure"
+      ],
+      "job_log_sha256": "a3a35258924d3d0cf0c834b1941564de9899c11efae2ef7dc7bc25614282ed3a",
+      "hardware_test": "NOT RUN"
     }
   ],
   "cancelled_run": {
@@ -150,9 +166,9 @@
     "reason": "Superseded during source sync to include verified static-libc allocator dependencies"
   },
   "pending": {
+    "status": "PAUSED_BY_USER",
     "source_init_run": null,
-    "selected_projects": 117,
-    "next_change": "Pinned native ICU and read-only inspection of the complete init Ninja command closure"
+    "resume_from": "Add the pinned provider for libarm-optimized-routines-math and retain the two Bionic projects found by the closure check, then build and verify the complete candidate before hardware tests"
   },
   "host_tests": {
     "total": 81,
@@ -163,7 +179,7 @@
       "Five bounded workspace-completion tests passed, including question-mark path punctuation"
     ]
   },
-  "phone_state": "Accepted M1 trial 35 GSI; M2 not flashed",
+  "phone_state": "Accepted M1 trial 35 GSI received reboot -p at user request; ADB and matching USB interfaces absent on repeated host checks. Physical power state not independently observed.",
   "source_kernel": {
     "run_id": 43619212111,
     "result": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_CHECKS",
@@ -187,5 +203,23 @@
       "phase": "source-sync"
     }
   ],
-  "superseded_reason": "Combine verified target dependencies and the sparse owner-metadata checkout; no image was produced or flashed by these attempts."
+  "superseded_reason": "Combine verified target dependencies and the sparse owner-metadata checkout; no image was produced or flashed by these attempts.",
+  "pause": {
+    "requested_by_user": true,
+    "utc": "2026-11-15T01:08:11.299201+00:00",
+    "prior_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+    "prior_state": [
+      "retained",
+      "adbd running"
+    ],
+    "shutdown_command": "/system/bin/reboot -p",
+    "reply": "Done",
+    "post_shutdown_adb": [],
+    "post_shutdown_matching_usb": [],
+    "active_build": false,
+    "last_run_conclusion": "failure",
+    "cancel_request": "HTTP 409 because run had already completed",
+    "m2_flashed": false,
+    "physical_power_state": "not independently observed"
+  }
 }
