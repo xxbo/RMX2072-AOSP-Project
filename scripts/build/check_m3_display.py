@@ -3,25 +3,34 @@ from inspect_boot_dt import fdt
 from check_m2_resources import check_m2_resources, normalized_node
 
 
-def check_m3_display(data):
+def check_m3_display(data, staged=False):
     preserved = check_m2_resources(data, display=True)
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
-    base = '/soc/display-subsystem@ae00000'
+    prefixes = {part: '/soc'+('/display-'+part+'-lab' if staged else '') for part in ('pins', 'fabric', 'core')}
+    if staged:
+        for path in prefixes.values():
+            node = tree.get(path, {})
+            if (node.get('compatible') != ['realme,rmx2072-diag-ufs-phy-bus']
+                    or node.get('ranges') != [] or node.get('#address-cells') != [1]
+                    or node.get('#size-cells') != [1]):
+                raise ValueError('Display stage must use the existing explicitly bound population driver: '+path)
+    base = prefixes['core']+'/display-subsystem@ae00000'
+    pins = prefixes['pins']+'/pinctrl@f100000'
     expected = {
         base: ('qcom,sm8250-mdss', [0xae00000, 0x1000]),
         base+'/display-controller@ae01000': ('qcom,sm8250-dpu', [0xae01000, 0x8f000, 0xaeb0000, 0x3000]),
         base+'/dsi@ae94000': ('qcom,sm8250-dsi-ctrl', [0xae94000, 0x400]),
         base+'/phy@ae94400': ('qcom,dsi-phy-7nm', [0xae94400, 0x200, 0xae94600, 0x280, 0xae94900, 0x260]),
-        '/soc/clock-controller@af00000': ('qcom,sm8250-dispcc', [0xaf00000, 0x10000]),
-        '/soc/interconnect@1740000': ('qcom,sm8250-mmss-noc', [0x1740000, 0x1f080]),
-        '/soc/pinctrl@f100000': ('qcom,sm8250-pinctrl', [0xf100000, 0x300000, 0xf500000, 0x300000, 0xf900000, 0x300000]),
+        prefixes['fabric']+'/clock-controller@af00000': ('qcom,sm8250-dispcc', [0xaf00000, 0x10000]),
+        prefixes['fabric']+'/interconnect@1740000': ('qcom,sm8250-mmss-noc', [0x1740000, 0x1f080]),
+        pins: ('qcom,sm8250-pinctrl', [0xf100000, 0x300000, 0xf500000, 0x300000, 0xf900000, 0x300000]),
     }
     for path, (compatible, reg) in expected.items():
         node = tree.get(path, {})
         if (compatible not in node.get('compatible', []) or node.get('reg') != reg
                 or node.get('status', ['okay']) != ['okay']):
             raise ValueError('Native display resource mismatch: ' + path)
-    reserved = tree['/soc/pinctrl@f100000'].get('gpio-reserved-ranges', [])
+    reserved = tree[pins].get('gpio-reserved-ranges', [])
     if len(reserved) % 2:
         raise ValueError('Malformed TLMM GPIO reservation')
     valid = set(range(181))
@@ -50,7 +59,7 @@ def check_m3_display(data):
     if node.get('compatible') != ['realme,rmx2072-rm19795-panel'] or node.get('reg') != [0]:
         raise ValueError('Wrong physical panel or DSI channel')
     reset = node['reset-gpios']
-    if ids.get(reset[0]) != '/soc/pinctrl@f100000' or reset[1:] != [75, 1]:
+    if ids.get(reset[0]) != pins or reset[1:] != [75, 1]:
         raise ValueError('Panel reset must be TLMM 75, active low')
     for name, target, voltage in [
         ('vddio', '/soc/rsc@18200000/diag-regulators/ldo14', 1800000),
@@ -61,7 +70,7 @@ def check_m3_display(data):
                 tree[target].get('regulator-min-microvolt') != [voltage] or
                 tree[target].get('regulator-max-microvolt') != [voltage]):
             raise ValueError('Panel rail differs from official board source: ' + name)
-    return dict(m1_resources=preserved, native_resources=list(expected),
+    return dict(m1_resources=preserved, native_resources=list(expected), staged=staged,
                 overlapping_legacy_providers_disabled=legacy, reciprocal_endpoints=endpoints,
                 panel_mode='1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices',
                 reset='TLMM75 active-low', te='TLMM66 mdp_vsync', valid_gpio_offsets=sorted(valid),

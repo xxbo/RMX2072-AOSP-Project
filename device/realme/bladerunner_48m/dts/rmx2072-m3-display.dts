@@ -62,6 +62,13 @@
 &{/soc} {
     #address-cells = <1>;
     #size-cells = <1>;
+#ifdef RMX2072_M3_STAGED
+    display-pins-lab {
+        compatible = "realme,rmx2072-diag-ufs-phy-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+#endif
     m3_tlmm: pinctrl@f100000 {
         compatible = "qcom,sm8250-pinctrl";
         reg = <0x0f100000 0x300000>, <0x0f500000 0x300000>, <0x0f900000 0x300000>;
@@ -91,6 +98,14 @@
             bias-pull-down;
         };
     };
+#ifdef RMX2072_M3_STAGED
+    };
+    display-fabric-lab {
+        compatible = "realme,rmx2072-diag-ufs-phy-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+#endif
     m3_mmss: interconnect@1740000 {
         compatible = "qcom,sm8250-mmss-noc";
         reg = <0x01740000 0x1f080>;
@@ -111,6 +126,14 @@
         #reset-cells = <1>;
         #power-domain-cells = <1>;
     };
+#ifdef RMX2072_M3_STAGED
+    };
+    display-core-lab {
+        compatible = "realme,rmx2072-diag-ufs-phy-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+#endif
     m3_mdss: display-subsystem@ae00000 {
         compatible = "qcom,sm8250-mdss";
         reg = <0x0ae00000 0x1000>;
@@ -225,4 +248,7 @@
             status = "disabled";
         };
     };
+#ifdef RMX2072_M3_STAGED
+    };
+#endif
 };

@@ -59,7 +59,10 @@ def main():
     for key in ('source', 'output', 'cpp', 'dtc', 'libfdt'):
         p.add_argument('--' + key, required=True, type=Path)
     p.add_argument('--display', action='store_true', help='Add the M3 native display bindings')
+    p.add_argument('--display-staged', action='store_true', help='Populate display providers only after the diagnostic USB gate')
     a = p.parse_args()
+    if a.display_staged and not a.display:
+        p.error('--display-staged requires --display')
     repo = Path(__file__).resolve().parents[2]
     source, output = a.source.resolve(), a.output.resolve()
     if output.is_relative_to(repo) or output.is_relative_to(source):
@@ -135,6 +138,7 @@ def main():
         cmd = [str(a.cpp.resolve()), '-E', '-P', '-x', 'assembler-with-cpp',
                '-nostdinc', '-undef', '-D__DTS__', *['-I' + str(d) for d in dirs],
                *(['-DRMX2072_M3_DISPLAY=1'] if a.display else []),
+               *(['-DRMX2072_M3_STAGED=1'] if a.display_staged else []),
                str(project / (name + '.dts'))]
         with expanded.open('wb') as out:
             subprocess.run(cmd, stdout=out, check=True)
@@ -166,7 +170,7 @@ def main():
     effective = lib.apply(final, overlay)
     if a.display:
         from check_m3_display import check_m3_display
-        checks['display'] = check_m3_display(effective)
+        checks['display'] = check_m3_display(effective, staged=a.display_staged)
     checks['m1_resource_reference'] = check_m2_resources(effective, display=a.display)
     expected = json.loads((repo / 'build/device/stock-dt-selection.json').read_text())
     for data, entry in ((final, expected['boot']['selected']), (overlay, expected['dtbo']['selected'])):
@@ -198,6 +202,7 @@ def main():
                   overlays={name: sha(data) for name, data in overlays.items()}, checks=checks,
                   factory_binary_inputs=False, status='source-built-not-device-tested')
     report['display'] = a.display
+    report['display_staged'] = a.display_staged
     (output / 'source.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report['outputs'], indent=2))
 

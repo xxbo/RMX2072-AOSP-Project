@@ -56,6 +56,8 @@ def main():
         raise ValueError('M2 requires autonomous guarded source-init ramdisk')
     if sha(rd) != provenance['gzip_sha256'] or gzip.decompress(rd)[:6] != b'070701':
         raise ValueError('Invalid ramdisk')
+    if bool(dt.get('display_staged')) != bool(provenance.get('display_staged')):
+        raise ValueError('Staged display DT and ramdisk gate must agree')
     stock = (work / 'recovery/f20/boot.img').read_bytes()
     stock_dtbo = (work / 'recovery/f20/dtbo.img').read_bytes()
     if sha(stock) != '9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3' or sha(stock_dtbo) != '61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef':

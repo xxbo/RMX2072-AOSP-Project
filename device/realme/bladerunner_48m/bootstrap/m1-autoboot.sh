@@ -34,7 +34,18 @@ if [ "$previous" != none ] && [ "${previous##*state=}" != retained ]; then
     exec /bin/reboot-edl edl
 fi
 mark attempt
-printf 'M1EVENT autonomous=1\nM1EVENT boot_id=%s\n' "$boot" > /run/m1-autoboot.events
+# Display diagnosis deliberately waits for the host to preserve live logs.
+# The unchanged supervisor timer still returns to EDL if no host arrives.
+if [ -f /m3-display-staged ]; then
+    printf '%s\n' "$boot" > /run/m3-display-gate-ready
+    /bin/busybox sh /diag-init.sh < /dev/null > /dev/kmsg 2>&1 &
+    while [ ! -f /run/m3-display-start ]; do sleep 1; done
+    [ "$(cat /run/m3-display-start)" = "$boot" ]
+fi
+autonomous=1
+[ ! -f /m3-display-staged ] || autonomous=0
+printf 'M1EVENT autonomous=%s\nM1EVENT boot_id=%s\n' "$autonomous" "$boot" > /run/m1-autoboot.events
+[ ! -f /m3-display-staged ] || printf 'M1EVENT display_staged=1\n' >> /run/m1-autoboot.events
 printf 'M1EVENT previous_guard=%s\n' "$previous" >> /run/m1-autoboot.events
 printf 'M1EVENT boot_usb_state=%s\n' "$(cat /sys/class/udc/*/state 2>/dev/null || echo unavailable)" >> /run/m1-autoboot.events
 # A real RTC is not yet available. Do not supply invented UTC to the optional

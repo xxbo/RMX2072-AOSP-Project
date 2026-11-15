@@ -101,6 +101,25 @@ Trial 39 restores the known TLMM valid-GPIO restriction described above. It
 exposes only display TE 66 and reset 75. This corrects a missed historical
 constraint; physical boot and display results remain pending.
 
+### Staged display diagnosis
+
+The GPIO-limited trial 39 still did not enumerate diagnostic USB or ADB.
+Recovery and preserved-log collection are in progress; no visible output is
+claimed. The next diagnostic profile uses `--display --display-staged` and
+keeps the same kernel binary. Three explicit population containers defer the
+native display GPIO provider, display fabric/clocks and MDSS/DPU/DSI until
+USB logging is connected. They reuse the already built, bounded platform
+population driver; they do not substitute any display driver implementation.
+The full source graph, GPIO restriction and M1 resource checks remain required.
+
+The pre-policy script emits `M3BIND` begin/return markers for each stage and
+the host records the live kernel stream before releasing a boot-ID gate.
+Failure of an individual binding leaves its result in the same-boot record;
+if execution remains responsive, Android startup is still attempted. This
+profile explicitly records `autonomous=0` and requires a matching host gate.
+It is a display fault-localization run, not a cold-start acceptance result.
+No new GSI, test-volume seed or graphics userspace is installed by this profile.
+
 The first graphics source build failed on the upstream libdisplay-info
 visibility boundary. A narrow project-package fix resolved it. The second
 build generated a 7,652-command target closure and identified two missing

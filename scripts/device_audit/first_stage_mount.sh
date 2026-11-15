@@ -70,6 +70,14 @@ if [ -x /bin/drm-panel-smoke ]; then
     # Only the explicitly selected display trial can modeset. A missing or
     # failing display must not prevent the existing GSI/ADB diagnostics.
     echo "M3DISPLAY boot_id=$(cat /proc/sys/kernel/random/boot_id)" > /run/m3-display.txt
+    if [ -f /m3-display-staged ]; then
+        for stage in pins fabric core; do
+            /bin/busybox sh /bin/display-bind "$stage" >> /run/m3-display.txt 2>&1 || {
+                echo "M3DISPLAY binding_failed=$stage rc=$?" >> /run/m3-display.txt
+                break
+            }
+        done
+    fi
     timeout 15 /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
     /bin/busybox sh /bin/display-snapshot >> /run/m3-display.txt 2>&1 || true
 fi
