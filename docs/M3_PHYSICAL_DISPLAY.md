@@ -530,3 +530,35 @@ ANGLE library; the packaged source vendor ANGLE is not claimed as its loaded
 implementation. Initial rendering still targets SwiftShader, with no Adreno
 acceleration claim. Next: get beyond mapper discovery, verify a real rendered
 HardwareBuffer and stabilize Android composition. [Trial 49](../build/device/m3-display-49-2026-11-15.json).
+
+### Trial 50: GLES initializes; composer hotplug socket denied
+
+Boot `3d762fed-d1c8-4f55-93b3-faa06fcfe5d4` validates native mapper discovery.
+SurfaceFlinger reports OpenGL ES 3.1 using GSI ANGLE and the source SwiftShader
+driver. The allocator remains registered under enforcing. Composer reaches
+client creation, but its `NETLINK_KOBJECT_UEVENT` socket is denied at creation.
+Cleanup then faults in `UEventListener::StopThread`; SurfaceFlinger aborts with
+`Can't create AidlComposerClient`. No registered SurfaceFlinger or Android frame
+is claimed. GSI ADB is retained, and native panel/frame-event checks still pass.
+
+The separate shell diagnostic now initializes EGL 1.5/GLES 3.1, but its
+in-process minigbm mapper cannot open either DRM node. Shell lacks their
+system/graphics DAC identity; direct opens return permission denied. The log
+identifies buffer import with an uninitialized client driver, and the smoke
+returns allocation status 5. This is a diagnostic-domain limitation, not proof
+of the same failure in SurfaceFlinger. No buffer pixels passed verification.
+
+The next policy change grants only composer self socket create/bind/read,
+matching the actual pinned `utils/UEvent.h` implementation. It adds no network
+capability or message-send permission. The observed cleanup bug is a separate
+upstream robustness issue; the immediate device integration must permit the
+hotplug listener's normal initialization. Validate the new strict policy,
+then continue with composer display discovery and actual Android composition.
+[Trial 50](../build/device/m3-display-50-2026-11-15.json) ·
+[UEvent source](https://android.googlesource.com/platform/external/drm_hwcomposer/+/87daba89b05fabc7f1e9316e3f283f19fd0c45cd/utils/UEvent.h) ·
+[Listener cleanup](https://android.googlesource.com/platform/external/drm_hwcomposer/+/87daba89b05fabc7f1e9316e3f283f19fd0c45cd/drm/UEventListener.cpp).
+
+The updated combined policy passed the actual GSI compiler with neverallow
+checks enabled on trial 50. Compiled digest:
+`6dafb8272f54804fae1f30efd6378d5ec8b34403bd9f7863b0830a3829f96ed7`.
+This was an isolated compile; the running phone's policy was not replaced.
