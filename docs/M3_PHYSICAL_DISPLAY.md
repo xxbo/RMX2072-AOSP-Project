@@ -5,6 +5,14 @@ and AOSP Launcher on the same Android 17 GSI. Cold-start and watchdog rehearsals
 are not part of this work. Each stage report identifies its objective, physical
 result, next blocker and source/evidence commit.
 
+Current result (trial 63, November 16): native SSPP hardware-generated red,
+green and blue still show strip noise and missing regions, with zero source
+addresses/strides verified. Framebuffer fetching is not required to reproduce
+this corruption. Android 17 returns with enforcing, SurfaceFlinger and ADB;
+the physical image and desktop remain unaccepted. The user ended today's
+session. Next resume the post-fill DPU/DSC/DSI/panel path. See the
+[experiment and actual observations](M3_DPU_SOLID_FILL_ISOLATION.md#trial-63-result).
+
 ## Starting observation, November 15
 
 The accepted trial 36 remains on boot
