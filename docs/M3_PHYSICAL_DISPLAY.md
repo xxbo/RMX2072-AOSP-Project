@@ -24,7 +24,8 @@ the Git blob SHA-256 and preserves all packet types, payload bytes, LP/HS mode
 and delays: 28 initialization packets, four display-on packets and four off
 packets in the generated reference table. The prepared DSC repair replaces only
 the runtime `0x9e` PPS payload with the host encoder's calculated parameters;
-its handset validation is still pending. The filename says 2340; the selected
+trial 55 verified the host-side change, but physical corruption remained.
+The filename says 2340; the selected
 mode actually specifies 1080x2400.
 Only the 60 Hz mode is exposed initially: RGB888, four lanes, DSC 1.1 at
 8 bits per component / 8 bits per pixel, two 540x48 slices. Brightness is capped
@@ -80,7 +81,9 @@ path rejects. Its software-renderer detection does not pass the augmented use
 flags to format resolution in this tag. The existing option keeps allocations
 linear without modifying the graphics binaries or enabling Adreno.
 [Source analysis](../build/device/m3-linear-buffer-reference-2026-11-15.json).
-Actual allocation and presentation remain pending device integration.
+Trial 61 identifies the actual Android scanout as linear ABGR8888 with pitch
+4352; physical presentation remains corrupted. Allocation length and runtime
+Android DPU readback remain open.
 
 ## Stage acceptance
 
