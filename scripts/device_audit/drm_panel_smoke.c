@@ -44,7 +44,7 @@ static void kms_snapshot(const char *solid_label)
 	for (size_t i = 0; i < sizeof(files) / sizeof(files[0]); i++) {
 		if (solid_label && i) break;
 		const char *label = solid_label ? solid_label : files[i].name;
-		size_t limit = solid_label ? 128 * 1024 : files[i].limit;
+		size_t limit = solid_label ? 256 * 1024 : files[i].limit;
 		char path[128], buf[4096];
 		size_t total = 0;
 		int error = 0;

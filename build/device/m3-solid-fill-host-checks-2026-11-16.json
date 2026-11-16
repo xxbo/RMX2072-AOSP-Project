@@ -1,7 +1,7 @@
 {
   "date": "2026-11-16",
-  "probe_source_sha256": "43e545237a02cc04f56b63f7aca56516162fa512f135ecddc618079b4a248370",
-  "static_arm64_probe_sha256": "0574af9c0d7899a2c687b0e5476f765442cc3e1e1a5cb72d2349c9b4019e0847",
+  "probe_source_sha256": "766a68ce35e68f1b5cfde4e729ab1017ccf9cf82ded725e29bfbf77a27063e24",
+  "static_arm64_probe_sha256": "e1256dabd0680f15baadba7f5556be94071c92fe3d63743f6a5a7d50baeb1ef2",
   "compile_flags": [
     "-static",
     "-O2",
