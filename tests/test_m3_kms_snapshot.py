@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
-from decode_m3_kms_snapshot import extract, register_banks
+from decode_m3_kms_snapshot import extract, register_banks, route_from_regs
 
 
 class SnapshotEvidenceTest(unittest.TestCase):
@@ -26,6 +26,14 @@ class SnapshotEvidenceTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             register_banks('====dsc_0====\n'+
                            '0x0 : 00000005 003880ca 04380960 021c0030\n'*2)
+
+    def test_missing_mux_is_unknown_and_partial_mux_rejected(self):
+        self.assertIsNone(route_from_regs({})['dsc_input_mux'])
+        with self.assertRaises(ValueError):
+            route_from_regs({'dsc_input_mux': {0: 0}})
+        banks = register_banks('====dsc_input_mux====\n'+
+                               '0x0 : 00000000 00000001 0000000f 0000000f\n')
+        self.assertEqual(route_from_regs(banks)['dsc_input_mux'], [0, 1, 15, 15])
 
 
 if __name__ == '__main__':

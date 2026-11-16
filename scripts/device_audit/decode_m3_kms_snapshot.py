@@ -64,6 +64,25 @@ def dsc_from_regs(r):
     )
 
 
+def route_from_regs(banks):
+    # Report all banks; the caller must associate CTL/INTF with the live CRTC.
+    # Nonzero registers in an unused bank are not evidence that it is active.
+    mux = banks.get('dsc_input_mux')
+    if mux is not None and not {0, 4, 8, 12}.issubset(mux):
+        raise ValueError('Incomplete SM8250 DSC input mux row')
+    return dict(
+        dsc_input_mux=None if mux is None else [mux[i*4] for i in range(4)],
+        ctl={name: dict(dsc_active=r[0xe8], intf_active=r[0xf4],
+                        merge_3d_active=r[0xe4])
+             for name, r in banks.items() if re.fullmatch(r'ctl_\d+', name)
+             and {0xe8, 0xf4, 0xe4}.issubset(r)},
+        intf_mux={name: r[0x25c] for name, r in banks.items()
+                  if re.fullmatch(r'intf_\d+', name) and 0x25c in r},
+        pingpong={name: dict(dsc_mode=r[0xa0], input_swap=r[0xac], output_swap=r[0xc8])
+                  for name, r in banks.items() if re.fullmatch(r'pingpong_\d+', name)
+                  and {0xa0, 0xac, 0xc8}.issubset(r)})
+
+
 def dsc_from_pps(p):
     if len(p) != 128 or p[0] != 0x11:
         raise ValueError('Requires a complete DSC 1.1 reference PPS')
@@ -118,6 +137,7 @@ def main():
         if re.fullmatch(r'sspp_\d+', name) and r[0]:
             sspp[name] = dict(source_size=[r[0] & 0xffff, r[0] >> 16],
                 out_size=[r[12] & 0xffff, r[12] >> 16], stride0=r[0x24] & 0xffff,
+                source_address0=hex(r[0x14]),
                 source_format=hex(r[0x30]), unpack=hex(r[0x34]), op_mode=hex(r[0x38]),
                 fetch_mode=(r[0x30] >> 30) & 3, bytes_per_pixel=((r[0x30] >> 9) & 3)+1,
                 ubwc_enabled=bool(r[0x38] & 1))
@@ -125,6 +145,7 @@ def main():
     result = dict(boot_id=boot, scope='Pre-Android native KMS; nonzero banks may include stale state. Not a live Android scanout or physical pass.',
         source_sha256=hashlib.sha256(raw).hexdigest(),
         reference_sha256=hashlib.sha256(args.pps_reference.read_bytes()).hexdigest(),
+        route=route_from_regs(banks),
         dsc=decoded, sspp=sspp, dsi=dict(compression=hex(r[0x2a4]),
         compression2=hex(r[0x2a8]), stream=hex(r[0x54]), total=hex(r[0x58])),
         buffers=re.findall(r'^DRMTEST buffer=.*$', text, re.M),

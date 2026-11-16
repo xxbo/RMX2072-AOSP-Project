@@ -16,9 +16,12 @@ def main():
     p.add_argument('--trial', required=True)
     p.add_argument('--display', action='store_true', help='Build the M3 DRM candidate and physical KMS probe')
     p.add_argument('--display-staged', action='store_true', help='Gate staged display binding on diagnostic USB capture')
+    p.add_argument('--single-dsc-test', action='store_true', help='Opt in to the RM19795 single DSC isolation experiment')
     a = p.parse_args()
     if a.display_staged and not a.display:
         p.error('--display-staged requires --display')
+    if a.single_dsc_test and not a.display:
+        p.error('--single-dsc-test requires --display')
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial naming')
     repo = Path(__file__).resolve().parents[2]
@@ -72,12 +75,14 @@ def main():
         '--adb-public-key', a.adb_public_key.resolve(), '--output', current / 'ramdisk', '--autonomous-ufs',
         *(['--display-smoke', current / 'display-smoke/drm-panel-smoke'] if a.display else []),
         *(['--display-staged'] if a.display_staged else []))
-    run(sys.executable, build / 'pack_m2_source_boot.py', '--workspace', work)
+    run(sys.executable, build / 'pack_m2_source_boot.py', '--workspace', work,
+        *(['--single-dsc-test'] if a.single_dsc_test else []))
     record = dict(previous, trial=a.trial, recipe_commit=commit, recipe_dirty=False,
                   kernel=kernel['image_sha256'], witness=sha(current / 'first-stage-witness'),
                   source_first_stage=init, source_device_trees=True,
                   display=a.display,
                   display_staged=a.display_staged,
+                  single_dsc_test=a.single_dsc_test,
                   adb_public_key_sha256=json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())['adb_public_key_sha256'])
     (current / 'usb-build.json').write_text(json.dumps(record, indent=2) + '\n')
     print('M2 source candidate prepared; original GSI/vendor/container and scratch seeds retained.')
