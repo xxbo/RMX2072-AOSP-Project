@@ -69,6 +69,16 @@ def compose(info, guard, graphics):
         files[name] = data
     if incoming != build['files']:
         raise ValueError('Graphics inventory differs from verified artifact')
+    probe_dir = graphics.parent/'display-smoke'
+    probe_build = json.loads((probe_dir/'build.json').read_text())
+    probe_source = (ROOT/'scripts/device_audit/drm_scanout_state.c').read_bytes().replace(b'\r\n', b'\n')
+    probe = (probe_dir/'drm-scanout-state').read_bytes()
+    if (sha(probe_source) != probe_build['scanout_source_sha256']
+            or sha(probe) != probe_build['scanout_binary_sha256']
+            or probe[:6] != b'\x7fELF\x02\x01' or len(probe) < 64
+            or struct.unpack_from('<H', probe, 18)[0] != 183):
+        raise ValueError('Rebuild the read-only ARM64 scanout probe from current source')
+    files['/bin/hw/rmx-m3-drm-state'] = probe
     files['/build.prop'] += b'\n'+(SOURCE/'vendor.prop').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/init/rmx-m3-capture.rc'] = (SOURCE/'framecapture.rc').read_bytes().replace(b'\r\n', b'\n')
     from m3_boot_pattern import archive_bytes
@@ -82,6 +92,8 @@ def compose(info, guard, graphics):
     files['/etc/selinux/vendor_service_contexts'] = (
         b'mapper/minigbm u:object_r:hal_graphics_mapper_service:s0\n')
     labels = [
+        '/data/vendor/rmx-m3-diag(/.*)? u:object_r:rmx_scanout_data_file:s0',
+        '/vendor/bin/hw/rmx-m3-drm-state u:object_r:rmx_scanout_probe_exec:s0',
         '/dev/dri/card[0-9]+ u:object_r:gpu_device:s0',
         '/dev/dri/renderD[0-9]+ u:object_r:gpu_device:s0',
         '/vendor/etc/selinux/vendor_service_contexts u:object_r:vendor_service_contexts_file:s0',

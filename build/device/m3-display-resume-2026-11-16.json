@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-16",
+  "purpose": "Resume unchanged trial 60 before same-pattern display isolation",
+  "source_commit": "3936dbe714000f0b7cb8ced8fb0c83fcbd160013",
+  "boot_id": "689672b7-1e6d-40ff-8f8b-26f032a5ec66",
+  "identity": [
+    "37",
+    "6.18.32-android17-5-maybe-dirty-4k",
+    "689672b7-1e6d-40ff-8f8b-26f032a5ec66",
+    "Enforcing",
+    "running",
+    "",
+    "retained",
+    "adb"
+  ],
+  "retention_last_sample_seconds": 182.703,
+  "boot_readback_sha256": "27b9a334e34ad25ce114ff264d04603e7386bfe4d90d9c1cf4ec1dbe21c120af",
+  "dtbo_readback_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "partition_writes": false,
+  "super_readback_on_resume": false,
+  "action": "Verified EDL loader, read and hashed boot/DTBO, attached staged observer before Firehose power reset, retained same GSI",
+  "prior_attempts": "Two late host gate releases exhausted the existing 180-second diagnostic window; neither installed a new candidate. Fresh EDL reset with early observer completed Android handoff.",
+  "handset_left": "Android 17 GSI with ADB",
+  "physical_fix_claimed": false,
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "local_record": "ufs-host-g3-gsi17-firststage-ufs-60-resume-c-20261116",
+  "logs": {
+    "sahara.log": {
+      "bytes": 12214,
+      "sha256": "2651392da09e8d83bfc9d309a85f5c113d5ceddcd8a5b3ab8217d30626657be5"
+    },
+    "read-boot.log": {
+      "bytes": 6830,
+      "sha256": "95c20065e8b67f6c48d7ed2bc09d994f021a2062dd668d4fd26e407e6916ee74"
+    },
+    "read-dtbo.log": {
+      "bytes": 5439,
+      "sha256": "119fdff8cfc566b8d9da3da1e1eec1d24a6b44428f0eda65086400dc34fc24e9"
+    },
+    "reset.log": {
+      "bytes": 3347,
+      "sha256": "74a6dcabb5fd249a27aae280f674a0ae3dcf7a439f4178218b7043a8b79d69ee"
+    },
+    "live/acm.log": {
+      "bytes": 249099,
+      "sha256": "40103d9278129a1a6586e0f3b11f325115187edc2d28bad3121d98dcbff488ed"
+    },
+    "live/host-events.jsonl": {
+      "bytes": 1921,
+      "sha256": "94c9a7dd4f84cd3295575353728a63a69d179ed41a713586bfd36a44962dec6f"
+    },
+    "live/gsi-stable.json": {
+      "bytes": 18229,
+      "sha256": "8d1682889b7213bd8d1a3fe92877268bf6390e9adfd3561b6aca6e19efe47112"
+    }
+  }
+}

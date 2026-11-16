@@ -55,8 +55,10 @@ def main():
     reference = json.loads((repo/'build/device/gsi17-mount-reference.json').read_text())
     if system_sha != reference['image_sha256']:
         raise ValueError('GSI changed')
+    subprocess.run([sys.executable, str(build/'build_display_smoke.py'),
+                    '--ndk', str(a.ndk.resolve()), '--output', str(current/'display-smoke')], check=True)
     files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics)
-    policy = json.loads((repo/'build/device/m3-graphics-policy-2026-11-15.json').read_text())
+    policy = json.loads((repo/'build/device/m3-graphics-policy-2026-11-16.json').read_text())
     cil = files['/etc/selinux/vendor_sepolicy.cil']
     cil_sha = hashlib.sha256(cil).hexdigest()
     compiled_input = (current/'policy-check/m3-vendor.cil').read_bytes()

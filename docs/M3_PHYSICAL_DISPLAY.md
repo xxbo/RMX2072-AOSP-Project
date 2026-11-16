@@ -948,3 +948,40 @@ separate FramebufferSurface allocation is not a substitute for the directly
 scanned BootAnimation buffer's metadata. Do not change PPS or clocks without
 new evidence. Health HAL remains deferred; no cold-start or fault injection.
 [Trial 60](../build/device/m3-display-60-2026-11-15.json).
+
+### Trial 61 preparation: identical row-sensitive native and Android input
+
+Follow the user's [November 16 diagnosis](M3_DISPLAY_DIAGNOSIS_2026-11-16.md).
+Keep kernel 30, effective DTB/DTBO, source graphics libraries, GSI, DSC PPS,
+clocks and scratch seed images fixed. Replace the diagnostic pattern with
+`m3-row-grid-v2`: the same 1080x2400 RGB888 pixels produce the ramdisk input
+and both BootAnimation PNG frames. A pixel-equality test independently decodes
+the PNG payload and checks its CRCs, labels, horizontal rules and asymmetric
+top/bottom. Native KMS explicitly converts RGB to XRGB using the returned
+pitch and validates allocation bounds. Both native buffers contain this image.
+
+After four flips and the existing native hardware snapshot, hold for 30 seconds
+and then disable the CRTC and destroy buffers before Android handoff. Increase
+the whole native-probe timeout from 15 to 50 seconds. The host's existing
+180-second fallback is unchanged; attach the staged observer before reboot.
+Do not leave the diagnostic gate waiting while building the candidate.
+
+Add a separate static ARM64 read-only Android DRM metadata probe. It queries
+active plane/FB bindings, GETFB2 format/modifier/pitch/offset, and plane properties
+at two bounded samples. It records boot ID and CLOCK_BOOTTIME, rereads the
+binding, and explicitly reports allocation length as unknown. Per-fd universal
+and atomic caps expose properties only; there are no modeset, master, PRIME
+or mapping operations. This does **not** yet capture Android DPU registers,
+mapped addresses, acquire fences or allocation lifetime, and binding rereads
+do not provide an atomic HWC-commit snapshot.
+
+Run the fixed probe in its own SELinux domain and write only its vendor
+diagnostic directory. Give shell read access to that output, without changing
+ADB groups, DRM node modes, or enforcing. Strict policy compilation retains
+neverallow checks. The initial draft targeting shell_data_file was rejected;
+that policy was never loaded and is not used by the candidate.
+
+Preparation is not a physical pass. Observe both native and Android screens;
+retain their separate outcomes, actual scanout samples and CPU capture before
+choosing the next hardware or buffer experiment. Health HAL remains deferred.
+No cold-start or watchdog fault-injection test is part of this experiment.

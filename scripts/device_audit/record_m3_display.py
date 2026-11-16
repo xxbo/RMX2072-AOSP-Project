@@ -43,6 +43,7 @@ def main():
         raise ValueError('Display snapshot is absent or belongs to another boot')
     (live/'m3-display.txt').write_text(snapshot, encoding='utf-8')
     commands = {
+        'scanout-state.txt': 'cat /data/vendor/rmx-m3-diag/scanout.txt',
         'graphics-status.txt': 'getprop init.svc.surfaceflinger; getprop init.svc.zygote; getprop init.svc.vendor.hwcomposer-3; getprop init.svc.vendor.graphics.allocator; getprop sys.boot_completed; service check SurfaceFlinger; service check android.hardware.graphics.composer3.IComposer/default; service check android.hardware.graphics.allocator.IAllocator/default',
         'drm-live.txt': 'ls -l /dev/dri; for p in /sys/class/drm/card*-DSI-*; do echo CONNECTOR=$p; cat $p/status $p/enabled $p/modes; done',
         'surfaceflinger.txt': 'timeout 20 dumpsys SurfaceFlinger',

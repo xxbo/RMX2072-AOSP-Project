@@ -12,6 +12,7 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <drm/drm.h>
 #include <drm/drm_mode.h>
@@ -32,7 +33,7 @@ struct buffer { struct drm_mode_create_dumb dumb; uint32_t fb; void *map; };
 /* Read the existing MSM snapshot only with our CRTC enabled. The pinned
  * driver's kms reader owns display runtime-PM references and snapshots
  * DSI/DPU registers and atomic state. No debug register writes or GPU snapshot.
- * The enclosing initramfs caller bounds this entire probe to 15 s.
+ * The enclosing initramfs caller bounds this entire probe to 50 s.
  * Keep output below the witness's 2 MiB publication limit.
  */
 static void kms_snapshot(void)
@@ -116,23 +117,40 @@ static void clock_snapshot(const char *phase)
 	}
 }
 
-static int alloc_buffer(int fd, struct buffer *b, uint32_t width, uint32_t height, int alternate)
+static int alloc_buffer(int fd, struct buffer *b, uint32_t width, uint32_t height)
 {
 	struct drm_mode_map_dumb map = {0};
 	struct drm_mode_fb_cmd fb = {0};
 	b->dumb.width = width; b->dumb.height = height; b->dumb.bpp = 32;
 	if (call(fd, DRM_IOCTL_MODE_CREATE_DUMB, &b->dumb, "create-dumb")) return -1;
-	if (b->dumb.size > 64 * 1024 * 1024 || b->dumb.pitch < width * 4) return -1;
+	if (b->dumb.size > 64 * 1024 * 1024 || b->dumb.pitch < width * 4 ||
+	    b->dumb.size < (uint64_t)b->dumb.pitch * height || width != 1080 || height != 2400) return -1;
 	map.handle = b->dumb.handle;
 	if (call(fd, DRM_IOCTL_MODE_MAP_DUMB, &map, "map-dumb")) return -1;
 	b->map = mmap(NULL, b->dumb.size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, map.offset);
 	if (b->map == MAP_FAILED) { b->map = NULL; perror("mmap"); return -1; }
-	for (uint32_t y = 0; y < height; y++) {
-		uint32_t *line = (uint32_t *)((char *)b->map + y * b->dumb.pitch);
-		const uint32_t colors[] = {0xff0000, 0x00ff00, 0x0000ff, 0xffffff, 0x606060, 0};
-		for (uint32_t x = 0; x < width; x++)
-			line[x] = colors[(x * 6 / width + alternate * 3) % 6];
+	int input = open("/m3-pattern.rgb", O_RDONLY | O_CLOEXEC);
+	struct stat st;
+	if (input < 0) { perror("pattern open"); return -1; }
+	if (fstat(input, &st) || !S_ISREG(st.st_mode) || st.st_size != (off_t)width * height * 3) {
+		close(input); puts("DRMTEST failure=pattern-size"); return -1;
 	}
+	memset(b->map, 0, b->dumb.size);
+	for (uint32_t y = 0; y < height; y++) {
+		unsigned char rgb[1080 * 3];
+		size_t have = 0;
+		while (have < sizeof(rgb)) {
+			ssize_t n = read(input, rgb + have, sizeof(rgb) - have);
+			if (n < 0 && errno == EINTR) continue;
+			if (n <= 0) { close(input); puts("DRMTEST failure=pattern-read"); return -1; }
+			have += (size_t)n;
+		}
+		uint32_t *line = (uint32_t *)((char *)b->map + y * b->dumb.pitch);
+		for (uint32_t x = 0; x < width; x++)
+			/* Explicit RGB888 -> XRGB8888; padding follows the returned pitch. */
+			line[x] = ((uint32_t)rgb[x*3] << 16) | ((uint32_t)rgb[x*3+1] << 8) | rgb[x*3+2];
+	}
+	close(input);
 	fb.width = width; fb.height = height; fb.pitch = b->dumb.pitch;
 	fb.bpp = 32; fb.depth = 24; fb.handle = b->dumb.handle;
 	if (call(fd, DRM_IOCTL_MODE_ADDFB, &fb, "add-fb")) return -1;
@@ -199,7 +217,7 @@ int main(void)
 	}
 	if (!crtc) goto out;
 	for (int i = 0; i < 2; i++)
-		if (alloc_buffer(fd, &buffers[i], mode.hdisplay, mode.vdisplay, i)) goto out;
+		if (alloc_buffer(fd, &buffers[i], mode.hdisplay, mode.vdisplay)) goto out;
 	scanout.crtc_id = crtc; scanout.fb_id = buffers[0].fb; scanout.mode_valid = 1;
 	scanout.mode = mode; scanout.set_connectors_ptr = PTR(&connector); scanout.count_connectors = 1;
 	clock_snapshot("before-modeset");
@@ -227,6 +245,14 @@ int main(void)
 		last_sequence = event.sequence; last_event_us = event_us;
 	}
 	kms_snapshot();
+	puts("DRMPATTERN version=m3-row-grid-v2 input=RGB888 output=XRGB8888 hold_seconds=30");
+	int kmsg = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
+	if (kmsg >= 0) {
+		const char event[] = "<6>RMX2072-NATIVE-PATTERN hold_seconds=30\n";
+		(void)write(kmsg, event, sizeof(event)-1);
+		close(kmsg);
+	}
+	sleep(30);
 	puts("DRMTEST kms_events=PASS physical_observation=REQUIRED"); result = 0;
 out:
 	if (active) {

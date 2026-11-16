@@ -39,6 +39,21 @@ def main():
     record = dict(ack_commit=ack, headers=headers,
                   source_sha256=hashlib.sha256(source.read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
                   binary_sha256=hashlib.sha256(target.read_bytes()).hexdigest())
+    scan_source = root/'scripts/device_audit/drm_scanout_state.c'
+    scan_target = output/'drm-scanout-state'
+    subprocess.run([str(tools/'aarch64-linux-android35-clang.cmd'), '-static', '-O2',
+                    '-Wall', '-Wextra', '-Werror', '-I'+str(output/'include'),
+                    str(scan_source), '-o', str(scan_target)], check=True)
+    subprocess.run([str(tools/'llvm-strip.exe'), '--strip-all', str(scan_target)], check=True)
+    record['scanout_source_sha256'] = hashlib.sha256(scan_source.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+    record['scanout_binary_sha256'] = hashlib.sha256(scan_target.read_bytes()).hexdigest()
+    from m3_boot_pattern import rgb_bytes, png_bytes, PATTERN_VERSION
+    rgb = rgb_bytes()
+    (output/'pattern.rgb').write_bytes(rgb)
+    (output/'pattern.png').write_bytes(png_bytes(rgb))
+    record['pattern'] = dict(version=PATTERN_VERSION, bytes=len(rgb),
+                            rgb_sha256=hashlib.sha256(rgb).hexdigest(),
+                            png_sha256=hashlib.sha256((output/'pattern.png').read_bytes()).hexdigest())
     (output/'build.json').write_text(json.dumps(record, indent=2)+'\n')
     print(json.dumps(record))
 

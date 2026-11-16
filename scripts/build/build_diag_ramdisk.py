@@ -184,6 +184,9 @@ def main():
             add('bin/first-stage-witness', 0o100755, witness)
             if a.display_smoke:
                 add('bin/drm-panel-smoke', 0o100755, read_static_arm64(a.display_smoke))
+                from m3_boot_pattern import rgb_bytes
+                pattern_rgb = rgb_bytes()
+                add('m3-pattern.rgb', 0o100444, pattern_rgb)
                 add('bin/display-snapshot', 0o100755,
                     (root/'scripts/device_audit/display_snapshot.sh').read_bytes().replace(b'\r\n', b'\n'))
                 if a.display_staged:
@@ -347,6 +350,8 @@ def main():
         report['guarded_adb'] = True
     report['autonomous_ufs'] = a.autonomous_ufs
     report['display_staged'] = a.display_staged
+    if a.display_smoke:
+        report['pattern_rgb_sha256'] = hashlib.sha256(pattern_rgb).hexdigest()
     if a.autonomous_ufs:
         report['autoboot_sha256'] = hashlib.sha256((root/'device/realme/bladerunner_48m/bootstrap/m1-autoboot.sh').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     if a.ufs_reset_info:

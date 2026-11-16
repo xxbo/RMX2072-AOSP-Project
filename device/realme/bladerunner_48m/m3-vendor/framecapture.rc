@@ -16,6 +16,22 @@ service vendor.rmx-m3-capture /system/bin/sh -c "sleep 5; { cat /proc/sys/kernel
 
 on property:sys.usb.state=adb
     start vendor.rmx-m3-capture
+    start vendor.rmx-m3-scanout
+
+# Query the actual active Android plane and framebuffer twice. Client caps only
+# expose properties on this fd; the probe never takes master or sets a mode.
+# Samples are not atomic with HWC commits; binding and uptime are recorded.
+on post-fs-data
+    mkdir /data/vendor/rmx-m3-diag 0755 shell shell
+    restorecon_recursive /data/vendor/rmx-m3-diag
+
+service vendor.rmx-m3-scanout /vendor/bin/hw/rmx-m3-drm-state
+    class late_start
+    user shell
+    group shell graphics
+    disabled
+    oneshot
+    timeout_period 25
 
 # Repeat only this fixed diagnostic on the current boot, without USB changes.
 on property:debug.rmx.m3.capture=1

@@ -98,7 +98,8 @@ if [ -x /bin/drm-panel-smoke ]; then
             ;;
         esac
     fi
-    timeout 15 /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
+    sha256sum /m3-pattern.rgb >> /run/m3-display.txt
+    timeout 50 /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
     if [ -f /m3-display-staged ]; then
         /bin/busybox sh /bin/display-clock-trace end >> /run/m3-display.txt 2>&1 ||
             echo 'M3CLKTRACE capture_failed' >> /run/m3-display.txt
