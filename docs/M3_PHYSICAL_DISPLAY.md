@@ -985,3 +985,56 @@ Preparation is not a physical pass. Observe both native and Android screens;
 retain their separate outcomes, actual scanout samples and CPU capture before
 choosing the next hardware or buffer experiment. Health HAL remains deferred.
 No cold-start or watchdog fault-injection test is part of this experiment.
+
+### Trial 61 result: corruption reproduced before Android
+
+Boot `fd45d4f7-18ad-48b0-b5f8-9a6c53c6cbd2` executes recipe `aa899de`.
+All 17 old and 17 new super segments and both boot/DTBO readback pairs match.
+Kernel 30, effective DTB/DTBO, GSI, graphics libraries and scratch seeds remain
+unchanged. GSI ADB and SurfaceFlinger run under enforcing; the phone is retained
+in GSI. Activity/window services and the AOSP desktop remain unavailable.
+
+**Both physical phases FAIL.** The operator explicitly reports the native
+pattern already contains errors and supplies a photograph during its hold.
+It shows extensive noise with narrow regions retaining colors and row labels.
+For Android, the operator first says the overall appearance is similar, then
+clarifies: “仍然是花屏，但是花屏的内容有所变化”. Preserve that distinction:
+the two outputs are both corrupted, not established as pixel-identical.
+
+The original native photograph remains local; its SHA-256 and observation are
+recorded publicly. Visible label pairs include 042/043, 048/049 and 054/055.
+These three readable groups are 144 input rows apart, or three 48-row DSC slices.
+This is a limited visual lead, not proof of a global corruption period or DSC
+root cause. Native hold begins at uptime 37.661 s; Android handoff is 70.284 s.
+
+| Measurement | Native KMS | Live Android |
+| --- | --- | --- |
+| Active binding | plane 41 / CRTC 89 / FB 91 | plane 41 / CRTC 89 / FB 95 |
+| Dimensions | 1080x2400 | 1080x2400 |
+| Format / modifier | XRGB8888 / linear | ABGR8888 / linear |
+| Pitch / offset | 4352 / 0 | 4352 / 0 |
+| Allocation | 10,444,800 bytes | unknown to this reader |
+| DPU registers | active SSPP stride 4352, UBWC off; both DSC banks match reference shared PPS fields | not captured |
+
+The Android probe completes two 1.5 ms samples at uptime 115.138 and 120.140 s,
+with unchanged bindings on reread. Source and destination rectangles are full
+frame; rotation raw value 1, alpha 65535 and blend mode raw value 2. A queried
+IN_FENCE_FD of -1 is not evidence that HWC failed to supply a fence: this is not
+a submission trace. No allocation/import lifetime or runtime DPU address claim.
+
+The 37.08-second CPU capture has 2,535,779 / 2,592,000 exact reference pixels
+(97.83%); remaining channel differences are at most 5/255. It still does not
+represent the physical output. The independent DRM query succeeds under the
+new policy. A later shell `ls` lacks directory getattr permission, but reading
+the intended diagnostic file succeeds; no permission broadening is needed.
+
+The failure can now be reproduced without Android HWC. Prioritize the shared
+DPU fetch, DSC/pingpong/merge, DSI and panel path; retain Android format and
+reconfiguration differences as comparisons, rather than claiming they are
+excluded. Next correlate active routing and packet/row boundaries against the
+OEM 20607 configuration before choosing one parameter to change. Keep the
+kernel/PPS/clocks baseline until that evidence exists. Health HAL is deferred.
+
+[Trial 61 evidence](../build/device/m3-display-61-2026-11-16.json) ·
+[Android CPU capture](../build/device/m3-display-61-android-frame.png) ·
+[Reference pattern](../build/device/m3-row-grid-v2.png).
