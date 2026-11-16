@@ -101,3 +101,10 @@ PPS 修正和两片每包已经做过，应保留已有结果，避免重新将�
 这一结果支持优先排查共用的 DPU 取像素、DSC/pingpong/merge、DSI 和面板通路。原生照片中三组可辨认行号相隔 144 个源图像行，恰为三个 48 行 slice；这只是待验证线索，不是已确定的故障周期或根因。下一步先把活跃通路、分包和行边界与官方 20607 配置对应，再选择单项改动。暂不推进 Health HAL，也不改写 pitch 或重复已失败的 PPS 假设。
 
 手机留在可用的 GSI ADB 中；实屏和桌面仍未通过。详见[第 61 轮记录](../build/device/m3-display-61-2026-11-16.json)和[阶段结果](M3_PHYSICAL_DISPLAY.md#trial-61-result-corruption-reproduced-before-android)。
+
+
+## 第 62 轮：单 DSC 仍复现花屏
+
+已按官方列出的另一种拓扑做对照：单 LM、单 DSC 编码两片、单 DSI。寄存器确认单 DSC 生效，16 项隔离检查通过，PPS、分包、报告的 DSI 速率和测试输入保持不变。用户确认原生阶段“还是一样”，Android 阶段“一样，与上次无变化”。因此花屏无需双 DSC 合并也能复现，尚不能定位到某个具体共用组件。
+
+手机继续留在 enforcing 的 GSI ADB，SurfaceFlinger 运行。下一步应把 DPU 显存取像素与后续压缩输出分开验证；不要重测冷启动或把这轮写成修复通过。[实验代码与完整结果](M3_DSC_TOPOLOGY_ISOLATION.md#trial-62-result)。

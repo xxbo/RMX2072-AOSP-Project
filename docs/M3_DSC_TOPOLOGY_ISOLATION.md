@@ -62,4 +62,38 @@ Acceptance and interpretation:
 - Retain usable GSI ADB; restore F.20 on a failed startup. No unplug/power-key
   or watchdog fault-injection test is part of this experiment.
 
-Status at recipe commit: prepared for build; no trial 62 device result yet.
+## Trial 62 result
+
+[Kernel build 31](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43873896627)
+passed at recipe `5f0494c89ca2ab0b45e56a4f49c2d79b4e494026`. Verified kernel Image
+SHA-256: `1908f7b1653a61d727f39578d57d8e7addd6843d82d609ec0487e83b1c42b8f3`.
+Trial boot: `9ef898f4-64ce-418b-904f-87adf645208c`.
+
+The isolation is valid: CTL0 DSC mask is 1, INTF mask is 2, generic merge-3D
+mask is 0; DSC0 input mux is 0, INTF1 selects PP0, DSC0 common mode is 0 and
+only PP0 enables DSC. Input mux readback is `[0, 7, 7, 7]`; inactive inputs
+are not interpreted as active routes. Only DSC0 has encoder configuration.
+Its shared PPS fields, DSI packet registers and reported DSI rates match trial
+61. All 16 recorded isolation checks pass. Native SSPP0 still uses IOVA
+`0x2000`, pitch 4352, linear 4-byte pixels; the active FB mapping agrees.
+
+**Physical result: FAIL.** During the native hold the operator answered
+“还是一样”; after Android took over, “一样，与上次无变化”. Single DSC therefore
+reproduces the symptom without dual-encoder merge. This does not identify
+which common component is faulty and does not establish that fetched pixels
+or the panel's internal PPS are correct.
+
+The Android CPU screenshot is byte-identical to trial 61's screenshot; the
+existing public PNG is reused. Live Android scanout remains plane 41 / CRTC 89 /
+FB 95, linear ABGR8888, 1080x2400, pitch 4352. These are metadata observations,
+not a physical display pass or Android DPU register capture.
+
+The runner verified all 17 existing super chunks and both boot/DTBO pairs;
+only boot was written. It retained enforcing GSI ADB after 196.297 seconds
+of the existing acceptance checks. No cold-start or fault-injection test ran.
+Next isolate the DPU's fetched pixels from the compressed output path, rather
+than repeating PPS or dual-DSC parameter guesses.
+
+Evidence: [trial 62](../build/device/m3-display-62-2026-11-16.json),
+[isolation checks](../build/device/m3-single-dsc-isolation-2026-11-16.json),
+[native route baseline](../build/device/m3-route-baseline-2026-11-16.json).

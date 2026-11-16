@@ -22,7 +22,7 @@ command sequence into a DRM MIPI-DSI panel. Its source is
 at realme commit `24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4`. The importer verifies
 the Git blob SHA-256 and preserves all packet types, payload bytes, LP/HS mode
 and delays: 28 initialization packets, four display-on packets and four off
-packets in the generated reference table. The prepared DSC repair replaces only
+packets in the generated reference table. The runtime panel path replaces only
 the runtime `0x9e` PPS payload with the host encoder's calculated parameters;
 trial 55 verified the host-side change, but physical corruption remained.
 The filename says 2340; the selected
@@ -1041,3 +1041,18 @@ kernel/PPS/clocks baseline until that evidence exists. Health HAL is deferred.
 [Trial 61 evidence](../build/device/m3-display-61-2026-11-16.json) ·
 [Android CPU capture](../build/device/m3-display-61-android-frame.png) ·
 [Reference pattern](../build/device/m3-row-grid-v2.png).
+
+
+## Trial 62: single DSC still reproduces corruption
+
+Current goal remains correct physical output, then the AOSP desktop. Kernel
+build 31 and the opt-in single-DSC boot passed the controlled routing checks:
+only DSC0 / PP0 / INTF1 are enabled, DSC split/multiplex is off, and PPS, DSI
+packets, reported DSI rates, GSI/vendor, board trees and volume seeds are fixed.
+The operator reports unchanged corruption in both native and Android phases.
+Dual-encoder merge is therefore not required to reproduce the symptom.
+
+GSI ADB and SurfaceFlinger remain available under enforcing; the same boot was
+retained. The next isolation should bypass memory fetching using a controlled
+DPU-generated pattern, or capture the hardware output before compression. No
+physical display or desktop pass is claimed. [Detailed result and next scope](M3_DSC_TOPOLOGY_ISOLATION.md#trial-62-result).
