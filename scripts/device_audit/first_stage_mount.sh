@@ -100,7 +100,7 @@ if [ -x /bin/drm-panel-smoke ]; then
     fi
     sha256sum /m3-pattern.rgb >> /run/m3-display.txt
     probe_timeout=50
-    [ ! -f /m3-solid-fill-test ] || probe_timeout=65
+    [ ! -f /m3-solid-fill-test ] || probe_timeout=75
     timeout "$probe_timeout" /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
     if [ -f /m3-solid-fill-test ]; then
         # Independent cleanup even when timeout killed the native probe.

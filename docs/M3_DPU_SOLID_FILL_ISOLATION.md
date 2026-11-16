@@ -14,11 +14,15 @@ bit 22. Userspace never writes MMIO addresses.
 
 The native probe displays red, green and blue for eight seconds each,
 collecting a KMS snapshot capped at 128 KiB after each successful flip. It
-then clears the parameter, restores the row pattern and holds it for ten
-seconds. Its parent independently clears and rereads the parameter after
+then clears the parameter and shows an ordinary framebuffer filled with the
+same RGB red for eight seconds. Only the inactive buffer is filled, using its
+returned pitch; the other buffer retains the row pattern. Finally it restores
+that pattern for ten seconds. This same-color comparison helps distinguish
+pixel-source effects from differences caused by image complexity.
+Its parent independently clears and rereads the parameter after
 success, timeout or failure, before Android starts. A failed reset blocks
 handoff. Packaging requires a matching verified patch and ramdisk marker.
-The complete native probe has a 65-second outer timeout in this mode; the
+The complete native probe has a 75-second outer timeout in this mode; the
 normal row-pattern-only mode retains its original 50-second limit.
 
 Keep the accepted single-DSC topology, PPS, DSI packets, source trees, graphics,

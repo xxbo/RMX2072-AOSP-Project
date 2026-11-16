@@ -1,7 +1,7 @@
 {
   "date": "2026-11-16",
-  "probe_source_sha256": "71c407383749493a9674b5bc9a8034180b6b6ada07477412b293eec8f8d221cf",
-  "static_arm64_probe_sha256": "dc085f229d154c97ee74efde7c4b74fa3f7925fb6cac74068799f0450dafded3",
+  "probe_source_sha256": "43e545237a02cc04f56b63f7aca56516162fa512f135ecddc618079b4a248370",
+  "static_arm64_probe_sha256": "0574af9c0d7899a2c687b0e5476f765442cc3e1e1a5cb72d2349c9b4019e0847",
   "compile_flags": [
     "-static",
     "-O2",
@@ -22,5 +22,12 @@
     "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
     "control.json": "ef34a8f1b49941214f79e7e1b3c2a4ca4183609516e9a9426572791a618612f2"
   },
-  "device_result": "NOT_TESTED"
+  "device_result": "NOT_TESTED",
+  "decoder_synthetic_checks": {
+    "valid_bypass": true,
+    "leftover_source_rejected": true,
+    "wrong_framebuffer_rejected": true,
+    "duplicate_framebuffer_rejected": true,
+    "scope": "Synthetic mutations of trial 62 register data; not trial 63 hardware evidence"
+  }
 }

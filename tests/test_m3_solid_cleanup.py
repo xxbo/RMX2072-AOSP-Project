@@ -17,7 +17,7 @@ class SolidCleanupTest(unittest.TestCase):
         source = (ROOT/'scripts/device_audit/first_stage_mount.sh').read_text()
         block = source.split('    probe_timeout=50\n', 1)[1].split(
             '    if [ -f /m3-display-staged ]; then', 1)[0]
-        block = 'probe_timeout=1\n'+block.replace('probe_timeout=65', 'probe_timeout=1')
+        block = 'probe_timeout=1\n'+block.replace('probe_timeout=75', 'probe_timeout=1')
         with tempfile.TemporaryDirectory(prefix='rmx-solid-') as directory:
             temp = Path(directory)
             control, log, marker = (temp/n for n in ('control', 'display.log', 'marker'))

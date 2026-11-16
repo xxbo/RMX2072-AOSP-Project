@@ -33,7 +33,7 @@ struct buffer { struct drm_mode_create_dumb dumb; uint32_t fb; void *map; };
 /* Read the existing MSM snapshot only with our CRTC enabled. The pinned
  * driver's kms reader owns display runtime-PM references and snapshots
  * DSI/DPU registers and atomic state. No debug register writes or GPU snapshot.
- * The enclosing initramfs caller bounds this probe to 50 s (65 s for solid fill).
+ * The enclosing initramfs caller bounds this probe to 50 s (75 s for solid fill).
  * Keep output below the witness's 2 MiB publication limit.
  */
 static void kms_snapshot(const char *solid_label)
@@ -323,7 +323,24 @@ int main(void)
 			phase_marker(event);
 			sleep(8);
 		}
-		if (set_fill(0) || solid_flip(fd, crtc, buffers[0].fb, 0x63ff,
+		/* Buffer 1 is currently on the plane (hardware blue). Fill only the
+		 * inactive buffer 0 with the same RGB red as the first hardware fill.
+		 * Buffer 1 retains the original row pattern for the final comparison.
+		 */
+		for (uint32_t y = 0; y < mode.vdisplay; y++) {
+			uint32_t *line = (uint32_t *)((char *)buffers[0].map + y * buffers[0].dumb.pitch);
+			for (uint32_t x = 0; x < mode.hdisplay; x++) line[x] = 0x00ff0000;
+		}
+		if (set_fill(0) || solid_flip(fd, crtc, buffers[0].fb, 0x63fe,
+					    &last_sequence, &last_event_us)) {
+			puts("DRMSOLID failure=memory-red"); goto out;
+		}
+		kms_snapshot("kms-memory-red");
+		printf("DRMSOLID memory_color=red format=XRGB8888 value=0x00ff0000 fb=%u pitch=%u size=%llu hold_seconds=8\n",
+		       buffers[0].fb, buffers[0].dumb.pitch, (unsigned long long)buffers[0].dumb.size);
+		phase_marker("<6>RMX2072-MEMORY-PATTERN color=red hold_seconds=8\n");
+		sleep(8);
+		if (solid_flip(fd, crtc, buffers[1].fb, 0x63ff,
 					    &last_sequence, &last_event_us)) {
 			puts("DRMSOLID failure=restore-pattern"); goto out;
 		}
