@@ -50,6 +50,7 @@ def main():
     p.add_argument('--first-stage-source-build', type=pathlib.Path, help='M2 source build artifact directory with resolved manifest and digests')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
     p.add_argument('--display-smoke', type=pathlib.Path, help='Static physical DRM test; run before Android policy')
+    p.add_argument('--solid-fill-test', action='store_true', help='Bounded native SSPP solid-fill isolation with independent parent cleanup')
     p.add_argument('--display-staged', action='store_true', help='Wait for USB log capture before binding the three display stages')
     p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
     p.add_argument('--ufs-first-stage', type=pathlib.Path, metavar='PROFILE',
@@ -75,6 +76,8 @@ def main():
         p.error('Display smoke requires autonomous UFS and the pre-policy witness')
     if a.display_staged and not a.display_smoke:
         p.error('Staged display requires the physical display probe')
+    if a.solid_fill_test and not a.display_smoke:
+        p.error('Solid-fill test requires the native display probe')
     if a.autonomous_ufs and not (a.adb_public_key and a.ufs_first_stage and a.entry_carrier):
         p.error('Autonomous UFS requires the guarded signed profile and recovery evidence carrier')
     if a.adb_public_key and not a.scratch_volumes:
@@ -184,6 +187,8 @@ def main():
             add('bin/first-stage-witness', 0o100755, witness)
             if a.display_smoke:
                 add('bin/drm-panel-smoke', 0o100755, read_static_arm64(a.display_smoke))
+                if a.solid_fill_test:
+                    add('m3-solid-fill-test', 0o100444, b'1\n')
                 from m3_boot_pattern import rgb_bytes
                 pattern_rgb = rgb_bytes()
                 add('m3-pattern.rgb', 0o100444, pattern_rgb)
@@ -350,7 +355,9 @@ def main():
         report['guarded_adb'] = True
     report['autonomous_ufs'] = a.autonomous_ufs
     report['display_staged'] = a.display_staged
+    report['solid_fill_test'] = a.solid_fill_test
     if a.display_smoke:
+        report['display_probe_sha256'] = hashlib.sha256(read_static_arm64(a.display_smoke)).hexdigest()
         report['pattern_rgb_sha256'] = hashlib.sha256(pattern_rgb).hexdigest()
     if a.autonomous_ufs:
         report['autoboot_sha256'] = hashlib.sha256((root/'device/realme/bladerunner_48m/bootstrap/m1-autoboot.sh').read_bytes().replace(b'\r\n', b'\n')).hexdigest()

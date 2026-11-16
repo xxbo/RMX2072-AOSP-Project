@@ -25,6 +25,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--workspace', required=True, type=Path)
     parser.add_argument('--single-dsc-test', action='store_true')
+    parser.add_argument('--solid-fill-test', action='store_true')
     a = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
@@ -37,6 +38,8 @@ def main():
         raise ValueError('Requires committed, source-only device tree build')
     if a.single_dsc_test and not dt.get('display'):
         raise ValueError('Single DSC test requires the display device tree')
+    if a.solid_fill_test and not dt.get('display'):
+        raise ValueError('Solid-fill test requires the display device tree')
     for name, expected in dt['outputs'].items():
         data = (source / name).read_bytes()
         if len(data) != expected['size_bytes'] or sha(data) != expected['sha256']:
@@ -63,10 +66,18 @@ def main():
         manifest = kernel_dir / (name + '.sha256')
         if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
             raise ValueError('Single DSC test requires the verified matching kernel patch')
+    if a.solid_fill_test:
+        name = 'rmx2072-dpu-solid-fill-test'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Solid-fill test requires the verified matching kernel patch')
     if any('CONFIG_' + name + '=y' not in config for name in ('INPUT_PM8941_PWRKEY', 'POWER_RESET_MSM', 'POWER_RESET_QCOM_PON')):
         raise ValueError('Upstream PON/PS_HOLD drivers are not built in')
     rd = (current / 'ramdisk/ramdisk.cpio.gz').read_bytes()
     provenance = json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())
+    if bool(provenance.get('solid_fill_test')) != a.solid_fill_test:
+        raise ValueError('Solid-fill boot request and ramdisk marker must agree')
     if (not provenance.get('autonomous_ufs') or not provenance.get('guarded_adb') or
             provenance.get('first_stage_source', {}).get('origin') != 'project-source-build'):
         raise ValueError('M2 requires autonomous guarded source-init ramdisk')
@@ -125,6 +136,7 @@ def main():
                   avb_envelopes=dict(boot=boot_avb, dtbo=dtbo_avb),
                   status='packaged-not-device-tested')
     record['single_dsc_test'] = a.single_dsc_test
+    record['solid_fill_test'] = a.solid_fill_test
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))
 

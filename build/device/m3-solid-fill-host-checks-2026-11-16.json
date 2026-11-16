@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-16",
+  "probe_source_sha256": "71c407383749493a9674b5bc9a8034180b6b6ada07477412b293eec8f8d221cf",
+  "static_arm64_probe_sha256": "dc085f229d154c97ee74efde7c4b74fa3f7925fb6cac74068799f0450dafded3",
+  "compile_flags": [
+    "-static",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "parent_cleanup_tests": {
+    "normal_exit": "PASS",
+    "probe_failure": "PASS",
+    "timeout": "PASS",
+    "failed_reset_blocks_handoff": "PASS"
+  },
+  "old_kernel_source": "5f0494c89ca2ab0b45e56a4f49c2d79b4e494026",
+  "old_kernel_rejected": true,
+  "existing_candidate_outputs_unchanged": {
+    "boot-diag.img": "0a372c35a19cdbc7a6a4dd4fe07071e6f947a9b119ae305a1a13000019403775",
+    "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+    "control.json": "ef34a8f1b49941214f79e7e1b3c2a4ca4183609516e9a9426572791a618612f2"
+  },
+  "device_result": "NOT_TESTED"
+}

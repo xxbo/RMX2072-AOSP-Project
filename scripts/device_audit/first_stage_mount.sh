@@ -99,7 +99,20 @@ if [ -x /bin/drm-panel-smoke ]; then
         esac
     fi
     sha256sum /m3-pattern.rgb >> /run/m3-display.txt
-    timeout 50 /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
+    probe_timeout=50
+    [ ! -f /m3-solid-fill-test ] || probe_timeout=65
+    timeout "$probe_timeout" /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
+    if [ -f /m3-solid-fill-test ]; then
+        # Independent cleanup even when timeout killed the native probe.
+        # This changes a driver input only; the next atomic update restores
+        # framebuffer scanout. Never hand a forced solid fill to Android.
+        control=/sys/module/msm/parameters/rmx2072_solid_fill
+        if ! printf '0\n' > "$control" || [ "$(cat "$control")" != 0 ]; then
+            echo 'M3SOLID parent_cleanup=FAILED' >> /run/m3-display.txt
+            exit 1
+        fi
+        echo 'M3SOLID parent_cleanup=ok parameter=0' >> /run/m3-display.txt
+    fi
     if [ -f /m3-display-staged ]; then
         /bin/busybox sh /bin/display-clock-trace end >> /run/m3-display.txt 2>&1 ||
             echo 'M3CLKTRACE capture_failed' >> /run/m3-display.txt

@@ -12,11 +12,14 @@ updates copy it into full-frame SM8250 primary planes. Existing driver code
 then clears source addresses, writes the constant color and sets SRC_FORMAT
 bit 22. Userspace never writes MMIO addresses.
 
-The planned native probe will display red, green and blue for eight seconds
-each, collecting a bounded KMS snapshot after each successful flip. It will
-then clear the parameter, restore the row pattern and verify its normal
-scanout. Its parent must also clear the parameter after timeout or failure,
-before Android starts. Packaging must require a matching verified patch.
+The native probe displays red, green and blue for eight seconds each,
+collecting a KMS snapshot capped at 128 KiB after each successful flip. It
+then clears the parameter, restores the row pattern and holds it for ten
+seconds. Its parent independently clears and rereads the parameter after
+success, timeout or failure, before Android starts. A failed reset blocks
+handoff. Packaging requires a matching verified patch and ramdisk marker.
+The complete native probe has a 65-second outer timeout in this mode; the
+normal row-pattern-only mode retains its original 50-second limit.
 
 Keep the accepted single-DSC topology, PPS, DSI packets, source trees, graphics,
 GSI and volume seeds. Verify the solid-fill bit, zero source address and
@@ -30,6 +33,12 @@ native pattern and Android observations separately.
 - A failed bypass check or cleanup invalidates the isolation. Never call an
   event, screenshot or clean color alone a complete physical-display pass.
 
-Current status: kernel-side probe prepared; userspace lifecycle and handset
-validation remain pending. No cold-start or watchdog fault injection is part
-of this display experiment.
+Host validation: the static ARM64 probe builds with warnings as errors. Four
+tests execute the actual parent-shell block with normal, failed and timed-out
+probe fixtures and an unwritable reset target. The stale-kernel packer guard
+rejects this experiment without changing the existing candidate. These checks
+do not establish hardware bypass or display correctness.
+
+Current status: [kernel build 32](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43881361097)
+is pending; handset validation has not run. No cold-start or watchdog fault
+injection is part of this display experiment.

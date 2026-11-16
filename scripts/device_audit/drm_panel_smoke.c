@@ -33,27 +33,30 @@ struct buffer { struct drm_mode_create_dumb dumb; uint32_t fb; void *map; };
 /* Read the existing MSM snapshot only with our CRTC enabled. The pinned
  * driver's kms reader owns display runtime-PM references and snapshots
  * DSI/DPU registers and atomic state. No debug register writes or GPU snapshot.
- * The enclosing initramfs caller bounds this entire probe to 50 s.
+ * The enclosing initramfs caller bounds this probe to 50 s (65 s for solid fill).
  * Keep output below the witness's 2 MiB publication limit.
  */
-static void kms_snapshot(void)
+static void kms_snapshot(const char *solid_label)
 {
 	static const struct { const char *name; size_t limit; } files[] = {
 		{"kms", 512 * 1024}, {"state", 64 * 1024}, {"fb", 64 * 1024},
 	};
 	for (size_t i = 0; i < sizeof(files) / sizeof(files[0]); i++) {
+		if (solid_label && i) break;
+		const char *label = solid_label ? solid_label : files[i].name;
+		size_t limit = solid_label ? 128 * 1024 : files[i].limit;
 		char path[128], buf[4096];
 		size_t total = 0;
 		int error = 0;
 		snprintf(path, sizeof(path), "/sys/kernel/debug/dri/0/%s", files[i].name);
-		printf("DRMSNAPSHOT begin=%s phase=after-flips\n", files[i].name);
+		printf("DRMSNAPSHOT begin=%s phase=after-flips\n", label);
 		int fd = open(path, O_RDONLY | O_CLOEXEC);
 		if (fd < 0) {
-			printf("DRMSNAPSHOT end=%s open_errno=%d\n", files[i].name, errno);
+			printf("DRMSNAPSHOT end=%s open_errno=%d\n", label, errno);
 			continue;
 		}
-		while (total < files[i].limit) {
-			size_t count = files[i].limit - total;
+		while (total < limit) {
+			size_t count = limit - total;
 			if (count > sizeof(buf)) count = sizeof(buf);
 			ssize_t n = read(fd, buf, count);
 			if (n < 0 && errno == EINTR) continue;
@@ -67,7 +70,7 @@ static void kms_snapshot(void)
 		}
 		close(fd);
 		printf("\nDRMSNAPSHOT end=%s bytes=%zu limit_reached=%d read_errno=%d\n",
-		       files[i].name, total, total == files[i].limit, error);
+		       label, total, total == limit, error);
 	}
 }
 
@@ -159,6 +162,55 @@ static int alloc_buffer(int fd, struct buffer *b, uint32_t width, uint32_t heigh
 	return 0;
 }
 
+static const char *fill_control = "/sys/module/msm/parameters/rmx2072_solid_fill";
+
+static int get_fill(uint32_t *value)
+{
+	FILE *file = fopen(fill_control, "r");
+	if (!file) return -1;
+	int matched = fscanf(file, "%u", value);
+	int error = fclose(file);
+	return matched == 1 && !error ? 0 : -1;
+}
+
+static int set_fill(uint32_t value)
+{
+	char text[32];
+	int len = snprintf(text, sizeof(text), "%u\n", value);
+	int fd = open(fill_control, O_WRONLY | O_CLOEXEC);
+	if (fd < 0) return -1;
+	ssize_t written = write(fd, text, (size_t)len);
+	int error = close(fd);
+	uint32_t observed;
+	if (written != len || error || get_fill(&observed) || observed != value) return -1;
+	return 0;
+}
+
+static int solid_flip(int fd, uint32_t crtc, uint32_t fb, uint64_t cookie,
+		      uint32_t *last_sequence, uint64_t *last_us)
+{
+	struct drm_mode_crtc_page_flip flip = {.crtc_id = crtc, .fb_id = fb,
+		.flags = DRM_MODE_PAGE_FLIP_EVENT, .user_data = cookie};
+	if (call(fd, DRM_IOCTL_MODE_PAGE_FLIP, &flip, "solid-page-flip")) return -1;
+	struct pollfd pfd = {.fd = fd, .events = POLLIN};
+	if (poll(&pfd, 1, 1500) <= 0) return -1;
+	struct drm_event_vblank event = {0};
+	if (read(fd, &event, sizeof(event)) != sizeof(event) ||
+	    event.base.type != DRM_EVENT_FLIP_COMPLETE || event.user_data != cookie) return -1;
+	uint64_t us = (uint64_t)event.tv_sec * 1000000 + event.tv_usec;
+	if ((int32_t)(event.sequence - *last_sequence) <= 0 || us <= *last_us) return -1;
+	*last_sequence = event.sequence; *last_us = us;
+	printf("DRMSOLID flip=%llu sequence=%u time=%u.%06u\n",
+	       (unsigned long long)cookie, event.sequence, event.tv_sec, event.tv_usec);
+	return 0;
+}
+
+static void phase_marker(const char *text)
+{
+	int fd = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
+	if (fd >= 0) { (void)write(fd, text, strlen(text)); close(fd); }
+}
+
 int main(void)
 {
 	uint32_t connectors[LIMIT], crtcs[LIMIT], encoders[LIMIT];
@@ -171,7 +223,15 @@ int main(void)
 	uint32_t last_sequence = 0;
 	uint64_t last_event_us = 0;
 	int fd = -1, result = 1, active = 0;
+	int solid_test = access("/m3-solid-fill-test", F_OK) == 0;
 	setvbuf(stdout, NULL, _IONBF, 0);
+	if (solid_test) {
+		uint32_t value;
+		if (get_fill(&value) || value) {
+			puts("DRMSOLID failure=missing-or-nonzero-control");
+			goto out;
+		}
+	}
 	for (int retry = 0; retry < 8; retry++) {
 		fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
 		if (fd >= 0) break;
@@ -244,17 +304,44 @@ int main(void)
 		}
 		last_sequence = event.sequence; last_event_us = event_us;
 	}
-	kms_snapshot();
-	puts("DRMPATTERN version=m3-row-grid-v2 input=RGB888 output=XRGB8888 hold_seconds=30");
-	int kmsg = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
-	if (kmsg >= 0) {
-		const char event[] = "<6>RMX2072-NATIVE-PATTERN hold_seconds=30\n";
-		(void)write(kmsg, event, sizeof(event)-1);
-		close(kmsg);
+	if (solid_test) {
+		static const struct { const char *name, *snapshot; uint32_t value; } colors[] = {
+			{"red", "kms-solid-red", 0x800000ffU},
+			{"green", "kms-solid-green", 0x8000ff00U},
+			{"blue", "kms-solid-blue", 0x80ff0000U},
+		};
+		for (int i = 0; i < 3; i++) {
+			if (set_fill(colors[i].value) ||
+			    solid_flip(fd, crtc, buffers[(i+1)%2].fb, 0x6300U+(unsigned)i,
+				       &last_sequence, &last_event_us)) {
+				puts("DRMSOLID failure=color-update"); goto out;
+			}
+			kms_snapshot(colors[i].snapshot);
+			printf("DRMSOLID color=%s value=%#x hold_seconds=8\n", colors[i].name, colors[i].value);
+			char event[128];
+			snprintf(event, sizeof(event), "<6>RMX2072-SOLID-PATTERN color=%s hold_seconds=8\n", colors[i].name);
+			phase_marker(event);
+			sleep(8);
+		}
+		if (set_fill(0) || solid_flip(fd, crtc, buffers[0].fb, 0x63ff,
+					    &last_sequence, &last_event_us)) {
+			puts("DRMSOLID failure=restore-pattern"); goto out;
+		}
+		puts("DRMSOLID restored=framebuffer parameter=0");
 	}
-	sleep(30);
+	kms_snapshot(NULL);
+	unsigned int hold = solid_test ? 10 : 30;
+	printf("DRMPATTERN version=m3-row-grid-v2 input=RGB888 output=XRGB8888 hold_seconds=%u\n", hold);
+	char event[96];
+	snprintf(event, sizeof(event), "<6>RMX2072-NATIVE-PATTERN hold_seconds=%u\n", hold);
+	phase_marker(event);
+	sleep(hold);
 	puts("DRMTEST kms_events=PASS physical_observation=REQUIRED"); result = 0;
 out:
+	if (solid_test) {
+		if (set_fill(0)) { puts("DRMSOLID cleanup=FAILED"); result = 1; }
+		else puts("DRMSOLID cleanup=ok parameter=0");
+	}
 	if (active) {
 		struct drm_mode_crtc disable = {.crtc_id = crtc};
 		if (call(fd, DRM_IOCTL_MODE_SETCRTC, &disable, "disable-crtc")) result = 1;
