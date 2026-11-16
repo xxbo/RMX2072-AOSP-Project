@@ -14068,7 +14068,12 @@
         "quote": "没注意，今天先到这里吧，你总结一下我们结束",
         "result": "NOT_OBSERVED"
       }
-    ]
+    ],
+    "trial62_baseline_checks": {
+      "dsc_fields_unchanged": true,
+      "dsi_packets_unchanged": true,
+      "route_unchanged": true
+    }
   },
   "preflight": {
     "checks": {
