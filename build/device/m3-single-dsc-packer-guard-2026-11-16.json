@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-16",
+  "old_kernel_source": "9a9b85f67d82d159f9f82f7b36b456de7492a749",
+  "single_dsc_request_rejected": true,
+  "reason": "Single DSC test requires the verified matching kernel patch",
+  "candidate_outputs_unchanged": {
+    "boot-diag.img": "c2736ffc96f58288eeedeac6c525f43c0e8f3f0a58b1c57ecd752ce1b82155de",
+    "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+    "control.json": "40b1c35f4f311ea42ab75a66a4e82c7e0af77832d57143448d1bc6f7d43135e7"
+  },
+  "device_restarted": false
+}
