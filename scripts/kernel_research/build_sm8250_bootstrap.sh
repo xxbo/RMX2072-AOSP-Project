@@ -65,7 +65,7 @@ if [[ "${RMX2072_DISPLAY:-0}" == 1 ]]; then
   git -C "$WORKSPACE/common" apply --check "$CLOCK_PATCH"
   git -C "$WORKSPACE/common" apply "$CLOCK_PATCH"
   sha256sum "$CLOCK_PATCH" > "$ARTIFACT_DIR/display-clock-patch.sha256"
-  for DSC_PATCH_NAME in upstream-dsi-dsc-all-slices-flag upstream-msm-dsi-dsc-slices-per-packet rmx2072-dsc-packet-trace rmx2072-dsc-route-test; do
+  for DSC_PATCH_NAME in upstream-dsi-dsc-all-slices-flag upstream-msm-dsi-dsc-slices-per-packet rmx2072-dsc-packet-trace rmx2072-dsc-route-test rmx2072-dpu-solid-fill-test; do
     DSC_PATCH="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-patches/$DSC_PATCH_NAME.patch"
     git -C "$WORKSPACE/common" apply --check "$DSC_PATCH"
     git -C "$WORKSPACE/common" apply "$DSC_PATCH"

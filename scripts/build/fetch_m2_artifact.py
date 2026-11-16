@@ -183,7 +183,8 @@ def main():
         # Earlier artifacts remain verifiable against their own original source.
         for name in ('upstream-dsi-dsc-all-slices-flag',
                      'upstream-msm-dsi-dsc-slices-per-packet',
-                     'rmx2072-dsc-packet-trace', 'rmx2072-dsc-route-test'):
+                     'rmx2072-dsc-packet-trace', 'rmx2072-dsc-route-test',
+                     'rmx2072-dpu-solid-fill-test'):
             path = 'bootstrap-patches/' + name + '.patch'
             exists = subprocess.run(['git', '-C', str(repo), 'cat-file', '-e',
                 a.commit + ':device/realme/bladerunner_48m/' + path],

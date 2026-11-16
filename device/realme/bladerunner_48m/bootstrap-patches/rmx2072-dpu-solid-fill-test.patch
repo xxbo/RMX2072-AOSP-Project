@@ -1,0 +1,54 @@
+Subject: [RMX2072 M3] expose bounded native SSPP solid-fill diagnostic input
+
+ACK base ecdaacc9a0ee87eaf9544e1836d86bd9d590312e. Default zero preserves
+normal scanout. A root-only parameter feeds the existing primary-plane solid
+fill implementation during ordinary atomic updates, scoped to SM8250 and the
+RM19795 full-frame geometry. No raw register-writing userspace interface.
+
+The existing setup_solidfill clears source addresses, programs the constant
+color and sets SRC_FORMAT BIT(22). Capture those fields to prove the bypass.
+The probe and its parent both clear the parameter before Android. A clean
+solid image would not exclude content-dependent DSC faults; noisy solid fill
+with the bypass verified would reproduce corruption without buffer fetching.
+
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/debugfs.h>
+ #include <linux/dma-buf.h>
++#include <linux/moduleparam.h>
+ 
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_uapi.h>
+@@ -45,6 +46,15 @@
+ #define SHARP_NOISE_THR_DEFAULT	2
+ 
+ #define DPU_PLANE_COLOR_FILL_FLAG	BIT(31)
++
++/* Root-only pre-policy RMX2072 experiment. Consumed by the ordinary atomic
++ * update/flush path; setting this parameter does not write hardware itself.
++ * Bit 31 enables the existing SSPP solid-fill operation; bits 23:0 are BGR.
++ * The bounded native probe and its parent reset it before Android starts.
++ */
++static unsigned int rmx2072_solid_fill;
++module_param_named(rmx2072_solid_fill, rmx2072_solid_fill, uint, 0600);
++MODULE_PARM_DESC(rmx2072_solid_fill, "RMX2072 native SSPP solid-fill isolation");
+ #define DPU_ZPOS_MAX 255
+ 
+ /*
+@@ -1515,6 +1525,14 @@
+ 	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state,
+ 									   plane);
+ 
++	pdpu->color_fill = 0;
++	if (pdpu->catalog->mdss_ver->core_major_ver == 6 &&
++	    pdpu->catalog->mdss_ver->core_minor_ver == 0 &&
++	    plane->type == DRM_PLANE_TYPE_PRIMARY &&
++	    new_state->visible && new_state->crtc_w == 1080 &&
++	    new_state->crtc_h == 2400)
++		pdpu->color_fill = READ_ONCE(rmx2072_solid_fill);
++
+ 	pdpu->is_error = false;
+ 
+ 	DPU_DEBUG_PLANE(pdpu, "\n");
