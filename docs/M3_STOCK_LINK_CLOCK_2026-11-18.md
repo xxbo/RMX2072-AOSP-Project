@@ -28,6 +28,16 @@ trial 64 同一次启动的 `before-modeset` 采样也为 660/82.5/110 MHz，`af
 
 ## 下一项受控验证
 
+### trial 65 暂停点
+
+内核构建 [#34](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/44321852995) 已成功，源码提交 `c0137943356794565b88e3eb2cdc2710411c5ec5`。选取的构建成员、源码补丁和内核输出摘要核验通过；未下载完整归档校验 archive digest。打包前后固定输入对照通过，候选 boot、DTBO 和全部 17 块 super 回读通过。
+
+原生测试图开始后，用户回复“先暂停”，没有提供本轮画面结果。手机随后完成已启动的自主交接，进入 GSI ADB，boot ID 为 `d156e9a3-246e-4249-a618-54a0931f7aa0`。确认设备自身为 `retained` 后停止电脑端 runner、采集、串口观察及 USB 观察进程。未关机，未恢复 F.20，未继续新的测试。
+
+主机 190 秒检查被暂停，没有 `gsi-stable.json`，不能标为完成。运行时链路时钟/PPS/路由的完整对照尚未完成，原生和 Android 实屏均未验收，花屏根因仍未确定。后续先复核已保存的同次启动记录，再取得实屏观察；不因本次暂停直接追加刷机。详见 [trial 65 暂停记录](../build/device/m3-display-65-paused-2026-11-18.json)。
+
+### 本轮实验设置
+
 新增默认关闭的 `msm.rmx2072_stock_linkclk=1`，仅匹配 SM8250 单 DSI、四条 D-PHY lane、RGB888 command mode、1080×2400@60、DSC 540×48/两片/8 bpc/8 bpp。开启时统一设置 byte=82.5 MHz、pixel=110 MHz，由现有 PHY/CCF 路径配置 660 MHz bit clock。
 
 保持 trial 64 的单 DSC 拓扑、PPS、每包两片、DTB/DTBO、GSI/vendor、测试卷和同图测试不变。原厂双 DSC 路径已经由此前双/单 DSC 对照覆盖，不能同时恢复双 DSC 又改变时钟。打包器要求此补丁摘要与编译产物一致，并在 boot/USB 构建记录中保存显式开关。
