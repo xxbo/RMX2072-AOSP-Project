@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-18T14:12:02.094359+00:00",
+  "recorded_at": "2026-11-18T14:15:51.004949+00:00",
   "objective": "Correct physical output on ACK6.18 + Android17 GSI + project/ported drivers, then AOSP desktop.",
   "user_early_onset": "目前是只要过了realme的标志之后就开始花屏了！是在很靠前的时候",
   "prior64": {
@@ -8,6 +8,24 @@
     "panel_enable_seconds": 33.594077,
     "selinux_policy_log_seconds": 91.862,
     "scope": "Software timestamps; the operator did not timestamp the first corrupt pixel.",
+    "pre_modeset_ccf_rates_hz": {
+      "disp_cc_mdss_mdp_clk_src": 460000000,
+      "disp_cc_mdss_mdp_clk": 460000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 660000000,
+      "dsi0_pll_out_div_clk": 660000000,
+      "dsi0_pll_bit_clk": 660000000,
+      "dsi0_pll_by_2_bit_clk": 330000000,
+      "dsi0_pclk_mux": 330000000,
+      "dsi0_phy_pll_out_byteclk": 82500000,
+      "dsi0_phy_pll_out_dsiclk": 110000000,
+      "disp_cc_mdss_byte0_clk_src": 82500000,
+      "disp_cc_mdss_byte0_clk": 82500000,
+      "disp_cc_mdss_pclk0_clk_src": 110000000,
+      "disp_cc_mdss_pclk0_clk": 110000000
+    },
     "clock_rates_hz": {
       "after-modeset": {
         "disp_cc_mdss_mdp_clk_src": 200000000,
