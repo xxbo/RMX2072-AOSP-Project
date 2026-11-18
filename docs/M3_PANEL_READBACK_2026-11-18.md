@@ -45,7 +45,11 @@ do not turn a KMS event or host transfer into a physical pass.
 
 The candidate retains trial 63's single-DSC route, board trees, GSI/vendor and
 writable seeds. It uses the original row pattern without the prior optional
-solid-fill sequence. The packer requires the verified current panel source,
+solid-fill sequence. The native probe additionally reads the CCF rates/parents/
+reference counts for MDP, AHB, escape and vsync clocks alongside the existing
+DSI clocks, including a sample after four flips. These are software clock
+diagnostics, not measurements of electrical frequency or proof of PLL lock.
+No clock is written. The packer requires the verified current panel source,
 so an older kernel cannot silently ignore the new boot option. Retain usable
 GSI ADB, recover F.20 only if startup fails. No cold-start or watchdog fault
 injection test is included.

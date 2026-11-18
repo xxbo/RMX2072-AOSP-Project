@@ -81,6 +81,9 @@ static void kms_snapshot(const char *solid_label)
 static void clock_snapshot(const char *phase)
 {
 	static const char *const clocks[] = {
+		"disp_cc_mdss_mdp_clk_src", "disp_cc_mdss_mdp_clk",
+		"disp_cc_mdss_ahb_clk", "disp_cc_mdss_esc0_clk",
+		"disp_cc_mdss_vsync_clk",
 		"dsi0vco_clk", "dsi0_pll_out_div_clk", "dsi0_pll_bit_clk",
 		"dsi0_pll_by_2_bit_clk", "dsi0_pclk_mux",
 		"dsi0_phy_pll_out_byteclk", "dsi0_phy_pll_out_dsiclk",
@@ -304,6 +307,7 @@ int main(void)
 		}
 		last_sequence = event.sequence; last_event_us = event_us;
 	}
+	clock_snapshot("after-flips");
 	if (solid_test) {
 		static const struct { const char *name, *snapshot; uint32_t value; } colors[] = {
 			{"red", "kms-solid-red", 0x800000ffU},
