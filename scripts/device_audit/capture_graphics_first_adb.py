@@ -6,11 +6,14 @@ p = argparse.ArgumentParser()
 p.add_argument('--workspace', type=Path, required=True)
 p.add_argument('--trial', required=True)
 p.add_argument('--previous-boot', required=True)
+p.add_argument('--record-suffix', default='')
 a = p.parse_args()
 if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
     p.error('Unexpected trial name')
+if a.record_suffix and not re.fullmatch(r'[a-z0-9-]{1,32}', a.record_suffix):
+    p.error('Unexpected evidence suffix')
 work = a.workspace.resolve()
-record = work/'records'/a.trial/'live'
+record = work/'records'/(a.trial+('-'+a.record_suffix if a.record_suffix else ''))/'live'
 def shell(command, timeout=10):
     return subprocess.check_output(['adb', '-s', 'RMX2072-M1', 'shell', command], timeout=timeout, stderr=subprocess.STDOUT).decode(errors='replace').replace('\r', '')
 end = time.monotonic() + 1500
