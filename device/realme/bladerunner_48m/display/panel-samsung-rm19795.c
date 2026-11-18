@@ -7,6 +7,7 @@
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
+#include <linux/moduleparam.h>
 #include <linux/regulator/consumer.h>
 #include <linux/string.h>
 #include <drm/display/drm_dsc.h>
@@ -15,6 +16,12 @@
 #include <drm/drm_modes.h>
 #include <drm/drm_panel.h>
 #include <drm/drm_probe_helper.h>
+#include <video/mipi_display.h>
+
+/* One bounded diagnostic before the first native frame; disabled by default. */
+static bool readback;
+module_param(readback, bool, 0400);
+MODULE_PARM_DESC(readback, "RM19795 one-shot power and PPS readback diagnostic");
 
 struct rm19795_cmd {
 	u8 type;
@@ -31,7 +38,19 @@ struct rm19795 {
 	struct gpio_desc *reset;
 	struct regulator_bulk_data supplies[3];
 	bool prepared;
+	bool readback_done;
 };
+
+static void rm19795_log_bytes(struct rm19795 *ctx, const char *kind,
+			     const u8 *data, size_t count)
+{
+	size_t offset;
+
+	/* Kernel %ph is capped at 64 bytes. Keep every 88-byte PPS byte visible. */
+	for (offset = 0; offset < count; offset += 32)
+		dev_info(&ctx->dsi->dev, "RMXPPS %s offset=%zu bytes=%*phN\n",
+			 kind, offset, (int)min_t(size_t, 32, count - offset), data + offset);
+}
 
 static int rm19795_send(struct rm19795 *ctx, const struct rm19795_cmd *cmd,
 		       size_t count, bool lp)
@@ -79,13 +98,73 @@ static int rm19795_send(struct rm19795 *ctx, const struct rm19795_cmd *cmd,
 		/* MSM returns its padded DMA packet length, including the header. */
 		if (ret < cmd[i].len)
 			return -EIO;
-		if (cmd[i].data[0] == 0x9e)
-			dev_info(&ctx->dsi->dev, "encoder-matched DSC PPS accepted: %*phN\n",
-				 (int)sizeof(pps_cmd) - 1, pps_cmd + 1);
+		if (cmd[i].data[0] == 0x9e) {
+			dev_info(&ctx->dsi->dev, "RMXPPS host-transfer ret=%zd payload=88\n", ret);
+			rm19795_log_bytes(ctx, "tx", pps_cmd + 1, sizeof(pps_cmd) - 1);
+		}
 		if (cmd[i].wait_ms)
 			msleep(cmd[i].wait_ms);
 	}
 	return 0;
+}
+
+static ssize_t rm19795_read(struct rm19795 *ctx, u8 command, u8 *data, size_t count)
+{
+	struct mipi_dsi_msg msg = {
+		.channel = ctx->dsi->channel,
+		.type = MIPI_DSI_DCS_READ,
+		.flags = MIPI_DSI_MSG_USE_LPM,
+		.tx_len = 1, .tx_buf = &command,
+		.rx_len = count, .rx_buf = data,
+	};
+	ssize_t ret;
+
+	memset(data, 0, count);
+	ret = ctx->dsi->host->ops->transfer(ctx->dsi->host, &msg);
+	dev_info(&ctx->dsi->dev, "RMXPANEL read command=%02x requested=%zu ret=%zd\n",
+		 command, count, ret);
+	if (ret > 0 && ret <= count)
+		rm19795_log_bytes(ctx, command == 0x0a ? "power" : "rx", data, ret);
+	return ret;
+}
+
+static void rm19795_readback_once(struct rm19795 *ctx)
+{
+	struct drm_dsc_picture_parameter_set pps;
+	u8 data[88];
+	ssize_t ret;
+	int lock_ret;
+
+	if (!readback || ctx->readback_done)
+		return;
+	ctx->readback_done = true;
+	/* OEM ESD check documents LP GET_POWER_MODE and expected byte 0x9c. */
+	ret = rm19795_read(ctx, 0x0a, data, 1);
+	if (ret != 1 || data[0] != 0x9c) {
+		dev_info(&ctx->dsi->dev, "RMXPANEL PPS-read skipped: power-mode unconfirmed\n");
+		return;
+	}
+	/* Reuse only the panel's original 9f key pair. 9e is its documented PPS
+	 * write address; whether this DDIC supports reading it is not established.
+	 * A short/zero/unsupported response is not decoder PPS evidence.
+	 */
+	ret = rm19795_send(ctx, &rm19795_cmd_enable[0], 1, false);
+	if (!ret) {
+		ret = rm19795_read(ctx, 0x9e, data, 16);
+		if (ret == 16 && data[0] == 0x11 && (data[3] >> 4) == 8) {
+			ret = rm19795_read(ctx, 0x9e, data, sizeof(data));
+			if (ret == sizeof(data)) {
+				drm_dsc_pps_payload_pack(&pps, &ctx->dsc);
+				dev_info(&ctx->dsi->dev, "RMXPANEL PPS-shaped-response match_tx=%d scope=unverified-register-semantics\n",
+					 !memcmp(data, &pps, sizeof(data)));
+			}
+		} else {
+			dev_info(&ctx->dsi->dev, "RMXPANEL PPS-read unsupported-or-unrecognized\n");
+		}
+	}
+	/* Relock even when the read or unlock failed. Do not change the PPS. */
+	lock_ret = rm19795_send(ctx, &rm19795_cmd_enable[ARRAY_SIZE(rm19795_cmd_enable) - 1], 1, false);
+	dev_info(&ctx->dsi->dev, "RMXPANEL readback-end relock_ret=%d\n", lock_ret);
 }
 
 static int rm19795_prepare(struct drm_panel *panel)
@@ -132,8 +211,10 @@ static int rm19795_enable(struct drm_panel *panel)
 		return -EPERM;
 	ret = rm19795_send(ctx, rm19795_cmd_enable, ARRAY_SIZE(rm19795_cmd_enable), false);
 
-	if (!ret)
+	if (!ret) {
 		dev_info(&ctx->dsi->dev, "RM19795 display-on commands accepted\n");
+		rm19795_readback_once(ctx);
+	}
 	return ret;
 }
 
