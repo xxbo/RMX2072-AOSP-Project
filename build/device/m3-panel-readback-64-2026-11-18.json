@@ -1,0 +1,98 @@
+{
+  "boot_id": "2ac67c10-16db-4644-b9d1-350d2b9c4511",
+  "acm_sha256": "efe684054b9c3745b2087480df2c3cba5ab35f46792dacc4cd7a678fd2426d0b",
+  "transmitted": [
+    {
+      "returned": 96,
+      "expected": 88,
+      "hex": "110000893080096004380030021c021c0200020e002004a60007000c020b021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62af62b342b743b746bf4"
+    }
+  ],
+  "panel_reads": [
+    {
+      "command": "0a",
+      "requested": 1,
+      "returned": 1,
+      "hex": "9c"
+    },
+    {
+      "command": "9e",
+      "requested": 16,
+      "returned": 16,
+      "hex": "00000000000000000000000000000000"
+    }
+  ],
+  "power_mode_matches_oem": true,
+  "encoder_vs_transmit_differences": {},
+  "all_transmitted_pps_identical": true,
+  "relock_confirmed": true,
+  "full_vendor_response_available": false,
+  "full_response_matches_tx": null,
+  "vendor_read_semantics": "UNVERIFIED: 0x9e is a known write address; read responses are raw evidence",
+  "physical_acceptance": "FAIL_BOTH_PHASES",
+  "scope": "Host transfer plus sampled native DSC registers; unavailable/zero reads do not prove decoder rejection.",
+  "operator_observations": [
+    {
+      "phase": "native",
+      "observation": "和之前完全没区别，还是一样的",
+      "result": "FAIL_CORRUPTED",
+      "boot_id": "2ac67c10-16db-4644-b9d1-350d2b9c4511",
+      "recorded_at": "2026-11-18T13:30:01.445811+00:00"
+    },
+    {
+      "phase": "android",
+      "observation": "仍然一样花屏",
+      "result": "FAIL_CORRUPTED",
+      "boot_id": "2ac67c10-16db-4644-b9d1-350d2b9c4511",
+      "recorded_at": "2026-11-18T13:30:01.445811+00:00"
+    }
+  ],
+  "clock_rates_hz": {
+    "after-modeset": {
+      "disp_cc_mdss_mdp_clk_src": 200000000,
+      "disp_cc_mdss_mdp_clk": 200000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 843263964,
+      "dsi0_pll_out_div_clk": 421631982,
+      "dsi0_pll_bit_clk": 421631982,
+      "dsi0_pll_by_2_bit_clk": 210815991,
+      "dsi0_pclk_mux": 210815991,
+      "dsi0_phy_pll_out_byteclk": 52703997,
+      "dsi0_phy_pll_out_dsiclk": 70271997,
+      "disp_cc_mdss_byte0_clk_src": 52703997,
+      "disp_cc_mdss_byte0_clk": 52703997,
+      "disp_cc_mdss_pclk0_clk_src": 70271997,
+      "disp_cc_mdss_pclk0_clk": 70271997
+    },
+    "after-flips": {
+      "disp_cc_mdss_mdp_clk_src": 200000000,
+      "disp_cc_mdss_mdp_clk": 200000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 843263964,
+      "dsi0_pll_out_div_clk": 421631982,
+      "dsi0_pll_bit_clk": 421631982,
+      "dsi0_pll_by_2_bit_clk": 210815991,
+      "dsi0_pclk_mux": 210815991,
+      "dsi0_phy_pll_out_byteclk": 52703997,
+      "dsi0_phy_pll_out_dsiclk": 70271997,
+      "disp_cc_mdss_byte0_clk_src": 52703997,
+      "disp_cc_mdss_byte0_clk": 52703997,
+      "disp_cc_mdss_pclk0_clk_src": 70271997,
+      "disp_cc_mdss_pclk0_clk": 70271997
+    }
+  },
+  "clock_scope": "CCF software rates; not electrical frequency/PLL measurements",
+  "dsi_sample": {
+    "status": "0x0",
+    "fifo": "0x11111010",
+    "ack_error": "0x0",
+    "timeout": "0x0",
+    "phy_lane0": "0x88888"
+  },
+  "captured_transmit_count": 1,
+  "transmit_scope": "Native pre-Android; later enforcing Android kernel log not captured"
+}

@@ -108,7 +108,53 @@ No corrupt image was programmed. The next attempt uses the separate
 `ufs-host-g3-gsi17-firststage-ufs-64-resume2` evidence directory and repeats
 all host and device checks. [Interruption and repair evidence](../build/device/m3-trial64-host-interruption-2026-11-18.json).
 
-New handset evidence is pending.
 The previously installed kernel 32 has been handed off to enforcing GSI ADB
 on boot `bcf5ec80-82f6-4e79-bd69-79412653e65c` and retained after 195.813 seconds.
 Today's resumed physical output was not observed and is not a new display pass.
+
+## Trial 64 result: physical corruption persists
+
+Boot `2ac67c10-16db-4644-b9d1-350d2b9c4511` runs the new candidate. The
+operator reports native output “和之前完全没区别，还是一样的” and Android
+output “仍然一样花屏”. Both physical phases fail. This measurement-only
+experiment does not establish a display fix or a unique root cause.
+
+The captured native host transfer contains all 88 DSC 1.1 bytes, including
+the previously truncated rate-control ranges. Every decoded field agrees with
+the sampled active DSC0 registers. One transfer is captured; the later
+enforcing Android kernel log is not a second verified transmit witness.
+
+The documented LP power read returns one byte `9c`, as the official ESD
+configuration expects. The attempted vendor-address `9e` read returns 16 zero
+bytes, not a recognizable PPS. The 88-byte read is therefore skipped and the
+original key relock succeeds. These zeroes are **not proof that the decoder
+contains a zero PPS or rejected its configuration**. Internal PPS remains
+unverified; no further guessed vendor register reads or writes were tried.
+
+After modeset and after four flips, CCF reports MDP 200 MHz, DSI bit clock
+421.631982 MHz, byte clock 52.703997 MHz, pixel clock 70.271997 MHz, and AHB /
+escape / vsync 19.2 MHz. The two samples agree. The factory DT's 660 MHz
+setting differs from these runtime software rates, but no stock runtime
+clock trace or electrical frequency was measured here. This difference is
+a comparison target, not a proven defect or justification to retime multiple
+blocks together. DSI status/ACK-error/timeout registers sample as zero, FIFO
+as `0x11111010`; lane-0 PHY `0x88888` does not set the defined error-bit mask.
+Snapshot flags do not exclude an earlier/transient transport fault.
+
+The resumed run verifies all 17 device super chunks and both old/new boot and
+DTBO pairs (21 readbacks total). It programs only boot. Board trees, GSI,
+vendor and writable seeds remain unchanged. Enforcing GSI ADB, SurfaceFlinger,
+composer, allocator and maintenance are available, and the same boot is
+retained after 196.985 seconds. Activity/window services and the desktop are
+still unavailable. No cold-start or watchdog fault injection ran. Only the
+original recovery images and current candidate are retained; the interrupted
+partial boot read was removed after a full verified reread.
+
+Next compare actual stock DSI/PHY transfer programming with this native
+6.18 snapshot, including lane rate and row/packet boundaries. Keep the
+verified PPS and buffer layout fixed until a specific mismatch is found.
+The earlier solid-fill result still places priority on the shared post-fill
+DPU/DSC/DSI/panel path; it does not prove that a specific block is faulty.
+
+[Physical record](../build/device/m3-display-64-2026-11-18.json) ·
+[PPS, raw responses and clocks](../build/device/m3-panel-readback-64-2026-11-18.json).

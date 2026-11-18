@@ -1064,3 +1064,21 @@ GSI ADB and SurfaceFlinger remain available under enforcing; the same boot was
 retained. The next isolation should bypass memory fetching using a controlled
 DPU-generated pattern, or capture the hardware output before compression. No
 physical display or desktop pass is claimed. [Detailed result and next scope](M3_DSC_TOPOLOGY_ISOLATION.md#trial-62-result).
+
+### Trial 64: complete PPS and bounded panel-state readback
+
+On November 18, the native and Android outputs both remain corrupted according
+to the operator. The complete 88-byte host PPS agrees with sampled DSC0
+parameters, and the panel power read returns the expected `0x9c`. Vendor PPS
+readability is not established: the 16-byte response is zero and is recorded
+as uninterpretable, not as decoder contents. CCF MDP is 200 MHz and DSI bit
+clock 421.632 MHz; comparison with the factory DT's 660 MHz still requires
+stock runtime evidence before attributing a clock defect. The selected F.20
+on/enable/off/PHY arrays and 16 timing/DSC scalars match the official Q source.
+
+Kernel 33 succeeds, all 17 device super chunks and boot/DTBO readbacks verify,
+only boot is programmed, and enforcing GSI ADB is retained for the same boot
+after 196.985 seconds. A host session interruption and a rejected local
+candidate-byte mismatch are documented separately; neither is a display
+result and no unverified candidate bytes were programmed. Root cause and
+AOSP desktop acceptance remain unresolved. [Trial 64 details](M3_PANEL_READBACK_2026-11-18.md#trial-64-result-physical-corruption-persists).

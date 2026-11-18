@@ -88,7 +88,7 @@ def main():
         all_transmitted_pps_identical=len({r['hex'] for r in tx}) == 1,
         relock_confirmed=relock == ['0'],
         full_vendor_response_available=bool(full),
-        full_response_matches_tx=bool(full) and full[0]['hex'] == tx[0]['hex'],
+        full_response_matches_tx=(full[0]['hex'] == tx[0]['hex']) if full else None,
         vendor_read_semantics='UNVERIFIED: 0x9e is a known write address; read responses are raw evidence',
         physical_acceptance='REQUIRES_OPERATOR_OBSERVATION',
         scope='Host transfer plus sampled native DSC registers; unavailable/zero reads do not prove decoder rejection.')
