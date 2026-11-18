@@ -8,6 +8,14 @@ import re
 from decode_m3_kms_snapshot import extract, register_banks, dsc_from_regs, dsc_from_pps
 
 
+def transmitted_config(data):
+    if len(data) != 88 or data[0] != 0x11:
+        raise ValueError('Requires the complete vendor DSC 1.1 payload')
+    # The shared decoder accepts the 128-byte standard container. All DSC 1.1
+    # fields it reads end at byte 87; padding is not claimed as transmitted data.
+    return dsc_from_pps(bytes(data) + bytes(40))
+
+
 def transactions(text):
     tx, reads = [], []
     current_tx = current_read = None
@@ -60,7 +68,7 @@ def main():
     text = raw.decode('utf-8', errors='strict')
     tx, reads = transactions(text)
     banks = register_banks(extract(snapshot, 'kms'))
-    expected = dsc_from_pps(tx[0]['data'])
+    expected = transmitted_config(tx[0]['data'])
     actual = dsc_from_regs(banks['dsc_0'])
     differences = {key:dict(encoder=value, transmitted=expected[key])
                    for key,value in actual.items() if value != expected[key]}

@@ -69,9 +69,11 @@ compares only the selected normal panel's timing@0 (not the no-TE variant).
 [Machine-readable result](../build/device/m3-f20-panel-source-comparison-2026-11-18.json).
 
 The readback decoder rejects incomplete, duplicated or misordered byte chunks
-and associates host traffic with the accepted boot's display gate. Five host
+and associates host traffic with the accepted boot's display gate. Six host
 tests pass, including rejection of the old 64-byte truncation and missing
-response bytes. The old kernel candidate is also rejected by the packer before
+response bytes, plus decoding the complete vendor 88-byte DSC 1.1 payload
+through the standard 128-byte parser without claiming the reserved padding
+as observed bytes. The old kernel candidate is also rejected by the packer before
 any output is changed. [Host checks](../build/device/m3-panel-readback-host-checks-2026-11-18.json).
 
 Status: kernel build 33 at `456c663` is in progress; new handset evidence pending.
