@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-18",
+  "stale_kernel_rejected": true,
+  "existing_candidate_unchanged": {
+    "boot-diag.img": "8bb26c3439c046566e380482860fca0f78e798d0a7f69eb0a235a8a878614cb6",
+    "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+    "control.json": "7be0d21e1e5128082691bb855c4ed1d34d481561b865f6167631dfc14362ab23"
+  },
+  "old_kernel_source": "fc9e6e3331ebf04ba8e5083f4d5dfa539442be02",
+  "readback_log_tests": 5,
+  "device_result": "PENDING_KERNEL_BUILD_AND_HANDSET"
+}

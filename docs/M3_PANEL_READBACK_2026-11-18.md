@@ -50,4 +50,31 @@ so an older kernel cannot silently ignore the new boot option. Retain usable
 GSI ADB, recover F.20 only if startup fails. No cold-start or watchdog fault
 injection test is included.
 
-Status: code prepared; new kernel build and handset evidence pending.
+## Factory configuration cross-check
+
+The recorded F.20 command line selects boot DTB 12 and DTBO 17, with the
+RM19795 command-mode panel. Applying these original local recovery trees in
+memory confirms byte-identical 60 Hz on (375 bytes), enable (36), off (36)
+and PHY timing (14) arrays against the pinned official Android Q source.
+Sixteen scalar values also agree: dimensions, refresh, porches, pulse widths,
+660 MHz link rate and DSC geometry/count/bit depths. The comparison includes
+the original PPS packet inside the on-command array. No missing F.20 command
+was found in these arrays; it does not prove that all runtime programming,
+electrical timing or the ACK-generated PPS agrees with stock.
+
+`scripts/device_audit/compare_m3_factory_panel.py` reproduces the comparison
+without booting F.20 or writing the handset. It derives selectors from the
+captured factory command line, verifies the pinned official source hash, and
+compares only the selected normal panel's timing@0 (not the no-TE variant).
+[Machine-readable result](../build/device/m3-f20-panel-source-comparison-2026-11-18.json).
+
+The readback decoder rejects incomplete, duplicated or misordered byte chunks
+and associates host traffic with the accepted boot's display gate. Five host
+tests pass, including rejection of the old 64-byte truncation and missing
+response bytes. The old kernel candidate is also rejected by the packer before
+any output is changed. [Host checks](../build/device/m3-panel-readback-host-checks-2026-11-18.json).
+
+Status: kernel build 33 at `456c663` is in progress; new handset evidence pending.
+The previously installed kernel 32 has been handed off to enforcing GSI ADB
+on boot `bcf5ec80-82f6-4e79-bd69-79412653e65c` and retained after 195.813 seconds.
+Today's resumed physical output was not observed and is not a new display pass.
