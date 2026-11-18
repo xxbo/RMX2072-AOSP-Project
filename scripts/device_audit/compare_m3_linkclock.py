@@ -39,7 +39,13 @@ def main():
     before=register_banks(extract(baseline_snapshot,'kms'))
     after=register_banks(extract(snapshot,'kms'))
     checks['same_dsc_parameters']=dsc_from_regs(before['dsc_0'])==dsc_from_regs(after['dsc_0'])
-    checks['same_route']=route_from_regs(before)==route_from_regs(after)
+    routes=[route_from_regs(bank) for bank in (before,after)]
+    # Both probes request the reviewed single DSC route. Ignore stale values
+    # in unused banks; preserve the complete routes below for manual review.
+    selected=lambda r: dict(ctl0=r['ctl']['ctl_0'],dsc0_input=r['dsc_input_mux'][0],
+        intf1=r['intf_mux']['intf_1'],pingpong0=r['pingpong']['pingpong_0'])
+    checks['same_selected_native_route']=selected(routes[0])==selected(routes[1])
+    checks['single_dsc_native_route']=routes[1]['ctl']['ctl_0']==dict(dsc_active=1,intf_active=2,merge_3d_active=0) and routes[1]['dsc_input_mux'][0]==0
     for off in (0x54,0x58,0x2a4,0x2a8):
         checks['same_dsi_packet_'+hex(off)]=before['dsi0_ctrl'][off]==after['dsi0_ctrl'][off]
     baseline_acm=(a.baseline/'live/acm.log').read_text(encoding='utf-8')
@@ -63,7 +69,8 @@ def main():
                 checks[phase+'_'+name]=name in clocks[phase] and abs(clocks[phase][name]-value)<=1000
     result=dict(boot_id=boot,baseline_boot_id=json.loads((a.baseline/'live/gsi-accepted.json').read_text())['identity'][2],
         checks=checks,all_setup_checks_pass=all(checks.values()),clock_rates_hz=clocks,
-        requested_clocks=requests,snapshot_sha256=hashlib.sha256(raw).hexdigest(),
+        requested_clocks=requests,baseline_route=routes[0],candidate_route=routes[1],
+        snapshot_sha256=hashlib.sha256(raw).hexdigest(),
         phy_pll_log=[line for line in acm.splitlines() if 'M3 DSI0 prepare-result' in line or 'M3 DSI0 phy-enable-exit' in line],
         physical_acceptance='REQUIRES_OPERATOR_OBSERVATION',
         scope='Isolation/CCF evidence; neither completed requests nor cached rates prove correct physical pixels or measured wire frequency.')
