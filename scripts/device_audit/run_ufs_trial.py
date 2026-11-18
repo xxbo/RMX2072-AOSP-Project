@@ -69,6 +69,7 @@ def main():
     retained.add_argument('--boot-only-from', type=Path, help='Previous retained trial record; read all super bytes, then program boot and its paired DTBO')
     retained.add_argument('--vendor-update-from', type=Path, help='Verify the retained layout, update only vendor-related container changes and paired boot, then read back the complete candidate')
     parser.add_argument('--record-suffix', default='', help='New evidence directory for repeating the exact current image')
+    parser.add_argument('--resume-prewrite', type=Path, help='Resume only an interrupted first boot READ after a verified Firehose drain; recheck every byte before writing')
     args = parser.parse_args()
     sys.path.insert(0, str(args.workspace.resolve()/'serial-deps'))
     from serial.tools.list_ports import comports
@@ -80,6 +81,7 @@ def main():
     assert not args.recovery_gate or restore_only
     assert not from_gsi or (args.retain_gsi and not restore_only)
     assert not args.record_suffix or re.fullmatch(r'[a-z0-9-]{1,32}',args.record_suffix)
+    assert not args.resume_prewrite or (args.boot_only_from and args.record_suffix and args.retain_gsi)
     dest=w/'records'/(trial+('-'+args.record_suffix if args.record_suffix else '')+('-restore' if restore_only else ''));dest.mkdir(parents=True,exist_ok=False)
     orig=json.loads((stock/'acquisition.json').read_text());candidate={} if restore_only else json.loads((p/'candidate/candidate.json').read_text());boot={} if restore_only else json.loads((p/'boot/control.json').read_text())
     port=None;configured=False
@@ -94,6 +96,12 @@ def main():
      with (dest/(label+'.log')).open('xb') as out:subprocess.run([str(a) for a in args],stdout=out,stderr=subprocess.STDOUT,check=True,timeout=timeout,cwd=dest)
     def enter(label,initial=False,timeout=400):
      nonlocal port,configured
+     if initial and args.resume_prewrite:
+      ports=[x.device for x in comports() if (x.vid,x.pid)==(0x05c6,0x9008)]
+      assert len(ports)==1
+      port=ports[0];configured=True
+      event('Resuming drained Firehose at first read; all boot/DTBO/super reads will run again')
+      return
      if initial:subprocess.run(['adb','-s','RMX2072-M1' if from_gsi else '3c8304a6','reboot','edl'],check=True,timeout=15)
      end=time.monotonic()+timeout
      while time.monotonic()<end:
@@ -202,7 +210,31 @@ def main():
      assert prior.parent==w/'records' and prior!=dest
      previous=json.loads((prior/'inputs.json').read_text())
      stable=json.loads((prior/'live/gsi-stable.json').read_text())
-     proof=inspect(prior/'live',stable['identity'][2])
+     if args.resume_prewrite:
+      interrupted=args.resume_prewrite.resolve()
+      assert interrupted.parent==w/'records' and interrupted!=dest and interrupted.name==trial
+      saved=json.loads((interrupted/'inputs.json').read_text())
+      # This entry point cannot resume any write, reset or later experiment.
+      xmls=list(interrupted.glob('*.xml'))
+      assert {x.name for x in xmls}=={'before-boot.xml'}
+      root=ET.parse(xmls[0]).getroot()
+      assert len(root)==1 and root[0].tag=='read' and root[0].attrib==dict(SECTOR_SIZE_IN_BYTES='4096',physical_partition_number='4',start_sector='79366',num_partition_sectors='24576',filename='readback.bin')
+      timeline=[json.loads(x) for x in (interrupted/'timeline.jsonl').read_text().splitlines()]
+      assert [x['event'] for x in timeline]==['Retained GSI identity and unchanged container/volumes; complete recovery and candidate inputs verified','entry Sahara ready']
+      drain=json.loads((interrupted/'interrupted-read-drain.json').read_text())
+      tail=bytes.fromhex(drain['tail_hex'])
+      assert drain['bytes_drained']>0 and tail.endswith(b'<response value="ACK" rawmode="false" /></data>')
+      assert saved['trial']==trial and saved['boot']==boot and saved['candidate']==candidate
+      assert saved['scratch']==json.loads((p/'volumes/scratch.json').read_text())
+      assert saved['kernel']==json.loads((p/'kernel/provenance.json').read_text())
+      assert saved['ramdisk']==json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())
+      assert saved['usb_build']==json.loads((p/'usb-build.json').read_text())
+      source=json.loads((interrupted/'boot-only-source.json').read_text())
+      assert source['previous_record']==prior.name and source['previous_boot_sha256']==previous['boot']['boot_sha256'] and source['chunks_to_write']==[]
+      proof=source['live']
+      (dest/'prewrite-resume.json').write_text(json.dumps(dict(interrupted_record=interrupted.name,scope='Saved pre-EDL identity only; fresh complete partition verification mandatory',drain=drain),indent=2)+'\n')
+     else:
+      proof=inspect(prior/'live',stable['identity'][2])
      scratch=json.loads((p/'volumes/scratch.json').read_text())
      if args.vendor_update_from:
       previous_boot_sha,update_chunks=validate_vendor_update(previous,stable,candidate,scratch,proof)

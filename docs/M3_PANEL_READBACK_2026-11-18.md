@@ -80,7 +80,24 @@ through the standard 128-byte parser without claiming the reserved padding
 as observed bytes. The old kernel candidate is also rejected by the packer before
 any output is changed. [Host checks](../build/device/m3-panel-readback-host-checks-2026-11-18.json).
 
-Status: kernel build 33 at `456c663` is in progress; new handset evidence pending.
+Kernel build 33 at `456c663` succeeded. Selected source/distribution digests
+verify (the full remote archive digest is not independently verified).
+The new Image SHA-256 is `77a081f77179e9792b994700267637612da68ace83027082fc660e219bf254bb`.
+Recipe `04fe0a0` produces boot `121d6b49d3e43a25dd9c9054e200daf66b616afb7de2bb7abcb52ab0ea7ce50a`.
+
+The host execution session was interrupted during the first pre-write boot
+read, after Sahara and before any program command. No candidate boot was
+written. A read-only drain received the remaining stream and a terminating
+Firehose ACK with rawmode=false. The runner has a narrow `--resume-prewrite`
+entry for precisely this checkpoint: only the first boot-read XML may exist,
+the two-event timeline, drained ACK, saved retained identity and every current
+candidate metadata object must match. A separate evidence directory is used.
+All recovery/candidate host hashes and complete old boot, DTBO and 17 super
+reads run again before any write; no partial read is accepted. It does not
+resume interrupted writes or resets. Fresh read errors use the existing F.20
+recovery path. This is a host interruption, not a kernel or display result.
+
+New handset evidence is pending.
 The previously installed kernel 32 has been handed off to enforcing GSI ADB
 on boot `bcf5ec80-82f6-4e79-bd69-79412653e65c` and retained after 195.813 seconds.
 Today's resumed physical output was not observed and is not a new display pass.
