@@ -97,6 +97,17 @@ reads run again before any write; no partial read is accepted. It does not
 resume interrupted writes or resets. Fresh read errors use the existing F.20
 recovery path. This is a host interruption, not a kernel or display result.
 
+The first resume attempt was rejected during host candidate hashing, before
+any device command: unchanged factory chunk 8 differed by one bit at byte
+121272271 (`b0` instead of `b2`). Its cause is unknown; timestamps do not
+establish who or what changed a byte. The corresponding recovery chunk still
+matched its established SHA-256. Replacing only this current-candidate chunk
+from that verified source restored its digest and the complete container digest
+`d42a1d7ba3b2cbea77cb3d9f3d5715ee55e6ed31307388cdbeb6123f420e4178`.
+No corrupt image was programmed. The next attempt uses the separate
+`ufs-host-g3-gsi17-firststage-ufs-64-resume2` evidence directory and repeats
+all host and device checks. [Interruption and repair evidence](../build/device/m3-trial64-host-interruption-2026-11-18.json).
+
 New handset evidence is pending.
 The previously installed kernel 32 has been handed off to enforcing GSI ADB
 on boot `bcf5ec80-82f6-4e79-bd69-79412653e65c` and retained after 195.813 seconds.
