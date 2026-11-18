@@ -1,0 +1,12 @@
+{
+  "stale_kernel_rejected": true,
+  "expected_error": "Stock link clock test requires the verified matching kernel patch",
+  "existing_candidate_unchanged": true,
+  "existing_outputs": {
+    "boot-diag.img": "121d6b49d3e43a25dd9c9054e200daf66b616afb7de2bb7abcb52ab0ea7ce50a",
+    "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+    "control.json": "ad728852692c9885addd7d0c4f65074b10fbcce7a87b055b18fadf9ff8c86e76"
+  },
+  "baseline_negative_control": false,
+  "scope": "Host checks only; no handset writes, no firmware copy created"
+}
