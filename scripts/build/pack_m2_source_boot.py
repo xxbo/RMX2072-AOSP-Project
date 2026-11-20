@@ -28,6 +28,7 @@ def main():
     parser.add_argument('--solid-fill-test', action='store_true')
     parser.add_argument('--panel-readback-test', action='store_true')
     parser.add_argument('--stock-linkclock-test', action='store_true')
+    parser.add_argument('--stock-dsc-test', action='store_true')
     a = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
@@ -46,6 +47,8 @@ def main():
         raise ValueError('Panel readback requires the display device tree')
     if a.stock_linkclock_test and not dt.get('display'):
         raise ValueError('Stock link clock test requires the display device tree')
+    if a.stock_dsc_test and (not a.stock_linkclock_test or not a.single_dsc_test):
+        raise ValueError('Stock DSC comparison requires the trial 65 stock clock and single DSC route')
     for name, expected in dt['outputs'].items():
         data = (source / name).read_bytes()
         if len(data) != expected['size_bytes'] or sha(data) != expected['sha256']:
@@ -84,6 +87,12 @@ def main():
         manifest = kernel_dir / (name + '.sha256')
         if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
             raise ValueError('Stock link clock test requires the verified matching kernel patch')
+    if a.stock_dsc_test:
+        name = 'rmx2072-stock-dsc-test'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Stock DSC test requires the verified matching kernel patch')
     if a.panel_readback_test:
         panel = repo / 'device/realme/bladerunner_48m/display/panel-samsung-rm19795.c'
         manifest = kernel_dir / 'display-source.sha256'
@@ -129,6 +138,8 @@ def main():
         cmdline += ' panel_samsung_rm19795.readback=1'
     if a.stock_linkclock_test:
         cmdline += ' msm.rmx2072_stock_linkclk=1'
+    if a.stock_dsc_test:
+        cmdline += ' msm.rmx2072_stock_dsc=1'
     if len(cmdline.encode()) >= 512:
         raise ValueError('Diagnostic command line exceeds the boot header field')
     header[64:576] = cmdline.encode().ljust(512, b'\0')
@@ -166,6 +177,7 @@ def main():
     record['solid_fill_test'] = a.solid_fill_test
     record['panel_readback_test'] = a.panel_readback_test
     record['stock_linkclock_test'] = a.stock_linkclock_test
+    record['stock_dsc_test'] = a.stock_dsc_test
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))
 

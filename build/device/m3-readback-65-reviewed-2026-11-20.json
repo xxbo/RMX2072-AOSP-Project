@@ -1,0 +1,40 @@
+{
+  "boot_id": "d156e9a3-246e-4249-a618-54a0931f7aa0",
+  "acm_sha256": "747245e8e8d0a73450a3445129ef722dd86273026503a2b5313c33410027f6d5",
+  "transmitted": [
+    {
+      "returned": 96,
+      "expected": 88,
+      "hex": "110000893080096004380030021c021c0200020e002004a60007000c020b021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62af62b342b743b746bf4"
+    }
+  ],
+  "panel_reads": [
+    {
+      "command": "0a",
+      "requested": 1,
+      "returned": 1,
+      "hex": "9c"
+    },
+    {
+      "command": "9e",
+      "requested": 16,
+      "returned": 16,
+      "hex": "00000000000000000000000000000000"
+    }
+  ],
+  "power_mode_matches_oem": true,
+  "encoder_vs_transmit_differences": {},
+  "all_transmitted_pps_identical": true,
+  "relock_confirmed": true,
+  "full_vendor_response_available": false,
+  "full_response_matches_tx": null,
+  "vendor_read_semantics": "UNVERIFIED: 0x9e is a known write address; read responses are raw evidence",
+  "physical_acceptance": "FAIL_OPERATOR_REPORT",
+  "scope": "Host transfer plus sampled native DSC registers; unavailable/zero reads do not prove decoder rejection.",
+  "review_date": "2026-11-20",
+  "operator_report": {
+    "quote": "65轮还是花屏",
+    "date": "2026-11-20",
+    "phase": "unspecified"
+  }
+}

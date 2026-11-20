@@ -8,6 +8,7 @@ import argparse,hashlib,json,re,subprocess
 from pathlib import Path
 p=argparse.ArgumentParser(description=__doc__)
 for arg in ('source','output','ndk'):p.add_argument('--'+arg,type=Path,required=True)
+p.add_argument('--stock-dsc',action='store_true',help='Verify the actual experimental function against the OEM PPS')
 a=p.parse_args();base=a.source.resolve();out=a.output.resolve()
 if out.is_relative_to(Path(__file__).resolve().parents[2]):p.error('Keep generated binaries outside the checkout')
 out.mkdir(parents=True,exist_ok=True)
@@ -56,7 +57,23 @@ main='''int main(void) {
  for(unsigned i=0;i<sizeof(p);i++)printf("%02x",((unsigned char*)&p)[i]);puts("");return 0;
 }
 '''
-source=out/'compare.c';source.write_text(prefix+header+decl+core+main,encoding='utf-8',newline='\n')
+experiment=''
+patch_sha=None
+if a.stock_dsc:
+ patch=Path(__file__).resolve().parents[2]/'device/realme/bladerunner_48m/bootstrap-patches/rmx2072-stock-dsc-test.patch'
+ text=patch.read_text()
+ added='\n'.join(line[1:] for line in text.splitlines() if line.startswith('+') and not line.startswith('+++'))
+ start=added.index('static int dsi_rmx2072_stock_rc(')
+ end=added.index('\n}\n',start)+3
+ experiment=added[start:end]+'\n'
+ patch_sha=hashlib.sha256(patch.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
+ main=main.replace('if(drm_dsc_compute_rc_parameters(&c))return 3;','if(dsi_rmx2072_stock_rc(&c))return 3;')
+ main=main.replace('puts("");return 0;', '''puts("");
+ c.pic_width=720; if(dsi_rmx2072_stock_rc(&c)!=-EINVAL)return 4;
+ c.pic_width=1080;c.rc_buf_thresh[0]^=1;
+ if(dsi_rmx2072_stock_rc(&c)!=-EINVAL)return 5;
+ fprintf(stderr,"stock DSC: geometry and unexpected PPS rejection passed\\n");return 0;''')
+source=out/'compare.c';source.write_text(prefix+header+decl+core+experiment+main,encoding='utf-8',newline='\n')
 clang=a.ndk.resolve()/'toolchains/llvm/prebuilt/windows-x86_64/bin/aarch64-linux-android35-clang.cmd'
 subprocess.run([str(clang),'-static','-O2',str(source),'-o',str(out/'dsc-compare')],check=True)
 record=dict(ack_commit='ecdaacc9a0ee87eaf9544e1836d86bd9d590312e',sources=pins,
@@ -64,4 +81,7 @@ record=dict(ack_commit='ecdaacc9a0ee87eaf9544e1836d86bd9d590312e',sources=pins,
  binary_sha256=hashlib.sha256((out/'dsc-compare').read_bytes()).hexdigest(),
  scope='Pure arithmetic only; no hardware validation',parameters=dict(width=1080,height=2400,slice_width=540,slice_height=48,bpc=8,bpp=8,version='1.1',table='DRM_DSC_1_1_PRE_SCR'))
 (out/'build.json').write_text(json.dumps(record,indent=2)+'\n')
+if a.stock_dsc:
+ record.update(stock_dsc=True,stock_dsc_patch_sha256=patch_sha)
+ (out/'build.json').write_text(json.dumps(record,indent=2)+'\n')
 print(json.dumps(record))

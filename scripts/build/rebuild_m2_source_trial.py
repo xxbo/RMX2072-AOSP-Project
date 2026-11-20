@@ -20,6 +20,7 @@ def main():
     p.add_argument('--solid-fill-test', action='store_true', help='Opt in to native SSPP hardware pixel generation')
     p.add_argument('--panel-readback-test', action='store_true', help='Opt in to one-shot RM19795 status/PPS readback')
     p.add_argument('--stock-linkclock-test', action='store_true', help='Opt in to the measured F.20 DSI transfer-clock budget')
+    p.add_argument('--stock-dsc-test', action='store_true', help='Match both encoder and panel to the original RM19795 PPS')
     a = p.parse_args()
     if a.display_staged and not a.display:
         p.error('--display-staged requires --display')
@@ -31,6 +32,8 @@ def main():
         p.error('--panel-readback-test requires --display')
     if a.stock_linkclock_test and not a.display:
         p.error('--stock-linkclock-test requires --display')
+    if a.stock_dsc_test and (not a.stock_linkclock_test or not a.single_dsc_test):
+        p.error('--stock-dsc-test requires --stock-linkclock-test and --single-dsc-test')
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial naming')
     repo = Path(__file__).resolve().parents[2]
@@ -89,7 +92,8 @@ def main():
         *(['--single-dsc-test'] if a.single_dsc_test else []),
         *(['--solid-fill-test'] if a.solid_fill_test else []),
         *(['--panel-readback-test'] if a.panel_readback_test else []),
-        *(['--stock-linkclock-test'] if a.stock_linkclock_test else []))
+        *(['--stock-linkclock-test'] if a.stock_linkclock_test else []),
+        *(['--stock-dsc-test'] if a.stock_dsc_test else []))
     record = dict(previous, trial=a.trial, recipe_commit=commit, recipe_dirty=False,
                   kernel=kernel['image_sha256'], witness=sha(current / 'first-stage-witness'),
                   source_first_stage=init, source_device_trees=True,
@@ -99,6 +103,7 @@ def main():
                   solid_fill_test=a.solid_fill_test,
                   panel_readback_test=a.panel_readback_test,
                   stock_linkclock_test=a.stock_linkclock_test,
+                  stock_dsc_test=a.stock_dsc_test,
                   adb_public_key_sha256=json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())['adb_public_key_sha256'])
     (current / 'usb-build.json').write_text(json.dumps(record, indent=2) + '\n')
     print('M2 source candidate prepared; original GSI/vendor/container and scratch seeds retained.')
