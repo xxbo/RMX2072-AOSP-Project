@@ -1,0 +1,39 @@
+{
+  "status": "PASS_REJECTS_PREVIOUS_CANDIDATE",
+  "old_kernel": "547f82c2f81777550a95aef91d24c11adadad2351c070203751c86aadf7896fb",
+  "packer_exit": 1,
+  "packer_reason": "ValueError: Stock PHY timing test requires the verified matching kernel patch",
+  "outputs_unchanged": {
+    "boot-diag.img": "021aef09508aa1c177563735a567dfa006cf6e74eaa8b09070d0652961239bdb",
+    "control.json": "8263450476459ce38eabe4fd637dd1dd5a06285fad75243fb0fd2cf20310e039",
+    "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44"
+  },
+  "old_record_rejected": true,
+  "failed_setup_checks": [
+    "explicit_stock_phy",
+    "all_fourteen_phy_values_match_original",
+    "only_three_phy_fields_changed",
+    "host_uses_original_pre_post",
+    "entry_timing_recorded",
+    "programmed_timing_matches",
+    "timing_requests_match"
+  ],
+  "baseline_phy": [
+    0,
+    23,
+    6,
+    7,
+    33,
+    32,
+    6,
+    6,
+    4,
+    2,
+    4,
+    0,
+    22,
+    22
+  ],
+  "baseline_host_clkout": "0x1616",
+  "scope": "Negative validation only; trial 67 has not run"
+}
