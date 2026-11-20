@@ -1,0 +1,56 @@
+{
+  "status": "FOLLOWUP_HYPOTHESIS_NOT_TESTED",
+  "scope": "Existing stock trace and trial 66 native snapshot; no new device action",
+  "stock_trace": {
+    "path": "f20-display-startup-2026-11-18/trace.txt",
+    "sha256": "6a0ee0072cd1eecee53a989bf2552e2038ddda19e50f3abdfc9ffb195d439762",
+    "mdp_completed_requests": [
+      {
+        "uptime_seconds": 9.50477,
+        "rate_hz": 200000000
+      },
+      {
+        "uptime_seconds": 9.515831,
+        "rate_hz": 460000000
+      },
+      {
+        "uptime_seconds": 17.560068,
+        "rate_hz": 200000000
+      },
+      {
+        "uptime_seconds": 20.672361,
+        "rate_hz": 345000000
+      },
+      {
+        "uptime_seconds": 27.538008,
+        "rate_hz": 200000000
+      },
+      {
+        "uptime_seconds": 29.311983,
+        "rate_hz": 345000000
+      }
+    ]
+  },
+  "stock_mode_log": "60 Hz starts at 9.495710 s; 90 Hz starts at 18.332926 s; reported mdp_transfer_time_us=7956",
+  "native_boot_id": "fa161396-0e8d-4c8d-b947-6bf547c0b956",
+  "native_core_clock_hz": 200000000,
+  "ack_calculation": {
+    "mode_width": 1080,
+    "vtotal": 2440,
+    "refresh": 60,
+    "clk_inefficiency_percent": 105,
+    "calculated_vote_hz": 166017600
+  },
+  "ack_source": {
+    "commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+    "mirror": "cfa72fb3d7f89372c7e449a4de2477551ea4c29c",
+    "path": "drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c",
+    "blob": "13cc658065c56a00a7dcdd0af4dec4aadfd0e6ed"
+  },
+  "limitations": [
+    "Different stock and diagnostic workloads; stock also drops to 200 MHz",
+    "Pixel throughput per hardware cycle and internal buffering are not measured",
+    "A higher stock vote alone does not establish insufficient native clock or explain corruption"
+  ],
+  "proposed_test": "Only after trial 67 is reviewed: consider bounded driver performance control at an observed stock rate, verify actual rate and unchanged DSI/DSC state, then observe physical output. Not part of trial 67."
+}
