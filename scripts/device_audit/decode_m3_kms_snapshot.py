@@ -110,6 +110,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--record', type=Path, required=True)
     parser.add_argument('--pps-reference', type=Path, required=True)
+    parser.add_argument('--pps-profile', choices=('computed', 'factory'), default='computed')
     args = parser.parse_args()
     live = args.record/'live'
     boot = json.loads((live/'gsi-accepted.json').read_text())['identity'][2]
@@ -123,7 +124,10 @@ def main():
     banks = register_banks(chunks['kms'])
     if not {'dsc_0', 'dsc_1', 'dsi0_ctrl'}.issubset(banks):
         raise ValueError('Required SM8250 DSC/DSI banks absent')
-    expected = dsc_from_pps(bytes.fromhex(json.loads(args.pps_reference.read_text())['computed_pps_hex']))
+    pps = bytes.fromhex(json.loads(args.pps_reference.read_text())[args.pps_profile + '_pps_hex'])
+    if len(pps) != (88 if args.pps_profile == 'factory' else 128):
+        raise ValueError('Incomplete reference PPS')
+    expected = dsc_from_pps(pps.ljust(128, b'\0'))
     decoded = {}
     for name, regs in banks.items():
         if re.fullmatch(r'dsc_\d+', name) and regs[4]:
@@ -145,6 +149,7 @@ def main():
     result = dict(boot_id=boot, scope='Pre-Android native KMS; nonzero banks may include stale state. Not a live Android scanout or physical pass.',
         source_sha256=hashlib.sha256(raw).hexdigest(),
         reference_sha256=hashlib.sha256(args.pps_reference.read_bytes()).hexdigest(),
+        reference_profile=args.pps_profile,
         route=route_from_regs(banks),
         dsc=decoded, sspp=sspp, dsi=dict(compression=hex(r[0x2a4]),
         compression2=hex(r[0x2a8]), stream=hex(r[0x54]), total=hex(r[0x58])),
