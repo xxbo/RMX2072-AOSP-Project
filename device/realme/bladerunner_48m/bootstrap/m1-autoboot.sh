@@ -1,5 +1,6 @@
 #!/bin/busybox sh
-# Autonomous engineering boot. No cable, host time or writable UFS is required.
+# Autonomous UFS boot, except explicitly host-gated display experiments below.
+# The staged-display variant needs a host signal on every boot.
 set -eu
 export PATH=/bin:/sbin
 /bin/busybox --install -s /bin

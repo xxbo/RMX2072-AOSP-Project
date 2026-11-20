@@ -1,5 +1,7 @@
 # RMX2072 花屏原因分析与排查方案
 
+2026-11-20：[trial 65 手动重启后的门控超时与 F.20 恢复](M3_REBOOT_LOOP_RECOVERY_2026-11-20.md)。本轮处理重启循环，没有追加显示实验；trial 65 的实屏效果仍未验收。
+
 2026-11-18 最新补充：[原厂正常显示与早期开屏时钟对照及 trial 65 暂停点](M3_STOCK_LINK_CLOCK_2026-11-18.md)。F.20 正常实屏与开机 trace 确认 60 Hz 区间的 DSI bit/byte/pixel 设频为 660/82.5/110 MHz；trial 64 约为 421.6/52.7/70.3 MHz。trial 65 已刷入时钟对照镜像并进入 GSI ADB；用户在原生观察阶段要求暂停，电脑端流程已停止，实屏效果未确认。当前目标仍为消除花屏，再推进 AOSP 桌面。
 
 适用状态：RMX2072，trial 60 / kernel 30，用户于 2026 年 11 月 16 日确认。代码基线为 [PR #22](https://github.com/xxbo/RMX2072-AOSP-Project/pull/22) 的 `bringup/m3-display` 分支，提交 `0e905be5ab76b250b93bab3507d8a31dd1d3f9f2`。

@@ -1,0 +1,230 @@
+{
+  "date": "2026-11-20",
+  "status": "F20_RESTORED",
+  "goal": "Stop reboot loop and preserve evidence; physical display/AOSP desktop work remains pending",
+  "observed_trial": "ufs-host-g3-gsi17-firststage-ufs-65",
+  "initial_diagnostic_boot": {
+    "boot_id": "f141a3d2-45c7-488d-8274-3bd700abae1e",
+    "uptime_seconds": 179.19,
+    "android_started": false
+  },
+  "next_diagnostic_boot": {
+    "boot_id": "5af855be-cf59-43ff-9f7a-42ae8d304ccb",
+    "identity": {
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "trial": "ufs-host-g3-gsi17-firststage-ufs-65",
+      "udc": "configured",
+      "uptime_seconds": 59.97,
+      "timer_seconds": 180
+    },
+    "utc": "2026-11-20T13:02:29.884593+00:00"
+  },
+  "host_gate": {
+    "ready": true,
+    "start_file_present": false,
+    "android_pid1": false,
+    "timer_seconds": 180
+  },
+  "previous_boot_reboot": {
+    "seconds": 181.242229,
+    "command": "edl",
+    "ramoops_ecc_corrected_bytes": 1979,
+    "ramoops_ecc_unrecoverable_blocks": 1270,
+    "integrity": "PARTIAL_UNRELIABLE; only readable lines used alongside live state and source"
+  },
+  "conclusion": "Host-gated display image waits for a fresh host signal on every boot; its 180-second supervisor requests EDL without that signal. Current-boot guardian retention does not establish unattended reboot.",
+  "unresolved": [
+    "Why the timer-driven EDL request did not leave the phone persistently in EDL"
+  ],
+  "host_recovery": "Captured diagnostic state and available pstore, then explicitly requested EDL before the deadline; verified stock recovery process captured Sahara successfully",
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
+  "readback_count": 19,
+  "full_super_readback_chunks": 17,
+  "source_fix_commit": "4bc7e26",
+  "source_fix_scope": "Packaging and retention reporting only; does not modify firmware boot behavior",
+  "cold_start_test": "NOT_RUN",
+  "new_display_trial": "NOT_RUN",
+  "images_retained": "original recovery set and current candidate only",
+  "raw_local_evidence": {
+    "initial-console.log": {
+      "bytes": 130973,
+      "sha256": "d54899a8b09371888052907e1a96092d63b7b0dc3f14cc42a51818fa76201695"
+    },
+    "recovery-console-state.txt": {
+      "bytes": 16856,
+      "sha256": "17aceb66661753ed6d017c51c5e692c7329b3e299a94f573ef6d642034a76f06"
+    },
+    "console-ramoops-0": {
+      "bytes": 233034,
+      "sha256": "4bf7b310218f6a19f71942baeaf9081e528dd495030e27ba3857a3e0314b4dca"
+    }
+  },
+  "stock_stability": {
+    "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+    "build": "RMX2072_11_F.20",
+    "boot_completed": true,
+    "same_boot_samples": [
+      {
+        "utc": "2026-11-20T13:10:02.175257+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 24.85,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 0.0
+      },
+      {
+        "utc": "2026-11-20T13:10:12.252657+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 34.94,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 10.078
+      },
+      {
+        "utc": "2026-11-20T13:10:22.336445+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 45.03,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 20.172
+      },
+      {
+        "utc": "2026-11-20T13:10:32.448827+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 55.13,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 30.282
+      },
+      {
+        "utc": "2026-11-20T13:10:42.573482+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 65.25,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 40.407
+      },
+      {
+        "utc": "2026-11-20T13:10:52.706166+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 75.39,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 50.532
+      },
+      {
+        "utc": "2026-11-20T13:11:02.843537+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 85.52,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 60.672
+      },
+      {
+        "utc": "2026-11-20T13:11:12.987122+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 95.67,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 70.813
+      },
+      {
+        "utc": "2026-11-20T13:11:23.110074+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 105.79,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 80.938
+      },
+      {
+        "utc": "2026-11-20T13:11:33.243577+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 115.92,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 91.078
+      },
+      {
+        "utc": "2026-11-20T13:11:43.365004+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 126.05,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 101.203
+      },
+      {
+        "utc": "2026-11-20T13:11:53.494963+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 136.17,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 111.328
+      },
+      {
+        "utc": "2026-11-20T13:12:03.620031+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 146.31,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 121.453
+      },
+      {
+        "utc": "2026-11-20T13:12:13.777544+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 156.44,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 131.61
+      },
+      {
+        "utc": "2026-11-20T13:12:23.916855+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 166.6,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 141.75
+      },
+      {
+        "utc": "2026-11-20T13:12:34.057497+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 176.73,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 151.891
+      },
+      {
+        "utc": "2026-11-20T13:12:44.186054+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 186.87,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 162.016
+      },
+      {
+        "utc": "2026-11-20T13:12:54.329102+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 197.01,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 172.157
+      },
+      {
+        "utc": "2026-11-20T13:13:04.456936+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 207.14,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 182.282
+      },
+      {
+        "utc": "2026-11-20T13:13:14.588880+00:00",
+        "boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+        "uptime_seconds": 217.28,
+        "kernel": "4.19.157-perf+",
+        "elapsed_seconds": 192.422
+      }
+    ],
+    "observed_seconds": 192.422,
+    "final_uptime_seconds": 217.28,
+    "past_previous_180_second_timer": true,
+    "scope": "Continuous stock ADB observation only; no extra restart or fault injection"
+  },
+  "operator": {
+    "question": "这次循环重启最初是怎么开始的？",
+    "answer": "按电源键或手动重启后开始",
+    "scope": "User-reported initial trigger; not evidence of spontaneous GSI failure",
+    "after_restore_observation": "已正常显示，暂未再重启"
+  }
+}
