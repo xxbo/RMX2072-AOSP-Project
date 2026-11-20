@@ -319,8 +319,11 @@ def main():
      try:usb.wait(timeout=10)
      except subprocess.TimeoutExpired:usb.terminate();usb.wait(5)
     if retained:
-     (dest/'gsi-retained.json').write_text(json.dumps(dict(current_mode='Android 17 GSI',candidate_super_retained=True,stock_restored=False,stable=json.loads((dest/'live/gsi-stable.json').read_text())),indent=2)+'\n')
-     event('GSI ADB stable across old timers; guardian retained and phone left running Android 17')
+     gated=bool(rd.get('display_staged'))
+     (dest/'gsi-retained.json').write_text(json.dumps(dict(current_mode='Android 17 GSI',candidate_super_retained=True,stock_restored=False,retention_scope='current-boot-only',host_start_required_after_every_reboot=gated,stable=json.loads((dest/'live/gsi-stable.json').read_text())),indent=2)+'\n')
+     event('GSI ADB stable in this boot; guardian retained and phone left running Android 17')
+     if gated:
+      event('HOST-GATED DISPLAY IMAGE: every reboot still requires the observer to release the display gate; without it the 180-second EDL timer runs. Current-boot retention does not establish unattended restart.')
      return
     try:read_boot('return',boot['boot_sha256'],candidate_dtbo_sha)
     except BaseException:

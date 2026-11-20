@@ -158,6 +158,10 @@ def main():
                   device_tree_build=dt, cmdline=cmdline, entry_probe=False,
                   avb_envelopes=dict(boot=boot_avb, dtbo=dtbo_avb),
                   status='packaged-not-device-tested')
+    # The autonomous UFS ramdisk variant also hosts gated display experiments.
+    # A retained Android guardian does not remove that next-boot host gate.
+    record['boot_start_policy'] = 'host-gated-display' if provenance.get('display_staged') else 'autonomous-ufs'
+    record['host_start_required_after_every_reboot'] = bool(provenance.get('display_staged'))
     record['single_dsc_test'] = a.single_dsc_test
     record['solid_fill_test'] = a.solid_fill_test
     record['panel_readback_test'] = a.panel_readback_test
