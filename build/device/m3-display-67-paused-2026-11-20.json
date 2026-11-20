@@ -1,0 +1,447 @@
+{
+  "utc": "2026-11-20T15:20:50.455173+00:00",
+  "status": "PAUSED_BY_USER_F20_RESTORED",
+  "request": "暂停任务",
+  "goal": "Correct physical display, then AOSP desktop on project ACK 6.18 + Android 17 GSI + source/ported drivers",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-67",
+  "boot_id": "790e9ef8-5e41-4066-8117-12222897de92",
+  "kernel": {
+    "run_id": 44752732665,
+    "source_commit": "7df9c64a916bfc8f10e866ceddc789468ca9446a",
+    "artifact_id": 14640930942,
+    "artifact_archive_digest": "sha256:af5e252b108115b3a64dc3a689c33ca6f5d59c148c87a70fdfd551d6c6a90e9b",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "34e28227e62cc22c5b5125bd6e187a1879b24bc9008ff5820e3e3dcca3ee9d4c",
+    "selected_member_sha256": {
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "SHA256SUMS": "98dda67f93fd89d27644003eda139fbd69468999123252b8fc13227ff59c6a09",
+      "build-metadata.txt": "bc2b624f493be0f37e24e16c09f33f4ee3efd39c9c588f769e82045b148f9874",
+      "display-clock-patch.sha256": "d61a6e071f4d95e1b4b78523f1aa0d0fe30d21380e845490921bd96baebfccd1",
+      "display-source.sha256": "6739de5becacf1cdb8e028ca0fc885058b632d97bffaa2795c1b4ad9030adc2e",
+      "Image.gz": "779497c189023b78bbbdd29909bfec291079adb09890261112621650f00f7b69",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "4b00d7b70feb80e4a80176cb10c73291b013c1da54cefc70693dbfa19c97a998",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "rmx2072-dsc-packet-trace.sha256": "6bf2fd3fc742d2b897753519cc9003c091351a8af8cea560622ac48a9cb9bd39",
+      "rmx2072-dpu-solid-fill-test.sha256": "23d9f30f6452c901ef6457761d6efa48380f35da179f107617e9f228d85f0d20",
+      "rmx2072-dsc-route-test.sha256": "0e8dd497379f704771996add7f72fce0d0972d73e971a39bd0ebb4aad8c1d4f3",
+      "rmx2072-stock-dsc-test.sha256": "c44cabb0bf548b927d631f0a9c53d0f47bd3de5eff57306bc20cb1562800e28e",
+      "rmx2072-stock-linkclock-test.sha256": "2d4d012fa54a5c058b8bc49f1224702e756682f44809c50aa86d30af6d25ee8b",
+      "rmx2072-stock-phy-timing-test.sha256": "73d4124ed5ba3ec9de7e6a029e3fab0aac449f7aac61db1298cd77683e0816aa",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309",
+      "upstream-dsi-dsc-all-slices-flag.sha256": "8a0f473a130c0159cb0d7badcd6f37a128915e08098de90ff010b58dc871a05d",
+      "upstream-msm-dsi-dsc-slices-per-packet.sha256": "130c7139f1104b38050febbff6c19bc10a41d13ff840d81f522562619f77fc0b"
+    }
+  },
+  "recipe_commit": "084279d9fcfe5bb0b76024b9a5da8918d306131f",
+  "boot_sha256": "ceaff490ad41eb6fd9168548863f87961fd50fc9b99ddd67a2996748e98613ec",
+  "dtbo_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "preflight": {
+    "checks": {
+      "kernel_pin": true,
+      "kernel_verified": true,
+      "kernel_hash": true,
+      "boot_hash": true,
+      "ramdisk_hash": true,
+      "container_identical": true,
+      "scratch_identical": true,
+      "device_trees_identical": true,
+      "dtbo_identical": true,
+      "experiment_opt_in": true,
+      "same_dsc_clock_topology": true,
+      "same_ramdisk_payloads": true,
+      "same_base_payloads": true,
+      "clean_recipe": true,
+      "known_host_gate": true
+    },
+    "passed": true,
+    "recipe_commit": "084279d9fcfe5bb0b76024b9a5da8918d306131f",
+    "kernel": "34e28227e62cc22c5b5125bd6e187a1879b24bc9008ff5820e3e3dcca3ee9d4c",
+    "boot": "ceaff490ad41eb6fd9168548863f87961fd50fc9b99ddd67a2996748e98613ec"
+  },
+  "programmed_readbacks": [
+    {
+      "label": "before-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "utc": "2026-11-20T15:03:55.142658+00:00"
+    },
+    {
+      "label": "before-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "utc": "2026-11-20T15:03:55.852504+00:00"
+    },
+    {
+      "label": "candidate-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "ceaff490ad41eb6fd9168548863f87961fd50fc9b99ddd67a2996748e98613ec",
+      "utc": "2026-11-20T15:06:19.731191+00:00"
+    },
+    {
+      "label": "candidate-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+      "utc": "2026-11-20T15:06:20.445213+00:00"
+    },
+    {
+      "label": "candidate-super-read-00",
+      "lun": 0,
+      "start_sector": 193032,
+      "sectors": 131072,
+      "sha256": "e625d0ef13273544e21c2131640c43ba3f61eee332a11205abab67bda38733d1",
+      "utc": "2026-11-20T15:06:32.884549+00:00"
+    },
+    {
+      "label": "candidate-super-read-01",
+      "lun": 0,
+      "start_sector": 324104,
+      "sectors": 131072,
+      "sha256": "5966cadc6bdbf42920f191b9295452dc54fb5f33b6d98c2db929b5b7884c8260",
+      "utc": "2026-11-20T15:06:45.386390+00:00"
+    },
+    {
+      "label": "candidate-super-read-02",
+      "lun": 0,
+      "start_sector": 455176,
+      "sectors": 131072,
+      "sha256": "2672cbd1f6906371963c62fa279d2b7ff1a036c0f87bd2ac0cd01a093d4ee4e4",
+      "utc": "2026-11-20T15:06:57.863994+00:00"
+    },
+    {
+      "label": "candidate-super-read-03",
+      "lun": 0,
+      "start_sector": 586248,
+      "sectors": 131072,
+      "sha256": "b773ca12b0a1eb5e0a3101281c03a20a0d16f1aa3fd435ca9888f5fdd7fbd0ee",
+      "utc": "2026-11-20T15:07:10.332834+00:00"
+    },
+    {
+      "label": "candidate-super-read-04",
+      "lun": 0,
+      "start_sector": 717320,
+      "sectors": 131072,
+      "sha256": "d9ec0569cf19a76d80e4f5bf3d305ccc785ff38ba4837594b69a3c92eced4715",
+      "utc": "2026-11-20T15:07:22.801097+00:00"
+    },
+    {
+      "label": "candidate-super-read-05",
+      "lun": 0,
+      "start_sector": 848392,
+      "sectors": 131072,
+      "sha256": "6d5207f2dc41d25cc72072a9a2ce78c3c942362d7bb84548a3c8da04f868d1f7",
+      "utc": "2026-11-20T15:07:35.290702+00:00"
+    },
+    {
+      "label": "candidate-super-read-06",
+      "lun": 0,
+      "start_sector": 979464,
+      "sectors": 131072,
+      "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+      "utc": "2026-11-20T15:07:47.748371+00:00"
+    },
+    {
+      "label": "candidate-super-read-07",
+      "lun": 0,
+      "start_sector": 1110536,
+      "sectors": 131072,
+      "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+      "utc": "2026-11-20T15:08:00.230658+00:00"
+    },
+    {
+      "label": "candidate-super-read-08",
+      "lun": 0,
+      "start_sector": 1241608,
+      "sectors": 131072,
+      "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+      "utc": "2026-11-20T15:08:12.711051+00:00"
+    },
+    {
+      "label": "candidate-super-read-09",
+      "lun": 0,
+      "start_sector": 1372680,
+      "sectors": 131072,
+      "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+      "utc": "2026-11-20T15:08:25.210905+00:00"
+    },
+    {
+      "label": "candidate-super-read-10",
+      "lun": 0,
+      "start_sector": 1503752,
+      "sectors": 131072,
+      "sha256": "b84e8cad1bcd574e5f1ca44475dc99ac1f1f39577ad86edb8ab42408157e894f",
+      "utc": "2026-11-20T15:08:37.701885+00:00"
+    },
+    {
+      "label": "candidate-super-read-11",
+      "lun": 0,
+      "start_sector": 1634824,
+      "sectors": 131072,
+      "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+      "utc": "2026-11-20T15:08:50.253394+00:00"
+    },
+    {
+      "label": "candidate-super-read-12",
+      "lun": 0,
+      "start_sector": 1765896,
+      "sectors": 131072,
+      "sha256": "31b33d4846a8353239b0f792ffe775664096115b91f6bccabbec84502603efe4",
+      "utc": "2026-11-20T15:09:02.773092+00:00"
+    },
+    {
+      "label": "candidate-super-read-13",
+      "lun": 0,
+      "start_sector": 1896968,
+      "sectors": 131072,
+      "sha256": "64806dc93ca06d60f25de50deb8084a8d648725271fd8ffcf4248ba6e61fa832",
+      "utc": "2026-11-20T15:09:15.264170+00:00"
+    },
+    {
+      "label": "candidate-super-read-14",
+      "lun": 0,
+      "start_sector": 2028040,
+      "sectors": 131072,
+      "sha256": "aa72d4e321e3ab53387af844e407f7b0d16d626b3cd320604cea539cc214582e",
+      "utc": "2026-11-20T15:09:27.742143+00:00"
+    },
+    {
+      "label": "candidate-super-read-15",
+      "lun": 0,
+      "start_sector": 2159112,
+      "sectors": 131072,
+      "sha256": "8cb68db5119ab5e0ba46d6f209b71a9bb5398cee6152806c75c1a941f3266ae6",
+      "utc": "2026-11-20T15:09:40.183942+00:00"
+    },
+    {
+      "label": "candidate-super-read-16",
+      "lun": 0,
+      "start_sector": 2290184,
+      "sectors": 67584,
+      "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+      "utc": "2026-11-20T15:09:46.715823+00:00"
+    }
+  ],
+  "physical_observation": "NOT_REPORTED: user requested pause at the native observation prompt; Android observation not requested",
+  "physical_acceptance": "NOT_EVALUATED_PAUSED",
+  "gsi_adb": "Enumerated and matched the boot UUID only for safe recovery; no 190-second soak",
+  "gsi_stability": "NOT_RUN_PAUSED",
+  "runtime_comparison": "NOT_COMPLETED_PAUSED",
+  "captured_timing_lines": [
+    "6,3725,31658474,-,caller=T1456;msm_dsi_phy ae94400.phy: RMXPHY timing stage=enable-entry bytes=0001010201010102010b0400032e",
+    "6,3726,31658689,-,caller=T1456;msm_dsi_phy ae94400.phy: RMXPHY stock-timing bit=660000000 clk_trail=5 clk_pre=20 clk_post=21",
+    "6,3728,31659162,-,caller=T1456;msm_dsi_phy ae94400.phy: RMXPHY timing stage=after-program bytes=0017060521200606040204001415"
+  ],
+  "timing_scope": "Enable-entry and after-program log only; entry is not claimed as original F20 or untouched bootloader state",
+  "host_test_processes": "Stopped after candidate readbacks and before further tests; restore-only process finished normally",
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "73e2bf96-93f9-41cf-916e-c3b5686f919e",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ],
+    "readbacks": [
+      {
+        "label": "restored-boot",
+        "lun": 4,
+        "start_sector": 79366,
+        "sectors": 24576,
+        "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "utc": "2026-11-20T15:16:06.430474+00:00"
+      },
+      {
+        "label": "restored-dtbo",
+        "lun": 4,
+        "start_sector": 104298,
+        "sectors": 6144,
+        "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "utc": "2026-11-20T15:16:07.136661+00:00"
+      },
+      {
+        "label": "restored-super-00",
+        "lun": 0,
+        "start_sector": 193032,
+        "sectors": 131072,
+        "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e",
+        "utc": "2026-11-20T15:16:19.562583+00:00"
+      },
+      {
+        "label": "restored-super-01",
+        "lun": 0,
+        "start_sector": 324104,
+        "sectors": 131072,
+        "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145",
+        "utc": "2026-11-20T15:16:32.044374+00:00"
+      },
+      {
+        "label": "restored-super-02",
+        "lun": 0,
+        "start_sector": 455176,
+        "sectors": 131072,
+        "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54",
+        "utc": "2026-11-20T15:16:44.547498+00:00"
+      },
+      {
+        "label": "restored-super-03",
+        "lun": 0,
+        "start_sector": 586248,
+        "sectors": 131072,
+        "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda",
+        "utc": "2026-11-20T15:16:57.033854+00:00"
+      },
+      {
+        "label": "restored-super-04",
+        "lun": 0,
+        "start_sector": 717320,
+        "sectors": 131072,
+        "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39",
+        "utc": "2026-11-20T15:17:09.533947+00:00"
+      },
+      {
+        "label": "restored-super-05",
+        "lun": 0,
+        "start_sector": 848392,
+        "sectors": 131072,
+        "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5",
+        "utc": "2026-11-20T15:17:22.011196+00:00"
+      },
+      {
+        "label": "restored-super-06",
+        "lun": 0,
+        "start_sector": 979464,
+        "sectors": 131072,
+        "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+        "utc": "2026-11-20T15:17:34.509912+00:00"
+      },
+      {
+        "label": "restored-super-07",
+        "lun": 0,
+        "start_sector": 1110536,
+        "sectors": 131072,
+        "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+        "utc": "2026-11-20T15:17:47.017327+00:00"
+      },
+      {
+        "label": "restored-super-08",
+        "lun": 0,
+        "start_sector": 1241608,
+        "sectors": 131072,
+        "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+        "utc": "2026-11-20T15:17:59.543287+00:00"
+      },
+      {
+        "label": "restored-super-09",
+        "lun": 0,
+        "start_sector": 1372680,
+        "sectors": 131072,
+        "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+        "utc": "2026-11-20T15:18:12.028431+00:00"
+      },
+      {
+        "label": "restored-super-10",
+        "lun": 0,
+        "start_sector": 1503752,
+        "sectors": 131072,
+        "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64",
+        "utc": "2026-11-20T15:18:24.581217+00:00"
+      },
+      {
+        "label": "restored-super-11",
+        "lun": 0,
+        "start_sector": 1634824,
+        "sectors": 131072,
+        "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+        "utc": "2026-11-20T15:18:37.130830+00:00"
+      },
+      {
+        "label": "restored-super-12",
+        "lun": 0,
+        "start_sector": 1765896,
+        "sectors": 131072,
+        "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf",
+        "utc": "2026-11-20T15:18:49.619550+00:00"
+      },
+      {
+        "label": "restored-super-13",
+        "lun": 0,
+        "start_sector": 1896968,
+        "sectors": 131072,
+        "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4",
+        "utc": "2026-11-20T15:19:02.076152+00:00"
+      },
+      {
+        "label": "restored-super-14",
+        "lun": 0,
+        "start_sector": 2028040,
+        "sectors": 131072,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+        "utc": "2026-11-20T15:19:14.498508+00:00"
+      },
+      {
+        "label": "restored-super-15",
+        "lun": 0,
+        "start_sector": 2159112,
+        "sectors": 131072,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+        "utc": "2026-11-20T15:19:26.894699+00:00"
+      },
+      {
+        "label": "restored-super-16",
+        "lun": 0,
+        "start_sector": 2290184,
+        "sectors": 67584,
+        "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+        "utc": "2026-11-20T15:19:33.386803+00:00"
+      }
+    ]
+  },
+  "evidence": {
+    "inputs.json": {
+      "bytes": 134448,
+      "sha256": "d695c4ed5724756930cfa395c331380cf56260ac7132a0bfcda34f526dd3bee6"
+    },
+    "live/acm.log": {
+      "bytes": 232788,
+      "sha256": "e310ea7e07f0ebd7829db2bd87346eac9e9cdd8b904910d68f3d5a64c03b4cfe"
+    },
+    "live/host-events.jsonl": {
+      "bytes": 304,
+      "sha256": "5e50843619608a0a3de596a4a44de27d39ccfe78ac14738f025e40e527b6156f"
+    },
+    "live/m3-display-at-pause.txt": {
+      "bytes": 208720,
+      "sha256": "f5fd9192a8494cea5845a50dd0a1f09dbce741a1c8d632e1b2f0abba655794c8"
+    },
+    "operator-observations.jsonl": {
+      "bytes": 150,
+      "sha256": "f35d27ae2594d46907314577bdfeccda9519bb331abb364d79f0756bd9c24307"
+    }
+  },
+  "handset_left": "F.20; no host-gated candidate left for unattended reboot",
+  "cold_start_test": "NOT_RUN",
+  "watchdog_fault_injection": "NOT_RUN",
+  "images_retained": "Original recovery set and current candidate only",
+  "resume_scope": "Review the saved trial 67 evidence and agree the next physical display comparison; no fix or failure verdict inferred from pause"
+}

@@ -1101,3 +1101,12 @@ included. Staged display still needs host release on every boot.
 [Trial 66](../build/device/m3-display-66-2026-11-20.json) ·
 [DSC comparison](M3_STOCK_DSC_2026-11-20.md) ·
 [PHY candidate](M3_STOCK_PHY_2026-11-20.md).
+
+
+## Trial 67 paused by user
+
+Build 36, candidate packaging and full device readback passed. The user
+requested pause at the native observation prompt, so the physical result is
+unreported and no repair is claimed. Further capture and testing stopped;
+F.20 was restored and fully verified to avoid leaving the per-boot host gate
+installed. Work remains paused. [Record](../build/device/m3-display-67-paused-2026-11-20.json).
