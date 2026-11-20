@@ -185,7 +185,7 @@ def main():
                      'upstream-msm-dsi-dsc-slices-per-packet',
                      'rmx2072-dsc-packet-trace', 'rmx2072-dsc-route-test',
                      'rmx2072-dpu-solid-fill-test', 'rmx2072-stock-linkclock-test',
-                     'rmx2072-stock-dsc-test'):
+                     'rmx2072-stock-dsc-test', 'rmx2072-stock-phy-timing-test'):
             path = 'bootstrap-patches/' + name + '.patch'
             exists = subprocess.run(['git', '-C', str(repo), 'cat-file', '-e',
                 a.commit + ':device/realme/bladerunner_48m/' + path],
