@@ -1082,3 +1082,22 @@ after 196.985 seconds. A host session interruption and a rejected local
 candidate-byte mismatch are documented separately; neither is a display
 result and no unverified candidate bytes were programmed. Root cause and
 AOSP desktop acceptance remain unresolved. [Trial 64 details](M3_PANEL_READBACK_2026-11-18.md#trial-64-result-physical-corruption-persists).
+
+
+## Trials 65–66: original clocks and original PPS do not repair physical output
+
+The reviewed trial 65 snapshot confirms 660/82.5/110 MHz CCF clocks with the
+previous DSC configuration. The operator subsequently confirmed corruption.
+Trial 66 additionally matches both the encoder and transmitted 88-byte PPS to
+the original panel payload. All 32 setup checks pass, yet native output has
+“没有改善” and Android has “一样花屏”. GSI ADB passed 196.625 seconds under
+enforcing, with graphics and maintenance registered and activity/window absent.
+
+F.20 was restored after trial 66 and its boot/DTBO, all 17 super chunks, both
+LP slots, full phone-side super digest and boot completion verified. The next
+candidate tests three PHY timing fields against the original panel table;
+this remains a hypothesis. No new cold-start or watchdog fault injection is
+included. Staged display still needs host release on every boot.
+[Trial 66](../build/device/m3-display-66-2026-11-20.json) ·
+[DSC comparison](M3_STOCK_DSC_2026-11-20.md) ·
+[PHY candidate](M3_STOCK_PHY_2026-11-20.md).
