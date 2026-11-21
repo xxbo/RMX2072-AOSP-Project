@@ -144,5 +144,13 @@
   ],
   "storage_policy": "One verified original recovery set plus current candidate firmware; no stock partition reread this trial",
   "cold_start_test": "NOT RUN",
-  "watchdog_fault_injection": "NOT RUN"
+  "watchdog_fault_injection": "NOT RUN",
+  "post_trial_restore": {
+    "record": "m3-display-69-restored-2026-11-21.json",
+    "boot_id": "0a094b64-4e2d-412b-9c0a-ac3e41f03514",
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "reason": "User requested restoration and pause",
+    "display_acceptance_unchanged": true
+  }
 }

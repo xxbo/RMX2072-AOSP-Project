@@ -10,11 +10,14 @@ display in both native KMS and Android phases. Adding the missing standard
 128-byte PPS after the vendor on-sequence, with the previous encoder and
 transport parameters unchanged, removes the corruption in this configuration.
 All 46 runtime comparison checks pass. Enforcing GSI ADB passes 194.687 seconds
-in the same boot; the phone remains in GSI. The AOSP desktop is still blocked:
+in the same boot. After acceptance, the user requested stock restoration and
+a pause; F.20 is now restored with boot completion and both LP slots verified.
+The AOSP desktop is still blocked:
 installd is absent and PackageManager waits for it, while activity/window are
-not registered. The next goal is Android framework startup. This candidate
-still requires the host observer after every reboot; retention covers the
-current boot only. [Evidence, limits and next step](M3_RUNTIME_PPS_2026-11-21.md).
+not registered. On resumption, the next goal is Android framework startup.
+The preserved trial-69 candidate still requires the host observer after every
+reboot; it is no longer installed on the phone.
+[Evidence, limits and next step](M3_RUNTIME_PPS_2026-11-21.md).
 
 ## Starting observation, November 15
 
@@ -1202,3 +1205,15 @@ or watchdog fault-injection tests and no new original-partition reread.
 
 [Detailed experiment and observations](M3_RUNTIME_PPS_2026-11-21.md),
 [acceptance receipt](../build/device/m3-standard-pps-69-result-2026-11-21.json).
+
+### User-requested stock restoration and pause
+
+After the successful trial, the user requested restoring stock before
+continuing later. The existing recovery set was locally verified and its
+super, boot and DTBO written successfully. F.20 boot
+`0a094b64-4e2d-412b-9c0a-ac3e41f03514` reports `4.19.157-perf+`, boot completion,
+running SurfaceFlinger and stopped boot animation; ADB and both original LP
+slots verify. No full original-partition reread or phone-side super hash was
+performed. Work is paused; trial 69's native/Android display acceptance and
+the one current candidate are preserved for resumption.
+[Restoration receipt](../build/device/m3-display-69-restored-2026-11-21.json).

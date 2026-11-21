@@ -154,11 +154,13 @@
   },
   "cold_start_test": "NOT RUN",
   "watchdog_fault_injection": "NOT RUN",
-  "handset_left": "retained Android 17 GSI; host observer required after every reboot",
+  "handset_left": "F.20 restored at user request after successful display acceptance; work paused",
   "operator_feedback": {
     "native": "显示的图案完全正常，未出现噪点！",
     "android": "完整！正常！你做到了"
   },
   "physical_acceptance_scope": "Same-boot native KMS and Android fixed pattern; not desktop or all panel lifecycle modes",
-  "framework_next_blocker": "installd not found; PackageManager installer timeouts; activity/window absent; desktop not reached"
+  "framework_next_blocker": "installd not found; PackageManager installer timeouts; activity/window absent; desktop not reached",
+  "recovery_record": "m3-display-69-restored-2026-11-21.json",
+  "recovery_boot_id": "0a094b64-4e2d-412b-9c0a-ac3e41f03514"
 }
