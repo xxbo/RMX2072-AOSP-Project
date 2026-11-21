@@ -1,0 +1,435 @@
+{
+  "boot_id": "de8af50f-4951-4be9-8da1-196ca5eaf8ab",
+  "baseline_boot_id": "fa161396-0e8d-4c8d-b947-6bf547c0b956",
+  "candidate_identity_scope": "gsi-accepted record",
+  "checks": {
+    "complete_original_pps_transmitted": true,
+    "active_encoder_matches_original_pps": true,
+    "original_rc_calculation_verified": true,
+    "explicit_stock_dsc": true,
+    "stock_clock_retained": true,
+    "same_super_and_verified_partitions": true,
+    "same_scratch_seeds": true,
+    "same_source_device_trees": true,
+    "same_single_dsc_test": true,
+    "same_panel_readback_test": true,
+    "same_solid_fill_test": true,
+    "same_display_probe_sha256": true,
+    "same_pattern_rgb_sha256": true,
+    "same_first_stage_init_sha256": true,
+    "same_witness_sha256": true,
+    "same_selected_route": true,
+    "single_dsc_route": true,
+    "same_dsi_packet_0x54": true,
+    "same_dsi_packet_0x58": true,
+    "same_dsi_packet_0x2a4": true,
+    "same_dsi_packet_0x2a8": true,
+    "after-modeset_dsi0_pll_bit_clk": true,
+    "after-modeset_dsi0_phy_pll_out_byteclk": true,
+    "after-modeset_dsi0_phy_pll_out_dsiclk": true,
+    "after-modeset_disp_cc_mdss_byte0_clk": true,
+    "after-modeset_disp_cc_mdss_pclk0_clk": true,
+    "after-flips_dsi0_pll_bit_clk": true,
+    "after-flips_dsi0_phy_pll_out_byteclk": true,
+    "after-flips_dsi0_phy_pll_out_dsiclk": true,
+    "after-flips_disp_cc_mdss_byte0_clk": true,
+    "after-flips_disp_cc_mdss_pclk0_clk": true,
+    "baseline_original_dsc": true,
+    "baseline_default_phy": true,
+    "explicit_stock_phy": true,
+    "expected_baseline_phy": true,
+    "all_fourteen_phy_values_match_original": true,
+    "only_three_phy_fields_changed": true,
+    "baseline_host_pre_post": true,
+    "host_uses_original_pre_post": true,
+    "entry_timing_recorded": true,
+    "programmed_timing_matches": true,
+    "timing_requests_match": true,
+    "no_timing_rejection": true
+  },
+  "all_setup_checks_pass": true,
+  "original_pps_hex": "110000893080096004380030021c021c02000252002004230007000f028e021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62ab62af42af44b346374",
+  "native_dsc_parameters": {
+    "picture": [
+      1080,
+      2400
+    ],
+    "slice": [
+      540,
+      48
+    ],
+    "chunk": 540,
+    "bpc": 8,
+    "bpp_6_4": 128,
+    "line_buf_depth": 9,
+    "simple_422": 0,
+    "convert_rgb": 1,
+    "block_pred_enable": 1,
+    "initial_xmit_delay": 512,
+    "initial_dec_delay": 594,
+    "initial_scale": 32,
+    "scale_decrement": 7,
+    "scale_increment": 1059,
+    "first_line_bpg": 15,
+    "nfl_bpg": 654,
+    "slice_bpg": 543,
+    "initial_offset": 6144,
+    "final_offset": 4336,
+    "flatness_min_qp": 3,
+    "flatness_max_qp": 12,
+    "rc_model_size": 8192,
+    "rc_edge_factor": 6,
+    "rc_quant_incr_limit0": 11,
+    "rc_quant_incr_limit1": 11,
+    "rc_tgt_offset_high": 3,
+    "rc_tgt_offset_low": 3,
+    "rc_buf_thresh": [
+      14,
+      28,
+      42,
+      56,
+      70,
+      84,
+      98,
+      105,
+      112,
+      119,
+      121,
+      123,
+      125,
+      126
+    ],
+    "rc_range": [
+      [
+        0,
+        4,
+        2
+      ],
+      [
+        0,
+        4,
+        0
+      ],
+      [
+        1,
+        5,
+        0
+      ],
+      [
+        1,
+        6,
+        62
+      ],
+      [
+        3,
+        7,
+        60
+      ],
+      [
+        3,
+        7,
+        58
+      ],
+      [
+        3,
+        7,
+        56
+      ],
+      [
+        3,
+        8,
+        56
+      ],
+      [
+        3,
+        9,
+        56
+      ],
+      [
+        3,
+        10,
+        54
+      ],
+      [
+        5,
+        10,
+        54
+      ],
+      [
+        5,
+        11,
+        52
+      ],
+      [
+        5,
+        11,
+        52
+      ],
+      [
+        9,
+        12,
+        52
+      ],
+      [
+        12,
+        13,
+        52
+      ]
+    ]
+  },
+  "clock_rates_hz": {
+    "after-modeset": {
+      "disp_cc_mdss_mdp_clk_src": 200000000,
+      "disp_cc_mdss_mdp_clk": 200000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 660000000,
+      "dsi0_pll_out_div_clk": 660000000,
+      "dsi0_pll_bit_clk": 660000000,
+      "dsi0_pll_by_2_bit_clk": 330000000,
+      "dsi0_pclk_mux": 330000000,
+      "dsi0_phy_pll_out_byteclk": 82500000,
+      "dsi0_phy_pll_out_dsiclk": 110000000,
+      "disp_cc_mdss_byte0_clk_src": 82500000,
+      "disp_cc_mdss_byte0_clk": 82500000,
+      "disp_cc_mdss_pclk0_clk_src": 110000000,
+      "disp_cc_mdss_pclk0_clk": 110000000
+    },
+    "after-flips": {
+      "disp_cc_mdss_mdp_clk_src": 200000000,
+      "disp_cc_mdss_mdp_clk": 200000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 660000000,
+      "dsi0_pll_out_div_clk": 660000000,
+      "dsi0_pll_bit_clk": 660000000,
+      "dsi0_pll_by_2_bit_clk": 330000000,
+      "dsi0_pclk_mux": 330000000,
+      "dsi0_phy_pll_out_byteclk": 82500000,
+      "dsi0_phy_pll_out_dsiclk": 110000000,
+      "disp_cc_mdss_byte0_clk_src": 82500000,
+      "disp_cc_mdss_byte0_clk": 82500000,
+      "disp_cc_mdss_pclk0_clk_src": 110000000,
+      "disp_cc_mdss_pclk0_clk": 110000000
+    }
+  },
+  "baseline_route": {
+    "dsc_input_mux": [
+      0,
+      7,
+      7,
+      7
+    ],
+    "ctl": {
+      "ctl_0": {
+        "dsc_active": 1,
+        "intf_active": 2,
+        "merge_3d_active": 0
+      },
+      "ctl_1": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_2": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_3": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_4": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_5": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      }
+    },
+    "intf_mux": {
+      "intf_0": 983055,
+      "intf_1": 983040,
+      "intf_2": 983055,
+      "intf_3": 983055
+    },
+    "pingpong": {
+      "pingpong_0": {
+        "dsc_mode": 1,
+        "input_swap": 181896,
+        "output_swap": 444040
+      },
+      "pingpong_1": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_2": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_3": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_4": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_5": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      }
+    }
+  },
+  "candidate_route": {
+    "dsc_input_mux": [
+      0,
+      7,
+      7,
+      7
+    ],
+    "ctl": {
+      "ctl_0": {
+        "dsc_active": 1,
+        "intf_active": 2,
+        "merge_3d_active": 0
+      },
+      "ctl_1": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_2": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_3": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_4": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_5": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      }
+    },
+    "intf_mux": {
+      "intf_0": 983055,
+      "intf_1": 983040,
+      "intf_2": 983055,
+      "intf_3": 983055
+    },
+    "pingpong": {
+      "pingpong_0": {
+        "dsc_mode": 1,
+        "input_swap": 181896,
+        "output_swap": 444040
+      },
+      "pingpong_1": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_2": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_3": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_4": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_5": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      }
+    }
+  },
+  "snapshot_sha256": "9ced91837c208016b12bec26ecbaaebb043e329510a54d28fff00397219e60fa",
+  "acm_sha256": "7a04c01491bc4288a734863b854c0879e77f908f27e7964863eafd76d545c061",
+  "reference_sha256": "f62843d3b5b0a28acd5c2a34a4bd23d831d06def08f78a5a251803c73dfdbd52",
+  "physical_acceptance": "REQUIRES_OPERATOR_OBSERVATION",
+  "scope": "Native PHY/host timing, encoder, PPS, CCF and fixed inputs. Entry is not presumed untouched bootloader state. Physical output requires operator observation.",
+  "original_panel_lf_sha256": "219f47d58006b129d9f46628389c161283debc5e04892e88ad6ff02a12074372",
+  "original_panel_raw_sha256": "8e97dfa208b59dc7cc7665fcb2d41fcc6ae2233e38b7c94ba85f62de60b0c1f8",
+  "original_phy_hex": "0017060521200606040204001415",
+  "baseline_phy_values": [
+    0,
+    23,
+    6,
+    7,
+    33,
+    32,
+    6,
+    6,
+    4,
+    2,
+    4,
+    0,
+    22,
+    22
+  ],
+  "candidate_phy_values": [
+    0,
+    23,
+    6,
+    5,
+    33,
+    32,
+    6,
+    6,
+    4,
+    2,
+    4,
+    0,
+    20,
+    21
+  ],
+  "changed_timing_indices": [
+    3,
+    12,
+    13
+  ],
+  "baseline_host_clkout": "0x1616",
+  "candidate_host_clkout": "0x1514",
+  "entry_timing_hex": [
+    "0001010201010102010b0400032e"
+  ],
+  "programmed_timing_hex": [
+    "0017060521200606040204001415"
+  ],
+  "requests": [
+    [
+      "660000000",
+      "5",
+      "20",
+      "21"
+    ]
+  ]
+}

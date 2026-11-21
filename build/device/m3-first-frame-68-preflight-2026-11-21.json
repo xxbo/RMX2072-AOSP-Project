@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "kernel_pin": true,
+    "kernel_run": true,
+    "kernel_verified": true,
+    "kernel_hash": true,
+    "boot_hash": true,
+    "ramdisk_hash": true,
+    "trace_patch_digest": true,
+    "trace_manifest_verified": true,
+    "container_identical": true,
+    "scratch_identical": true,
+    "device_trees_identical": true,
+    "dtbo_identical": true,
+    "cmdline_identical": true,
+    "trace_opt_in": true,
+    "staged_gate": true,
+    "same_display_flags": true,
+    "same_ramdisk_payloads": true,
+    "same_base_payloads": true,
+    "clean_recipe": true,
+    "trial_id": true
+  },
+  "passed": true,
+  "recipe_commit": "d7b91e7b7cc1d45aa7febc9d5534bcb72ebd77b4",
+  "kernel": "f04014b02687af42f74d0edf92aa6b62c21dea20c507529d5b67466508f7ac11",
+  "boot": "e3704f8b7bd8ead3f75414de5240cca607941e7bbd57f2864a593e82b1745c77",
+  "build": {
+    "run_id": 44877291283,
+    "source_commit": "57e5b0c8311e86e22fc41cb8fa7438f761e4c216",
+    "conclusion": "success",
+    "artifact_id": 14697143190
+  },
+  "packaging_correction": "Initial local preflight rejected omitted trial-67 panel-readback flag; repacked with the flag before any handset write. Final 20 checks passed."
+}

@@ -1,0 +1,2449 @@
+{
+  "complete": true,
+  "problems": [],
+  "boot_id": "de8af50f-4951-4be9-8da1-196ca5eaf8ab",
+  "phase_counts": {
+    "0": 1,
+    "4": 1,
+    "1": 5,
+    "2": 5
+  },
+  "step_counts": {
+    "pll-prepare": 2,
+    "pll-prepare-result": 2,
+    "pll-unprepare": 2,
+    "mdp-request": 3,
+    "mdp-result": 3,
+    "pll-set-begin": 1,
+    "pll-set-end": 1,
+    "link-request": 43,
+    "link-result": 43,
+    "dcs-begin": 42,
+    "dcs-end": 42
+  },
+  "loss_counters": {
+    "0": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    },
+    "1": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    },
+    "2": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    },
+    "3": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    },
+    "4": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    },
+    "5": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    },
+    "6": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    },
+    "7": {
+      "overrun": 0,
+      "commit overrun": 0,
+      "dropped events": 0
+    }
+  },
+  "saturated_phases": [],
+  "samples": [
+    {
+      "time_ns": 33620445000,
+      "kind": "rmx_dsi_sample",
+      "phase": 0,
+      "id": 0,
+      "cookie": 0,
+      "irq": 2854267394,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 835,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 33620697000,
+      "kind": "rmx_dsi_sample",
+      "phase": 4,
+      "id": 0,
+      "cookie": 0,
+      "irq": 2854267394,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 33741103000,
+      "kind": "rmx_dsi_sample",
+      "phase": 1,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 33756551000,
+      "kind": "rmx_dsi_sample",
+      "phase": 2,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 34743000000,
+      "kind": "rmx_dsi_sample",
+      "phase": 1,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 34770276000,
+      "kind": "rmx_dsi_sample",
+      "phase": 2,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 35743667000,
+      "kind": "rmx_dsi_sample",
+      "phase": 1,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 35767407000,
+      "kind": "rmx_dsi_sample",
+      "phase": 2,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 36744481000,
+      "kind": "rmx_dsi_sample",
+      "phase": 1,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 36764593000,
+      "kind": "rmx_dsi_sample",
+      "phase": 2,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 37745163000,
+      "kind": "rmx_dsi_sample",
+      "phase": 1,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    },
+    {
+      "time_ns": 37761572000,
+      "kind": "rmx_dsi_sample",
+      "phase": 2,
+      "id": 0,
+      "cookie": 33,
+      "irq": 2854267392,
+      "status": 0,
+      "fifo": 286330896,
+      "ack": 0,
+      "timeout": 0,
+      "phy": 559240,
+      "clk": 9027,
+      "mask": 335494112,
+      "errors": []
+    }
+  ],
+  "errors": [],
+  "steps": [
+    {
+      "time_ns": 31295551000,
+      "kind": "rmx_display_step",
+      "step": "pll-prepare",
+      "id": 0,
+      "a": 660000000,
+      "b": 0,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 31295567000,
+      "kind": "rmx_display_step",
+      "step": "pll-prepare-result",
+      "id": 0,
+      "a": 660000000,
+      "b": 1,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 31295731000,
+      "kind": "rmx_display_step",
+      "step": "pll-unprepare",
+      "id": 0,
+      "a": 660000000,
+      "b": 1,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 33589506000,
+      "kind": "rmx_display_step",
+      "step": "mdp-request",
+      "id": 89,
+      "a": 166017600,
+      "b": 0,
+      "c": 0,
+      "d": 800000
+    },
+    {
+      "time_ns": 33589678000,
+      "kind": "rmx_display_step",
+      "step": "mdp-result",
+      "id": 89,
+      "a": 166017600,
+      "b": 200000000,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 33593781000,
+      "kind": "rmx_display_step",
+      "step": "pll-set-begin",
+      "id": 0,
+      "a": 660000000,
+      "b": 19200000,
+      "c": 660000000,
+      "d": 0
+    },
+    {
+      "time_ns": 33594559000,
+      "kind": "rmx_display_step",
+      "step": "pll-set-end",
+      "id": 0,
+      "a": 660000000,
+      "b": 19200000,
+      "c": 660000000,
+      "d": 0
+    },
+    {
+      "time_ns": 33594799000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33595048000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33595053000,
+      "kind": "rmx_display_step",
+      "step": "pll-prepare",
+      "id": 0,
+      "a": 660000000,
+      "b": 0,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 33595186000,
+      "kind": "rmx_display_step",
+      "step": "pll-prepare-result",
+      "id": 0,
+      "a": 660000000,
+      "b": 1,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 33678032000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 1,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33678034000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33678257000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33679005000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 1,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33679014000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 2,
+      "b": 244813136030,
+      "c": 89,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33679015000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33679226000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33679986000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 2,
+      "b": 57,
+      "c": 89,
+      "d": 2
+    },
+    {
+      "time_ns": 33680811000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 3,
+      "b": 244813136029,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33680811000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33681023000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33681754000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 3,
+      "b": 57,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33681759000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 4,
+      "b": 21474836497,
+      "c": 1,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33681760000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33681968000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33682677000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 4,
+      "b": 5,
+      "c": 1,
+      "d": 2
+    },
+    {
+      "time_ns": 33704019000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 5,
+      "b": 90194313269,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33704020000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33704231000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33704941000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 5,
+      "b": 21,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33704945000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 6,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33704946000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33705155000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33705867000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 6,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33705872000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 7,
+      "b": 244813135914,
+      "c": 5,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33705872000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33705988000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33706794000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 7,
+      "b": 57,
+      "c": 5,
+      "d": 2
+    },
+    {
+      "time_ns": 33706798000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 8,
+      "b": 244813135915,
+      "c": 5,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33706800000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33706917000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33707637000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 8,
+      "b": 57,
+      "c": 5,
+      "d": 2
+    },
+    {
+      "time_ns": 33707642000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 9,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33707644000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33707848000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33708570000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 9,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33708574000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 10,
+      "b": 244813136048,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33708575000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33708780000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33709499000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 10,
+      "b": 57,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33709505000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 11,
+      "b": 244813136055,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33709506000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33709712000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33710416000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 11,
+      "b": 57,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33710422000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 12,
+      "b": 244813136048,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33710422000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33710626000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33711344000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 12,
+      "b": 57,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33711350000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 13,
+      "b": 244813136055,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33711351000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33711559000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33712269000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 13,
+      "b": 57,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33712274000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 14,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33712275000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33712484000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33713203000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 14,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33713209000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 15,
+      "b": 244813135955,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33713210000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33713416000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33714114000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 15,
+      "b": 57,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33714120000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 16,
+      "b": 90194313355,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33714123000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33714332000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33715043000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 16,
+      "b": 21,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33715050000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 17,
+      "b": 244813136001,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33715050000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33715259000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33715976000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 17,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33715981000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 18,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33715982000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33716194000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33716908000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 18,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33716913000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 19,
+      "b": 90194313392,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33716913000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33717030000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33717842000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 19,
+      "b": 21,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33717848000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 20,
+      "b": 244813136049,
+      "c": 22,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33717848000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33717965000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33718682000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 20,
+      "b": 57,
+      "c": 22,
+      "d": 2
+    },
+    {
+      "time_ns": 33718686000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 21,
+      "b": 90194313393,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33718687000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33718890000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33719619000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 21,
+      "b": 21,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33719625000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 22,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33719625000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33719834000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33720553000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 22,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33720558000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 23,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33720559000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33720763000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33721463000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 23,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33721469000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 24,
+      "b": 90194313312,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33721470000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33721674000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33722385000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 24,
+      "b": 21,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33722390000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 25,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33722391000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33722597000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33723311000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 25,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33723316000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 26,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33723316000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33723521000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33724226000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 26,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33724230000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 27,
+      "b": 90194313301,
+      "c": 2,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33724231000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33724437000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33725161000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 27,
+      "b": 21,
+      "c": 2,
+      "d": 2
+    },
+    {
+      "time_ns": 33725166000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 28,
+      "b": 244813136112,
+      "c": 3,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33725166000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33725374000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33726074000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 28,
+      "b": 57,
+      "c": 3,
+      "d": 2
+    },
+    {
+      "time_ns": 33727731000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 29,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 33727732000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33727849000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33728564000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 29,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 33728569000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 30,
+      "b": 21474836521,
+      "c": 1,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 33728569000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33728772000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33729474000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 30,
+      "b": 5,
+      "c": 1,
+      "d": 0
+    },
+    {
+      "time_ns": 33729479000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 31,
+      "b": 21474836499,
+      "c": 1,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 33729480000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33729686000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33730393000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 31,
+      "b": 5,
+      "c": 1,
+      "d": 0
+    },
+    {
+      "time_ns": 33730401000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 32,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 33730401000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33730604000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33731315000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 32,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 33731521000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 33,
+      "b": 25769803786,
+      "c": 1,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33731521000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33731728000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33733159000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 33,
+      "b": 6,
+      "c": 1,
+      "d": 2
+    },
+    {
+      "time_ns": 33733564000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 34,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 33733565000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33733682000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33734488000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 34,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 33734493000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 35,
+      "b": 25769803934,
+      "c": 1,
+      "d": 4294967298
+    },
+    {
+      "time_ns": 33734494000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33734610000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33738395000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 35,
+      "b": 6,
+      "c": 1,
+      "d": 2
+    },
+    {
+      "time_ns": 33739001000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 36,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 33739001000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33739207000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33739918000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 36,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 33740130000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 37,
+      "b": 244813135953,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 33740131000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 33740247000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 33741050000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 37,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 67801065000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 38,
+      "b": 244813135953,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 67801077000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 67801365000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 67802178000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 38,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 67802226000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 39,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 67802228000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 67802456000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 67803203000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 39,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 67803210000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 40,
+      "b": 21474836520,
+      "c": 1,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 67803211000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 67803430000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 67804189000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 40,
+      "b": 5,
+      "c": 1,
+      "d": 0
+    },
+    {
+      "time_ns": 67828025000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 41,
+      "b": 21474836496,
+      "c": 1,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 67828027000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 67828252000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 67828992000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 41,
+      "b": 5,
+      "c": 1,
+      "d": 0
+    },
+    {
+      "time_ns": 67828998000,
+      "kind": "rmx_display_step",
+      "step": "dcs-begin",
+      "id": 0,
+      "a": 42,
+      "b": 244813136031,
+      "c": 3,
+      "d": 4294967296
+    },
+    {
+      "time_ns": 67828998000,
+      "kind": "rmx_display_step",
+      "step": "link-request",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 1
+    },
+    {
+      "time_ns": 67829122000,
+      "kind": "rmx_display_step",
+      "step": "link-result",
+      "id": 0,
+      "a": 82500000,
+      "b": 110000000,
+      "c": 41250000,
+      "d": 0
+    },
+    {
+      "time_ns": 67829946000,
+      "kind": "rmx_display_step",
+      "step": "dcs-end",
+      "id": 0,
+      "a": 42,
+      "b": 57,
+      "c": 3,
+      "d": 0
+    },
+    {
+      "time_ns": 68008288000,
+      "kind": "rmx_display_step",
+      "step": "pll-unprepare",
+      "id": 0,
+      "a": 660000000,
+      "b": 1,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 68009324000,
+      "kind": "rmx_display_step",
+      "step": "mdp-request",
+      "id": 89,
+      "a": 0,
+      "b": 166017600,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 68009336000,
+      "kind": "rmx_display_step",
+      "step": "mdp-result",
+      "id": 89,
+      "a": 0,
+      "b": 200000000,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 68009547000,
+      "kind": "rmx_display_step",
+      "step": "mdp-request",
+      "id": 89,
+      "a": 0,
+      "b": 0,
+      "c": 0,
+      "d": 0
+    },
+    {
+      "time_ns": 68009549000,
+      "kind": "rmx_display_step",
+      "step": "mdp-result",
+      "id": 89,
+      "a": 0,
+      "b": 200000000,
+      "c": 0,
+      "d": 0
+    }
+  ],
+  "transactions": [
+    {
+      "id": 0,
+      "seq": 1,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 33678032000,
+      "end_ns": 33679005000
+    },
+    {
+      "id": 0,
+      "seq": 2,
+      "type": 57,
+      "opcode": 158,
+      "begin_ns": 33679014000,
+      "end_ns": 33679986000
+    },
+    {
+      "id": 0,
+      "seq": 3,
+      "type": 57,
+      "opcode": 157,
+      "begin_ns": 33680811000,
+      "end_ns": 33681754000
+    },
+    {
+      "id": 0,
+      "seq": 4,
+      "type": 5,
+      "opcode": 17,
+      "begin_ns": 33681759000,
+      "end_ns": 33682677000
+    },
+    {
+      "id": 0,
+      "seq": 5,
+      "type": 21,
+      "opcode": 53,
+      "begin_ns": 33704019000,
+      "end_ns": 33704941000
+    },
+    {
+      "id": 0,
+      "seq": 6,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 33704945000,
+      "end_ns": 33705867000
+    },
+    {
+      "id": 0,
+      "seq": 7,
+      "type": 57,
+      "opcode": 42,
+      "begin_ns": 33705872000,
+      "end_ns": 33706794000
+    },
+    {
+      "id": 0,
+      "seq": 8,
+      "type": 57,
+      "opcode": 43,
+      "begin_ns": 33706798000,
+      "end_ns": 33707637000
+    },
+    {
+      "id": 0,
+      "seq": 9,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33707642000,
+      "end_ns": 33708570000
+    },
+    {
+      "id": 0,
+      "seq": 10,
+      "type": 57,
+      "opcode": 176,
+      "begin_ns": 33708574000,
+      "end_ns": 33709499000
+    },
+    {
+      "id": 0,
+      "seq": 11,
+      "type": 57,
+      "opcode": 183,
+      "begin_ns": 33709505000,
+      "end_ns": 33710416000
+    },
+    {
+      "id": 0,
+      "seq": 12,
+      "type": 57,
+      "opcode": 176,
+      "begin_ns": 33710422000,
+      "end_ns": 33711344000
+    },
+    {
+      "id": 0,
+      "seq": 13,
+      "type": 57,
+      "opcode": 183,
+      "begin_ns": 33711350000,
+      "end_ns": 33712269000
+    },
+    {
+      "id": 0,
+      "seq": 14,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33712274000,
+      "end_ns": 33713203000
+    },
+    {
+      "id": 0,
+      "seq": 15,
+      "type": 57,
+      "opcode": 83,
+      "begin_ns": 33713209000,
+      "end_ns": 33714114000
+    },
+    {
+      "id": 0,
+      "seq": 16,
+      "type": 21,
+      "opcode": 139,
+      "begin_ns": 33714120000,
+      "end_ns": 33715043000
+    },
+    {
+      "id": 0,
+      "seq": 17,
+      "type": 57,
+      "opcode": 129,
+      "begin_ns": 33715050000,
+      "end_ns": 33715976000
+    },
+    {
+      "id": 0,
+      "seq": 18,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33715981000,
+      "end_ns": 33716908000
+    },
+    {
+      "id": 0,
+      "seq": 19,
+      "type": 21,
+      "opcode": 176,
+      "begin_ns": 33716913000,
+      "end_ns": 33717842000
+    },
+    {
+      "id": 0,
+      "seq": 20,
+      "type": 57,
+      "opcode": 177,
+      "begin_ns": 33717848000,
+      "end_ns": 33718682000
+    },
+    {
+      "id": 0,
+      "seq": 21,
+      "type": 21,
+      "opcode": 177,
+      "begin_ns": 33718686000,
+      "end_ns": 33719619000
+    },
+    {
+      "id": 0,
+      "seq": 22,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33719625000,
+      "end_ns": 33720553000
+    },
+    {
+      "id": 0,
+      "seq": 23,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33720558000,
+      "end_ns": 33721463000
+    },
+    {
+      "id": 0,
+      "seq": 24,
+      "type": 21,
+      "opcode": 96,
+      "begin_ns": 33721469000,
+      "end_ns": 33722385000
+    },
+    {
+      "id": 0,
+      "seq": 25,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33722390000,
+      "end_ns": 33723311000
+    },
+    {
+      "id": 0,
+      "seq": 26,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33723316000,
+      "end_ns": 33724226000
+    },
+    {
+      "id": 0,
+      "seq": 27,
+      "type": 21,
+      "opcode": 85,
+      "begin_ns": 33724230000,
+      "end_ns": 33725161000
+    },
+    {
+      "id": 0,
+      "seq": 28,
+      "type": 57,
+      "opcode": 240,
+      "begin_ns": 33725166000,
+      "end_ns": 33726074000
+    },
+    {
+      "id": 0,
+      "seq": 29,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 33727731000,
+      "end_ns": 33728564000
+    },
+    {
+      "id": 0,
+      "seq": 30,
+      "type": 5,
+      "opcode": 41,
+      "begin_ns": 33728569000,
+      "end_ns": 33729474000
+    },
+    {
+      "id": 0,
+      "seq": 31,
+      "type": 5,
+      "opcode": 19,
+      "begin_ns": 33729479000,
+      "end_ns": 33730393000
+    },
+    {
+      "id": 0,
+      "seq": 32,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 33730401000,
+      "end_ns": 33731315000
+    },
+    {
+      "id": 0,
+      "seq": 33,
+      "type": 6,
+      "opcode": 10,
+      "begin_ns": 33731521000,
+      "end_ns": 33733159000
+    },
+    {
+      "id": 0,
+      "seq": 34,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 33733564000,
+      "end_ns": 33734488000
+    },
+    {
+      "id": 0,
+      "seq": 35,
+      "type": 6,
+      "opcode": 158,
+      "begin_ns": 33734493000,
+      "end_ns": 33738395000
+    },
+    {
+      "id": 0,
+      "seq": 36,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 33739001000,
+      "end_ns": 33739918000
+    },
+    {
+      "id": 0,
+      "seq": 37,
+      "type": 57,
+      "opcode": 81,
+      "begin_ns": 33740130000,
+      "end_ns": 33741050000
+    },
+    {
+      "id": 0,
+      "seq": 38,
+      "type": 57,
+      "opcode": 81,
+      "begin_ns": 67801065000,
+      "end_ns": 67802178000
+    },
+    {
+      "id": 0,
+      "seq": 39,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 67802226000,
+      "end_ns": 67803203000
+    },
+    {
+      "id": 0,
+      "seq": 40,
+      "type": 5,
+      "opcode": 40,
+      "begin_ns": 67803210000,
+      "end_ns": 67804189000
+    },
+    {
+      "id": 0,
+      "seq": 41,
+      "type": 5,
+      "opcode": 16,
+      "begin_ns": 67828025000,
+      "end_ns": 67828992000
+    },
+    {
+      "id": 0,
+      "seq": 42,
+      "type": 57,
+      "opcode": 159,
+      "begin_ns": 67828998000,
+      "end_ns": 67829946000
+    }
+  ],
+  "pll_during_command": [],
+  "pll_set_while_on": [],
+  "root_cause": "NOT_ESTABLISHED",
+  "scope": "Bounded native first-frame samples only; no physical acceptance or Android trace; saturated phases do not cover later events.",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-68",
+  "kernel": "f04014b02687af42f74d0edf92aa6b62c21dea20c507529d5b67466508f7ac11",
+  "snapshot_sha256": "9ced91837c208016b12bec26ecbaaebb043e329510a54d28fff00397219e60fa"
+}

@@ -62,3 +62,32 @@ phase 2 handler 也可由原驱动的等待处理调用，不能单凭它声称�
 等待构建时补查了第 58–67 轮的已保存时钟：第 58–63 轮 byte/pixel 约 52.704/70.272 MHz，第 65–67 轮为 82.5/110 MHz，均曾有花屏。前组没有记录 MDP 实际频率，不能补造为 200 MHz；第 64 轮没有此次脚本选取的标准路径快照，未纳入表中。这限制了“只因当前 200/110 比例”的解释，不能用旧 MDSS 比例规则直接给 SM8250 下结论。
 
 另核对了同系列 DSC 上游修复 [12cef323c903](https://github.com/torvalds/linux/commit/12cef323c903bd8b13d1f6ff24a9695c2cdc360b)：旧代码把字面量 22 写入 CTL_FLUSH，正确含义应是 bit 22。当前固定 ACK 的 `dpu_hw_ctl.c`（Git blob `ac834db2e4c16cfd2053f9761c49d91a02bcffa6`，已与远端固定提交核验）在 `update_pending_flush_dsc_v1()` 使用 `BIT(DSC_IDX)`，并在 `trigger_flush_v1()` 先写 DSC 子块 flush、再写总 flush。因此该旧修复的语义已存在，不能作为新的缺失补丁重复移植；这项源码核对也不替代首帧运行时证据。
+
+## 第 68 轮真机结果
+
+构建 #38 成功，选取成员及其源码/分发摘要核验通过；没有下载并验证整个包含模块的 ZIP。内核 SHA-256 为 `f04014b02687af42f74d0edf92aa6b62c21dea20c507529d5b67466508f7ac11`，boot 为 `e3704f8b7bd8ead3f75414de5240cca607941e7bbd57f2864a593e82b1745c77`。第一次本地打包遗漏了第 67 轮已有的 panel-readback 开关，被预检拒绝；补齐后 [20 项输入检查](../build/device/m3-first-frame-68-preflight-2026-11-21.json)全部通过才刷入。实际运行的 [43 项配置检查](../build/device/m3-stock-phy-68-runtime-2026-11-21.json)也全部通过。
+
+真机 boot UUID `de8af50f-4951-4be9-8da1-196ca5eaf8ab`。用户分别反馈原生图“**一样仍有花屏**”、Android“**一样花屏**”。因此显示未通过，根因仍未确认；本轮是有效的首帧取证，不是花屏修复。GSI enforcing ADB 同 boot 检查持续 195.203 秒，SurfaceFlinger 和 maintenance 服务存在，activity/window 仍缺失，未达到桌面。[真机记录](../build/device/m3-display-68-2026-11-21.json)
+
+[首帧解码记录](../build/device/m3-first-frame-68-2026-11-21.json)确认：
+
+- trace 为 230/230 个事件，八个 CPU 的丢失计数全部为零；包含 power-ready、host-enable、五次 kickoff 和对应五次 PP done handler 采样，没有达到采样上限。
+- 这 12 组原始状态没有解码到 FIFO underflow/overflow、timeout、ACK、PHY error 或 PLL unlock；没有 DSI error IRQ preclear 或 DPU underrun handler 事件。FIFO 的 `0x11111010` 与 PHY 的 `0x88888` 不能因非零就当作错误。
+- 42 对 DCS 事务、43 次 link-rate 请求中，仅发生一次真实 PLL set-rate，位于首个 DCS 事务之前且 `pll_on=0`。DCS 事务内没有 PLL set-rate、prepare 或 unprepare。两次 prepare/unprepare 分别属于早期初始化和原生显示生命周期，不能混称为命令期重锁。
+- MDP 在 33.589678 秒已以 166,017,600 Hz 请求落到实际 200,000,000 Hz；第一次 kickoff 为 33.741103 秒。采集窗口内没有“先正常出图、随后降频”的证据，原生结束时的关闭请求不能解释开始就出现的花屏。
+
+这里的“完整”指已启用 trace 的导出完整、必要采样点齐全，不是所有电气错误都被连续观测。错误屏蔽保持原样；边界采样不能排除所有瞬态问题，也未覆盖 Android 接管后的操作。因此把“DCS 引发 PLL 重编程”降级为本次原生失败不支持的假说，而不是宣称整个 PHY/DSI 正常。没有据此盲目提高 MDP 频率。
+
+下一步核对原厂实际执行的开屏命令/状态与项目执行顺序，以及 DSC 流格式和面板解码使能。原厂 DT 中的命令表此前已与 Q 源码比较相同；不能重复把静态表一致冒充实际执行一致。恢复 F.20 后先查可用的运行时命令追踪接口，不重复冷启动测试。
+
+本轮用户要求复用唯一原厂备份、停止例行整区回读。恢复脚本已按此调整并通过 14 项相关检查；本轮候选回读已经完成，随后 F.20 恢复使用新策略，结果单独记录，不将原厂镜像的预期摘要写成新回读证据。
+
+F.20 恢复于 07:37:19 UTC 完成，boot UUID 为 `357dcda6-83fa-46dc-9f61-3eb2eaedc0af`，开机完成、固件版本及两份 LP 元数据检查通过。原厂 boot/DTBO/super 的本次观测摘要明确为 null；唯一备份的摘要单列为 expected，写入获得 loader ACK，没有进行原厂整区回读或手机端 super SHA 扫描。[恢复凭据](../build/device/m3-display-68-restored-2026-11-21.json)
+
+### 恢复后的原厂命令追踪接口检查
+
+同 boot 的[只读清单](../build/device/m3-f20-dsi-trace-inventory-2026-11-21.json)发现 `/sys/kernel/oplus_display/dsi_cmd_log_switch` 存在、当前值为 `0`。固定版本[同平台源码的 getter/setter](https://github.com/SM8250-Common/android_kernel_realme_sm8250/blob/b76eb6c93add8152b1aa873da0d8d7f495cccab0/techpack/display/oplus/oplus_display_private_api.c#L2950)读写日志开关变量，但这不证明 F.20 的实际日志包含每条命令的完整载荷，也不把社区源码冒充精确的 F.20 二进制源码。
+
+当前 tracefs 提供 `sde_evtlog`，未发现独立 DSI/DCS trace event；`available_filter_functions`、`kprobe_events` 不存在，debugfs 未挂载且 `/sys/kernel/debug` 不存在。因此本次没有取得 function/kprobe/dynamic-debug 能力，不能据此断言内核未编译这些功能。接口清单脚本用远端状态标记保留查询失败，避免 stock su/ADB 返回 0 时把缺失路径误记为成功。
+
+本次没有启用日志、挂载 debugfs、切换显示、发送 DCS 或重启。下一步先验证该命令日志的覆盖范围，再在可恢复设置的短窗口内采集原厂显示开关过程，比较项目的开屏命令、PPS 和 DSC 使能顺序；若无法取得完整载荷，明确保留这一证据缺口。当前目标仍是消除实屏花屏后进入 AOSP 桌面，不根据无报错日志宣布链路正常。

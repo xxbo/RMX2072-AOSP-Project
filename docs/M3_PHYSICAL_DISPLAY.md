@@ -1127,3 +1127,27 @@ and runtime PLL reprogramming remain hypotheses. First-frame evidence is the
 next priority; no new flash, restart or image version was produced during
 this review. [Investigation](M3_DISPLAY_RESEARCH_2026-11-21.md) and
 [review record](../build/device/m3-display-67-reviewed-2026-11-21.json).
+
+## Trial 68: first-frame trace complete, physical corruption unchanged
+
+Build 38 succeeds. The instrumentation-only candidate passes 20 input checks
+and 43 runtime configuration comparisons with the preceding setup. The
+operator reports unchanged corruption in both native and Android phases.
+Enforcing GSI ADB remains available for the 195.203-second check;
+SurfaceFlinger and maintenance exist, but activity/window and desktop
+acceptance remain absent.
+
+All 230 exported events and eight CPU loss counters validate. Twelve boundary
+samples do not report decoded DSI errors; no actual PLL reprogramming occurs
+inside the 42 DCS transactions. MDP is already at 200 MHz before the first
+kickoff. This lowers the priority of command-triggered PLL reprogramming for
+this native failure; bounded samples and unchanged interrupt masks do not
+exclude every transient fault or prove correct physical output.
+
+F.20 is restored with boot completion and both LP slots matching. The user's
+single-backup policy is now the default: verified local originals are reused,
+without routine stock partition readback or a phone-side full-super digest.
+The receipt separates expected image digests from unperformed observations.
+The next investigation verifies actual stock command-log coverage and then
+panel setup/PPS/DSC ordering; no cold-start repeats were performed.
+[Trial 68 evidence and next scope](M3_FIRST_FRAME_TRACE_2026-11-21.md#第-68-轮真机结果).
