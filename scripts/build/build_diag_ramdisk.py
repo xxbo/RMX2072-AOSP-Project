@@ -52,6 +52,7 @@ def main():
     p.add_argument('--display-smoke', type=pathlib.Path, help='Static physical DRM test; run before Android policy')
     p.add_argument('--solid-fill-test', action='store_true', help='Bounded native SSPP solid-fill isolation with independent parent cleanup')
     p.add_argument('--display-staged', action='store_true', help='Wait for USB log capture before binding the three display stages')
+    p.add_argument('--first-frame-trace', action='store_true', help='Opt in to bounded native DSI/PLL/MDP tracing')
     p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
     p.add_argument('--ufs-first-stage', type=pathlib.Path, metavar='PROFILE',
                    help='UFS first-stage profile with signed system and vendor public keys')
@@ -70,6 +71,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.first_frame_trace and not a.display_staged:
+        p.error('--first-frame-trace requires --display-staged')
     if a.first_stage_source_build and not a.android_first_stage:
         p.error('Source build evidence requires the first-stage binary')
     if a.display_smoke and not a.autonomous_ufs:
@@ -196,6 +199,8 @@ def main():
                     (root/'scripts/device_audit/display_snapshot.sh').read_bytes().replace(b'\r\n', b'\n'))
                 if a.display_staged:
                     add('m3-display-staged', 0o100444, b'1\n')
+                    if a.first_frame_trace:
+                        add('m3-first-frame-trace', 0o100444, b'1\n')
                     add('bin/display-clock-trace', 0o100755,
                         (root/'scripts/device_audit/display_clock_trace.sh').read_bytes().replace(b'\r\n', b'\n'))
                     add('bin/display-bind', 0o100755,
@@ -355,6 +360,7 @@ def main():
         report['guarded_adb'] = True
     report['autonomous_ufs'] = a.autonomous_ufs
     report['display_staged'] = a.display_staged
+    report['first_frame_trace'] = a.first_frame_trace
     report['solid_fill_test'] = a.solid_fill_test
     if a.display_smoke:
         report['display_probe_sha256'] = hashlib.sha256(read_static_arm64(a.display_smoke)).hexdigest()

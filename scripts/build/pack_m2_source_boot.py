@@ -30,6 +30,7 @@ def main():
     parser.add_argument('--stock-linkclock-test', action='store_true')
     parser.add_argument('--stock-dsc-test', action='store_true')
     parser.add_argument('--stock-phy-test', action='store_true')
+    parser.add_argument('--first-frame-trace', action='store_true')
     a = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
@@ -52,6 +53,8 @@ def main():
         raise ValueError('Stock DSC comparison requires the trial 65 stock clock and single DSC route')
     if a.stock_phy_test and not a.stock_dsc_test:
         raise ValueError('Stock PHY timing test requires the trial 66 stock DSC configuration')
+    if a.first_frame_trace and (not a.stock_phy_test or not dt.get('display_staged')):
+        raise ValueError('First-frame tracing requires the staged trial 67 baseline')
     for name, expected in dt['outputs'].items():
         data = (source / name).read_bytes()
         if len(data) != expected['size_bytes'] or sha(data) != expected['sha256']:
@@ -109,10 +112,18 @@ def main():
                   for row in manifest.read_text().splitlines()} if manifest.is_file() else {}
         if hashes.get(panel.name) != sha(panel.read_bytes().replace(b'\r\n', b'\n')):
             raise ValueError('Panel readback requires the verified matching panel source')
+    if a.first_frame_trace:
+        name = 'rmx2072-first-frame-trace'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('First-frame tracing requires the verified matching kernel patch')
     if any('CONFIG_' + name + '=y' not in config for name in ('INPUT_PM8941_PWRKEY', 'POWER_RESET_MSM', 'POWER_RESET_QCOM_PON')):
         raise ValueError('Upstream PON/PS_HOLD drivers are not built in')
     rd = (current / 'ramdisk/ramdisk.cpio.gz').read_bytes()
     provenance = json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())
+    if bool(provenance.get('first_frame_trace')) != a.first_frame_trace:
+        raise ValueError('First-frame trace request and ramdisk marker must agree')
     if bool(provenance.get('solid_fill_test')) != a.solid_fill_test:
         raise ValueError('Solid-fill boot request and ramdisk marker must agree')
     if (not provenance.get('autonomous_ufs') or not provenance.get('guarded_adb') or
@@ -190,6 +201,7 @@ def main():
     record['stock_linkclock_test'] = a.stock_linkclock_test
     record['stock_dsc_test'] = a.stock_dsc_test
     record['stock_phy_test'] = a.stock_phy_test
+    record['first_frame_trace'] = a.first_frame_trace
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))
 
