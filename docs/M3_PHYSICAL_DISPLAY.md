@@ -1151,3 +1151,19 @@ The receipt separates expected image digests from unperformed observations.
 The next investigation verifies actual stock command-log coverage and then
 panel setup/PPS/DSC ordering; no cold-start repeats were performed.
 [Trial 68 evidence and next scope](M3_FIRST_FRAME_TRACE_2026-11-21.md#第-68-轮真机结果).
+
+## Post-trial community comparison: transport flag evidence gap
+
+Primary developer records for OnePlus 7T Pro, Redmi K30 Pro and Xiaomi Mi 10
+provide similar corruption or initialization symptoms, but none establishes
+the RM19795 root cause. An offline audit of the selected F.20 DT and trial-68
+snapshot finds TX EoT appending enabled in the candidate, while the stock DT
+lacks the corresponding boolean and the reference downstream driver predicts
+it disabled. The exact F.20 runtime value is not yet observed. Null insertion
+has no stock DT enable property and is disabled in the candidate snapshot;
+Google's different-panel workaround is not automatically applicable.
+
+The next priority is to confirm stock transport flags and actual command
+logging coverage, then test one evidenced difference at a time. No handset
+access, flash, restart, full partition reread or new image was performed in
+this research phase. [Community cases, applicability and reproducible audit](M3_COMMUNITY_CASES_2026-11-21.md).

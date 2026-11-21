@@ -1,0 +1,79 @@
+{
+  "scope": "Offline original F.20 DT and accepted native snapshot; no handset access, partition reread or new display experiment.",
+  "images": {
+    "dtb": {
+      "image_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "index": 12,
+      "tree_sha256": "490c33efd2cf232b39950447dde31153ea13b854a95f015bd90cc55c0ae2e1dd"
+    },
+    "dtbo": {
+      "image_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "index": 17,
+      "tree_sha256": "03f920608f4fbf46aaface2b2641711b3194081fe4a588b42232b7e60e07db9d"
+    }
+  },
+  "command_line_sha256": "f3a95500ecc52e38d97af3f65e0e46c61b0f3889849e40f6f51f56379e81d7e5",
+  "selected_panel": "qcom,mdss_dsi_rm19795samsung_ams641rw01_1080_2340_cmd",
+  "selected_panel_path": "/soc/qcom,mdss_mdp@ae00000/qcom,mdss_dsi_rm19795samsung_ams641rw01_1080_2340_cmd",
+  "panel_properties": {
+    "qcom,mdss-dsi-tx-eot-append": {
+      "present": false,
+      "value": null
+    },
+    "qcom,mdss-dsi-rx-eot-ignore": {
+      "present": false,
+      "value": null
+    },
+    "qcom,mdss-dsi-force-clock-lane-hs": {
+      "present": false,
+      "value": null
+    },
+    "qcom,mdss-dsi-reset-sequence": {
+      "present": true,
+      "value": [
+        1,
+        20,
+        0,
+        10,
+        1,
+        5
+      ]
+    },
+    "qcom,platform-reset-gpio": {
+      "present": true,
+      "value": [
+        101,
+        75,
+        0
+      ]
+    }
+  },
+  "null_insertion_nodes": [],
+  "boot_id": "de8af50f-4951-4be9-8da1-196ca5eaf8ab",
+  "snapshot_sha256": "9ced91837c208016b12bec26ecbaaebb043e329510a54d28fff00397219e60fa",
+  "register_base_shift": 4,
+  "candidate_native": {
+    "eot_resource_offset": "0xcc",
+    "eot_snapshot_offset": "0xc8",
+    "eot_raw": "0x1",
+    "tx_eot_append": true,
+    "rx_eot_ignore": false,
+    "null_resource_offset": "0x2b4",
+    "null_snapshot_offset": "0x2b0",
+    "null_raw": "0x0",
+    "null_insertion_enabled": false
+  },
+  "reference_driver_expectation": {
+    "tx_eot_append": false,
+    "rx_eot_ignore": false
+  },
+  "tx_eot_configuration_difference": true,
+  "stock_runtime_eot_register": null,
+  "stock_runtime_null_register": null,
+  "root_cause": "NOT_ESTABLISHED",
+  "limitation": "DT absence plus same-platform downstream read_bool semantics predicts configuration, not the exact F.20 executable or runtime register. This does not demonstrate that EoT causes corruption.",
+  "source_pins": {
+    "ack_mirror": "cfa72fb3d7f89372c7e449a4de2477551ea4c29c",
+    "downstream": "b76eb6c93add8152b1aa873da0d8d7f495cccab0"
+  }
+}
