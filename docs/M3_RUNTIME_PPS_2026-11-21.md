@@ -25,6 +25,8 @@ F.20 在同一次启动 `357dcda6-83fa-46dc-9f61-3eb2eaedc0af` 内完成两次�
 
 最后五组 RC range 也不同，完整差异在 JSON 中。日志头 `flags=0x0a`，与参考下游的 LP `BIT(1)` + LASTCOMMAND `BIT(3)` 一致。`*ERROR*` 是此日志输出的等级，不能据此声称发包失败；这仍是软件 TX 记录，不是线缆捕获或面板内部 PPS 回读。
 
+与第 65 轮的 ACK 默认 PPS 对照，前 88 字节也不是完全相同：偏移 86 为 ACK `0x6b`、原厂标准包 `0x63`，最后一组 RC range 的 min-QP 分别为 13、12。因此也不能把旧 ACK 默认参数的实验等同于原厂标准 PPS 路径。
+
 参考[下游 dsi_display_enable](https://github.com/SM8250-Common/android_kernel_realme_sm8250/blob/b76eb6c93add8152b1aa873da0d8d7f495cccab0/techpack/display/msm/dsi/dsi_display.c)在 `dsi_panel_enable()` 后调用 `dsi_panel_update_pps()`，与本次实际顺序相符。参考源码不是 F.20 二进制的完全对应源码，本次结论以真机发送日志为依据。
 
 **纠正此前边界：第 66–68 轮所谓匹配“原厂 PPS”，实际只匹配选中 DT 的静态 `0x9e`，不代表原厂最后发送的运行时 PPS。** 既有 43 项配置检查没有验证这一命令差异，不能解释成原厂完整显示状态均已复现。
@@ -42,3 +44,5 @@ F.20 在同一次启动 `357dcda6-83fa-46dc-9f61-3eb2eaedc0af` 内完成两次�
 验收需要三层证据：完整 128 字节发送记录与返回值、编码器/原有输入保持不变、用户观察原生和 Android 实屏。编译成功或发送返回非负不等于花屏修复。测试失败恢复 F.20；仅保留原厂恢复集和当前候选。
 
 当前状态：原厂采集完成，根因尚未确认；第 69 轮源码已准备，编译与真机结果待记录。
+
+构建记录：首次工作流 #39 因提交参数同时打开 legacy PON 和 source PON，在入口互斥检查退出，未开始内核编译、未生成候选。修正为 `pon_power=false, source_pon=true, display=true` 后，同一源码提交 `c8ce89da8b1451ba48a2ba3c84b334380763164a` 的工作流 #40（44884169265）开始构建。该主机参数错误未涉及手机刷写。
