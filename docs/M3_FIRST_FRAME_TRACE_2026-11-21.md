@@ -60,3 +60,5 @@ phase 2 handler 也可由原驱动的等待处理调用，不能单凭它声称�
 使用本地 Git Bash 执行先前跳过的四项测试后，本阶段全部 31 项 M3 测试通过，无跳过。原厂恢复集和当前候选的完整 super 字节、boot/DTBO、loader 与测试卷清单已校验；旧内核被打包器拒绝，未改写 boot 输出。[准备记录](../build/device/m3-first-frame-preparation-2026-11-21.json)
 
 等待构建时补查了第 58–67 轮的已保存时钟：第 58–63 轮 byte/pixel 约 52.704/70.272 MHz，第 65–67 轮为 82.5/110 MHz，均曾有花屏。前组没有记录 MDP 实际频率，不能补造为 200 MHz；第 64 轮没有此次脚本选取的标准路径快照，未纳入表中。这限制了“只因当前 200/110 比例”的解释，不能用旧 MDSS 比例规则直接给 SM8250 下结论。
+
+另核对了同系列 DSC 上游修复 [12cef323c903](https://github.com/torvalds/linux/commit/12cef323c903bd8b13d1f6ff24a9695c2cdc360b)：旧代码把字面量 22 写入 CTL_FLUSH，正确含义应是 bit 22。当前固定 ACK 的 `dpu_hw_ctl.c`（Git blob `ac834db2e4c16cfd2053f9761c49d91a02bcffa6`，已与远端固定提交核验）在 `update_pending_flush_dsc_v1()` 使用 `BIT(DSC_IDX)`，并在 `trigger_flush_v1()` 先写 DSC 子块 flush、再写总 flush。因此该旧修复的语义已存在，不能作为新的缺失补丁重复移植；这项源码核对也不替代首帧运行时证据。
