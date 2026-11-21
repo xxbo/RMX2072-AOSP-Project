@@ -48,3 +48,7 @@ phase 2 handler 也可由原驱动的等待处理调用，不能单凭它声称�
 2026-11-21 只读连接检查：手机仍为 F.20，内核 `4.19.157-perf+`、`sys.boot_completed=1`，boot UUID `73e2bf96-93f9-41cf-916e-c3b5686f919e`。这不替代刷入前的完整恢复集检查。
 
 当前正在进行补丁应用、源码检查与构建；尚未刷入第 68 轮。试验前核验唯一候选、原厂恢复集及固定输入，取得新的完整 trace 后再判断供数/PLL/面板时序假说。失败恢复 F.20；不做冷启动或看门狗故障注入重复测试。
+
+源码 `477dfb25c2f3d937bee27d6179d42c4abff888a5` 已触发 [内核构建 #37](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/44875114557)。本地补丁链应用及反向检查通过，脚本编译和 shell 语法检查通过；构建成功与否需单独记录。
+
+`decode_m3_first_frame.py --record <record> --output <json>` 复用同 boot 的严格 native capture 读取器，校验 arming/completion UUID、完整 trace 边界、导出事件数、八个 CPU 的丢失计数及必要采样点。它保留错误原始值、PLL/DCS 关联、样本上限提示，不输出根因或物理通过结论。六个单元测试覆盖 masked underflow、非错误 FIFO 状态、丢失/截断、boot 混用及实际 PLL 编程与请求的区别。
