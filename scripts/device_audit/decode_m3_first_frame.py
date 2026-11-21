@@ -29,7 +29,9 @@ def decode(snapshot, boot):
     def check(ok, message):
         if not ok:
             problems.append(message)
-    check(re.findall(r'^M3DISPLAY boot_id=(\S+)$', snapshot, re.M) == [boot], 'display boot mismatch')
+    # Parent and final display snapshot both print the same boot marker.
+    boots = re.findall(r'^M3DISPLAY boot_id=(\S+)$', snapshot, re.M)
+    check(bool(boots) and set(boots) == {boot}, 'display boot mismatch')
     check(re.findall(r'^M3FF armed=1 boot=(\S+) buffer_kb_per_cpu=256 overwrite=0 clock=mono$', snapshot, re.M) == [boot], 'missing or wrong trace arming')
     check(re.findall(r'^M3FF complete boot=(\S+)$', snapshot, re.M) == [boot], 'missing or wrong completion')
     blocks = re.findall(r'^M3CLKTRACE begin\n(.*?)^M3CLKTRACE end$', snapshot, re.M | re.S)
@@ -89,6 +91,10 @@ def decode(snapshot, boot):
     check(all(a['time_ns'] <= b['time_ns'] for a, b in zip(events, events[1:])), 'event time went backwards')
     phases = Counter(s['phase'] for s in samples)
     check(all(phases[p] for p in (0, 1, 2, 4)), 'missing initial power/enable/kickoff/completion samples')
+    if all(phases[p] for p in (0, 1, 2, 4)):
+        first = {p: next(s['time_ns'] for s in samples if s['phase'] == p) for p in (0, 1, 2, 4)}
+        check(first[0] <= first[1] <= first[2] and first[4] <= first[2],
+              'first active kickoff/completion ordering is incomplete')
     check(all(n <= 16 for n in phases.values()), 'sample limit exceeded')
     names = Counter(s['step'] for s in steps)
     check(all(names[n] for n in ('link-request', 'link-result', 'pll-prepare', 'pll-prepare-result', 'mdp-request', 'mdp-result', 'dcs-begin', 'dcs-end')), 'missing clock or command coverage')

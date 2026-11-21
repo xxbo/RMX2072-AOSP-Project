@@ -70,6 +70,10 @@ class FirstFrameTest(unittest.TestCase):
         text = fixture().replace(f'M3FF complete boot={BOOT}', 'M3FF complete boot=another')
         self.assertFalse(decode(text, BOOT)['complete'])
 
+    def test_parent_and_final_snapshot_may_repeat_same_boot_marker(self):
+        self.assertTrue(decode(fixture()+f'M3DISPLAY boot_id={BOOT}\n', BOOT)['complete'])
+        self.assertFalse(decode(fixture()+'M3DISPLAY boot_id=another\n', BOOT)['complete'])
+
     def test_actual_pll_programming_is_distinct_from_link_request(self):
         baseline = decode(fixture(), BOOT)
         changed = decode(fixture(pll=True), BOOT)
@@ -80,6 +84,10 @@ class FirstFrameTest(unittest.TestCase):
 
     def test_unpaired_commands_rejected(self):
         text = fixture().replace('step=dcs-end id=0 a=1', 'step=dcs-end id=0 a=2')
+        self.assertFalse(decode(text, BOOT)['complete'])
+
+    def test_missing_first_kickoff_not_replaced_by_later_flip(self):
+        text = fixture().replace('phase=1', 'phase=TEMP').replace('phase=2', 'phase=1').replace('phase=TEMP', 'phase=2')
         self.assertFalse(decode(text, BOOT)['complete'])
 
 
