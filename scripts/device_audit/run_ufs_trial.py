@@ -6,6 +6,8 @@ readback files are removed only after their expected digest matches. No
 partition outside boot, DTBO and super is programmed. Original userdata is untouched.
 The guarded profile keeps GSI running only after authenticated identity checks,
 a renewable watchdog lease and a 190-second ADB soak; failures recover to F.20.
+The original recovery set is reused. Re-reading complete stock partitions is
+opt-in; normal recovery checks loader acknowledgements, boot identity and LP metadata.
 """
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -58,11 +60,31 @@ def validate_vendor_update(previous, stable, candidate, scratch, live):
     return digest, [n for n, (before, after) in enumerate(zip(old['parts'], candidate['parts'])) if before != after]
 
 
+def verify_stock_readbacks(original, read_boot, read_super, enabled=False):
+    """Reuse the acquisition by default; never imply a fresh stock readback."""
+    if not enabled:
+        return False
+    read_boot('restored', original['partitions']['boot']['sha256'])
+    read_super('restored-super', [x['sha256'] for x in original['partitions']['super']['parts']])
+    return True
+
+
+def verify_stock_phone_digest(phone, expected, enabled=False):
+    """Do not scan the handset's full stock super during routine trials."""
+    if not enabled:
+        return None
+    actual = phone('sha256sum /dev/block/by-name/super', 240).split()[0]
+    if actual != expected:
+        raise ValueError('Stock super digest mismatch')
+    return actual
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--workspace', type=Path, required=True)
     parser.add_argument('--trial', required=True)
     parser.add_argument('--restore-only', action='store_true')
+    parser.add_argument('--verify-stock-partitions', action='store_true', help='Explicit diagnostic: re-read stock boot/DTBO/super and compute phone-side super hash; default reuses the verified original set')
     parser.add_argument('--recovery-gate', type=Path, help='Restore only: validate now, wait for this explicit JSON handoff before capturing EDL')
     parser.add_argument('--retain-gsi', action='store_true')
     retained = parser.add_mutually_exclusive_group()
@@ -152,8 +174,7 @@ def main():
      fh('restore-super',ET.parse(stock/'stock-super-restore.xml').getroot(),stock)
      write_boot('restore-boot',stock/'boot.img',orig['partitions']['boot']['sha256'])
      write_dtbo('restore-dtbo',stock/'dtbo.img',orig['partitions']['dtbo']['sha256'])
-     read_boot('restored',orig['partitions']['boot']['sha256'])
-     read_super('restored-super',[x['sha256'] for x in orig['partitions']['super']['parts']])
+     full_stock_readback=verify_stock_readbacks(orig,read_boot,read_super,args.verify_stock_partitions)
      reset('stock-reset');end=time.monotonic()+210
      while time.monotonic()<end:
       try:
@@ -163,15 +184,16 @@ def main():
      else:raise RuntimeError('F.20 boot completion not observed')
      assert phone('getprop ro.build.display.id')=='RMX2072_11_F.20'
      for slot in (0,1):assert phone(f'lpdump -s {slot}')==(stock/f'slot{slot}.txt').read_text().strip()
-     assert phone('sha256sum /dev/block/by-name/super',240).split()[0]==orig['partitions']['super']['sha256']
-     restored=dict(firmware='RMX2072_11_F.20',sys_boot_completed=1,boot_id=phone('cat /proc/sys/kernel/random/boot_id'),super_sha256=orig['partitions']['super']['sha256'],boot_sha256=orig['partitions']['boot']['sha256'],dtbo_sha256=orig['partitions']['dtbo']['sha256'],lp_slots=[0,1])
-     (dest/'restored.json').write_text(json.dumps(restored,indent=2)+'\n');event('F.20 restored; boot completion, both LP slots and full super digest match')
+     super_digest=verify_stock_phone_digest(phone,orig['partitions']['super']['sha256'],args.verify_stock_partitions)
+     restored=dict(firmware='RMX2072_11_F.20',sys_boot_completed=1,boot_id=phone('cat /proc/sys/kernel/random/boot_id'),super_sha256=super_digest,boot_sha256=orig['partitions']['boot']['sha256'] if full_stock_readback else None,dtbo_sha256=orig['partitions']['dtbo']['sha256'] if full_stock_readback else None,lp_slots=[0,1],stock_full_partition_readback=full_stock_readback,stock_write_acknowledged=True,expected_image_sha256={name:orig['partitions'][name]['sha256'] for name in ('boot','dtbo','super')},verification_policy='full-stock-readback' if full_stock_readback else 'reuse-original-backup-write-ack-boot-and-lp-metadata')
+     (dest/'restored.json').write_text(json.dumps(restored,indent=2)+'\n')
+     event('F.20 restored; boot completion and both LP slots match; '+('full stock readback and super digest match' if full_stock_readback else 'original backup reused, full stock partition readback NOT RUN'))
     
     assert sha(loader)=='9955d332f67bd610621d092520fa65626743e10a5b781c4f2ae532b99934dea9'
     assert verify(stock,'f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532')['parts']==orig['partitions']['super']['parts']
     assert sha(stock/'boot.img')==orig['partitions']['boot']['sha256'] and sha(stock/'dtbo.img')==orig['partitions']['dtbo']['sha256']
     if restore_only:
-     (dest/'recovery-ready.json').write_text(json.dumps(dict(original_images_verified=True,utc=datetime.now(timezone.utc).isoformat()))+'\n')
+     (dest/'recovery-ready.json').write_text(json.dumps(dict(original_images_verified=True,full_stock_partition_readback_requested=args.verify_stock_partitions,utc=datetime.now(timezone.utc).isoformat()))+'\n')
      event('Original recovery inputs verified; waiting for EDL')
      if args.recovery_gate:
       end=time.monotonic()+600
@@ -247,7 +269,8 @@ def main():
      info=phone('getprop ro.product.model; getprop ro.build.display.id; getprop sys.boot_completed; getprop ro.boot.flash.locked').splitlines()
      assert info==['RMX2072','RMX2072_11_F.20','1','0']
      assert int(phone('cat /sys/class/power_supply/battery/capacity'))>=25
-     assert phone('sha256sum /dev/block/by-name/super',240).split()[0]==candidate['source_sha256']
+     verify_stock_phone_digest(phone,candidate['source_sha256'],args.verify_stock_partitions)
+     for slot in (0,1):assert phone(f'lpdump -s {slot}')==(stock/f'slot{slot}.txt').read_text().strip()
      geometry=phone('readlink -f /dev/block/by-name/super; cat /sys/class/block/sda10/start /sys/class/block/sda10/size /sys/class/block/sda/queue/logical_block_size').splitlines()
      assert geometry==['/dev/block/sda10','1544256','17317888','4096']
     if args.retain_gsi:
@@ -257,7 +280,7 @@ def main():
     event(('Retained GSI identity and checked vendor-update plan' if args.vendor_update_from else 'Retained GSI identity and unchanged container/volumes' if args.boot_only_from else 'F.20 identity and geometry')+'; complete recovery and candidate inputs verified')
     enter('entry',True)
     try:
-     read_boot('before',previous_boot_sha,previous_dtbo_sha)
+     if from_gsi or args.verify_stock_partitions:read_boot('before',previous_boot_sha,previous_dtbo_sha)
      if args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
      if args.vendor_update_from:read_super('previous-super-read',previous['candidate']['parts'])
      write_boot('test-boot',p/'boot/boot-diag.img',boot['boot_sha256'])

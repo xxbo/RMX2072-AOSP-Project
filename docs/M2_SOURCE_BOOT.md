@@ -37,6 +37,17 @@ The new components are not flashed until their inputs, selected board IDs,
 reserved memory, interrupt routing and boot/recovery packaging are checked.
 Only the original recovery set and current candidate image versions are kept.
 
+From 2026-11-21, per the owner's instruction, routine trials reuse that single
+verified original recovery set. `run_ufs_trial.py` no longer re-reads complete
+stock boot/DTBO/super partitions or computes the phone-side stock super digest
+by default. Local recovery-file hashes, loader write acknowledgements, F.20
+boot completion and both LP metadata slots remain checked. Fresh candidate
+write/readback verification remains separate. Restored receipts explicitly
+mark stock full readback as not run and keep expected image hashes separate
+from observed hashes. `--verify-stock-partitions` enables the full stock
+diagnostic only when specifically needed; it does not create another backup.
+Earlier full-readback records remain historical evidence and are not relabeled.
+
 The source-tree kernel option enables `CONFIG_POWER_RESET_QCOM_PON` for the
 upstream `qcom,pm8998-pon` parent and `qcom,pm8941-pwrkey` child. It does not
 apply M1's `qcom,qpnp-power-on` alias patch. The separate small patch logs the
