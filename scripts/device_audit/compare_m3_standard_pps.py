@@ -7,6 +7,7 @@ import re
 from compare_m3_stock_dsc import compare as compare_dsc, load_capture
 from decode_m3_first_frame import decode
 from decode_m3_panel_readback import transactions
+from decode_m3_kms_snapshot import dsc_from_regs
 
 
 def standard_packets(text):
@@ -66,7 +67,7 @@ def compare(baseline, record, reference):
         same_null_insertion=previous['banks']['dsi0_ctrl'][0x2b0] == current['banks']['dsi0_ctrl'][0x2b0],
         same_host_pre_post=previous['banks']['dsi0_ctrl'][0xc0] == current['banks']['dsi0_ctrl'][0xc0],
         same_phy=all(previous['banks']['dsi0_phy'][0xb4 + 4*i] == current['banks']['dsi0_phy'][0xb4 + 4*i] for i in range(14)),
-        same_native_encoder=previous['banks']['dsc_0'] == current['banks']['dsc_0'],
+        same_native_encoder_parameters=dsc_from_regs(previous['banks']['dsc_0']) == dsc_from_regs(current['banks']['dsc_0']),
     )
     for row in standard:
         row['hex'] = row.pop('data').hex()
