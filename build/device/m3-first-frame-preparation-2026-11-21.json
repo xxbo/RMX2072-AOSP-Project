@@ -1,0 +1,392 @@
+{
+  "status": "PREPARATION_ONLY_NOT_FLASHED",
+  "date": "2026-11-21",
+  "objective": "Capture first-frame display errors and clock activity; correct physical display then AOSP desktop",
+  "kernel_build": {
+    "run_id": 44875114557,
+    "run_number": 37,
+    "source_commit": "477dfb25c2f3d937bee27d6179d42c4abff888a5",
+    "status_at_record": "in_progress"
+  },
+  "live_before": {
+    "firmware": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "boot_completed": "1",
+    "boot_id": "73e2bf96-93f9-41cf-916e-c3b5686f919e"
+  },
+  "recovery_preflight": {
+    "original_super": {
+      "bytes": 8866758656,
+      "sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+      "parts": [
+        {
+          "bytes": 536870912,
+          "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767"
+        },
+        {
+          "bytes": 276824064,
+          "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+        }
+      ]
+    },
+    "candidate_super": {
+      "bytes": 8866758656,
+      "sha256": "d42a1d7ba3b2cbea77cb3d9f3d5715ee55e6ed31307388cdbeb6123f420e4178",
+      "parts": [
+        {
+          "bytes": 536870912,
+          "sha256": "e625d0ef13273544e21c2131640c43ba3f61eee332a11205abab67bda38733d1"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "5966cadc6bdbf42920f191b9295452dc54fb5f33b6d98c2db929b5b7884c8260"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "2672cbd1f6906371963c62fa279d2b7ff1a036c0f87bd2ac0cd01a093d4ee4e4"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "b773ca12b0a1eb5e0a3101281c03a20a0d16f1aa3fd435ca9888f5fdd7fbd0ee"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "d9ec0569cf19a76d80e4f5bf3d305ccc785ff38ba4837594b69a3c92eced4715"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "6d5207f2dc41d25cc72072a9a2ce78c3c942362d7bb84548a3c8da04f868d1f7"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "b84e8cad1bcd574e5f1ca44475dc99ac1f1f39577ad86edb8ab42408157e894f"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "31b33d4846a8353239b0f792ffe775664096115b91f6bccabbec84502603efe4"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "64806dc93ca06d60f25de50deb8084a8d648725271fd8ffcf4248ba6e61fa832"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "aa72d4e321e3ab53387af844e407f7b0d16d626b3cd320604cea539cc214582e"
+        },
+        {
+          "bytes": 536870912,
+          "sha256": "8cb68db5119ab5e0ba46d6f209b71a9bb5398cee6152806c75c1a941f3266ae6"
+        },
+        {
+          "bytes": 276824064,
+          "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03"
+        }
+      ]
+    },
+    "original_boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "original_dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "loader": "9955d332f67bd610621d092520fa65626743e10a5b781c4f2ae532b99934dea9",
+    "candidate_matches_trial67": true,
+    "scratch_matches_trial67": true,
+    "handset_write": "NOT RUN"
+  },
+  "historical_clock_context": [
+    {
+      "trial": 58,
+      "boot": [
+        "7d750f14-c07c-4145-b9c5-5305af9c83f1",
+        "7d750f14-c07c-4145-b9c5-5305af9c83f1"
+      ],
+      "single_dsc": false,
+      "stock_linkclock": false,
+      "snapshot_sha256": "7033a54529ac8289825fa274f40f16630a6a0372f73088f4197e6b65a2237b45",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_byte0_clk": 52703997,
+          "disp_cc_mdss_pclk0_clk": 70271997
+        }
+      }
+    },
+    {
+      "trial": 59,
+      "boot": [
+        "ec0f3713-797f-4339-95c8-8947213842ee",
+        "ec0f3713-797f-4339-95c8-8947213842ee"
+      ],
+      "single_dsc": false,
+      "stock_linkclock": false,
+      "snapshot_sha256": "136df9fef929300fa6d1be7562fa81468247dbe3c9ba8329ecb4ea18f7e696d4",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_byte0_clk": 52703997,
+          "disp_cc_mdss_pclk0_clk": 70271997
+        }
+      }
+    },
+    {
+      "trial": 60,
+      "boot": [
+        "205712fa-efd4-4d0c-ab13-53913bd96b24",
+        "205712fa-efd4-4d0c-ab13-53913bd96b24"
+      ],
+      "single_dsc": false,
+      "stock_linkclock": false,
+      "snapshot_sha256": "93932ebf6309dbe94369ea409a828ada0408c0a3c72d6f912ddd98ef0eb21a27",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_byte0_clk": 52703997,
+          "disp_cc_mdss_pclk0_clk": 70271997
+        }
+      }
+    },
+    {
+      "trial": 61,
+      "boot": [
+        "fd45d4f7-18ad-48b0-b5f8-9a6c53c6cbd2",
+        "fd45d4f7-18ad-48b0-b5f8-9a6c53c6cbd2"
+      ],
+      "single_dsc": false,
+      "stock_linkclock": false,
+      "snapshot_sha256": "ae1efd8f0688261fedd638884125d741165fe153170c92d386bb3d3ec23774f0",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_byte0_clk": 52703997,
+          "disp_cc_mdss_pclk0_clk": 70271997
+        }
+      }
+    },
+    {
+      "trial": 62,
+      "boot": [
+        "9ef898f4-64ce-418b-904f-87adf645208c",
+        "9ef898f4-64ce-418b-904f-87adf645208c"
+      ],
+      "single_dsc": true,
+      "stock_linkclock": false,
+      "snapshot_sha256": "d2f060d27547b25c31b323ea199680a3a0d40054eb1be0e7eaf911e1c2056508",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_byte0_clk": 52703997,
+          "disp_cc_mdss_pclk0_clk": 70271997
+        }
+      }
+    },
+    {
+      "trial": 63,
+      "boot": [
+        "d328f362-2da1-4cf7-bb53-49c69e04eed5",
+        "d328f362-2da1-4cf7-bb53-49c69e04eed5"
+      ],
+      "single_dsc": true,
+      "stock_linkclock": false,
+      "snapshot_sha256": "95de26a3f2033d2cc3e10e2791d3a5619f0b4d64e6704771e98ee494e861ad2e",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_byte0_clk": 52703997,
+          "disp_cc_mdss_pclk0_clk": 70271997
+        }
+      }
+    },
+    {
+      "trial": 65,
+      "boot": [
+        "d156e9a3-246e-4249-a618-54a0931f7aa0",
+        "d156e9a3-246e-4249-a618-54a0931f7aa0"
+      ],
+      "single_dsc": true,
+      "stock_linkclock": true,
+      "snapshot_sha256": "085ae3c76dba7fcfc42b5fef594dca099bcf8a8e3d8af46c34f4571ce406ad01",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_mdp_clk": 460000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_mdp_clk": 200000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-flips": {
+          "disp_cc_mdss_mdp_clk": 200000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        }
+      }
+    },
+    {
+      "trial": 66,
+      "boot": [
+        "fa161396-0e8d-4c8d-b947-6bf547c0b956",
+        "fa161396-0e8d-4c8d-b947-6bf547c0b956"
+      ],
+      "single_dsc": true,
+      "stock_linkclock": true,
+      "snapshot_sha256": "03d3286fa306124f6632d6c33c2b9a815245fff7b399c28c30bad2d23fcafe57",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_mdp_clk": 460000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_mdp_clk": 200000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-flips": {
+          "disp_cc_mdss_mdp_clk": 200000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        }
+      }
+    },
+    {
+      "trial": 67,
+      "boot": [
+        "790e9ef8-5e41-4066-8117-12222897de92",
+        "790e9ef8-5e41-4066-8117-12222897de92"
+      ],
+      "single_dsc": true,
+      "stock_linkclock": true,
+      "snapshot_sha256": "f5fd9192a8494cea5845a50dd0a1f09dbce741a1c8d632e1b2f0abba655794c8",
+      "clocks": {
+        "before-modeset": {
+          "disp_cc_mdss_mdp_clk": 460000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-modeset": {
+          "disp_cc_mdss_mdp_clk": 200000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        },
+        "after-flips": {
+          "disp_cc_mdss_mdp_clk": 200000000,
+          "disp_cc_mdss_byte0_clk": 82500000,
+          "disp_cc_mdss_pclk0_clk": 110000000
+        }
+      }
+    }
+  ],
+  "historical_limit": "Earlier 58-63 snapshots did not include MDP rate. Their lower DSI clock still produced corruption. This is not a measured MDP/DSI throughput limit or a causal proof.",
+  "validation": {
+    "m3_tests_passed": 31,
+    "m3_tests_skipped": 0,
+    "shell_syntax": "PASS (Git Bash)",
+    "python_compile": "PASS",
+    "patch_chain": "PASS applied and reverse check",
+    "old_kernel_rejection": {
+      "kernel": "34e28227e62cc22c5b5125bd6e187a1879b24bc9008ff5820e3e3dcca3ee9d4c",
+      "exit_status": 1,
+      "message": "First-frame tracing requires the verified matching kernel patch",
+      "boot_outputs_not_written": true
+    }
+  },
+  "handset_write": "NOT RUN",
+  "root_cause": "NOT_ESTABLISHED"
+}

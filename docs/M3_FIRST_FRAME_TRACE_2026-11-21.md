@@ -52,3 +52,7 @@ phase 2 handler 也可由原驱动的等待处理调用，不能单凭它声称�
 源码 `477dfb25c2f3d937bee27d6179d42c4abff888a5` 已触发 [内核构建 #37](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/44875114557)。本地补丁链应用及反向检查通过，脚本编译和 shell 语法检查通过；构建成功与否需单独记录。
 
 `decode_m3_first_frame.py --record <record> --output <json>` 复用同 boot 的严格 native capture 读取器，校验 arming/completion UUID、完整 trace 边界、导出事件数、八个 CPU 的丢失计数及必要采样点。它保留错误原始值、PLL/DCS 关联、样本上限提示，不输出根因或物理通过结论。六个单元测试覆盖 masked underflow、非错误 FIFO 状态、丢失/截断、boot 混用及实际 PLL 编程与请求的区别。
+
+使用本地 Git Bash 执行先前跳过的四项测试后，本阶段全部 31 项 M3 测试通过，无跳过。原厂恢复集和当前候选的完整 super 字节、boot/DTBO、loader 与测试卷清单已校验；旧内核被打包器拒绝，未改写 boot 输出。[准备记录](../build/device/m3-first-frame-preparation-2026-11-21.json)
+
+等待构建时补查了第 58–67 轮的已保存时钟：第 58–63 轮 byte/pixel 约 52.704/70.272 MHz，第 65–67 轮为 82.5/110 MHz，均曾有花屏。前组没有记录 MDP 实际频率，不能补造为 200 MHz；第 64 轮没有此次脚本选取的标准路径快照，未纳入表中。这限制了“只因当前 200/110 比例”的解释，不能用旧 MDSS 比例规则直接给 SM8250 下结论。
