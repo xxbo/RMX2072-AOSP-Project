@@ -11,7 +11,7 @@ PANEL_SHA256 = '219f47d58006b129d9f46628389c161283debc5e04892e88ad6ff02a12074372
 BASELINE = bytes.fromhex('0017060721200606040204001616')
 
 
-def compare(baseline, record, reference, panel_source):
+def compare(baseline, record, reference, panel_source, pause_record=None):
     panel_raw = panel_source.read_bytes()
     panel_bytes = panel_raw.replace(b'\r\n', b'\n')
     if hashlib.sha256(panel_bytes).hexdigest() != PANEL_SHA256:
@@ -23,11 +23,11 @@ def compare(baseline, record, reference, panel_source):
     expected = next(iter(tables))
     # Reuse DSC/clock/route/fixed-input checks. Unlike trial 66, both inputs
     # already have original DSC; remove only its old-DSC experiment predicate.
-    result = compare_dsc(baseline, record, reference)
+    result = compare_dsc(baseline, record, reference, pause_record)
     checks = result['checks']
     del checks['baseline_has_no_stock_dsc']
     old, new = [json.loads((r / 'inputs.json').read_text(encoding='utf-8')) for r in (baseline, record)]
-    previous, current = [load_capture(r) for r in (baseline, record)]
+    previous, current = load_capture(baseline), load_capture(record, pause_record)
     values = [[c['banks']['dsi0_phy'][0xb4 + 4 * i] for i in range(14)] for c in (previous, current)]
     host = [c['banks']['dsi0_ctrl'][0xc0] for c in (previous, current)]
     entry = re.findall(r'RMXPHY timing stage=enable-entry bytes=([0-9a-f]{28})\b', current['acm'])
@@ -63,8 +63,10 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ('baseline', 'record', 'reference', 'panel-source', 'output'):
         p.add_argument('--' + name, type=Path, required=True)
+    p.add_argument('--pause-record', type=Path,
+                   help='Published digest manifest for an interrupted candidate; does not grant GSI acceptance')
     a = p.parse_args()
-    result = compare(a.baseline, a.record, a.reference, a.panel_source)
+    result = compare(a.baseline, a.record, a.reference, a.panel_source, a.pause_record)
     a.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps({key: result[key] for key in ('boot_id', 'all_setup_checks_pass', 'checks')}, indent=2))
     if not result['all_setup_checks_pass']:

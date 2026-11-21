@@ -9,16 +9,40 @@ from decode_m3_kms_snapshot import extract, register_banks, route_from_regs, dsc
 from decode_m3_panel_readback import transactions, transmitted_config
 
 
-def load_capture(record):
+def load_capture(record, pause_record=None):
     live = record / 'live'
-    boot = json.loads((live / 'gsi-accepted.json').read_text())['identity'][2]
-    raw = (live / 'm3-display.txt').read_bytes()
+    if pause_record is None:
+        boot = json.loads((live / 'gsi-accepted.json').read_text())['identity'][2]
+        raw = (live / 'm3-display.txt').read_bytes()
+        identity_scope = 'gsi-accepted record'
+    else:
+        # An interrupted test can still contain a complete native snapshot.
+        # Authenticate it against the previously published pause record;
+        # never create or imply a missing GSI acceptance/stability result.
+        attestation = json.loads(pause_record.read_text(encoding='utf-8'))
+        if attestation['status'] != 'PAUSED_BY_USER_F20_RESTORED' or attestation['trial'] != record.name:
+            raise ValueError('Pause record does not identify this interrupted trial')
+        boot = attestation['boot_id']
+        for name in ('inputs.json', 'live/acm.log', 'live/host-events.jsonl',
+                     'live/m3-display-at-pause.txt'):
+            data = (record / name).read_bytes()
+            expected = attestation['evidence'][name]
+            if len(data) != expected['bytes'] or hashlib.sha256(data).hexdigest() != expected['sha256']:
+                raise ValueError('Pause evidence digest mismatch: ' + name)
+        events = [json.loads(line) for line in (live / 'host-events.jsonl').read_text().splitlines()]
+        relevant = [event for event in events if event.get('event') in
+                    ('handoff_requested', 'display_gate_requested')]
+        if {event['event'] for event in relevant} != {'handoff_requested', 'display_gate_requested'} or \
+                {event['boot_id'] for event in relevant} != {boot}:
+            raise ValueError('Pause snapshot/host gate boot mismatch')
+        raw = (live / 'm3-display-at-pause.txt').read_bytes()
+        identity_scope = 'published pause digests and host gate UUID; no GSI acceptance or stability claim'
     snapshot = raw.decode('utf-8').replace('\r\n', '\n')
     if set(re.findall(r'^M3DISPLAY boot_id=(.+)$', snapshot, re.M)) != {boot}:
-        raise ValueError('Snapshot/accepted boot mismatch')
+        raise ValueError('Snapshot/identity boot mismatch')
     if 'DRMTEST exit=0\n' not in snapshot:
         raise ValueError('Native probe did not complete')
-    return dict(boot=boot, raw=raw, snapshot=snapshot,
+    return dict(boot=boot, raw=raw, snapshot=snapshot, identity_scope=identity_scope,
                 banks=register_banks(extract(snapshot, 'kms')),
                 acm=(live / 'acm.log').read_text(encoding='utf-8'))
 
@@ -35,9 +59,9 @@ def verify_pps(banks, acm, expected):
     return checks, actual
 
 
-def compare(baseline, record, reference):
+def compare(baseline, record, reference, pause_record=None):
     old, new = [json.loads((r / 'inputs.json').read_text(encoding='utf-8')) for r in (baseline, record)]
-    previous, current = [load_capture(r) for r in (baseline, record)]
+    previous, current = load_capture(baseline), load_capture(record, pause_record)
     expected = bytes.fromhex(json.loads(reference.read_text())['factory_pps_hex'])
     if len(expected) != 88:
         raise ValueError('Expected complete original DSC 1.1 payload')
@@ -76,6 +100,7 @@ def compare(baseline, record, reference):
         for key, value in expected_clocks.items():
             checks[phase + '_' + key] = key in clocks[phase] and abs(clocks[phase][key] - value) <= 1000
     return dict(boot_id=current['boot'], baseline_boot_id=previous['boot'],
+        candidate_identity_scope=current['identity_scope'],
         checks=checks, all_setup_checks_pass=all(checks.values()),
         original_pps_hex=expected.hex(), native_dsc_parameters=parameters,
         clock_rates_hz=clocks, baseline_route=routes[0], candidate_route=routes[1],

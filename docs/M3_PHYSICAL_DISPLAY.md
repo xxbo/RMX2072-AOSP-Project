@@ -1109,4 +1109,21 @@ Build 36, candidate packaging and full device readback passed. The user
 requested pause at the native observation prompt, so the physical result is
 unreported and no repair is claimed. Further capture and testing stopped;
 F.20 was restored and fully verified to avoid leaving the per-boot host gate
-installed. Work remains paused. [Record](../build/device/m3-display-67-paused-2026-11-20.json).
+installed. Work was paused at that checkpoint. [Record](../build/device/m3-display-67-paused-2026-11-20.json).
+
+## Trial 67 reviewed: physical corruption unchanged
+
+On November 21 the user reported no improvement in trial 67, without separate
+native/Android phase descriptions. Offline review authenticates the saved
+snapshot against the published pause digests and host gate UUID; all 43 PHY,
+PPS, clock, route and fixed-input checks pass. This is configuration evidence,
+not GSI stability acceptance. The original PHY changes alone did not repair
+the display. The root cause remains open.
+
+SM8250 research and a pinned-source audit identify a missing first-frame error
+history: the current snapshot masks several error IRQs, and normal error
+handling clears status before later samples. Core-clock/transfer budgeting
+and runtime PLL reprogramming remain hypotheses. First-frame evidence is the
+next priority; no new flash, restart or image version was produced during
+this review. [Investigation](M3_DISPLAY_RESEARCH_2026-11-21.md) and
+[review record](../build/device/m3-display-67-reviewed-2026-11-21.json).
