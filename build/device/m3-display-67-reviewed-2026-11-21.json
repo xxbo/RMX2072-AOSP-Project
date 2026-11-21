@@ -24,18 +24,21 @@
   "evidence": [
     {
       "path": "build/device/m3-display-67-paused-2026-11-20.json",
-      "bytes": 17810,
-      "sha256": "0447d8468bd7e82433f5e4adbdd856941dc5aaa994dadd075e9419f92e2aa9ac"
+      "bytes": 17363,
+      "sha256": "d7faf425095c4bea6598418151c905bed1069e22d045b61d6677763d80e6a11d",
+      "encoding": "repository LF bytes"
     },
     {
       "path": "build/device/m3-stock-phy-67-runtime-2026-11-21.json",
-      "bytes": 10265,
-      "sha256": "d05c58f7684721fdf48058dc80e0da9348f962785b3a896d4602f8e47b50044d"
+      "bytes": 9830,
+      "sha256": "d2ee2c934446f7dada318d357b98ed6d05d7afd3c68b0f69d1c872df0926f1e4",
+      "encoding": "repository LF bytes"
     },
     {
       "path": "build/device/m3-first-frame-gap-2026-11-21.json",
-      "bytes": 4649,
-      "sha256": "a44b3e97bcaf946adbbeba77d7d6865dc022f20dacadfae92327a0d6f54121df"
+      "bytes": 4496,
+      "sha256": "4ddced8e0159c195c8421441058068148f674e4d5c462006cc83c660cc950437",
+      "encoding": "repository LF bytes"
     }
   ],
   "new_device_actions": [],
