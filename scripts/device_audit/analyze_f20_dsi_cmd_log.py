@@ -4,8 +4,11 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import sys
 
 from decode_m3_kms_snapshot import dsc_from_pps
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'build'))
+from import_rm19795_panel import generate, packets as source_packets, SOURCE_SHA
 
 
 def packets(text):
@@ -28,7 +31,7 @@ def packets(text):
     return result
 
 
-def analyze(record, baseline):
+def analyze(record, baseline, panel_source):
     receipt = json.loads((record / 'capture.json').read_text())
     if receipt['firmware'] != 'RMX2072_11_F.20' or receipt['restored_logger'] != receipt['original_logger']:
         raise ValueError('Unverified F.20/restoration')
@@ -55,12 +58,23 @@ def analyze(record, baseline):
         raise ValueError('Incomplete or out-of-order PPS')
     vb, sb = bytes.fromhex(v['payload_hex'])[1:], bytes.fromhex(s['payload_hex'])
     vc, sc = dsc_from_pps(vb + bytes(40)), dsc_from_pps(sb)
+    raw_source = panel_source.read_bytes()
+    generate(raw_source)  # Enforces the pinned official source digest.
+    source_text = re.sub(r'/\*.*?\*/|//[^\n]*', '', raw_source.decode(), flags=re.S)
+    timing = source_text.split('timing@0', 1)[1].split('timing@1', 1)[0]
+    command_bytes = bytes.fromhex(re.search(r'qcom,mdss-dsi-on-command\s*=\s*\[([^]]+)\]', timing)[1])
+    source_on = source_packets(command_bytes)
+    runtime_on = rows[:rows.index(s)]
+    actual_on = [(r['type'], r['wait_ms'], bytes.fromhex(r['payload_hex'])) for r in runtime_on]
     prior = json.loads(baseline.read_text())
     return dict(firmware=receipt['firmware'], kernel=receipt['kernel'], boot_id=receipt['boot_id'],
         capture=receipt, actual_mode=[1080, 2400, 60], wake_packets=rows,
         vendor_pps_hex=vb.hex(), standard_pps_hex=sb.hex(),
         standard_after_vendor_ms=round((s['seconds']-v['seconds'])*1000, 3),
         standard_before_display_on_ms=round((on['seconds']-s['seconds'])*1000, 3),
+        official_panel_source_sha256=SOURCE_SHA, on_command_count=len(runtime_on),
+        on_types_payloads_delays_match_project=actual_on == source_on,
+        on_lp_and_last_flags=all(r['flags_raw'] == 10 and r['last'] == 1 and r['channel'] == 0 for r in runtime_on),
         differing_pps_offsets=[i for i in range(88) if vb[i] != sb[i]],
         field_differences={k:dict(vendor=vc[k], standard=sc[k]) for k in vc if vc[k] != sc[k]},
         trial68_matches_vendor=prior['original_pps_hex'] == vb.hex(),
@@ -74,10 +88,10 @@ def analyze(record, baseline):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    for name in ('record', 'baseline', 'output'):
+    for name in ('record', 'baseline', 'panel-source', 'output'):
         p.add_argument('--' + name, type=Path, required=True)
     a = p.parse_args()
-    result = analyze(a.record, a.baseline)
+    result = analyze(a.record, a.baseline, a.panel_source)
     a.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps({k:v for k,v in result.items() if k not in ('capture','wake_packets','vendor_pps_hex','standard_pps_hex')}, indent=2))
 
