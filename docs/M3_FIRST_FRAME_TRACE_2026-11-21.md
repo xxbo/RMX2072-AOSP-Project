@@ -51,6 +51,8 @@ phase 2 handler 也可由原驱动的等待处理调用，不能单凭它声称�
 
 源码 `477dfb25c2f3d937bee27d6179d42c4abff888a5` 已触发 [内核构建 #37](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/44875114557)。本地补丁链应用及反向检查通过，脚本编译和 shell 语法检查通过；构建成功与否需单独记录。
 
+构建 #37 在 `dsi_host.c` 编译失败：新增的 `msm_dsi_host_first_frame_sample()` 位于 `to_msm_dsi_host()` 定义之前，触发隐式声明和类型冲突。修复只把新增函数移到现有转换函数之后，没有改变采样逻辑或显示参数。该次构建没有生成可用内核，也没有刷机；手机保持原厂 F.20。修正后重新检查补丁应用，再触发新构建。
+
 `decode_m3_first_frame.py --record <record> --output <json>` 复用同 boot 的严格 native capture 读取器，校验 arming/completion UUID、完整 trace 边界、导出事件数、八个 CPU 的丢失计数及必要采样点。它保留错误原始值、PLL/DCS 关联、样本上限提示，不输出根因或物理通过结论。六个单元测试覆盖 masked underflow、非错误 FIFO 状态、丢失/截断、boot 混用及实际 PLL 编程与请求的区别。
 
 使用本地 Git Bash 执行先前跳过的四项测试后，本阶段全部 31 项 M3 测试通过，无跳过。原厂恢复集和当前候选的完整 super 字节、boot/DTBO、loader 与测试卷清单已校验；旧内核被打包器拒绝，未改写 boot 输出。[准备记录](../build/device/m3-first-frame-preparation-2026-11-21.json)

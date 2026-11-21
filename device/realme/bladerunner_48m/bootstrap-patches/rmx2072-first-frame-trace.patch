@@ -122,7 +122,7 @@ index 93c028a..7123662 100644
  					const struct mipi_dsi_msg *msg);
  void msm_dsi_host_xfer_restore(struct mipi_dsi_host *host,
 diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index df8061f..ffc6417 100644
+index df8061f..8c49eb7 100644
 --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
 +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
 @@ -3,6 +3,7 @@
@@ -142,7 +142,7 @@ index df8061f..ffc6417 100644
  };
  
  static inline u32 dsi_read(struct msm_dsi_host *msm_host, u32 reg)
-@@ -206,6 +209,42 @@ static inline u32 dsi_read(struct msm_dsi_host *msm_host, u32 reg)
+@@ -206,6 +209,32 @@ static inline u32 dsi_read(struct msm_dsi_host *msm_host, u32 reg)
  	return readl(msm_host->ctrl_base + reg);
  }
  
@@ -172,6 +172,13 @@ index df8061f..ffc6417 100644
 +	trace_rmx_dsi_sample(phase, msm_host->id, cookie, v);
 +}
 +
+ static inline void dsi_write(struct msm_dsi_host *msm_host, u32 reg, u32 data)
+ {
+ 	writel(data, msm_host->ctrl_base + reg);
+@@ -258,6 +287,16 @@ static inline struct msm_dsi_host *to_msm_dsi_host(struct mipi_dsi_host *host)
+ 	return container_of(host, struct msm_dsi_host, base);
+ }
+ 
 +void msm_dsi_host_first_frame_sample(struct mipi_dsi_host *host,
 +				   u32 phase, u32 cookie)
 +{
@@ -182,9 +189,9 @@ index df8061f..ffc6417 100644
 +		dsi_ff_sample(msm_host, phase, cookie);
 +}
 +
- static inline void dsi_write(struct msm_dsi_host *msm_host, u32 reg, u32 data)
+ int dsi_clk_init_v2(struct msm_dsi_host *msm_host)
  {
- 	writel(data, msm_host->ctrl_base + reg);
+ 	struct platform_device *pdev = msm_host->pdev;
 @@ -420,6 +459,10 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
  {
  	int ret;
