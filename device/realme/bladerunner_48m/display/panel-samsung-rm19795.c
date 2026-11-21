@@ -23,6 +23,13 @@ static bool readback;
 module_param(readback, bool, 0400);
 MODULE_PARM_DESC(readback, "RM19795 one-shot power and PPS readback diagnostic");
 
+/* F.20 logs a standard PPS after its complete vendor on-sequence. Keep the
+ * encoder and existing 0x9e payload unchanged to isolate that missing packet.
+ */
+static bool pps;
+module_param(pps, bool, 0400);
+MODULE_PARM_DESC(pps, "RM19795 standard PPS after vendor on-sequence isolation test");
+
 struct rm19795_cmd {
 	u8 type;
 	u8 wait_ms;
@@ -167,6 +174,31 @@ static void rm19795_readback_once(struct rm19795 *ctx)
 	dev_info(&ctx->dsi->dev, "RMXPANEL readback-end relock_ret=%d\n", lock_ret);
 }
 
+static int rm19795_standard_pps(struct rm19795 *ctx)
+{
+	struct drm_dsc_picture_parameter_set payload;
+	struct mipi_dsi_msg msg = {
+		.channel = ctx->dsi->channel,
+		.type = MIPI_DSI_PICTURE_PARAMETER_SET,
+		.flags = MIPI_DSI_MSG_USE_LPM,
+		.tx_len = sizeof(payload),
+		.tx_buf = &payload,
+	};
+	ssize_t ret;
+
+	drm_dsc_pps_payload_pack(&payload, &ctx->dsc);
+	ret = ctx->dsi->host->ops->transfer(ctx->dsi->host, &msg);
+	dev_info(&ctx->dsi->dev, "RMXPPS standard-transfer ret=%zd payload=%zu\n",
+		 ret, sizeof(payload));
+	if (ret < 0)
+		return ret;
+	/* MSM returns the padded DMA packet length, not just the payload size. */
+	if (ret < sizeof(payload))
+		return -EIO;
+	rm19795_log_bytes(ctx, "standard-tx", (const u8 *)&payload, sizeof(payload));
+	return 0;
+}
+
 static int rm19795_prepare(struct drm_panel *panel)
 {
 	struct rm19795 *ctx = container_of(panel, struct rm19795, panel);
@@ -192,6 +224,11 @@ static int rm19795_prepare(struct drm_panel *panel)
 	ret = rm19795_send(ctx, rm19795_cmd_on, ARRAY_SIZE(rm19795_cmd_on), true);
 	if (ret)
 		goto disable;
+	if (pps) {
+		ret = rm19795_standard_pps(ctx);
+		if (ret)
+			goto disable;
+	}
 	ctx->prepared = true;
 	dev_info(&ctx->dsi->dev, "RM19795 prepared 1080x2400@60 DSC 540x48\n");
 	return 0;

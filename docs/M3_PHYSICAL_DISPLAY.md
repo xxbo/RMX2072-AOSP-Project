@@ -5,13 +5,13 @@ and AOSP Launcher on the same Android 17 GSI. Cold-start and watchdog rehearsals
 are not part of this work. Each stage report identifies its objective, physical
 result, next blocker and source/evidence commit.
 
-Current result (trial 63, November 16): native SSPP hardware-generated red,
-green and blue still show strip noise and missing regions, with zero source
-addresses/strides verified. Framebuffer fetching is not required to reproduce
-this corruption. Android 17 returns with enforcing, SurfaceFlinger and ADB;
-the physical image and desktop remain unaccepted. The user ended today's
-session. Next resume the post-fill DPU/DSC/DSI/panel path. See the
-[experiment and actual observations](M3_DPU_SOLID_FILL_ISOLATION.md#trial-63-result).
+Current result (November 21): trial 68 remains physically corrupt in native
+and Android phases; F.20 has been restored. A new stock 60 Hz command capture
+shows a complete standard 128-byte PPS after the vendor 0x9e sequence, absent
+from the project panel path. Earlier trials matched the static vendor PPS,
+not this final runtime packet. Trial 69 will isolate adding that packet while
+retaining the current encoder parameters. Root cause and desktop acceptance
+remain open. [Runtime evidence and experiment](M3_RUNTIME_PPS_2026-11-21.md).
 
 ## Starting observation, November 15
 

@@ -31,6 +31,7 @@ def main():
     parser.add_argument('--stock-dsc-test', action='store_true')
     parser.add_argument('--stock-phy-test', action='store_true')
     parser.add_argument('--first-frame-trace', action='store_true')
+    parser.add_argument('--standard-pps-test', action='store_true')
     a = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
@@ -55,6 +56,8 @@ def main():
         raise ValueError('Stock PHY timing test requires the trial 66 stock DSC configuration')
     if a.first_frame_trace and (not a.stock_phy_test or not dt.get('display_staged')):
         raise ValueError('First-frame tracing requires the staged trial 67 baseline')
+    if a.standard_pps_test and (not a.first_frame_trace or not a.panel_readback_test):
+        raise ValueError('Standard PPS isolation requires the complete trial 68 baseline')
     for name, expected in dt['outputs'].items():
         data = (source / name).read_bytes()
         if len(data) != expected['size_bytes'] or sha(data) != expected['sha256']:
@@ -162,6 +165,8 @@ def main():
         cmdline += ' msm.rmx2072_stock_dsc=1'
     if a.stock_phy_test:
         cmdline += ' msm.rmx2072_stock_phy=1'
+    if a.standard_pps_test:
+        cmdline += ' panel_samsung_rm19795.pps=1'
     if len(cmdline.encode()) >= 512:
         raise ValueError('Diagnostic command line exceeds the boot header field')
     header[64:576] = cmdline.encode().ljust(512, b'\0')
@@ -202,6 +207,7 @@ def main():
     record['stock_dsc_test'] = a.stock_dsc_test
     record['stock_phy_test'] = a.stock_phy_test
     record['first_frame_trace'] = a.first_frame_trace
+    record['standard_pps_test'] = a.standard_pps_test
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))
 
