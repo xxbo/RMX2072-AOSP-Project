@@ -1,0 +1,34 @@
+{
+  "boot_id": "fa161396-0e8d-4c8d-b947-6bf547c0b956",
+  "acm_sha256": "fb0b3492608739414d2386ee7d57fd4b431ff0158687f9f63c505b80d2ec0876",
+  "transmitted": [
+    {
+      "returned": 96,
+      "expected": 88,
+      "hex": "110000893080096004380030021c021c02000252002004230007000f028e021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62ab62af42af44b346374"
+    }
+  ],
+  "panel_reads": [
+    {
+      "command": "0a",
+      "requested": 1,
+      "returned": 1,
+      "hex": "9c"
+    },
+    {
+      "command": "9e",
+      "requested": 16,
+      "returned": 16,
+      "hex": "00000000000000000000000000000000"
+    }
+  ],
+  "power_mode_matches_oem": true,
+  "encoder_vs_transmit_differences": {},
+  "all_transmitted_pps_identical": true,
+  "relock_confirmed": true,
+  "full_vendor_response_available": false,
+  "full_response_matches_tx": null,
+  "vendor_read_semantics": "UNVERIFIED: 0x9e is a known write address; read responses are raw evidence",
+  "physical_acceptance": "REQUIRES_OPERATOR_OBSERVATION",
+  "scope": "Host transfer plus sampled native DSC registers; unavailable/zero reads do not prove decoder rejection."
+}

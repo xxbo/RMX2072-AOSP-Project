@@ -1,0 +1,271 @@
+{
+  "boot_id": "d156e9a3-246e-4249-a618-54a0931f7aa0",
+  "baseline_boot_id": "2ac67c10-16db-4644-b9d1-350d2b9c4511",
+  "checks": {
+    "explicit_stock_clock_request": true,
+    "baseline_default_clock": true,
+    "same_super_and_verified_partitions": true,
+    "same_scratch_seeds": true,
+    "same_source_device_trees": true,
+    "same_single_dsc_test": true,
+    "same_panel_readback_test": true,
+    "same_solid_fill_test": true,
+    "same_display_probe_sha256": true,
+    "same_pattern_rgb_sha256": true,
+    "same_first_stage_init_sha256": true,
+    "same_witness_sha256": true,
+    "same_dsc_parameters": true,
+    "same_selected_native_route": true,
+    "single_dsc_native_route": true,
+    "same_dsi_packet_0x54": true,
+    "same_dsi_packet_0x58": true,
+    "same_dsi_packet_0x2a4": true,
+    "same_dsi_packet_0x2a8": true,
+    "same_complete_transmitted_pps": true,
+    "host_requests_match": true,
+    "after-modeset_dsi0_pll_bit_clk": true,
+    "after-modeset_dsi0_phy_pll_out_byteclk": true,
+    "after-modeset_dsi0_phy_pll_out_dsiclk": true,
+    "after-modeset_disp_cc_mdss_byte0_clk": true,
+    "after-modeset_disp_cc_mdss_pclk0_clk": true,
+    "after-flips_dsi0_pll_bit_clk": true,
+    "after-flips_dsi0_phy_pll_out_byteclk": true,
+    "after-flips_dsi0_phy_pll_out_dsiclk": true,
+    "after-flips_disp_cc_mdss_byte0_clk": true,
+    "after-flips_disp_cc_mdss_pclk0_clk": true
+  },
+  "all_setup_checks_pass": true,
+  "clock_rates_hz": {
+    "before-modeset": {
+      "disp_cc_mdss_mdp_clk_src": 460000000,
+      "disp_cc_mdss_mdp_clk": 460000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 660000000,
+      "dsi0_pll_out_div_clk": 660000000,
+      "dsi0_pll_bit_clk": 660000000,
+      "dsi0_pll_by_2_bit_clk": 330000000,
+      "dsi0_pclk_mux": 330000000,
+      "dsi0_phy_pll_out_byteclk": 82500000,
+      "dsi0_phy_pll_out_dsiclk": 110000000,
+      "disp_cc_mdss_byte0_clk_src": 82500000,
+      "disp_cc_mdss_byte0_clk": 82500000,
+      "disp_cc_mdss_pclk0_clk_src": 110000000,
+      "disp_cc_mdss_pclk0_clk": 110000000
+    },
+    "after-modeset": {
+      "disp_cc_mdss_mdp_clk_src": 200000000,
+      "disp_cc_mdss_mdp_clk": 200000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 660000000,
+      "dsi0_pll_out_div_clk": 660000000,
+      "dsi0_pll_bit_clk": 660000000,
+      "dsi0_pll_by_2_bit_clk": 330000000,
+      "dsi0_pclk_mux": 330000000,
+      "dsi0_phy_pll_out_byteclk": 82500000,
+      "dsi0_phy_pll_out_dsiclk": 110000000,
+      "disp_cc_mdss_byte0_clk_src": 82500000,
+      "disp_cc_mdss_byte0_clk": 82500000,
+      "disp_cc_mdss_pclk0_clk_src": 110000000,
+      "disp_cc_mdss_pclk0_clk": 110000000
+    },
+    "after-flips": {
+      "disp_cc_mdss_mdp_clk_src": 200000000,
+      "disp_cc_mdss_mdp_clk": 200000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 660000000,
+      "dsi0_pll_out_div_clk": 660000000,
+      "dsi0_pll_bit_clk": 660000000,
+      "dsi0_pll_by_2_bit_clk": 330000000,
+      "dsi0_pclk_mux": 330000000,
+      "dsi0_phy_pll_out_byteclk": 82500000,
+      "dsi0_phy_pll_out_dsiclk": 110000000,
+      "disp_cc_mdss_byte0_clk_src": 82500000,
+      "disp_cc_mdss_byte0_clk": 82500000,
+      "disp_cc_mdss_pclk0_clk_src": 110000000,
+      "disp_cc_mdss_pclk0_clk": 110000000
+    }
+  },
+  "requested_clocks": [
+    [
+      "660000000",
+      "82500000",
+      "110000000"
+    ]
+  ],
+  "baseline_route": {
+    "dsc_input_mux": [
+      0,
+      7,
+      7,
+      7
+    ],
+    "ctl": {
+      "ctl_0": {
+        "dsc_active": 1,
+        "intf_active": 2,
+        "merge_3d_active": 0
+      },
+      "ctl_1": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_2": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_3": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_4": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_5": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      }
+    },
+    "intf_mux": {
+      "intf_0": 983055,
+      "intf_1": 983040,
+      "intf_2": 983055,
+      "intf_3": 983055
+    },
+    "pingpong": {
+      "pingpong_0": {
+        "dsc_mode": 1,
+        "input_swap": 181896,
+        "output_swap": 444040
+      },
+      "pingpong_1": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_2": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_3": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_4": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_5": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      }
+    }
+  },
+  "candidate_route": {
+    "dsc_input_mux": [
+      0,
+      7,
+      7,
+      7
+    ],
+    "ctl": {
+      "ctl_0": {
+        "dsc_active": 1,
+        "intf_active": 2,
+        "merge_3d_active": 0
+      },
+      "ctl_1": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_2": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_3": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_4": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_5": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      }
+    },
+    "intf_mux": {
+      "intf_0": 983055,
+      "intf_1": 983040,
+      "intf_2": 983055,
+      "intf_3": 983055
+    },
+    "pingpong": {
+      "pingpong_0": {
+        "dsc_mode": 1,
+        "input_swap": 181896,
+        "output_swap": 444040
+      },
+      "pingpong_1": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_2": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_3": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_4": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_5": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      }
+    }
+  },
+  "snapshot_sha256": "085ae3c76dba7fcfc42b5fef594dca099bcf8a8e3d8af46c34f4571ce406ad01",
+  "phy_pll_log": [
+    "7,3569,29293120,-,caller=T1403;[drm:dsi_pll_7nm_vco_prepare] M3 DSI0 prepare-result pll_on=1 bias_refs=1 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51",
+    "7,3702,31596093,-,caller=T1460;[drm:dsi_7nm_phy_enable] M3 DSI0 phy-enable-exit pll_on=0 bias_refs=0 ctrl0=0x7f pll_ctrl=0x0 cfg1=0x10 lock=0x22",
+    "7,3709,31597925,-,caller=T1460;[drm:dsi_pll_7nm_vco_prepare] M3 DSI0 prepare-result pll_on=1 bias_refs=1 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51"
+  ],
+  "physical_acceptance": "FAIL_OPERATOR_REPORT",
+  "scope": "Isolation/CCF evidence; neither completed requests nor cached rates prove correct physical pixels or measured wire frequency.",
+  "review_date": "2026-11-20",
+  "operator_report": {
+    "quote": "65轮还是花屏",
+    "date": "2026-11-20",
+    "phase": "unspecified"
+  }
+}

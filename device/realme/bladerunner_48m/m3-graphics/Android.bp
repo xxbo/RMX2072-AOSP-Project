@@ -1,0 +1,14 @@
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+// Use the upstream generic DRM backend and mapper metadata. Do not select
+// downstream SDM/KGSL or the legacy gralloc handle decoder for minigbm.
+cc_binary {
+    name: "android.hardware.composer.hwc3-service.rmx2072",
+    defaults: ["android.hardware.composer.hwc3-service.drm.defaults"],
+    relative_install_path: "hw",
+    vendor: true,
+    vintf_fragments: [":drm_hwcomposer_vintf_manifest"],
+    init_rc: ["composer.rc"],
+}

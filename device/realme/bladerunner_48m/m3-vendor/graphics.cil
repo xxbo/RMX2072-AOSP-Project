@@ -1,0 +1,116 @@
+; Native graphics services on the existing Android 17 platform split policy.
+; CPU-rendering bring-up only: the verified SwiftShader driver JITs shaders
+; inside these two observed clients. Trial 52 faults in swiftshader_jit after
+; execmem denials. Do not extend this to domain/system_server; remove these
+; exceptions when the hardware renderer replaces this engineering profile.
+(allow surfaceflinger self (process (execmem)))
+(allow bootanim self (process (execmem)))
+
+; Temporary, generated known-color input to the GSI BootAnimation. The source
+; lives on verified read-only vendor and is bind-mounted at the existing /oem.
+; Use the existing OEM directory/archive labels and platform BootAnimation read
+; rules. Do not grant this core process generic vendor-file read access.
+; No new executable, property control or writable graphics access is added.
+; The mount builtin runs in init, including when declared by a vendor rc.
+; Trial 57 records init -> oemfs:dir mounton denial; no vendor_init grant needed.
+(allow init oemfs (dir (mounton)))
+
+; Fixed two-sample engineering probe. Init starts a static vendor executable in
+; its own domain. No shell execution, binder service, DRM master or modeset.
+; Query ioctls only (client caps affect property visibility on its own fd).
+(type rmx_scanout_probe)
+(type rmx_scanout_probe_exec)
+(roletype r rmx_scanout_probe)
+(roletype object_r rmx_scanout_probe_exec)
+(typeattributeset domain (rmx_scanout_probe))
+(typeattributeset file_type (rmx_scanout_probe_exec))
+(typeattributeset exec_type (rmx_scanout_probe_exec))
+(typeattributeset vendor_file_type (rmx_scanout_probe_exec))
+(typetransition init rmx_scanout_probe_exec process rmx_scanout_probe)
+(allow init rmx_scanout_probe_exec (file (getattr open read execute map)))
+(allow init rmx_scanout_probe (process (transition siginh rlimitinh)))
+(allow rmx_scanout_probe rmx_scanout_probe_exec (file (getattr open read execute entrypoint map)))
+(allow rmx_scanout_probe init (process (sigchld)))
+(allow rmx_scanout_probe graphics_device (dir (search)))
+(allow rmx_scanout_probe gpu_device (chr_file (getattr open read write ioctl)))
+(allowx rmx_scanout_probe gpu_device (ioctl chr_file (0x6400 0x6409 0x640d 0x64aa 0x64b5 0x64b6 0x64b9 0x64ce)))
+(type rmx_scanout_data_file)
+(roletype object_r rmx_scanout_data_file)
+(typeattributeset file_type (rmx_scanout_data_file))
+(typeattributeset data_file_type (rmx_scanout_data_file))
+(allow rmx_scanout_probe vendor_data_file (dir (search)))
+(allow rmx_scanout_probe rmx_scanout_data_file (dir (search write add_name)))
+(allow rmx_scanout_probe rmx_scanout_data_file (file (create getattr open write)))
+(allow shell vendor_data_file (dir (search)))
+(allow shell rmx_scanout_data_file (dir (search)))
+(allow shell rmx_scanout_data_file (file (getattr open read)))
+
+; A public, nonsecret vendor configuration read by in-process mapper clients.
+(type rmx_graphics_config_prop)
+(roletype object_r rmx_graphics_config_prop)
+(typeattributeset property_type (rmx_graphics_config_prop))
+(typeattributeset vendor_property_type (rmx_graphics_config_prop))
+(typeattributeset vendor_public_property_type (rmx_graphics_config_prop))
+(allow init rmx_graphics_config_prop (property_service (set)))
+(allow vendor_init rmx_graphics_config_prop (property_service (set)))
+(allow domain rmx_graphics_config_prop (file (getattr open read map)))
+
+(type rmx_graphics_allocator)
+(type rmx_graphics_allocator_exec)
+(roletype r rmx_graphics_allocator)
+(roletype object_r rmx_graphics_allocator_exec)
+(typeattributeset domain (rmx_graphics_allocator))
+(typeattributeset halserverdomain (rmx_graphics_allocator))
+(typeattributeset hal_graphics_allocator (rmx_graphics_allocator))
+(typeattributeset hal_graphics_allocator_server (rmx_graphics_allocator))
+(typeattributeset file_type (rmx_graphics_allocator_exec))
+(typeattributeset exec_type (rmx_graphics_allocator_exec))
+(typeattributeset vendor_file_type (rmx_graphics_allocator_exec))
+(typetransition init rmx_graphics_allocator_exec process rmx_graphics_allocator)
+(allow init rmx_graphics_allocator_exec (file (getattr open read execute map)))
+(allow init rmx_graphics_allocator (process (transition siginh rlimitinh)))
+(allow rmx_graphics_allocator rmx_graphics_allocator_exec (file (getattr open read execute entrypoint map)))
+(allow rmx_graphics_allocator init (process (sigchld)))
+(allow rmx_graphics_allocator graphics_device (dir (search)))
+(allow rmx_graphics_allocator graphics_device (chr_file (getattr open read write ioctl map)))
+(allow rmx_graphics_allocator gpu_device (chr_file (getattr open read write ioctl map)))
+
+(type rmx_graphics_composer)
+(type rmx_graphics_composer_exec)
+(roletype r rmx_graphics_composer)
+(roletype object_r rmx_graphics_composer_exec)
+(typeattributeset domain (rmx_graphics_composer))
+(typeattributeset halserverdomain (rmx_graphics_composer))
+(typeattributeset hal_graphics_composer (rmx_graphics_composer))
+(typeattributeset hal_graphics_composer_server (rmx_graphics_composer))
+; Android 17 hal_client_domain(rmx_graphics_composer, hal_graphics_allocator)
+; for a full-Treble device: discover/call allocator and map its shared memfds.
+(typeattributeset halclientdomain (rmx_graphics_composer))
+(typeattributeset hal_graphics_allocator_client (rmx_graphics_composer))
+(allow rmx_graphics_composer hal_graphics_allocator (memfd_file (read write getattr map)))
+(allow hal_graphics_allocator rmx_graphics_composer (memfd_file (read write getattr map)))
+(typeattributeset file_type (rmx_graphics_composer_exec))
+(typeattributeset exec_type (rmx_graphics_composer_exec))
+(typeattributeset vendor_file_type (rmx_graphics_composer_exec))
+(typetransition init rmx_graphics_composer_exec process rmx_graphics_composer)
+(allow init rmx_graphics_composer_exec (file (getattr open read execute map)))
+(allow init rmx_graphics_composer (process (transition siginh rlimitinh)))
+(allow rmx_graphics_composer rmx_graphics_composer_exec (file (getattr open read execute entrypoint map)))
+(allow rmx_graphics_composer init (process (sigchld)))
+(typetransition rmx_graphics_composer tmpfs file hal_graphics_composer_server_tmpfs)
+(allow rmx_graphics_composer hal_graphics_composer_server_tmpfs (file (getattr map read write)))
+(allow rmx_graphics_composer gpu_device (chr_file (getattr open read write ioctl map)))
+; DRM HWC's pinned UEvent implementation creates, binds and reads its own
+; hotplug socket. It does not send messages or require network capabilities.
+(allow rmx_graphics_composer self (netlink_kobject_uevent_socket (create bind read)))
+
+; Read DRM connector identity. Backlight writes await the observed device path.
+(type rmx_display_sysfs)
+(roletype object_r rmx_display_sysfs)
+(typeattributeset fs_type (rmx_display_sysfs))
+(typeattributeset sysfs_type (rmx_display_sysfs))
+(genfscon sysfs "/devices/platform/soc/ae00000.display-subsystem" (u object_r rmx_display_sysfs ((s0) (s0))))
+(genfscon sysfs "/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem" (u object_r rmx_display_sysfs ((s0) (s0))))
+(allow rmx_graphics_composer rmx_display_sysfs (dir (getattr open read search)))
+(allow rmx_graphics_composer rmx_display_sysfs (file (getattr open read)))
+(allow rmx_graphics_composer rmx_display_sysfs (lnk_file (getattr read)))

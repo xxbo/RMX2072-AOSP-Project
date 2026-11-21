@@ -1,0 +1,694 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "kernel": "4.19.157-perf+",
+  "boot_id": "357dcda6-83fa-46dc-9f61-3eb2eaedc0af",
+  "capture": {
+    "utc": "2026-11-21T08:10:30.266852+00:00",
+    "firmware": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "boot_id": "357dcda6-83fa-46dc-9f61-3eb2eaedc0af",
+    "original_logger": "0",
+    "restored_logger": "0",
+    "original_power": "2",
+    "final_power": "2",
+    "marker": "RMX_DSI_LOG_20261121T081020Z",
+    "requested_refresh60": true,
+    "original_peak_refresh_rate": "90.0",
+    "restored_peak_refresh_rate": "90.0",
+    "bounded_lines": 217,
+    "display_lines": 108,
+    "results": {
+      "kernel-debug-config": {
+        "bytes": 185,
+        "sha256": "617acda7e52b9bebfa25084f055c933b7c15c338d1a6a332638d19a959f05c1e"
+      },
+      "cycle-command": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "kernel-after": {
+        "bytes": 1109682,
+        "sha256": "d162b65209f0e766211a47e608a68340d170cbb70f442268bede84e08770742a"
+      },
+      "bounded-kernel-log": {
+        "bytes": 33188,
+        "sha256": "555e43e29fed3be9ab19b6c60d0567e87468782bca2c04768a515ba4b75f76b4"
+      },
+      "display-log": {
+        "bytes": 17424,
+        "sha256": "1d575d6d7e1d9ce6e53e8ef5bbf5132a6852599f903847c1227327de56da4d32"
+      }
+    },
+    "scope": "One display-only sleep/wake with vendor DSI logger, optionally requesting 60 Hz. Logger and peak refresh setting restored. No phone restart, host-register writes or partition readback. Active mode requires kernel log evidence; raw logs stay local pending review."
+  },
+  "actual_mode": [
+    1080,
+    2400,
+    60
+  ],
+  "wake_packets": [
+    {
+      "seconds": 2013.413642,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "9f5a5a"
+    },
+    {
+      "seconds": 2013.413866,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 89,
+      "payload_hex": "9e110000893080096004380030021c021c02000252002004230007000f028e021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62ab62af42af44b346374"
+    },
+    {
+      "seconds": 2013.414192,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "9d01"
+    },
+    {
+      "seconds": 2013.414364,
+      "type": 5,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 20,
+      "payload_bytes": 1,
+      "payload_hex": "11"
+    },
+    {
+      "seconds": 2013.434612,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "3500"
+    },
+    {
+      "seconds": 2013.434821,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "9fa5a5"
+    },
+    {
+      "seconds": 2013.43498,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 5,
+      "payload_hex": "2a00000437"
+    },
+    {
+      "seconds": 2013.435172,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 5,
+      "payload_hex": "2b0000095f"
+    },
+    {
+      "seconds": 2013.435364,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f05a5a"
+    },
+    {
+      "seconds": 2013.435538,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b006"
+    },
+    {
+      "seconds": 2013.435719,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b701"
+    },
+    {
+      "seconds": 2013.435855,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b005"
+    },
+    {
+      "seconds": 2013.436156,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b713"
+    },
+    {
+      "seconds": 2013.436345,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f0a5a5"
+    },
+    {
+      "seconds": 2013.436517,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "5320"
+    },
+    {
+      "seconds": 2013.436686,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "8b00"
+    },
+    {
+      "seconds": 2013.436851,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "813102"
+    },
+    {
+      "seconds": 2013.437063,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f05a5a"
+    },
+    {
+      "seconds": 2013.437217,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b02b"
+    },
+    {
+      "seconds": 2013.43742,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 22,
+      "payload_hex": "b1d000001adf000706d02ad2d3c108b4e0d600ffffff"
+    },
+    {
+      "seconds": 2013.43763,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b100"
+    },
+    {
+      "seconds": 2013.437802,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f0a5a5"
+    },
+    {
+      "seconds": 2013.437976,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f05a5a"
+    },
+    {
+      "seconds": 2013.438157,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "6000"
+    },
+    {
+      "seconds": 2013.438329,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f0a5a5"
+    },
+    {
+      "seconds": 2013.438911,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f05a5a"
+    },
+    {
+      "seconds": 2013.439088,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "5500"
+    },
+    {
+      "seconds": 2013.439253,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f0a5a5"
+    },
+    {
+      "seconds": 2013.439465,
+      "type": 10,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 10,
+      "wait_ms": 0,
+      "payload_bytes": 128,
+      "payload_hex": "110000893080096004380030021c021c0200020e002004a60007000c020b021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62af62b342b743b7463f400000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "seconds": 2013.440407,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "510000"
+    },
+    {
+      "seconds": 2013.474068,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "813102"
+    },
+    {
+      "seconds": 2013.474255,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f05a5a"
+    },
+    {
+      "seconds": 2013.47441,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b02b"
+    },
+    {
+      "seconds": 2013.474611,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 22,
+      "payload_hex": "b1d000001adf000706d02ad2d3c108b4e0d600ffffff"
+    },
+    {
+      "seconds": 2013.474931,
+      "type": 21,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "b100"
+    },
+    {
+      "seconds": 2013.475085,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "f0a5a5"
+    },
+    {
+      "seconds": 2013.476464,
+      "type": 21,
+      "last": 0,
+      "channel": 0,
+      "flags_raw": 0,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "5320"
+    },
+    {
+      "seconds": 2013.476565,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "510000"
+    },
+    {
+      "seconds": 2013.494759,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "9f5a5a"
+    },
+    {
+      "seconds": 2013.502413,
+      "type": 5,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 1,
+      "payload_hex": "29"
+    },
+    {
+      "seconds": 2013.502929,
+      "type": 5,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 1,
+      "payload_hex": "13"
+    },
+    {
+      "seconds": 2013.503145,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "9fa5a5"
+    },
+    {
+      "seconds": 2013.503392,
+      "type": 21,
+      "last": 0,
+      "channel": 0,
+      "flags_raw": 0,
+      "wait_ms": 0,
+      "payload_bytes": 2,
+      "payload_hex": "5320"
+    },
+    {
+      "seconds": 2013.503503,
+      "type": 57,
+      "last": 1,
+      "channel": 0,
+      "flags_raw": 8,
+      "wait_ms": 0,
+      "payload_bytes": 3,
+      "payload_hex": "5100f1"
+    }
+  ],
+  "vendor_pps_hex": "110000893080096004380030021c021c02000252002004230007000f028e021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62ab62af42af44b346374",
+  "standard_pps_hex": "110000893080096004380030021c021c0200020e002004a60007000c020b021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62af62b342b743b7463f400000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "standard_after_vendor_ms": 25.599,
+  "standard_before_display_on_ms": 62.948,
+  "official_panel_source_sha256": "219f47d58006b129d9f46628389c161283debc5e04892e88ad6ff02a12074372",
+  "on_command_count": 28,
+  "on_types_payloads_delays_match_project": true,
+  "on_lp_and_last_flags": true,
+  "differing_pps_offsets": [
+    19,
+    23,
+    27,
+    29,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    87
+  ],
+  "field_differences": {
+    "initial_dec_delay": {
+      "vendor": 594,
+      "standard": 526
+    },
+    "scale_increment": {
+      "vendor": 1059,
+      "standard": 1190
+    },
+    "first_line_bpg": {
+      "vendor": 15,
+      "standard": 12
+    },
+    "nfl_bpg": {
+      "vendor": 654,
+      "standard": 523
+    },
+    "rc_range": {
+      "vendor": [
+        [
+          0,
+          4,
+          2
+        ],
+        [
+          0,
+          4,
+          0
+        ],
+        [
+          1,
+          5,
+          0
+        ],
+        [
+          1,
+          6,
+          62
+        ],
+        [
+          3,
+          7,
+          60
+        ],
+        [
+          3,
+          7,
+          58
+        ],
+        [
+          3,
+          7,
+          56
+        ],
+        [
+          3,
+          8,
+          56
+        ],
+        [
+          3,
+          9,
+          56
+        ],
+        [
+          3,
+          10,
+          54
+        ],
+        [
+          5,
+          10,
+          54
+        ],
+        [
+          5,
+          11,
+          52
+        ],
+        [
+          5,
+          11,
+          52
+        ],
+        [
+          9,
+          12,
+          52
+        ],
+        [
+          12,
+          13,
+          52
+        ]
+      ],
+      "standard": [
+        [
+          0,
+          4,
+          2
+        ],
+        [
+          0,
+          4,
+          0
+        ],
+        [
+          1,
+          5,
+          0
+        ],
+        [
+          1,
+          6,
+          62
+        ],
+        [
+          3,
+          7,
+          60
+        ],
+        [
+          3,
+          7,
+          58
+        ],
+        [
+          3,
+          7,
+          56
+        ],
+        [
+          3,
+          8,
+          56
+        ],
+        [
+          3,
+          9,
+          56
+        ],
+        [
+          3,
+          10,
+          54
+        ],
+        [
+          5,
+          11,
+          54
+        ],
+        [
+          5,
+          12,
+          52
+        ],
+        [
+          5,
+          13,
+          52
+        ],
+        [
+          7,
+          13,
+          52
+        ],
+        [
+          12,
+          15,
+          52
+        ]
+      ]
+    }
+  },
+  "trial68_matches_vendor": true,
+  "trial68_matches_standard": false,
+  "trial68_baseline_sha256": "f4ecfd95e2eb3d1e8dc8739176cc2d027f4d6512f6e5feee1c3b0c32ad7b396a",
+  "standard_reserved_tail_zero": true,
+  "host_eot_runtime": "UNAVAILABLE: debugfs, devmem, kprobes and function tracer disabled in stock config",
+  "physical_result": "No candidate tested by this capture",
+  "scope": "Actual F.20 driver TX log at 60 Hz, not wire capture or DDIC readback. ERROR is the logger severity, not evidence that these sends failed. Static vendor PPS is not the final runtime PPS. No full partition readback."
+}

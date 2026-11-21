@@ -1,0 +1,57 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-41",
+  "goal": "Physical display, SurfaceFlinger, AOSP desktop",
+  "recipe_commit": "0d59fb266bdaf5d7478eb1f10de48777291983de",
+  "execution_commit": "fa3f4a29eb328a70424845e687307f02b31165f4",
+  "boot_sha256": "52a3d643a4b82a3ad0038549c38129eef0404ea1761c6c0a6c31298983e4d630",
+  "dtbo_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "kernel_sha256": "da083d2970bac47f58c2262e5c84fb29b93fa49a1ef5bf4433fff41ab42bf765",
+  "boot_id": "e710c03b-bb4f-4654-a98b-9a31f597cfd0",
+  "result": "BLOCKED_BEFORE_DISPLAY: previous RAM journal unreadable",
+  "display_bind": "NOT RUN",
+  "kms": "NOT RUN",
+  "physical_screen_observation": "NO_CONFIRMED_OUTPUT",
+  "previous_pmsg_ecc": {
+    "corrected_bytes": 92,
+    "unrecoverable_blocks": 112
+  },
+  "pstore_corruption_cause": "UNRESOLVED; prior trial 34 also observed this limitation",
+  "edl": "Entered automatically without physical keys or host reboot request",
+  "recovery": "PASS: complete 17-chunk super readback, device-side super hash, boot/DTBO, both LP slots and F.20 boot completion",
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "evidence": {
+    "live/previous-pmsg-ramoops-0": {
+      "bytes": 16164,
+      "sha256": "01d56c1452c1f3ae2f3383dd6da1689528aaa9d372673a1460a19ec8b91bb3b7"
+    },
+    "live/previous-console-ramoops-0": {
+      "bytes": 233034,
+      "sha256": "76eec1e167a825cb1fff3d307636269da8d9eea67c268b8f58ce34bb88012455"
+    },
+    "live/recovery-gate-reason.txt": {
+      "bytes": 1689,
+      "sha256": "470ccfddc0d209992e52cb251f2bf4d33d04fd4274e75ff0c5362a44b7746620"
+    },
+    "live/display-gate-not-ready.txt": {
+      "bytes": 13818,
+      "sha256": "b7416688ae0da9f0c1a7cdbf3df7cf4e9a26d2d425706a84cec150921fd70b3f"
+    },
+    "readbacks.jsonl": {
+      "bytes": 8718,
+      "sha256": "bd9b8cd35cf1d1a8f646d3c7aff89f17cf6a7d125c65d790d632165c287f7aa1"
+    }
+  },
+  "restored": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "01662e28-1ffa-451e-bc14-f9b529e0339e",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  }
+}

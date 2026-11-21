@@ -5,10 +5,12 @@ import hashlib
 import io
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
 import time
+import tarfile
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -28,8 +30,11 @@ def main():
     p.add_argument('--run-id', type=int, required=True)
     p.add_argument('--artifact-id', type=int, required=True)
     p.add_argument('--commit', required=True)
-    p.add_argument('--kind', choices=('kernel', 'init'), required=True)
+    p.add_argument('--kind', choices=('kernel', 'init', 'graphics'), required=True)
+    p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     a = p.parse_args()
+    if a.display and a.kind != 'kernel':
+        p.error('--display requires a kernel artifact')
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
     if work.is_relative_to(repo):
@@ -61,6 +66,75 @@ def main():
         url = error.headers['Location']
     provenance = dict(run_id=a.run_id, source_commit=a.commit, artifact_id=a.artifact_id,
                       artifact_archive_digest=artifact['digest'], archive_digest_verified=False)
+    if a.kind == 'graphics':
+        if run['path'] != '.github/workflows/m3-graphics.yml' or artifact['size_in_bytes'] > 512*1024*1024:
+            raise ValueError('Unexpected graphics build or oversized artifact')
+        plain = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with plain.open(url, timeout=120) as response:
+            archive = response.read(512*1024*1024+1)
+        if len(archive) > 512*1024*1024 or 'sha256:'+digest(archive) != artifact['digest']:
+            raise ValueError('Graphics archive digest/size mismatch')
+        wanted = {'graphics-vendor.tar.gz', 'vendor-files.sha256', 'resolved-manifest.xml',
+                  'SHA256SUMS', 'project-commit.txt', 'target-dependencies.json', 'STATUS.txt',
+                  'hardwarebuffer-source.json', 'vendor-output-path.txt'}
+        with zipfile.ZipFile(io.BytesIO(archive)) as z:
+            files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
+        if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
+            raise ValueError('Incomplete graphics artifact provenance')
+        from prepare_m3_hardwarebuffer import PINNED, SELECTED_MODULES
+        hardwarebuffer = json.loads(files['hardwarebuffer-source.json'])
+        if hardwarebuffer['original_files'] != PINNED or hardwarebuffer['selected_modules'] != SELECTED_MODULES:
+            raise ValueError('Graphics source declaration selection differs from pinned upstream')
+        closure = json.loads(files['target-dependencies.json'])
+        if closure['missing_dependency_commands'] or closure['command_count'] < 1:
+            raise ValueError('Graphics dependency closure is incomplete')
+        sums = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
+                for line in files['SHA256SUMS'].decode().splitlines()}
+        for name in ('graphics-vendor.tar.gz', 'resolved-manifest.xml', 'vendor-output-path.txt'):
+            if digest(files[name]) != sums[name]:
+                raise ValueError('Graphics member digest mismatch: '+name)
+        vendor_output = files['vendor-output-path.txt'].decode().strip()
+        if vendor_output not in ('out/target/product/rmx2072_m3/vendor',
+                                 'out/target/product/rmx2072_m3/system/vendor'):
+            raise ValueError('Unexpected AOSP vendor output path')
+        expected = {}
+        for line in files['vendor-files.sha256'].decode().splitlines():
+            sha256, name = line.split(maxsplit=1)
+            prefix = vendor_output+'/'
+            if not name.startswith(prefix):
+                raise ValueError('Non-vendor file in graphics manifest')
+            expected['/'+name[len(prefix):]] = sha256
+        payload = {}
+        with tarfile.open(fileobj=io.BytesIO(files['graphics-vendor.tar.gz']), mode='r:gz') as tar:
+            for member in tar:
+                if member.isdir():
+                    continue
+                name = member.name.removeprefix('./')
+                if (not member.isfile() or not re.fullmatch(r'[a-zA-Z0-9+@/_.-]+', name)
+                        or Path(name).is_absolute() or '..' in Path(name).parts
+                        or '/'+name in payload or member.size > 128*1024*1024):
+                    raise ValueError('Unsafe or unexpected graphics payload member')
+                data = tar.extractfile(member).read()
+                payload['/'+name] = data
+                if sum(map(len, payload.values())) > 512*1024*1024 or len(payload) > 2048:
+                    raise ValueError('Graphics payload exceeds staging bounds')
+        if {n:digest(data) for n,data in payload.items()} != expected:
+            raise ValueError('Graphics files differ from build manifest')
+        output = work/'current/graphics'
+        if output.exists():
+            raise ValueError('Current graphics payload already exists; reconcile it before replacing')
+        for name,data in payload.items():
+            target = output/'vendor'/name.lstrip('/')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        for name,data in files.items():
+            if name != 'graphics-vendor.tar.gz':
+                (output/name).write_bytes(data)
+        provenance.update(source_verified=True, archive_digest_verified=True, files=expected,
+                          target_closure=closure, payload_bytes=sum(map(len,payload.values())))
+        (output/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n')
+        print('Installed verified source graphics payload:', len(payload), 'files')
+        return
     if a.kind == 'init':
         plain = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         archive = plain.open(url, timeout=120).read()
@@ -103,8 +177,26 @@ def main():
                'keymaster-lookup.sha256': 'bootstrap-probes/rmx2072-keymaster-lookup.c',
                'keymaster-transport.sha256': 'bootstrap-probes/rmx2072-keymaster-transport.h',
                'listener.sha256': 'bootstrap-probes/rmx2072-listener.inc'}
+    if a.display:
+        patches['display-clock-patch.sha256'] = 'bootstrap-patches/rmx2072-display-clock.patch'
+        # Require every packet patch present at the selected source commit.
+        # Earlier artifacts remain verifiable against their own original source.
+        for name in ('upstream-dsi-dsc-all-slices-flag',
+                     'upstream-msm-dsi-dsc-slices-per-packet',
+                     'rmx2072-dsc-packet-trace', 'rmx2072-dsc-route-test',
+                     'rmx2072-dpu-solid-fill-test', 'rmx2072-stock-linkclock-test',
+                     'rmx2072-stock-dsc-test', 'rmx2072-stock-phy-timing-test',
+                     'rmx2072-first-frame-trace'):
+            path = 'bootstrap-patches/' + name + '.patch'
+            exists = subprocess.run(['git', '-C', str(repo), 'cat-file', '-e',
+                a.commit + ':device/realme/bladerunner_48m/' + path],
+                capture_output=True).returncode == 0
+            if exists:
+                patches[name + '.sha256'] = path
     wanted = set(patches) | {'Image.gz', 'sm8250_bootstrap_dot_config', 'kernel.release',
                              'SHA256SUMS', 'build-metadata.txt', 'resolved-manifest.xml'}
+    if a.display:
+        wanted.add('display-source.sha256')
     with RemoteZip(url, session=session, timeout=120, support_suffix_range=False) as z:
         files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
     if files.keys() != wanted:
@@ -114,6 +206,16 @@ def main():
             a.commit + ':device/realme/bladerunner_48m/' + path])
         if digest(data) != files[name].decode().split()[0]:
             raise ValueError('Kernel source patch mismatch: ' + name)
+    if a.display:
+        rows = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
+                for line in files['display-source.sha256'].decode().splitlines()}
+        if set(rows) != {'panel-samsung-rm19795.c', 'rm19795-commands.h'}:
+            raise ValueError('Incomplete panel source manifest')
+        for name, expected in rows.items():
+            data = subprocess.check_output(['git', '-C', repo, 'show',
+                a.commit + ':device/realme/bladerunner_48m/display/' + name])
+            if digest(data) != expected:
+                raise ValueError('Panel source mismatch: ' + name)
     sums = {Path(line.split(maxsplit=1)[1]).name: line.split()[0] for line in files['SHA256SUMS'].decode().splitlines()}
     for name in ('Image.gz', 'sm8250_bootstrap_dot_config', 'kernel.release'):
         if digest(files[name]) != sums[name]:
@@ -130,6 +232,11 @@ def main():
     for key in ('POWER_RESET_QCOM_PON', 'INPUT_PM8941_PWRKEY', 'POWER_RESET_MSM', 'QCOM_TZMEM_MODE_SHMBRIDGE'):
         if 'CONFIG_' + key + '=y' not in config:
             raise ValueError('Missing kernel configuration: ' + key)
+    if a.display:
+        for key in ('DRM_MSM', 'DRM_MSM_DPU', 'DRM_MSM_DSI', 'DRM_MSM_DSI_7NM_PHY',
+                    'DRM_PANEL_RMX2072_RM19795', 'REGULATOR_QCOM_REFGEN'):
+            if 'CONFIG_' + key + '=y' not in config:
+                raise ValueError('Missing display configuration: ' + key)
     output = work / 'current/kernel'
     provenance.update(installing=True)
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
@@ -141,7 +248,7 @@ def main():
     old = output / 'pon-power-patch.sha256'
     if old.is_file():
         old.unlink()
-    provenance.update(installing=False, source_pon=True, source_digests_verified=True,
+    provenance.update(installing=False, source_pon=True, display=a.display, source_digests_verified=True,
                       dist_digests_verified=True, image_sha256=digest(raw),
                       selected_member_sha256={n: digest(d) for n, d in files.items()})
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')

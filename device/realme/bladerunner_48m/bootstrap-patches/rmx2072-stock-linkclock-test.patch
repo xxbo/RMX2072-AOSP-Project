@@ -1,0 +1,88 @@
+Subject: [RMX2072 M3] opt-in stock DSI transfer clock isolation
+
+Normal F.20 startup trace on 2026-11-18 completes bit/byte/pixel clock
+settings of 660000000/82500000/110000000 Hz while the display is in its
+initial 60 Hz mode. Trial 64 instead reports 421631982/52703997/70271997.
+Keep PPS, packet layout, topology and DRM frame timing unchanged. The
+read-only boot parameter defaults off and is limited to the reviewed
+SM8250 single-link RM19795 geometry. This is an experiment, not a fix claim.
+The byte-rate query and host/PHY clock request use the same fixed budget.
+Runtime CCF and PHY evidence must verify that the requested rates take effect.
+
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -9,6 +9,7 @@
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/moduleparam.h>
+ #include <linux/of.h>
+ #include <linux/of_graph.h>
+ #include <linux/of_irq.h>
+@@ -33,6 +34,13 @@
+ #include "phy/dsi_phy.h"
+ 
+ #define DSI_RESET_TOGGLE_DELAY_MS 20
++
++/* Diagnostic opt-in, derived from the normal F.20 60 Hz startup trace.
++ * Keep the DRM mode and PPS unchanged; only select its measured link budget.
++ */
++static bool rmx2072_stock_linkclk;
++module_param_named(rmx2072_stock_linkclk, rmx2072_stock_linkclk, bool, 0400);
++MODULE_PARM_DESC(rmx2072_stock_linkclk, "RM19795 stock 660 MHz DSI link isolation test");
+ 
+ static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc_config *dsc);
+ 
+@@ -656,6 +664,23 @@
+ 	return pclk_rate;
+ }
+ 
++static bool dsi_rmx2072_stock_linkclk(struct msm_dsi_host *msm_host,
++				    const struct drm_display_mode *mode,
++				    bool is_bonded_dsi)
++{
++	const struct drm_dsc_config *dsc = msm_host->dsc;
++
++	return rmx2072_stock_linkclk && !is_bonded_dsi && mode && dsc &&
++		of_device_is_compatible(msm_host->pdev->dev.of_node, "qcom,sm8250-dsi-ctrl") &&
++		!msm_host->cphy_mode && msm_host->lanes == 4 &&
++		msm_host->format == MIPI_DSI_FMT_RGB888 &&
++		!(msm_host->mode_flags & MIPI_DSI_MODE_VIDEO) &&
++		mode->hdisplay == 1080 && mode->vdisplay == 2400 &&
++		drm_mode_vrefresh(mode) == 60 && dsc->slice_count == 2 &&
++		dsc->slice_width == 540 && dsc->slice_height == 48 &&
++		dsc->bits_per_component == 8 && dsc->bits_per_pixel == (8 << 4);
++}
++
+ unsigned long dsi_byte_clk_get_rate(struct mipi_dsi_host *host, bool is_bonded_dsi,
+ 				    const struct drm_display_mode *mode)
+ {
+@@ -664,6 +689,9 @@
+ 	u32 bpp = mipi_dsi_pixel_format_to_bpp(msm_host->format);
+ 	unsigned long pclk_rate = dsi_get_pclk_rate(mode, msm_host->dsc, is_bonded_dsi);
+ 	unsigned long pclk_bpp;
++
++	if (dsi_rmx2072_stock_linkclk(msm_host, mode, is_bonded_dsi))
++		return 82500000; /* 660 Mbit/s per lane / 8 */
+ 
+ 	if (lanes == 0) {
+ 		pr_err("%s: forcing mdss_dsi lanes to 1\n", __func__);
+@@ -681,9 +709,17 @@
+ 
+ static void dsi_calc_pclk(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
+ {
+-	msm_host->pixel_clk_rate = dsi_get_pclk_rate(msm_host->mode, msm_host->dsc, is_bonded_dsi);
++	if (dsi_rmx2072_stock_linkclk(msm_host, msm_host->mode, is_bonded_dsi))
++		msm_host->pixel_clk_rate = 110000000; /* 660 MHz * 4 lanes / 24 bits */
++	else
++		msm_host->pixel_clk_rate = dsi_get_pclk_rate(msm_host->mode, msm_host->dsc, is_bonded_dsi);
+ 	msm_host->byte_clk_rate = dsi_byte_clk_get_rate(&msm_host->base, is_bonded_dsi,
+ 							msm_host->mode);
++
++	if (dsi_rmx2072_stock_linkclk(msm_host, msm_host->mode, is_bonded_dsi))
++		dev_info(&msm_host->pdev->dev,
++			 "RMXLINK stock-clock requested bit=660000000 byte=%lu pixel=%lu\n",
++			 msm_host->byte_clk_rate, msm_host->pixel_clk_rate);
+ 
+ 	DBG("pclk=%lu, bclk=%lu", msm_host->pixel_clk_rate,
+ 				msm_host->byte_clk_rate);

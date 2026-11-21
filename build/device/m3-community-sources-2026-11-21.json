@@ -1,0 +1,86 @@
+{
+  "date": "2026-11-21",
+  "scope": "Pinned developer records and source files, searched online and compared offline. Third-party handset results are author reports, not independently reproduced. No new RMX2072 device experiment.",
+  "sources": [
+    {
+      "repo": "Sr-0w/hotdog-linux-bringup",
+      "commit": "47087509c4289c2580c54f5433e55366b2e00445",
+      "path": "docs/evidence/2026-08-17-dsi-dsc-transport-errors.md",
+      "url": "https://github.com/Sr-0w/hotdog-linux-bringup/blob/47087509c4289c2580c54f5433e55366b2e00445/docs/evidence/2026-08-17-dsi-dsc-transport-errors.md",
+      "normalized_sha256": "f874335cd4ec9ab10957cf185f8249fceb141cda0d2db1b46028919f8497d0a8",
+      "local_bytes": 4961
+    },
+    {
+      "repo": "Sr-0w/hotdog-linux-bringup",
+      "commit": "47087509c4289c2580c54f5433e55366b2e00445",
+      "path": "docs/evidence/2026-08-20-display-regression-01.md",
+      "url": "https://github.com/Sr-0w/hotdog-linux-bringup/blob/47087509c4289c2580c54f5433e55366b2e00445/docs/evidence/2026-08-20-display-regression-01.md",
+      "normalized_sha256": "6fb6598512a273ebbaf4d6790cab033a70c96cce8cada8b246aa77846b3f6c49",
+      "local_bytes": 3355
+    },
+    {
+      "repo": "Sr-0w/hotdog-linux-bringup",
+      "commit": "47087509c4289c2580c54f5433e55366b2e00445",
+      "path": "docs/evidence/2026-08-03-native-display.md",
+      "url": "https://github.com/Sr-0w/hotdog-linux-bringup/blob/47087509c4289c2580c54f5433e55366b2e00445/docs/evidence/2026-08-03-native-display.md",
+      "normalized_sha256": "f43aeb6d6e8c19e377379e8b309da7945225ece7fd24c1b72919c4fad14aa5aa",
+      "local_bytes": 4639
+    },
+    {
+      "repo": "colorgarden/umi-mainline",
+      "commit": "e38cb76b41c9d33bf5145732381dbf55f5f7cf1b",
+      "path": "docs/DISPLAY.md",
+      "url": "https://github.com/colorgarden/umi-mainline/blob/e38cb76b41c9d33bf5145732381dbf55f5f7cf1b/docs/DISPLAY.md",
+      "normalized_sha256": "7fe9d17fc5baab6e6276f41eddd3693685cf0e931ee9efda4efc4366639469ef",
+      "local_bytes": 12201
+    },
+    {
+      "repo": "colorgarden/umi-mainline",
+      "commit": "e38cb76b41c9d33bf5145732381dbf55f5f7cf1b",
+      "path": "patches/panel-xiaomi-umi.c",
+      "url": "https://github.com/colorgarden/umi-mainline/blob/e38cb76b41c9d33bf5145732381dbf55f5f7cf1b/patches/panel-xiaomi-umi.c",
+      "normalized_sha256": "8589418e099ee114902b25eeeb52be2e7ca550ea614dd9e89b5c8d3ad29632a3",
+      "local_bytes": 32746
+    },
+    {
+      "repo": "ccc007ccc/linux-sm8250-xiaomi-lmi",
+      "commit": "3a8409fb1020b5952310072713ce97edea5e65d7",
+      "path": "lmi/ADAPTATION_NOTES.md",
+      "url": "https://github.com/ccc007ccc/linux-sm8250-xiaomi-lmi/blob/3a8409fb1020b5952310072713ce97edea5e65d7/lmi/ADAPTATION_NOTES.md",
+      "normalized_sha256": "1a8fb867709296334c136cfc1e4d962c1acde216658589dbf01c268baae95281",
+      "local_bytes": 14276
+    },
+    {
+      "repo": "ccc007ccc/linux-sm8250-xiaomi-lmi",
+      "commit": "3a8409fb1020b5952310072713ce97edea5e65d7",
+      "path": "drivers/gpu/drm/panel/panel-samsung-ams667uu01.c",
+      "url": "https://github.com/ccc007ccc/linux-sm8250-xiaomi-lmi/blob/3a8409fb1020b5952310072713ce97edea5e65d7/drivers/gpu/drm/panel/panel-samsung-ams667uu01.c",
+      "normalized_sha256": "e4b6235e6a835f9f65fcff29832e98f953b5d37f04abb715452db3c8a453250c",
+      "local_bytes": 9345
+    }
+  ],
+  "other_primary_sources": [
+    {
+      "url": "https://android.googlesource.com/kernel/msm/+/184170bea097dec34b9871fc724dcac9b5989427/arch/arm64/boot/dts/google/sm8150-floral-display.dtsi",
+      "use": "Explicit null insertion and corruption comment for a different Samsung command-mode DSC panel"
+    },
+    {
+      "url": "https://github.com/SM8250-Common/android_kernel_realme_sm8250/blob/b76eb6c93add8152b1aa873da0d8d7f495cccab0/techpack/display/msm/dsi/dsi_ctrl_reg.h",
+      "use": "Resource offsets EOT_CTRL=0xcc NULL_INSERTION=0x2b4"
+    },
+    {
+      "url": "https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/gpu/drm/msm/dsi/dsi_cfg.h",
+      "use": "ACK DSI_6G_REG_SHIFT=4"
+    }
+  ],
+  "unread_sources": [
+    {
+      "url": "https://gitlab.freedesktop.org/drm/msm/-/issues/24",
+      "reason": "Anubis access denied"
+    },
+    {
+      "url": "https://gitlab.freedesktop.org/drm/msm/-/issues/42",
+      "reason": "Page unavailable through search tool"
+    }
+  ]
+}

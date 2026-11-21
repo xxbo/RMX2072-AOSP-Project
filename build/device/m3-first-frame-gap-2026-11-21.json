@@ -1,0 +1,153 @@
+{
+  "boot_id": "790e9ef8-5e41-4066-8117-12222897de92",
+  "snapshot_sha256": "f5fd9192a8494cea5845a50dd0a1f09dbce741a1c8d632e1b2f0abba655794c8",
+  "scope": "Offline review of trial 67 snapshot and source; no new device experiment",
+  "source_pins": {
+    "dsi_host.c": "1c0841a1c101334ce2b097408668fb448f9dd821",
+    "dpu_core_perf.c": "13cc658065c56a00a7dcdd0af4dec4aadfd0e6ed",
+    "dsi_ctrl_hw_cmn.c": "b57583c481a11cf56f4cc66d48fc2e5b25ed3c57",
+    "dsi_panel.c": "a45a2d8f5bc8ea7371225225b168a06b8f173c56"
+  },
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "ack_mirror": "cfa72fb3d7f89372c7e449a4de2477551ea4c29c",
+  "downstream_commit": "b76eb6c93add8152b1aa873da0d8d7f495cccab0",
+  "downstream_scope": "SM8250 community source, not an attestation of the F.20 executable",
+  "raw_dsi_registers": {
+    "STATUS0": "0x0",
+    "FIFO_STATUS": "0x11111010",
+    "ACK_ERR_STATUS": "0x0",
+    "TIMEOUT_STATUS": "0x0",
+    "CLK_STATUS": "0x2343",
+    "DLN0_PHY_ERR": "0x88888",
+    "ERR_INT_MASK0": "0x13ff3be0",
+    "INTR_CTRL": "0xaa20aa00"
+  },
+  "irq_mask_semantics": "1 masks the event, inferred from the pinned SM8250 downstream implementation",
+  "error_irq_mask": {
+    "DSI_RDBK_SINGLE_ECC_ERR": {
+      "mask_bit": 0,
+      "masked": false
+    },
+    "DSI_RDBK_MULTI_ECC_ERR": {
+      "mask_bit": 1,
+      "masked": false
+    },
+    "DSI_RDBK_CRC_ERR": {
+      "mask_bit": 2,
+      "masked": false
+    },
+    "DSI_RDBK_INCOMPLETE_PKT": {
+      "mask_bit": 3,
+      "masked": false
+    },
+    "DSI_PERIPH_ERROR_PKT": {
+      "mask_bit": 4,
+      "masked": false
+    },
+    "DSI_LP_RX_TIMEOUT": {
+      "mask_bit": 5,
+      "masked": true
+    },
+    "DSI_HS_TX_TIMEOUT": {
+      "mask_bit": 6,
+      "masked": true
+    },
+    "DSI_BTA_TIMEOUT": {
+      "mask_bit": 7,
+      "masked": true
+    },
+    "DSI_PLL_UNLOCK": {
+      "mask_bit": 28,
+      "masked": true
+    },
+    "DSI_DLN0_LP0_CONTENTION": {
+      "mask_bit": 24,
+      "masked": true
+    },
+    "DSI_DLN0_LP1_CONTENTION": {
+      "mask_bit": 25,
+      "masked": true
+    },
+    "DSI_DLN0_ESC_ENTRY_ERR": {
+      "mask_bit": 21,
+      "masked": true
+    },
+    "DSI_DLN0_ESC_SYNC_ERR": {
+      "mask_bit": 22,
+      "masked": true
+    },
+    "DSI_DLN0_LP_CONTROL_ERR": {
+      "mask_bit": 23,
+      "masked": true
+    },
+    "DSI_CMD_DMA_FIFO_UNDERFLOW": {
+      "mask_bit": 9,
+      "masked": true
+    },
+    "DSI_CMD_MDP_FIFO_UNDERFLOW": {
+      "mask_bit": 11,
+      "masked": true
+    },
+    "DSI_DLN0_HS_FIFO_OVERFLOW": {
+      "mask_bit": 16,
+      "masked": true
+    },
+    "DSI_DLN1_HS_FIFO_OVERFLOW": {
+      "mask_bit": 17,
+      "masked": true
+    },
+    "DSI_DLN2_HS_FIFO_OVERFLOW": {
+      "mask_bit": 18,
+      "masked": true
+    },
+    "DSI_DLN3_HS_FIFO_OVERFLOW": {
+      "mask_bit": 19,
+      "masked": true
+    },
+    "DSI_DLN0_HS_FIFO_UNDERFLOW": {
+      "mask_bit": 26,
+      "masked": false
+    },
+    "DSI_DLN1_HS_FIFO_UNDERFLOW": {
+      "mask_bit": 27,
+      "masked": false
+    },
+    "DSI_DLN2_HS_FIFO_UNDERFLOW": {
+      "mask_bit": 29,
+      "masked": false
+    },
+    "DSI_DLN3_HS_FIFO_UNDERFLOW": {
+      "mask_bit": 30,
+      "masked": false
+    },
+    "DSI_INTERLEAVE_OP_CONTENTION": {
+      "mask_bit": 8,
+      "masked": true
+    }
+  },
+  "clock_rates_hz": {
+    "before-modeset:disp_cc_mdss_mdp_clk": 460000000,
+    "before-modeset:disp_cc_mdss_byte0_clk": 82500000,
+    "before-modeset:disp_cc_mdss_pclk0_clk": 110000000,
+    "after-modeset:disp_cc_mdss_mdp_clk": 200000000,
+    "after-modeset:disp_cc_mdss_byte0_clk": 82500000,
+    "after-modeset:disp_cc_mdss_pclk0_clk": 110000000,
+    "after-flips:disp_cc_mdss_mdp_clk": 200000000,
+    "after-flips:disp_cc_mdss_byte0_clk": 82500000,
+    "after-flips:disp_cc_mdss_pclk0_clk": 110000000
+  },
+  "source_observations": {
+    "error_handler_clears_fifo": true,
+    "error_handler_clears_timeout": true,
+    "byte_clock_rounding_present": false,
+    "fixed_perf_overrides_bandwidth": true,
+    "downstream_computes_transfer_budget": true
+  },
+  "limitations": [
+    "These are after-flips register samples, not first-frame or latched error history.",
+    "Masked interrupts do not prove an error occurred or that status cannot latch.",
+    "CCF rate equality does not prove no PLL reprogramming occurred during earlier DCS transfers.",
+    "Core clock reduction and missing upstream rounding are hypotheses, not a root-cause finding.",
+    "A clock-only experiment must not zero the interconnect votes via perf_mode=FIXED."
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "date": "2026-11-16",
+  "trial": 61,
+  "boot_id": "fd45d4f7-18ad-48b0-b5f8-9a6c53c6cbd2",
+  "scope": "Native after-flips snapshot only; Android runtime DPU and physical pixel correctness are not proven.",
+  "native_files": {
+    "native-kms.txt": "4ed9b678b8d1a28d28c525bb27836e2e669a6fdce8ebc75210e0119fd8185043",
+    "native-fb.txt": "85a29ec16692d43a25c401a7889ffb1742519d8ee389be38eff5d12975ec183b",
+    "native-state.txt": "93c3b376828086507bc1280a8e569012ca7be3cd65026b7290d90b9b8a6daa52"
+  },
+  "fetch": {
+    "plane": 41,
+    "crtc": 89,
+    "fb": 91,
+    "format": "XRGB8888",
+    "modifier": "LINEAR",
+    "width": 1080,
+    "height": 2400,
+    "pitch": 4352,
+    "offset": 0,
+    "iova": "0x2000",
+    "sspp": "sspp_0",
+    "src0_addr": "0x2000",
+    "stride": 4352,
+    "address_and_stride_match": true,
+    "actual_fetched_pixels_verified": false
+  },
+  "route": {
+    "dsc_input_mux": null,
+    "ctl": {
+      "ctl_0": {
+        "dsc_active": 3,
+        "intf_active": 2,
+        "merge_3d_active": 0
+      },
+      "ctl_1": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_2": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_3": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_4": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      },
+      "ctl_5": {
+        "dsc_active": 0,
+        "intf_active": 0,
+        "merge_3d_active": 0
+      }
+    },
+    "intf_mux": {
+      "intf_0": 983055,
+      "intf_1": 983040,
+      "intf_2": 983055,
+      "intf_3": 983055
+    },
+    "pingpong": {
+      "pingpong_0": {
+        "dsc_mode": 1,
+        "input_swap": 181896,
+        "output_swap": 444040
+      },
+      "pingpong_1": {
+        "dsc_mode": 1,
+        "input_swap": 181896,
+        "output_swap": 444040
+      },
+      "pingpong_2": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_3": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_4": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      },
+      "pingpong_5": {
+        "dsc_mode": 0,
+        "input_swap": 181896,
+        "output_swap": 181896
+      }
+    }
+  },
+  "active_reference": {
+    "ctl": "ctl_0",
+    "dsc_mask": 3,
+    "intf_mask": 2,
+    "generic_merge_3d_mask": 0,
+    "intf": "intf_1",
+    "intf_mux_offset": "0x25c",
+    "intf_mux_raw": "0xf0000",
+    "intf_input_pp": 0
+  },
+  "dsi": {
+    "0x3c": "0x8",
+    "0x40": "0x13c2c",
+    "0x54": "0x4390039",
+    "0x58": "0x9600168",
+    "0x1b4": "0x10006",
+    "0x2a4": "0x39003901",
+    "0x2a8": "0x21c"
+  },
+  "physical_native": "FAIL: operator photo shows repeated partial rows and extensive noise",
+  "physical_android": "FAIL: still corrupt; operator says content changed after handoff",
+  "missing": [
+    "DSC input mux was outside old snapshot ranges",
+    "Generic merge-3D bank readback",
+    "Panel internal PPS readback",
+    "Hardware-fetched pixel data"
+  ],
+  "next_experiment": "Trial 62: official-listed 1 LM / 1 DSC / 1 DSI topology, same two slices and PPS; add input mux witness"
+}

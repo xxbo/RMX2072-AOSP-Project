@@ -1,0 +1,11 @@
+{
+  "check": "stale trial65 kernel rejected",
+  "exit_code": 1,
+  "output_digests_unchanged": true,
+  "expected_error": "ValueError: Stock DSC test requires the verified matching kernel patch",
+  "output_digests": {
+    "boot-diag.img": "336fe129a7d72be94df8fa3d115d7dc01aa2dc76b0d8f2c216f48295177160bc",
+    "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+    "control.json": "59d4f0ce65d0978c7c7cf4f25092b53612d8303f42799936aef22885529e6911"
+  }
+}

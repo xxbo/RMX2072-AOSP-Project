@@ -1,0 +1,28 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "sys_boot_completed": 1,
+  "boot_id": "357dcda6-83fa-46dc-9f61-3eb2eaedc0af",
+  "super_sha256": null,
+  "boot_sha256": null,
+  "dtbo_sha256": null,
+  "lp_slots": [
+    0,
+    1
+  ],
+  "stock_full_partition_readback": false,
+  "stock_write_acknowledged": true,
+  "expected_image_sha256": {
+    "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+  },
+  "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-68",
+  "utc": "2026-11-21T07:37:19.139565+00:00",
+  "source_sha256": {
+    "restored.json": "b0b75888e18d6b97d66e62cc31051bd8de7e04a1b9f26f4449f8dc0cb8281b13",
+    "timeline.jsonl": "4bf2cf3241ea87e5ecbc75dc72bba38362bfc7754025c582698fe5c41a28a99a",
+    "recovery-ready.json": "63905ad1f6c68cc9150029d5cc45e77349412424d76405053215b3d27220b1a1"
+  },
+  "scope": "Verified local recovery inputs, acknowledged writes, F.20 boot completion and both LP slots. No new stock partition readback or phone-side super digest. Expected digests are not fresh observations."
+}

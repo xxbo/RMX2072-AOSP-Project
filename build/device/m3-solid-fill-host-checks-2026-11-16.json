@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-16",
+  "probe_source_sha256": "766a68ce35e68f1b5cfde4e729ab1017ccf9cf82ded725e29bfbf77a27063e24",
+  "static_arm64_probe_sha256": "e1256dabd0680f15baadba7f5556be94071c92fe3d63743f6a5a7d50baeb1ef2",
+  "compile_flags": [
+    "-static",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "parent_cleanup_tests": {
+    "normal_exit": "PASS",
+    "probe_failure": "PASS",
+    "timeout": "PASS",
+    "failed_reset_blocks_handoff": "PASS"
+  },
+  "old_kernel_source": "5f0494c89ca2ab0b45e56a4f49c2d79b4e494026",
+  "old_kernel_rejected": true,
+  "existing_candidate_outputs_unchanged": {
+    "boot-diag.img": "0a372c35a19cdbc7a6a4dd4fe07071e6f947a9b119ae305a1a13000019403775",
+    "dtbo-diag.img": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+    "control.json": "ef34a8f1b49941214f79e7e1b3c2a4ca4183609516e9a9426572791a618612f2"
+  },
+  "device_result": "NOT_TESTED",
+  "decoder_synthetic_checks": {
+    "valid_bypass": true,
+    "leftover_source_rejected": true,
+    "wrong_framebuffer_rejected": true,
+    "duplicate_framebuffer_rejected": true,
+    "scope": "Synthetic mutations of trial 62 register data; not trial 63 hardware evidence"
+  }
+}

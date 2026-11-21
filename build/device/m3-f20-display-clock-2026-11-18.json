@@ -1,0 +1,262 @@
+{
+  "recorded_at": "2026-11-18T14:15:51.004949+00:00",
+  "objective": "Correct physical output on ACK6.18 + Android17 GSI + project/ported drivers, then AOSP desktop.",
+  "user_early_onset": "目前是只要过了realme的标志之后就开始花屏了！是在很靠前的时候",
+  "prior64": {
+    "boot_id": "2ac67c10-16db-4644-b9d1-350d2b9c4511",
+    "first_host_power_on_seconds": 33.424915,
+    "panel_enable_seconds": 33.594077,
+    "selinux_policy_log_seconds": 91.862,
+    "scope": "Software timestamps; the operator did not timestamp the first corrupt pixel.",
+    "pre_modeset_ccf_rates_hz": {
+      "disp_cc_mdss_mdp_clk_src": 460000000,
+      "disp_cc_mdss_mdp_clk": 460000000,
+      "disp_cc_mdss_ahb_clk": 19200000,
+      "disp_cc_mdss_esc0_clk": 19200000,
+      "disp_cc_mdss_vsync_clk": 19200000,
+      "dsi0vco_clk": 660000000,
+      "dsi0_pll_out_div_clk": 660000000,
+      "dsi0_pll_bit_clk": 660000000,
+      "dsi0_pll_by_2_bit_clk": 330000000,
+      "dsi0_pclk_mux": 330000000,
+      "dsi0_phy_pll_out_byteclk": 82500000,
+      "dsi0_phy_pll_out_dsiclk": 110000000,
+      "disp_cc_mdss_byte0_clk_src": 82500000,
+      "disp_cc_mdss_byte0_clk": 82500000,
+      "disp_cc_mdss_pclk0_clk_src": 110000000,
+      "disp_cc_mdss_pclk0_clk": 110000000
+    },
+    "clock_rates_hz": {
+      "after-modeset": {
+        "disp_cc_mdss_mdp_clk_src": 200000000,
+        "disp_cc_mdss_mdp_clk": 200000000,
+        "disp_cc_mdss_ahb_clk": 19200000,
+        "disp_cc_mdss_esc0_clk": 19200000,
+        "disp_cc_mdss_vsync_clk": 19200000,
+        "dsi0vco_clk": 843263964,
+        "dsi0_pll_out_div_clk": 421631982,
+        "dsi0_pll_bit_clk": 421631982,
+        "dsi0_pll_by_2_bit_clk": 210815991,
+        "dsi0_pclk_mux": 210815991,
+        "dsi0_phy_pll_out_byteclk": 52703997,
+        "dsi0_phy_pll_out_dsiclk": 70271997,
+        "disp_cc_mdss_byte0_clk_src": 52703997,
+        "disp_cc_mdss_byte0_clk": 52703997,
+        "disp_cc_mdss_pclk0_clk_src": 70271997,
+        "disp_cc_mdss_pclk0_clk": 70271997
+      },
+      "after-flips": {
+        "disp_cc_mdss_mdp_clk_src": 200000000,
+        "disp_cc_mdss_mdp_clk": 200000000,
+        "disp_cc_mdss_ahb_clk": 19200000,
+        "disp_cc_mdss_esc0_clk": 19200000,
+        "disp_cc_mdss_vsync_clk": 19200000,
+        "dsi0vco_clk": 843263964,
+        "dsi0_pll_out_div_clk": 421631982,
+        "dsi0_pll_bit_clk": 421631982,
+        "dsi0_pll_by_2_bit_clk": 210815991,
+        "dsi0_pclk_mux": 210815991,
+        "dsi0_phy_pll_out_byteclk": 52703997,
+        "dsi0_phy_pll_out_dsiclk": 70271997,
+        "disp_cc_mdss_byte0_clk_src": 52703997,
+        "disp_cc_mdss_byte0_clk": 52703997,
+        "disp_cc_mdss_pclk0_clk_src": 70271997,
+        "disp_cc_mdss_pclk0_clk": 70271997
+      }
+    },
+    "physical_acceptance": "FAIL_BOTH_PHASES"
+  },
+  "stock_restore": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "b5349ad5-4051-408f-8480-262ae410d4a8",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
+  "stock_operator": [
+    {
+      "boot_id": "b5349ad5-4051-408f-8480-262ae410d4a8",
+      "observation": "画面正常，没有花屏"
+    },
+    {
+      "boot_id": "97f34182-44b8-4562-aeea-d5d15ec9052e",
+      "observation": "正常锁屏或桌面"
+    }
+  ],
+  "stock_capture": {
+    "boot_id": "97f34182-44b8-4562-aeea-d5d15ec9052e",
+    "hook_sha256": "d19b9a59bf31d5dd3171100e3460c5cc9ae500ed10cf53f9652eb406c5fda6ad",
+    "hook_removed": true,
+    "trace_disabled": true,
+    "trace_instance_removed": false,
+    "cleanup_note": "Initial device-side rmdir failed EBUSY after successful capture/disable; host cleanup state recorded independently.",
+    "results": {
+      "start.txt": {
+        "bytes": 48,
+        "sha256": "7239efea69402ea532054c9765a7e37a0e71a89df1f9e7facd5d487a8c43dc5a"
+      },
+      "trace.txt": {
+        "bytes": 9069,
+        "sha256": "6a0ee0072cd1eecee53a989bf2552e2038ddda19e50f3abdfc9ffb195d439762"
+      },
+      "stats.txt": {
+        "bytes": 1623,
+        "sha256": "5a50a6210d7d7c5a925a6f1acccbf997bc47a2b65686f4e63af7d0f7051252a7"
+      },
+      "display-log.txt": {
+        "bytes": 1104,
+        "sha256": "702baa883ba33bdb17a0e0d8a60dfade71f4b590d80cc1b0f41510d1c109de35"
+      },
+      "state.txt": {
+        "bytes": 58,
+        "sha256": "f4c9be52e59a00c251b320743c6839457f153e2acf61b97d53ee4df81efb4829"
+      },
+      "cleanup.txt": {
+        "bytes": 101,
+        "sha256": "14562c1aa6643f4b4f78a3be48ad0156924d4fab13d50ad5adba3faf7e5620c5"
+      },
+      "finish-log.txt": {
+        "bytes": 82,
+        "sha256": "9a7d367465f034c7c596a6f4568e4f9bd95a6317ba81530cf1f471c63c83ccd7"
+      }
+    }
+  },
+  "stock_trace": "# tracer: nop\n#\n# entries-in-buffer/entries-written: 86/86   #P:8\n#\n#                              _-----=> irqs-off\n#                             / _----=> need-resched\n#                            | / _---=> hardirq/softirq\n#                            || / _--=> preempt-depth\n#                            ||| /     delay\n#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION\n#              | |       |   ||||       |         |\n           <...>-537   [004] ....     9.504749: clk_set_rate: disp_cc_mdss_mdp_clk_src 200000000\n           <...>-537   [004] ....     9.504762: clk_set_rate_complete: disp_cc_mdss_mdp_clk_src 200000000\n           <...>-537   [004] ....     9.504765: clk_set_rate: disp_cc_mdss_mdp_lut_clk 200000000\n           <...>-537   [004] ....     9.504767: clk_set_rate_complete: disp_cc_mdss_mdp_lut_clk 200000000\n           <...>-537   [004] ....     9.504768: clk_set_rate: disp_cc_mdss_mdp_clk 200000000\n           <...>-537   [004] ....     9.504770: clk_set_rate_complete: disp_cc_mdss_mdp_clk 200000000\n           <...>-537   [003] ....     9.515747: clk_set_rate: disp_cc_mdss_mdp_clk_src 460000000\n           <...>-537   [003] ....     9.515785: clk_set_parent: disp_cc_mdss_mdp_clk_src disp_cc_pll0\n           <...>-537   [003] ....     9.515799: clk_set_parent_complete: disp_cc_mdss_mdp_clk_src disp_cc_pll0\n           <...>-537   [003] ....     9.515815: clk_set_rate_complete: disp_cc_mdss_mdp_clk_src 460000000\n           <...>-537   [003] ....     9.515822: clk_set_rate: disp_cc_mdss_mdp_lut_clk 460000000\n           <...>-537   [003] ....     9.515825: clk_set_rate_complete: disp_cc_mdss_mdp_lut_clk 460000000\n           <...>-537   [003] ....     9.515828: clk_set_rate: disp_cc_mdss_mdp_clk 460000000\n           <...>-537   [003] ....     9.515831: clk_set_rate_complete: disp_cc_mdss_mdp_clk 460000000\n           <...>-537   [007] ....    13.742978: clk_set_rate: dsi0pll_vco_clk 660000000\n           <...>-537   [007] ....    13.743100: clk_set_rate_complete: dsi0pll_vco_clk 660000000\n           <...>-537   [007] ....    13.743102: clk_set_rate: dsi0pll_pll_out_div 660000000\n           <...>-537   [007] ....    13.743107: clk_set_rate_complete: dsi0pll_pll_out_div 660000000\n           <...>-537   [007] ....    13.743113: clk_set_rate: dsi0pll_post_vco_div3_5 188571428\n           <...>-537   [007] ....    13.743115: clk_set_rate_complete: dsi0pll_post_vco_div3_5 188571428\n           <...>-537   [007] ....    13.743116: clk_set_rate: dsi0pll_cphy_pclk_src_mux 188571428\n           <...>-537   [007] ....    13.743118: clk_set_rate_complete: dsi0pll_cphy_pclk_src_mux 188571428\n           <...>-537   [007] ....    13.743119: clk_set_rate: dsi0pll_cphy_pclk_src 62857143\n           <...>-537   [007] ....    13.743122: clk_set_rate_complete: dsi0pll_cphy_pclk_src 62857143\n           <...>-537   [007] ....    13.743125: clk_set_rate: dsi0pll_post_vco_div 165000000\n           <...>-537   [007] ....    13.743126: clk_set_rate_complete: dsi0pll_post_vco_div 165000000\n           <...>-537   [007] ....    13.743128: clk_set_rate: dsi0pll_bitclk_src 660000000\n           <...>-537   [007] ....    13.743130: clk_set_rate_complete: dsi0pll_bitclk_src 660000000\n           <...>-537   [007] ....    13.743133: clk_set_rate: dsi0pll_cphy_byteclk_src 94285714\n           <...>-537   [007] ....    13.743134: clk_set_rate_complete: dsi0pll_cphy_byteclk_src 94285714\n           <...>-537   [007] ....    13.743136: clk_set_rate: dsi0pll_post_bit_div 330000000\n           <...>-537   [007] ....    13.743137: clk_set_rate_complete: dsi0pll_post_bit_div 330000000\n           <...>-537   [007] ....    13.743139: clk_set_rate: dsi0pll_pclk_src_mux 330000000\n           <...>-537   [007] ....    13.743140: clk_set_rate_complete: dsi0pll_pclk_src_mux 330000000\n           <...>-537   [007] ....    13.743141: clk_set_rate: dsi0pll_pclk_src 110000000\n           <...>-537   [007] ....    13.743144: clk_set_rate_complete: dsi0pll_pclk_src 110000000\n           <...>-537   [007] ....    13.743147: clk_set_rate: dsi0_phy_pll_out_dsiclk 110000000\n           <...>-537   [007] ....    13.743148: clk_set_rate_complete: dsi0_phy_pll_out_dsiclk 110000000\n           <...>-537   [007] ....    13.743150: clk_set_rate: disp_cc_mdss_pclk0_clk_src 110000000\n           <...>-537   [007] ....    13.743166: clk_set_rate_complete: disp_cc_mdss_pclk0_clk_src 110000000\n           <...>-537   [007] ....    13.743170: clk_set_rate: disp_cc_mdss_pclk0_clk 110000000\n           <...>-537   [007] ....    13.743172: clk_set_rate_complete: disp_cc_mdss_pclk0_clk 110000000\n           <...>-537   [007] ....    13.743173: clk_set_rate: dsi0pll_byteclk_src 82500000\n           <...>-537   [007] ....    13.743174: clk_set_rate_complete: dsi0pll_byteclk_src 82500000\n           <...>-537   [007] ....    13.743176: clk_set_rate: dsi0_phy_pll_out_byteclk 82500000\n           <...>-537   [007] ....    13.743177: clk_set_rate_complete: dsi0_phy_pll_out_byteclk 82500000\n           <...>-537   [007] ....    13.743179: clk_set_rate: disp_cc_mdss_byte0_clk_src 82500000\n           <...>-537   [007] ....    13.743183: clk_set_rate_complete: disp_cc_mdss_byte0_clk_src 82500000\n           <...>-537   [007] ....    13.743185: clk_set_rate: disp_cc_mdss_byte0_div_clk_src 41250000\n           <...>-537   [007] ....    13.743188: clk_set_rate_complete: disp_cc_mdss_byte0_div_clk_src 41250000\n           <...>-537   [007] ....    13.743191: clk_set_rate: disp_cc_mdss_byte0_intf_clk 41250000\n           <...>-537   [007] ....    13.743193: clk_set_rate_complete: disp_cc_mdss_byte0_intf_clk 41250000\n           <...>-537   [007] ....    13.743194: clk_set_rate: disp_cc_mdss_byte0_clk 82500000\n           <...>-537   [007] ....    13.743196: clk_set_rate_complete: disp_cc_mdss_byte0_clk 82500000\n           <...>-537   [004] ....    17.559977: clk_set_rate: disp_cc_mdss_mdp_clk_src 200000000\n           <...>-537   [004] ....    17.559997: clk_set_parent: disp_cc_mdss_mdp_clk_src disp_cc_pll1\n           <...>-537   [004] ....    17.560006: clk_set_parent_complete: disp_cc_mdss_mdp_clk_src disp_cc_pll1\n           <...>-537   [004] ....    17.560059: clk_set_rate_complete: disp_cc_mdss_mdp_clk_src 200000000\n           <...>-537   [004] ....    17.560063: clk_set_rate: disp_cc_mdss_mdp_lut_clk 200000000\n           <...>-537   [004] ....    17.560064: clk_set_rate_complete: disp_cc_mdss_mdp_lut_clk 200000000\n           <...>-537   [004] ....    17.560066: clk_set_rate: disp_cc_mdss_mdp_clk 200000000\n           <...>-537   [004] ....    17.560068: clk_set_rate_complete: disp_cc_mdss_mdp_clk 200000000\n           <...>-537   [001] ....    20.672260: clk_set_rate: disp_cc_mdss_mdp_clk_src 345000000\n           <...>-537   [001] ....    20.672320: clk_set_parent: disp_cc_mdss_mdp_clk_src disp_cc_pll0\n           <...>-537   [001] ....    20.672332: clk_set_parent_complete: disp_cc_mdss_mdp_clk_src disp_cc_pll0\n           <...>-537   [001] ....    20.672347: clk_set_rate_complete: disp_cc_mdss_mdp_clk_src 345000000\n           <...>-537   [001] ....    20.672353: clk_set_rate: disp_cc_mdss_mdp_lut_clk 345000000\n           <...>-537   [001] ....    20.672356: clk_set_rate_complete: disp_cc_mdss_mdp_lut_clk 345000000\n           <...>-537   [001] ....    20.672358: clk_set_rate: disp_cc_mdss_mdp_clk 345000000\n           <...>-537   [001] ....    20.672361: clk_set_rate_complete: disp_cc_mdss_mdp_clk 345000000\n           <...>-537   [000] ....    27.537907: clk_set_rate: disp_cc_mdss_mdp_clk_src 200000000\n           <...>-537   [000] ....    27.537966: clk_set_parent: disp_cc_mdss_mdp_clk_src disp_cc_pll1\n           <...>-537   [000] ....    27.537979: clk_set_parent_complete: disp_cc_mdss_mdp_clk_src disp_cc_pll1\n           <...>-537   [000] ....    27.537994: clk_set_rate_complete: disp_cc_mdss_mdp_clk_src 200000000\n           <...>-537   [000] ....    27.538000: clk_set_rate: disp_cc_mdss_mdp_lut_clk 200000000\n           <...>-537   [000] ....    27.538003: clk_set_rate_complete: disp_cc_mdss_mdp_lut_clk 200000000\n           <...>-537   [000] ....    27.538005: clk_set_rate: disp_cc_mdss_mdp_clk 200000000\n           <...>-537   [000] ....    27.538008: clk_set_rate_complete: disp_cc_mdss_mdp_clk 200000000\n           <...>-537   [005] ....    29.311907: clk_set_rate: disp_cc_mdss_mdp_clk_src 345000000\n           <...>-537   [005] ....    29.311952: clk_set_parent: disp_cc_mdss_mdp_clk_src disp_cc_pll0\n           <...>-537   [005] ....    29.311962: clk_set_parent_complete: disp_cc_mdss_mdp_clk_src disp_cc_pll0\n           <...>-537   [005] ....    29.311973: clk_set_rate_complete: disp_cc_mdss_mdp_clk_src 345000000\n           <...>-537   [005] ....    29.311977: clk_set_rate: disp_cc_mdss_mdp_lut_clk 345000000\n           <...>-537   [005] ....    29.311979: clk_set_rate_complete: disp_cc_mdss_mdp_lut_clk 345000000\n           <...>-537   [005] ....    29.311981: clk_set_rate: disp_cc_mdss_mdp_clk 345000000\n           <...>-537   [005] ....    29.311983: clk_set_rate_complete: disp_cc_mdss_mdp_clk 345000000\n",
+  "stock_trace_stats": "/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu0/stats\nentries: 8\noverrun: 0\ncommit overrun: 0\nbytes: 456\noldest event ts:    27.537907\nnow ts:    50.716870\ndropped events: 0\nread events: 0\n/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu1/stats\nentries: 8\noverrun: 0\ncommit overrun: 0\nbytes: 456\noldest event ts:    20.672260\nnow ts:    50.729207\ndropped events: 0\nread events: 0\n/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu2/stats\nentries: 0\noverrun: 0\ncommit overrun: 0\nbytes: 0\noldest event ts:     0.000000\nnow ts:    50.741096\ndropped events: 0\nread events: 0\n/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu3/stats\nentries: 8\noverrun: 0\ncommit overrun: 0\nbytes: 456\noldest event ts:     9.515747\nnow ts:    50.752977\ndropped events: 0\nread events: 0\n/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu4/stats\nentries: 14\noverrun: 0\ncommit overrun: 0\nbytes: 792\noldest event ts:     9.504749\nnow ts:    50.765165\ndropped events: 0\nread events: 0\n/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu5/stats\nentries: 8\noverrun: 0\ncommit overrun: 0\nbytes: 456\noldest event ts:    29.311907\nnow ts:    50.776722\ndropped events: 0\nread events: 0\n/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu6/stats\nentries: 0\noverrun: 0\ncommit overrun: 0\nbytes: 0\noldest event ts:     0.000000\nnow ts:    50.788727\ndropped events: 0\nread events: 0\n/sys/kernel/tracing/instances/rmx_m3_f20_startup/per_cpu/cpu7/stats\nentries: 40\noverrun: 0\ncommit overrun: 0\nbytes: 2104\noldest event ts:    13.742978\nnow ts:    50.800153\ndropped events: 0\nread events: 0\n",
+  "stock_display_mode_log": "[    9.495709] (4)[537:crtc_commit:139][    9.495697]@4 [drm:dsi_display_set_mode] [msm-dsi-info]: mdp_transfer_time_us=7956 us\n[    9.495712] (4)[537:crtc_commit:139][    9.495710]@4 [drm:dsi_display_set_mode] [msm-dsi-info]: hactive= 1080,vactive= 2400,fps=60\n[   18.332926] (4)[537:crtc_commit:139][   18.332915]@4 [drm:dsi_display_set_mode] [msm-dsi-info]: mdp_transfer_time_us=7956 us\n[   18.332928] (4)[537:crtc_commit:139][   18.332926]@4 [drm:dsi_display_set_mode] [msm-dsi-info]: hactive= 1080,vactive= 2400,fps=90\n[   33.433491] (7)[537:crtc_commit:139][20261118_22:03:21.854745]@7 [drm:dsi_display_set_mode] [msm-dsi-info]: mdp_transfer_time_us=7956 us\n[   33.433497] (7)[537:crtc_commit:139][20261118_22:03:21.854754]@7 [drm:dsi_display_set_mode] [msm-dsi-info]: hactive= 1080,vactive= 2400,fps=60\n[  270.968859] (1)[537:crtc_commit:139][20261118_22:07:19.390108]@1 [drm:dsi_display_set_mode] [msm-dsi-info]: mdp_transfer_time_us=7956 us\n[  270.968869] (1)[537:crtc_commit:139][20261118_22:07:19.390124]@1 [drm:dsi_display_set_mode] [msm-dsi-info]: hactive= 1080,vactive= 2400,fps=90\n",
+  "stock_completed_clock_requests": {
+    "dsi0pll_vco_clk": [
+      {
+        "uptime_seconds": 13.7431,
+        "rate_hz": 660000000
+      }
+    ],
+    "dsi0pll_pll_out_div": [
+      {
+        "uptime_seconds": 13.743107,
+        "rate_hz": 660000000
+      }
+    ],
+    "dsi0pll_post_vco_div3_5": [
+      {
+        "uptime_seconds": 13.743115,
+        "rate_hz": 188571428
+      }
+    ],
+    "dsi0pll_cphy_pclk_src_mux": [
+      {
+        "uptime_seconds": 13.743118,
+        "rate_hz": 188571428
+      }
+    ],
+    "dsi0pll_cphy_pclk_src": [
+      {
+        "uptime_seconds": 13.743122,
+        "rate_hz": 62857143
+      }
+    ],
+    "dsi0pll_post_vco_div": [
+      {
+        "uptime_seconds": 13.743126,
+        "rate_hz": 165000000
+      }
+    ],
+    "dsi0pll_bitclk_src": [
+      {
+        "uptime_seconds": 13.74313,
+        "rate_hz": 660000000
+      }
+    ],
+    "dsi0pll_cphy_byteclk_src": [
+      {
+        "uptime_seconds": 13.743134,
+        "rate_hz": 94285714
+      }
+    ],
+    "dsi0pll_post_bit_div": [
+      {
+        "uptime_seconds": 13.743137,
+        "rate_hz": 330000000
+      }
+    ],
+    "dsi0pll_pclk_src_mux": [
+      {
+        "uptime_seconds": 13.74314,
+        "rate_hz": 330000000
+      }
+    ],
+    "dsi0pll_pclk_src": [
+      {
+        "uptime_seconds": 13.743144,
+        "rate_hz": 110000000
+      }
+    ],
+    "dsi0_phy_pll_out_dsiclk": [
+      {
+        "uptime_seconds": 13.743148,
+        "rate_hz": 110000000
+      }
+    ],
+    "disp_cc_mdss_pclk0_clk_src": [
+      {
+        "uptime_seconds": 13.743166,
+        "rate_hz": 110000000
+      }
+    ],
+    "disp_cc_mdss_pclk0_clk": [
+      {
+        "uptime_seconds": 13.743172,
+        "rate_hz": 110000000
+      }
+    ],
+    "dsi0pll_byteclk_src": [
+      {
+        "uptime_seconds": 13.743174,
+        "rate_hz": 82500000
+      }
+    ],
+    "dsi0_phy_pll_out_byteclk": [
+      {
+        "uptime_seconds": 13.743177,
+        "rate_hz": 82500000
+      }
+    ],
+    "disp_cc_mdss_byte0_clk_src": [
+      {
+        "uptime_seconds": 13.743183,
+        "rate_hz": 82500000
+      }
+    ],
+    "disp_cc_mdss_byte0_div_clk_src": [
+      {
+        "uptime_seconds": 13.743188,
+        "rate_hz": 41250000
+      }
+    ],
+    "disp_cc_mdss_byte0_intf_clk": [
+      {
+        "uptime_seconds": 13.743193,
+        "rate_hz": 41250000
+      }
+    ],
+    "disp_cc_mdss_byte0_clk": [
+      {
+        "uptime_seconds": 13.743196,
+        "rate_hz": 82500000
+      }
+    ]
+  },
+  "stock_limitations": [
+    "CONFIG_DEBUG_FS and CONFIG_KPROBES are not set; no runtime hardware register snapshot was acquired.",
+    "CCF trace proves completed software clock operations, not an electrical frequency measurement.",
+    "The display-only sleep/wake capture requested peak 60 Hz but actual mode returned to 90 Hz; it is not a fixed-60-Hz acceptance. Startup trace separately covers 60 Hz at 9.495710 s through the change to 90 Hz at 18.332926 s."
+  ],
+  "hypothesis": "The 6.18 generic command-mode link budget differs from the normal F.20 transfer budget. A scoped opt-in test will match bit/byte/pixel rates to 660000000/82500000/110000000 without changing PPS, image, topology or DRM frame timing.",
+  "root_cause": "UNRESOLVED",
+  "next_test_status": "SOURCE_PREPARED_NOT_DEVICE_TESTED"
+}

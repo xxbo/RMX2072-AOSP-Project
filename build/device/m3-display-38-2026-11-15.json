@@ -1,0 +1,88 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-38",
+  "goal": "Physical RM19795 panel output on ACK 6.18, then SurfaceFlinger and AOSP desktop",
+  "kernel": {
+    "run_id": 43668465944,
+    "source_commit": "68dc430e784e0fb84f9fab36ee7d8a78a43659c4",
+    "artifact_id": 14143344269,
+    "artifact_archive_digest": "sha256:db16d0137de495722fc640620fc2933d2c22b2a9b555dc527622e724e224c114",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "da083d2970bac47f58c2262e5c84fb29b93fa49a1ef5bf4433fff41ab42bf765",
+    "selected_member_sha256": {
+      "SHA256SUMS": "bc7e71e7d050ce85a71fa6828eca17cd6b68a3391ea4b8ef0bf818ec2159a9f5",
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "build-metadata.txt": "f9a6e422ae6eaa514346a4c3692ce52cdac82fcc2438f83ac50e0b94b75e44c8",
+      "display-source.sha256": "bb5cff96f97f8c5059cc70b4675efa0db3a168b8490b1a3a363acfd94b3c5774",
+      "Image.gz": "70f4b49c55d1a6fa5974edcd76de1189ef27770d0ee53bd058fe7171e32f6da8",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "c5938a3af480a8b4e311ce2889d9e012d924ac1e1368d5e655487c80edb4b50b",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+    }
+  },
+  "boot_sha256": "2ae8057b8768ec24f22fdab6aee377235019f3cbcdf39a3d5b15654550c6a837",
+  "dtbo_sha256": "0e6912fb0af203e4845b5462fe91d22a4f8497aab3b48a1d6186d7d6da10358d",
+  "effective_dtb": {
+    "sha256": "f4210fc4052a1ad7feeddc20d4da0f98e90f81ca330296a9cf2cbb6cb4821a9d"
+  },
+  "super_sha256": "bcaf350af6f3ccb5218e468837c6e37ef3a266df302f3b77cd6416df81a3988d",
+  "system": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "vendor": "10f8a24714d97d63fe5ed1b32eaa224e5df21e0e7d864a43dd847e0bcf2f976e",
+  "scratch": {
+    "data": {
+      "bytes": 536870912,
+      "sha256": "3609b84f64c748ec526b9a5cad9c8d60fa75fb95246d883d73e5300ea663e561",
+      "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+      "gzip_sha256": "b083742d72df2140ef211aa9332d5ce221fc4e159caf2c23f0da3392faeac3c0"
+    },
+    "metadata": {
+      "bytes": 33554432,
+      "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+      "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+      "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+    }
+  },
+  "result": "FAIL: reboot loop before diagnostic USB or GSI ADB",
+  "operator_observation": "Repeated reboots; operator used both volume keys to enter EDL. No color-bar or desktop observation.",
+  "adb_observed": false,
+  "diagnostic_acm_observed": false,
+  "kms_result": "BLOCKED: neither diagnostic ACM nor GSI ADB appeared; no KMS probe result recovered.",
+  "surfaceflinger": "NOT RUN with M3 userspace; source graphics build pending",
+  "root_cause": "Unresolved. Damaged preserved console reaches approximately 1.07 seconds near deferred driver probing. No intact fatal stack or reliable last failing driver was recovered.",
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "83f1a4a6-3a5c-4a21-a23d-13cfe503675f",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "next": "Trial 39 restores the established valid-GPIO restriction, allowing only display TE 66 and reset 75. This is a known missing constraint, not yet a proven cause of trial 38.",
+  "execution_commit": "1a3c4fbed870889a3a16114a8aba74f3f4e45e20",
+  "changes": "Append qcom,sm8250 to the effective root compatible and enable initcall_debug; same compiled kernel, GSI, vendor and test-volume seeds as trial 37.",
+  "preserved_console": {
+    "sha256": "221ac3e1b19c21c3f1e8c583e3426ecc33d7b46761556ac32a48ac35cf8bc054",
+    "bytes": 233028,
+    "archive_sha256": "aa8cb4928aee642235a7defa23780d73a0eff3e3ed91c59ed9c04610e3e98ae8",
+    "integrity": "905 corrected bytes, 1673 unrecoverable blocks; do not reconstruct damaged lines or infer missing return signs",
+    "intact_display_line": "[    0.893483][    T1] platform ae00000.display-subsystem: Adding to iommu group 0",
+    "last_region": "Damaged deferred_probe_initcall and soc:qcom,smem probe lines near 1.07 seconds; cannot establish the last failing driver",
+    "panic_trace": "No complete panic/Oops trace recovered"
+  }
+}

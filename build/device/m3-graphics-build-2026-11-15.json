@@ -1,0 +1,156 @@
+{
+  "goal": "Real Android 17 graphics libraries and HALs for physical MSM DRM scanout",
+  "product": "rmx2072_m3_graphics",
+  "aosp_tag": "android-17.0.0_r1",
+  "manifest_commit": "5bc9a7ce1cd78dd53613bbfd0ebf506e1e4adb0f",
+  "rendering": "ANGLE over SwiftShader CPU Vulkan; Adreno is not enabled",
+  "attempts": [
+    {
+      "run": 43668957299,
+      "commit": "ade9010c34cc070ae293329d69487309dfdddfdb",
+      "result": "FAIL",
+      "failure": "libdisplay_info not visible to the project composer package",
+      "fix": "ac89941abde946bbd0acb80b0408ed627b01be4e; allow only //device/realme/rmx2072_m3"
+    },
+    {
+      "run": 43670631951,
+      "commit": "ac89941abde946bbd0acb80b0408ed627b01be4e",
+      "result": "FAIL",
+      "command_count": 7652,
+      "missing_edges": [
+        "assemble_vintf -> libvts_vintf_test_common",
+        "libvintf -> libkver"
+      ],
+      "fix": "1a3c4fbed870889a3a16114a8aba74f3f4e45e20; add pinned Gki and vts-testcase/hal native sources"
+    },
+    {
+      "run": 43672280150,
+      "commit": "1a3c4fbed870889a3a16114a8aba74f3f4e45e20",
+      "result": "FAIL",
+      "source_projects": 137,
+      "command_count": 8446,
+      "missing_edges": [
+        "android.hardware.media.bufferpool2_interface -> HardwareBuffer_aidl",
+        "android.hardware.media.c2_interface -> HardwareBuffer_aidl"
+      ],
+      "fix": "Include the pinned frameworks/base HardwareBuffer AIDL, upstream build declarations and license in the M3 sparse checkout. Target closure still requires zero missing edges."
+    },
+    {
+      "run": 43673925967,
+      "commit": "7ba7405b3cebd4d84fbf6ac79f31505b4c95db71",
+      "result": "FAIL",
+      "source_projects": 137,
+      "failure": "The full frameworks/base root declaration imports AconfigFlags.bp, ProtoLibraries.bp, TestProtoLibraries.bp and Ravenwood.bp outside the native sparse product.",
+      "fix": "Select byte-identical pinned package/license and HardwareBuffer_aidl declarations; retain the real AIDL source. Independently verify input and selected-module SHA-256; still require zero missing target edges."
+    },
+    {
+      "run": 43675503669,
+      "commit": "3bba989fdd10b1f4b4235914181c68ec48623710",
+      "result": "COMPILE_PASS_PACKAGE_FAIL",
+      "compiled_steps": 8464,
+      "compile_duration": "01:11:04",
+      "failure": "Archive script assumed out/target/product/rmx2072_m3/vendor; AOSP installed real ARM64 payload under out/target/product/rmx2072_m3/system/vendor. No installable artifact was archived.",
+      "fix": "Query TARGET_OUT_VENDOR from the selected AOSP product and record/verify its exact prefix. Rebuild required because the ephemeral runner completed."
+    },
+    {
+      "run": 43682875528,
+      "job": 132717077727,
+      "commit": "3c55d7b3ded65a04ddc099b5e0c8f7df8f58dd7c",
+      "result": "COMPILE_PACKAGE_IMPORT_PASS",
+      "build_step_started_utc": "2026-11-15T06:05:02Z",
+      "change": "Query and verify the selected product TARGET_OUT_VENDOR; preserve the compiled ARM64 graphics payload.",
+      "artifact_id": 14153035910,
+      "artifact_archive_digest": "sha256:eb96701bc6534d2bda4ebb7c27e539233f8b091d74ba44d29d8320806692b3c2",
+      "archive_digest_verified": true,
+      "payload_bytes": 40252275,
+      "file_count": 44,
+      "compile_duration": "01:41:47",
+      "vendor_output": "out/target/product/rmx2072_m3/system/vendor",
+      "target_closure": {
+        "target": "libEGL_angle libGLESv1_CM_angle libGLESv2_angle vulkan.pastel android.hardware.graphics.allocator-service.minigbm mapper.minigbm gralloc.minigbm android.hardware.composer.hwc3-service.rmx2072",
+        "graph": "out/combined-rmx2072_m3_graphics.ninja",
+        "method": "ninja -t commands (read only)",
+        "command_count": 8455,
+        "commands_sha256": "634689fc2f1163d60d19518d1546a351de0b7af4d04fdef9e9ca5e9b03703919",
+        "missing_dependency_commands": []
+      },
+      "files": {
+        "/bin/hw/android.hardware.composer.hwc3-service.rmx2072": "3ab314384da364e959523f3c81e10f073357ba847971642affc9dd6230d0cff1",
+        "/bin/hw/android.hardware.graphics.allocator-service.minigbm": "24acb3d759385bbef95f5dbca7ce56a67f26314566b183fd249a13c97fec0aab",
+        "/etc/init/allocator.rc": "6399fd2e6ab2b4297a64eac9d3593d9c4dd9c0cfd12094ac75f3858f1ff7ad4e",
+        "/etc/init/composer.rc": "07d70c1802a360fc80952bc6a96894db70a806189bd020a82e68b26b9e76bfd9",
+        "/etc/vintf/manifest/allocator.xml": "7f2924173b7b9a4ec765986032fda70c67dba08bc1b1241505be2aaa3f20454a",
+        "/etc/vintf/manifest/hwc3-drm.xml": "1eec97669217d852e61f9bb04b933332ed543205a36af70d537540c6abf35b06",
+        "/etc/vintf/manifest/mapper.minigbm.xml": "89ea599e25d05f4316d88982b4ea9aa817add552da1817895d5e104e3a33d4c6",
+        "/lib64/android.hardware.common-V2-ndk.so": "7c2a094273c7bd1d01f53acdcd849cae0655bf7a9a39a2057b36b0e33ffb235f",
+        "/lib64/android.hardware.drm.common-V1-ndk.so": "0c23c8fa31fd28ee1a5dc4db9545fd809c660921c88d6d8a30587e9682db447d",
+        "/lib64/android.hardware.graphics.allocator-V2-ndk.so": "c215c6b2f7f65af429db247486bd3b1d45e2a97afc147b8cf67571c2ffef3eda",
+        "/lib64/android.hardware.graphics.allocator-V3-ndk.so": "535c02c354526bc282a2bc502a41d907db9a03b986ec51b7631c7eb9c62e8399",
+        "/lib64/android.hardware.graphics.allocator@2.0.so": "1741350e28c9e67eb4f939286cdc87231e59fa640e3b76c22e1ca35e1c668940",
+        "/lib64/android.hardware.graphics.allocator@3.0.so": "bcdfc8318d3203cbe3f46051c945e25a2e9bcc9d3d0fdbe4bb8306005e31cc64",
+        "/lib64/android.hardware.graphics.allocator@4.0.so": "d15153702eac8af7f7b9f461fb96297c13d231b3538d95f855c662d940e0b322",
+        "/lib64/android.hardware.graphics.common-V7-ndk.so": "5051e1f92fa884fce0ceb9837586989173eb7dd328934a271d49827b2c3e26bd",
+        "/lib64/android.hardware.graphics.common@1.0.so": "d4e4ebca2bf6eaff22a6ca40e5a0f5fdd36861f08b4b374cd6a4700ed90f86b5",
+        "/lib64/android.hardware.graphics.common@1.1.so": "58dc09697e9622714c0c826905883902efd4abb5a59b2796f7d9777cd25235ce",
+        "/lib64/android.hardware.graphics.common@1.2.so": "2971758b206e4b92905a7d57b6d8a840580edb31cf0b491c25479c864dd3152e",
+        "/lib64/android.hardware.graphics.composer3-V5-ndk.so": "05c63df99dee655d6fbb24bef9c3534bc018d4aa6c10c087f5a5360739337e90",
+        "/lib64/android.hardware.graphics.mapper@2.0.so": "83bd577013802c4464ff88289e4af719aabb1cfc67551d7af077d9cf99f0d6a9",
+        "/lib64/android.hardware.graphics.mapper@2.1.so": "e6e972530bfcc924448d21019ec72446725daf72720cd576223e4b8dd3de2d14",
+        "/lib64/android.hardware.graphics.mapper@3.0.so": "4a5262cc7299a177e5a253a02dce017b5ae38d50e5bc043a5920dde79b19acfc",
+        "/lib64/android.hardware.graphics.mapper@4.0.so": "bf7b961d9c2e7bfe241127ca4c58969e86ed3d5c3fbc7ff5c39060d5f552ae77",
+        "/lib64/drm_hwcomposer_atom_reporter.so": "95d84a39a086ac432287a035dca7de65d3400694fe3e744c20d0a5c523e3becb",
+        "/lib64/egl/libEGL_angle.so": "f61e6dae0cf6ec9f3c2c6668b59df7c3b9e6b1eaea47b7bd6d30ba1a09695f4f",
+        "/lib64/egl/libGLESv1_CM_angle.so": "02b3caf070748baf10a0015e1940bccad7dae8655ed7f89b8d89f314aeccd9b9",
+        "/lib64/egl/libGLESv2_angle.so": "e0f0cbf31f33041d956fd9c64311e54cbac2f5ca2e76e20624e249d4a186a636",
+        "/lib64/hw/gralloc.minigbm.so": "5635a0fb628dcda7f068e794a64b9b8c397b53a442da8eb6e1bbf5d625acee0f",
+        "/lib64/hw/mapper.minigbm.so": "bd18eda4f6c4573bd1ddd074aa02ce2d97687e05d648af9ac78b9812d4a0ed56",
+        "/lib64/hw/vulkan.pastel.so": "a98bda4e50484a4e307f5bffd34378fb7afdd90363ff328a8d14440334d784a3",
+        "/lib64/libaconfig_storage_read_api_cc.so": "e85b69405c2945a4f72ef0dbb8eb5c8d62430a4ee60a4cbb5cdce5c770687e68",
+        "/lib64/libbase.so": "79cc9c2b80cb9d91ee866f9995552d53ce35e3fa6671c2687c6af38f1101eff1",
+        "/lib64/libc++.so": "cb118e98c74d3454858921123b9b51ba13df9cad7dfa141dd892c453661a4d78",
+        "/lib64/libcutils.so": "aa3fd0306f880a56a54b0149aa0fa8a9ac85ed39e6d6ae412fadc6539831e073",
+        "/lib64/libdmabufheap.so": "95b4958be3de9341c43f8c0bfa0f8a0a0b1142690060b23ebbb434490f681f0e",
+        "/lib64/libdrm.so": "5a65194db7e8f329a6998f74fb794ec0f81f8b313192e499021f9edfe35dad6d",
+        "/lib64/libgralloctypes.so": "a9b601184ff0c3ad7d87c55130519343a8300a7265623a9098d8f36a1a04fdee",
+        "/lib64/libhardware.so": "e62c7686b2c0802e44cd69a2cd8c9d4c9e8f01fc3802f00a54e4ef432524ca7a",
+        "/lib64/libhidlbase.so": "d698905bc0cc67c2ca2c670157ec3a49e77c92e02b0d6ce7468f3f021c7bfe1f",
+        "/lib64/libminigbm_gralloc.so": "dfd9bac12b806310a89a1a55dc4dfa0203bb2525c517f5e510b65d625d0c4364",
+        "/lib64/libminigbm_gralloc4_utils.so": "443697b3c3612db5607b7b594f5038bdf608757bb8e8145d0584c2bf74231df7",
+        "/lib64/libui.so": "7d28f1f1ac3a919d158f1c38bfa6eb3260204f0c112f837394e326672c2f60a2",
+        "/lib64/libutils.so": "b3c2d00e186d8340548f5bb4ef5974fdba0e6c89cb9bb78761555803c41e7687",
+        "/lib64/libz.so": "618c480774eccce44cd928d586714782fe9472f204a227c1c005a635ba29f8e5"
+      }
+    }
+  ],
+  "physical_installation": "NOT RUN",
+  "surfaceflinger": "NOT VERIFIED with the new source payload",
+  "cpu_scanout_source_audit": {
+    "scope": "Source-only compatibility check; not a device allocation or display pass",
+    "minigbm_driver": "Tries render nodes then card nodes; MSM backend allocates scanout GEM objects without a GPU-ID query",
+    "swiftshader_usage": "vkGetSwapchainGrallocUsageANDROID requests GRALLOC_USAGE_SW_WRITE_OFTEN; minigbm excludes software-use buffers from UBWC combinations",
+    "sources": {
+      "minigbm-msm.c": "0c62535bc940ef69207606c1ffa0326f74fdb6a02248d5c818a34c273a58f080",
+      "minigbm-cros_gralloc-cros_gralloc_driver.cc": "98e9054d5f98c3d107c25be6ac240c0b4bb858717860657641479595d3ec3103",
+      "swiftshader-libVulkan.cpp": "1019c39d2820b3bee933a3aefdf28c800087055d6194c74eb9787d45c0cf1e45"
+    },
+    "tag": "android-17.0.0_r1"
+  },
+  "hardwarebuffer_source_selection": {
+    "original_files": {
+      "Android.bp": "9039665725aa013a88f222430e33a1a3e662e23ec87090f253592ee28ec2f545",
+      "core/java/Android.bp": "bde0ed0b9eae4dda4170e84d700c2acf445938f107dd0c094e2cfd1535578fd4",
+      "core/java/android/hardware/HardwareBuffer.aidl": "287035e1d41954725d17f0729fa6c163dac80e0cd8980653720366dc2a9b71e9"
+    },
+    "selected_modules": {
+      "frameworks_base_license": "7108aa5f46797e8b32b8a288e0b81c82601f534ad711afa52519256d8316f877",
+      "HardwareBuffer_aidl": "8cd2f8140323288bf190a80288d4bab4059bb7897ac9b78da28cf6190322c988"
+    },
+    "selected_files": {
+      "Android.bp": "fe263edf0edd1cd504d9f8fc9801b52862d80cb61e97928b69be391b7d3c9b23",
+      "core/java/Android.bp": "7a765e480826b65797d6781da694eaa99ec408cda8afaff97db1f19f7798add5"
+    },
+    "aidl_implementation": "unmodified upstream HardwareBuffer.aidl",
+    "omitted_scope": "Unrelated Java framework product declarations only"
+  },
+  "physical_scanout_reference": "m3-display-46-2026-11-15.json"
+}

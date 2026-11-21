@@ -1,0 +1,156 @@
+{
+  "utc": "2026-11-21T09:12:15.231932+00:00",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-69",
+  "boot_id": "a1ffd3bd-be48-43d9-9822-98839f722720",
+  "goal": "Correct physical display on 6.18 + Android 17 GSI + source/ported drivers, then AOSP desktop",
+  "result": "PASS_PHYSICAL_NATIVE_AND_ANDROID",
+  "operator_feedback": {
+    "native": "显示的图案完全正常，未出现噪点！",
+    "android": "完整！正常！你做到了"
+  },
+  "kernel_source_commit": "c8ce89da8b1451ba48a2ba3c84b334380763164a",
+  "kernel_workflow_run": 44884169265,
+  "kernel_workflow_number": 40,
+  "packaging_recipe_commit": "5806bae317f096540a100b15ed60b61dd54e640f",
+  "kernel_sha256": "7b1701283ca73e4b2536fbf053aaa01dbca9b8e5f77059b98dc5291a9569d7b3",
+  "boot_sha256": "28a112d5d2f916570c5371a2c425bfcdedc97c13ec9770000a3ab64b2fb7df1f",
+  "dtbo_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "only_display_input_change": "Add LP standard type 0x0a 128-byte PPS after complete vendor on-sequence and before display-on; keep current encoder parameters",
+  "runtime_checks": {
+    "passed": 46,
+    "total": 46,
+    "record": "m3-standard-pps-69-runtime-2026-11-21.json"
+  },
+  "preflight_record": "m3-standard-pps-69-preflight-2026-11-21.json",
+  "standard_pps": [
+    {
+      "returned": 132,
+      "expected": 128,
+      "hex": "110000893080096004380030021c021c02000252002004230007000f028e021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62ab62af42af44b34637400000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "same_boot_adb": {
+    "seconds": 194.687,
+    "identity": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "a1ffd3bd-be48-43d9-9822-98839f722720",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "guard_mode_during_soak": "retained"
+  },
+  "android_frame": {
+    "boot_id": "a1ffd3bd-be48-43d9-9822-98839f722720",
+    "bytes": 32528,
+    "sha256": "9bbc264ead848e3b73af9a083165f3a309445c852d170e6d653b031ac923dccc",
+    "size": [
+      1080,
+      2400
+    ],
+    "mode": "RGBA",
+    "colors": null,
+    "scope": "CPU RenderEngine screenshot, not DPU readback or physical acceptance",
+    "capture_seconds": 37.8,
+    "reference": {
+      "sha256": "9bbc264ead848e3b73af9a083165f3a309445c852d170e6d653b031ac923dccc",
+      "maximum_channel_error": 0,
+      "exact": true,
+      "all_pixels_within_one": true
+    }
+  },
+  "candidate_readback_records": 19,
+  "local_evidence": {
+    "inputs.json": {
+      "sha256": "f5d27c7407680d5ef5883dd86b27100732bf1fc968255b4f1359cc228612b5bc",
+      "bytes": 134747
+    },
+    "readbacks.jsonl": {
+      "sha256": "64a4d15974da4c8a407ef90c1e2751a544c26a1f517df1776ad6a880214a6b42",
+      "bytes": 4015
+    },
+    "gsi-retained.json": {
+      "sha256": "26cac59d6db2fd08d2353d75072eb9c076fed055994154fb248a7332c149bd02",
+      "bytes": 18958
+    },
+    "live/acm.log": {
+      "sha256": "22b728dab8c4a6924b97fde00fb61ad7241740eeb8f4433f27c5c3688e4d9019",
+      "bytes": 237169
+    },
+    "live/host-events.jsonl": {
+      "sha256": "b5549e0fcde303a9f0125693b48f53e592c44505b1c6b678519ccef6042613c4",
+      "bytes": 1780
+    },
+    "live/gsi-stable.json": {
+      "sha256": "a586b1d25aee2bfa202ecb531933d6110592cca92cc885eac98d1e38be94e7fd",
+      "bytes": 18234
+    },
+    "live/m3-display.txt": {
+      "sha256": "c3e211c7244f8375dbb64c8be59830c348c3260642566ac378861cbf5a4c3809",
+      "bytes": 236815
+    },
+    "live/graphics-first-3-logcat.txt": {
+      "sha256": "f7b45d14acde1ad8fe3ee7a2bda935966f4f0f3f5ed9deaa3df4cbe1f5debcd5",
+      "bytes": 982645
+    },
+    "live/graphics-status.txt": {
+      "sha256": "ce58f919c05f4b2ed15ebad62e14a46d06b63f4dda39d019fe84e1547f9c9974",
+      "bytes": 196
+    },
+    "live/scanout-state.txt": {
+      "sha256": "fd130cfbb8bc6ef4c114e39bfd6277aff97df236ca78e1458663535cab2fc01a",
+      "bytes": 3146
+    },
+    "live/android-frame.png": {
+      "sha256": "9bbc264ead848e3b73af9a083165f3a309445c852d170e6d653b031ac923dccc",
+      "bytes": 32528
+    },
+    "live/decoded-frame.json": {
+      "sha256": "e12afb8e8caff8bb2803b91556b8cd78bfa2bb36675eea732aa120cb29b2bbb4",
+      "bytes": 544
+    },
+    "live/desktop-next-blocker.txt": {
+      "sha256": "2d4530faba291f258f39c1e9c5acccdf859eb9c4b6d90d1d56b4594b7bab6c1a",
+      "bytes": 23814
+    },
+    "live/final-state.txt": {
+      "sha256": "6a8f78df99c1361bf063a92278f23366479bf1b1fe40937e1ebe6d848be8252f",
+      "bytes": 279
+    }
+  },
+  "framework": {
+    "installd": "not found",
+    "activity": "not found",
+    "window": "not found",
+    "boot_completed": false,
+    "observed_blocker": "PackageManager times out waiting for installer; cause of missing installd still to investigate",
+    "desktop_accepted": false
+  },
+  "retention": {
+    "current_system": "Android 17 GSI",
+    "stock_restored": false,
+    "scope": "current boot",
+    "host_observer_required_after_every_reboot": true,
+    "no_host_timeout": "180-second EDL fallback"
+  },
+  "limits": [
+    "Single successful same-boot native/Android observation, not all refresh rates or panel lifecycle modes",
+    "No DDIC internal PPS readback or wire capture",
+    "Standard packet uses current encoder parameters, not exact F.20 final runtime RC values",
+    "CPU graphics path; Adreno and AOSP desktop not yet accepted"
+  ],
+  "storage_policy": "One verified original recovery set plus current candidate firmware; no stock partition reread this trial",
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "post_trial_restore": {
+    "record": "m3-display-69-restored-2026-11-21.json",
+    "boot_id": "0a094b64-4e2d-412b-9c0a-ac3e41f03514",
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "reason": "User requested restoration and pause",
+    "display_acceptance_unchanged": true
+  }
+}

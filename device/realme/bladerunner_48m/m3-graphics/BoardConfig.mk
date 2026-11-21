@@ -1,0 +1,12 @@
+TARGET_ARCH := arm64
+TARGET_ARCH_VARIANT := armv8-a
+TARGET_CPU_VARIANT := generic
+TARGET_CPU_ABI := arm64-v8a
+TARGET_SUPPORTS_32_BIT_APPS := false
+TARGET_SUPPORTS_64_BIT_APPS := true
+TARGET_NO_BOOTLOADER := true
+TARGET_NO_KERNEL := true
+TARGET_NO_RECOVERY := true
+TARGET_BOARD_PLATFORM := sm8250
+$(call soong_config_set,angle,angle_in_vendor,true)
+$(call soong_config_set,minigbm,platform,msm)

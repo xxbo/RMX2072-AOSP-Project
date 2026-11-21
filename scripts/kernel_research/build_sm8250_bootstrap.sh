@@ -59,6 +59,31 @@ if [[ "${RMX2072_SOURCE_PON:-0}" == 1 ]]; then
   sha256sum "$PON_PATCH" > "$ARTIFACT_DIR/source-pon-patch.sha256"
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_source_pon.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
 fi
+if [[ "${RMX2072_DISPLAY:-0}" == 1 ]]; then
+  test "${RMX2072_SOURCE_PON:-0}" == 1
+  CLOCK_PATCH="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-patches/rmx2072-display-clock.patch"
+  git -C "$WORKSPACE/common" apply --check "$CLOCK_PATCH"
+  git -C "$WORKSPACE/common" apply "$CLOCK_PATCH"
+  sha256sum "$CLOCK_PATCH" > "$ARTIFACT_DIR/display-clock-patch.sha256"
+  for DSC_PATCH_NAME in upstream-dsi-dsc-all-slices-flag upstream-msm-dsi-dsc-slices-per-packet rmx2072-dsc-packet-trace rmx2072-dsc-route-test rmx2072-dpu-solid-fill-test rmx2072-stock-linkclock-test rmx2072-stock-dsc-test rmx2072-stock-phy-timing-test rmx2072-first-frame-trace; do
+    DSC_PATCH="$ROOT_DIR/device/realme/bladerunner_48m/bootstrap-patches/$DSC_PATCH_NAME.patch"
+    git -C "$WORKSPACE/common" apply --check "$DSC_PATCH"
+    git -C "$WORKSPACE/common" apply "$DSC_PATCH"
+    sha256sum "$DSC_PATCH" > "$ARTIFACT_DIR/$DSC_PATCH_NAME.sha256"
+  done
+  PANEL_DIR="$ROOT_DIR/device/realme/bladerunner_48m/display"
+  cp "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" "$WORKSPACE/common/drivers/gpu/drm/panel/"
+  cat >> "$WORKSPACE/common/drivers/gpu/drm/panel/Kconfig" <<'EOF'
+
+config DRM_PANEL_RMX2072_RM19795
+	tristate "RMX2072 RM19795 Samsung command-mode DSC panel"
+	depends on OF && DRM_MIPI_DSI && BACKLIGHT_CLASS_DEVICE
+	select DRM_DISPLAY_DSC_HELPER
+EOF
+  printf '\nobj-$(CONFIG_DRM_PANEL_RMX2072_RM19795) += panel-samsung-rm19795.o\n' >> "$WORKSPACE/common/drivers/gpu/drm/panel/Makefile"
+  sha256sum "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" > "$ARTIFACT_DIR/display-source.sha256"
+  cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_display.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
+fi
 cd "$WORKSPACE"
 tools/bazel --output_user_root="${RUNNER_TEMP:-/tmp}/bazel-output-root" run \
   --jobs=2 --local_resources=cpu=2 --local_resources=memory=5500 --verbose_failures \
@@ -81,5 +106,10 @@ fi
 python3 "$ROOT_DIR/scripts/device_audit/audit_bootstrap_config.py" \
   --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
   --output "$ARTIFACT_DIR/platform-config-audit.json"
+if [[ "${RMX2072_DISPLAY:-0}" == 1 ]]; then
+  python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
+    --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
+    --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_display.fragment"
+fi
 find "$ARTIFACT_DIR/dist" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DIR/SHA256SUMS"
 printf '%s\n' 'Platform compile candidate: Qualcomm hardware mutex and APSS watchdog required built-in. Physical kernel execution is not established by this build.' > "$ARTIFACT_DIR/STATUS.txt"

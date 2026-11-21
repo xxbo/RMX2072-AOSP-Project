@@ -1,0 +1,111 @@
+Subject: [RMX2072 M3] opt-in original encoder and panel DSC parameters
+
+Trial 65 retained physical corruption with the stock DSI clock budget.
+Trial 55 matched the panel to ACK RC values, not both ends to the OEM PPS.
+Test that remaining difference with an explicit, default-off parameter.
+Source: official Android Q 24a15224, 20607 RM19795 0x9e payload, also matched
+against the selected F.20 panel node. Do not claim decoder readback.
+Require the exact board/mode and stock-clock opt-in, and validate all 88
+computed PPS bytes before sharing the config with DPU and panel prepare.
+
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -38,11 +38,15 @@
+ /* Diagnostic opt-in, derived from the normal F.20 60 Hz startup trace.
+  * Keep the DRM mode and PPS unchanged; only select its measured link budget.
+  */
++static bool rmx2072_stock_dsc;
++module_param_named(rmx2072_stock_dsc, rmx2072_stock_dsc, bool, 0400);
++MODULE_PARM_DESC(rmx2072_stock_dsc, "RM19795 original encoder and decoder PPS isolation test");
++
+ static bool rmx2072_stock_linkclk;
+ module_param_named(rmx2072_stock_linkclk, rmx2072_stock_linkclk, bool, 0400);
+ MODULE_PARM_DESC(rmx2072_stock_linkclk, "RM19795 stock 660 MHz DSI link isolation test");
+ 
+-static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc_config *dsc);
++static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc_config *dsc, bool is_bonded_dsi);
+ 
+ static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
+ {
+@@ -1077,7 +1081,7 @@
+ 		/* we do the calculations for dsc parameters here so that
+ 		 * panel can use these parameters
+ 		 */
+-		ret = dsi_populate_dsc_params(msm_host, dsc);
++		ret = dsi_populate_dsc_params(msm_host, dsc, is_bonded_dsi);
+ 		if (ret)
+ 			return;
+ 
+@@ -1900,7 +1904,46 @@
+ 	return -EINVAL;
+ }
+ 
+-static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc_config *dsc)
++/* RM19795 OEM 20607 PPS: first-line budget and the last five RC ranges.
++ * Recompute dependent fields with the pinned DRM helper, then require all
++ * 88 transmitted DSC 1.1 bytes to match the original panel command.
++ */
++static int dsi_rmx2072_stock_rc(struct drm_dsc_config *dsc)
++{
++	static const u8 stock_pps[] = {
++		0x11, 0x00, 0x00, 0x89, 0x30, 0x80, 0x09, 0x60, 0x04, 0x38, 0x00, 0x30, 0x02, 0x1c, 0x02, 0x1c,
++		0x02, 0x00, 0x02, 0x52, 0x00, 0x20, 0x04, 0x23, 0x00, 0x07, 0x00, 0x0f, 0x02, 0x8e, 0x02, 0x1f,
++		0x18, 0x00, 0x10, 0xf0, 0x03, 0x0c, 0x20, 0x00, 0x06, 0x0b, 0x0b, 0x33, 0x0e, 0x1c, 0x2a, 0x38,
++		0x46, 0x54, 0x62, 0x69, 0x70, 0x77, 0x79, 0x7b, 0x7d, 0x7e, 0x01, 0x02, 0x01, 0x00, 0x09, 0x40,
++		0x09, 0xbe, 0x19, 0xfc, 0x19, 0xfa, 0x19, 0xf8, 0x1a, 0x38, 0x1a, 0x78, 0x1a, 0xb6, 0x2a, 0xb6,
++		0x2a, 0xf4, 0x2a, 0xf4, 0x4b, 0x34, 0x63, 0x74,
++	};
++	struct drm_dsc_picture_parameter_set pps;
++	int ret;
++
++	if (dsc->dsc_version_major != 1 || dsc->dsc_version_minor != 1 ||
++	    dsc->pic_width != 1080 || dsc->pic_height != 2400 ||
++	    dsc->slice_count != 2 || dsc->slice_width != 540 ||
++	    dsc->slice_height != 48 || dsc->bits_per_component != 8 ||
++	    dsc->bits_per_pixel != 128)
++		return -EINVAL;
++
++	dsc->first_line_bpg_offset = 15;
++	dsc->rc_range_params[10].range_max_qp = 10;
++	dsc->rc_range_params[11].range_max_qp = 11;
++	dsc->rc_range_params[12].range_max_qp = 11;
++	dsc->rc_range_params[13].range_min_qp = 9;
++	dsc->rc_range_params[13].range_max_qp = 12;
++	dsc->rc_range_params[14].range_min_qp = 12;
++	dsc->rc_range_params[14].range_max_qp = 13;
++	ret = drm_dsc_compute_rc_parameters(dsc);
++	if (ret)
++		return ret;
++	drm_dsc_pps_payload_pack(&pps, dsc);
++	return memcmp(&pps, stock_pps, sizeof(stock_pps)) ? -EINVAL : 0;
++}
++
++static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc_config *dsc, bool is_bonded_dsi)
+ {
+ 	int ret;
+ 
+@@ -1942,6 +1985,24 @@
+ 
+ 	dsc->initial_scale_value = drm_dsc_initial_scale_value(dsc);
+ 	dsc->line_buf_depth = dsc->bits_per_component + 1;
++
++	if (rmx2072_stock_dsc) {
++		struct device_node *panel;
++
++		panel = of_get_compatible_child(msm_host->pdev->dev.of_node,
++					        "realme,rmx2072-rm19795-panel");
++		if (!panel)
++			return -EINVAL;
++		of_node_put(panel);
++		/* Keep the preceding stock-clock experiment and geometry fixed. */
++		if (!dsi_rmx2072_stock_linkclk(msm_host, msm_host->mode,
++					    is_bonded_dsi))
++			return -EINVAL;
++		ret = dsi_rmx2072_stock_rc(dsc);
++		dev_info(&msm_host->pdev->dev,
++			 "RMXDSC stock-pps bytes=88 match=%d ret=%d\n", !ret, ret);
++		return ret;
++	}
+ 
+ 	return drm_dsc_compute_rc_parameters(dsc);
+ }

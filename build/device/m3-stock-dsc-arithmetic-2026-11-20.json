@@ -1,0 +1,30 @@
+{
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "sources": {
+    "drivers/gpu/drm/display/drm_dsc_helper.c": "a4d0df3f61fff2846a94f95928e2267e76f3b2c4c6cd57d2920f7b0dc7367fef",
+    "include/drm/display/drm_dsc.h": "f57cf45be321cdf4def25491ef54e2adfef9627c18cebc53bd9e2acd0fd2a394",
+    "include/drm/display/drm_dsc_helper.h": "dd0a8f30ee0c78d5ff61081f7dd928e85fd58436f6f41367e8d927ed36014f08"
+  },
+  "generated_source_sha256": "b727fa7c02704700a8523027cddebf2debc615e37c0bf6f0501f808671a18347",
+  "binary_sha256": "e7f4a3c68becd42457a01ac47452fb19737fadc26cbd2f2c30d5d252195e4dbd",
+  "scope": "Pure arithmetic only; no hardware validation",
+  "parameters": {
+    "width": 1080,
+    "height": 2400,
+    "slice_width": 540,
+    "slice_height": 48,
+    "bpc": 8,
+    "bpp": 8,
+    "version": "1.1",
+    "table": "DRM_DSC_1_1_PRE_SCR"
+  },
+  "stock_dsc": true,
+  "stock_dsc_patch_sha256": "9a3b7ec1cce9dac2c10fd2d87cfddddfdd09609bdc3768bf87bbea199ef16d5b",
+  "exit_code": 0,
+  "computed_pps_hex": "110000893080096004380030021c021c02000252002004230007000f028e021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62ab62af42af44b34637400000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "factory_payload_match": true,
+  "guard_checks": "stock DSC: geometry and unexpected PPS rejection passed",
+  "phone_boot_id": "f9eda4c4-f202-4130-b68d-4cfb3e25d287",
+  "hardware_display_test": false,
+  "host_guard_validation": "Reviewed in patch; pure arithmetic run does not execute the host/device-tree guard"
+}

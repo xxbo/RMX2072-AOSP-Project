@@ -15,6 +15,12 @@ class M2BootTests(unittest.TestCase):
         text=''.join(f'M2BOOT {k}={v}\n' for k,v in values.items())
         events='M1EVENT boot_id='+boot+'\n'+''.join(f'M1EVENT disk=sd{n} ro=1\n' for n in 'abcdef')
         self.assertEqual(check_m2_boot(text,boot,init,'6.18-test',events),dict(values,read_only_ufs_luns=['sd'+n for n in 'abcdef']))
+        display_text=text.replace('qcom,mtp ', 'qcom,mtp qcom,sm8250 ')
+        self.assertIn('qcom,sm8250',check_m2_boot(display_text,boot,init,'6.18-test',events,display=True)['root_compatible'])
+        with self.assertRaises(ValueError):
+            check_m2_boot(text,boot,init,'6.18-test',events,display=True)
+        with self.assertRaises(ValueError):
+            check_m2_boot(display_text,boot,init,'6.18-test',events)
         for field in values:
             with self.subTest(field=field),self.assertRaises(ValueError):
                 check_m2_boot(text.replace(values[field],'wrong'),boot,init,'6.18-test',events)

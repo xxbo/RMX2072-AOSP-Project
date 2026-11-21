@@ -1,0 +1,107 @@
+Subject: [RMX2072 M3] opt-in original 660 MHz D-PHY timing table
+
+Trial 66 matches OEM PPS in encoder registers and host transmit but remains
+physically corrupted in native and Android phases. Its 14 PHY timing bytes
+differ from the selected F.20 / official Q panel table only at indices
+3, 12 and 13. Keep clocks, packet layout and DSC configuration unchanged.
+Modify the timing structure so both PHY and host see coherent pre/post
+values. Default off, guarded by exact board, panel, PHY variant, clock and
+calculated baseline. Log the entry and programmed timing bytes without
+claiming that entry state is untouched bootloader/F.20 hardware state.
+
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+@@ -6,6 +6,8 @@
+ #include <dt-bindings/clock/qcom,dsi-phy-28nm.h>
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
++#include <linux/moduleparam.h>
++#include <linux/of.h>
+ #include <linux/clk-provider.h>
+ #include <linux/iopoll.h>
+ 
+@@ -969,6 +971,59 @@
+ 	}
+ }
+ 
++/* Diagnostic only: OEM 20607 RM19795 660 MHz D-PHY timing table. */
++static bool rmx2072_stock_phy;
++module_param_named(rmx2072_stock_phy, rmx2072_stock_phy, bool, 0400);
++MODULE_PARM_DESC(rmx2072_stock_phy, "RM19795 original PHY timing isolation test");
++
++static void dsi_rmx2072_log_phy_timing(struct msm_dsi_phy *phy, const char *stage)
++{
++	u8 values[14];
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(values); i++)
++		values[i] = readl(phy->base + REG_DSI_7nm_PHY_CMN_TIMING_CTRL_0 + 4 * i);
++	dev_info(&phy->pdev->dev, "RMXPHY timing stage=%s bytes=%*phN\n",
++		 stage, (int)sizeof(values), values);
++}
++
++static int dsi_rmx2072_stock_phy_timing(struct msm_dsi_phy *phy,
++				       const struct msm_dsi_phy_clk_request *req)
++{
++	struct msm_dsi_dphy_timing *t = &phy->timing;
++	struct device_node *panel;
++
++	if (phy->id != 0 || phy->cphy_mode || req->bitclk_rate != 660000000 ||
++	    phy->cfg->quirks != DSI_PHY_7NM_QUIRK_V4_1 ||
++	    !of_machine_is_compatible("qcom,sm8250"))
++		return -EINVAL;
++	panel = of_find_compatible_node(NULL, NULL, "realme,rmx2072-rm19795-panel");
++	if (!panel)
++		return -EINVAL;
++	of_node_put(panel);
++
++	/* Refuse an unexpected calculated baseline; change only the three
++	 * fields differing from the 14-byte OEM table in trial 66.
++	 */
++	if (t->clk_zero != 0x17 || t->clk_prepare != 0x06 ||
++	    t->clk_trail != 0x07 || t->hs_exit != 0x21 ||
++	    t->hs_zero != 0x20 || t->hs_prepare != 0x06 ||
++	    t->hs_trail != 0x06 || t->hs_rqst != 0x04 ||
++	    t->shared_timings.clk_pre != 0x16 ||
++	    t->shared_timings.clk_post != 0x16 ||
++	    t->shared_timings.clk_pre_inc_by_2)
++		return -EINVAL;
++
++	dsi_rmx2072_log_phy_timing(phy, "enable-entry");
++	t->clk_trail = 0x05;
++	t->shared_timings.clk_pre = 0x14;
++	t->shared_timings.clk_post = 0x15;
++	dev_info(&phy->pdev->dev,
++		 "RMXPHY stock-timing bit=%lu clk_trail=5 clk_pre=20 clk_post=21\n",
++		 req->bitclk_rate);
++	return 0;
++}
++
+ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
+ 			      struct msm_dsi_phy_clk_request *clk_req)
+ {
+@@ -998,6 +1053,14 @@
+ 	}
+ 
+ 	dsi_pll_7nm_trace_state(to_pll_7nm(phy->vco_hw), "phy-enable-entry");
++	if (rmx2072_stock_phy) {
++		ret = dsi_rmx2072_stock_phy_timing(phy, clk_req);
++		if (ret) {
++			dev_err(&phy->pdev->dev, "RMXPHY stock-timing rejected ret=%d\n", ret);
++			return ret;
++		}
++	}
++
+ 	if (dsi_phy_hw_v4_0_is_pll_on(phy))
+ 		pr_warn("PLL turned on before configuring PHY\n");
+ 
+@@ -1192,6 +1255,9 @@
+ 		       base + REG_DSI_7nm_PHY_CMN_TIMING_CTRL_13);
+ 	}
+ 
++	if (rmx2072_stock_phy)
++		dsi_rmx2072_log_phy_timing(phy, "after-program");
++
+ 	/* DSI lane settings */
+ 	dsi_phy_hw_v4_0_lane_settings(phy);
+ 

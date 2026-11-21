@@ -1,0 +1,106 @@
+{
+  "boot_id": "61647569-b8be-4d1b-a02e-3bfc0493492e",
+  "source_probe": {
+    "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+    "sources": {
+      "drivers/gpu/drm/display/drm_dsc_helper.c": "a4d0df3f61fff2846a94f95928e2267e76f3b2c4c6cd57d2920f7b0dc7367fef",
+      "include/drm/display/drm_dsc.h": "f57cf45be321cdf4def25491ef54e2adfef9627c18cebc53bd9e2acd0fd2a394",
+      "include/drm/display/drm_dsc_helper.h": "dd0a8f30ee0c78d5ff61081f7dd928e85fd58436f6f41367e8d927ed36014f08"
+    },
+    "generated_source_sha256": "ddba0e2b4fd78410e19066821cee0800593c117f828481fff59389e85eb33291",
+    "binary_sha256": "f849c79722e76a7aa6bcdcf7286237b421530569dea890a7076b35abc93e3a72",
+    "scope": "Pure arithmetic only; no hardware validation",
+    "parameters": {
+      "width": 1080,
+      "height": 2400,
+      "slice_width": 540,
+      "slice_height": 48,
+      "bpc": 8,
+      "bpp": 8,
+      "version": "1.1",
+      "table": "DRM_DSC_1_1_PRE_SCR"
+    }
+  },
+  "result": "ENCODER_DECODER_PPS_MISMATCH_CONFIRMED_BY_PINNED_HELPER_CALCULATION",
+  "hardware_scope": "No register reads or display writes; these are calculated values, not a hardware register dump.",
+  "factory_dcs": "0x9e",
+  "factory_pps_hex": "110000893080096004380030021c021c02000252002004230007000f028e021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62ab62af42af44b346374",
+  "computed_pps_hex": "110000893080096004380030021c021c0200020e002004a60007000c020b021f180010f0030c2000060b0b330e1c2a38465462697077797b7d7e01020100094009be19fc19fa19f81a381a781ab62af62b342b743b746bf400000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "differences": [
+    {
+      "pps_offset": 19,
+      "factory": 82,
+      "encoder": 14
+    },
+    {
+      "pps_offset": 23,
+      "factory": 35,
+      "encoder": 166
+    },
+    {
+      "pps_offset": 27,
+      "factory": 15,
+      "encoder": 12
+    },
+    {
+      "pps_offset": 29,
+      "factory": 142,
+      "encoder": 11
+    },
+    {
+      "pps_offset": 79,
+      "factory": 182,
+      "encoder": 246
+    },
+    {
+      "pps_offset": 80,
+      "factory": 42,
+      "encoder": 43
+    },
+    {
+      "pps_offset": 81,
+      "factory": 244,
+      "encoder": 52
+    },
+    {
+      "pps_offset": 82,
+      "factory": 42,
+      "encoder": 43
+    },
+    {
+      "pps_offset": 83,
+      "factory": 244,
+      "encoder": 116
+    },
+    {
+      "pps_offset": 84,
+      "factory": 75,
+      "encoder": 59
+    },
+    {
+      "pps_offset": 85,
+      "factory": 52,
+      "encoder": 116
+    },
+    {
+      "pps_offset": 86,
+      "factory": 99,
+      "encoder": 107
+    },
+    {
+      "pps_offset": 87,
+      "factory": 116,
+      "encoder": 244
+    }
+  ],
+  "first_line_bpg_offset": {
+    "factory": 15,
+    "encoder": 12
+  },
+  "initial_dec_delay": {
+    "factory": 594,
+    "encoder": 526
+  },
+  "candidate_fix": "Pack ctx->dsc for panel vendor DCS 0x9e; preserve the original 88-byte DSC 1.1 packet payload and command timing.",
+  "handset_fix_status": "NOT RUN"
+}

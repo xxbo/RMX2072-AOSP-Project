@@ -1,0 +1,42 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "sys_boot_completed": 1,
+  "boot_id": "0a094b64-4e2d-412b-9c0a-ac3e41f03514",
+  "super_sha256": null,
+  "boot_sha256": null,
+  "dtbo_sha256": null,
+  "lp_slots": [
+    0,
+    1
+  ],
+  "stock_full_partition_readback": false,
+  "stock_write_acknowledged": true,
+  "expected_image_sha256": {
+    "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+  },
+  "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-69",
+  "utc": "2026-11-21T09:25:19.806168+00:00",
+  "requested_by": "User: restore original images now and continue later",
+  "task_state": "paused after successful stock restoration",
+  "kernel": "4.19.157-perf+",
+  "surfaceflinger": "running",
+  "boot_animation": "stopped",
+  "physical_screen_observation": "Not separately requested in this restoration; Android boot/service state verified over ADB",
+  "source_sha256": {
+    "restored.json": "a9f56c9a833fc9d4adbb308c217782ad013c71318e18e1a9cdbea3714a567d36",
+    "timeline.jsonl": "b09554ba008f7a47785235165243e8c79f11dadaa7dcd9716cf0cd29d20b297f",
+    "recovery-ready.json": "ebf7816dbc14ceea56bd79329fdb9ff525b1bb214bc93f2ce6299ca7d813340b",
+    "user-requested-rollback.json": "307d17d002ffff4c04513e7d6e62b0601193d62c16435e38e3b7de04cf5c3fdd",
+    "final-stock-state.txt": "679c1f905215451c7d9c9189070cbd2bffc958e832f03d17847adf0e9e75c181",
+    "restore-super.log": "67a860d205db6b6b0790d35440afb431dfda661d484fb63db915afbf7df09d7f",
+    "restore-boot.log": "83cf8eb2d303ff259d2b8338cb43cd4445330a779eb2e8152087798dfbdae0a8",
+    "restore-dtbo.log": "6f5b59aacc045933f06c8b1451476c591d4f566b9064914e5b1615172d6f8db8",
+    "stock-reset.log": "ff881b220ac044566a9ae16fec6c36d3c869ed878a17bd0387f975b9fde2f518"
+  },
+  "scope": "Verified local original inputs, acknowledged boot/DTBO/super writes, F.20 boot completion and both LP slots. No new stock partition readback or phone-side full-super digest. Expected hashes are not fresh device-read observations.",
+  "candidate_retained": "Current trial 69 only; physical native/Android acceptance preserved",
+  "next_objective_after_resume": "Continue toward AOSP desktop by investigating missing installd and PackageManager startup"
+}

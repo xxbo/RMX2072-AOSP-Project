@@ -1,0 +1,43 @@
+{
+  "workflow_url": "https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/43704231848",
+  "result": "PASS_SOURCE_BUILD_AND_SELECTED_ARTIFACT_VERIFICATION_ONLY",
+  "kernel": {
+    "run_id": 43704231848,
+    "source_commit": "7eef6528eca11d2444cbdc3e49de295373e71081",
+    "artifact_id": 14158810407,
+    "artifact_archive_digest": "sha256:32c0cf693f006c836f4beb57bfbe20444b4830c5a5699fd037c859d18f6c07e6",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "6e5bb1cab0282755b47322e7bc89222f81167f83eb60e294ddd9d477b950f466",
+    "selected_member_sha256": {
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "SHA256SUMS": "64242140af096172975fc3bec3221e57a82f0486ba6a777a31c57e3bb847f573",
+      "build-metadata.txt": "1c23a0f30cf9e810e8efd0ce9a5d859c86062f56fbf2953f027de8539dd277f6",
+      "display-clock-patch.sha256": "d61a6e071f4d95e1b4b78523f1aa0d0fe30d21380e845490921bd96baebfccd1",
+      "display-source.sha256": "e4532bd88c54a1d36db53065ccc992a8f9fd3ffb78c19141fa88593037cfb681",
+      "Image.gz": "3783bdc43f655e989c8188fbdaaff968cacf2f7c8f1d4b90e7e5fd7199e4378f",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "4b00d7b70feb80e4a80176cb10c73291b013c1da54cefc70693dbfa19c97a998",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+    }
+  },
+  "panel_source_sha256": "732822191c71922910e69d3e609ab920d5a31b2ddfe0e4b11cce506092f91300",
+  "fix": "Use the host encoder DSC config for the panel DCS 0x9e payload.",
+  "image_retention": "Replaced the sole current kernel input; no extra candidate image history.",
+  "archive_scope": "Verified selected member digests and source manifests; complete ZIP digest was not verified.",
+  "previous_failed_run": {
+    "id": 43703892858,
+    "cause": "Dispatch selected mutually exclusive legacy and source PON inputs; no compilation ran."
+  },
+  "handset_validation": "TRIAL_55: matching PPS prefix accepted; GSI ADB retained; operator still reports corrupted output. See m3-display-55-2026-11-15.json."
+}

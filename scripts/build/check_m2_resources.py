@@ -37,7 +37,7 @@ def normalized_node(tree, path):
     return out
 
 
-def check_m2_resources(data):
+def check_m2_resources(data, display=False):
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
     reference = json.loads((Path(__file__).resolve().parents[2] / 'build/device/m2-m1-resource-reference.json').read_text())
     differences = []
@@ -51,7 +51,8 @@ def check_m2_resources(data):
                 differences.append(f'{path}/{key}: {actual.get(key)!r} != {value!r}')
     if differences:
         raise ValueError('M1 resource mismatch:\n' + '\n'.join(differences))
-    if (tree[''].get('compatible') != ['qcom,kona-mtp', 'qcom,kona', 'qcom,mtp']
+    compatibles = ['qcom,kona-mtp', 'qcom,kona', 'qcom,mtp'] + (['qcom,sm8250'] if display else [])
+    if (tree[''].get('compatible') != compatibles
             or tree[''].get('oplus,dtsi_no') != [20607]):
         raise ValueError('Effective source tree does not identify the board for SCM/PON guards')
     primary = '/soc/qcom,spmi@c440000/qcom,pm8150@0'
