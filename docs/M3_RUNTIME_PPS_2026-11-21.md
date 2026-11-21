@@ -1,6 +1,6 @@
-# F.20 实际 PPS 顺序与第 69 轮准备
+# F.20 实际 PPS 顺序与第 69 轮实屏修复
 
-当前目标：修复项目 6.18 + Android 17 GSI 的实屏花屏，再推进 AOSP 桌面。第 68 轮仍花屏；本阶段先采原厂实际命令，不重复冷启动或整区备份。
+当前目标：项目 6.18 + Android 17 GSI + 源码/移植驱动进入 AOSP 桌面。第 69 轮已在原生和 Android 阶段通过用户实屏验收，下一步处理 Android 框架启动阻塞。本阶段没有重复冷启动或原厂整区备份。
 
 ## 原厂真机新证据
 
@@ -47,6 +47,29 @@ F.20 在同一次启动 `357dcda6-83fa-46dc-9f61-3eb2eaedc0af` 内完成两次�
 
 新增的发送记录检查拒绝缺块、重复块、负返回值、短返回值和错误长度，并关联同 boot 首帧中的包类型、LP 标志及先后顺序。打包[负向检查](../build/device/m3-standard-pps-packer-guard-2026-11-21.json)确认旧第 68 轮内核不能配上新 PPS 开关，原候选元数据未被改写。
 
-当前状态：原厂采集完成，根因尚未确认；第 69 轮源码已准备，编译与真机结果待记录。
+以下保留实验前的假说和对照边界；实际构建和真机结果见后文。
 
 构建记录：首次工作流 #39 因提交参数同时打开 legacy PON 和 source PON，在入口互斥检查退出，未开始内核编译、未生成候选。修正为 `pon_power=false, source_pon=true, display=true` 后，同一源码提交 `c8ce89da8b1451ba48a2ba3c84b334380763164a` 的工作流 #40（44884169265）开始构建。该主机参数错误未涉及手机刷写。
+
+## 第 69 轮真机结果：两阶段均正常
+
+工作流 #40 成功，选取的内核及源码清单摘要校验通过；没有声称校验完整 ZIP 摘要。当前候选打包配方为 `5806bae317f096540a100b15ed60b61dd54e640f`，22 项刷前检查全部通过，候选 super 的 17/17 分段回读通过。原厂恢复文件继续复用同一份，没有新建原厂镜像副本或再次回读原厂整区。
+
+同一次真机启动 `a1ffd3bd-be48-43d9-9822-98839f722720`：
+
+- 原生阶段用户反馈：**“显示的图案完全正常，未出现噪点！”**
+- Android 接管后用户反馈：**“完整！正常！你做到了”**
+- `RMXPPS standard-transfer ret=132 payload=128`；完整四块载荷验证通过。首帧轨迹确认 LP、类型 `0x0a`，位置在原有厂商命令之后、display-on 之前。
+- 与第 68 轮比较的 46 项运行配置检查全部通过：原有 PPS/编码器参数、660 MHz 时钟、PHY、EoT、路由、测试图、GSI、源码启动组件及测试卷保持一致，原有命令序列仅增加标准 PPS。
+- API 37、6.18.32 内核、SELinux enforcing、认证 GSI ADB 在同一 boot 完成 194.687 秒检查，进入 retained；SurfaceFlinger、composer、allocator 和 maintenance 已注册。
+- Android 内部截图为 1080×2400，SHA-256 `9bbc264ead848e3b73af9a083165f3a309445c852d170e6d653b031ac923dccc`，与第 61 轮同一测试图截图逐像素一致。此前内部图正确而实屏花屏，本次实屏成功由上述用户反馈独立确认。
+
+这组单变量结果支持：**项目面板初始化缺失标准 PPS 是当前花屏的关键软件缺陷，补齐后该配置下的原生和 Android 实屏均恢复正常。** 没有把成功扩大为所有刷新率、面板休眠唤醒、硬件 GPU 或桌面已经通过；也没有声称读到了 DDIC 内部解码状态，或完整复现 F.20 的最后一份 RC 参数。
+
+证据：[刷前检查](../build/device/m3-standard-pps-69-preflight-2026-11-21.json)、[46 项运行对照](../build/device/m3-standard-pps-69-runtime-2026-11-21.json)、[完整首帧解码](../build/device/m3-first-frame-69-2026-11-21.json)、[两阶段实屏及 Android 状态](../build/device/m3-display-69-2026-11-21.json)、[验收摘要](../build/device/m3-standard-pps-69-result-2026-11-21.json)。
+
+## 下一阶段：让 Android 框架进入桌面
+
+本轮没有改动 Android 框架、测试卷或图形栈来掩盖显示结果。同一 boot 的只读检查发现 `installd` 未注册，PackageManager 多次等待 installer 超时；`activity`、`window` 和 `sys.boot_completed` 尚未就绪。下一步先查清 installd 的 init 导入、可执行文件和启动失败记录，再验证包管理、ActivityManager、WindowManager 与 Launcher。此处是已观察到的阻塞，不宣称是桌面的唯一剩余问题。
+
+手机留在当前 GSI，未恢复 F.20。当前镜像仍带分阶段观察的主机门控：**再次重启仍需电脑观察器放行，否则会进入 180 秒 EDL 回退**。本次 retained 只保证当前启动的调试状态；下一阶段需在保存显示成功基线后处理正常启动入口，不重复冷启动或看门狗故障演练。磁盘仍只保留原厂恢复集和当前候选固件。

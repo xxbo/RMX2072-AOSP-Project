@@ -5,13 +5,16 @@ and AOSP Launcher on the same Android 17 GSI. Cold-start and watchdog rehearsals
 are not part of this work. Each stage report identifies its objective, physical
 result, next blocker and source/evidence commit.
 
-Current result (November 21): trial 68 remains physically corrupt in native
-and Android phases; F.20 has been restored. A new stock 60 Hz command capture
-shows a complete standard 128-byte PPS after the vendor 0x9e sequence, absent
-from the project panel path. Earlier trials matched the static vendor PPS,
-not this final runtime packet. Trial 69 will isolate adding that packet while
-retaining the current encoder parameters. Root cause and desktop acceptance
-remain open. [Runtime evidence and experiment](M3_RUNTIME_PPS_2026-11-21.md).
+Current result (November 21): trial 69 passes operator-confirmed physical
+display in both native KMS and Android phases. Adding the missing standard
+128-byte PPS after the vendor on-sequence, with the previous encoder and
+transport parameters unchanged, removes the corruption in this configuration.
+All 46 runtime comparison checks pass. Enforcing GSI ADB passes 194.687 seconds
+in the same boot; the phone remains in GSI. The AOSP desktop is still blocked:
+installd is absent and PackageManager waits for it, while activity/window are
+not registered. The next goal is Android framework startup. This candidate
+still requires the host observer after every reboot; retention covers the
+current boot only. [Evidence, limits and next step](M3_RUNTIME_PPS_2026-11-21.md).
 
 ## Starting observation, November 15
 
@@ -1167,3 +1170,35 @@ The next priority is to confirm stock transport flags and actual command
 logging coverage, then test one evidenced difference at a time. No handset
 access, flash, restart, full partition reread or new image was performed in
 this research phase. [Community cases, applicability and reproducible audit](M3_COMMUNITY_CASES_2026-11-21.md).
+
+## Trial 69: standard PPS restores native and Android physical output
+
+Stock runtime command logging reveals a standard type-0x0a, 128-byte PPS after
+all 28 vendor on-sequence packets and before display-on. Trial 69 adds only
+that packet, packed from the existing encoder configuration; it does not also
+adopt stock's different runtime RC parameters. Build 40 and 22 preflight checks
+pass. Candidate super readback verifies all 17 chunks. The fixed-input runtime
+comparison passes all 46 checks, including unchanged PHY, EoT, clock, route,
+encoder values and existing packet sequence. The full PPS transmission returns
+132 with payload length 128, and complete first-frame tracing verifies its
+type, LP flag and placement.
+
+In boot `a1ffd3bd-be48-43d9-9822-98839f722720`, the operator reports the native
+pattern fully correct without noise, then independently confirms the Android
+picture complete and normal. The Android CPU screenshot is pixel-identical
+to trial 61's existing reference; the physical improvement is separately
+established by the operator. This identifies the omitted standard PPS as a
+causal defect for the tested corruption. No claim is made for every mode,
+panel wake cycle, hardware GPU support or the AOSP desktop.
+
+Authenticated API 37 ADB remains enforcing and passes 194.687 seconds in the
+same boot, with SurfaceFlinger/composer/allocator/maintenance available. GSI
+is retained. Read-only framework evidence shows missing installd and repeated
+PackageManager installer timeouts; activity/window and boot completion are
+still absent. That is the next startup blocker to investigate. Current reboot
+behavior remains host-gated with the existing 180-second EDL fallback; no
+autonomous restart acceptance is implied. There were no repeated cold-start
+or watchdog fault-injection tests and no new original-partition reread.
+
+[Detailed experiment and observations](M3_RUNTIME_PPS_2026-11-21.md),
+[acceptance receipt](../build/device/m3-standard-pps-69-result-2026-11-21.json).
