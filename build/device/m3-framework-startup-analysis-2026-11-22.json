@@ -1,0 +1,48 @@
+{
+  "baseline_trial": "ufs-host-g3-gsi17-firststage-ufs-69",
+  "baseline_boot": "a1ffd3bd-be48-43d9-9822-98839f722720",
+  "status": "SOURCE_AND_SAVED_RUNTIME_INFERENCE; fix not yet tested",
+  "gsi_files": {
+    "/system/etc/init/installd.rc": {
+      "bytes": 4783,
+      "sha256": "fcb59d1c3f8e49c5348d383805ca287b54c24d8f8fc3b70378078736676ed4a2"
+    },
+    "/system/bin/installd": {
+      "bytes": 372680,
+      "sha256": "148e79507389bc76a8890e9506940e883a3959852a25de53ec2b13e93060c401"
+    },
+    "/system/etc/init/hw/init.rc": {
+      "bytes": 56913,
+      "sha256": "165d0bfac10c8d6715260f1214b55858dcd1284775ce13fd7b900a9936f82937"
+    }
+  },
+  "installd_service": "service installd /system/bin/installd\n    class main\n    user root\n    capabilities CHOWN DAC_OVERRIDE DAC_READ_SEARCH FOWNER FSETID KILL SETGID SETUID SYS_ADMIN",
+  "class_start_trigger": "on nonencrypted\n    class_start main\n    class_start late_start\n",
+  "baseline_vendor_init": "on early-init\n    write /dev/kmsg \"RMX2072: project vendor early-init\"\n",
+  "baseline_vendor_fstab": "system /system ext4 ro,noload wait,logical,first_stage_mount,avb=vbmeta_system,avb_keys=/avb/system.avbpubkey\nvendor /vendor ext4 ro,noload wait,logical,first_stage_mount,avb=vbmeta_vendor,avb_keys=/avb/vendor.avbpubkey\n",
+  "baseline_init_status": {
+    "installd": [],
+    "storaged": [],
+    "surfaceflinger": [
+      "running"
+    ],
+    "zygote": [
+      "running"
+    ]
+  },
+  "scratch_mounts": [
+    "M1EVENT scratch_mount=/data device=7:0 flags=rw,nosuid,nodev,relatime fs=ext4",
+    "M1EVENT scratch_backing=/data file=/run/m1-scratch/data.ext4",
+    "M1EVENT scratch_mount=/metadata device=7:1 flags=rw,nosuid,nodev,relatime fs=ext4",
+    "M1EVENT scratch_backing=/metadata file=/run/m1-scratch/metadata.ext4"
+  ],
+  "observed_blocker": "Installer: installd not found; PackageManager: time out waiting for the installer to be ready",
+  "inference": "Already-mounted scratch volumes bypass mount_all; vendor has no nonencrypted trigger, leaving the GSI main class unstarted. Verify by scoped event on trial 70.",
+  "reference": "https://android.googlesource.com/platform/system/core/+/6f22965053550a23489cac4e9bc1cff38503a2e2/init/builtins.cpp",
+  "reference_scope": "General fs_mgr mount_all event behavior; the bundled GSI rc and saved trial 69 are the device-specific evidence.",
+  "new_candidate_changes": [
+    "Gate nonencrypted on ro.boot.rmx_scratch=1 after boot actions",
+    "Set boot marker only for verified isolated data/metadata seeds",
+    "Preserve every previously accepted display option during vendor composition"
+  ]
+}

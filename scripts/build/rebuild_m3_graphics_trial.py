@@ -16,6 +16,20 @@ import sys
 from stage_m3_graphics import compose, filesystem_size
 
 
+DISPLAY_OPTIONS = ('single_dsc_test', 'solid_fill_test', 'panel_readback_test',
+                   'stock_linkclock_test', 'stock_dsc_test', 'stock_phy_test',
+                   'first_frame_trace', 'standard_pps_test')
+
+
+def retained_display_flags(prior, display_staged):
+    """A vendor-only change must not silently undo the accepted panel setup."""
+    if bool(prior.get('display_staged')) != display_staged:
+        raise ValueError('Vendor rebuild must retain the prior display staging mode')
+    if any(not isinstance(prior.get(key, False), bool) for key in DISPLAY_OPTIONS):
+        raise ValueError('Invalid prior display option')
+    return ['--' + key.replace('_', '-') for key in DISPLAY_OPTIONS if prior.get(key)]
+
+
 def sha(path):
     with path.open('rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
@@ -48,6 +62,7 @@ def main():
     build = repo/'scripts/build'
     graphics = current/'graphics'
     prior = json.loads((current/'usb-build.json').read_text())
+    display_flags = retained_display_flags(prior, a.display_staged)
     if sha(current/'rmx-m1-guard') != prior['guard']:
         raise ValueError('USB guardian differs from the retained input')
     seeds = json.loads((current/'volumes/scratch.json').read_text())
@@ -115,7 +130,7 @@ def main():
     run(sys.executable, build/'rebuild_m2_source_trial.py', '--workspace', work,
         '--ndk', a.ndk.resolve(), '--adb-public-key', a.adb_public_key.resolve(),
         '--board-source', a.board_source.resolve(), '--trial', a.trial, '--display',
-        *(['--display-staged'] if a.display_staged else []))
+        *(['--display-staged'] if a.display_staged else []), *display_flags)
     if sha(current/'system.img') != system_sha or json.loads((current/'volumes/scratch.json').read_text()) != seeds:
         raise ValueError('GSI or scratch seed manifest changed during preparation')
     result = dict(trial=a.trial, graphics_source=provenance, vendor_payload_bytes=payload_size,
@@ -124,6 +139,7 @@ def main():
                   strict_compile_input_sha256=policy['combined_vendor_policy_sha256'],
                   policy_proof_reused_for_identical_statements=True,
                   source_gsi_sha256=system_sha, scratch=seeds, display_staged=a.display_staged,
+                  retained_display_flags=display_flags,
                   openssl_version=openssl_version,
                   handset_write='NOT RUN')
     (current/'graphics-candidate.json').write_text(json.dumps(result, indent=2)+'\n')

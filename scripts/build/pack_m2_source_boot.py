@@ -8,6 +8,7 @@ import gzip
 import hashlib
 import json
 from pathlib import Path
+import re
 import struct
 
 from avb_footer import retain_envelope
@@ -19,6 +20,23 @@ from inspect_boot_dt import inspect
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def scratch_boot_argument(provenance):
+    """Identify only the checked RAM scratch profile, never physical userdata."""
+    volumes = provenance.get('scratch_volumes')
+    if volumes is None:
+        return ''
+    if (not provenance.get('autonomous_ufs') or not provenance.get('guarded_adb')
+            or set(volumes) != {'data', 'metadata'}):
+        raise ValueError('Scratch framework startup requires guarded isolated volumes')
+    for name, mib in [('data', 512), ('metadata', 32)]:
+        info = volumes[name]
+        if (info.get('bytes') != mib * 1024**2 or any(
+                not re.fullmatch(r'[0-9a-f]{64}', info.get(key, ''))
+                for key in ('sha256', 'gzip_sha256'))):
+            raise ValueError('Unchecked scratch volume for framework startup: ' + name)
+    return ' androidboot.rmx_scratch=1'
 
 
 def main():
@@ -167,6 +185,7 @@ def main():
         cmdline += ' msm.rmx2072_stock_phy=1'
     if a.standard_pps_test:
         cmdline += ' panel_samsung_rm19795.pps=1'
+    cmdline += scratch_boot_argument(provenance)
     if len(cmdline.encode()) >= 512:
         raise ValueError('Diagnostic command line exceeds the boot header field')
     header[64:576] = cmdline.encode().ljust(512, b'\0')
@@ -208,6 +227,7 @@ def main():
     record['stock_phy_test'] = a.stock_phy_test
     record['first_frame_trace'] = a.first_frame_trace
     record['standard_pps_test'] = a.standard_pps_test
+    record['scratch_framework_start'] = bool(provenance.get('scratch_volumes'))
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))
 

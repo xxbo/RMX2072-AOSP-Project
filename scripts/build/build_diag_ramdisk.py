@@ -358,6 +358,8 @@ def main():
     if a.adb_public_key:
         report['adb_public_key_sha256'] = hashlib.sha256((key+' M1-host\n').encode()).hexdigest()
         report['guarded_adb'] = True
+    if a.scratch_volumes:
+        report['scratch_volumes'] = scratch
     report['autonomous_ufs'] = a.autonomous_ufs
     report['display_staged'] = a.display_staged
     report['first_frame_trace'] = a.first_frame_trace
