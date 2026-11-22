@@ -117,3 +117,17 @@ Health 构建 #2 的 2,330 条命令依赖检查发现唯一缺项为
 已定位的框架致命点仍是更早的 BatteryService，音频是否阻塞桌面要在
 Health 接入后再判断。下一轮使用相同显示输入、源码 Health 和 2 GiB RAM
 data，目标为 BatteryService 通过、activity/window 注册和 Launcher 出图。
+
+## 第 71 轮 Health 候选
+
+[源码构建 45002345247](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/45002345247)
+成功，2,332 条目标命令没有缺失依赖。固定源版本、源码摘要、产物归属和
+压缩包摘要均通过验证。11 个产物文件中，6 个与现有图形载荷重叠的共享库
+字节完全相同；vendor 只新增 Health 服务、init/VINTF 配置、V5 接口库和
+libpng，另更新文件标签与已严格编译的策略。仍为 64 MiB 文件系统加 AVB。
+[构建记录](../build/device/m3-health-build-2026-11-22.json)。
+
+第 71 轮候选的 27 项[输入对比](../build/device/m3-framework71-preflight-2026-11-22.json)
+通过：内核、DTB/DTBO、GSI、显示开关、图案、guardian 与密钥保留；LP
+元数据和 extent 也不变。RAM data 扩为已校验的 2 GiB，metadata 种子不变。
+这些是本地准备结果，真机 Health 回调、BatteryService 和桌面尚待验证。

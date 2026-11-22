@@ -1,0 +1,63 @@
+{
+  "result": "PASS_SOURCE_BUILD_AND_LOCAL_COMPOSITION",
+  "workflow_run": 45002345247,
+  "source_commit": "e08c6a18d1eab8561913f17594b0eefb9691cf6f",
+  "artifact_id": 14747230997,
+  "artifact_archive_digest": "sha256:bcce2efa6c05c573b69251e9c8f65ed7b9b3eb0f29bc18ea18d88e2fad3d1628",
+  "archive_digest_verified": true,
+  "source_verified": true,
+  "pinned_source": {
+    "tag": "android-17.0.0_r1",
+    "projects": {
+      "hardware/interfaces": "0162af698935100a590b7359581ac8b1b80693e5",
+      "system/core": "545d2487e38192a2ce25040897ced877cf6b4f53",
+      "packages/modules/Connectivity": "347fbd34b368d19f0d87e908ea101eed3601a731",
+      "system/bpf": "d68a263039127dc709114802395e57537a02babf"
+    },
+    "sha256": {
+      "hardware/interfaces/health/aidl/default/Android.bp": "2e6b434350e152fef1c649d3f71bcbf41578f72d03a2305dfa7e1d58cfb03952",
+      "hardware/interfaces/health/aidl/default/main.cpp": "ff71aebe907a8dfeefb50c231cc5f27ee93b737624b92440e7872a78dd5232d4",
+      "hardware/interfaces/health/aidl/default/Health.cpp": "9078170dc915bbba6d0be195676b039317a62230ead340807957cd078fcf770e",
+      "hardware/interfaces/health/aidl/default/HalHealthLoop.cpp": "888405bafb8e0b0f558f379205bc1521c44ea0f7e93da542bf87f24bfcebf268",
+      "system/core/healthd/BatteryMonitor.cpp": "50cd06d7f0e3c7b8d257cfbd6486bfc5b93879744bf0a279b5a4c5bf13111faf",
+      "packages/modules/Connectivity/bpf/headers/Android.bp": "beb13e8f72415a761dad9bc09735e761304da092af8333c0d6fd573888ef7656",
+      "packages/modules/Connectivity/bpf/syscall_wrappers/Android.bp": "f2eaa6afa50c5881d00c02b20d4f107a4cac4db7b13aaaa301f669032be6f692",
+      "system/bpf/Android.bp": "10d2f5dec339e0df91e152ff200669745535cffd4b53ed951a952792dc3bd140"
+    },
+    "scope": "Unmodified AOSP Health V5 implementation and BatteryMonitor; device integration and gauge/charger drivers not implied."
+  },
+  "dependency_closure": {
+    "target": "android.hardware.health-service.example",
+    "graph": "out/combined-rmx2072_m3_graphics.ninja",
+    "method": "ninja -t commands (read only)",
+    "command_count": 2332,
+    "commands_sha256": "b3a2cb071ab845b69df65d0f17b7cc46a2afb36d02f17e4b581d3e69e6aa238d",
+    "missing_dependency_commands": []
+  },
+  "files": {
+    "/bin/hw/android.hardware.health-service.example": "bf7827c6c22c661dfbb70e42d287048d0106e833b78f592a76c464313e5809ce",
+    "/etc/init/android.hardware.health-service.example.rc": "c1a8a66c52719cdce5d0d6d88b39b3e453e7f1133405371162c7b86031cb63cc",
+    "/etc/vintf/manifest/android.hardware.health-service.example.xml": "56fb94fe88596561b53458ccb8d565b200a2b4f308704e56474993ee7668e91b",
+    "/lib64/android.hardware.health-V5-ndk.so": "0b816c34c39917fbce3048acf18e894d6e4d7c6ffe093ae3db99987d86d9bdc4",
+    "/lib64/libbase.so": "79cc9c2b80cb9d91ee866f9995552d53ce35e3fa6671c2687c6af38f1101eff1",
+    "/lib64/libc++.so": "cb118e98c74d3454858921123b9b51ba13df9cad7dfa141dd892c453661a4d78",
+    "/lib64/libcutils.so": "aa3fd0306f880a56a54b0149aa0fa8a9ac85ed39e6d6ae412fadc6539831e073",
+    "/lib64/libhidlbase.so": "d698905bc0cc67c2ca2c670157ec3a49e77c92e02b0d6ce7468f3f021c7bfe1f",
+    "/lib64/libpng.so": "437fec468fd2ece887857dad78ab43d7fad1a2c04819b2210eeb3f3c03a6a633",
+    "/lib64/libutils.so": "b3c2d00e186d8340548f5bb4ef5974fdba0e6c89cb9bb78761555803c41e7687",
+    "/lib64/libz.so": "618c480774eccce44cd928d586714782fe9472f204a227c1c005a635ba29f8e5"
+  },
+  "payload_bytes": 2981530,
+  "shared_graphics_libraries_byte_identical": [
+    "/lib64/libbase.so",
+    "/lib64/libc++.so",
+    "/lib64/libcutils.so",
+    "/lib64/libhidlbase.so",
+    "/lib64/libutils.so",
+    "/lib64/libz.so"
+  ],
+  "installed_rc": "device/realme/bladerunner_48m/m3-vendor/health.rc",
+  "normal_service_only": true,
+  "handset_result": "NOT RUN",
+  "scope": "Unmodified source Health AIDL V5. Gauge and charger drivers remain unported; no synthetic battery property."
+}
