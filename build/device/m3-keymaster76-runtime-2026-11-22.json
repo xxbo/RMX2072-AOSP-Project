@@ -1,0 +1,52 @@
+{
+  "rmx-keymaster-info-service": {
+    "sha256": "3c9ba050e90769bc4adc8685e72cc9dec26c48863cc701e745983ff1a39d9313",
+    "needed": [
+      "android.hardware.keymaster@3.0.so",
+      "android.hardware.keymaster@4.0.so",
+      "libbase.so",
+      "libc++.so",
+      "libcutils.so",
+      "libhidlbase.so",
+      "libprocessgroup.so",
+      "libutils.so",
+      "liblog.so",
+      "libc.so"
+    ],
+    "runpath": [
+      "/vendor/lib64/rmx-keymaster"
+    ],
+    "source_sha256": "7616a607268a6d0e30fe836b9e024d45835c5bcd3c33799ab20506c8a9e9a98b",
+    "source_files": {
+      "m1-keymaster-info/service.cpp": "7616a607268a6d0e30fe836b9e024d45835c5bcd3c33799ab20506c8a9e9a98b",
+      "m1-keymaster-info/wire.h": "1a32eebe7b74b11e99d430d19b41dfa264b50a7f3962e3eab3841ff8d30c3d88",
+      "m1-keymaster-info/operations.h": "c22e3775a01ce49535c4cf5d35dffd9c6cf72c13dbfd817849139bc1aba5e788",
+      "m1-keymaster-info/selftest.h": "70543a507259414afaf341d2b8179fc2ca656ce582930fc5578eaece68bd786b",
+      "bootstrap-probes/rmx2072-keymaster-transport.h": "2c397b281ff8bd4b10a45d91f87e87397de359e3d58be6902cbe55d73ba67eda"
+    }
+  },
+  "rmx-keymaster-info-client": {
+    "sha256": "c8e284ab3438cbf797a5054bb974298aa1ff4a8725c408887c2cf3dd3f72f11f",
+    "needed": [
+      "android.hardware.keymaster@3.0.so",
+      "android.hardware.keymaster@4.0.so",
+      "libbase.so",
+      "libc++.so",
+      "libcutils.so",
+      "libhidlbase.so",
+      "libprocessgroup.so",
+      "libutils.so",
+      "liblog.so",
+      "libc.so"
+    ],
+    "runpath": [
+      "/vendor/lib64/rmx-keymaster"
+    ],
+    "source_sha256": "ca7b4007ab68ba97c0fb58f5f9dd5c3a11111df957f07eaf55eca0d3b33be810",
+    "source_files": {
+      "m1-keymaster-info/client.cpp": "ca7b4007ab68ba97c0fb58f5f9dd5c3a11111df957f07eaf55eca0d3b33be810",
+      "m1-keymaster-info/selftest.h": "70543a507259414afaf341d2b8179fc2ca656ce582930fc5578eaece68bd786b",
+      "m1-keymaster-info/wire.h": "1a32eebe7b74b11e99d430d19b41dfa264b50a7f3962e3eab3841ff8d30c3d88"
+    }
+  }
+}

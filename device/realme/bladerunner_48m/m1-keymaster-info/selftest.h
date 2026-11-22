@@ -29,7 +29,9 @@ inline int aesSelftest(const android::sp<IKeymasterDevice>& device) {
         scalar(Tag::BLOCK_MODE,uint32_t(BlockMode::GCM)),scalar(Tag::PADDING,uint32_t(PaddingMode::NONE)),
         scalar(Tag::MIN_MAC_LENGTH,128),scalar(Tag::NO_AUTH_REQUIRED,1)};
     Bytes raw,blob; raw.resize(32);
-    if (getrandom(raw.data(),raw.size(),0)!=ssize_t(raw.size())) {
+    // This diagnostic must not hold HIDL registration waiting for Linux CRNG.
+    // Insufficient entropy is a failed test, never a substitute/fixed key.
+    if (getrandom(raw.data(),raw.size(),GRND_NONBLOCK)!=ssize_t(raw.size())) {
         rmxkm::wipe(raw.data(),raw.size()); return 2;
     }
     ErrorCode status=ErrorCode::UNKNOWN_ERROR;

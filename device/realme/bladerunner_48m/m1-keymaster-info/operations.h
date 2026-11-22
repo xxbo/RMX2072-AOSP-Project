@@ -57,8 +57,11 @@ inline ErrorCode configure() {
     __system_property_get("ro.build.version.release",os);
     __system_property_get("ro.build.version.security_patch",patch);
     __system_property_get("ro.vendor.build.security_patch",vendor);
-    if (strcmp(os,"17") || strcmp(patch,"2026-09-05") || strcmp(vendor,"1970-01-01"))
+    if (strcmp(os,"17") || strcmp(patch,"2026-09-05") || strcmp(vendor,"1970-01-01")) {
+        __android_log_print(ANDROID_LOG_ERROR,"RMXKeymaster",
+            "configure property mismatch release=%s system_patch=%s vendor_patch=%s",os,patch,vendor);
         return ErrorCode::INVALID_ARGUMENT;
+    }
     rmxkm::Packet p(12,0x116);
     p.params(4,{{0x300002c1,170000},{0x300002c2,202609},{0x300002ce,19700101}});
     Reply r; auto error=call(p,r); log("configure",error); return error;

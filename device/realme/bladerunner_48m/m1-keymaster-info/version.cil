@@ -19,3 +19,6 @@
 (typeattributeset dev_type (rmx_keymaster_device))
 (allow rmx_keymaster rmx_keymaster_device (chr_file (getattr open read write ioctl)))
 (allowx rmx_keymaster rmx_keymaster_device (ioctl chr_file (0x524b)))
+
+; Configure uses the actual project vendor patch property before TEE calls.
+(allow rmx_keymaster vendor_security_patch_level_prop (file (getattr open read map)))

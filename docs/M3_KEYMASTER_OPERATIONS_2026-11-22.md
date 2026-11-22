@@ -110,3 +110,39 @@ is relaxed. `check_m3_keymaster.py` only collects these logs on the matched boot
 
 Status: candidate preparation in progress. No new image has been booted and no
 LockSettings/Launcher success is claimed.
+
+## Trial 75: property read denial, restored F.20
+
+The source kernel build
+[45029228400](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/45029228400)
+succeeded. All 36 candidate checks passed; only Keymaster kernel sources changed.
+Boot/DTBO and all 17 candidate super chunks passed readback. The GSI boot UUID was
+`727f70a2-ac05-44f0-8a1e-5e3d393fe45b`.
+
+Saved ramoops identifies an exact failure before new TEE transactions: the
+`rmx_keymaster` domain was denied reading `vendor_security_patch_level_prop`.
+The existing TEE version query still returned transport/status success. The new
+configure guard then saw an unavailable vendor property and exited with status 1.
+Repeated lazy starts could not register the HAL, `android.security.maintenance`
+remained unavailable, and GSI ADB never appeared. AES self-test, import, framework
+progress and Launcher were **not reached**, not failed cryptographic tests.
+
+The user observed restarting/realme. The guard's previous-boot marker says
+`expired`; ramoops records APSS watchdog pretimeout. The host caught recovery
+boot `6eeda310-725d-414f-8e8b-ec27959715d0` and requested EDL without manual keys.
+F.20 was restored from the existing one-copy recovery set, with write ACKs,
+boot completion and both LP metadata slots verified. No full stock partition
+readback was performed. Exact result and evidence hashes:
+[trial 75](../build/device/m3-keymaster75-result-2026-11-22.json).
+
+Trial 76 adds only read/getattr/open/map for that property to the HAL domain.
+The diagnostic random-key allocation also uses nonblocking `getrandom`: a lack
+of Linux entropy must fail the test instead of holding HAL registration. The
+property check now logs a mismatch explicitly. Kernel, display, GSI and seeds
+stay the same. The complete new policy passed strict compilation with the
+pinned GSI's own compiler, linker and Bionic files, executed as a temporary tool
+on restored F.20. Policy was not loaded and enforcing stayed enabled.
+[policy proof](../build/device/m3-keymaster76-policy-2026-11-22.json).
+
+Current target: actual TEE import and temporary AES-GCM acceptance, followed by
+LockSettings and Launcher. No desktop acceptance yet.

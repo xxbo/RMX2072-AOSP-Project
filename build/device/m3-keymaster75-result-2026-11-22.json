@@ -1,0 +1,100 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-75",
+  "boot_id": "727f70a2-ac05-44f0-8a1e-5e3d393fe45b",
+  "result": "FAIL_VENDOR_PATCH_PROPERTY_READ_BEFORE_HAL_CONFIGURATION",
+  "recipe_commit": "9956e46ed7b111d6bd88861c8b54f20c6169951e",
+  "kernel": {
+    "run_id": 45029228400,
+    "source_commit": "9241fa08c65cf1138a5d8e5503efc6c46801cccd",
+    "artifact_id": 14758530718,
+    "artifact_archive_digest": "sha256:e7b30682acacf84a02dca8ba0fd77a9de6700507dde6e583ad8cc3a17235f441",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "6bbf89b900d3d303dc92d197f9f971294eda63949d6f41d15684f18c211abca2",
+    "selected_member_sha256": {
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "SHA256SUMS": "85c5fe357f8a5785d5db5213843b7c1efbd63786f3e4fad3c8b5d9973ca109dc",
+      "build-metadata.txt": "d1d1aedbf7ec8e5dc55ed6701a64d9c51c0798af8380553de1ddb792f1ca7dac",
+      "display-clock-patch.sha256": "d61a6e071f4d95e1b4b78523f1aa0d0fe30d21380e845490921bd96baebfccd1",
+      "display-source.sha256": "bb30fa4d877c0ab57162df875ddafb1a28ae7e654675116f0dc88e986720d502",
+      "Image.gz": "4e9ee232be343bbdcd64caf86451ecd6a746b1ac222c9b3aa4e7ace77bc9e5d9",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "4b00d7b70feb80e4a80176cb10c73291b013c1da54cefc70693dbfa19c97a998",
+      "keymaster-lookup.sha256": "27eb57ca52867b462c5e6ac7f2ad7232de222ae39d1d8c127b619c05a853fd79",
+      "keymaster-transport.sha256": "2e92035b47210a91734a749c73266f6d620a3fd9e152ca04fd6f064e88f67510",
+      "listener.sha256": "ce792f82568eaa96bdc4055efecb70f37baaa3c9eaf77278e9d653bb0b18d4c7",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "rmx2072-dpu-solid-fill-test.sha256": "23d9f30f6452c901ef6457761d6efa48380f35da179f107617e9f228d85f0d20",
+      "rmx2072-dsc-packet-trace.sha256": "6bf2fd3fc742d2b897753519cc9003c091351a8af8cea560622ac48a9cb9bd39",
+      "rmx2072-dsc-route-test.sha256": "0e8dd497379f704771996add7f72fce0d0972d73e971a39bd0ebb4aad8c1d4f3",
+      "rmx2072-first-frame-trace.sha256": "6df11e75ba7d34c889c576002a9e07b921a01a730aa415ca663122d8746a16ee",
+      "rmx2072-stock-dsc-test.sha256": "c44cabb0bf548b927d631f0a9c53d0f47bd3de5eff57306bc20cb1562800e28e",
+      "rmx2072-stock-linkclock-test.sha256": "2d4d012fa54a5c058b8bc49f1224702e756682f44809c50aa86d30af6d25ee8b",
+      "rmx2072-stock-phy-timing-test.sha256": "73d4124ed5ba3ec9de7e6a029e3fab0aac449f7aac61db1298cd77683e0816aa",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309",
+      "upstream-dsi-dsc-all-slices-flag.sha256": "8a0f473a130c0159cb0d7badcd6f37a128915e08098de90ff010b58dc871a05d",
+      "upstream-msm-dsi-dsc-slices-per-packet.sha256": "130c7139f1104b38050febbff6c19bc10a41d13ff840d81f522562619f77fc0b"
+    }
+  },
+  "boot_sha256": "f99ee8c86672715215b5a96296697ddca2d10e8ae123078cba0f9d6cb9175bb6",
+  "vendor_sha256": "396396bc8c6fca22d177878c5d1022055aa7e53db80f545f23707f7b6a546158",
+  "super_sha256": "ca814400cb8bdccca838ba96655b9887294d168e53845ec20dbf6e4a58890476",
+  "candidate_readback": "PASS_BOOT_DTBO_AND_17_SUPER_CHUNKS",
+  "updated_super_chunks": [
+    0
+  ],
+  "stock_partition_readback": false,
+  "tee_version_query": "PASS",
+  "tee_configure": "NOT_REACHED",
+  "temporary_aes_test": "NOT_REACHED",
+  "maintenance": "NOT_REGISTERED",
+  "gsi_adb": "NOT_OBSERVED",
+  "launcher": "NOT_REACHED",
+  "cold_boot_or_fault_injection": "NOT_RUN",
+  "physical_observation": "User reported repeating restart or realme logo",
+  "automatic_recovery": "Guard expired, APSS watchdog rebooted; host observed recovery diagnostic boot and requested EDL; no keys/unplug required",
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "65940559-9fea-45f7-a632-97e29e729c74",
+    "super_sha256": null,
+    "boot_sha256": null,
+    "dtbo_sha256": null,
+    "lp_slots": [
+      0,
+      1
+    ],
+    "stock_full_partition_readback": false,
+    "stock_write_acknowledged": true,
+    "expected_image_sha256": {
+      "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+    },
+    "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata"
+  },
+  "next": "Grant only vendor_security_patch_level_prop file read/getattr/open/map to rmx_keymaster; strict policy compile and repeat with unchanged kernel/display/GSI/seeds",
+  "evidence_sha256": {
+    "inputs.json": "564e478ef24f69e520e66193792a546f6e46516097d7625e4b4d2250500a7576",
+    "readbacks.jsonl": "305b0c0f4ba8733464b56ad4489d4962525d5aece87f45f548e1af187c119e04",
+    "restored.json": "372de4a61fa847f097a6c1fff6dbbc852f5c0d05672b729c02e6dc8e84702559",
+    "live/console-ramoops-0": "158e71bd3ea67e4cfa22205650fd2b2586d0134af62398e5503232972eccce45",
+    "live/pmsg-ramoops-0": "4c97d8bef3393e73ffcee46bed29ba382d4105e94ac0662ed6705ba8dd47291e",
+    "live/host-events.jsonl": "563314f8a76e89447c2ce0ef3af40ccbf6ce36cf5c864a1f40cf64eb425b6e0d",
+    "live/intermediate-boot.json": "8a884d1240f56f190fea9ed7c790efa37cb65a880c5fbf9b1cf663d1d135bf37",
+    "live/recovery-providers.txt": "d138294a2fa750f6cb5e4051c9721acef5de3cd8d9ff8009868d0491d36fcfb8"
+  },
+  "excerpt": [
+    "[  241.894592][ T2286] rmx2072-keymaster: query method=512 rc=0 terminal=1",
+    "[  241.895237][ T1876] type=1400 audit(241.875:305): avc:  denied  { read } for  comm=\"rmx-keymaster-i\" name=\"u:object_r:vendor_security_patch_level_prop:s0\" dev=\"tmpfs\" ino=420 scontext=u:r:rmx_keymaster:s0 tcontext=u:object_r:vendor_security_patch_level_prop:s0 tclass=file permissive=0",
+    "[  241.896755][    T1] init: Service 'vendor.rmx-keymaster' (pid 2286) exited with status 1",
+    "[  241.824541][ T1863] servicemanager: Caller(pid=1877,uid=0,sid=u:r:vold:s0) Since 'android.security.maintenance' could not be found trying to start it as a lazy AIDL service. (if it's not configured to be a lazy service, it may be stuck starting or still starting).",
+    "[  324.282969][    C0] watchdog0: pretimeout event"
+  ]
+}
