@@ -143,6 +143,15 @@ static int rmx2072_key_call(struct rmx2072_key_test *test, size_t len, bool *ter
 	test->reply = reply;
 	memset(reply, 0, SZ_32K + SZ_8K - len);
 	*(__le32 *)reply = cpu_to_le32((u32)-1000);
+	/* Legacy update/finish take their output capacity in the response header.
+	 * F.20 initializes these before send_cmd; all offsets are reply-relative. */
+	if (le32_to_cpup((__le32 *)test->request) == 0x111 ||
+	    le32_to_cpup((__le32 *)test->request) == 0x112) {
+		u32 header = le32_to_cpup((__le32 *)test->request) == 0x111 ? 20 : 16;
+
+		((__le32 *)reply)[2] = cpu_to_le32(header);
+		((__le32 *)reply)[3] = cpu_to_le32(RMX2072_KM_CAPACITY - len - header);
+	}
 	*terminal = false;
 	pr_info("rmx2072-temp-key: send method=%u bytes=%zu\n",
 		le32_to_cpu(*(__le32 *)test->request), len);
@@ -343,3 +352,90 @@ out:
 
 static const struct kernel_param_ops rmx2072_temp_key_ops = { .get = rmx2072_temp_key };
 module_param_cb(temp_hmac_key, &rmx2072_temp_key_ops, NULL, 0400);
+
+/* HAL transactions use the proven contiguous allocation and TIME continuation.
+ * Unknown callbacks or uncertain teardown block further app calls this boot. */
+int rmx2072_keymaster_transact(const void *request, size_t bytes, void *reply)
+{
+	struct rmx2072_key_test t = {};
+	struct qcom_scm_qseecom_resp resp = {};
+	u32 board, method, minimum;
+	bool terminal = true, listener_owned = false;
+	int rc, teardown;
+
+	if (!of_machine_is_compatible("qcom,kona-mtp") ||
+	    of_property_read_u32(of_root, "oplus,dtsi_no", &board) || board != 20607 ||
+	    !qcom_scm_is_available())
+		return -ENODEV;
+	if (!request || !reply || bytes < 4 || bytes > RMX2072_KM_MAX_REQUEST)
+		return -EINVAL;
+	method = le32_to_cpup((const __le32 *)request);
+	/* No provisioning, boot-state overrides, delete-all, app loading or
+	 * arbitrary SCM commands. These are F.20's legacy key operation IDs. */
+	switch (method) {
+	case 0x108: case 0x10d: case 0x113: case 0x116: case 0x20f:
+		minimum = 12; break;
+	case 0x10b: case 0x10f:
+		minimum = 24; break;
+	case 0x111:
+		minimum = 28; break;
+	case 0x112:
+		minimum = 36; break;
+	default:
+		return -EOPNOTSUPP;
+	}
+	if (bytes < minimum)
+		return -EINVAL;
+	rc = qcom_scm_qseecom_app_get_id("keymaster64", &t.app_id);
+	if (rc)
+		return rc;
+	mutex_lock(&qcom_scm_qseecom_call_lock);
+	if (rmx2072_keymaster_blocked) {
+		rc = -EBUSY;
+		goto out;
+	}
+	t.request = qcom_tzmem_alloc(__scm->mempool, RMX2072_KM_CAPACITY, GFP_KERNEL);
+	t.listener = qcom_tzmem_alloc(__scm->mempool, SZ_16K + SZ_4K, GFP_KERNEL);
+	t.sglist = qcom_tzmem_alloc(__scm->mempool, 32, GFP_KERNEL);
+	rc = -ENOMEM;
+	if (!t.request || !t.listener || !t.sglist)
+		goto out;
+	memset(t.request, 0, RMX2072_KM_CAPACITY);
+	memset(t.listener, 0, SZ_16K + SZ_4K);
+	memset(t.sglist, 0, 32);
+	memcpy(t.request, request, bytes);
+	rc = rmx2072_listener_change(11, t.listener, &resp);
+	listener_owned = rc || resp.result != QSEECOM_RESULT_FAILURE;
+	if (rc || resp.result != QSEECOM_RESULT_SUCCESS) {
+		rc = rc ?: -EIO;
+		goto out;
+	}
+	rc = rmx2072_key_call(&t, bytes, &terminal);
+	if (!rc)
+		memcpy(reply, t.reply, RMX2072_KM_CAPACITY - bytes);
+	if (terminal) {
+		teardown = rmx2072_listener_change(11, NULL, &resp);
+		listener_owned = teardown || resp.result != QSEECOM_RESULT_SUCCESS;
+		if (listener_owned)
+			rc = rc ?: -EIO;
+	}
+	pr_info("rmx2072-keymaster: method=%u transport=%d terminal=%u callbacks=%u teardown_ok=%u\n",
+		method, rc, terminal, t.callbacks, !listener_owned);
+out:
+	if (terminal) {
+		if (t.request) {
+			memzero_explicit(t.request, RMX2072_KM_CAPACITY);
+			qcom_tzmem_free(t.request);
+		}
+		if (t.sglist)
+			qcom_tzmem_free(t.sglist);
+	}
+	if (!listener_owned && t.listener) {
+		memzero_explicit(t.listener, SZ_16K + SZ_4K);
+		qcom_tzmem_free(t.listener);
+	}
+	if (!terminal || listener_owned)
+		rmx2072_keymaster_blocked = true;
+	mutex_unlock(&qcom_scm_qseecom_call_lock);
+	return rc;
+}
