@@ -1,0 +1,15 @@
+{
+  "tag": "android-17.0.0_r1",
+  "projects": {
+    "hardware/interfaces": "0162af698935100a590b7359581ac8b1b80693e5"
+  },
+  "sha256": {
+    "hardware/interfaces/power/aidl/Android.bp": "b53bb2b762f938692406800b302f9de1554e5360e81e65b638e493247e0fb612",
+    "hardware/interfaces/power/aidl/android/hardware/power/IPower.aidl": "9fbbb6d680266fd0a5b87e32d917f9e40b6f37c30e6794c782c605226f86a278",
+    "hardware/interfaces/power/aidl/android/hardware/power/SupportInfo.aidl": "e7ad6b958b4df3f12ee87931a583669563caf09bafc01f84e22a4237574390ef",
+    "hardware/interfaces/power/aidl/aidl_api/android.hardware.power/7/android/hardware/power/IPower.aidl": "b5ef580e1aea9781300a258fe37f11154870ec8435943c516d5584789c879a84",
+    "hardware/interfaces/power/aidl/aidl_api/android.hardware.power/7/android/hardware/power/SupportInfo.aidl": "140baa824e9dad2b84bf0e6fd51ff279aec136be1cfe06b5e6b50fa29b94eb06",
+    "hardware/interfaces/power/aidl/aidl_api/android.hardware.power/7/.hash": "e6fea549c14b76d6b107a30134ca6fa2c10e68240f8aed4438d31837ad1837ef"
+  },
+  "scope": "Frozen Power AIDL V7 interface; project implementation reports unimplemented capabilities as unsupported"
+}
