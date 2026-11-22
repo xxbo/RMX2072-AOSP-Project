@@ -182,6 +182,12 @@ def main():
                   metadata_and_extents_unchanged=(candidate['prefix_sha256'] == old['candidate']['prefix_sha256'] and candidate['targets'] == old['candidate']['targets']),
                   headroom_bytes=candidate['headroom'],
                   scope='Local input comparison only; no handset or desktop acceptance implied')
+    if a.stage == 'keymaster':
+        report.update(selected_hal_build=None,
+            selected_hal_source_commit=usb['recipe_commit'],
+            keymaster_build_report_sha256=sha(a.keymaster_build),
+            kernel_source_commit=new_kernel['source_commit'], kernel_build=new_kernel['run_id'],
+            retained_audio_build=extra['run_id'])
     a.output.write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(dict(passed=report['passed'], checks=len(checks),
                           failed=[k for k,v in checks.items() if not v])))
