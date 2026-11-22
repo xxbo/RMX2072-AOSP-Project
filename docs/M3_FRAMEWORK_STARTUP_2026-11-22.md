@@ -136,6 +136,8 @@ libpng，另更新文件标签与已严格编译的策略。仍为 64 MiB 文件
 完成确认，boot、DTBO 和 super 前 8 段回读通过；第 9 段收到的
 384,827,392 字节也与候选前缀相同，但 Windows ReadFile 在 16:54 失败。
 紧随其后的原厂恢复因端口消失未能开始。USB 重插后短暂枚举为
-`05c6:900e` / COM9，之后再次消失。正在等待新 9008 会话恢复 F.20；
+`05c6:900e` / COM9，之后再次消失。用户配合重新进入 9008 后，在 COM6
+完成原厂回写；17:11 的 F.20、ADB、boot_completed 和两份 LP 元数据验证
+通过，未重复回读原厂整区。[恢复记录](../build/device/m3-framework71-restored-2026-11-22.json)。
 不能将该事件归因于尚未验收的 Health 或新框架。900E 根因仍未确定。
 [中断证据](../build/device/m3-framework71-interruption-2026-11-22.json)。
