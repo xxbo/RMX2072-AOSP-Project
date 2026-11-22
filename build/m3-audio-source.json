@@ -1,0 +1,20 @@
+{
+  "tag": "android-17.0.0_r1",
+  "projects": {
+    "hardware/interfaces": "0162af698935100a590b7359581ac8b1b80693e5",
+    "system/hardware/interfaces": "9c3469aa3d4aeec5b2bc8e8ae8fdb4437dab4edb"
+  },
+  "sha256": {
+    "hardware/interfaces/audio/aidl/Android.bp": "52e9ee30c84a3be742a9253065be55ad3b625be5bb16a329a4a703b47ba426fb",
+    "hardware/interfaces/audio/aidl/android/hardware/audio/core/IModule.aidl": "bd2631295e279a6b43e0f5f6d1a1f3ed01524c61fae8d101e539a7ede641b08a",
+    "hardware/interfaces/audio/aidl/android/hardware/audio/core/IConfig.aidl": "08f6f8337fcf499d07927e215cbdce9e42845df150fa9c038df53b914c1d582a",
+    "hardware/interfaces/audio/aidl/android/hardware/audio/effect/IFactory.aidl": "43ed442023c59e4baee6bd669ead0a7afa1c78cf4b7232670725cc8849b703e7",
+    "hardware/interfaces/audio/aidl/aidl_api/android.hardware.audio.core/4/.hash": "06c682f38eb8592725785be04d637edb13a6343b36e16a515b49cb4bb06bc8d7",
+    "hardware/interfaces/audio/aidl/aidl_api/android.hardware.audio.effect/4/.hash": "8b51602004cf7566a2ec315a501213aebfce4353a26c7686a410b76401157887",
+    "hardware/interfaces/audio/aidl/aidl_api/android.hardware.audio.core/4/android/hardware/audio/core/IModule.aidl": "b12c3b2951741104832334d8112476589c17e2d5e44fb451820fd7d9fc548dcf",
+    "hardware/interfaces/audio/aidl/aidl_api/android.hardware.audio.core/4/android/hardware/audio/core/IConfig.aidl": "fa69b7f83f28ba912f481ee3afdc4d6e65d70b6531fe18f06c525fd973caebfe",
+    "hardware/interfaces/audio/aidl/aidl_api/android.hardware.audio.effect/4/android/hardware/audio/effect/IFactory.aidl": "37537edcc5876fce1c014091dcb0aebe05dca722d13b2640d7c8658a8e348fd3",
+    "system/hardware/interfaces/media/Android.bp": "eb359a4a775fed97bc87c4a23c4e8f48e920a5b1bd6723a0a1e93b1a38490056"
+  },
+  "scope": "Frozen Core/Effect AIDL V4; project endpoints enumerate zero available devices/effects. Physical audio backend not yet connected."
+}
