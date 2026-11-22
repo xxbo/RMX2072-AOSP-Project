@@ -42,6 +42,8 @@ def main():
     else:
         raise TimeoutError('No matching new authenticated GSI ADB')
     commands = {
+        # Save startup messages before potentially slow Binder dump calls.
+        'logcat': 'logcat -b all -d',
         'identity': 'cat /proc/sys/kernel/random/boot_id; uname -r; getenforce; getprop vendor.rmx.m1.state; getprop ro.boot.rmx_scratch; getprop sys.boot_completed',
         'services': 'getprop init.svc.installd; getprop init.svc.storaged; getprop init.svc.vendor.health-default; getprop init.svc.vendor.power-rmx2072; getprop init.svc.audioserver; getprop init.svc.zygote; service check activity; service check window; service check package; service check SurfaceFlinger; service check android.security.maintenance; ps -AZ | grep -E "health-service|power-service|system_server|installd|surfaceflinger|audioserver"',
         'storage': 'df -k /data /metadata; head -n 8 /proc/meminfo; ls -lZ /sys/class/power_supply',
@@ -53,7 +55,6 @@ def main():
         'audio-hal': 'getprop init.svc.vendor.audio-hal-aidl; service check android.hardware.audio.core.IConfig/default; service check android.hardware.audio.core.IModule/default; service check android.hardware.audio.effect.IFactory/default; ps -AZ | grep -E "audio-service|audioserver"; ls -lZ /dev/snd',
         'audio': 'service check media.audio_flinger; service check media.audio_policy; service check audio; timeout 6 dumpsys media.audio_flinger; timeout 6 dumpsys media.audio_policy; timeout 6 dumpsys audio',
         'activity': 'getprop sys.boot_completed; getprop service.bootanim.exit; timeout 12 dumpsys activity activities',
-        'logcat': 'logcat -b all -d',
     }
     print('FIRST_FRAMEWORK_ADB '+boot, flush=True)
     for iteration in range(5):
