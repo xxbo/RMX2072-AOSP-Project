@@ -1,0 +1,121 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-71",
+  "result": "BLOCKED_EDL_TRANSPORT_INTERRUPTION_BEFORE_GSI_RELEASE",
+  "recipe_commit": "028265ad18cc5dceb784f1c89186f9f043843ef2",
+  "kernel_sha256": "7b1701283ca73e4b2536fbf053aaa01dbca9b8e5f77059b98dc5291a9569d7b3",
+  "boot_sha256": "54d3ef4662a2d00293e11c358dce7131850b7e2f87b5e8fd171720f03718f3d5",
+  "vendor_sha256": "3c716a81268a42d1df2260cbbbf6018436d3c566e9b0c3902ad88ac65be10585",
+  "super_sha256": "d9dd8c64fbf185cdba37f382090eb5c9cbfd960f2172a1bbf5c78ba45dd9f00f",
+  "candidate_programming_acknowledged": true,
+  "candidate_readbacks": [
+    {
+      "label": "candidate-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "54d3ef4662a2d00293e11c358dce7131850b7e2f87b5e8fd171720f03718f3d5",
+      "utc": "2026-11-22T08:52:18.545029+00:00"
+    },
+    {
+      "label": "candidate-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+      "utc": "2026-11-22T08:52:19.252133+00:00"
+    },
+    {
+      "label": "candidate-super-read-00",
+      "lun": 0,
+      "start_sector": 193032,
+      "sectors": 131072,
+      "sha256": "641e91358af1ed8b0244029730cbf909cd4ba36b0c0a84ccb8c1f061e1067ec6",
+      "utc": "2026-11-22T08:52:31.311174+00:00"
+    },
+    {
+      "label": "candidate-super-read-01",
+      "lun": 0,
+      "start_sector": 324104,
+      "sectors": 131072,
+      "sha256": "5966cadc6bdbf42920f191b9295452dc54fb5f33b6d98c2db929b5b7884c8260",
+      "utc": "2026-11-22T08:52:43.443365+00:00"
+    },
+    {
+      "label": "candidate-super-read-02",
+      "lun": 0,
+      "start_sector": 455176,
+      "sectors": 131072,
+      "sha256": "2672cbd1f6906371963c62fa279d2b7ff1a036c0f87bd2ac0cd01a093d4ee4e4",
+      "utc": "2026-11-22T08:52:55.544051+00:00"
+    },
+    {
+      "label": "candidate-super-read-03",
+      "lun": 0,
+      "start_sector": 586248,
+      "sectors": 131072,
+      "sha256": "b773ca12b0a1eb5e0a3101281c03a20a0d16f1aa3fd435ca9888f5fdd7fbd0ee",
+      "utc": "2026-11-22T08:53:07.622867+00:00"
+    },
+    {
+      "label": "candidate-super-read-04",
+      "lun": 0,
+      "start_sector": 717320,
+      "sectors": 131072,
+      "sha256": "d9ec0569cf19a76d80e4f5bf3d305ccc785ff38ba4837594b69a3c92eced4715",
+      "utc": "2026-11-22T08:53:19.707393+00:00"
+    },
+    {
+      "label": "candidate-super-read-05",
+      "lun": 0,
+      "start_sector": 848392,
+      "sectors": 131072,
+      "sha256": "6d5207f2dc41d25cc72072a9a2ce78c3c942362d7bb84548a3c8da04f868d1f7",
+      "utc": "2026-11-22T08:53:31.795190+00:00"
+    },
+    {
+      "label": "candidate-super-read-06",
+      "lun": 0,
+      "start_sector": 979464,
+      "sectors": 131072,
+      "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+      "utc": "2026-11-22T08:53:43.876808+00:00"
+    },
+    {
+      "label": "candidate-super-read-07",
+      "lun": 0,
+      "start_sector": 1110536,
+      "sectors": 131072,
+      "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+      "utc": "2026-11-22T08:53:55.917832+00:00"
+    }
+  ],
+  "interrupted_read": {
+    "bytes_received": 384827392,
+    "partial_sha256": "8acae803c4ec6aa0ec0a2a44d756c7e36af08e6ba3dde2d40ab2fe9a010fe9a2",
+    "expected_prefix_sha256": "8acae803c4ec6aa0ec0a2a44d756c7e36af08e6ba3dde2d40ab2fe9a010fe9a2",
+    "candidate_chunk": 8,
+    "complete_chunk_bytes": 536870912,
+    "received_prefix_matches_candidate": true
+  },
+  "host_error": "Windows ReadFile failed on COM8 during candidate super chunk 08",
+  "subsequent_usb": {
+    "vid": "05c6",
+    "pid": "900e",
+    "name": "Qualcomm HS-USB Diagnostics 900E",
+    "port": "COM9"
+  },
+  "health_on_device": "NOT RUN",
+  "framework_on_device": "NOT RUN",
+  "gsi_release_command_sent": false,
+  "edl_interruption_root_cause": "UNKNOWN",
+  "restore_status": "WAITING_FOR_FRESH_EDL",
+  "local_evidence": {
+    "candidate-super.log": "14a2b09589a747ba6d660ab0647dffa184a432dd5a4fccd451f86bec2b525e40",
+    "candidate-super-read-08.log": "4d7a5b53066dfc17f55eca9a95d2980c4b25e1b6ef9e22b3e7bad1211585c1db",
+    "restore-super.log": "a8cc8bb058101080c38e8b6963e19ef6bf0fa212d193422e074ff5a89b3f58f8",
+    "readbacks.jsonl": "ef115a4999641f7f81cda5835af5ff543e7a009cbf2cee6a455ed946b9bcd3da",
+    "interrupted-read-prefix.json": "fd24835007ef71bd046ad206116a53299a12d993871bd5e1df475c06a0262732",
+    "timeline.jsonl": "18138c48108de35bea3bec13915379d31a4fcc5e8f81727110829ea6625acf37",
+    "usb-interruption-host.jsonl": "2bc910d285fea64423530b9b2d39116f35c63f21387ebb44270272088c9f7ef9"
+  }
+}

@@ -131,3 +131,11 @@ libpng，另更新文件标签与已严格编译的策略。仍为 64 MiB 文件
 通过：内核、DTB/DTBO、GSI、显示开关、图案、guardian 与密钥保留；LP
 元数据和 extent 也不变。RAM data 扩为已校验的 2 GiB，metadata 种子不变。
 这些是本地准备结果，真机 Health 回调、BatteryService 和桌面尚待验证。
+
+第 71 轮实际在 EDL 回读阶段中断，尚未发送 GSI 放行命令。候选写入收到
+完成确认，boot、DTBO 和 super 前 8 段回读通过；第 9 段收到的
+384,827,392 字节也与候选前缀相同，但 Windows ReadFile 在 16:54 失败。
+紧随其后的原厂恢复因端口消失未能开始。USB 重插后短暂枚举为
+`05c6:900e` / COM9，之后再次消失。正在等待新 9008 会话恢复 F.20；
+不能将该事件归因于尚未验收的 Health 或新框架。900E 根因仍未确定。
+[中断证据](../build/device/m3-framework71-interruption-2026-11-22.json)。
