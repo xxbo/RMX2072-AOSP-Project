@@ -271,3 +271,8 @@ guardian retained，手机留在 GSI。
 无 8 GiB 专用配置；在实测约 7.25 GiB 可见 RAM 的手机上采用其 6 GiB
 手机配置，不修改 GSI。源版本、摘要和值见
 [堆配置固定输入](../build/m3-dalvik-heap-source.json)。
+
+第 74 轮 34 项[候选对比](../build/device/m3-framework74-preflight-2026-11-22.json)
+全部通过。vendor 仅 `/build.prop` 改变，逐属性检查只增加固定的六项
+堆参数；所有 HAL/图形文件、SELinux、显示输入、测试卷和 LP 布局相同。
+下一步上机检查实际属性、OOM、AudioService 和 Launcher。
