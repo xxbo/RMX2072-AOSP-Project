@@ -17,7 +17,9 @@
     "inputs.json": "222d9c17ebed45723054fc842d3e983e3f8db7213c9065517f575e40102047b3",
     "logcat70-early.txt": "da57bc9d748ded828fa29e6a444d4a8fba503ed51c9fe22e105ee96508dc0193",
     "framework70-early.txt": "69f2418c617653f217a6c6079dae113c11765a926b743097a41157bce0b7e2aa",
-    "power-supply70.txt": "eedcea203eb8ee4f34da566b017e1e63cc55b08298716d5d25b2a47ec234578d"
+    "power-supply70.txt": "eedcea203eb8ee4f34da566b017e1e63cc55b08298716d5d25b2a47ec234578d",
+    "logcat70-later.txt": "d3b9632c835b3db6676d76c91032b4dbe8686952745817f9af41d586874f8482",
+    "framework70-later.txt": "11de506028749d7e27e599cd84142b9ad8fcac17283f1eaf56d2a06f9ab651a2"
   },
   "evidence": {
     "installd firing up": [
@@ -51,6 +53,30 @@
   "limits": [
     "AOSP desktop not reached",
     "Power supply drivers not ported",
-    "Same-boot stability capture still in progress at this report"
-  ]
+    "512 MiB RAM data exhausted while decompressing bundled Trichrome APK",
+    "Host observer still needed after reboot of staged display image"
+  ],
+  "stability": {
+    "seconds": 197.593,
+    "guardian": "retained",
+    "identity": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "8135c6b2-9905-4c2b-8908-d986e7422672",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ]
+  },
+  "data_enospc": {
+    "observed": true,
+    "data_used_kib": 496840,
+    "available_kib": 8716,
+    "source": "GSI TrichromeLibrary.apk.gz decompression",
+    "next_profile_mib": 2048,
+    "metadata_unchanged": true,
+    "physical_userdata_changed": false
+  }
 }

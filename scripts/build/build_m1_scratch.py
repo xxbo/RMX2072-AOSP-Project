@@ -19,7 +19,9 @@ VOLUMES = {
 }
 
 
-def build(output):
+def build(output, data_mib=512, reuse_metadata=None):
+    if data_mib not in (512, 2048):
+        raise ValueError('Use the bounded 512 or 2048 MiB volatile data profile')
     output.mkdir(parents=True, exist_ok=False)
     output = output.resolve()
     env = dict(os.environ, LC_ALL='C', TZ='UTC', E2FSPROGS_FAKE_TIME='1230768000')
@@ -27,6 +29,20 @@ def build(output):
     with tempfile.TemporaryDirectory() as tmp:
         directory = Path(tmp)
         for name, (mib, uuid, directories) in VOLUMES.items():
+            if name == 'data':
+                mib = data_mib
+            elif reuse_metadata is not None:
+                prior = json.loads((reuse_metadata/'scratch.json').read_text())['metadata']
+                packed = (reuse_metadata/'metadata.ext4.gz').read_bytes()
+                raw = gzip.decompress(packed)
+                if (prior['bytes'] != 32 << 20 or len(raw) != prior['bytes']
+                        or prior['uuid'] != uuid
+                        or hashlib.sha256(packed).hexdigest() != prior['gzip_sha256']
+                        or hashlib.sha256(raw).hexdigest() != prior['sha256']):
+                    raise ValueError('Existing metadata seed is not the verified isolated profile')
+                (output/'metadata.ext4.gz').write_bytes(packed)
+                records[name] = prior
+                continue
             image = directory/(name+'.ext4')
             with image.open('xb') as file:
                 file.truncate(mib * 1024 * 1024)
@@ -70,4 +86,7 @@ def build(output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    build(parser.parse_args().output)
+    parser.add_argument('--data-mib', type=int, choices=(512, 2048), default=512)
+    parser.add_argument('--reuse-metadata', type=Path)
+    args = parser.parse_args()
+    build(args.output, args.data_mib, args.reuse_metadata)

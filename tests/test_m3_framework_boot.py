@@ -16,6 +16,9 @@ class FrameworkBootTests(unittest.TestCase):
             name: dict(bytes=mib*1024**2, sha256='1'*64, gzip_sha256='2'*64)
             for name, mib in [('data', 512), ('metadata', 32)]})
         self.assertEqual(scratch_boot_argument(p), ' androidboot.rmx_scratch=1')
+        larger = deepcopy(p)
+        larger['scratch_volumes']['data']['bytes'] = 2048 << 20
+        self.assertEqual(scratch_boot_argument(larger), ' androidboot.rmx_scratch=1')
         self.assertEqual(scratch_boot_argument({}), '')
         for change in [lambda x:x.update(guarded_adb=False),
                        lambda x:x['scratch_volumes'].pop('metadata'),

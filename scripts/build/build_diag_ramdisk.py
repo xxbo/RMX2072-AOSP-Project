@@ -240,13 +240,15 @@ def main():
             add('bin/ufs-init-trace', 0o100755, (root/'scripts/device_audit/ufs_init_trace.sh').read_bytes().replace(b'\r\n', b'\n'))
             if a.scratch_volumes:
                 scratch = json.loads((a.scratch_volumes/'scratch.json').read_text())
-                for name, mib in [('data', 512), ('metadata', 32)]:
+                for name, sizes in [('data', (512 << 20, 2048 << 20)), ('metadata', (32 << 20,))]:
                     packed = (a.scratch_volumes/(name+'.ext4.gz')).read_bytes()
                     info = scratch[name]
-                    if info['bytes'] != mib * 1024**2 or hashlib.sha256(packed).hexdigest() != info['gzip_sha256']:
+                    if info['bytes'] not in sizes or hashlib.sha256(packed).hexdigest() != info['gzip_sha256']:
                         raise ValueError('Wrong scratch volume: '+name)
                     add(name+'.ext4.gz', 0o100444, packed)
                     add(name+'.ext4.sha256', 0o100444, (info['sha256']+'\n').encode())
+                limit_mib = (sum(v['bytes'] for v in scratch.values()) >> 20) + 96
+                add('m1-scratch-limit-mib', 0o100444, (str(limit_mib)+'\n').encode())
                 script = (root/'scripts/device_audit/ufs_scratch.sh').read_bytes().replace(b'\r\n', b'\n')
                 add('bin/ufs-scratch', 0o100755, script)
                 if a.adb_public_key:

@@ -5,7 +5,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
-from run_ufs_trial import validate_vendor_update
+from run_ufs_trial import validate_vendor_update, validate_scratch_resize
 
 
 class VendorUpdateTests(unittest.TestCase):
@@ -47,6 +47,28 @@ class VendorUpdateTests(unittest.TestCase):
         self.previous['candidate']['parts'].pop()
         with self.assertRaisesRegex(ValueError, '17-chunk'):
             self.check()
+
+    def test_explicit_ram_resize_keeps_metadata_and_gsi_fixed(self):
+        old = dict(data=dict(bytes=512 << 20, sha256='1'*64, gzip_sha256='2'*64,
+                             uuid='56baa650-68d8-498b-95f3-a9ac4e11127d'),
+                   metadata=dict(bytes=32 << 20, sha256='3'*64))
+        new = deepcopy(old)
+        new['data'].update(bytes=2048 << 20, sha256='4'*64, gzip_sha256='5'*64)
+        self.previous['scratch'] = old
+        with self.assertRaises(ValueError):
+            validate_vendor_update(self.previous, self.stable, self.candidate, new, self.stable)
+        self.assertEqual(validate_vendor_update(self.previous, self.stable, self.candidate,
+                                                new, self.stable, True)[1], [1])
+        for change in [lambda x:x['metadata'].update(sha256='6'*64),
+                       lambda x:x['data'].update(bytes=8 << 30),
+                       lambda x:x['data'].update(uuid='physical-userdata')]:
+            invalid = deepcopy(new)
+            change(invalid)
+            with self.assertRaises(ValueError):
+                validate_scratch_resize(old, invalid)
+        self.candidate['signed']['system']['sha256'] = '7'*64
+        with self.assertRaises(ValueError):
+            validate_vendor_update(self.previous, self.stable, self.candidate, new, self.stable, True)
 
 
 if __name__ == '__main__':

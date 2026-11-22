@@ -5,6 +5,9 @@
 (roletype r rmx_health)
 (roletype object_r rmx_health_exec)
 (typeattributeset domain (rmx_health))
+; Matches pinned AOSP vendor/hal_health_default.te. The platform Health server
+; rules include vendor BPF reads/prog_run and require this domain attribute.
+(typeattributeset bpfdomain (rmx_health))
 (typeattributeset halserverdomain (rmx_health))
 (typeattributeset hal_health (rmx_health))
 (typeattributeset hal_health_server (rmx_health))

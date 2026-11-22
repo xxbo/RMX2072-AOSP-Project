@@ -40,10 +40,29 @@ def validate_boot_only(previous, stable, candidate, scratch, live):
     return digest
 
 
-def validate_vendor_update(previous, stable, candidate, scratch, live):
+def validate_scratch_resize(old, new):
+    """Only the explicit 512 MiB -> 2 GiB RAM data seed expansion is allowed."""
+    if (set(old) != {'data', 'metadata'} or set(new) != set(old)
+            or old['metadata'] != new['metadata']
+            or old['data']['bytes'] != 512 << 20 or new['data']['bytes'] != 2048 << 20):
+        raise ValueError('Scratch resize must preserve metadata and expand only RAM data to 2 GiB')
+    mutable = {'bytes', 'sha256', 'gzip_sha256'}
+    if (set(old['data']) != set(new['data'])
+            or {k:v for k,v in old['data'].items() if k not in mutable}
+            != {k:v for k,v in new['data'].items() if k not in mutable}
+            or new['data'].get('uuid') != '56baa650-68d8-498b-95f3-a9ac4e11127d'
+            or any(not re.fullmatch(r'[0-9a-f]{64}', new['data'].get(k, ''))
+                   for k in ('sha256', 'gzip_sha256'))):
+        raise ValueError('Scratch resize changed identity or lacks checked digests')
+
+
+def validate_vendor_update(previous, stable, candidate, scratch, live, resize_scratch_data=False):
     """Permit only a project-vendor update over an accepted retained GSI."""
     old = previous['candidate']
-    digest = validate_boot_only(previous, stable, old, scratch, live)
+    if resize_scratch_data:
+        validate_scratch_resize(previous['scratch'], scratch)
+    digest = validate_boot_only(previous, stable, old,
+                                previous['scratch'] if resize_scratch_data else scratch, live)
     if (old['source_sha256'] != candidate['source_sha256'] or old['bytes'] != candidate['bytes']
             or old['signed']['system'] != candidate['signed']['system']
             or old['signed']['vendor']['key_sha256'] != candidate['signed']['vendor']['key_sha256']
@@ -90,9 +109,12 @@ def main():
     retained = parser.add_mutually_exclusive_group()
     retained.add_argument('--boot-only-from', type=Path, help='Previous retained trial record; read all super bytes, then program boot and its paired DTBO')
     retained.add_argument('--vendor-update-from', type=Path, help='Verify the retained layout, update only vendor-related container changes and paired boot, then read back the complete candidate')
+    parser.add_argument('--resize-scratch-data', action='store_true', help='With vendor update only: permit the checked 512 MiB to 2 GiB RAM data seed expansion, preserving metadata')
     parser.add_argument('--record-suffix', default='', help='New evidence directory for repeating the exact current image')
     parser.add_argument('--resume-prewrite', type=Path, help='Resume only an interrupted first boot READ after a verified Firehose drain; recheck every byte before writing')
     args = parser.parse_args()
+    if args.resize_scratch_data and not args.vendor_update_from:
+        parser.error('--resize-scratch-data requires --vendor-update-from')
     sys.path.insert(0, str(args.workspace.resolve()/'serial-deps'))
     from serial.tools.list_ports import comports
     from check_super_chunks import chunks, verify, stock_restore_xml
@@ -259,12 +281,12 @@ def main():
       proof=inspect(prior/'live',stable['identity'][2])
      scratch=json.loads((p/'volumes/scratch.json').read_text())
      if args.vendor_update_from:
-      previous_boot_sha,update_chunks=validate_vendor_update(previous,stable,candidate,scratch,proof)
+      previous_boot_sha,update_chunks=validate_vendor_update(previous,stable,candidate,scratch,proof,args.resize_scratch_data)
      else:
       previous_boot_sha=validate_boot_only(previous,stable,candidate,scratch,proof)
      previous_dtbo_sha=previous['boot']['dtbo_sha256']
      assert re.fullmatch(r'[0-9a-f]{64}',previous_dtbo_sha)
-     (dest/('vendor-update-source.json' if args.vendor_update_from else 'boot-only-source.json')).write_text(json.dumps(dict(previous_record=prior.name,previous_boot_sha256=previous_boot_sha,live=proof,chunks_to_write=update_chunks),indent=2)+'\n')
+     (dest/('vendor-update-source.json' if args.vendor_update_from else 'boot-only-source.json')).write_text(json.dumps(dict(previous_record=prior.name,previous_boot_sha256=previous_boot_sha,live=proof,chunks_to_write=update_chunks,resize_scratch_data=args.resize_scratch_data),indent=2)+'\n')
     else:
      info=phone('getprop ro.product.model; getprop ro.build.display.id; getprop sys.boot_completed; getprop ro.boot.flash.locked').splitlines()
      assert info==['RMX2072','RMX2072_11_F.20','1','0']

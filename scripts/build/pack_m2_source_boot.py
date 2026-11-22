@@ -30,9 +30,9 @@ def scratch_boot_argument(provenance):
     if (not provenance.get('autonomous_ufs') or not provenance.get('guarded_adb')
             or set(volumes) != {'data', 'metadata'}):
         raise ValueError('Scratch framework startup requires guarded isolated volumes')
-    for name, mib in [('data', 512), ('metadata', 32)]:
+    for name, sizes in [('data', (512 << 20, 2048 << 20)), ('metadata', (32 << 20,))]:
         info = volumes[name]
-        if (info.get('bytes') != mib * 1024**2 or any(
+        if (info.get('bytes') not in sizes or any(
                 not re.fullmatch(r'[0-9a-f]{64}', info.get(key, ''))
                 for key in ('sha256', 'gzip_sha256'))):
             raise ValueError('Unchecked scratch volume for framework startup: ' + name)

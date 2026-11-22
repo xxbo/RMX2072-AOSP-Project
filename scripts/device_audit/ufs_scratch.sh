@@ -6,7 +6,9 @@ event_sink=/dev/ttyGS0
 root=/proc/1/root
 store=/run/m1-scratch
 mkdir "$store"
-mount -t tmpfs -o size=640m,mode=0700 tmpfs "$store"
+limit_mib=$(cat /m1-scratch-limit-mib)
+case "$limit_mib" in 640|2176) ;; *) exit 1 ;; esac
+mount -t tmpfs -o size=${limit_mib}m,mode=0700 tmpfs "$store"
 for name in data metadata; do
     case "$name" in data) index=0 ;; metadata) index=1 ;; esac
     sys=/sys/class/block/loop$index

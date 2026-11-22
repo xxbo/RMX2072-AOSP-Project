@@ -58,6 +58,19 @@ system_server 随后仍因缺少 IHealth/default 在 BatteryService.onStart 退�
 activity/window 和桌面尚未出现；`/sys/class/power_supply` 为空。
 [同 boot 摘要、关键日志与原始文件摘要](../build/device/m3-framework-70-2026-11-22.json)。
 
+同一次启动连续 ADB 检查通过 197.593 秒，guardian 为 retained，未切换到
+F.20。当前镜像仍是需要主机放行的显示诊断入口；这不证明重启后可无人
+接管。本阶段未重复冷启动或看门狗故障测试。
+
+main 服务启动后也暴露了测试卷容量限制：512 MiB `/data` 使用约 99%，
+GSI 解压 Trichrome 系统 stub APK 时明确出现 ENOSPC。Chrome/Trichrome
+本身的解压大小约 54/138 MiB，其他首次启动写入与它们共用该卷。
+下一轮仅把 RAM loop0 的 data 种子扩大到 2 GiB；相同 UUID、初始标签、
+32 MiB metadata 字节与摘要保留，原厂 userdata 不变。新压缩 data 种子
+为 2,089,420 字节，完整解压摘要和 e2fsck 已通过。仅接受显式开启的
+512 MiB → 2 GiB 转换，普通更新继续要求种子完全相同。
+[容量与种子记录](../build/device/m3-scratch-expansion-2026-11-22.json)。
+
 ## 同时确认的下一处阻塞：Health HAL
 
 第 69 轮的同 boot 日志在约 179 秒记录 BatteryService.onStart 致命异常：
@@ -73,3 +86,11 @@ activity/window 和桌面尚未出现；`/sys/class/power_supply` 为空。
 没有读数不等于电量为零或满电；项目不设置 fake_battery。后续必须先查
 6.18 的实际节点，再验证服务回调、enforcing 权限与 BatteryService 的
 启动结果。构建 Health 服务不代表充电/电量计驱动已经移植完成。
+
+Health 域继承平台 `hal_health_server` 规则，按同版本上游
+`vendor/hal_health_default.te` 加入 `bpfdomain`；初次缺少该属性时，严格
+编译正确触发 neverallow。补齐上游域属性后，组合策略在第 70 轮同一
+boot 严格编译通过，未关闭 neverallow、未加载新策略或改变 enforcing。
+[策略编译记录](../build/device/m3-health-policy-2026-11-22.json)。
+HAL 产物只允许增加文件或复用字节相同的共享库，拒绝替换已有图形库；
+正常 Health 服务与尚未移植的 charger-mode UI 分开，当前不启用后者。
