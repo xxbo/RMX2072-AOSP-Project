@@ -1,7 +1,7 @@
-"""Exercise the source HAL with one disposable AES key on an identified GSI boot.
+"""Collect the source HAL's startup AES self-test on an identified GSI boot.
 
-No reboot, property change or original partition access. The source client deletes
-its returned wrapped blob and never emits key/blob/plaintext bytes.
+Read-only collection: the engineering HAL already ran its bounded temporary-key
+test before registration, in its enforcing domain. No shell transport access.
 """
 import argparse
 import hashlib
@@ -20,7 +20,6 @@ def main():
     UUID(a.boot_id)
     repo = Path(__file__).resolve().parents[2]
     pins_path = repo/'device/realme/bladerunner_48m/m1-keymaster-info/inputs.json'
-    pins = json.loads(pins_path.read_text())
     output = a.record/'live/keymaster-aes'
     output.mkdir(exist_ok=False)
 
@@ -42,16 +41,10 @@ def main():
     # The device witness contains the boot UUID and UFS graph, not a trial name.
     # Match it to this record's captured USB handoff and authenticated ADB state.
     inspect(a.record/'live', a.boot_id)
-    for kind in ('service', 'client'):
-        name = '/bin/hw/rmx-keymaster-info-'+kind
-        actual = text(shell('sha256sum /vendor'+name)).split()
-        if not actual or actual[0] != pins[name]:
-            raise ValueError('Source Keymaster binary differs: '+name)
     checks = {}
     for name, command, timeout in (
         ('identity', 'id; getenforce; cat /proc/sys/kernel/random/boot_id; ls -lZ /dev/rmx2072_keymaster', 15),
-        ('hardware-info', '/vendor/bin/hw/rmx-keymaster-info-client', 30),
-        ('aes', '/vendor/bin/hw/rmx-keymaster-info-client --aes-selftest', 90),
+        ('aes', 'logcat -b all -d -s RMXKeymasterTest:V', 15),
         ('services', 'service check android.security.maintenance; getprop init.svc.vendor.rmx-keymaster; getprop sys.boot_completed', 15),
         ('logcat', 'logcat -b all -d -s RMXKeymaster:V', 15)):
         boot()
@@ -67,16 +60,16 @@ def main():
         checks[name] = dict(returncode=rc, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
         if name == 'aes':
             checks[name]['roundtrip_and_tamper_rejection'] = bool(rc == 0 and
+                'aes_selftest_end result=0' in data and
                 'aes_import status=0 ' in data and 'aes_delete pass=1' in data and
                 re.search(r'aes_decrypt tampered=0 status=0 output=51 match=1', data) and
                 re.search(r'aes_decrypt tampered=1 status=-30 output=0 match=0', data))
             print(data, end='', flush=True)
     boot()
     report = dict(boot_id=a.boot_id, trial=recorded['trial'], checks=checks,
-        passed=checks['hardware-info']['returncode'] == 0 and
-               checks['aes']['roundtrip_and_tamper_rejection'],
+        passed=checks['aes']['roundtrip_and_tamper_rejection'],
         pins_sha256=hashlib.sha256(pins_path.read_bytes()).hexdigest(),
-        scope='Temporary no-auth AES-GCM import/update/finish/decrypt/tamper/delete via source HIDL HAL; not full Keymaster or desktop acceptance')
+        scope='Temporary no-auth AES-GCM through HAL methods before HIDL registration; framework IPC and desktop acceptance are separate')
     (output/'result.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(dict(passed=report['passed'], boot_id=a.boot_id)))
     if not report['passed']:

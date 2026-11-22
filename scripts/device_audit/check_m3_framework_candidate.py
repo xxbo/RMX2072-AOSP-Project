@@ -84,7 +84,7 @@ def main():
         'health_is_composed': graphics['graphics_source'].get('health') == health,
         'no_unrelated_vendor_change': set(changed) <= ({'/build.prop'} if a.stage == 'heap' else
             {'/bin/hw/rmx-keymaster-info-service', '/bin/hw/rmx-keymaster-info-client',
-             '/etc/ueventd.rc', '/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}
+             '/etc/init/keymaster.rc', '/etc/ueventd.rc', '/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}
             if a.stage == 'keymaster' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
         'only_selected_hal_files_added': set(added) == (set() if a.stage in ('heap', 'keymaster') else set(extra['files'])-set(old_files['files'])),
         'no_vendor_files_removed': set(old_files['files']) <= set(vendor['files']),
@@ -128,7 +128,7 @@ def main():
         pins = read(repo/source_root/'m1-keymaster-info/inputs.json')
         expected_sources = {
             'service': {'m1-keymaster-info/service.cpp', 'm1-keymaster-info/wire.h',
-                        'm1-keymaster-info/operations.h', 'bootstrap-probes/rmx2072-keymaster-transport.h'},
+                        'm1-keymaster-info/operations.h', 'm1-keymaster-info/selftest.h', 'bootstrap-probes/rmx2072-keymaster-transport.h'},
             'client': {'m1-keymaster-info/client.cpp', 'm1-keymaster-info/selftest.h', 'm1-keymaster-info/wire.h'}}
         source_ok = True
         for kind, sources in expected_sources.items():

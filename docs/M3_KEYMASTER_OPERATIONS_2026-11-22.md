@@ -96,11 +96,17 @@ Validation completed before booting the candidate:
   unchanged display source hashes, kernel configuration, DT outputs, GSI, seeds,
   graphics/USB guard and existing health/power/audio payloads.
 
-The client `--aes-selftest` uses a fresh random temporary AES key, imports it,
+The shared `aesSelftest` uses a fresh random temporary AES key, imports it,
 encrypts through update/finish, decrypts and compares all plaintext bytes, requires
 a modified GCM tag to fail with no output, then deletes the returned blob. It
 does not log key bytes, blobs or payloads. This test still requires the new kernel
 and HAL on the handset; a codec/build pass does not imply a TEE transaction pass.
+The user GSI correctly denies shell access to the private vendor client/runtime.
+For this candidate, init sets `RMX_KEYMASTER_AES_SELFTEST=1`: the service runs the
+same bounded test through its HAL methods once before HIDL registration, and
+logs statuses to `RMXKeymasterTest`. This tests the HAL-to-kernel-to-TEE path;
+framework HIDL calls after registration are separate evidence. No shell policy
+is relaxed. `check_m3_keymaster.py` only collects these logs on the matched boot.
 
 Status: candidate preparation in progress. No new image has been booted and no
 LockSettings/Launcher success is claimed.

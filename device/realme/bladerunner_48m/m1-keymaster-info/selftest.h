@@ -2,9 +2,18 @@
 // Temporary HIDL AES-GCM control. Never prints raw keys, wrapped blobs or data.
 #pragma once
 #include <sys/random.h>
+#include <android/log.h>
+#include <cstdarg>
 #include <cstring>
 #include <vector>
 #include "wire.h"
+
+inline void aesTestLog(const char* format, ...) {
+    char message[256]; va_list args; va_start(args,format);
+    vsnprintf(message,sizeof(message),format,args); va_end(args);
+    fputs(message,stdout);
+    __android_log_write(ANDROID_LOG_INFO,"RMXKeymasterTest",message);
+}
 
 inline int aesSelftest(const android::sp<IKeymasterDevice>& device) {
     using android::hardware::hidl_vec;
@@ -26,7 +35,7 @@ inline int aesSelftest(const android::sp<IKeymasterDevice>& device) {
     ErrorCode status=ErrorCode::UNKNOWN_ERROR;
     auto imported=device->importKey(params,KeyFormat::RAW,raw,[&](ErrorCode e,const auto& b,const auto& c) {
         status=e; if(e==ErrorCode::OK) blob=b;
-        printf("aes_import status=%d blob_bytes=%zu hw_params=%zu sw_params=%zu\n",int(e),b.size(),c.hardwareEnforced.size(),c.softwareEnforced.size());
+        aesTestLog("aes_import status=%d blob_bytes=%zu hw_params=%zu sw_params=%zu\n",int(e),b.size(),c.hardwareEnforced.size(),c.softwareEnforced.size());
     });
     rmxkm::wipe(raw.data(),raw.size());
     if (!imported.isOk() || status!=ErrorCode::OK || !blob.size()) return 3;
@@ -35,7 +44,7 @@ inline int aesSelftest(const android::sp<IKeymasterDevice>& device) {
         if(handle) { device->abort(handle).isOk(); handle=0; }
         auto deleted=device->deleteKey(blob);
         bool ok=deleted.isOk() && ErrorCode(deleted)==ErrorCode::OK;
-        printf("aes_delete pass=%d\n",ok);
+        aesTestLog("aes_delete pass=%d\n",ok);
         rmxkm::wipe(blob.data(),blob.size()); return ok ? result : 20;
     };
     Params op={scalar(Tag::BLOCK_MODE,uint32_t(BlockMode::GCM)),
@@ -44,7 +53,7 @@ inline int aesSelftest(const android::sp<IKeymasterDevice>& device) {
     auto begun=device->begin(KeyPurpose::ENCRYPT,blob,op,emptyAuth,[&](ErrorCode e,const auto& out,uint64_t h) {
         status=e; handle=h;
         for(const auto& p:out) if(p.tag==Tag::NONCE) nonce=p.blob;
-        printf("aes_encrypt_begin status=%d nonce_bytes=%zu\n",int(e),nonce.size());
+        aesTestLog("aes_encrypt_begin status=%d nonce_bytes=%zu\n",int(e),nonce.size());
     });
     if(!begun.isOk() || status!=ErrorCode::OK || nonce.size()!=12) return cleanup(4);
     Bytes plain; plain.resize(51); for(size_t i=0;i<plain.size();++i) plain[i]=uint8_t(i*7+3);
@@ -53,13 +62,13 @@ inline int aesSelftest(const android::sp<IKeymasterDevice>& device) {
     uint32_t used=0;
     auto updated=device->update(handle,{},prefix,emptyAuth,emptyVerify,[&](ErrorCode e,uint32_t n,const auto&,const auto& out) {
         status=e; used=n; encrypted.insert(encrypted.end(),out.begin(),out.end());
-        printf("aes_update status=%d consumed=%u output=%zu\n",int(e),n,out.size());
+        aesTestLog("aes_update status=%d consumed=%u output=%zu\n",int(e),n,out.size());
     });
     if(!updated.isOk() || status!=ErrorCode::OK || used>prefix.size()) return cleanup(5);
     Bytes tail; tail.resize(plain.size()-used); memcpy(tail.data(),plain.data()+used,tail.size());
     auto finished=device->finish(handle,{},tail,{},emptyAuth,emptyVerify,[&](ErrorCode e,const auto&,const auto& out) {
         status=e; encrypted.insert(encrypted.end(),out.begin(),out.end());
-        printf("aes_encrypt_finish status=%d output=%zu\n",int(e),out.size());
+        aesTestLog("aes_encrypt_finish status=%d output=%zu\n",int(e),out.size());
     });
     if(!finished.isOk() || status!=ErrorCode::OK) return cleanup(6);
     handle=0;
@@ -74,7 +83,7 @@ inline int aesSelftest(const android::sp<IKeymasterDevice>& device) {
         finished=device->finish(handle,{},cipher,{},emptyAuth,emptyVerify,[&](ErrorCode e,const auto&,const auto& out) {
             status=e; outBytes=out.size(); match=out.size()==plain.size() && !memcmp(out.data(),plain.data(),plain.size());
         });
-        printf("aes_decrypt tampered=%d status=%d output=%zu match=%d\n",tamper,int(status),outBytes,match);
+        aesTestLog("aes_decrypt tampered=%d status=%d output=%zu match=%d\n",tamper,int(status),outBytes,match);
         if(!finished.isOk()) return cleanup(9);
         handle=0;
         if((!tamper && (status!=ErrorCode::OK || !match)) ||

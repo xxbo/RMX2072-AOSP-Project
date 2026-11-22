@@ -63,7 +63,7 @@ def build(ndk, headers, bionic, libraries, output, f20_hmac_control=False, f20_t
             runtime_report[binary.name]['source_files'] = {
                 str(path.relative_to(DEVICE.parent)).replace('\\', '/'):
                     hashlib.sha256(path.read_bytes()).hexdigest()
-                for path in ([DEVICE/(name+'.cpp')] + ([DEVICE/'wire.h', DEVICE/'operations.h',
+                for path in ([DEVICE/(name+'.cpp')] + ([DEVICE/'wire.h', DEVICE/'operations.h', DEVICE/'selftest.h',
                     DEVICE.parent/'bootstrap-probes/rmx2072-keymaster-transport.h'] if name=='service' else [
                     DEVICE/'selftest.h', DEVICE/'wire.h']))}
     if runtime_report:

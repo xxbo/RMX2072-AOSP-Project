@@ -3,5 +3,6 @@ service vendor.rmx-keymaster /vendor/bin/hw/rmx-keymaster-info-service
     user root
     group system
     capabilities
+    setenv RMX_KEYMASTER_AES_SELFTEST 1
     interface android.hardware.keymaster@4.0::IKeymasterDevice default
     disabled

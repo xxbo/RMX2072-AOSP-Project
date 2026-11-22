@@ -14,6 +14,7 @@
 using android::hardware::hidl_vec;
 using android::hardware::Return;
 using namespace android::hardware::keymaster::V4_0;
+#include "selftest.h"
 
 namespace {
 using Bytes = hidl_vec<uint8_t>;
@@ -197,6 +198,15 @@ int main() {
     if (rmxops::configure()!=ErrorCode::OK) return 1;
     android::hardware::configureRpcThreadpool(1, true);
     android::sp<IKeymasterDevice> device = new InfoDevice(name);
+    // Engineering candidate only: exercise the exact HAL methods before
+    // registration, in its own enforcing domain. Framework IPC is checked
+    // separately after registration. No shell access to the transport is added.
+    const char* test = getenv("RMX_KEYMASTER_AES_SELFTEST");
+    if (test && !strcmp(test,"1")) {
+        aesTestLog("aes_selftest_begin\n");
+        int result=aesSelftest(device);
+        aesTestLog("aes_selftest_end result=%d\n",result);
+    }
     if (device->registerAsService("default") != android::OK) {
         __android_log_write(ANDROID_LOG_ERROR, "RMXKeymaster", "registration failed");
         return 1;
