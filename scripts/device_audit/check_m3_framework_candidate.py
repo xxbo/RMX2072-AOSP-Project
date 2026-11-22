@@ -120,7 +120,7 @@ def main():
         changed_sources = set(subprocess.check_output(['git', '-C', str(repo), 'diff', '--name-only',
             previous_kernel['source_commit'], new_kernel['source_commit'], '--',
             source_root+'bootstrap-probes', source_root+'bootstrap-patches', source_root+'display',
-            '.github/workflows/sm8250-bootstrap.yml', 'scripts/build/build_sm8250_bootstrap.sh'],
+            '.github/workflows/sm8250-bootstrap.yml', 'scripts/kernel_research/build_sm8250_bootstrap.sh'],
             text=True).splitlines())
         allowed_paths = {source_root+'bootstrap-probes/'+name for name in (
             'rmx2072-keymaster-lookup.c', 'rmx2072-keymaster-transport.h', 'rmx2072-listener.inc')}
