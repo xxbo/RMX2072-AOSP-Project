@@ -38,10 +38,10 @@ def main():
 
     boot()
     recorded = json.loads((a.record/'inputs.json').read_text())
-    if recorded['trial'] not in shell('cat /data/local/tmp/rmx-m1-boot.txt').stdout.decode():
-        raise ValueError('Boot witness does not match the trial record')
-    if text(shell('getenforce')).strip() != 'Enforcing':
-        raise ValueError('Expected enforcing GSI')
+    from gsi_adb_accept import inspect
+    # The device witness contains the boot UUID and UFS graph, not a trial name.
+    # Match it to this record's captured USB handoff and authenticated ADB state.
+    inspect(a.record/'live', a.boot_id)
     for kind in ('service', 'client'):
         name = '/bin/hw/rmx-keymaster-info-'+kind
         actual = text(shell('sha256sum /vendor'+name)).split()
