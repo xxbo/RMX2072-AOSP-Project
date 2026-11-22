@@ -162,3 +162,17 @@ BatteryService 记录 `Waited 0ms and received the update`，初始回调已通�
 不给出虚假的性能会话或余量测量。保持第 69 轮显示输入、同一 GSI 和
 2 GiB/32 MiB 测试卷，先验证框架越过 HintManagerService，再看 WindowManager
 和 Launcher。电量/充电驱动仍未移植，audioserver 的独立空指针崩溃仍待处理。
+
+项目 Power 服务已实现，使用固定 AOSP 的冻结 V7 NDK 接口。能力位全为
+false/0；会话创建、周期、通道和 headroom 同步查询返回
+`EX_UNSUPPORTED_OPERATION`，不分配虚假会话或伪造余量。接口允许忽略的
+oneway 提示保持无操作，不写频率/电源节点。`SupportInfo` 保留完整的嵌套
+parcelable，让框架能查询“不支持”，而不是得到空服务。
+源接口摘要见 [固定输入](../build/m3-power-source.json)，项目源码在
+`device/realme/bladerunner_48m/m3-power/`。
+
+Power 使用平台公开 HAL server 属性；合并策略已在第 71 轮当前 GSI 上
+严格编译通过，neverallow 保持启用，未加载新策略、未改变 enforcing。
+[策略编译记录](../build/device/m3-power-policy-2026-11-22.json)。
+本地集成继续拒绝覆盖字节不同的现有 HAL/图形库；第 72 轮对比要求测试卷
+完全相同，并仅允许 Power 文件、标签及合并策略改变。构建和真机结果待验证。

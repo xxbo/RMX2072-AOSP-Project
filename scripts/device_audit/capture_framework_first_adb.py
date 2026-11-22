@@ -43,12 +43,13 @@ def main():
         raise TimeoutError('No matching new authenticated GSI ADB')
     commands = {
         'identity': 'cat /proc/sys/kernel/random/boot_id; uname -r; getenforce; getprop vendor.rmx.m1.state; getprop ro.boot.rmx_scratch; getprop sys.boot_completed',
-        'services': 'getprop init.svc.installd; getprop init.svc.storaged; getprop init.svc.vendor.health-default; getprop init.svc.audioserver; getprop init.svc.zygote; service check activity; service check window; service check package; service check SurfaceFlinger; service check android.security.maintenance; ps -AZ | grep -E "health-service|system_server|installd|surfaceflinger|audioserver"',
+        'services': 'getprop init.svc.installd; getprop init.svc.storaged; getprop init.svc.vendor.health-default; getprop init.svc.vendor.power-rmx2072; getprop init.svc.audioserver; getprop init.svc.zygote; service check activity; service check window; service check package; service check SurfaceFlinger; service check android.security.maintenance; ps -AZ | grep -E "health-service|power-service|system_server|installd|surfaceflinger|audioserver"',
         'storage': 'df -k /data /metadata; head -n 8 /proc/meminfo; ls -lZ /sys/class/power_supply',
         # Preserve permission errors: shell's inability to find/dump a HAL is
         # not proof that the framework cannot register or call that HAL.
         'health': 'service check android.hardware.health.IHealth/default; timeout 15 dumpsys android.hardware.health.IHealth/default',
         'battery': 'timeout 15 dumpsys battery',
+        'power': 'service check android.hardware.power.IPower/default; service check performance_hint; timeout 15 dumpsys performance_hint',
         'logcat': 'logcat -b all -d',
     }
     print('FIRST_FRAMEWORK_ADB '+boot, flush=True)

@@ -1,4 +1,4 @@
-"""Compare the Health/framework candidate with the saved display baseline.
+"""Compare an additive framework HAL candidate with the saved display baseline.
 
 Read-only local inspection. The device runner separately verifies the complete
 container before writing and reads the candidate back after writing.
@@ -24,6 +24,7 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--stage', choices=('health', 'power'), default='health')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial name')
@@ -39,6 +40,7 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
+    extra = read(current/'power/provenance.json') if a.stage == 'power' else health
     scratch = read(current/'volumes/scratch.json')
     flags = ('single_dsc_test', 'solid_fill_test', 'panel_readback_test',
              'stock_linkclock_test', 'stock_dsc_test', 'stock_phy_test',
@@ -78,16 +80,28 @@ def main():
         'health_source_verified': health.get('kind') == 'health' and health.get('source_verified') is True and health.get('archive_digest_verified') is True,
         'health_is_composed': graphics['graphics_source'].get('health') == health,
         'no_graphics_or_existing_hal_replacement': set(changed) <= {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'},
-        'only_health_files_added': set(added) == set(health['files'])-set(old_files['files']),
+        'only_selected_hal_files_added': set(added) == set(extra['files'])-set(old_files['files']),
         'scratch_profile_consistent': scratch == rd['scratch_volumes'] == graphics['scratch'],
-        'bounded_data_expansion': old['scratch']['data']['bytes'] == 512 << 20 and scratch['data']['bytes'] == 2048 << 20 and scratch['data']['uuid'] == old['scratch']['data']['uuid'],
         'same_metadata_seed': scratch['metadata'] == old['scratch']['metadata'],
     }
+    if a.stage == 'health':
+        checks['bounded_data_expansion'] = (old['scratch']['data']['bytes'] == 512 << 20
+            and scratch['data']['bytes'] == 2048 << 20
+            and scratch['data']['uuid'] == old['scratch']['data']['uuid'])
+    else:
+        checks.update(
+            same_data_seed=scratch['data'] == old['scratch']['data'],
+            power_source_verified=(extra.get('kind') == 'power' and extra.get('source_verified') is True
+                                   and extra.get('archive_digest_verified') is True),
+            power_is_composed=graphics['graphics_source'].get('power') == extra,
+            power_service_added='/bin/hw/android.hardware.power-service.rmx2072' in added)
     report = dict(trial=a.trial, baseline=old['trial'], recipe_commit=usb['recipe_commit'],
                   checks=checks, passed=all(checks.values()),
                   boot_sha256=boot['boot_sha256'], kernel_sha256=boot['kernel_sha256'],
                   vendor_sha256=usb['vendor_signed'], super_sha256=candidate['sha256'],
                   health_build=health['run_id'], health_source_commit=health['source_commit'],
+                  stage=a.stage, selected_hal_build=extra['run_id'],
+                  selected_hal_source_commit=extra['source_commit'],
                   vendor_files_changed=changed, vendor_files_added=added,
                   metadata_and_extents_unchanged=(candidate['prefix_sha256'] == old['candidate']['prefix_sha256'] and candidate['targets'] == old['candidate']['targets']),
                   headroom_bytes=candidate['headroom'],

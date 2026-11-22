@@ -30,7 +30,7 @@ def main():
     p.add_argument('--run-id', type=int, required=True)
     p.add_argument('--artifact-id', type=int, required=True)
     p.add_argument('--commit', required=True)
-    p.add_argument('--kind', choices=('kernel', 'init', 'graphics', 'health'), required=True)
+    p.add_argument('--kind', choices=('kernel', 'init', 'graphics', 'health', 'power'), required=True)
     p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     a = p.parse_args()
     if a.display and a.kind != 'kernel':
@@ -66,7 +66,7 @@ def main():
         url = error.headers['Location']
     provenance = dict(run_id=a.run_id, source_commit=a.commit, artifact_id=a.artifact_id,
                       artifact_archive_digest=artifact['digest'], archive_digest_verified=False)
-    if a.kind in ('graphics', 'health'):
+    if a.kind in ('graphics', 'health', 'power'):
         archive_name = a.kind + '-vendor.tar.gz'
         if run['path'] != '.github/workflows/m3-'+a.kind+'.yml' or artifact['size_in_bytes'] > 512*1024*1024:
             raise ValueError('Unexpected graphics build or oversized artifact')
@@ -80,10 +80,31 @@ def main():
                   'hardwarebuffer-source.json', 'vendor-output-path.txt'}
         if a.kind == 'health':
             wanted.update({'health-source.sha256', 'connectivity-sparse.txt', 'bpf-sparse.txt'})
+        if a.kind == 'power':
+            wanted.update({'power-source.sha256', 'project-power-source.sha256'})
         with zipfile.ZipFile(io.BytesIO(archive)) as z:
             files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
         if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
             raise ValueError('Incomplete graphics artifact provenance')
+        if a.kind == 'power':
+            manifest = ET.fromstring(files['resolved-manifest.xml'])
+            revisions = {x.get('path'): x.get('revision') for x in manifest.findall('project')}
+            pinned = json.loads((repo/'build/m3-power-source.json').read_text())
+            if any(revisions.get(path) != rev for path, rev in pinned['projects'].items()):
+                raise ValueError('Power AIDL source revision changed')
+            source_hashes = {line.split(maxsplit=1)[1]:line.split()[0]
+                             for line in files['power-source.sha256'].decode().splitlines()}
+            if source_hashes != pinned['sha256']:
+                raise ValueError('Power AIDL source differs from pinned upstream')
+            project_hashes = {line.split(maxsplit=1)[1]:line.split()[0]
+                              for line in files['project-power-source.sha256'].decode().splitlines()}
+            source_dir = 'device/realme/bladerunner_48m/m3-power/'
+            if set(project_hashes) != {source_dir+n for n in ('Android.bp', 'service.cpp', 'power.rc', 'power.xml')}:
+                raise ValueError('Incomplete project Power source inventory')
+            for path, expected_sha in project_hashes.items():
+                data = subprocess.check_output(['git', '-C', str(repo), 'show', a.commit+':'+path])
+                if digest(data) != expected_sha:
+                    raise ValueError('Project Power source mismatch: '+path)
         if a.kind == 'health':
             manifest = ET.fromstring(files['resolved-manifest.xml'])
             revisions = {x.get('path'): x.get('revision') for x in manifest.findall('project')}
