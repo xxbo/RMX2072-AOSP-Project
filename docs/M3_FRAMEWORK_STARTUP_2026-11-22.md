@@ -38,3 +38,19 @@ GSI、内核、设备树和测试卷保持固定。本轮仍用已有诊断入�
 两项新的打包边界测试及四项既有 vendor 更新边界测试通过。
 后续依次验收 installd 注册、包管理初始化、activity/window、Launcher 与
 实际屏幕；不以 ADB 或内部截图替代桌面验收。候选构建和真机结果待记录。
+
+## 同时确认的下一处阻塞：Health HAL
+
+第 69 轮的同 boot 日志在约 179 秒记录 BatteryService.onStart 致命异常：
+`IHealth service instance default isn't available`，之后重复出现。
+因此 main 类启动修复并不足以宣称桌面可用。
+
+新增独立 Health 构建任务，使用同一 Android 17 tag 和已固定的 native
+源码工作区，只编译上游 `android.hardware.health-service.example` 及其
+真实依赖，保留解析后的 manifest、目标依赖图和源码摘要。其 AIDL 为 V5。
+不重编内核或渲染器；产物尚未集成到第 70 轮 vendor。
+
+该实现读取内核 power_supply。缺失电量节点时，属性查询返回不支持，
+没有读数不等于电量为零或满电；项目不设置 fake_battery。后续必须先查
+6.18 的实际节点，再验证服务回调、enforcing 权限与 BatteryService 的
+启动结果。构建 Health 服务不代表充电/电量计驱动已经移植完成。
