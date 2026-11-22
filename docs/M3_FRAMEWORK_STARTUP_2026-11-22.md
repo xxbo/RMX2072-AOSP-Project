@@ -141,3 +141,24 @@ libpng，另更新文件标签与已严格编译的策略。仍为 64 MiB 文件
 通过，未重复回读原厂整区。[恢复记录](../build/device/m3-framework71-restored-2026-11-22.json)。
 不能将该事件归因于尚未验收的 Health 或新框架。900E 根因仍未确定。
 [中断证据](../build/device/m3-framework71-interruption-2026-11-22.json)。
+
+## 第 71 轮重试：Health 已通过，阻塞推进到 Power HAL
+
+原厂恢复后重试同一候选，boot、DTBO 和 super 全部 17 段回读通过。
+boot `c4b86563-5714-4f06-855e-26cf1525e734` 中，源码 Health 在
+`u:r:rmx_health:s0` 下注册 `android.hardware.health.IHealth/default`。
+BatteryService 记录 `Waited 0ms and received the update`，初始回调已通过。
+2 GiB RAM data 样本使用约 41%，本次采集没有 ENOSPC；原厂 userdata 不变。
+同一次启动的 ADB 传输与稳定性检查通过 196.859 秒，guardian retained，
+手机留在 GSI。未重复冷启动或故障注入，也未新增实屏验收。
+
+下一处实际致命错误是 `HintManagerService.java:334`：没有 Power HAL 时，
+构造函数读取空 `SupportInfo.headroom`，导致 system_server 退出。
+后续采样中 battery/activity/window 不可查询，是这次进程退出后的状态，
+不能据此否定已经收到的 Health 回调。当前仍未到达 Launcher 或开机完成。
+[真机结果与日志摘要](../build/device/m3-framework71-result-2026-11-22.json)。
+
+下一步提供项目源码 Power AIDL 服务，明确报告尚未实现的能力为不支持；
+不给出虚假的性能会话或余量测量。保持第 69 轮显示输入、同一 GSI 和
+2 GiB/32 MiB 测试卷，先验证框架越过 HintManagerService，再看 WindowManager
+和 Launcher。电量/充电驱动仍未移植，audioserver 的独立空指针崩溃仍待处理。
