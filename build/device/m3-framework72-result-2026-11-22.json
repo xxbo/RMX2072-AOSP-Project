@@ -1,0 +1,76 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-72",
+  "boot_id": "b32f1c72-fb87-41e1-8a49-33dac9bdda38",
+  "result": "PASS_POWER_AND_WINDOW_REGISTRATION_BLOCKED_AUDIO_SERVICE",
+  "recipe_commit": "9811f8efe4d961133c42f367f83b69b3de63767e",
+  "power_source_commit": "efa6846c8ad2fb2abc01004e44beea27a36dc31a",
+  "power_build": 45008097656,
+  "kernel_sha256": "7b1701283ca73e4b2536fbf053aaa01dbca9b8e5f77059b98dc5291a9569d7b3",
+  "boot_sha256": "5317eece68b0cbeceaf57df998c0d4b9f1ba6e2735793d0f9ee78ae3483f8c8f",
+  "vendor_sha256": "eaaa17ec9accc517291e7829b1aecdef54b89048692880ec93ff43489ee74423",
+  "super_sha256": "65a3767d7532879dd756bb099679d8707153de86388c1b53ca6fe753db1a95a2",
+  "candidate_readback": "PASS_BOOT_DTBO_AND_17_SUPER_CHUNKS",
+  "updated_super_chunks": [
+    0
+  ],
+  "stock_partition_readback": false,
+  "power_instance": "android.hardware.power.IPower/default",
+  "power_domain": "u:r:rmx_power:s0",
+  "power_registration": "PASS",
+  "support_info": "PASS_FRAMEWORK_QUERY",
+  "hint_manager_service": "REGISTERED",
+  "hint_session_preferred_rate": -1,
+  "hint_sessions_supported": false,
+  "cpu_headroom_supported": false,
+  "gpu_headroom_supported": false,
+  "health_initial_callback": "PASS_0_MS_WAIT",
+  "framework_services": {
+    "activity": "REGISTERED_DURING_STARTUP",
+    "window": "REGISTERED_DURING_STARTUP",
+    "package": "REGISTERED_DURING_STARTUP",
+    "boot_completed": "NOT SET",
+    "launcher": "NOT REACHED",
+    "system_server": "RESTARTED_BY_ANDROID_WATCHDOG_WHILE_AUDIO_SERVICE_BLOCKED"
+  },
+  "next_blocker": {
+    "audio_device_hal": "NO_DECLARED_AIDL_OR_SUPPORTED_HIDL",
+    "audio_effects_factory": "NO_DECLARED_AIDL_OR_SUPPORTED_HIDL",
+    "audioserver_crash": "AudioFlinger::onFirstRef()+712 SIGSEGV null; BuildId 322d95fb5c8e907a189dd150a282f654",
+    "main_thread": "AudioSystem.muteMicrophone -> AudioService.readUserRestrictions -> AudioService constructor",
+    "framework_watchdog": "main handler blocked 67 seconds",
+    "alsa_nodes": "Only timer visible under /dev/snd; no PCM nodes observed; /proc/asound/cards denied to shell"
+  },
+  "stable_adb_seconds": 196.0,
+  "guardian": "retained",
+  "retained": "GSI_CURRENT_BOOT_ONLY",
+  "physical_display": "NOT RECHECKED; accepted trial69 kernel/DT/flags/pattern retained",
+  "cold_boot_or_fault_injection": "NOT RUN",
+  "evidence_sha256": {
+    "inputs.json": "67e906a50a481ac18fabd718f5c73bdac6796e5a012a1ec981dec80fcd5222df",
+    "readbacks.jsonl": "6f1640766c325593b41e98f424f33ecac8162d2b9e443ea2db6a271694af3b11",
+    "vendor-update-source.json": "604e4030299bac31af939bd36493d7c11d6157fc87cb2a8ecfb7a9a566327112",
+    "live/gsi-stable.json": "7ce70ae5b3660bba3805cd19561d9890ea27b37121bf506bf77b36ce2b402d03",
+    "live/framework-2-logcat.txt": "fb3e23bb4e7f0b8152df849a4bccc6c0353204c8b116fe28b4e91aebd67be23f",
+    "live/framework-2-power.txt": "1bc819e0bdbb8e8ad3d7f1ef16f37795d8675dab905a19c6b7ed9141a0db57cd",
+    "live/framework-after-soak-logcat.txt": "ce355e38aced869030a1fb22f5e6d7468eb2e0ed0fcda5eb24d27c72bafba86a",
+    "live/framework-audio-nodes.txt": "33701ee1d3b9811b7011ee3e645ba395004e984ccf65fc2e5f481401c2a96fb1",
+    "live/framework-final-identity.txt": "e8ede14d135a56629af77a9d1775f16de929cfdbb04a152ff4a444c14ad81823"
+  },
+  "power_log_excerpt": [
+    "01-01 00:02:49.513  2126  2126 I android.hardware.power-service.rmx2072: RMX Power registered; performance controls are not implemented",
+    "01-01 00:03:31.161  2392  2392 I BatteryService: health: Waited 0ms and received the update.",
+    "01-01 00:03:31.752  2392  2392 D SystemServerTiming: StartHintManager",
+    "01-01 00:03:31.760  2126  2126 I android.hardware.power-service.rmx2072: RMX Power getSupportInfo: sessions=0 modes=0 boosts=0 composition=0 cpuHeadroom=0 gpuHeadroom=0",
+    "08-26 02:57:47.040  2392  2392 D SystemServerTiming: StartWindowManagerService"
+  ],
+  "watchdog_excerpt": [
+    "08-26 02:59:25.884  2392  2439 W Watchdog: *** WATCHDOG KILLING SYSTEM PROCESS: Blocked in handler on main thread (main) for 67s",
+    "08-26 02:59:25.892  2392  2439 W Watchdog:     at android.media.AudioSystem.muteMicrophone(Native Method)",
+    "08-26 02:59:25.892  2392  2439 W Watchdog:     at com.android.server.audio.AudioService.readUserRestrictions(AudioService.java:3667)",
+    "08-26 02:59:25.892  2392  2439 W Watchdog:     at com.android.server.audio.AudioService.<init>(AudioService.java:1796)",
+    "08-26 03:01:13.840  4193  4218 W Watchdog: *** WATCHDOG KILLING SYSTEM PROCESS: Blocked in handler on main thread (main) for 67s",
+    "08-26 03:01:13.857  4193  4218 W Watchdog:     at android.media.AudioSystem.muteMicrophone(Native Method)",
+    "08-26 03:01:13.857  4193  4218 W Watchdog:     at com.android.server.audio.AudioService.readUserRestrictions(AudioService.java:3667)",
+    "08-26 03:01:13.857  4193  4218 W Watchdog:     at com.android.server.audio.AudioService.<init>(AudioService.java:1796)"
+  ]
+}

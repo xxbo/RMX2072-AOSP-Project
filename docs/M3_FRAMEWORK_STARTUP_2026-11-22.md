@@ -176,3 +176,37 @@ Power 使用平台公开 HAL server 属性；合并策略已在第 71 轮当前 
 [策略编译记录](../build/device/m3-power-policy-2026-11-22.json)。
 本地集成继续拒绝覆盖字节不同的现有 HAL/图形库；第 72 轮对比要求测试卷
 完全相同，并仅允许 Power 文件、标签及合并策略改变。构建和真机结果待验证。
+
+## 第 72 轮：Power、HintManager 和 WindowManager 通过启动入口
+
+[Power 构建](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/45008097656)
+成功，1,758 条目标命令没有缺失依赖；源码和产物摘要均核验通过。
+只新增服务、init/VINTF 配置及两个 AIDL 接口库，重叠的库与上一轮字节相同。
+vendor 仍为 64 MiB 文件系统加 AVB。[构建记录](../build/device/m3-power-build-2026-11-22.json)。
+30 项[候选对比](../build/device/m3-framework72-preflight-2026-11-22.json)全部通过；
+同一内核、DT、显示参数、GSI、2 GiB data/32 MiB metadata、LP 元数据和 extent。
+
+从第 71 轮 retained GSI 自动进入 COM6 9008，核验机内旧布局后只更新
+super 第 0 段及配套 boot。boot/DTBO 和完整 super 回读全部通过。没有再次
+备份或回读原厂分区。新 boot 为 `b32f1c72-fb87-41e1-8a49-33dac9bdda38`。
+
+项目 Power 在 `u:r:rmx_power:s0` 下注册 `IPower/default`。框架实际调用
+`getSupportInfo`，HintManagerService 完成启动，`performance_hint` 可查询：
+preferred rate 为 -1，hint sessions、CPU/GPU headroom 都正确显示不支持。
+Health 初始回调仍为 0 ms；activity、window、package 服务都已注册。
+同一次启动 ADB 检查通过 196 秒，guardian retained，手机留在 GSI。
+[真机结果与证据摘要](../build/device/m3-framework72-result-2026-11-22.json)。
+
+这尚不代表整个框架稳定：启动随后卡在 AudioService 构造函数的
+`AudioSystem.muteMicrophone`。audioserver 仍在 `AudioFlinger::onFirstRef()+712`
+空指针崩溃；日志明确显示设备和效果两种音频 HAL 均未声明，工厂选择返回空。
+Android Watchdog 记录 main handler 阻塞 67 秒并重启 system_server，
+内核 boot ID 和 ADB 保持不变。Launcher 未启动，boot_completed 未设置。
+这是本轮自然出现的框架故障，不是注入的看门狗测试。
+
+下一阶段目标是项目源码音频 HAL 的设备/配置和效果工厂入口，先让
+audioserver 注册 AudioFlinger/AudioPolicy、AudioService 完成构造，再看 Launcher。
+同版本 [FactoryHal.cpp](https://android.googlesource.com/platform/frameworks/av/+/refs/tags/android-17.0.0_r1/media/libaudiohal/FactoryHal.cpp)
+要求设备接口与效果工厂类型及主版本匹配；只补 IConfig 不足以通过工厂选择。
+目前 `/dev/snd` 仅有 timer，不能宣称 PCM、扬声器、麦克风或 DSP 已移植。
+后续实现必须区分接口可用和真实音频硬件能力。显示内核与参数继续保持不变。
