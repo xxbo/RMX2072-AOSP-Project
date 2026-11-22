@@ -25,7 +25,7 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access'), default='health')
     p.add_argument('--keymaster-build', type=Path, help='Source HAL build report for the keymaster stage')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
@@ -42,7 +42,7 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    hal_kind = 'audio' if a.stage in ('heap', 'keymaster') else a.stage
+    hal_kind = 'audio' if a.stage in ('heap', 'keymaster', 'render-access') else a.stage
     extra = read(current/hal_kind/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
     flags = ('single_dsc_test', 'solid_fill_test', 'panel_readback_test',
@@ -82,11 +82,12 @@ def main():
         'same_inactive_nonalias_partitions': {k:v for k,v in candidate['partitions_after'][1].items() if k != 'system'} == {k:v for k,v in old['candidate']['partitions_after'][1].items() if k != 'system'},
         'health_source_verified': health.get('kind') == 'health' and health.get('source_verified') is True and health.get('archive_digest_verified') is True,
         'health_is_composed': graphics['graphics_source'].get('health') == health,
-        'no_unrelated_vendor_change': set(changed) <= ({'/build.prop'} if a.stage == 'heap' else
+        'no_unrelated_vendor_change': set(changed) <= ({'/etc/ueventd.rc'} if a.stage == 'render-access' else
+            {'/build.prop'} if a.stage == 'heap' else
             {'/bin/hw/rmx-keymaster-info-service', '/bin/hw/rmx-keymaster-info-client',
              '/etc/init/keymaster.rc', '/etc/ueventd.rc', '/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}
             if a.stage == 'keymaster' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
-        'only_selected_hal_files_added': set(added) == (set() if a.stage in ('heap', 'keymaster') else set(extra['files'])-set(old_files['files'])),
+        'only_selected_hal_files_added': set(added) == (set() if a.stage in ('heap', 'keymaster', 'render-access') else set(extra['files'])-set(old_files['files'])),
         'no_vendor_files_removed': set(old_files['files']) <= set(vendor['files']),
         'scratch_profile_consistent': scratch == rd['scratch_volumes'] == graphics['scratch'],
         'same_metadata_seed': scratch['metadata'] == old['scratch']['metadata'],
@@ -101,7 +102,7 @@ def main():
             hal_kind+'_source_verified': (extra.get('kind') == hal_kind and extra.get('source_verified') is True
                                         and extra.get('archive_digest_verified') is True),
             hal_kind+'_is_composed': graphics['graphics_source'].get(hal_kind) == extra})
-        if a.stage not in ('heap', 'keymaster'):
+        if a.stage not in ('heap', 'keymaster', 'render-access'):
             checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
     if a.stage != 'keymaster':
         checks['same_kernel'] = boot['kernel_sha256'] == old['boot']['kernel_sha256']
@@ -147,6 +148,18 @@ def main():
             kernel_has_only_keymaster_source_change=changed_sources == allowed_paths,
             same_display_and_non_keymaster_kernel_inputs=all(prev_hashes[k] == new_hashes.get(k) for k in immutable),
             keymaster_binary_and_source_verified=bool(source_ok),
+            same_audio_source=extra == read(a.baseline/'audio-provenance.json'))
+    if a.stage == 'render-access':
+        before = (a.baseline/'vendor-ueventd.rc').read_bytes()
+        after = subprocess.check_output([str(current/'fs-tools/debugfs.exe'), '-R', 'cat /etc/ueventd.rc',
+                                        str(current/'vendor/vendor.img')], stderr=subprocess.DEVNULL)
+        old_rule = b'/dev/dri/renderD* 0660 system graphics\n'
+        new_rule = b'/dev/dri/renderD* 0666 system graphics\n'
+        checks.update(
+            baseline_ueventd_digest=hashlib.sha256(before).hexdigest() == old_files['files']['/etc/ueventd.rc'],
+            current_ueventd_digest=hashlib.sha256(after).hexdigest() == vendor['files']['/etc/ueventd.rc'],
+            only_render_node_dac_changed=(before.count(old_rule) == 1 and after == before.replace(old_rule,new_rule)),
+            primary_node_restricted=b'/dev/dri/card* 0660 system graphics\n' in after,
             same_audio_source=extra == read(a.baseline/'audio-provenance.json'))
     if a.stage == 'heap':
         before = (a.baseline/'vendor-build.prop').read_bytes()

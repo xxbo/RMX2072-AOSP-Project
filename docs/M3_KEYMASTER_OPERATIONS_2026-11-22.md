@@ -146,3 +146,40 @@ on restored F.20. Policy was not loaded and enforcing stayed enabled.
 
 Current target: actual TEE import and temporary AES-GCM acceptance, followed by
 LockSettings and Launcher. No desktop acceptance yet.
+
+## Trial 76: real import and framework boot, desktop blocked
+
+Boot `f45b52da-66fc-4b1b-98de-b78df636a718` passed candidate readback,
+enforcing/API 37 ADB retention and GSI `sys.boot_completed=1`. Configure,
+HMAC sharing parameters, shared-HMAC negotiation, HAL/maintenance registration
+and the earlyBootEnded RPC succeeded. The boot-level HMAC key operation still
+returned -49; an RPC success is not complete keystore acceptance.
+
+The startup AES self-test failed at import (-49), before HIDL registration.
+Later, the actual framework import rejected rollback resistance (-67), then
+accepted the framework's ordinary import and returned a 455-byte TEE blob.
+LockSettings logged successful synthetic-password initialization for user 0.
+This proves import progress, not AES roundtrip, tamper rejection or PIN support.
+The first-ADB log preserved these results; later filtered logcat was empty
+because rapid graphics crashes wrapped the ring.
+
+SystemUI, Launcher and SetupWizard then failed mapper initialization and buffer
+import, culminating in HWUI `drawRenderNode called on a context with no surface!`.
+Both DRM nodes are 0660 system:graphics; application UIDs lack that group.
+Pinned minigbm `ce79bbee67b3e2ea7abb110e1415e9ceceaa6471` opens render nodes
+O_RDWR before falling back to primary nodes. Trial 77 changes only render-node
+DAC to 0666, retaining primary 0660 and gpu_device enforcing policy. It keeps
+the kernel, display timing/PPS, graphics binaries, HALs, GSI and test seeds.
+
+A separate later failure must not be hidden by boot completion: system_server
+PID 2361 faulted executing `[anon:swiftshader_jit]` after an execmem denial in
+the PowerManager screen-transition path. Framework restarted to PID 13191
+without a kernel reboot. The GSI platform explicitly forbids system_server
+execmem. No policy exception is added. USB stay-awake was temporarily enabled
+(previous setting 0) to collect the mapper isolation without that sleep path.
+A source resource configuration for the CPU-rendering screen transition is a
+follow-up; neither unrestricted JIT policy nor Adreno readiness is claimed.
+
+[Result and evidence hashes](../build/device/m3-keymaster76-result-2026-11-22.json).
+Current target: let application windows allocate and render, then verify the
+physical Launcher. The phone remains on GSI with authenticated ADB.

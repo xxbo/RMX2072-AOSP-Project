@@ -160,8 +160,11 @@ def compose(info, guard, graphics):
         if path.startswith('/lib64/'):
             labels.append(re.escape('/vendor'+path)+' u:object_r:same_process_hal_file:s0')
     files['/etc/selinux/vendor_file_contexts'] += ('\n'.join(labels)+'\n').encode()
+    # In-process mappers also run as application UIDs, outside graphics GID.
+    # Render nodes expose rendering/import operations, not DRM master/modeset.
+    # Keep primary nodes restricted and retain gpu_device SELinux enforcement.
     files['/etc/ueventd.rc'] += (b'/dev/dri/card* 0660 system graphics\n'
-                                b'/dev/dri/renderD* 0660 system graphics\n'
+                                b'/dev/dri/renderD* 0666 system graphics\n'
                                 b'/dev/dma_heap/system 0666 system graphics\n')
     return files, build
 
