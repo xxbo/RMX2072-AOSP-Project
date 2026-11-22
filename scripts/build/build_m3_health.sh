@@ -10,7 +10,38 @@ mkdir -p "$ARTIFACT_DIR"
 if [[ "$PHASE" != build ]]; then
   # Reuse the bounded, pinned native workspace, without building the renderer.
   bash "$ROOT_DIR/scripts/build/build_m3_graphics.sh" prepare
+  # HealthLoop uses UeventSkfilter through these real upstream header modules.
+  # Select their projects from the same pinned manifest, then expose only the
+  # native headers/defaults instead of parsing the networking Java framework.
+  python3 - "$SOURCE_DIR" "$ROOT_DIR/artifacts/m3-graphics/selected.upstream.xml" <<'PY'
+import copy
+from pathlib import Path
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+workspace = Path(sys.argv[1])
+manifest_path = workspace/'.repo/manifests/rmx2072-minimal.xml'
+manifest = ET.parse(manifest_path)
+upstream = {p.get('path', p.get('name')):p for p in ET.parse(sys.argv[2]).findall('project')}
+selected = {p.get('path', p.get('name')) for p in manifest.findall('project')}
+paths = ['packages/modules/Connectivity', 'system/bpf']
+for path in paths:
+    if path not in selected:
+        node = copy.deepcopy(upstream[path])
+        node.attrib.pop('groups', None)
+        manifest.getroot().append(node)
+ET.indent(manifest)
+manifest.write(manifest_path, encoding='utf-8', xml_declaration=True)
+subprocess.run(['repo', 'sync', '-c', '-j2', '--no-tags', '--no-clone-bundle', *paths],
+               cwd=workspace, check=True)
+PY
+  git -C "$SOURCE_DIR/packages/modules/Connectivity" sparse-checkout set --no-cone \
+    /bpf/headers/ /bpf/syscall_wrappers/
+  git -C "$SOURCE_DIR/system/bpf" sparse-checkout set --no-cone /Android.bp /NOTICE /include/
+  git -C "$SOURCE_DIR/packages/modules/Connectivity" sparse-checkout list > "$ARTIFACT_DIR/connectivity-sparse.txt"
+  git -C "$SOURCE_DIR/system/bpf" sparse-checkout list > "$ARTIFACT_DIR/bpf-sparse.txt"
   cp "$ROOT_DIR/artifacts/m3-graphics/selected"*.xml "$ARTIFACT_DIR/"
+  cp "$SOURCE_DIR/.repo/manifests/rmx2072-minimal.xml" "$ARTIFACT_DIR/selected.xml"
   cp "$ROOT_DIR/artifacts/m3-graphics/hardwarebuffer-source.json" "$ARTIFACT_DIR/"
 fi
 if [[ "$PHASE" == prepare ]]; then exit 0; fi
@@ -63,6 +94,8 @@ find "$VENDOR" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DI
 tar -C "$VENDOR" -czf "$ARTIFACT_DIR/health-vendor.tar.gz" .
 sha256sum "$ARTIFACT_DIR/health-vendor.tar.gz" "$ARTIFACT_DIR/resolved-manifest.xml" "$ARTIFACT_DIR/vendor-output-path.txt" > "$ARTIFACT_DIR/SHA256SUMS"
 sha256sum hardware/interfaces/health/aidl/default/{Android.bp,main.cpp,Health.cpp,HalHealthLoop.cpp} \
-  system/core/healthd/BatteryMonitor.cpp > "$ARTIFACT_DIR/health-source.sha256"
+  system/core/healthd/BatteryMonitor.cpp \
+  packages/modules/Connectivity/bpf/{headers,syscall_wrappers}/Android.bp \
+  system/bpf/Android.bp > "$ARTIFACT_DIR/health-source.sha256"
 git -C "$ROOT_DIR" rev-parse HEAD > "$ARTIFACT_DIR/project-commit.txt"
 printf '%s\n' 'Pinned AOSP Health AIDL V5 service. Reads kernel power_supply only; no synthetic battery override. Missing gauge/charger drivers remain unported. Device integration pending.' > "$ARTIFACT_DIR/STATUS.txt"

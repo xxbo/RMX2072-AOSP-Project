@@ -94,3 +94,12 @@ boot 严格编译通过，未关闭 neverallow、未加载新策略或改变 enf
 [策略编译记录](../build/device/m3-health-policy-2026-11-22.json)。
 HAL 产物只允许增加文件或复用字节相同的共享库，拒绝替换已有图形库；
 正常 Health 服务与尚未移植的 charger-mode UI 分开，当前不启用后者。
+
+Health 构建 #2 的 2,330 条命令依赖检查发现唯一缺项为
+`libhealthloop -> bpf_headers`，因而在执行不完整目标前失败。
+该模块及 `bpf_syscall_wrappers` 位于同一 Android 17 tag 的
+`packages/modules/Connectivity/bpf`；其测试声明引用的
+`bpf_cc_defaults` 位于 `system/bpf/Android.bp`。构建补入这两个真实
+项目，只展开原生头文件与默认声明，继续保留缺失依赖检查。
+两个新增项目的 commit、三个 Android.bp 摘要和 sparse 选择均进入
+产物验证；不合成头文件、不删除 HealthLoop 功能。

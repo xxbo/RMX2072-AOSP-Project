@@ -79,7 +79,7 @@ def main():
                   'SHA256SUMS', 'project-commit.txt', 'target-dependencies.json', 'STATUS.txt',
                   'hardwarebuffer-source.json', 'vendor-output-path.txt'}
         if a.kind == 'health':
-            wanted.add('health-source.sha256')
+            wanted.update({'health-source.sha256', 'connectivity-sparse.txt', 'bpf-sparse.txt'})
         with zipfile.ZipFile(io.BytesIO(archive)) as z:
             files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
         if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
@@ -95,6 +95,11 @@ def main():
                             for line in files['health-source.sha256'].decode().splitlines()}
             if health_hashes != pinned_health['sha256']:
                 raise ValueError('Health source hashes differ from pinned upstream')
+            if (set(files['connectivity-sparse.txt'].decode().splitlines())
+                    != {'/bpf/headers/', '/bpf/syscall_wrappers/'}
+                    or set(files['bpf-sparse.txt'].decode().splitlines())
+                    != {'/Android.bp', '/NOTICE', '/include/'}):
+                raise ValueError('Health native BPF selection changed')
         from prepare_m3_hardwarebuffer import PINNED, SELECTED_MODULES
         hardwarebuffer = json.loads(files['hardwarebuffer-source.json'])
         if hardwarebuffer['original_files'] != PINNED or hardwarebuffer['selected_modules'] != SELECTED_MODULES:
