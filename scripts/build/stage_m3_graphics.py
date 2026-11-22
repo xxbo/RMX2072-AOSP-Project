@@ -34,7 +34,7 @@ def filesystem_size(files):
 def merge_native_hal_payload(files, directory, kind):
     """Admit a checked additive native HAL; never replace graphics libraries."""
     build = json.loads((directory/'provenance.json').read_text())
-    if kind not in ('health', 'power'):
+    if kind not in ('health', 'power', 'audio'):
         raise ValueError('Unrecognized additive HAL')
     if (build.get('kind') != kind or not build.get('source_verified')
             or not build.get('archive_digest_verified')):
@@ -60,7 +60,8 @@ def merge_native_hal_payload(files, directory, kind):
     if {name:sha(data) for name,data in incoming.items()} != build['files']:
         raise ValueError(kind+' inventory differs from verified artifact')
     service = {'health': 'android.hardware.health-service.example',
-               'power': 'android.hardware.power-service.rmx2072'}[kind]
+               'power': 'android.hardware.power-service.rmx2072',
+               'audio': 'android.hardware.audio-service.rmx2072'}[kind]
     if '/bin/hw/'+service not in incoming:
         raise ValueError(kind+' service missing')
     files.update(incoming)
@@ -110,7 +111,7 @@ def compose(info, guard, graphics):
         files[name] = data
     if incoming != build['files']:
         raise ValueError('Graphics inventory differs from verified artifact')
-    for kind in ('health', 'power'):
+    for kind in ('health', 'power', 'audio'):
         hal_dir = graphics.parent/kind
         if hal_dir.exists():
             hal, hal_files = merge_native_hal_payload(files, hal_dir, kind)
@@ -134,6 +135,7 @@ def compose(info, guard, graphics):
     files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'graphics.cil').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'health.cil').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'power.cil').read_bytes().replace(b'\r\n', b'\n')
+    files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'audio.cil').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_property_contexts'] += (
         b'vendor.minigbm.debug u:object_r:rmx_graphics_config_prop:s0 exact string\n')
     # Stable-C mapper discovery uses servicemanager's isDeclared permission
@@ -145,6 +147,7 @@ def compose(info, guard, graphics):
         '/vendor/bin/hw/rmx-m3-drm-state u:object_r:rmx_scanout_probe_exec:s0',
         '/vendor/bin/hw/android\\.hardware\\.health-service\\.example u:object_r:rmx_health_exec:s0',
         '/vendor/bin/hw/android\\.hardware\\.power-service\\.rmx2072 u:object_r:rmx_power_exec:s0',
+        '/vendor/bin/hw/android\\.hardware\\.audio-service\\.rmx2072 u:object_r:rmx_audio_exec:s0',
         '/dev/dri/card[0-9]+ u:object_r:gpu_device:s0',
         '/dev/dri/renderD[0-9]+ u:object_r:gpu_device:s0',
         '/vendor/etc/selinux/vendor_service_contexts u:object_r:vendor_service_contexts_file:s0',

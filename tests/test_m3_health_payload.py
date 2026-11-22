@@ -65,5 +65,10 @@ class PowerPayloadTests(HealthPayloadTests):
     service = 'android.hardware.power-service.rmx2072'
 
 
+class AudioPayloadTests(HealthPayloadTests):
+    kind = 'audio'
+    service = 'android.hardware.audio-service.rmx2072'
+
+
 if __name__ == '__main__':
     unittest.main()

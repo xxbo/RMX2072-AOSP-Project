@@ -210,3 +210,28 @@ audioserver 注册 AudioFlinger/AudioPolicy、AudioService 完成构造，再看
 要求设备接口与效果工厂类型及主版本匹配；只补 IConfig 不足以通过工厂选择。
 目前 `/dev/snd` 仅有 timer，不能宣称 PCM、扬声器、麦克风或 DSP 已移植。
 后续实现必须区分接口可用和真实音频硬件能力。显示内核与参数继续保持不变。
+
+## 第 73 轮准备：项目 Audio Core / Config / Effect
+
+项目 `m3-audio` 同一进程提供冻结 AIDL V4 的 `IConfig/default`、
+`IModule/default` 和 `IFactory/default`。实现完整接口方法，以当前内核的
+可用能力为边界：端口、路由、麦克风、效果列表为空；无有效端口时拒绝
+创建流、patch 和效果句柄；未接通的音量、静音、时钟控制返回不支持。
+配置不覆盖 AOSP 默认策略，不伪造扬声器、PCM 输出或 DSP 功能。
+
+这一步解决工厂缺失并验证 framework 启动，不等于音频硬件移植完成。
+无默认输出时 AudioPolicyManager 可能无法初始化真实路由；需要真机区分
+AudioFlinger/AudioPolicy Binder 注册、AudioService 构造和完整路由能力。
+当前目标仍为通过 AudioService 后检查 Launcher 的真实画面。
+
+构建使用[固定源版本和摘要](../build/m3-audio-source.json)，集成只允许增加
+源码音频载荷。任何不同字节的已有图形/Health/Power 库都会被拒绝。
+候选保持第 69 轮显示参数和第 72 轮 2 GiB/32 MiB 测试卷。原厂恢复集
+继续仅保留一份，不新增原厂整区回读。源码构建、严格策略编译和真机结果
+在完成后追加；当前尚不作第 73 轮通过结论。
+
+第 72 轮同一 retained GSI 上的合并 SELinux 策略已严格编译通过，
+neverallow 检查启用；未加载策略、未改变 enforcing。
+[Audio 策略证明](../build/device/m3-audio-policy-2026-11-22.json)。
+三个音频实例均使用 GSI 已有的 `hal_audio_service` 标签及公开 server 属性。
+13 项载荷碰撞/篡改、显示保留、测试卷及增量更新检查通过。

@@ -24,7 +24,7 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio'), default='health')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial name')
@@ -40,7 +40,7 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    extra = read(current/'power/provenance.json') if a.stage == 'power' else health
+    extra = read(current/a.stage/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
     flags = ('single_dsc_test', 'solid_fill_test', 'panel_readback_test',
              'stock_linkclock_test', 'stock_dsc_test', 'stock_phy_test',
@@ -89,12 +89,12 @@ def main():
             and scratch['data']['bytes'] == 2048 << 20
             and scratch['data']['uuid'] == old['scratch']['data']['uuid'])
     else:
-        checks.update(
-            same_data_seed=scratch['data'] == old['scratch']['data'],
-            power_source_verified=(extra.get('kind') == 'power' and extra.get('source_verified') is True
-                                   and extra.get('archive_digest_verified') is True),
-            power_is_composed=graphics['graphics_source'].get('power') == extra,
-            power_service_added='/bin/hw/android.hardware.power-service.rmx2072' in added)
+        checks.update({
+            'same_data_seed': scratch['data'] == old['scratch']['data'],
+            a.stage+'_source_verified': (extra.get('kind') == a.stage and extra.get('source_verified') is True
+                                        and extra.get('archive_digest_verified') is True),
+            a.stage+'_is_composed': graphics['graphics_source'].get(a.stage) == extra,
+            a.stage+'_service_added': '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added})
     report = dict(trial=a.trial, baseline=old['trial'], recipe_commit=usb['recipe_commit'],
                   checks=checks, passed=all(checks.values()),
                   boot_sha256=boot['boot_sha256'], kernel_sha256=boot['kernel_sha256'],

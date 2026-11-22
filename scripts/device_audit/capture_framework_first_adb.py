@@ -50,6 +50,9 @@ def main():
         'health': 'service check android.hardware.health.IHealth/default; timeout 15 dumpsys android.hardware.health.IHealth/default',
         'battery': 'timeout 15 dumpsys battery',
         'power': 'service check android.hardware.power.IPower/default; service check performance_hint; timeout 15 dumpsys performance_hint',
+        'audio-hal': 'getprop init.svc.vendor.audio-hal-aidl; service check android.hardware.audio.core.IConfig/default; service check android.hardware.audio.core.IModule/default; service check android.hardware.audio.effect.IFactory/default; ps -AZ | grep -E "audio-service|audioserver"; ls -lZ /dev/snd',
+        'audio': 'service check media.audio_flinger; service check media.audio_policy; service check audio; timeout 6 dumpsys media.audio_flinger; timeout 6 dumpsys media.audio_policy; timeout 6 dumpsys audio',
+        'activity': 'getprop sys.boot_completed; getprop service.bootanim.exit; timeout 12 dumpsys activity activities',
         'logcat': 'logcat -b all -d',
     }
     print('FIRST_FRAMEWORK_ADB '+boot, flush=True)

@@ -42,6 +42,7 @@ def main():
         repo/'device/realme/bladerunner_48m/m3-vendor/graphics.cil').read_bytes().replace(b'\r\n', b'\n')
     cil += (repo/'device/realme/bladerunner_48m/m3-vendor/health.cil').read_bytes().replace(b'\r\n', b'\n')
     cil += (repo/'device/realme/bladerunner_48m/m3-vendor/power.cil').read_bytes().replace(b'\r\n', b'\n')
+    cil += (repo/'device/realme/bladerunner_48m/m3-vendor/audio.cil').read_bytes().replace(b'\r\n', b'\n')
     local = work/'current/policy-check'
     candidate = local/'candidate-vendor.cil'
     candidate.write_bytes(cil)

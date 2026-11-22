@@ -1,0 +1,18 @@
+; Core/Config/Effect share the GSI's public Audio HAL server policy.
+; No PCM/DSP devices or allocator/Bluetooth client permissions are added.
+(type rmx_audio)
+(type rmx_audio_exec)
+(roletype r rmx_audio)
+(roletype object_r rmx_audio_exec)
+(typeattributeset domain (rmx_audio))
+(typeattributeset halserverdomain (rmx_audio))
+(typeattributeset hal_audio (rmx_audio))
+(typeattributeset hal_audio_server (rmx_audio))
+(typeattributeset file_type (rmx_audio_exec))
+(typeattributeset exec_type (rmx_audio_exec))
+(typeattributeset vendor_file_type (rmx_audio_exec))
+(typetransition init rmx_audio_exec process rmx_audio)
+(allow init rmx_audio_exec (file (getattr open read execute map)))
+(allow init rmx_audio (process (transition siginh rlimitinh)))
+(allow rmx_audio rmx_audio_exec (file (getattr open read execute entrypoint map)))
+(allow rmx_audio init (process (sigchld)))
