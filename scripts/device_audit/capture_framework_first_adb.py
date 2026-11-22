@@ -74,15 +74,15 @@ def main():
             if args.keep_awake and not awake_set and name == 'logcat':
                 # Do not fake battery state or change the original /data. This
                 # setting is discarded with the existing RAM-backed test volume.
-                state = shell('service check power', 5)
-                if 'found' in state and 'not found' not in state:
+                state = shell('getprop sys.boot_completed; service check power; service check settings; service check input', 5)
+                if state.startswith('1\n') and state.count(': found') == 3:
                     before = shell('settings get global stay_on_while_plugged_in', 5)
                     changed = shell('svc power stayon true; input keyevent KEYCODE_WAKEUP', 10)
                     after = shell('settings get global stay_on_while_plugged_in; dumpsys power | grep -E "mStayOn=|mWakefulness=|mIsPowered=|mPlugType="', 10)
-                    (live/'graphics-stay-awake.txt').write_text(
+                    (live/f'graphics-stay-awake-{iteration}.txt').write_text(
                         'boot_id='+boot+'\nprevious='+before+changed+'after='+after, encoding='utf-8')
-                    awake_set = True
-                    print('GRAPHICS_STAY_AWAKE '+after, flush=True)
+                    awake_set = after.splitlines()[:1] == ['15'] and 'mStayOn=true' in after
+                    print('GRAPHICS_STAY_AWAKE accepted='+str(awake_set)+' '+after, flush=True)
         if iteration < 4:
             time.sleep(25)
     print('FRAMEWORK_CAPTURE_COMPLETE', flush=True)
