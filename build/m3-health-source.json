@@ -1,0 +1,15 @@
+{
+  "tag": "android-17.0.0_r1",
+  "projects": {
+    "hardware/interfaces": "0162af698935100a590b7359581ac8b1b80693e5",
+    "system/core": "545d2487e38192a2ce25040897ced877cf6b4f53"
+  },
+  "sha256": {
+    "hardware/interfaces/health/aidl/default/Android.bp": "2e6b434350e152fef1c649d3f71bcbf41578f72d03a2305dfa7e1d58cfb03952",
+    "hardware/interfaces/health/aidl/default/main.cpp": "ff71aebe907a8dfeefb50c231cc5f27ee93b737624b92440e7872a78dd5232d4",
+    "hardware/interfaces/health/aidl/default/Health.cpp": "9078170dc915bbba6d0be195676b039317a62230ead340807957cd078fcf770e",
+    "hardware/interfaces/health/aidl/default/HalHealthLoop.cpp": "888405bafb8e0b0f558f379205bc1521c44ea0f7e93da542bf87f24bfcebf268",
+    "system/core/healthd/BatteryMonitor.cpp": "50cd06d7f0e3c7b8d257cfbd6486bfc5b93879744bf0a279b5a4c5bf13111faf"
+  },
+  "scope": "Unmodified AOSP Health V5 implementation and BatteryMonitor; device integration and gauge/charger drivers not implied."
+}

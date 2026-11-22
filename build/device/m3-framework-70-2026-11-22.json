@@ -1,0 +1,56 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-70",
+  "boot_id": "8135c6b2-9905-4c2b-8908-d986e7422672",
+  "recipe_commit": "1b3ebeb87f102d0fa349303677904735ec31f127",
+  "result": "MAIN_SERVICES_STARTED_HEALTH_BLOCKED",
+  "installd": "running with real PackageManager transactions",
+  "storaged": "running",
+  "system_packages_scanned": 201,
+  "reconciled_app_data_packages": 28,
+  "boot_completed": false,
+  "activity_window": "not available",
+  "next_blocker": "BatteryService onStart: IHealth/default unavailable",
+  "power_supply_nodes": [],
+  "health_hal_in_this_candidate": false,
+  "shell_service_check_caveat": "Shell find on installd_service is denied by SELinux. Its not-found output is not evidence of missing registration; installd transaction logs are used.",
+  "raw_sha256": {
+    "inputs.json": "222d9c17ebed45723054fc842d3e983e3f8db7213c9065517f575e40102047b3",
+    "logcat70-early.txt": "da57bc9d748ded828fa29e6a444d4a8fba503ed51c9fe22e105ee96508dc0193",
+    "framework70-early.txt": "69f2418c617653f217a6c6079dae113c11765a926b743097a41157bce0b7e2aa",
+    "power-supply70.txt": "eedcea203eb8ee4f34da566b017e1e63cc55b08298716d5d25b2a47ec234578d"
+  },
+  "evidence": {
+    "installd firing up": [
+      "01-01 00:01:45.862  2146  2146 I installd: installd firing up"
+    ],
+    "Finished scanning system apps.": [
+      "01-01 00:01:54.738  2326  2326 I PackageManager: Finished scanning system apps. Time: 3311 ms, packageCount: 201 , timePerPackage: 16 , cached: 0"
+    ],
+    "reconcileAppsData finished": [
+      "01-01 00:02:07.794  2326  2326 V PackageManager: reconcileAppsData finished 28 packages"
+    ],
+    "Failed to start service com.android.server.BatteryService": [
+      "01-01 00:02:08.090  2326  2326 E System  : java.lang.RuntimeException: Failed to start service com.android.server.BatteryService: onStart threw an exception",
+      "01-01 00:02:08.091  2326  2326 E Zygote  : java.lang.RuntimeException: Failed to start service com.android.server.BatteryService: onStart threw an exception",
+      "01-01 00:02:08.091  2326  2326 E AndroidRuntime: java.lang.RuntimeException: Failed to start service com.android.server.BatteryService: onStart threw an exception"
+    ],
+    "IHealth service instance default": [
+      "01-01 00:02:08.090  2326  2326 E System  : Caused by: java.util.NoSuchElementException: IHealth service instance default isn't available. Perhaps no permission?",
+      "01-01 00:02:08.091  2326  2326 E Zygote  : Caused by: java.util.NoSuchElementException: IHealth service instance default isn't available. Perhaps no permission?",
+      "01-01 00:02:08.091  2326  2326 E AndroidRuntime: Caused by: java.util.NoSuchElementException: IHealth service instance default isn't available. Perhaps no permission?",
+      "01-01 00:02:08.093  2326  2326 I am_crash: [2326,0,system_server,-1,java.util.NoSuchElementException,IHealth service instance default isn't available. Perhaps no permission?,HealthServiceWrapperHidl.java,207,0]"
+    ],
+    "name=installd scontext=u:r:shell": [
+      "01-01 00:02:11.653  1837  1837 I auditd  : avc:  denied  { find } for pid=2750 uid=2000 name=installd scontext=u:r:shell:s0 tcontext=u:object_r:installd_service:s0 tclass=service_manager permissive=0"
+    ],
+    "StartInstaller": [
+      "01-01 00:01:51.153  2326  2326 D SystemServerTiming: StartInstaller",
+      "01-01 00:02:11.812  2740  2740 D SystemServerTiming: StartInstaller"
+    ]
+  },
+  "limits": [
+    "AOSP desktop not reached",
+    "Power supply drivers not ported",
+    "Same-boot stability capture still in progress at this report"
+  ]
+}

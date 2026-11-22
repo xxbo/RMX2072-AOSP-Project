@@ -37,7 +37,26 @@ GSI、内核、设备树和测试卷保持固定。本轮仍用已有诊断入�
 
 两项新的打包边界测试及四项既有 vendor 更新边界测试通过。
 后续依次验收 installd 注册、包管理初始化、activity/window、Launcher 与
-实际屏幕；不以 ADB 或内部截图替代桌面验收。候选构建和真机结果待记录。
+实际屏幕；不以 ADB 或内部截图替代桌面验收。
+
+## 第 70 轮真机结果
+
+26 项[候选检查](../build/device/m3-framework70-preflight-2026-11-22.json)通过，
+内核、DTB/DTBO、GSI、显示开关和测试卷种子保持第 69 轮输入。活跃 LP
+布局仅 vendor 改变；另一份 LP 元数据的 system 覆盖同一片 vendor 字节，
+因此它的摘要也随之改变。元数据和全部 extent 不变，未把它当作回滚槽。
+候选 boot 和 super 回读通过；未重新备份或回读原厂 super。
+
+boot `8135c6b2-9905-4c2b-8908-d986e7422672` 上 `ro.boot.rmx_scratch=1`，
+installd/storaged 均运行。包管理扫描完成 201 个系统包，installd 执行真实
+应用数据事务，`reconcileAppsData` 完成 28 包。main 类启动缺口得到验证。
+shell 执行 `service check installd` 被 `installd_service:find` 拒绝，不能
+把这个 not-found 当成服务不存在；上述事务来自 installd 自身日志。
+
+ADB、SurfaceFlinger、HWC、allocator、maintenance 在 enforcing 下可用。
+system_server 随后仍因缺少 IHealth/default 在 BatteryService.onStart 退出，
+activity/window 和桌面尚未出现；`/sys/class/power_supply` 为空。
+[同 boot 摘要、关键日志与原始文件摘要](../build/device/m3-framework-70-2026-11-22.json)。
 
 ## 同时确认的下一处阻塞：Health HAL
 

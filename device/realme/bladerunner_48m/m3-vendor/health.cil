@@ -1,0 +1,18 @@
+; Use the GSI's public Health HAL server policy and real AIDL service type.
+; Battery/charger device-specific access awaits observed kernel nodes.
+(type rmx_health)
+(type rmx_health_exec)
+(roletype r rmx_health)
+(roletype object_r rmx_health_exec)
+(typeattributeset domain (rmx_health))
+(typeattributeset halserverdomain (rmx_health))
+(typeattributeset hal_health (rmx_health))
+(typeattributeset hal_health_server (rmx_health))
+(typeattributeset file_type (rmx_health_exec))
+(typeattributeset exec_type (rmx_health_exec))
+(typeattributeset vendor_file_type (rmx_health_exec))
+(typetransition init rmx_health_exec process rmx_health)
+(allow init rmx_health_exec (file (getattr open read execute map)))
+(allow init rmx_health (process (transition siginh rlimitinh)))
+(allow rmx_health rmx_health_exec (file (getattr open read execute entrypoint map)))
+(allow rmx_health init (process (sigchld)))

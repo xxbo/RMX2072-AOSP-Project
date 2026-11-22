@@ -30,7 +30,7 @@ def main():
     p.add_argument('--run-id', type=int, required=True)
     p.add_argument('--artifact-id', type=int, required=True)
     p.add_argument('--commit', required=True)
-    p.add_argument('--kind', choices=('kernel', 'init', 'graphics'), required=True)
+    p.add_argument('--kind', choices=('kernel', 'init', 'graphics', 'health'), required=True)
     p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     a = p.parse_args()
     if a.display and a.kind != 'kernel':
@@ -66,21 +66,35 @@ def main():
         url = error.headers['Location']
     provenance = dict(run_id=a.run_id, source_commit=a.commit, artifact_id=a.artifact_id,
                       artifact_archive_digest=artifact['digest'], archive_digest_verified=False)
-    if a.kind == 'graphics':
-        if run['path'] != '.github/workflows/m3-graphics.yml' or artifact['size_in_bytes'] > 512*1024*1024:
+    if a.kind in ('graphics', 'health'):
+        archive_name = a.kind + '-vendor.tar.gz'
+        if run['path'] != '.github/workflows/m3-'+a.kind+'.yml' or artifact['size_in_bytes'] > 512*1024*1024:
             raise ValueError('Unexpected graphics build or oversized artifact')
         plain = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         with plain.open(url, timeout=120) as response:
             archive = response.read(512*1024*1024+1)
         if len(archive) > 512*1024*1024 or 'sha256:'+digest(archive) != artifact['digest']:
             raise ValueError('Graphics archive digest/size mismatch')
-        wanted = {'graphics-vendor.tar.gz', 'vendor-files.sha256', 'resolved-manifest.xml',
+        wanted = {archive_name, 'vendor-files.sha256', 'resolved-manifest.xml',
                   'SHA256SUMS', 'project-commit.txt', 'target-dependencies.json', 'STATUS.txt',
                   'hardwarebuffer-source.json', 'vendor-output-path.txt'}
+        if a.kind == 'health':
+            wanted.add('health-source.sha256')
         with zipfile.ZipFile(io.BytesIO(archive)) as z:
             files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
         if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
             raise ValueError('Incomplete graphics artifact provenance')
+        if a.kind == 'health':
+            manifest = ET.fromstring(files['resolved-manifest.xml'])
+            revisions = {x.get('path'): x.get('revision') for x in manifest.findall('project')}
+            pinned_health = json.loads((repo/'build/m3-health-source.json').read_text())
+            for path, revision in pinned_health['projects'].items():
+                if revisions.get(path) != revision:
+                    raise ValueError('Health source revision changed: '+path)
+            health_hashes = {line.split(maxsplit=1)[1]:line.split()[0]
+                            for line in files['health-source.sha256'].decode().splitlines()}
+            if health_hashes != pinned_health['sha256']:
+                raise ValueError('Health source hashes differ from pinned upstream')
         from prepare_m3_hardwarebuffer import PINNED, SELECTED_MODULES
         hardwarebuffer = json.loads(files['hardwarebuffer-source.json'])
         if hardwarebuffer['original_files'] != PINNED or hardwarebuffer['selected_modules'] != SELECTED_MODULES:
@@ -90,7 +104,7 @@ def main():
             raise ValueError('Graphics dependency closure is incomplete')
         sums = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
                 for line in files['SHA256SUMS'].decode().splitlines()}
-        for name in ('graphics-vendor.tar.gz', 'resolved-manifest.xml', 'vendor-output-path.txt'):
+        for name in (archive_name, 'resolved-manifest.xml', 'vendor-output-path.txt'):
             if digest(files[name]) != sums[name]:
                 raise ValueError('Graphics member digest mismatch: '+name)
         vendor_output = files['vendor-output-path.txt'].decode().strip()
@@ -105,7 +119,7 @@ def main():
                 raise ValueError('Non-vendor file in graphics manifest')
             expected['/'+name[len(prefix):]] = sha256
         payload = {}
-        with tarfile.open(fileobj=io.BytesIO(files['graphics-vendor.tar.gz']), mode='r:gz') as tar:
+        with tarfile.open(fileobj=io.BytesIO(files[archive_name]), mode='r:gz') as tar:
             for member in tar:
                 if member.isdir():
                     continue
@@ -120,7 +134,7 @@ def main():
                     raise ValueError('Graphics payload exceeds staging bounds')
         if {n:digest(data) for n,data in payload.items()} != expected:
             raise ValueError('Graphics files differ from build manifest')
-        output = work/'current/graphics'
+        output = work/'current'/a.kind
         if output.exists():
             raise ValueError('Current graphics payload already exists; reconcile it before replacing')
         for name,data in payload.items():
@@ -128,10 +142,10 @@ def main():
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
         for name,data in files.items():
-            if name != 'graphics-vendor.tar.gz':
+            if name != archive_name:
                 (output/name).write_bytes(data)
         provenance.update(source_verified=True, archive_digest_verified=True, files=expected,
-                          target_closure=closure, payload_bytes=sum(map(len,payload.values())))
+                          kind=a.kind, target_closure=closure, payload_bytes=sum(map(len,payload.values())))
         (output/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n')
         print('Installed verified source graphics payload:', len(payload), 'files')
         return

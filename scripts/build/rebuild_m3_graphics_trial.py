@@ -42,6 +42,7 @@ def main():
     p.add_argument('--trial', required=True)
     p.add_argument('--openssl', type=Path, help='OpenSSL executable; defaults to the executable on PATH')
     p.add_argument('--display-staged', action='store_true', help='Keep the diagnostic USB gate and native staged display paths')
+    p.add_argument('--policy-proof', type=Path, help='Strict compilation record for the exact composed policy')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial naming')
@@ -73,7 +74,7 @@ def main():
     subprocess.run([sys.executable, str(build/'build_display_smoke.py'),
                     '--ndk', str(a.ndk.resolve()), '--output', str(current/'display-smoke')], check=True)
     files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics)
-    policy = json.loads((repo/'build/device/m3-graphics-policy-2026-11-16.json').read_text())
+    policy = json.loads((a.policy_proof or repo/'build/device/m3-graphics-policy-2026-11-16.json').read_text())
     cil = files['/etc/selinux/vendor_sepolicy.cil']
     cil_sha = hashlib.sha256(cil).hexdigest()
     compiled_input = (current/'policy-check/m3-vendor.cil').read_bytes()

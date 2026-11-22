@@ -31,6 +31,42 @@ def filesystem_size(files):
     return size
 
 
+def merge_health_payload(files, directory):
+    """Admit a checked additive native HAL; never replace graphics libraries."""
+    build = json.loads((directory/'provenance.json').read_text())
+    if (build.get('kind') != 'health' or not build.get('source_verified')
+            or not build.get('archive_digest_verified')):
+        raise ValueError('Health source artifact is not verified')
+    incoming = {}
+    payload = directory/'vendor'
+    for path in payload.rglob('*'):
+        if path.is_symlink():
+            raise ValueError('Unexpected Health symlink')
+        if not path.is_file():
+            continue
+        name = '/'+path.relative_to(payload).as_posix()
+        if (not re.fullmatch(r'/[a-zA-Z0-9+@/_.-]+', name)
+                or not name.startswith(('/lib64/', '/bin/hw/', '/etc/init/', '/etc/vintf/'))):
+            raise ValueError('Unexpected Health input: '+name)
+        data = path.read_bytes()
+        if name.startswith(('/lib64/', '/bin/hw/')) and (data[:6] != b'\x7fELF\x02\x01'
+                or len(data) < 64 or struct.unpack_from('<H', data, 18)[0] != 183):
+            raise ValueError('Expected ARM64 Health ELF: '+name)
+        if name in files and files[name] != data:
+            raise ValueError('Health would replace a different existing vendor file: '+name)
+        incoming[name] = data
+    if {name:sha(data) for name,data in incoming.items()} != build['files']:
+        raise ValueError('Health inventory differs from verified artifact')
+    if '/bin/hw/android.hardware.health-service.example' not in incoming:
+        raise ValueError('Health service missing')
+    files.update(incoming)
+    # This engineering profile does not enable a charger-mode UI or charging
+    # policy. Keep only the normal Health service reading power_supply.
+    files['/etc/init/android.hardware.health-service.example.rc'] = (
+        SOURCE/'health.rc').read_bytes().replace(b'\r\n', b'\n')
+    return build, incoming
+
+
 def compose(info, guard, graphics):
     files, pinned = inventory(True, guard)
     for path, digest in pinned.items():
@@ -69,6 +105,11 @@ def compose(info, guard, graphics):
         files[name] = data
     if incoming != build['files']:
         raise ValueError('Graphics inventory differs from verified artifact')
+    health_dir = graphics.parent/'health'
+    if health_dir.exists():
+        health, health_files = merge_health_payload(files, health_dir)
+        build = dict(build, health=health)
+        incoming.update({name:sha(data) for name,data in health_files.items()})
     probe_dir = graphics.parent/'display-smoke'
     probe_build = json.loads((probe_dir/'build.json').read_text())
     probe_source = (ROOT/'scripts/device_audit/drm_scanout_state.c').read_bytes().replace(b'\r\n', b'\n')
@@ -85,6 +126,7 @@ def compose(info, guard, graphics):
     files['/etc/rmx-m3-oem/media/bootanimation.zip'] = archive_bytes()
     files['/etc/init/rmx-m3-bootpattern.rc'] = (SOURCE/'bootpattern.rc').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'graphics.cil').read_bytes().replace(b'\r\n', b'\n')
+    files['/etc/selinux/vendor_sepolicy.cil'] += (SOURCE/'health.cil').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/selinux/vendor_property_contexts'] += (
         b'vendor.minigbm.debug u:object_r:rmx_graphics_config_prop:s0 exact string\n')
     # Stable-C mapper discovery uses servicemanager's isDeclared permission
@@ -94,6 +136,7 @@ def compose(info, guard, graphics):
     labels = [
         '/data/vendor/rmx-m3-diag(/.*)? u:object_r:rmx_scanout_data_file:s0',
         '/vendor/bin/hw/rmx-m3-drm-state u:object_r:rmx_scanout_probe_exec:s0',
+        '/vendor/bin/hw/android\\.hardware\\.health-service\\.example u:object_r:rmx_health_exec:s0',
         '/dev/dri/card[0-9]+ u:object_r:gpu_device:s0',
         '/dev/dri/renderD[0-9]+ u:object_r:gpu_device:s0',
         '/vendor/etc/selinux/vendor_service_contexts u:object_r:vendor_service_contexts_file:s0',
