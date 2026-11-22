@@ -1,4 +1,4 @@
-"""Capture framework progress without restarting Android or changing properties."""
+"""Capture framework progress; optionally isolate rendering from screen sleep."""
 import argparse
 import json
 from pathlib import Path
@@ -18,6 +18,8 @@ def main():
     p.add_argument('--workspace', type=Path, required=True)
     p.add_argument('--trial', required=True)
     p.add_argument('--previous-boot', required=True)
+    p.add_argument('--keep-awake', action='store_true',
+                   help='Record and enable temporary powered stay-awake on this RAM test boot')
     p.add_argument('--record-suffix', default='',
                    help='Match a device-runner retry record without changing the candidate')
     args = p.parse_args()
@@ -57,6 +59,7 @@ def main():
         'activity': 'getprop sys.boot_completed; getprop service.bootanim.exit; timeout 12 dumpsys activity activities',
     }
     print('FIRST_FRAMEWORK_ADB '+boot, flush=True)
+    awake_set = False
     for iteration in range(5):
         if shell('cat /proc/sys/kernel/random/boot_id', 3).strip() != boot:
             raise ValueError('Boot changed during framework capture')
@@ -68,6 +71,18 @@ def main():
             (live/f'framework-{iteration}-{name}.txt').write_text(output, encoding='utf-8')
             if name in ('identity', 'services'):
                 print(f'{iteration} {name} '+output, flush=True)
+            if args.keep_awake and not awake_set and name == 'logcat':
+                # Do not fake battery state or change the original /data. This
+                # setting is discarded with the existing RAM-backed test volume.
+                state = shell('service check power', 5)
+                if 'found' in state and 'not found' not in state:
+                    before = shell('settings get global stay_on_while_plugged_in', 5)
+                    changed = shell('svc power stayon true; input keyevent KEYCODE_WAKEUP', 10)
+                    after = shell('settings get global stay_on_while_plugged_in; dumpsys power | grep -E "mStayOn=|mWakefulness=|mIsPowered=|mPlugType="', 10)
+                    (live/'graphics-stay-awake.txt').write_text(
+                        'boot_id='+boot+'\nprevious='+before+changed+'after='+after, encoding='utf-8')
+                    awake_set = True
+                    print('GRAPHICS_STAY_AWAKE '+after, flush=True)
         if iteration < 4:
             time.sleep(25)
     print('FRAMEWORK_CAPTURE_COMPLETE', flush=True)
