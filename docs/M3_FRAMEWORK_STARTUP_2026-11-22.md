@@ -246,3 +246,28 @@ vendor 文件系统为 64 MiB，GSI 和已有驱动载荷未替换。
 全部通过：保留内核、DT、显示参数、GSI、测试卷、LP 元数据和 extent；
 仅增加音频文件并更新标签/策略。下一步真机验证三个接口注册、
 audioserver、AudioService 和 Launcher。
+
+## 第 73 轮：音频入口通过，发现 16 MiB Java 堆上限
+
+boot/DTBO 和 super 全部 17 段回读通过，仅写变化的 super 第 0 段和 boot。
+boot `af9d53f4-d880-4306-87b3-dfa46287c16b` 中，三个音频实例在
+`u:r:rmx_audio:s0` 注册，框架实际调用 IConfig、queryEffects 和 getAudioPorts。
+AudioFlinger 创建、primary interface 加载成功，AudioPolicy 创建并记录
+`AudioSystem ready`。原有 `AudioFlinger::onFirstRef()+712` 空指针未再出现。
+AudioService 完成构造，记录到启动阶段 500。
+
+后续 system_server 在多个线程发生 OOM：Java 堆 growth limit 只有
+16,777,216 字节，而 MemTotal 为 7,607,848 KiB，采样 MemAvailable 仍有
+4,545,908 KiB。`dalvik.vm.heap*` 属性全部缺失。zygote 的联动重启也重启
+了 audioserver/Audio HAL，因此不能将本轮写成音频进程已持续稳定验收。
+无真实输出端口时，路由/音量初始化仍会报错并重试；没有声音能力结论。
+Launcher 和 boot_completed 尚未到达。ADB 同次启动通过 197.078 秒，
+guardian retained，手机留在 GSI。
+[第 73 轮结果](../build/device/m3-framework73-result-2026-11-22.json)。
+
+下一轮保持所有 HAL/显示输入与测试卷，仅增加六项 Dalvik 堆属性。
+采用固定 AOSP `phone-xhdpi-6144-dalvik-heap.mk`：初始 16m、增长上限
+256m、最大 512m、目标利用率 0.5、最小/最大空闲 8m/32m。AOSP 此目录
+无 8 GiB 专用配置；在实测约 7.25 GiB 可见 RAM 的手机上采用其 6 GiB
+手机配置，不修改 GSI。源版本、摘要和值见
+[堆配置固定输入](../build/m3-dalvik-heap-source.json)。

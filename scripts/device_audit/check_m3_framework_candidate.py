@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 
 
 def read(path):
@@ -24,7 +25,7 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power', 'audio'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap'), default='health')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial name')
@@ -40,7 +41,8 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    extra = read(current/a.stage/'provenance.json')
+    hal_kind = 'audio' if a.stage == 'heap' else a.stage
+    extra = read(current/hal_kind/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
     flags = ('single_dsc_test', 'solid_fill_test', 'panel_readback_test',
              'stock_linkclock_test', 'stock_dsc_test', 'stock_phy_test',
@@ -79,8 +81,8 @@ def main():
         'same_inactive_nonalias_partitions': {k:v for k,v in candidate['partitions_after'][1].items() if k != 'system'} == {k:v for k,v in old['candidate']['partitions_after'][1].items() if k != 'system'},
         'health_source_verified': health.get('kind') == 'health' and health.get('source_verified') is True and health.get('archive_digest_verified') is True,
         'health_is_composed': graphics['graphics_source'].get('health') == health,
-        'no_graphics_or_existing_hal_replacement': set(changed) <= {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'},
-        'only_selected_hal_files_added': set(added) == set(extra['files'])-set(old_files['files']),
+        'no_graphics_or_existing_hal_replacement': set(changed) <= ({'/build.prop'} if a.stage == 'heap' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
+        'only_selected_hal_files_added': set(added) == (set() if a.stage == 'heap' else set(extra['files'])-set(old_files['files'])),
         'scratch_profile_consistent': scratch == rd['scratch_volumes'] == graphics['scratch'],
         'same_metadata_seed': scratch['metadata'] == old['scratch']['metadata'],
     }
@@ -91,10 +93,34 @@ def main():
     else:
         checks.update({
             'same_data_seed': scratch['data'] == old['scratch']['data'],
-            a.stage+'_source_verified': (extra.get('kind') == a.stage and extra.get('source_verified') is True
+            hal_kind+'_source_verified': (extra.get('kind') == hal_kind and extra.get('source_verified') is True
                                         and extra.get('archive_digest_verified') is True),
-            a.stage+'_is_composed': graphics['graphics_source'].get(a.stage) == extra,
-            a.stage+'_service_added': '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added})
+            hal_kind+'_is_composed': graphics['graphics_source'].get(hal_kind) == extra})
+        if a.stage != 'heap':
+            checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
+    if a.stage == 'heap':
+        before = (a.baseline/'vendor-build.prop').read_bytes()
+        after = subprocess.check_output([str(current/'fs-tools/debugfs.exe'), '-R', 'cat /build.prop',
+                                         str(current/'vendor/vendor.img')], stderr=subprocess.DEVNULL)
+        def properties(data):
+            result = {}
+            for row in data.decode().splitlines():
+                row = row.strip()
+                if not row or row.startswith('#'):
+                    continue
+                key, value = row.split('=', 1)
+                if key in result:
+                    raise ValueError('Duplicate vendor property: '+key)
+                result[key] = value
+            return result
+        pinned = read(Path(__file__).resolve().parents[2]/'build/m3-dalvik-heap-source.json')['properties']
+        prior_props, new_props = properties(before), properties(after)
+        checks.update(
+            baseline_property_digest=hashlib.sha256(before).hexdigest() == old_files['files']['/build.prop'],
+            current_property_digest=hashlib.sha256(after).hexdigest() == vendor['files']['/build.prop'],
+            previously_missing_heap_properties=not (set(prior_props) & set(pinned)),
+            only_pinned_heap_properties_added=new_props == dict(prior_props, **pinned),
+            same_audio_source=extra == read(a.baseline/'audio-provenance.json'))
     report = dict(trial=a.trial, baseline=old['trial'], recipe_commit=usb['recipe_commit'],
                   checks=checks, passed=all(checks.values()),
                   boot_sha256=boot['boot_sha256'], kernel_sha256=boot['kernel_sha256'],

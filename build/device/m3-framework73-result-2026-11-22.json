@@ -1,0 +1,80 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-73",
+  "boot_id": "af9d53f4-d880-4306-87b3-dfa46287c16b",
+  "result": "PASS_AUDIO_HAL_AND_AUDIO_SERVICE_CONSTRUCTION_BLOCKED_JAVA_HEAP",
+  "recipe_commit": "15eb07b7dd7e44d3e5850e21aa7c57994b00f480",
+  "audio_source_commit": "238f5df79f27cd1885fda837407ef1b4e6d66415",
+  "audio_build": 45012264891,
+  "kernel_sha256": "7b1701283ca73e4b2536fbf053aaa01dbca9b8e5f77059b98dc5291a9569d7b3",
+  "boot_sha256": "83d6bed7e2cdcb7b91202b7bf7855a35d69912d62677d17316715a1582f0c0c2",
+  "vendor_sha256": "400b5a11ccc09ec426897c5b32bb88b3c143c56ae5f36166fbb86b542130e408",
+  "super_sha256": "f88ec616acc9cde5490d0f86ee04320dd734d3d0f14cf754634aedc5aea73505",
+  "candidate_readback": "PASS_BOOT_DTBO_AND_17_SUPER_CHUNKS",
+  "updated_super_chunks": [
+    0
+  ],
+  "stock_partition_readback": false,
+  "audio_hal_instances": [
+    "android.hardware.audio.core.IConfig/default",
+    "android.hardware.audio.core.IModule/default",
+    "android.hardware.audio.effect.IFactory/default"
+  ],
+  "audio_domain": "u:r:rmx_audio:s0",
+  "audio_hal_registration": "PASS",
+  "audioflinger": "CREATED_PRIMARY_INTERFACE_LOADED",
+  "audio_policy_service": "CREATED_AUDIO_SYSTEM_READY",
+  "audio_service": "CONSTRUCTED_AND_REACHED_BOOT_PHASE_500",
+  "previous_audioserver_null_dereference": "NOT_PRESENT_IN_CAPTURED_LOGS",
+  "audioserver_stability": "RESTARTS_WITH_ZYGOTE_AFTER_SYSTEM_SERVER_OOM; NOT_STANDALONE_STABLE_ACCEPTANCE",
+  "physical_audio": "NO_PCM_OR_ROUTES; VOLUME_INITIALIZATION_RETRIES",
+  "next_blocker": {
+    "exception": "java.lang.OutOfMemoryError",
+    "growth_limit_bytes": 16777216,
+    "properties": "No dalvik.vm.heap* properties set",
+    "mem_total_kb": 7607848,
+    "mem_available_sample_kb": 4545908
+  },
+  "launcher": "NOT_REACHED",
+  "boot_completed": "NOT_SET",
+  "stable_adb_seconds": 197.078,
+  "guardian": "retained",
+  "retained": "GSI_CURRENT_BOOT_ONLY",
+  "cold_boot_or_fault_injection": "NOT_RUN",
+  "evidence_sha256": {
+    "inputs.json": "3c1740d45f68b51d4cf7b162340f0a00e3d7a84a6e9f3a7a64d697eba9afdf27",
+    "readbacks.jsonl": "06820e08f32a77085d0cd2a8f010f14765b0045949b6e5bbf2afde1a5f13e21f",
+    "vendor-update-source.json": "141969a0fc3d512f237b82888592e14b418b95d07067fb75651750d9b82d7245",
+    "live/gsi-stable.json": "e68c16b790fe3909df80444add78668ba934e339a831ca4050ed4e3978d3bf4e",
+    "live/framework-0-logcat.txt": "1b35332d62829dd0604a53b94b0169342e60f7ff6dabb91e364fe5d9c4c8236e",
+    "live/framework-4-logcat.txt": "bce7c2090a13ce98ea973449b89ffdde9ca4a7a16008f362c1c520e69ce4b867",
+    "live/framework-1-audio-hal.txt": "d57ac71d0e1eb0992d19ace33a5d4d8896fa11a37807f62694e5b4f790f638fd",
+    "live/framework-heap-properties.txt": "022199a36a70e4ee01ea4ade351e563ba39eecd5b0b42ac5363b4fbd7f13d098"
+  },
+  "registration_excerpt": [
+    "01-01 00:02:36.604  2104  2104 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.core.IConfig/default",
+    "01-01 00:02:36.606  2104  2104 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.core.IModule/default",
+    "01-01 00:02:36.607  2104  2104 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.effect.IFactory/default"
+  ],
+  "audio_excerpt": [
+    "01-01 00:02:36.936  2107  2107 I audioserver_main: main: AudioFlinger created",
+    "01-01 00:03:18.246  2107  2107 I audioserver_main: main: AudioPolicy created",
+    "01-01 00:03:18.246  2107  2107 I audioserver_main: main: AudioSystem ready",
+    "08-26 02:57:56.861  2351  2351 D SystemServerTiming: StartAudioService",
+    "08-26 02:57:58.241  2351  2535 D SystemServerTimingAsync: InitThreadPoolExec:OnBootPhase_500_com.android.server.audio.AudioService$Lifecycle",
+    "08-26 02:58:02.766  3430  3430 I audioserver_main: main: AudioFlinger created",
+    "08-26 02:58:02.777  3430  3430 I AudioFlinger: loadHwModule() Loaded primary audio interface, handle 10",
+    "08-26 02:58:20.941  3430  3430 I audioserver_main: main: AudioPolicy created",
+    "08-26 02:58:20.941  3430  3430 I audioserver_main: main: AudioSystem ready",
+    "08-26 02:58:22.483  3489  3489 D SystemServerTiming: StartAudioService",
+    "08-26 02:58:23.279  3489  3540 D SystemServerTimingAsync: InitThreadPoolExec:OnBootPhase_500_com.android.server.audio.AudioService$Lifecycle",
+    "08-26 02:58:26.797  3863  3863 I audioserver_main: main: AudioFlinger created",
+    "08-26 02:58:26.805  3863  3863 I AudioFlinger: loadHwModule() Loaded primary audio interface, handle 10",
+    "08-26 02:58:42.390  3863  3863 I audioserver_main: main: AudioPolicy created"
+  ],
+  "oom_excerpt": [
+    "08-26 02:58:02.233  2351  2351 E AndroidRuntime: java.lang.OutOfMemoryError: Failed to allocate a 376 byte allocation with 69808 free bytes and 68KB until OOM, target footprint 16777216, growth limit 16777216; giving up on allocation because <1% of heap free after GC.",
+    "08-26 02:58:26.073  3489  3793 E AndroidRuntime: java.lang.OutOfMemoryError: Failed to allocate a 24 byte allocation with 151616 free bytes and 148KB until OOM, target footprint 16777216, growth limit 16777216; giving up on allocation because <1% of heap free after GC.",
+    "08-26 02:58:26.073  3489  3510 E AndroidRuntime: java.lang.OutOfMemoryError: Failed to allocate a 32 byte allocation with 155712 free bytes and 152KB until OOM, target footprint 16777216, growth limit 16777216; giving up on allocation because <1% of heap free after GC.",
+    "08-26 02:58:47.790  3912  3934 E AndroidRuntime: java.lang.OutOfMemoryError: Failed to allocate a 24 byte allocation with 114752 free bytes and 112KB until OOM, target footprint 16777216, growth limit 16777216; giving up on allocation because <1% of heap free after GC."
+  ]
+}
