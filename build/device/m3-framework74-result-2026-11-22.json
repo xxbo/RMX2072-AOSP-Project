@@ -1,0 +1,101 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-74",
+  "boot_id": "efad714b-7e3d-4c66-b787-c170f875df6a",
+  "result": "PASS_AUDIO_STARTUP_AND_HEAP_CONFIGURATION_BLOCKED_KEYMASTER_IMPORT",
+  "recipe_commit": "0734bc73988a9909a4f8c00ffdb08244f98e603e",
+  "audio_source_commit": "238f5df79f27cd1885fda837407ef1b4e6d66415",
+  "audio_build": 45012264891,
+  "kernel_sha256": "7b1701283ca73e4b2536fbf053aaa01dbca9b8e5f77059b98dc5291a9569d7b3",
+  "boot_sha256": "163634b3a56d2434de2831c5fd492e53e1dece6262714f9ed0439adc3d33e685",
+  "vendor_sha256": "5861a4f5aecdfa457ef73795af1105b0fd794185251237caa16ed7b6d1a7b617",
+  "super_sha256": "d8e160b7ef231fef097afdf63378e6975a9784f3e8026ad6b677972772d5cef2",
+  "candidate_readback": "PASS_BOOT_DTBO_AND_17_SUPER_CHUNKS",
+  "updated_super_chunks": [
+    0
+  ],
+  "stock_partition_readback": false,
+  "changed_vendor_files": [
+    "/build.prop"
+  ],
+  "heap_properties": {
+    "dalvik.vm.heapstartsize": "16m",
+    "dalvik.vm.heapgrowthlimit": "256m",
+    "dalvik.vm.heapsize": "512m",
+    "dalvik.vm.heaptargetutilization": "0.5",
+    "dalvik.vm.heapminfree": "8m",
+    "dalvik.vm.heapmaxfree": "32m"
+  },
+  "heap_oom_in_captured_logs": false,
+  "audio_hal_instances": "ALL_THREE_REGISTERED_UNDER_ENFORCING",
+  "audioflinger": "CREATED_PRIMARY_LOADED_REGISTERED",
+  "audio_policy_service": "CREATED_AND_REGISTERED",
+  "audio_service": "REGISTERED_DURING_STARTUP_AND_REACHED_BOOT_PHASE_600",
+  "audio_runtime": "No captured native AudioFlinger null dereference; processes restart with zygote after LockSettings failure. Continuous framework stability not achieved.",
+  "physical_audio": "Not implemented: ports/routes/microphones/effects empty, no PCM stream; policy volume initialization retries",
+  "systemui": "PROCESS_STARTED_THEN_DIED_AFTER_SYSTEM_SERVER",
+  "launcher": "NO_RESUMED_DESKTOP_OBSERVED",
+  "boot_completed": "NOT_SET",
+  "next_blocker": {
+    "component": "LockSettingsService.initializeSyntheticPassword",
+    "exception": "IllegalStateException: Failed to encrypt blob",
+    "cause": "KeyStoreSecurityLevel.importKey -> Error::Km(UNIMPLEMENTED)",
+    "error_code": -100,
+    "source": "device/realme/bladerunner_48m/m1-keymaster-info/service.cpp:81",
+    "required_next": "TEE-backed key import and subsequent AES-GCM operations for SyntheticPasswordCrypto; validate temporary test keys and continue Launcher startup"
+  },
+  "stable_adb_seconds": 196.563,
+  "guardian": "retained",
+  "retained": "GSI_CURRENT_BOOT_ONLY",
+  "physical_display": "No new physical acceptance; accepted trial69 inputs unchanged",
+  "cold_boot_or_fault_injection": "NOT_RUN",
+  "host_postcollection_recovery": {
+    "utc": "2026-11-22T11:23:37.933058+00:00",
+    "result": "PASS_SAME_BOOT_POST_COLLECTION",
+    "boot_id": "efad714b-7e3d-4c66-b787-c170f875df6a",
+    "existing_completed_soak_seconds": 196.563,
+    "issue": "Windows GBK decoder failed on Android UTF-8 logcat after gsi-stable.json and guardian retention were completed",
+    "fix": "Explicit UTF-8 decoding; collect and inspect repeated without reboot or repeated soak",
+    "new_boot": false,
+    "new_soak": false
+  },
+  "evidence_sha256": {
+    "inputs.json": "ad9cee15ff779a62fb14d212f746df8498b68323fd22e9a718a06cda66a83514",
+    "readbacks.jsonl": "48242e30f243d28b73160e1e016532bf980e23a7df3351198c1a2c2c65d1255b",
+    "vendor-update-source.json": "c6647030c034e9a3f89e1466b25afbd1979729976bf5abe39fe648639a76dfbf",
+    "gsi-retained.json": "1ddfd6671ecdab203720dcf313c0ccd737b474ef42589557aff8b875b9e4bde4",
+    "host-postcollection-recovery.json": "022893ea45c38d50718f3acd83f0025a96136840a0216c8163896e04a5de2f21",
+    "live/gsi-stable.json": "251756382204fc03e9874caefedb3d58fb0ef81378d6e13e7711fa5161a20ec0",
+    "live/framework-2-logcat.txt": "d6c93661b2d6aa72cbaabb3b855a05f798a8af6cc029101c924f354104e7bbe1",
+    "live/framework-keymaster-crash.txt": "95fc9efd5a7f5d3fa841f194ddaa7d9015fd4f6000023a980e2e581928abd2d5",
+    "live/framework-heap-properties.txt": "b4f60d5538f31b8800aa4359572b27985e3f0b6bf26f1a86af8e063c08b077d3",
+    "live/framework-audio-live.txt": "c37449b24e4424b7162cebf7e723d0d1543c408552dcf676d0fc10377f0aa26a",
+    "live/framework-desktop-startup.txt": "762e0c7f67a1f17d5ce195cb271b81ba0a81a4cca8d2116d4a1ea1e1dffe90ff",
+    "live/logcat.txt": "01ab6c77ffd278f719373a6573f7da79f484cc441cc21e15f903b52a2b8477b4"
+  },
+  "audio_excerpt": [
+    "01-01 00:02:44.205  2087  2087 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.core.IConfig/default",
+    "01-01 00:02:44.206  2087  2087 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.core.IModule/default",
+    "01-01 00:02:44.207  2087  2087 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.effect.IFactory/default",
+    "01-01 00:03:24.007  2095  2095 I audioserver_main: main: AudioSystem ready",
+    "01-01 00:03:24.008  2095  2095 I audioserver_main: main: initialization done in 39540.781 ms, joining thread pool",
+    "08-26 02:57:57.617  2372  2372 D SystemServerTiming: StartAudioService",
+    "08-26 02:57:59.348  2372  2466 D SystemServerTimingAsync: InitThreadPoolExec:OnBootPhase_600_com.android.server.audio.AudioService$Lifecycle",
+    "08-26 02:58:01.034  3477  3477 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.core.IConfig/default",
+    "08-26 02:58:01.036  3477  3477 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.core.IModule/default",
+    "08-26 02:58:01.037  3477  3477 I android.hardware.audio-service.rmx2072: RMX Audio registered android.hardware.audio.effect.IFactory/default"
+  ],
+  "keymaster_excerpt": [
+    "08-26 02:58:00.290  2372  2372 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main",
+    "08-26 02:58:00.290  2372  2372 E AndroidRuntime: java.lang.IllegalStateException: Failed to encrypt blob",
+    "08-26 02:58:00.290  2372  2372 E AndroidRuntime: \tat com.android.server.locksettings.SyntheticPasswordCrypto.createBlob(SyntheticPasswordCrypto.java:232)",
+    "08-26 02:58:00.290  2372  2372 E AndroidRuntime: \tat com.android.server.locksettings.SyntheticPasswordCrypto.createBlob(SyntheticPasswordCrypto.java:218)",
+    "08-26 02:58:00.290  2372  2372 E AndroidRuntime:     Error::Km(r#UNIMPLEMENTED)) (public error code: 12 internal Keystore code: -100)",
+    "08-26 02:58:00.290  2372  2372 E AndroidRuntime: \tat android.security.KeyStoreSecurityLevel.importKey(KeyStoreSecurityLevel.java:192)",
+    "08-26 02:58:22.144  3540  3540 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main",
+    "08-26 02:58:22.144  3540  3540 E AndroidRuntime: java.lang.IllegalStateException: Failed to encrypt blob",
+    "08-26 02:58:22.144  3540  3540 E AndroidRuntime: \tat com.android.server.locksettings.SyntheticPasswordCrypto.createBlob(SyntheticPasswordCrypto.java:232)",
+    "08-26 02:58:22.144  3540  3540 E AndroidRuntime: \tat com.android.server.locksettings.SyntheticPasswordCrypto.createBlob(SyntheticPasswordCrypto.java:218)",
+    "08-26 02:58:22.144  3540  3540 E AndroidRuntime:     Error::Km(r#UNIMPLEMENTED)) (public error code: 12 internal Keystore code: -100)",
+    "08-26 02:58:22.144  3540  3540 E AndroidRuntime: \tat android.security.KeyStoreSecurityLevel.importKey(KeyStoreSecurityLevel.java:192)"
+  ]
+}

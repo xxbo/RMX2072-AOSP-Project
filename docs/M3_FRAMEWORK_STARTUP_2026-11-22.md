@@ -276,3 +276,30 @@ guardian retained，手机留在 GSI。
 全部通过。vendor 仅 `/build.prop` 改变，逐属性检查只增加固定的六项
 堆参数；所有 HAL/图形文件、SELinux、显示输入、测试卷和 LP 布局相同。
 下一步上机检查实际属性、OOM、AudioService 和 Launcher。
+
+## 第 74 轮：AudioService 到阶段 600，桌面前阻塞于 Keymaster 导入
+
+完整回读通过，boot 为 `efad714b-7e3d-4c66-b787-c170f875df6a`。六项堆属性
+全部与固定配置相符，采集窗口内没有再出现 OOM。音频三接口在 enforcing
+下注册，AudioFlinger/AudioPolicy 初始化完成并进入线程池；现场查询捕获
+`media.audio_flinger`、`media.audio_policy` 和 `audio` 均为 found。
+AudioService 到达启动阶段 600，SystemUI 进程启动。
+
+随后 system_server 在 `LockSettingsService.initializeSyntheticPassword`
+退出：`SyntheticPasswordCrypto.createBlob` 导入密钥时得到
+`Error::Km(UNIMPLEMENTED)` / -100，最终抛出 `Failed to encrypt blob`。
+项目 `m1-keymaster-info/service.cpp:81` 的 `importKey` 目前确实直接返回
+未实现。该故障在后续框架启动中重复；audioserver/音频 HAL 随 zygote 联动
+重启，不是此前的 AudioFlinger 原生空指针。音频初始化后仍无真实路由，
+音量初始化会重试，不能宣称硬件音频或整个框架已稳定。
+
+Launcher 尚未形成可验收桌面，`sys.boot_completed` 未设置。下一阶段目标
+是接通项目 Keymaster 到 TEE 的密钥导入及后续 AES-GCM 操作，让合成密码
+初始化完成，再继续 Launcher。目标仍为 6.18 + GSI + 移植驱动的真实桌面。
+
+ADB 同次启动检查通过 196.563 秒，guardian retained，手机留在 GSI；内核、
+DTB/DTBO、显示配置和测试卷未变，未做冷启动或故障注入，未回读原厂整区。
+主机在已写入 gsi-stable 证明后收集 logcat 时使用 Windows GBK 解码而失败；
+已修为显式 UTF-8，并在同一启动重新采集、核验身份和 retained 状态。
+没有重启手机或重复稳定性测试。该主机错误与 Keymaster 框架崩溃分开记录。
+[第 74 轮结果与证据摘要](../build/device/m3-framework74-result-2026-11-22.json)。

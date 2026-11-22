@@ -10,7 +10,11 @@ RELEASE = '6.18.32-android17-5-maybe-dirty-4k'
 SERIAL = 'RMX2072-M1'
 
 def shell(command, timeout=8):
-    return subprocess.check_output(['adb','-s',SERIAL,'shell',command], text=True, timeout=timeout, stderr=subprocess.STDOUT).replace('\r','')
+    # Android emits UTF-8. A Windows GBK locale can otherwise make log collection
+    # fail after successful retention when framework messages contain Unicode.
+    return subprocess.check_output(['adb','-s',SERIAL,'shell',command], text=True,
+                                   encoding='utf-8', errors='backslashreplace',
+                                   timeout=timeout, stderr=subprocess.STDOUT).replace('\r','')
 
 def fetch_autonomous(output):
     """Fetch pre-policy evidence, distinguishing autonomous and host-gated boots."""
