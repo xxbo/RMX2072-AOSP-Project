@@ -103,3 +103,17 @@ Health 构建 #2 的 2,330 条命令依赖检查发现唯一缺项为
 项目，只展开原生头文件与默认声明，继续保留缺失依赖检查。
 两个新增项目的 commit、三个 Android.bp 摘要和 sparse 选择均进入
 产物验证；不合成头文件、不删除 HealthLoop 功能。
+
+## 下午恢复与继续
+
+11 月 22 日下午继续时，设备处于 9008/显示诊断入口。取得的 pstore 只
+包含后续诊断启动：181.082 秒执行 `reboot edl`，符合未收到主机放行的
+180 秒入口超时。它不能证明最初的 GSI 退出原因；不将该原因写成已定位。
+16:22 用唯一原厂恢复集恢复 F.20，ADB、boot_completed、两份 LP 元数据
+通过，未回读原厂整区。[恢复记录](../build/device/m3-framework70-restored-2026-11-22.json)。
+
+第 70 轮既有 tombstone 还确认 audioserver 在
+`AudioFlinger::onFirstRef()+712` 空指针 SIGSEGV。先保存这个问题；目前
+已定位的框架致命点仍是更早的 BatteryService，音频是否阻塞桌面要在
+Health 接入后再判断。下一轮使用相同显示输入、源码 Health 和 2 GiB RAM
+data，目标为 BatteryService 通过、activity/window 注册和 Launcher 出图。

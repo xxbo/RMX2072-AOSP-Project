@@ -1,0 +1,33 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "sys_boot_completed": 1,
+  "boot_id": "3be53103-db75-43c5-b822-3a07a054427f",
+  "super_sha256": null,
+  "boot_sha256": null,
+  "dtbo_sha256": null,
+  "lp_slots": [
+    0,
+    1
+  ],
+  "stock_full_partition_readback": false,
+  "stock_write_acknowledged": true,
+  "expected_image_sha256": {
+    "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+  },
+  "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-70",
+  "reason": "On resumption handset was in EDL/host-gated diagnostic boot; original set restored while Health build is prepared",
+  "original_gsi_exit_cause": "UNDETERMINED: preserved pstore only contains a subsequent diagnostic boot",
+  "previous_diagnostic_boot": "56bd9c5f-9f23-4103-b942-7d613732f88d",
+  "captured_diagnostic_boot": "d84453f7-2a3c-4698-b05d-369b36d6fb23",
+  "observed_diagnostic_exit": "181.082296 seconds: Restarting system with command edl",
+  "raw_sha256": {
+    "console-ramoops-0": "1931ccb2511cd90481332e90bc8825ea95ce9a0f3ae06d50e7a0073c77a0753d",
+    "host-events.jsonl": "c9aed7c8c66a682ec396c1d1ba3096e560daebb844fdd650b5f23c8795c8fe6c",
+    "intermediate-boot.json": "cc6c3f8e28b63934117e0560cdb5d60108aee303fd0456b5fe5dabc224848358",
+    "pmsg-ramoops-0": "bd476a62cc19ffa8585758f815b02cf914614506584e5fd3163bbec6babcbf12",
+    "recovery-providers.txt": "347bc1268e49807944a627420381be0906832b09dc64604454f517b2f1f7a8a3"
+  }
+}

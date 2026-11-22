@@ -19,7 +19,9 @@
     "framework70-early.txt": "69f2418c617653f217a6c6079dae113c11765a926b743097a41157bce0b7e2aa",
     "power-supply70.txt": "eedcea203eb8ee4f34da566b017e1e63cc55b08298716d5d25b2a47ec234578d",
     "logcat70-later.txt": "d3b9632c835b3db6676d76c91032b4dbe8686952745817f9af41d586874f8482",
-    "framework70-later.txt": "11de506028749d7e27e599cd84142b9ad8fcac17283f1eaf56d2a06f9ab651a2"
+    "framework70-later.txt": "11de506028749d7e27e599cd84142b9ad8fcac17283f1eaf56d2a06f9ab651a2",
+    "native-crash-heads.txt": "7ec03cb7a612cc91e3fb88e2225d119b803e0f862ffdfae322c7bd5fd23ab47d",
+    "core-service-states.txt": "4a6094a432216524372977a971cf6d0e8189cbf31fda96c5aba11c3909b4fd57"
   },
   "evidence": {
     "installd firing up": [
@@ -78,5 +80,13 @@
     "next_profile_mib": 2048,
     "metadata_unchanged": true,
     "physical_userdata_changed": false
+  },
+  "native_crash_observation": {
+    "process": "/system/bin/audioserver",
+    "signal": "SIGSEGV",
+    "address": "0x0",
+    "frame": "android::AudioFlinger::onFirstRef()+712",
+    "desktop_blocking_role": "Not yet established; BatteryService fails earlier",
+    "other_services": "netd, installd, storaged, vold and SurfaceFlinger running at capture"
   }
 }
