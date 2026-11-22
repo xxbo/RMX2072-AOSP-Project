@@ -5,11 +5,14 @@
 #include <cstdio>
 
 using namespace android::hardware::keymaster::V4_0;
+#include "selftest.h"
 
-int main() {
+int main(int argc, char** argv) {
     android::hardware::configureRpcThreadpool(1, false);
     auto device = IKeymasterDevice::tryGetService("default");
     if (!device || !device->isRemote()) return 1;
+    if (argc==2 && !strcmp(argv[1],"--aes-selftest")) return aesSelftest(device);
+    if (argc!=1) return 1;
     bool returned = false;
     auto result = device->getHardwareInfo([&](SecurityLevel level, const auto& name,
                                                const auto& author) {

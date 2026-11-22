@@ -60,6 +60,12 @@ def build(ndk, headers, bionic, libraries, output, f20_hmac_control=False, f20_t
                 raise ValueError('Keymaster private runtime closure/RUNPATH is incomplete')
             runtime_report[binary.name] = dict(sha256=manifest[binary.name], needed=needed, runpath=runpath,
                 source_sha256=hashlib.sha256((DEVICE / (name + '.cpp')).read_bytes()).hexdigest())
+            runtime_report[binary.name]['source_files'] = {
+                str(path.relative_to(DEVICE.parent)).replace('\\', '/'):
+                    hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in ([DEVICE/(name+'.cpp')] + ([DEVICE/'wire.h', DEVICE/'operations.h',
+                    DEVICE.parent/'bootstrap-probes/rmx2072-keymaster-transport.h'] if name=='service' else [
+                    DEVICE/'selftest.h', DEVICE/'wire.h']))}
     if runtime_report:
         (output / 'private-runtime.json').write_text(json.dumps(runtime_report, indent=2)+'\n')
     print(json.dumps(manifest, indent=2))

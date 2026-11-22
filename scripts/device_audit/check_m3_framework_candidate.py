@@ -25,7 +25,8 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster'), default='health')
+    p.add_argument('--keymaster-build', type=Path, help='Source HAL build report for the keymaster stage')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial name')
@@ -41,7 +42,7 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    hal_kind = 'audio' if a.stage == 'heap' else a.stage
+    hal_kind = 'audio' if a.stage in ('heap', 'keymaster') else a.stage
     extra = read(current/hal_kind/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
     flags = ('single_dsc_test', 'solid_fill_test', 'panel_readback_test',
@@ -56,8 +57,8 @@ def main():
         'clean_recipe': usb['recipe_dirty'] is False,
         'same_display_flags': same(boot, old['boot'], flags) and same(usb, old['usb_build'], flags),
         'standard_pps_retained': boot['standard_pps_test'] is True,
-        'same_kernel_and_boot_components': same(boot, old['boot'], (
-            'kernel_sha256', 'dtbo_sha256', 'source_boot_sha256',
+        'same_boot_components': same(boot, old['boot'], (
+            'dtbo_sha256', 'source_boot_sha256',
             'source_dtbo_sha256', 'dtb_bundle_sha256', 'first_stage_init_sha256',
             'boot_start_policy', 'host_start_required_after_every_reboot', 'cmdline')),
         'same_dt_outputs': boot['device_tree_build']['outputs'] == old['boot']['device_tree_build']['outputs'],
@@ -81,8 +82,12 @@ def main():
         'same_inactive_nonalias_partitions': {k:v for k,v in candidate['partitions_after'][1].items() if k != 'system'} == {k:v for k,v in old['candidate']['partitions_after'][1].items() if k != 'system'},
         'health_source_verified': health.get('kind') == 'health' and health.get('source_verified') is True and health.get('archive_digest_verified') is True,
         'health_is_composed': graphics['graphics_source'].get('health') == health,
-        'no_graphics_or_existing_hal_replacement': set(changed) <= ({'/build.prop'} if a.stage == 'heap' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
-        'only_selected_hal_files_added': set(added) == (set() if a.stage == 'heap' else set(extra['files'])-set(old_files['files'])),
+        'no_unrelated_vendor_change': set(changed) <= ({'/build.prop'} if a.stage == 'heap' else
+            {'/bin/hw/rmx-keymaster-info-service', '/bin/hw/rmx-keymaster-info-client',
+             '/etc/ueventd.rc', '/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}
+            if a.stage == 'keymaster' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
+        'only_selected_hal_files_added': set(added) == (set() if a.stage in ('heap', 'keymaster') else set(extra['files'])-set(old_files['files'])),
+        'no_vendor_files_removed': set(old_files['files']) <= set(vendor['files']),
         'scratch_profile_consistent': scratch == rd['scratch_volumes'] == graphics['scratch'],
         'same_metadata_seed': scratch['metadata'] == old['scratch']['metadata'],
     }
@@ -96,8 +101,53 @@ def main():
             hal_kind+'_source_verified': (extra.get('kind') == hal_kind and extra.get('source_verified') is True
                                         and extra.get('archive_digest_verified') is True),
             hal_kind+'_is_composed': graphics['graphics_source'].get(hal_kind) == extra})
-        if a.stage != 'heap':
+        if a.stage not in ('heap', 'keymaster'):
             checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
+    if a.stage != 'keymaster':
+        checks['same_kernel'] = boot['kernel_sha256'] == old['boot']['kernel_sha256']
+    else:
+        if not a.keymaster_build:
+            p.error('--keymaster-build is required for the keymaster stage')
+        repo = Path(__file__).resolve().parents[2]
+        previous_kernel = read(a.baseline/'kernel-inputs/provenance.json')
+        new_kernel = read(current/'kernel/provenance.json')
+        allowed_sources = {'keymaster-lookup.sha256', 'keymaster-transport.sha256', 'listener.sha256'}
+        prev_hashes = previous_kernel['selected_member_sha256']
+        new_hashes = new_kernel['selected_member_sha256']
+        immutable = {k for k in prev_hashes if k.endswith('.sha256')} - allowed_sources
+        immutable.update(('sm8250_bootstrap_dot_config', 'resolved-manifest.xml'))
+        source_root = 'device/realme/bladerunner_48m/'
+        changed_sources = set(subprocess.check_output(['git', '-C', str(repo), 'diff', '--name-only',
+            previous_kernel['source_commit'], new_kernel['source_commit'], '--',
+            source_root+'bootstrap-probes', source_root+'bootstrap-patches', source_root+'display',
+            '.github/workflows/sm8250-bootstrap.yml', 'scripts/build/build_sm8250_bootstrap.sh'],
+            text=True).splitlines())
+        allowed_paths = {source_root+'bootstrap-probes/'+name for name in (
+            'rmx2072-keymaster-lookup.c', 'rmx2072-keymaster-transport.h', 'rmx2072-listener.inc')}
+        km = read(a.keymaster_build)
+        pins = read(repo/source_root/'m1-keymaster-info/inputs.json')
+        expected_sources = {
+            'service': {'m1-keymaster-info/service.cpp', 'm1-keymaster-info/wire.h',
+                        'm1-keymaster-info/operations.h', 'bootstrap-probes/rmx2072-keymaster-transport.h'},
+            'client': {'m1-keymaster-info/client.cpp', 'm1-keymaster-info/selftest.h', 'm1-keymaster-info/wire.h'}}
+        source_ok = True
+        for kind, sources in expected_sources.items():
+            name = 'rmx-keymaster-info-'+kind
+            report = km[name]
+            source_ok &= (set(report['source_files']) == sources and
+                all(sha(repo/source_root/path) == digest for path,digest in report['source_files'].items()) and
+                sha(current/'info-input'/name) == report['sha256'] == pins['/bin/hw/'+name] == vendor['files']['/bin/hw/'+name] and
+                report['runpath'] == ['/vendor/lib64/rmx-keymaster'] and
+                {Path(path).name for path in pins if path.startswith('/lib64/')} <= set(report['needed']))
+        checks.update(
+            baseline_kernel_record_matches=previous_kernel['image_sha256'] == old['boot']['kernel_sha256'],
+            kernel_inputs_verified=(new_kernel['source_digests_verified'] is True and
+                new_kernel['dist_digests_verified'] is True and new_kernel['installing'] is False and
+                new_kernel['image_sha256'] == boot['kernel_sha256']),
+            kernel_has_only_keymaster_source_change=changed_sources == allowed_paths,
+            same_display_and_non_keymaster_kernel_inputs=all(prev_hashes[k] == new_hashes.get(k) for k in immutable),
+            keymaster_binary_and_source_verified=bool(source_ok),
+            same_audio_source=extra == read(a.baseline/'audio-provenance.json'))
     if a.stage == 'heap':
         before = (a.baseline/'vendor-build.prop').read_bytes()
         after = subprocess.check_output([str(current/'fs-tools/debugfs.exe'), '-R', 'cat /build.prop',

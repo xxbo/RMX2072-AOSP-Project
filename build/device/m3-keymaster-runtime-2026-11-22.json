@@ -1,0 +1,51 @@
+{
+  "rmx-keymaster-info-service": {
+    "sha256": "6a25da2817c2961d9de540c77a88edfe10ac359fc1f93debf1959c2b0f4be602",
+    "needed": [
+      "android.hardware.keymaster@3.0.so",
+      "android.hardware.keymaster@4.0.so",
+      "libbase.so",
+      "libc++.so",
+      "libcutils.so",
+      "libhidlbase.so",
+      "libprocessgroup.so",
+      "libutils.so",
+      "liblog.so",
+      "libc.so"
+    ],
+    "runpath": [
+      "/vendor/lib64/rmx-keymaster"
+    ],
+    "source_sha256": "f2b41f413ed710e307203e2fd04a6ccb0725e5e54ac70f4508364a626ea53c89",
+    "source_files": {
+      "m1-keymaster-info/service.cpp": "f2b41f413ed710e307203e2fd04a6ccb0725e5e54ac70f4508364a626ea53c89",
+      "m1-keymaster-info/wire.h": "1a32eebe7b74b11e99d430d19b41dfa264b50a7f3962e3eab3841ff8d30c3d88",
+      "m1-keymaster-info/operations.h": "b440b4c7ab80fe0d3f918b041ee6bb1c721b58e50d1b736b1c8ba7d2b54d782c",
+      "bootstrap-probes/rmx2072-keymaster-transport.h": "2c397b281ff8bd4b10a45d91f87e87397de359e3d58be6902cbe55d73ba67eda"
+    }
+  },
+  "rmx-keymaster-info-client": {
+    "sha256": "78677ba283ed383cf0b7e54ff0f4c14e863dbcc77e0a5ffd6b891701bde274c1",
+    "needed": [
+      "android.hardware.keymaster@3.0.so",
+      "android.hardware.keymaster@4.0.so",
+      "libbase.so",
+      "libc++.so",
+      "libcutils.so",
+      "libhidlbase.so",
+      "libprocessgroup.so",
+      "libutils.so",
+      "liblog.so",
+      "libc.so"
+    ],
+    "runpath": [
+      "/vendor/lib64/rmx-keymaster"
+    ],
+    "source_sha256": "ca7b4007ab68ba97c0fb58f5f9dd5c3a11111df957f07eaf55eca0d3b33be810",
+    "source_files": {
+      "m1-keymaster-info/client.cpp": "ca7b4007ab68ba97c0fb58f5f9dd5c3a11111df957f07eaf55eca0d3b33be810",
+      "m1-keymaster-info/selftest.h": "7160e2e53c54130ec85f33076e99ad92002b9b32972a3d2f537297026ef6ae21",
+      "m1-keymaster-info/wire.h": "1a32eebe7b74b11e99d430d19b41dfa264b50a7f3962e3eab3841ff8d30c3d88"
+    }
+  }
+}
