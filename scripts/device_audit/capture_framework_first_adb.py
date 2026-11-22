@@ -18,10 +18,15 @@ def main():
     p.add_argument('--workspace', type=Path, required=True)
     p.add_argument('--trial', required=True)
     p.add_argument('--previous-boot', required=True)
+    p.add_argument('--record-suffix', default='',
+                   help='Match a device-runner retry record without changing the candidate')
     args = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', args.trial):
         p.error('Use the recorded trial name')
-    live = args.workspace.resolve()/'records'/args.trial/'live'
+    if args.record_suffix and not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,63}', args.record_suffix):
+        p.error('Use a short lowercase record suffix')
+    record = args.trial + ('-'+args.record_suffix if args.record_suffix else '')
+    live = args.workspace.resolve()/'records'/record/'live'
     deadline = time.monotonic()+1500
     while time.monotonic() < deadline:
         try:
