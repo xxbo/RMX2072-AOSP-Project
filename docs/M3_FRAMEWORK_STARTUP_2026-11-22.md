@@ -235,3 +235,9 @@ neverallow 检查启用；未加载策略、未改变 enforcing。
 [Audio 策略证明](../build/device/m3-audio-policy-2026-11-22.json)。
 三个音频实例均使用 GSI 已有的 `hal_audio_service` 标签及公开 server 属性。
 13 项载荷碰撞/篡改、显示保留、测试卷及增量更新检查通过。
+
+[Audio 源码构建 45012264891](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/45012264891)
+成功，2014 条目标命令无缺失依赖。13 个产物文件均通过源版本、
+源码和归档摘要核验；9 个新增文件，重叠库全部字节相同。
+vendor 文件系统为 64 MiB，GSI 和已有驱动载荷未替换。
+[构建及组合记录](../build/device/m3-audio-build-2026-11-22.json)。

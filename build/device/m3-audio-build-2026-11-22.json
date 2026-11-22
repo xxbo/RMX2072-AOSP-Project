@@ -1,0 +1,59 @@
+{
+  "result": "PASS_SOURCE_BUILD_AND_ADDITIVE_COMPOSITION",
+  "run_id": 45012264891,
+  "job_id": 137176945519,
+  "recipe_commit": "238f5df79f27cd1885fda837407ef1b4e6d66415",
+  "artifact_id": 14750793217,
+  "artifact_archive_digest": "sha256:1dfa4c1f6a1af0df1e8f4798f9cd177372f40a62656d07f1aa98881dd90f5de4",
+  "target_dependencies": {
+    "target": "android.hardware.audio-service.rmx2072",
+    "graph": "out/combined-rmx2072_m3_graphics.ninja",
+    "method": "ninja -t commands (read only)",
+    "command_count": 2014,
+    "commands_sha256": "927360dd80863ee1315507cc35a99f50215a29c09db7c8a5791bd655bbcf7044",
+    "missing_dependency_commands": []
+  },
+  "files": {
+    "/bin/hw/android.hardware.audio-service.rmx2072": "581f05d8ace5a988a0bd349558fa7a5dc5b400bba8c24b5d2ff9781543c72607",
+    "/etc/init/audio.rc": "9bef59a275f573221ebe8ea32d352e7430b19a03002d8b1a4b77b9b0e5a3cca5",
+    "/etc/vintf/manifest/audio.xml": "ec62ca650ebc60618d10f389d915c42689302b6b5287dedf2412dd77ec24f13d",
+    "/lib64/android.hardware.audio.common-V5-ndk.so": "5b113081bf1fcb3cff22a19500878d5e2829097e9c6b292493daae702969b597",
+    "/lib64/android.hardware.audio.core-V4-ndk.so": "7021f3b73a365e775bde00461a361e943771164709b40fc11245f06cfd648021",
+    "/lib64/android.hardware.audio.core.sounddose-V4-ndk.so": "4b07c06412da1071ca245db4004909a403003baa984828aff24d7527aba587ee",
+    "/lib64/android.hardware.audio.effect-V4-ndk.so": "a437b7a4a0fc5d12aee6642158eea5ed4e097aa93564b75cd04561588fd249fd",
+    "/lib64/android.hardware.common-V2-ndk.so": "7c2a094273c7bd1d01f53acdcd849cae0655bf7a9a39a2057b36b0e33ffb235f",
+    "/lib64/android.hardware.common.fmq-V1-ndk.so": "7acc141ba11c898048d7b55c3551a4b0f7005329a629754b18c02a95c549dba7",
+    "/lib64/android.media.audio.common.types-V5-ndk.so": "c968534496caf69bb5b4a624f520da729481fb5b62cdbd89a33fb11b928b9b52",
+    "/lib64/android.media.audio.eraser.types-V2-ndk.so": "a42ad99ed1c7014cb5417cea1da34e3d4e874bc7661729c36d66cc81e801715f",
+    "/lib64/libbase.so": "79cc9c2b80cb9d91ee866f9995552d53ce35e3fa6671c2687c6af38f1101eff1",
+    "/lib64/libc++.so": "cb118e98c74d3454858921123b9b51ba13df9cad7dfa141dd892c453661a4d78"
+  },
+  "shared_identical": [
+    "/lib64/android.hardware.common-V2-ndk.so",
+    "/lib64/android.hardware.common.fmq-V1-ndk.so",
+    "/lib64/libbase.so",
+    "/lib64/libc++.so"
+  ],
+  "vendor_added": [
+    "/bin/hw/android.hardware.audio-service.rmx2072",
+    "/etc/init/audio.rc",
+    "/etc/vintf/manifest/audio.xml",
+    "/lib64/android.hardware.audio.common-V5-ndk.so",
+    "/lib64/android.hardware.audio.core-V4-ndk.so",
+    "/lib64/android.hardware.audio.core.sounddose-V4-ndk.so",
+    "/lib64/android.hardware.audio.effect-V4-ndk.so",
+    "/lib64/android.media.audio.common.types-V5-ndk.so",
+    "/lib64/android.media.audio.eraser.types-V2-ndk.so"
+  ],
+  "vendor_changed": [
+    "/etc/selinux/vendor_file_contexts",
+    "/etc/selinux/vendor_sepolicy.cil"
+  ],
+  "payload_bytes": 2574135,
+  "vendor_filesystem_bytes": 67108864,
+  "policy_proof": "m3-audio-policy-2026-11-22.json",
+  "handset_result": "NOT RUN",
+  "capabilities": "Empty available ports/routes/microphones/effects; no PCM streams or DSP backend. Unsupported hardware controls are explicit errors.",
+  "scope": "Pinned AIDL Core/Effect V4 project service, additive to verified trial72 Power/Health/graphics/Keymaster",
+  "focused_checks": "13 passed: additive HAL payloads, preserved display flags and vendor-update boundaries"
+}
