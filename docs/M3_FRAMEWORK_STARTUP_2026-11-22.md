@@ -241,3 +241,8 @@ neverallow 检查启用；未加载策略、未改变 enforcing。
 源码和归档摘要核验；9 个新增文件，重叠库全部字节相同。
 vendor 文件系统为 64 MiB，GSI 和已有驱动载荷未替换。
 [构建及组合记录](../build/device/m3-audio-build-2026-11-22.json)。
+
+第 73 轮 30 项[候选对比](../build/device/m3-framework73-preflight-2026-11-22.json)
+全部通过：保留内核、DT、显示参数、GSI、测试卷、LP 元数据和 extent；
+仅增加音频文件并更新标签/策略。下一步真机验证三个接口注册、
+audioserver、AudioService 和 Launcher。
