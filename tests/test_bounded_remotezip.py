@@ -12,8 +12,15 @@ import unittest
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/build'))
-from bounded_remotezip import BoundedRemoteFetcher
-from remotezip import RemoteZip, RemoteZipError
+try:
+    from bounded_remotezip import BoundedRemoteFetcher
+    from remotezip import RemoteZip, RemoteZipError
+except ModuleNotFoundError as error:
+    if error.name not in ('remotezip', 'requests'):
+        raise
+    # General DT/boot checks use stdlib Python; artifact downloading has
+    # separate host dependencies. Run these HTTP tests where those are installed.
+    raise unittest.SkipTest('requires optional artifact-host requests and remotezip')
 
 
 class SmallFetcher(BoundedRemoteFetcher):
