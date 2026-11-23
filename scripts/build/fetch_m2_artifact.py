@@ -297,7 +297,9 @@ def main():
             a.commit + ':build/m3-battery-source.json']))
         rows = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
                 for line in files['battery-source.sha256'].decode().splitlines()}
-        if rows != pinned['files'] or pinned['ack_commit'] != common.get('revision'):
+        # common is the repository's history-free source snapshot; its commit
+        # differs from the official ACK commit mapped by SOURCE_LOCK above.
+        if rows != pinned['files'] or pinned['ack_commit'] != ack['commit']:
             raise ValueError('Gauge source does not match the pinned ACK driver')
         if (any('CONFIG_' + k + '=y' not in config for k in ('BATTERY_BQ27XXX', 'BATTERY_BQ27XXX_I2C'))
                 or '# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set' not in config):
