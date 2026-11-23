@@ -39,8 +39,11 @@ def check_m3_input(data, staged):
         node = tree['/soc/gpio_keys/' + name]
         if ids[node['gpios'][0]] != pmic or node['gpios'][1:] != [gpio, 1] or node['linux,code'] != [code]:
             raise ValueError('Volume-key board wiring differs: ' + name)
-    if tree['/soc/i2c@a94000']['compatible'] != ['realme,rmx2072-parked-i2c']:
-        raise ValueError('Legacy I2C controller must remain parked')
+    legacy = tree['/soc/i2c@a94000']
+    if (legacy['compatible'] != ['realme,rmx2072-parked-i2c'] or
+            legacy.get('status') != ['disabled']):
+        raise ValueError('Legacy I2C controller must remain disabled after the board overlay; '
+                         'a parked compatible still creates a duplicate a94000.i2c device')
     return dict(touch='GT9886 at native SE13 0xa94000, address 0x5d',
                 coordinates=[1080, 2400], reset_gpio=38, irq_gpio=39,
                 volume_up='PM8150 GPIO6 active-low, KEY_VOLUMEUP',

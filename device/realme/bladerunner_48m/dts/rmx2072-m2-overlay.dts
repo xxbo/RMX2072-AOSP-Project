@@ -38,6 +38,12 @@
 };
 
 #ifdef RMX2072_M3_INPUT
+// The OEM board overlay enables the old SE13 node. A parked compatible alone
+// still creates a94000.i2c, preventing the native wrapper's child of that name
+// from being registered. Apply the disabled state in this final board overlay.
+&qupv3_se13_i2c { status = "disabled"; };
+&qupv3_1 { status = "disabled"; };
+
 // The legacy provider never matched the native driver, leaving gpio-keys
 // deferred. Preserve its board pin groups and admit only the two volume pads.
 &pm8150_gpios {

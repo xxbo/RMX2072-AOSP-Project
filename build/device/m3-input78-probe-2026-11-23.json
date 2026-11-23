@@ -1,0 +1,16 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-78",
+  "boot_id": "8097409b-0bce-4f88-b7f4-63b941dd4119",
+  "result": "EARLY_INPUT_PROBE_PARTIAL",
+  "volume_input_registration": true,
+  "touch_input_registration": false,
+  "evidence": [
+    "6,3086,1038578,-,caller=T1;input: gpio-keys as /devices/platform/soc/soc:gpio_keys/input/input1",
+    "4,3512,29252154,-,caller=T1401;sysfs: cannot create duplicate filename '/bus/platform/devices/a94000.i2c'",
+    "7,3565,29256990,-,caller=T1401;probe of ac0000.geniqup returned 0 after 4976 usecs"
+  ],
+  "cause": "Legacy SE13 remained enabled after the OEM board overlay; its platform device name a94000.i2c prevents registration of the new native child. Parking only the compatible is insufficient.",
+  "next_change": "Disable legacy SE13 and wrapper in the final board overlay; retain kernel and vendor",
+  "physical_input_result": "NOT RUN",
+  "gsi_adb_result": "PENDING"
+}
