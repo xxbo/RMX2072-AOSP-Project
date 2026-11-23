@@ -11,8 +11,20 @@
     "Explicit required kernel headers and big-endian register addresses",
     "Normandy slot ID masked as in official GT9886 and bounds checked for both families",
     "Rate-limit touch checksum errors and log successful chip identification",
-    "Remove archive-obfuscated email from copyright and MODULE_AUTHOR, retain author attribution"
+    "Remove archive-obfuscated email from copyright and MODULE_AUTHOR, retain author attribution",
+    "RMX2072-only Normandy variant for measured firmware PID 9885; validate the full 72-byte OEM version block checksum and sensor byte before registering input"
   ],
   "firmware": "Uses pre-flashed touch-controller firmware; no firmware/config flashing or factory Android binary is loaded",
-  "device_result": "NOT RUN"
+  "device_result": "Trial 79 native I2C reads firmware PID 9885; input refused by generic 9886 PID check. Board variant pending build and real touch validation.",
+  "official_board_reference": {
+    "commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+    "driver": "drivers/input/touchscreen/oppo_touchscreen/Goodix/GT9886/goodix_drivers_gt9886.c",
+    "version_read": "72 bytes at 0x452c; u8 checksum zero, PID at offset 9, patch at 17, sensor at 21",
+    "touch_layout": "0x4100, two-byte header, eight bytes per contact, byte-sum checksum"
+  },
+  "goodix_reference": {
+    "repository": "https://github.com/goodix/gtx8_driver_linux",
+    "commit": "8fc3b1fac3fe60d13b1cfe69ca3cbabba165677c",
+    "scope": "Normandy family selection and I2C/event layout; not an independent silicon ID proof"
+  }
 }

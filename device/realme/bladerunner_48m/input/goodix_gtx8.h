@@ -41,6 +41,7 @@ struct goodix_gtx8_ic_data {
 	enum goodix_gtx8_ic_type ic_type;
 	char product_id[4];
 	int touch_data_addr;
+	bool verify_version_checksum;
 };
 
 struct goodix_gtx8_header_normandy {

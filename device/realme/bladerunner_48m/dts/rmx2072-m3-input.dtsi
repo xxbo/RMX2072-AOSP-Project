@@ -77,7 +77,7 @@
             #address-cells = <1>;
             #size-cells = <0>;
             touchscreen@5d {
-                compatible = "goodix,gt9886";
+                compatible = "realme,rmx2072-goodix-normandy";
                 reg = <0x5d>;
                 interrupt-parent = <&m3_tlmm>;
                 interrupts = <39 IRQ_TYPE_EDGE_FALLING>;

@@ -14,7 +14,7 @@ def check_m3_input(data, staged):
     for path, expected in {
         host: {'compatible': ['qcom,geni-i2c'], 'reg': [0xa94000, 0x4000],
                'interrupts': [0, 358, 4], 'clock-frequency': [400000]},
-        touch: {'compatible': ['goodix,gt9886'], 'reg': [0x5d],
+        touch: {'compatible': ['realme,rmx2072-goodix-normandy'], 'reg': [0x5d],
                 'interrupts': [39, 2], 'touchscreen-size-x': [1080],
                 'touchscreen-size-y': [2400]},
         pmic: {'compatible': ['qcom,pm8150-gpio'], 'reg': [0xc000],
@@ -44,7 +44,7 @@ def check_m3_input(data, staged):
             legacy.get('status') != ['disabled']):
         raise ValueError('Legacy I2C controller must remain disabled after the board overlay; '
                          'a parked compatible still creates a duplicate a94000.i2c device')
-    return dict(touch='GT9886 at native SE13 0xa94000, address 0x5d',
+    return dict(touch='RMX2072 Normandy, measured firmware PID 9885, SE13 0xa94000/address 0x5d',
                 coordinates=[1080, 2400], reset_gpio=38, irq_gpio=39,
                 volume_up='PM8150 GPIO6 active-low, KEY_VOLUMEUP',
                 volume_down='PM8150 GPIO7 active-low, KEY_VOLUMEDOWN',

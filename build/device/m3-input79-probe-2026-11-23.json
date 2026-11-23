@@ -1,0 +1,19 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-79",
+  "boot_id": "31c067f9-477b-42e9-a365-c13e20b2cea4",
+  "result": "NATIVE_I2C_WORKS_FIRMWARE_PID_DIFFERS",
+  "legacy_name_collision_resolved": true,
+  "native_i2c_registered": true,
+  "firmware_product_id": "9885",
+  "input_registration": false,
+  "evidence": [
+    "3,3548,29592101,-,caller=T90;goodix-gtx8 1-005d: unexpected product ID, got: 9885",
+    "3,3549,29592215,-,caller=T90;goodix-gtx8 1-005d: failed to get version info",
+    "3,3550,29592538,-,caller=T90;goodix-gtx8 1-005d: probe with driver goodix-gtx8 failed with error -22",
+    "7,3552,29593295,-,caller=T90;probe of a94000.i2c returned 0 after 438079 usecs"
+  ],
+  "next": "Board-specific Normandy match for firmware PID 9885 plus full OEM version checksum validation; no broad PID bypass or firmware write",
+  "silicon_model_scope": "Firmware PID measured; physical silicon marking was not read",
+  "physical_touch": "NOT RUN",
+  "power_key_off_on": "NOT RUN"
+}

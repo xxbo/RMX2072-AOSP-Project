@@ -303,6 +303,37 @@ static int goodix_gtx8_read_version(struct goodix_gtx8_core *cd)
 {
 	int error;
 
+	if (cd->ic_data->verify_version_checksum) {
+		/* Board 20607's vendor GT9886-family driver reads this complete
+		 * Normandy version block. Its firmware PID is 9885, as measured
+		 * on RMX2072; do not accept arbitrary IDs or infer a generic IC.
+		 */
+		u8 version[72];
+		int attempt;
+
+		for (attempt = 0; attempt < 3; attempt++) {
+			error = regmap_raw_read(cd->regmap, 0x452c, version,
+						sizeof(version));
+			if (!error) {
+				if (goodix_gtx8_checksum_valid_normandy(version,
+								 sizeof(version)) &&
+				    version[21] != 0xff) {
+					memcpy(&cd->fw_version, version + 9,
+					       sizeof(cd->fw_version));
+					dev_info(cd->dev, "RMX2072 version checksum valid, sensor=%u\n",
+						 version[21] & 0x0f);
+					break;
+				}
+				error = -EBADMSG;
+			}
+			msleep(100);
+		}
+		if (error)
+			return dev_err_probe(cd->dev, error,
+					     "Invalid complete Normandy version block\n");
+		goto check_product_id;
+	}
+
 	/*
 	 * The vendor driver reads a whole lot more data to calculate and
 	 * verify a checksum. Without documentation, we don't know what
@@ -320,6 +351,7 @@ static int goodix_gtx8_read_version(struct goodix_gtx8_core *cd)
 	 * Since we don't verify the checksum, do a basic check that the
 	 * product ID meets expectations
 	 */
+check_product_id:
 	if (memcmp(cd->fw_version.product_id, cd->ic_data->product_id,
 		   sizeof(cd->fw_version.product_id))) {
 		dev_err(cd->dev, "unexpected product ID, got: %c%c%c%c\n",
@@ -525,6 +557,19 @@ static int goodix_gtx8_probe(struct i2c_client *client)
 	return 0;
 }
 
+/* Same event/register layout as the official board's GT9886-family driver;
+ * its measured firmware PID is 9885. Restrict this variant to this board.
+ */
+static const struct goodix_gtx8_ic_data rmx2072_normandy_data = {
+	.event_size = GOODIX_GTX8_EVENT_SIZE_NORMANDY,
+	.fw_version_addr = GOODIX_GTX8_FW_VERSION_ADDR_NORMANDY,
+	.header_size = GOODIX_GTX8_HEADER_SIZE_NORMANDY,
+	.ic_type = IC_TYPE_NORMANDY,
+	.product_id = { '9', '8', '8', '5' },
+	.touch_data_addr = GOODIX_GTX8_TOUCH_DATA_ADDR_NORMANDY,
+	.verify_version_checksum = true,
+};
+
 static const struct goodix_gtx8_ic_data gt9886_data = {
 	.event_size = GOODIX_GTX8_EVENT_SIZE_NORMANDY,
 	.fw_version_addr = GOODIX_GTX8_FW_VERSION_ADDR_NORMANDY,
@@ -551,6 +596,7 @@ static const struct i2c_device_id goodix_gtx8_i2c_id[] = {
 MODULE_DEVICE_TABLE(i2c, goodix_gtx8_i2c_id);
 
 static const struct of_device_id goodix_gtx8_of_match[] = {
+	{ .compatible = "realme,rmx2072-goodix-normandy", .data = &rmx2072_normandy_data },
 	{ .compatible = "goodix,gt9886", .data = &gt9886_data },
 	{ .compatible = "goodix,gt9896", .data = &gt9896_data },
 	{},
