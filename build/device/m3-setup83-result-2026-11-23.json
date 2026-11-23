@@ -1,0 +1,128 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-83",
+  "baseline_trial": 82,
+  "result": "PASS_LAUNCHER_RENDER; PHYSICAL_CONFIRMATION_PAUSED; ADB_INTERRUPTED_AFTER_POWER_KEY",
+  "boot_id": "5b10cfc2-a792-47f1-ad7b-a5d1c875288e",
+  "api": 37,
+  "kernel_release": "6.18.32-android17-5-maybe-dirty-4k",
+  "enforcing": true,
+  "boot_completed": true,
+  "pids_before_disconnect": {
+    "system_server": 2403,
+    "surfaceflinger": 2127,
+    "audioserver": 2123,
+    "launcher": 3665
+  },
+  "change": {
+    "added_vendor_files": [
+      "/etc/permissions/android.software.app_widgets.xml"
+    ],
+    "changed_existing_vendor_files": [],
+    "same_kernel_dtbo_effective_dt_policy_gsi_test_seeds": true
+  },
+  "appwidget_service": "PASS: feature true, Binder service registered",
+  "launcher": {
+    "start": "Explicit am start of com.android.launcher3/.uioverrides.QuickstepLauncher",
+    "activity_result": "Status ok, top-resumed QuickstepLauncher",
+    "screenshot": "Complete wallpaper, icons and search bar",
+    "crash_buffer_after_launch": "empty",
+    "physical_confirmation": "User paused before replying to the screen/app-drawer question",
+    "later_foreground_observation": "ADB subsequently observed com.google.android.dialer/.extensions.GoogleDialtactsActivity; operator confirmation pending"
+  },
+  "battery": {
+    "present": true,
+    "level": 100,
+    "pack_voltage_mV": 8650,
+    "temperature_tenths_C": 359,
+    "override": false,
+    "usb_powered": false
+  },
+  "provisioning": {
+    "device_provisioned": 0,
+    "user_setup_complete": 0,
+    "override": false,
+    "gsi_skip_bug": "Unresolved; do not equate standalone Launcher with completed setup"
+  },
+  "input": {
+    "requested_seconds": 300,
+    "completed": false,
+    "process_returncode": 255,
+    "connection_samples": 20,
+    "last_good_sample_seconds": 60.62,
+    "touch_down": 25,
+    "touch_up": 26,
+    "power_down_uptime_seconds": 391.603417,
+    "power_up_uptime_seconds": 391.784028,
+    "injected": false
+  },
+  "adb_end_state": {
+    "current_connection": "offline",
+    "last_verified_guardian_mode": "retained",
+    "retention_suite": "NOT PASSED; ADB disconnected during final cleanup, subprocess returned nonzero",
+    "correlation": "KEY_POWER down/up immediately precedes USB loss; matches prior screen-sleep USB continuity issue; exact driver fault unproven",
+    "rollback": "Host attempted rollback after disconnect; success unconfirmed. No restoration write started. User requested pause; runner and USB watcher stopped while waiting, before further device actions.",
+    "last_verified_os": "Android 17 GSI trial 83",
+    "stock_restored": false,
+    "current_phone_screen": "NOT CONFIRMED"
+  },
+  "pause": {
+    "requested_by_user": true,
+    "utc": "2026-11-23T15:33:29.215525+00:00",
+    "next": [
+      "Restore ADB, verify same boot and guardian state before any restart",
+      "Confirm physical Launcher/app interaction",
+      "Resolve GSI lock-skip return code without falsifying provisioning",
+      "Fix screen off/on USB continuity"
+    ]
+  },
+  "recipe_commit": "3509974ae3d083d0e8f0ac0b0f93f5f6fcf15840",
+  "runner_commit": "9fa662f19c43dc094cb88237f085fc7473ac1b5d",
+  "kernel_run": 45186575774,
+  "hashes": {
+    "boot_sha256": "4a792faa8a1bdaa851a9a1e75aa0f69a4efe6c61a76b03b900b4a29e6dfcc2c4",
+    "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+    "kernel_sha256": "846380b48466996a2df81d690352166d753ddd542d8c4f5195076932c666ac34",
+    "first_stage_init_sha256": "76236d035fcd6afdd208b7812f74a91724e77ef59e837a2e40dc0640b4e453ad",
+    "candidate_super_sha256": "7233ed77a8c7559778d9012a52da2132e0d9bae54c50b9739de530f680fc1c67",
+    "vendor_signed_sha256": "e2df41afad83a46ba955df9cce829cc91ac3631b5ca0c82a3cbe2f5c3eaf38de"
+  },
+  "evidence": {
+    "setup83-launcher-activity.txt": {
+      "bytes": 27657,
+      "sha256": "017a162eb6920b9b1e273e8a70d65c11d8cac6fa1f0de0c4ce2dde11177f1d55"
+    },
+    "setup83-launcher-crashes.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "setup83-launcher-logcat.txt": {
+      "bytes": 2804083,
+      "sha256": "876b5c24f90f8fad336b6244a7525899e5e6d10d5581d479a191ef261991f244"
+    },
+    "setup83-launcher-start.txt": {
+      "bytes": 283,
+      "sha256": "cebce94dcb71cf6a0f56e749754071505080d1504ea084c3d0c97fcb994a0044"
+    },
+    "setup83-launcher-state.txt": {
+      "bytes": 65,
+      "sha256": "46f8fd00d89f68dada3f76a0a0587eeb814de4af6be9313f7cb8c2eda5333b89"
+    },
+    "setup83-launcher.png": {
+      "bytes": 1311056,
+      "sha256": "ba2b372494f6fc9ee43938a2c7733bcd7390aec728e6803583d3c1582d777108"
+    },
+    "setup83-ready.txt": {
+      "bytes": 756,
+      "sha256": "1b41ba52f2c2df4427d9f10ed3fb74fe741e894ca95c7693d689953cf7509364"
+    },
+    "input-launcher/session.json": {
+      "bytes": 3611,
+      "sha256": "f5db0b8d0807e2aebfb6a525051f08e134213ac5630fe4b7a51ef2939b2f0d29"
+    },
+    "input-launcher/getevent.txt": {
+      "bytes": 361043,
+      "sha256": "bb21f58b77006630f43739121aa0d61b4b80b9a6dc15cabb5aa3083a1c329686"
+    }
+  },
+  "recovery": "Single F.20 recovery set preserved. Previous/current candidate full readback passed; no new stock backup reads. Stock userdata untouched."
+}

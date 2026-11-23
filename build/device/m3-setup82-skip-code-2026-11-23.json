@@ -1,0 +1,15 @@
+{
+  "settings_apk_sha256": "4c184e7abd0f4f38b09f2d2434eec778003f970bca35d2a17bba673fa7015b37",
+  "method_dump_tool": "Android SDK apkanalyzer dex code",
+  "read_only": true,
+  "result_code_observed": 0,
+  "callback_argument": 11,
+  "method_hashes": {
+    "SetupSkipDialog-onClick.smali": "79da1695d5d0fb8686e3043ebad5b2d73980cd852e00b21dbeb10be7a95021a1",
+    "SetupSkipCallback.smali": "dc13778b346d2f69386095384c3c48a6ed4b473f1ebbbf3ba5fe0443538cc995",
+    "SetupUploadMetrics.smali": "4056abc402a0157c682317e6f7cf6776507c8097f830bbd08f62ae1fbf35d3ae",
+    "LockSettingsOnboardingHelper-upload.smali": "32c3bc06c961f8664881e22c25438cbb2e68ef5da925ac426329d8ab97a164f3"
+  },
+  "result_assignment_found": false,
+  "scope": "Positive skip callback and both uploadMetrics methods; negative callback and unrelated methods excluded from diagnosis"
+}
