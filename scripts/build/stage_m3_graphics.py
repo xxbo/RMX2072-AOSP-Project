@@ -128,6 +128,11 @@ def compose(info, guard, graphics):
         raise ValueError('Rebuild the read-only ARM64 scanout probe from current source')
     files['/bin/hw/rmx-m3-drm-state'] = probe
     files['/build.prop'] += b'\n'+(SOURCE/'vendor.prop').read_bytes().replace(b'\r\n', b'\n')
+    # SystemServer starts WifiService only for this board feature. Without it,
+    # the GSI SetupWizard network page dereferences a null WifiManager. This
+    # starts the framework path; it does not supply a radio driver or Wi-Fi HAL.
+    files['/etc/permissions/android.hardware.wifi.xml'] = (
+        SOURCE/'android.hardware.wifi.xml').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/init/rmx-m3-capture.rc'] = (SOURCE/'framecapture.rc').read_bytes().replace(b'\r\n', b'\n')
     from m3_boot_pattern import archive_bytes
     files['/etc/rmx-m3-oem/media/bootanimation.zip'] = archive_bytes()

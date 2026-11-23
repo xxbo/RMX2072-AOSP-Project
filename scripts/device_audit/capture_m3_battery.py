@@ -48,7 +48,7 @@ def main():
                                labels=shell('ls -ldZ '+base+'/ '+base+'/capacity '+base+'/present'))
         raw = shell('dumpsys battery')
         (a.output/f'{index}-battery-service.txt').write_text(raw)
-        android = dict(re.findall(r'^\s*([A-Za-z_ ]+):\s*([^\n]*)$', raw, re.M))
+        android = dict(re.findall(r'^[ \t]*([A-Za-z_ ]+):[ \t]*([^\n]*)$', raw, re.M))
         android = {k.strip(): v.strip() for k, v in android.items()}
         batteries = [g for g in gauge.values() if g['values'].get('POWER_SUPPLY_TYPE') == 'Battery']
         checks = dict(one_real_gauge=len(batteries) == 1, no_android_override='UPDATES STOPPED' not in raw)
