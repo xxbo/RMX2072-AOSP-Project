@@ -72,16 +72,17 @@ def main():
             if name in ('identity', 'services'):
                 print(f'{iteration} {name} '+output, flush=True)
             if args.keep_awake and not awake_set and name == 'logcat':
-                # Do not fake battery state or change the original /data. This
-                # setting is discarded with the existing RAM-backed test volume.
+                # These settings are discarded with the RAM test volume. A real
+                # external gauge can report discharging while the charger path
+                # is unported, so powered stay-awake alone is insufficient.
                 state = shell('getprop sys.boot_completed; service check power; service check settings; service check input', 5)
                 if state.startswith('1\n') and state.count(': found') == 3:
-                    before = shell('settings get global stay_on_while_plugged_in', 5)
-                    changed = shell('svc power stayon true; input keyevent KEYCODE_WAKEUP', 10)
-                    after = shell('settings get global stay_on_while_plugged_in; dumpsys power | grep -E "mStayOn=|mWakefulness=|mIsPowered=|mPlugType="', 10)
+                    before = shell('settings get global stay_on_while_plugged_in; settings get system screen_off_timeout', 5)
+                    changed = shell('svc power stayon true; settings put system screen_off_timeout 1800000; input keyevent KEYCODE_WAKEUP', 10)
+                    after = shell('settings get global stay_on_while_plugged_in; settings get system screen_off_timeout; dumpsys power | grep -E "mStayOn=|mWakefulness=|mIsPowered=|mPlugType="', 10)
                     (live/f'graphics-stay-awake-{iteration}.txt').write_text(
                         'boot_id='+boot+'\nprevious='+before+changed+'after='+after, encoding='utf-8')
-                    awake_set = after.splitlines()[:1] == ['15'] and 'mStayOn=true' in after
+                    awake_set = after.splitlines()[:2] == ['15', '1800000']
                     print('GRAPHICS_STAY_AWAKE accepted='+str(awake_set)+' '+after, flush=True)
         if iteration < 4:
             time.sleep(25)
