@@ -1,0 +1,14 @@
+{
+  "result": "PASS_LOCAL_ADDITIVE_WIDGETS_DECLARATION",
+  "baseline_trial": 82,
+  "trial": 83,
+  "vendor_added": [
+    "/etc/permissions/android.software.app_widgets.xml"
+  ],
+  "vendor_changed": [],
+  "policy_unchanged": true,
+  "feature": "android.software.app_widgets",
+  "source": "Pinned GSI SystemServer gates AppWidgetService on FEATURE_APP_WIDGETS or config_enableAppWidgetService",
+  "live_trial82": "appwidget service absent, feature absent, Launcher3 crashes in AppWidgetManager.getInstalledProvidersForProfile",
+  "handset_result": "NOT RUN"
+}

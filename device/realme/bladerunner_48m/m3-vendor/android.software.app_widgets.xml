@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Start the GSI AppWidgetService used by Launcher3. This is a framework
+     software feature and does not declare any additional hardware or HAL. -->
+<permissions>
+    <feature name="android.software.app_widgets" />
+</permissions>

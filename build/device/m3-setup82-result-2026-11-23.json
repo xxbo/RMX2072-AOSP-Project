@@ -2,7 +2,7 @@
   "trial": "ufs-host-g3-gsi17-firststage-ufs-82",
   "baseline_trial": 81,
   "goal": "Render SetupWizard network page after physical Next, then continue offline toward Launcher",
-  "result": "PASS_FRAMEWORK_PREREQUISITE_PENDING_PHYSICAL_NEXT",
+  "result": "PASS_PHYSICAL_NETWORK_PAGE_AND_OFFLINE_FLOW; BLOCKED_LOCK_SKIP_AND_LAUNCHER_WIDGETS",
   "boot_id": "09d2dd9a-bf2a-438f-bc6e-03e3f5665843",
   "kernel_release": "6.18.32-android17-5-maybe-dirty-4k",
   "api": 37,
@@ -33,9 +33,9 @@
     "welcome_screenshot": true,
     "crash_buffer_empty_before_next": true
   },
-  "physical_next": "PENDING_OPERATOR_RESPONSE",
-  "network_page": "NOT RUN",
-  "launcher": "NOT RUN",
+  "physical_next": "PASS: operator sees WLAN page, chooses offline setup, reaches date/time and protection screens",
+  "network_page": "PASS: operator confirms rendered WLAN page; no null-WifiManager crash after Next",
+  "launcher": "FAIL: explicit activity launch crashes on null AppWidgetManager.getInstalledProvidersForProfile",
   "wifi_radio": "NOT IMPLEMENTED; framework service only; cmd wifi status reports disabled",
   "charging": "NOT QUALIFIED; USB/AC powered false",
   "retention": {
@@ -94,12 +94,78 @@
     "setup82-ready-wifi-dump.txt": {
       "bytes": 59704,
       "sha256": "45e18ce5df0578b20daa15de0ef3e3059f1e55c4e2401788f14a9d795a7973a1"
+    },
+    "setup82-after-next-activity.txt": {
+      "bytes": 45083,
+      "sha256": "b06d0b5131b96b1005c172a3a90dd07769a43a7cd2222f18f04adf35b4994e67"
+    },
+    "setup82-after-next-crashes.txt": {
+      "bytes": 7377,
+      "sha256": "ce53383ad40c18ef3961c88eda09c252edd2375e5ec113c88716a3436771a3bd"
+    },
+    "setup82-after-next-identity.txt": {
+      "bytes": 68,
+      "sha256": "c6474aeb9386ab6ac7596160fd60dee8cb81af29f835228b2dde6e796072abeb"
+    },
+    "setup82-after-next-logcat.txt": {
+      "bytes": 3525925,
+      "sha256": "0f686fb9aba27d66e721ad75afb303270be26882653554cf2cf487590f467acc"
+    },
+    "setup82-after-next.png": {
+      "bytes": 79808,
+      "sha256": "490628204eafbb220bd05cf83cb2f71425dab6f30b0649a121d0b90a1bb3a669"
+    },
+    "setup82-launcher-activity.txt": {
+      "bytes": 36757,
+      "sha256": "e2bb98e528e78f06f5ee8abc2e06cb2a9719e363f3ac2abaa5e581500692acda"
+    },
+    "setup82-launcher-crashes.txt": {
+      "bytes": 19926,
+      "sha256": "7258d580f5296ae237bae26aaeef577ecb7c4a084cecdd4479c13020f50a7727"
+    },
+    "setup82-launcher-logcat.txt": {
+      "bytes": 3710860,
+      "sha256": "2d667bc7bfe7874e1057cf66c1fc36cd34b91a9caca7f5ee060defdf0e9cf1ff"
+    },
+    "setup82-launcher-start.txt": {
+      "bytes": 278,
+      "sha256": "141c065f0fab4696ce767b308bb9881dab6eb43adcc8b43441fc7c9cf32f7ebb"
+    },
+    "setup82-launcher-state.txt": {
+      "bytes": 64,
+      "sha256": "a31272bdbc971c9ff2f18d7cc4ce7fa8c2bb3b02433168aa2c3765056b5fb5c4"
+    },
+    "setup82-launcher.png": {
+      "bytes": 62377,
+      "sha256": "55b5f2e560a1b61d6ea910e6ea1ec9aeb3b5042ba80730dc0f63869ba9adf144"
     }
   },
   "recovery": "Reused the single F.20 recovery set. Verified previous/current candidate container and boot; no fresh stock backup reads. No stock userdata writes.",
   "limitations": [
+    "Google GSI lock skip returns RESULT_CANCELED and loops to date/time",
+    "Launcher needs the missing AppWidgetService; candidate 83 prepared",
     "Current display image needs the host observer after reboot",
     "USB loss across screen off/on remains open",
-    "No physical network-page or Launcher acceptance yet"
+    "Charging control, functional Wi-Fi, real audio and Adreno are not qualified"
+  ],
+  "setup_lock_skip": {
+    "operator": "Choosing Later, then Skip anyway, returns to date/time",
+    "observed_result_code": 0,
+    "intended_skip_code": 11,
+    "cause": "Actual GSI Settings positive callback calls uploadMetrics(11,true), then finish; neither upload method sets Activity result, so default RESULT_CANCELED is returned",
+    "settings_apk_sha256": "4c184e7abd0f4f38b09f2d2434eec778003f970bca35d2a17bba673fa7015b37",
+    "settings_apk_bytes": 91953591,
+    "binary_modified": false,
+    "source_comparison": "android-17.0.0_r1 SetupSkipDialog sets RESULT_SKIP directly; it is not the same implementation as this prebuilt GSI"
+  },
+  "provisioning": {
+    "device_provisioned": 0,
+    "user_setup_complete": 0,
+    "overridden": false
+  },
+  "additional_crashes": [
+    "Chrome widget receiver: null AppWidgetManager",
+    "Calendar widget factory",
+    "Launcher3 workspace widgets: null AppWidgetManager"
   ]
 }

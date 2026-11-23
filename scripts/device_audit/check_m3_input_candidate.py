@@ -35,11 +35,14 @@ def main():
     p.add_argument('--trial', required=True)
     p.add_argument('--battery-gauge', action='store_true',
                    help='Compare a gauge candidate with the accepted input trial')
-    p.add_argument('--setup-wifi', action='store_true',
+    feature = p.add_mutually_exclusive_group()
+    feature.add_argument('--setup-wifi', action='store_true',
                    help='Compare the additive framework Wi-Fi declaration with the gauge trial')
+    feature.add_argument('--setup-widgets', action='store_true',
+                   help='Compare the additive AppWidgetService declaration with the Wi-Fi trial')
     a = p.parse_args()
-    if a.setup_wifi and not a.battery_gauge:
-        p.error('--setup-wifi requires --battery-gauge')
+    if (a.setup_wifi or a.setup_widgets) and not a.battery_gauge:
+        p.error('Setup feature comparisons require --battery-gauge')
     current = a.workspace / 'current'
     old = read(a.baseline / 'inputs.json')
     old_vendor = read(a.baseline / 'vendor-inventory.json')
@@ -122,7 +125,7 @@ def main():
             strict_new_policy=graphics['policy_proof_reused_for_identical_statements'] is True
                 and vendor['files']['/etc/selinux/vendor_sepolicy.cil'] == graphics['composed_vendor_cil_sha256'],
         )
-    if a.setup_wifi:
+    if a.setup_wifi or a.setup_widgets:
         for name in ('only_gauge_config_added', 'only_label_policy_changes', 'no_vendor_additions'):
             del checks[name]
         checks.update(
@@ -131,9 +134,12 @@ def main():
             same_effective_dt=hashlib.sha256(dt).hexdigest() == old['boot']['device_tree_build']['outputs']['effective.dtb']['sha256'],
             same_dtbo=boot['dtbo_sha256'] == old['boot']['dtbo_sha256'],
             no_changed_vendor_files=not changed,
-            only_wifi_feature_added=added == ['/etc/permissions/android.hardware.wifi.xml'],
             same_strict_policy=vendor['files']['/etc/selinux/vendor_sepolicy.cil'] == old_vendor['files']['/etc/selinux/vendor_sepolicy.cil'],
         )
+        if a.setup_wifi:
+            checks['only_wifi_feature_added'] = added == ['/etc/permissions/android.hardware.wifi.xml']
+        else:
+            checks['only_widgets_feature_added'] = added == ['/etc/permissions/android.software.app_widgets.xml']
     report = dict(trial=a.trial, baseline=old['trial'], recipe_commit=usb['recipe_commit'],
                   kernel_run=kernel['run_id'], kernel_source=kernel['source_commit'], checks=checks,
                   passed=all(checks.values()), config_delta=delta, resources=resources,

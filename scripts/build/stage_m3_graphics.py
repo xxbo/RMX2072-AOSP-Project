@@ -133,6 +133,10 @@ def compose(info, guard, graphics):
     # starts the framework path; it does not supply a radio driver or Wi-Fi HAL.
     files['/etc/permissions/android.hardware.wifi.xml'] = (
         SOURCE/'android.hardware.wifi.xml').read_bytes().replace(b'\r\n', b'\n')
+    # Launcher3 calls AppWidgetManager while loading its workspace. SystemServer
+    # needs this software feature to register the existing GSI AppWidgetService.
+    files['/etc/permissions/android.software.app_widgets.xml'] = (
+        SOURCE/'android.software.app_widgets.xml').read_bytes().replace(b'\r\n', b'\n')
     files['/etc/init/rmx-m3-capture.rc'] = (SOURCE/'framecapture.rc').read_bytes().replace(b'\r\n', b'\n')
     from m3_boot_pattern import archive_bytes
     files['/etc/rmx-m3-oem/media/bootanimation.zip'] = archive_bytes()
