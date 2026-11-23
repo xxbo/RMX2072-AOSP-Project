@@ -95,7 +95,7 @@
   },
   "kernel_run_id": 45166498874,
   "kernel_source_commit": "1b49cb6a4f7c44788d6a33c1da7f6289264530fd",
-  "kernel_result": "IN_PROGRESS",
+  "kernel_result": "PASS_BUILD_AND_SELECTED_MEMBER_SOURCE_DIGESTS",
   "overlay": {
     "framework_sha256": "b77f17c2f4014fdb2754e3ed5fc020e3912507e2e92a837d9eca341f021fa05a",
     "apk_sha256": "309c02cbc5ca815d4e190a42a4737ab355637f5480ab0cbeac4c4c5f0f475f8c",
@@ -129,5 +129,7 @@
     "stock-touch-dmesg.txt": "24e2882162e604719543660813717d7d57fdf2053843a4f7ab7dafbf849817cf",
     "dt-check.json": "0347c54b546cd55bc48a4c81f3359fdc7c14740ed3680055d2985765620e62f3"
   },
-  "device_result": "NOT RUN; handset remains on F20"
+  "device_result": "NOT RUN; handset remains on F20",
+  "kernel_sha256": "dd83e66cbd275e70532c647a4c3b6b439b2b72e0b4619e9bc13f039df4c8928a",
+  "candidate_preflight": "m3-input78-preflight-2026-11-23.json"
 }
