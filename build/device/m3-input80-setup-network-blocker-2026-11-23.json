@@ -1,0 +1,26 @@
+{
+  "trial": 80,
+  "boot_id": "0ba56e5b-d33c-4509-9b5a-fb09ac76f047",
+  "system_server_pid": 2373,
+  "surfaceflinger_pid": 2120,
+  "focused_activity": "com.google.android.setupwizard/.network.NetworkActivity",
+  "wifi_service": "not found",
+  "wifi_feature": false,
+  "exception": "NullPointerException: WifiManager.isVerboseLoggingEnabled() on a null object reference",
+  "evidence": [
+    "E/AndroidRuntime(29943): \tat com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)",
+    "E/AndroidRuntime(29943): \tat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:918)",
+    "E/AndroidRuntime(29943): Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'boolean android.net.wifi.WifiManager.isVerboseLoggingEnabled()' on a null object reference",
+    "E/AndroidRuntime(29943): \tat cvz.t(PG:7)",
+    "E/AndroidRuntime(29943): \tat com.android.wifitrackerlib.BaseWifiTracker$WifiTrackerLifecycleObserver.onStart(PG:3)",
+    "E/AndroidRuntime(29943): \tat java.lang.reflect.Method.invoke(Native Method)",
+    "E/AndroidRuntime(29943): \tat bcu.a(PG:51)",
+    "E/AndroidRuntime(29943): \t... 24 more",
+    "I/PhClient(29943): Shared storage file not found for com.google.android.libraries.performance.primes#com.google.android.setupwizard",
+    "I/PhClient(29943): Unable to retrieve flag snapshot for com.google.android.libraries.performance.primes#com.google.android.setupwizard, using defaults.",
+    "I/am_crash( 2373): [29943,0,com.google.android.setupwizard,684211717,java.lang.NullPointerException,Attempt to invoke virtual method 'boolean android.net.wifi.WifiManager.isVerboseLoggingEnabled()' on a null object reference,PG,7,0]"
+  ],
+  "raw_log_sha256": "41534f37bcca6ad525ab2a91a2dc34161388015c8c762ed241165d92c82be158",
+  "screenshot_sha256": "0ff68f923aa50d1c21e680d562c15180570f2c03cbf7d3614053efaedef46d28",
+  "scope": "Later setup blocker observed during battery build; not a tested Wi-Fi fix or functional-radio result"
+}
