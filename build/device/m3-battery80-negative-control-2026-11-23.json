@@ -1,0 +1,113 @@
+{
+  "boot_id": "0ba56e5b-d33c-4509-9b5a-fb09ac76f047",
+  "identity": [
+    "0ba56e5b-d33c-4509-9b5a-fb09ac76f047",
+    "Enforcing",
+    "37",
+    "1"
+  ],
+  "samples": [
+    {
+      "utc": "2026-11-23T13:58:30.667439+00:00",
+      "gauge": {},
+      "android": {
+        "Current Battery Service state": "AC powered: false",
+        "USB powered": "false",
+        "Wireless powered": "false",
+        "Dock powered": "false",
+        "Max charging current": "0",
+        "Time when the latest updated value of the Max charging current was sent via battery changed broadcast": "+3m17s157ms",
+        "Max charging voltage": "0",
+        "Charge counter": "0",
+        "status": "1",
+        "health": "1",
+        "present": "false",
+        "level": "0",
+        "scale": "100",
+        "voltage": "0",
+        "Time when the latest updated value of the voltage was sent via battery changed broadcast": "+3m17s157ms",
+        "The last voltage value sent via the battery changed broadcast": "0",
+        "temperature": "0",
+        "technology": "Charging state: 0",
+        "Charging policy": "0",
+        "Capacity level": "-1"
+      },
+      "checks": {
+        "one_real_gauge": false,
+        "no_android_override": true
+      }
+    },
+    {
+      "utc": "2026-11-23T13:58:41.028016+00:00",
+      "gauge": {},
+      "android": {
+        "Current Battery Service state": "AC powered: false",
+        "USB powered": "false",
+        "Wireless powered": "false",
+        "Dock powered": "false",
+        "Max charging current": "0",
+        "Time when the latest updated value of the Max charging current was sent via battery changed broadcast": "+3m17s157ms",
+        "Max charging voltage": "0",
+        "Charge counter": "0",
+        "status": "1",
+        "health": "1",
+        "present": "false",
+        "level": "0",
+        "scale": "100",
+        "voltage": "0",
+        "Time when the latest updated value of the voltage was sent via battery changed broadcast": "+3m17s157ms",
+        "The last voltage value sent via the battery changed broadcast": "0",
+        "temperature": "0",
+        "technology": "Charging state: 0",
+        "Charging policy": "0",
+        "Capacity level": "-1"
+      },
+      "checks": {
+        "one_real_gauge": false,
+        "no_android_override": true
+      }
+    },
+    {
+      "utc": "2026-11-23T13:58:51.409316+00:00",
+      "gauge": {},
+      "android": {
+        "Current Battery Service state": "AC powered: false",
+        "USB powered": "false",
+        "Wireless powered": "false",
+        "Dock powered": "false",
+        "Max charging current": "0",
+        "Time when the latest updated value of the Max charging current was sent via battery changed broadcast": "+3m17s157ms",
+        "Max charging voltage": "0",
+        "Charge counter": "0",
+        "status": "1",
+        "health": "1",
+        "present": "false",
+        "level": "0",
+        "scale": "100",
+        "voltage": "0",
+        "Time when the latest updated value of the voltage was sent via battery changed broadcast": "+3m17s157ms",
+        "The last voltage value sent via the battery changed broadcast": "0",
+        "temperature": "0",
+        "technology": "Charging state: 0",
+        "Charging policy": "0",
+        "Capacity level": "-1"
+      },
+      "checks": {
+        "one_real_gauge": false,
+        "no_android_override": true
+      }
+    }
+  ],
+  "passed": false,
+  "scope": "Gauge-to-Android telemetry only; charging, setup and Launcher require separate acceptance",
+  "injected_battery_state": false,
+  "charging_control": false,
+  "evidence_sha256": {
+    "0-battery-service.txt": "33943c59ff469c4bf6097ab9a5afbdc58d209a24d2d0e75918e099bdac9f54b7",
+    "1-battery-service.txt": "33943c59ff469c4bf6097ab9a5afbdc58d209a24d2d0e75918e099bdac9f54b7",
+    "2-battery-service.txt": "33943c59ff469c4bf6097ab9a5afbdc58d209a24d2d0e75918e099bdac9f54b7",
+    "battery-logcat.txt": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+  },
+  "expected_result": "FAIL: current trial 80 exposes no gauge; acceptance must reject absent data",
+  "control_passed": true
+}
