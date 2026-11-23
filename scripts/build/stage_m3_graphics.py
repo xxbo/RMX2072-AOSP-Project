@@ -166,6 +166,19 @@ def compose(info, guard, graphics):
     files['/etc/ueventd.rc'] += (b'/dev/dri/card* 0660 system graphics\n'
                                 b'/dev/dri/renderD* 0666 system graphics\n'
                                 b'/dev/dma_heap/system 0666 system graphics\n')
+    overlay = graphics.parent/'input-overlay'
+    if (overlay/'provenance.json').is_file():
+        proof = json.loads((overlay/'provenance.json').read_text())
+        source = ROOT/'device/realme/bladerunner_48m/input'
+        actual = {x.relative_to(source/'overlay').as_posix(): sha(x.read_bytes())
+                  for x in (source/'overlay').rglob('*') if x.is_file()}
+        apk = (overlay/'RmxCpuInputOverlay.apk').read_bytes()
+        if actual != proof['source_sha256'] or sha(apk) != proof['apk_sha256']:
+            raise ValueError('Rebuild the changed source input overlay')
+        files['/overlay/RmxCpuInputOverlay.apk'] = apk
+        files['/usr/idc/Goodix_GTX8_Capacitive_TouchScreen.idc'] = (
+            source/'Goodix_GTX8_Capacitive_TouchScreen.idc').read_bytes().replace(b'\r\n', b'\n')
+        files['/etc/selinux/vendor_file_contexts'] += b'/vendor/overlay(/.*)? u:object_r:vendor_overlay_file:s0\n'
     return files, build
 
 

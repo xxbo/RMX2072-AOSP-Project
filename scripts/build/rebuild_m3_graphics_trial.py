@@ -43,6 +43,7 @@ def main():
     p.add_argument('--openssl', type=Path, help='OpenSSL executable; defaults to the executable on PATH')
     p.add_argument('--display-staged', action='store_true', help='Keep the diagnostic USB gate and native staged display paths')
     p.add_argument('--policy-proof', type=Path, help='Strict compilation record for the exact composed policy')
+    p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
         p.error('Use the recorded handset trial naming')
@@ -62,6 +63,8 @@ def main():
     current = work/'current'
     build = repo/'scripts/build'
     graphics = current/'graphics'
+    if a.input_devices and not (current/'input-overlay/provenance.json').is_file():
+        raise ValueError('Input trial requires the source ColorFade overlay before power-key testing')
     prior = json.loads((current/'usb-build.json').read_text())
     display_flags = retained_display_flags(prior, a.display_staged)
     if sha(current/'rmx-m1-guard') != prior['guard']:
@@ -131,7 +134,8 @@ def main():
     run(sys.executable, build/'rebuild_m2_source_trial.py', '--workspace', work,
         '--ndk', a.ndk.resolve(), '--adb-public-key', a.adb_public_key.resolve(),
         '--board-source', a.board_source.resolve(), '--trial', a.trial, '--display',
-        *(['--display-staged'] if a.display_staged else []), *display_flags)
+        *(['--display-staged'] if a.display_staged else []),
+        *(['--input-devices'] if a.input_devices else []), *display_flags)
     if sha(current/'system.img') != system_sha or json.loads((current/'volumes/scratch.json').read_text()) != seeds:
         raise ValueError('GSI or scratch seed manifest changed during preparation')
     result = dict(trial=a.trial, graphics_source=provenance, vendor_payload_bytes=payload_size,

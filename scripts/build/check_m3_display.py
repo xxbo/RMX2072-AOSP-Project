@@ -3,7 +3,7 @@ from inspect_boot_dt import fdt
 from check_m2_resources import check_m2_resources, normalized_node
 
 
-def check_m3_display(data, staged=False):
+def check_m3_display(data, staged=False, input_devices=False):
     preserved = check_m2_resources(data, display=True)
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
     for path, node in tree.items():
@@ -43,8 +43,8 @@ def check_m3_display(data, staged=False):
         if count <= 0 or start + count > 181:
             raise ValueError('TLMM GPIO reservation outside the physical provider')
         valid.difference_update(range(start, start + count))
-    if valid != {66, 75}:
-        raise ValueError('Display TLMM must expose only TE 66 and reset 75; unmasked registration previously rebooted')
+    if valid != ({36, 37, 38, 39, 66, 75} if input_devices else {66, 75}):
+        raise ValueError('TLMM may expose only the requested display/input pads; unmasked registration previously rebooted')
     legacy = ['pinctrl@f000000', 'qcom,dispcc@af00000', 'qcom,mdss_mdp@ae00000',
               'qcom,mdss_dsi_ctrl0@ae94000', 'qcom,mdss_dsi_ctrl1@ae96000',
               'qcom,mdss_dsi_phy0@ae94400', 'qcom,mdss_dsi_phy1@ae96400',

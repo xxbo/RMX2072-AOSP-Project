@@ -1,0 +1,5 @@
+<resources>
+    <!-- SwiftShader's ColorFade JIT violates system_server's execmem neverallow.
+         Use the supported non-ColorFade screen transition for this CPU profile. -->
+    <bool name="config_displayColorFadeDisabled">true</bool>
+</resources>

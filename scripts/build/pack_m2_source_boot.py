@@ -94,6 +94,14 @@ def main():
         if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
             raise ValueError('Display DT requires the matching deferred DSI clock-parent kernel patch')
     config = (kernel_dir / 'sm8250_bootstrap_dot_config').read_text().splitlines()
+    if dt.get('input_devices'):
+        if 'CONFIG_TOUCHSCREEN_GOODIX_GTX8=y' not in config or not kernel.get('input_devices'):
+            raise ValueError('Input DT requires the verified GTX8 kernel artifact')
+        for filename, manifest in [('goodix_gtx8.c', 'touch-source.sha256'),
+                                   ('goodix_gtx8.h', 'touch-header.sha256')]:
+            source_bytes = (repo / 'device/realme/bladerunner_48m/input' / filename).read_bytes().replace(b'\r\n', b'\n')
+            if (kernel_dir / manifest).read_text().split()[0] != sha(source_bytes):
+                raise ValueError('Input DT and compiled touch driver differ')
     if dt.get('display') and 'CONFIG_REGULATOR_QCOM_REFGEN=y' not in config:
         raise ValueError('Display DT requires the native REFGEN regulator driver')
     if a.single_dsc_test:

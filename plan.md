@@ -61,7 +61,7 @@ See [VTS for HALs and kernels](https://source.android.com/docs/core/tests/vts), 
 
 On November 15 the user cancelled further unplug/power-key and watchdog fault-injection repeats. Keep the accepted source-boot GSI running and prioritize graphics userspace, display/panel and framework/launcher startup. Repeat recovery work only when a real failure requires it. The omitted M2 qualification checks remain explicitly unrun.
 
-Next after trial 77 recovery: keep authenticated GSI ADB through the first-run setup transition, then verify the physical Launcher. Preserve the accepted panel/DSC configuration. Separately resolve the measured CPU-rendering ColorFade failure without weakening the platform system_server execmem neverallow. [Trial 77 analysis](docs/M3_APP_RENDERING_2026-11-22.md)
+November 23 priority: enable GT9886 touch and physical power/volume keys so the operator can navigate first-run setup and inspect Launcher directly. Preserve the accepted display configuration, GSI and test volumes. Verify physical input events and Android UI response, retain authenticated ADB, and address the measured ColorFade failure without weakening system_server policy. [Input work](docs/M3_INPUT_2026-11-23.md) · [Trial 77 baseline](docs/M3_APP_RENDERING_2026-11-22.md)
 
 ## Earlier work sequence after M1 headless acceptance
 

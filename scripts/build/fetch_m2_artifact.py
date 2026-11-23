@@ -32,9 +32,12 @@ def main():
     p.add_argument('--commit', required=True)
     p.add_argument('--kind', choices=('kernel', 'init', 'graphics', 'health', 'power', 'audio'), required=True)
     p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
+    p.add_argument('--input-devices', action='store_true', help='Require the GTX8 source digests and built-in driver')
     a = p.parse_args()
     if a.display and a.kind != 'kernel':
         p.error('--display requires a kernel artifact')
+    if a.input_devices and not a.display:
+        p.error('--input-devices requires --display')
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
     if work.is_relative_to(repo):
@@ -233,6 +236,9 @@ def main():
                 capture_output=True).returncode == 0
             if exists:
                 patches[name + '.sha256'] = path
+    if a.input_devices:
+        patches['touch-source.sha256'] = 'input/goodix_gtx8.c'
+        patches['touch-header.sha256'] = 'input/goodix_gtx8.h'
     wanted = set(patches) | {'Image.gz', 'sm8250_bootstrap_dot_config', 'kernel.release',
                              'SHA256SUMS', 'build-metadata.txt', 'resolved-manifest.xml'}
     if a.display:
@@ -277,6 +283,8 @@ def main():
                     'DRM_PANEL_RMX2072_RM19795', 'REGULATOR_QCOM_REFGEN'):
             if 'CONFIG_' + key + '=y' not in config:
                 raise ValueError('Missing display configuration: ' + key)
+    if a.input_devices and 'CONFIG_TOUCHSCREEN_GOODIX_GTX8=y' not in config:
+        raise ValueError('GTX8 driver is not built in')
     output = work / 'current/kernel'
     provenance.update(installing=True)
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
@@ -288,7 +296,7 @@ def main():
     old = output / 'pon-power-patch.sha256'
     if old.is_file():
         old.unlink()
-    provenance.update(installing=False, source_pon=True, display=a.display, source_digests_verified=True,
+    provenance.update(installing=False, source_pon=True, display=a.display, input_devices=a.input_devices, source_digests_verified=True,
                       dist_digests_verified=True, image_sha256=digest(raw),
                       selected_member_sha256={n: digest(d) for n, d in files.items()})
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')

@@ -36,3 +36,18 @@
     };
 #endif
 };
+
+#ifdef RMX2072_M3_INPUT
+// The legacy provider never matched the native driver, leaving gpio-keys
+// deferred. Preserve its board pin groups and admit only the two volume pads.
+&pm8150_gpios {
+    compatible = "qcom,pm8150-gpio";
+    /delete-property/ interrupts;
+    /delete-property/ interrupt-names;
+    /delete-property/ qcom,gpios-disallowed;
+    interrupt-controller;
+    #interrupt-cells = <2>;
+    gpio-reserved-ranges = <0 5>, <7 3>;
+};
+
+#endif

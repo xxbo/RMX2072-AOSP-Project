@@ -24,6 +24,7 @@ def main():
     p.add_argument('--stock-phy-test', action='store_true', help='Match the original 660 MHz PHY timing table, retaining trial 66 DSC')
     p.add_argument('--first-frame-trace', action='store_true', help='Capture the native first-frame event history without changing display settings')
     p.add_argument('--standard-pps-test', action='store_true', help='Add one LP standard PPS after the unchanged vendor on-sequence')
+    p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
     a = p.parse_args()
     if a.display_staged and not a.display:
         p.error('--display-staged requires --display')
@@ -77,7 +78,8 @@ def main():
         '--output', current / 'source-dt', '--cpp', tools / 'clang.exe',
         '--dtc', current / 'dtc-tools/dtc.exe', '--libfdt', current / 'dtc-tools/libfdt-1.dll',
         *(['--display'] if a.display else []),
-        *(['--display-staged'] if a.display_staged else []))
+        *(['--display-staged'] if a.display_staged else []),
+        *(['--input-devices'] if a.input_devices else []))
     if a.display:
         if not kernel.get('display'):
             raise ValueError('Install the checked DRM/panel kernel before packaging M3')
@@ -111,7 +113,7 @@ def main():
                   kernel=kernel['image_sha256'], witness=sha(current / 'first-stage-witness'),
                   source_first_stage=init, source_device_trees=True,
                   display=a.display,
-                  display_staged=a.display_staged,
+                  display_staged=a.display_staged, input_devices=a.input_devices,
                   single_dsc_test=a.single_dsc_test,
                   solid_fill_test=a.solid_fill_test,
                   panel_readback_test=a.panel_readback_test,
