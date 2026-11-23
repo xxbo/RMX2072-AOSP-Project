@@ -118,5 +118,216 @@
   ],
   "boot_sha256": "66ad7543aabd1b674e2b771f5c33c4ff9a22da616efdeef71d2f6904fdab9117",
   "super_sha256": "60ace60ec20cc3af44f6ab6004338c5a63fb0c6436dee70467a82378d4dd6e09",
-  "device_result": "NOT RUN"
+  "device_result": "NOT RUN",
+  "same_container_as_78": true,
+  "same_vendor_as_78": true,
+  "effective_dt_changes_from_78": {
+    "/soc/qcom,qupv3_1_geni_se@ac0000": {
+      "before": {
+        "compatible": [
+          "realme,rmx2072-parked-qup"
+        ],
+        "reg": [
+          11272192,
+          8192
+        ],
+        "qcom,bus-mas-id": [
+          152
+        ],
+        "qcom,bus-slv-id": [
+          512
+        ],
+        "iommus": [
+          51,
+          67,
+          0
+        ],
+        "qcom,iommu-dma-addr-pool": [
+          1073741824,
+          3221225472
+        ],
+        "qcom,iommu-dma": [
+          "fastmap"
+        ],
+        "phandle": [
+          654
+        ]
+      },
+      "after": {
+        "status": [
+          "disabled"
+        ],
+        "compatible": [
+          "realme,rmx2072-parked-qup"
+        ],
+        "reg": [
+          11272192,
+          8192
+        ],
+        "qcom,bus-mas-id": [
+          152
+        ],
+        "qcom,bus-slv-id": [
+          512
+        ],
+        "iommus": [
+          51,
+          67,
+          0
+        ],
+        "qcom,iommu-dma-addr-pool": [
+          1073741824,
+          3221225472
+        ],
+        "qcom,iommu-dma": [
+          "fastmap"
+        ],
+        "phandle": [
+          654
+        ]
+      }
+    },
+    "/soc/i2c@a94000": {
+      "before": {
+        "compatible": [
+          "realme,rmx2072-parked-i2c"
+        ],
+        "reg": [
+          11091968,
+          16384
+        ],
+        "interrupts": [
+          0,
+          358,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "clock-names": [
+          "se-clk",
+          "m-ahb",
+          "s-ahb"
+        ],
+        "clocks": [
+          22,
+          116,
+          22,
+          134,
+          22,
+          135
+        ],
+        "dmas": [
+          655,
+          0,
+          5,
+          3,
+          64,
+          0,
+          655,
+          1,
+          5,
+          3,
+          64,
+          0
+        ],
+        "dma-names": [
+          "tx",
+          "rx"
+        ],
+        "pinctrl-names": [
+          "default",
+          "sleep"
+        ],
+        "pinctrl-0": [
+          666
+        ],
+        "pinctrl-1": [
+          667
+        ],
+        "qcom,wrapper-core": [
+          654
+        ],
+        "status": [
+          "okay"
+        ],
+        "phandle": [
+          1428
+        ]
+      },
+      "after": {
+        "compatible": [
+          "realme,rmx2072-parked-i2c"
+        ],
+        "reg": [
+          11091968,
+          16384
+        ],
+        "interrupts": [
+          0,
+          358,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "clock-names": [
+          "se-clk",
+          "m-ahb",
+          "s-ahb"
+        ],
+        "clocks": [
+          22,
+          116,
+          22,
+          134,
+          22,
+          135
+        ],
+        "dmas": [
+          655,
+          0,
+          5,
+          3,
+          64,
+          0,
+          655,
+          1,
+          5,
+          3,
+          64,
+          0
+        ],
+        "dma-names": [
+          "tx",
+          "rx"
+        ],
+        "pinctrl-names": [
+          "default",
+          "sleep"
+        ],
+        "pinctrl-0": [
+          666
+        ],
+        "pinctrl-1": [
+          667
+        ],
+        "qcom,wrapper-core": [
+          654
+        ],
+        "status": [
+          "disabled"
+        ],
+        "phandle": [
+          1428
+        ]
+      }
+    }
+  }
 }
