@@ -213,6 +213,7 @@ def main():
     # selected ZIP members only, checking them against the build's dist digests.
     sys.path.insert(0, str(work / 'host-deps'))
     from remotezip import RemoteZip
+    from bounded_remotezip import BoundedRemoteFetcher
     import requests
     session = requests.Session()
     session.trust_env = False
@@ -248,7 +249,8 @@ def main():
         wanted.add('display-source.sha256')
     if a.battery_gauge:
         wanted.add('battery-source.sha256')
-    with RemoteZip(url, session=session, timeout=120, support_suffix_range=False) as z:
+    with RemoteZip(url, session=session, timeout=120, support_suffix_range=False,
+                   fetcher=BoundedRemoteFetcher) as z:
         files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
     if files.keys() != wanted:
         raise ValueError('Incomplete source-PON kernel artifact')
