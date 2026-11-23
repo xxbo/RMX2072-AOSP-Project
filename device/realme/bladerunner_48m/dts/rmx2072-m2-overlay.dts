@@ -43,6 +43,10 @@
 // from being registered. Apply the disabled state in this final board overlay.
 &qupv3_se13_i2c { status = "disabled"; };
 &qupv3_1 { status = "disabled"; };
+#ifdef RMX2072_M3_BATTERY
+&qupv3_se16_i2c { status = "disabled"; };
+&qupv3_2 { status = "disabled"; };
+#endif
 
 // The legacy provider never matched the native driver, leaving gpio-keys
 // deferred. Preserve its board pin groups and admit only the two volume pads.

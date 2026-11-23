@@ -94,6 +94,18 @@ def main():
         if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
             raise ValueError('Display DT requires the matching deferred DSI clock-parent kernel patch')
     config = (kernel_dir / 'sm8250_bootstrap_dot_config').read_text().splitlines()
+    if dt.get('battery_gauge'):
+        pinned = json.loads((repo / 'build/m3-battery-source.json').read_text())
+        manifest = kernel_dir / 'battery-source.sha256'
+        if not kernel.get('battery_gauge') or not manifest.is_file():
+            raise ValueError('Gauge DT requires the verified battery kernel artifact')
+        actual = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
+                  for line in manifest.read_text().splitlines()}
+        if actual != pinned['files'] or any('CONFIG_' + k + '=y' not in config
+                for k in ('BATTERY_BQ27XXX', 'BATTERY_BQ27XXX_I2C')):
+            raise ValueError('Gauge source or configuration differs')
+        if '# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set' not in config:
+            raise ValueError('Gauge nonvolatile updates must stay disabled')
     if dt.get('input_devices'):
         if 'CONFIG_TOUCHSCREEN_GOODIX_GTX8=y' not in config or not kernel.get('input_devices'):
             raise ValueError('Input DT requires the verified GTX8 kernel artifact')

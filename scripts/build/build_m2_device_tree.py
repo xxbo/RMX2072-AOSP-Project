@@ -61,9 +61,12 @@ def main():
     p.add_argument('--display', action='store_true', help='Add the M3 native display bindings')
     p.add_argument('--display-staged', action='store_true', help='Populate display providers only after the diagnostic USB gate')
     p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
+    p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
     a = p.parse_args()
     if a.input_devices and not a.display:
         p.error('--input-devices requires --display')
+    if a.battery_gauge and not a.input_devices:
+        p.error('--battery-gauge requires --input-devices')
     if a.display_staged and not a.display:
         p.error('--display-staged requires --display')
     repo = Path(__file__).resolve().parents[2]
@@ -143,6 +146,7 @@ def main():
                *(['-DRMX2072_M3_DISPLAY=1'] if a.display else []),
                *(['-DRMX2072_M3_STAGED=1'] if a.display_staged else []),
                *(['-DRMX2072_M3_INPUT=1'] if a.input_devices else []),
+               *(['-DRMX2072_M3_BATTERY=1'] if a.battery_gauge else []),
                str(project / (name + '.dts'))]
         with expanded.open('wb') as out:
             subprocess.run(cmd, stdout=out, check=True)
@@ -177,7 +181,10 @@ def main():
         checks['input'] = check_m3_input(effective, staged=a.display_staged)
     if a.display:
         from check_m3_display import check_m3_display
-        checks['display'] = check_m3_display(effective, staged=a.display_staged, input_devices=a.input_devices)
+        checks['display'] = check_m3_display(effective, staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge)
+    if a.battery_gauge:
+        from check_m3_battery import check_m3_battery
+        checks['battery'] = check_m3_battery(effective, staged=a.display_staged)
     checks['m1_resource_reference'] = check_m2_resources(effective, display=a.display)
     expected = json.loads((repo / 'build/device/stock-dt-selection.json').read_text())
     for data, entry in ((final, expected['boot']['selected']), (overlay, expected['dtbo']['selected'])):
@@ -209,6 +216,7 @@ def main():
                   overlays={name: sha(data) for name, data in overlays.items()}, checks=checks,
                   factory_binary_inputs=False, status='source-built-not-device-tested')
     report['input_devices'] = a.input_devices
+    report['battery_gauge'] = a.battery_gauge
     report['display'] = a.display
     report['display_staged'] = a.display_staged
     (output / 'source.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')

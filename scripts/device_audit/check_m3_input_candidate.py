@@ -1,4 +1,4 @@
-"""Check the input candidate against the accepted display/render inputs.
+"""Check input or battery candidates against accepted display/render inputs.
 
 Local provenance and scope checks only; real touch and physical keys need
 target getevent, InputReader and operator-visible UI evidence.
@@ -33,6 +33,8 @@ def main():
     for name in ('workspace', 'baseline', 'baseline-config', 'output'):
         p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--battery-gauge', action='store_true',
+                   help='Compare a gauge candidate with the accepted input trial')
     a = p.parse_args()
     current = a.workspace / 'current'
     old = read(a.baseline / 'inputs.json')
@@ -47,7 +49,10 @@ def main():
     overlay = read(current / 'input-overlay/provenance.json')
     dt = (current / 'source-dt/effective.dtb').read_bytes()
     resources = dict(input=check_m3_input(dt, True),
-                     display=check_m3_display(dt, True, True))
+                     display=check_m3_display(dt, True, True, a.battery_gauge))
+    if a.battery_gauge:
+        from check_m3_battery import check_m3_battery
+        resources['battery'] = check_m3_battery(dt, True)
     before, after = config(a.baseline_config), config(current / 'kernel/sm8250_bootstrap_dot_config')
     delta = {k: [before.get(k), after.get(k)] for k in before.keys() | after.keys()
              if before.get(k) != after.get(k)}
@@ -96,6 +101,23 @@ def main():
         same_strict_policy=graphics['policy_proof_reused_for_identical_statements'] is True
             and vendor['files']['/etc/selinux/vendor_sepolicy.cil'] == old_vendor['files']['/etc/selinux/vendor_sepolicy.cil'],
     )
+    if a.battery_gauge:
+        for name in ('only_touch_config_added', 'only_input_vendor_changes',
+                     'only_input_vendor_additions', 'same_strict_policy'):
+            del checks[name]
+        checks.update(
+            accepted_input_baseline=old['usb_build'].get('input_devices') is True,
+            gauge_requested=usb.get('battery_gauge') is True and kernel.get('battery_gauge') is True,
+            only_gauge_config_added=delta == {k: [None, 'y'] for k in
+                ('CONFIG_BATTERY_BQ27XXX', 'CONFIG_BATTERY_BQ27XXX_I2C')},
+            nvm_updates_disabled='# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set'
+                in (current / 'kernel/sm8250_bootstrap_dot_config').read_text().splitlines(),
+            only_label_policy_changes=set(changed) == {'/etc/selinux/vendor_file_contexts',
+                                                       '/etc/selinux/vendor_sepolicy.cil'},
+            no_vendor_additions=not added,
+            strict_new_policy=graphics['policy_proof_reused_for_identical_statements'] is True
+                and vendor['files']['/etc/selinux/vendor_sepolicy.cil'] == graphics['composed_vendor_cil_sha256'],
+        )
     report = dict(trial=a.trial, baseline=old['trial'], recipe_commit=usb['recipe_commit'],
                   kernel_run=kernel['run_id'], kernel_source=kernel['source_commit'], checks=checks,
                   passed=all(checks.values()), config_delta=delta, resources=resources,

@@ -33,11 +33,14 @@ def main():
     p.add_argument('--kind', choices=('kernel', 'init', 'graphics', 'health', 'power', 'audio'), required=True)
     p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     p.add_argument('--input-devices', action='store_true', help='Require the GTX8 source digests and built-in driver')
+    p.add_argument('--battery-gauge', action='store_true', help='Require the pinned BQ28Z610 driver without NVM updates')
     a = p.parse_args()
     if a.display and a.kind != 'kernel':
         p.error('--display requires a kernel artifact')
     if a.input_devices and not a.display:
         p.error('--input-devices requires --display')
+    if a.battery_gauge and not a.input_devices:
+        p.error('--battery-gauge requires --input-devices')
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
     if work.is_relative_to(repo):
@@ -243,6 +246,8 @@ def main():
                              'SHA256SUMS', 'build-metadata.txt', 'resolved-manifest.xml'}
     if a.display:
         wanted.add('display-source.sha256')
+    if a.battery_gauge:
+        wanted.add('battery-source.sha256')
     with RemoteZip(url, session=session, timeout=120, support_suffix_range=False) as z:
         files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
     if files.keys() != wanted:
@@ -285,6 +290,16 @@ def main():
                 raise ValueError('Missing display configuration: ' + key)
     if a.input_devices and 'CONFIG_TOUCHSCREEN_GOODIX_GTX8=y' not in config:
         raise ValueError('GTX8 driver is not built in')
+    if a.battery_gauge:
+        pinned = json.loads(subprocess.check_output(['git', '-C', repo, 'show',
+            a.commit + ':build/m3-battery-source.json']))
+        rows = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
+                for line in files['battery-source.sha256'].decode().splitlines()}
+        if rows != pinned['files'] or pinned['ack_commit'] != common.get('revision'):
+            raise ValueError('Gauge source does not match the pinned ACK driver')
+        if (any('CONFIG_' + k + '=y' not in config for k in ('BATTERY_BQ27XXX', 'BATTERY_BQ27XXX_I2C'))
+                or '# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set' not in config):
+            raise ValueError('Gauge driver missing or nonvolatile writes enabled')
     output = work / 'current/kernel'
     provenance.update(installing=True)
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
@@ -296,7 +311,7 @@ def main():
     old = output / 'pon-power-patch.sha256'
     if old.is_file():
         old.unlink()
-    provenance.update(installing=False, source_pon=True, display=a.display, input_devices=a.input_devices, source_digests_verified=True,
+    provenance.update(installing=False, source_pon=True, display=a.display, input_devices=a.input_devices, battery_gauge=a.battery_gauge, source_digests_verified=True,
                       dist_digests_verified=True, image_sha256=digest(raw),
                       selected_member_sha256={n: digest(d) for n, d in files.items()})
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')

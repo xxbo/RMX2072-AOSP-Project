@@ -25,7 +25,10 @@ def main():
     p.add_argument('--first-frame-trace', action='store_true', help='Capture the native first-frame event history without changing display settings')
     p.add_argument('--standard-pps-test', action='store_true', help='Add one LP standard PPS after the unchanged vendor on-sequence')
     p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
+    p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
     a = p.parse_args()
+    if a.battery_gauge and not a.input_devices:
+        p.error('--battery-gauge requires --input-devices')
     if a.display_staged and not a.display:
         p.error('--display-staged requires --display')
     if a.single_dsc_test and not a.display:
@@ -79,7 +82,8 @@ def main():
         '--dtc', current / 'dtc-tools/dtc.exe', '--libfdt', current / 'dtc-tools/libfdt-1.dll',
         *(['--display'] if a.display else []),
         *(['--display-staged'] if a.display_staged else []),
-        *(['--input-devices'] if a.input_devices else []))
+        *(['--input-devices'] if a.input_devices else []),
+        *(['--battery-gauge'] if a.battery_gauge else []))
     if a.display:
         if not kernel.get('display'):
             raise ValueError('Install the checked DRM/panel kernel before packaging M3')
@@ -113,7 +117,7 @@ def main():
                   kernel=kernel['image_sha256'], witness=sha(current / 'first-stage-witness'),
                   source_first_stage=init, source_device_trees=True,
                   display=a.display,
-                  display_staged=a.display_staged, input_devices=a.input_devices,
+                  display_staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge,
                   single_dsc_test=a.single_dsc_test,
                   solid_fill_test=a.solid_fill_test,
                   panel_readback_test=a.panel_readback_test,
