@@ -84,6 +84,25 @@ EOF
   sha256sum "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" > "$ARTIFACT_DIR/display-source.sha256"
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_display.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
 fi
+if [[ "${RMX2072_INPUT:-0}" == 1 ]]; then
+  test "${RMX2072_DISPLAY:-0}" == 1
+  INPUT_DIR="$ROOT_DIR/device/realme/bladerunner_48m/input"
+  cp "$INPUT_DIR/goodix_gtx8.c" "$INPUT_DIR/goodix_gtx8.h" "$WORKSPACE/common/drivers/input/touchscreen/"
+  cat >> "$WORKSPACE/common/drivers/input/touchscreen/Kconfig" <<'EOF'
+
+config TOUCHSCREEN_GOODIX_GTX8
+	tristate "Goodix GTX8 touchscreen"
+	depends on I2C
+	select REGMAP_I2C
+	help
+	  Community GTX8 driver port for GT9886/GT9896 I2C touchscreens.
+	  Requires pre-flashed controller firmware; does not flash firmware.
+EOF
+  printf '\nobj-$(CONFIG_TOUCHSCREEN_GOODIX_GTX8) += goodix_gtx8.o\n' >> "$WORKSPACE/common/drivers/input/touchscreen/Makefile"
+  sha256sum "$INPUT_DIR/goodix_gtx8.c" > "$ARTIFACT_DIR/touch-source.sha256"
+  sha256sum "$INPUT_DIR/goodix_gtx8.h" > "$ARTIFACT_DIR/touch-header.sha256"
+  cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_input.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
+fi
 cd "$WORKSPACE"
 tools/bazel --output_user_root="${RUNNER_TEMP:-/tmp}/bazel-output-root" run \
   --jobs=2 --local_resources=cpu=2 --local_resources=memory=5500 --verbose_failures \
@@ -110,6 +129,11 @@ if [[ "${RMX2072_DISPLAY:-0}" == 1 ]]; then
   python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
     --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
     --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_display.fragment"
+fi
+if [[ "${RMX2072_INPUT:-0}" == 1 ]]; then
+  python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
+    --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
+    --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_input.fragment"
 fi
 find "$ARTIFACT_DIR/dist" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DIR/SHA256SUMS"
 printf '%s\n' 'Platform compile candidate: Qualcomm hardware mutex and APSS watchdog required built-in. Physical kernel execution is not established by this build.' > "$ARTIFACT_DIR/STATUS.txt"

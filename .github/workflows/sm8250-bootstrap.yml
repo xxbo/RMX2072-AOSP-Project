@@ -14,6 +14,10 @@ on:
         description: Build M3 DPU/DSI and the source RM19795 panel (requires source_pon)
         type: boolean
         default: false
+      input_devices:
+        description: Build the source GTX8 touch driver for the M3 input candidate
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -39,6 +43,7 @@ jobs:
           RMX2072_PON_POWER: ${{ inputs.pon_power && '1' || '0' }}
           RMX2072_SOURCE_PON: ${{ inputs.source_pon && '1' || '0' }}
           RMX2072_DISPLAY: ${{ inputs.display && '1' || '0' }}
+          RMX2072_INPUT: ${{ inputs.input_devices && '1' || '0' }}
         run: bash scripts/kernel_research/build_sm8250_bootstrap.sh
       - uses: actions/upload-artifact@v4
         if: always()

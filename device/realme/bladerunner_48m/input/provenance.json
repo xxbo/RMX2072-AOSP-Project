@@ -1,0 +1,18 @@
+{
+  "upstream_submission": "https://lkml.iu.edu/hypermail/linux/kernel/2602.3/08482.html",
+  "subject": "[PATCH v2 2/3] Input: add support for Goodix GTX8 Touchscreen ICs",
+  "author": "Aelin Reidel",
+  "status": "Submitted community driver; not present in pinned ACK 6.18",
+  "extracted_sha256": {
+    "goodix_gtx8.c": "3ebb1da64efbbd8ebb90aeedfd70c6ca05269b01ebd0c6e7954ca389245e3cbc",
+    "goodix_gtx8.h": "ed9b59e64588544e37f2e4480ca247ce53639af4dce564c41c3028eca1dbc499"
+  },
+  "local_changes": [
+    "Explicit required kernel headers and big-endian register addresses",
+    "Normandy slot ID masked as in official GT9886 and bounds checked for both families",
+    "Rate-limit touch checksum errors and log successful chip identification",
+    "Remove archive-obfuscated email from copyright and MODULE_AUTHOR, retain author attribution"
+  ],
+  "firmware": "Uses pre-flashed touch-controller firmware; no firmware/config flashing or factory Android binary is loaded",
+  "device_result": "NOT RUN"
+}
