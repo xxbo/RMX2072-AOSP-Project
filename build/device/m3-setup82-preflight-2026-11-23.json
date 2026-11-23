@@ -1,0 +1,134 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-82",
+  "baseline": "ufs-host-g3-gsi17-firststage-ufs-81",
+  "recipe_commit": "a03468f167e0073a6ee4a95deeaed7bf3fe102c3",
+  "kernel_run": 45186575774,
+  "kernel_source": "bcd0ee06e7873b2d75ac59109e3198d5ba49b28d",
+  "checks": {
+    "correct_trial": true,
+    "clean_recipe": true,
+    "input_requested": true,
+    "baseline_inventory": true,
+    "same_display_flags": true,
+    "same_boot_policy": true,
+    "same_guard_and_keys": true,
+    "same_native_pattern": true,
+    "kernel_checked": true,
+    "existing_kernel_sources_unchanged": true,
+    "boot_digest": true,
+    "dtbo_digest": true,
+    "kernel_digest": true,
+    "ramdisk_digest": true,
+    "effective_dt_digest": true,
+    "vendor_digest": true,
+    "same_gsi": true,
+    "same_vendor_key": true,
+    "same_original": true,
+    "same_volumes": true,
+    "same_layout": true,
+    "no_removed_files": true,
+    "overlay_matches": true,
+    "accepted_input_baseline": true,
+    "gauge_requested": true,
+    "nvm_updates_disabled": true,
+    "strict_new_policy": true,
+    "same_kernel_config": true,
+    "same_kernel_binary": true,
+    "same_effective_dt": true,
+    "same_dtbo": true,
+    "no_changed_vendor_files": true,
+    "only_wifi_feature_added": true,
+    "same_strict_policy": true
+  },
+  "passed": true,
+  "config_delta": {},
+  "resources": {
+    "input": {
+      "touch": "RMX2072 Normandy, measured firmware PID 9885, SE13 0xa94000/address 0x5d",
+      "coordinates": [
+        1080,
+        2400
+      ],
+      "reset_gpio": 38,
+      "irq_gpio": 39,
+      "volume_up": "PM8150 GPIO6 active-low, KEY_VOLUMEUP",
+      "volume_down": "PM8150 GPIO7 active-low, KEY_VOLUMEDOWN",
+      "power": "Existing upstream PON power-key binding retained",
+      "hardware_result": "NOT RUN"
+    },
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        36,
+        37,
+        38,
+        39,
+        48,
+        49,
+        66,
+        75
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    },
+    "battery": {
+      "gauge": "BQ28Z610, OEM board selection; hardware identity not yet read",
+      "bus": "SE16 0x888000",
+      "address": 85,
+      "gpio": [
+        48,
+        49
+      ],
+      "rate_hz": 100000,
+      "charging_control": false,
+      "hardware_result": "NOT RUN"
+    }
+  },
+  "vendor_changed": [],
+  "vendor_added": [
+    "/etc/permissions/android.hardware.wifi.xml"
+  ],
+  "boot_sha256": "a4518fc10ec5c0573308c714fcfcf90bdabfc03a8cf3b8c7394a276b184265b7",
+  "super_sha256": "d6f77b81bfd00c8761aa507cae76974b7b96b48469b7ef43eb488250b50dba0a",
+  "device_result": "NOT RUN"
+}
