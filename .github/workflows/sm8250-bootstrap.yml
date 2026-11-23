@@ -18,6 +18,10 @@ on:
         description: Build the source GTX8 touch driver for the M3 input candidate
         type: boolean
         default: false
+      battery_gauge:
+        description: Build the pinned BQ27xxx I2C gauge driver without NVM updates
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -44,6 +48,7 @@ jobs:
           RMX2072_SOURCE_PON: ${{ inputs.source_pon && '1' || '0' }}
           RMX2072_DISPLAY: ${{ inputs.display && '1' || '0' }}
           RMX2072_INPUT: ${{ inputs.input_devices && '1' || '0' }}
+          RMX2072_BATTERY: ${{ inputs.battery_gauge && '1' || '0' }}
         run: bash scripts/kernel_research/build_sm8250_bootstrap.sh
       - uses: actions/upload-artifact@v4
         if: always()

@@ -103,6 +103,12 @@ EOF
   sha256sum "$INPUT_DIR/goodix_gtx8.h" > "$ARTIFACT_DIR/touch-header.sha256"
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_input.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
 fi
+if [[ "${RMX2072_BATTERY:-0}" == 1 ]]; then
+  test "${RMX2072_INPUT:-0}" == 1
+  cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_battery.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
+  sha256sum "$WORKSPACE/common/drivers/power/supply/bq27xxx_battery.c" \
+    "$WORKSPACE/common/drivers/power/supply/bq27xxx_battery_i2c.c" > "$ARTIFACT_DIR/battery-source.sha256"
+fi
 cd "$WORKSPACE"
 tools/bazel --output_user_root="${RUNNER_TEMP:-/tmp}/bazel-output-root" run \
   --jobs=2 --local_resources=cpu=2 --local_resources=memory=5500 --verbose_failures \
@@ -134,6 +140,12 @@ if [[ "${RMX2072_INPUT:-0}" == 1 ]]; then
   python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
     --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
     --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_input.fragment"
+fi
+if [[ "${RMX2072_BATTERY:-0}" == 1 ]]; then
+  python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
+    --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
+    --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_battery.fragment"
+  grep -Fx '# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set' "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config"
 fi
 find "$ARTIFACT_DIR/dist" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DIR/SHA256SUMS"
 printf '%s\n' 'Platform compile candidate: Qualcomm hardware mutex and APSS watchdog required built-in. Physical kernel execution is not established by this build.' > "$ARTIFACT_DIR/STATUS.txt"
