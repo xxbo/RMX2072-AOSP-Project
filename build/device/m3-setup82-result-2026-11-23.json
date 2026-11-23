@@ -1,0 +1,105 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-82",
+  "baseline_trial": 81,
+  "goal": "Render SetupWizard network page after physical Next, then continue offline toward Launcher",
+  "result": "PASS_FRAMEWORK_PREREQUISITE_PENDING_PHYSICAL_NEXT",
+  "boot_id": "09d2dd9a-bf2a-438f-bc6e-03e3f5665843",
+  "kernel_release": "6.18.32-android17-5-maybe-dirty-4k",
+  "api": 37,
+  "enforcing": true,
+  "boot_completed": true,
+  "pids": {
+    "system_server": 2415,
+    "surfaceflinger": 2141,
+    "audioserver": 2137
+  },
+  "changes": {
+    "added_vendor_files": [
+      "/etc/permissions/android.hardware.wifi.xml"
+    ],
+    "changed_existing_vendor_files": [],
+    "kernel_effective_dt_dtbo_policy_unchanged": true,
+    "same_gsi_and_test_seeds": true
+  },
+  "checks": {
+    "wifi_feature": true,
+    "wifi_service": true,
+    "wifi_scanning_service": true,
+    "battery_present": true,
+    "battery_level": 100,
+    "battery_voltage_mV": 8651,
+    "battery_override": false,
+    "project_touch_idc_loaded": true,
+    "welcome_screenshot": true,
+    "crash_buffer_empty_before_next": true
+  },
+  "physical_next": "PENDING_OPERATOR_RESPONSE",
+  "network_page": "NOT RUN",
+  "launcher": "NOT RUN",
+  "wifi_radio": "NOT IMPLEMENTED; framework service only; cmd wifi status reports disabled",
+  "charging": "NOT QUALIFIED; USB/AC powered false",
+  "retention": {
+    "current_mode": "Android 17 GSI",
+    "candidate_super_retained": true,
+    "stock_restored": false,
+    "retention_scope": "current-boot-only",
+    "host_start_required_after_every_reboot": true
+  },
+  "same_boot_adb_seconds": 196.25,
+  "recipe_commit": "a03468f167e0073a6ee4a95deeaed7bf3fe102c3",
+  "runner_commit": "ff6c3f3ca962413685975ec55d3b55d5772c2c4b",
+  "kernel_run": 45186575774,
+  "kernel_source_commit": "bcd0ee06e7873b2d75ac59109e3198d5ba49b28d",
+  "hashes": {
+    "boot_sha256": "a4518fc10ec5c0573308c714fcfcf90bdabfc03a8cf3b8c7394a276b184265b7",
+    "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+    "kernel_sha256": "846380b48466996a2df81d690352166d753ddd542d8c4f5195076932c666ac34",
+    "first_stage_init_sha256": "76236d035fcd6afdd208b7812f74a91724e77ef59e837a2e40dc0640b4e453ad",
+    "candidate_super_sha256": "d6f77b81bfd00c8761aa507cae76974b7b96b48469b7ef43eb488250b50dba0a",
+    "vendor_signed_sha256": "d54117146446f777fba695f4d20664ea6a546267c962f5aed3d1613f16c9103a"
+  },
+  "evidence": {
+    "setup82-ready-identity.txt": {
+      "bytes": 72,
+      "sha256": "fcffade47d953840d7df57169c3e28a70f28805bb33d699db76d63d04ffc4745"
+    },
+    "setup82-ready-wifi.txt": {
+      "bytes": 127,
+      "sha256": "4dac1447ad863412cb9432f52609c4d400bce20cc54d7238d01ebcb219413e2f"
+    },
+    "setup82-ready-battery.txt": {
+      "bytes": 685,
+      "sha256": "00abe3208bd46c4aad31cfc25bc2e0dc0e9d65351d47c4ba383b4436223ee631"
+    },
+    "setup82-ready-activity.txt": {
+      "bytes": 20597,
+      "sha256": "35a35c8ffe6e30e820676441a5dcd701ca3b5eccbefb2fcec6df9b50a37b4b81"
+    },
+    "setup82-ready-crashes.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "setup82-ready.png": {
+      "bytes": 51521,
+      "sha256": "4d6dab50a7b566f77f2b1bd60db6c84ed329cb946e5d0b983e1ebd7bf415f35b"
+    },
+    "setup82-ready-input.txt": {
+      "bytes": 35381,
+      "sha256": "c473aaf333939d33a2d22daedd2b36626cc37328a5b4cb73158c9b5d3a464081"
+    },
+    "setup82-ready-logcat.txt": {
+      "bytes": 2879848,
+      "sha256": "b8ee633a3227456d93d35c631b532ebc187e26c22b0a57a9519910f37b43e0dd"
+    },
+    "setup82-ready-wifi-dump.txt": {
+      "bytes": 59704,
+      "sha256": "45e18ce5df0578b20daa15de0ef3e3059f1e55c4e2401788f14a9d795a7973a1"
+    }
+  },
+  "recovery": "Reused the single F.20 recovery set. Verified previous/current candidate container and boot; no fresh stock backup reads. No stock userdata writes.",
+  "limitations": [
+    "Current display image needs the host observer after reboot",
+    "USB loss across screen off/on remains open",
+    "No physical network-page or Launcher acceptance yet"
+  ]
+}
