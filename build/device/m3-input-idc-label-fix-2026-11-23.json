@@ -1,0 +1,14 @@
+{
+  "result": "PASS_SOURCE_LABEL_CHECK_ONLY",
+  "changed_payloads": [
+    "/etc/selinux/vendor_file_contexts"
+  ],
+  "resolved_labels": {
+    "/vendor/usr/idc": "u:object_r:vendor_idc_file:s0",
+    "/vendor/usr/idc/Goodix_GTX8_Capacitive_TouchScreen.idc": "u:object_r:vendor_idc_file:s0"
+  },
+  "policy_bytes_unchanged": true,
+  "device_applied": false,
+  "current_phone_trial": 80,
+  "source_gsi_context_sha256": "85175ed802b5661b44ba7ffff5e820e34dcbcbf9d8cbec799a5a1853499941bb"
+}

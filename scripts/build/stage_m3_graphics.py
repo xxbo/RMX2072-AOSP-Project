@@ -178,7 +178,11 @@ def compose(info, guard, graphics):
         files['/overlay/RmxCpuInputOverlay.apk'] = apk
         files['/usr/idc/Goodix_GTX8_Capacitive_TouchScreen.idc'] = (
             source/'Goodix_GTX8_Capacitive_TouchScreen.idc').read_bytes().replace(b'\r\n', b'\n')
-        files['/etc/selinux/vendor_file_contexts'] += b'/vendor/overlay(/.*)? u:object_r:vendor_overlay_file:s0\n'
+        # Match the pinned GSI's platform file contexts. InputReader cannot
+        # read vendor_file under enforcing; its IDC files use vendor_idc_file.
+        files['/etc/selinux/vendor_file_contexts'] += (
+            b'/vendor/overlay(/.*)? u:object_r:vendor_overlay_file:s0\n'
+            b'/vendor/usr/idc(/.*)? u:object_r:vendor_idc_file:s0\n')
     return files, build
 
 
