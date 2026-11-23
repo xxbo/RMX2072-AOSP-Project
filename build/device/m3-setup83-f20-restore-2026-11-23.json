@@ -1,0 +1,31 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "sys_boot_completed": 1,
+  "boot_id": "a91a450d-f8e8-4ffb-a9b4-80446d8fc65f",
+  "super_sha256": null,
+  "boot_sha256": null,
+  "dtbo_sha256": null,
+  "lp_slots": [
+    0,
+    1
+  ],
+  "stock_full_partition_readback": false,
+  "stock_write_acknowledged": true,
+  "expected_image_sha256": {
+    "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+  },
+  "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata",
+  "result": "PASS_F20_RESTORED_AT_USER_REQUEST",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-83",
+  "kernel": "4.19.157-perf+",
+  "android_release": "12",
+  "adb_available": true,
+  "previous_gsi_boot_id": "5b10cfc2-a792-47f1-ad7b-a5d1c875288e",
+  "reconnect_restored_same_gsi_boot": true,
+  "source_record": "ufs-host-g3-gsi17-firststage-ufs-83-user-restore",
+  "work_status": "paused until user resumes",
+  "original_userdata_untouched": true,
+  "utc": "2026-11-23T15:41:47.953025+00:00"
+}

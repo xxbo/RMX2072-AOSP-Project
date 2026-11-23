@@ -124,5 +124,16 @@
       "sha256": "bb21f58b77006630f43739121aa0d61b4b80b9a6dc15cabb5aa3083a1c329686"
     }
   },
-  "recovery": "Single F.20 recovery set preserved. Previous/current candidate full readback passed; no new stock backup reads. Stock userdata untouched."
+  "recovery": "Single F.20 recovery set preserved. Previous/current candidate full readback passed; no new stock backup reads. Stock userdata untouched.",
+  "post_pause_restore": {
+    "result": "PASS",
+    "record": "m3-setup83-f20-restore-2026-11-23.json",
+    "reconnected_same_gsi_boot": true,
+    "restored_firmware": "RMX2072_11_F.20",
+    "restored_boot_id": "a91a450d-f8e8-4ffb-a9b4-80446d8fc65f",
+    "adb_available": true,
+    "sys_boot_completed": 1,
+    "full_stock_partition_readback": false,
+    "work_status": "paused"
+  }
 }
