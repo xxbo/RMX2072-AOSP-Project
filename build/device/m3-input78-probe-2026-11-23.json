@@ -13,7 +13,7 @@
   "next_change": "Disable legacy SE13 and wrapper in the final board overlay; retain kernel and vendor",
   "physical_input_result": {
     "volume_up": "Operator observed volume UI response; down/up events recorded",
-    "volume_down": "Down/up events recorded; separate operator UI response pending",
+    "volume_down": "Operator observed the volume bar decrease; down/up events recorded",
     "power": "NOT RUN",
     "touch": "NOT RUN; native controller child could not register"
   },
