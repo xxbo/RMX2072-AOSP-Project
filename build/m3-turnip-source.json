@@ -1,0 +1,10 @@
+{
+  "repository": "https://android.googlesource.com/platform/external/mesa3d",
+  "commit": "875160ed32cc5bc32777fa04870a0a57ed38c987",
+  "reference": "android-17.0.0_r1",
+  "version": "26.1.0-devel",
+  "ndk": "28.2.13676358",
+  "api": 35,
+  "kernel_interface": "msm DRM, not stock KGSL",
+  "scope": "Turnip Vulkan hardware driver; retain accepted ANGLE EGL/GLES, minigbm and DRM composer"
+}
