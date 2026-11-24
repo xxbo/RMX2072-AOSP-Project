@@ -6,6 +6,7 @@ Permission errors are saved as evidence, not interpreted as absent hardware.
 import argparse
 import json
 from pathlib import Path
+import shlex
 import subprocess
 import time
 
@@ -56,6 +57,8 @@ done'''
             f.flush()
             time.sleep(1)
     commands = {
+        'layer-list': 'timeout 12 dumpsys SurfaceFlinger --list',
+        'display-period': 'timeout 12 dumpsys SurfaceFlinger --latency',
         'graphics': 'getprop ro.hardware.vulkan; getprop ro.hardware.egl; ls -lZ /dev/dri; timeout 12 dumpsys SurfaceFlinger',
         'display': 'timeout 12 dumpsys display',
         'launcher-frames': 'timeout 12 dumpsys gfxinfo com.android.launcher3 framestats',
@@ -66,6 +69,14 @@ done'''
     for name, command in commands.items():
         result = shell(command)
         (out / (name+'.json')).write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+        if name == 'layer-list':
+            layers = [n for n in result['stdout'].splitlines() if any(package in n
+                      for package in ('com.android.launcher3', 'com.android.settings'))]
+            for index, layer in enumerate(layers[:8]):
+                latency = shell('timeout 12 dumpsys SurfaceFlinger --latency '+shlex.quote(layer))
+                latency['layer'] = layer
+                (out / f'layer-present-{index}.json').write_text(
+                    json.dumps(latency, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     identity()
     print(json.dumps(dict(boot_id=boot, phase=a.phase, output=str(out), same_boot=True)))
 
