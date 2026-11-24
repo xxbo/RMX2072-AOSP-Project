@@ -88,3 +88,37 @@ F.20 was restored automatically and passed ADB boot-completion and both LP-slot
 checks. The original recovery copy was reused; stock partitions were not read
 back again. Next target: reach native modeset, then prove an Adreno transaction
 and Android rendering before measuring interactive frame times.
+
+
+## Trial 85: native GPU binds; two explicit blockers
+
+[Device record](../build/device/m3-performance-85.json): the TSENS fault did not
+recur. Adreno SMMU registered, GMU/GPU joined IOMMU groups 15/16, native Adreno
+6.5.0.2 bound and MSM DRM registered minor 0. CPU frequency transitions were
+not captured, so binding progress is not DVFS acceptance.
+
+The native KMS open then rejected F.20 SQE version 0.93. The pinned driver
+requires at least 0.95. Independently, modeset returned `RMXPHY stock-timing
+rejected ret=-22`: the project stock-link predicate only accepted 60 Hz, so the
+90 Hz mode used the calculated link rate instead of 660 MHz. The unchanged PHY
+guard correctly rejected that inconsistent request. Both modes use the same
+660 MHz clock and PHY bytes in official source timing@0/timing@1. The patch now
+admits exactly 60 or 90 Hz with all existing panel/DSC/format checks retained.
+The complete DSI host patch stack applies to the pinned ACK source.
+
+The next candidate uses only the upstream A650 SQE 1.12 update, retaining the
+five original GMU/board-ZAP files. [Firmware source lock](../build/m3-gpu-firmware-source.json)
+pins Linux firmware commit `599764611a8ac213c6aa6dad17c941c2f46b53cb`, Git blob and
+SHA-256 digests, and carries its license/notice. The firmware loader's existing
+minimum-version check remains intact. The original one-time acquisition record
+is preserved separately. No repeated stock firmware read was needed.
+
+[Replacement kernel build](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/45402072797)
+was dispatched from `bc15e0d23abe83e7112ff6d9cc4b03c0aaf0db14`. Device result is
+pending. Pre-modeset CPU/thermal values will also be streamed to the independent
+serial logger, so a display failure cannot hide those observations.
+
+Trial 85 did not reach Android ADB or a valid physical pattern. F.20 was restored
+and passed boot completion plus both LP-slot checks, without another full stock
+readback. The goal remains native GPU submission, 90 Hz physical scanout and
+measured interactive frame times on the same GSI/test volumes.

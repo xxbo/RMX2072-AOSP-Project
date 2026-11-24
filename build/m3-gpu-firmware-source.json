@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "profile": "original RMX2072 GMU/ZAP plus upstream A650 SQE",
+  "stock_firmware": "RMX2072_11.F.20_3200_202401191645",
+  "linux_firmware_tag": "20260221",
+  "purpose": "Peripheral firmware for native Adreno; original 0.93 SQE is rejected by ACK minimum 0.95. Keep board-specific secure ZAP and original GMU unchanged.",
+  "files": {
+    "qcom/a650_gmu.bin": {
+      "bytes": 41548,
+      "sha256": "df79fa8482fcc7587bb239b9c9e2b24bce4729893b990fe3f82b30da8175b01c",
+      "source": "/vendor/firmware/a650_gmu.bin",
+      "origin": "original F.20 acquisition"
+    },
+    "qcom/rmx2072/a650_zap.mdt": {
+      "bytes": 6860,
+      "sha256": "a0087c7efc41ff825055636c8f43372a703642287656ed7d392bfc6b17f0d333",
+      "source": "/vendor/firmware/a650_zap.mdt",
+      "origin": "original F.20 acquisition"
+    },
+    "qcom/rmx2072/a650_zap.b00": {
+      "bytes": 148,
+      "sha256": "ec9b9d5a67456384809624b14a00d15d36297e5f2e75728504cd872bc95e0947",
+      "source": "/vendor/firmware/a650_zap.b00",
+      "origin": "original F.20 acquisition"
+    },
+    "qcom/rmx2072/a650_zap.b01": {
+      "bytes": 6712,
+      "sha256": "dcf42c99a4c418850e962ae80e65f8f440db5c61ea88ac4a65e6cd405bdc59bf",
+      "source": "/vendor/firmware/a650_zap.b01",
+      "origin": "original F.20 acquisition"
+    },
+    "qcom/rmx2072/a650_zap.b02": {
+      "bytes": 1676,
+      "sha256": "a415e5452fa8f597670a6e51010e97bfabca7d20fbce8044caed64d9d5873113",
+      "source": "/vendor/firmware/a650_zap.b02",
+      "origin": "original F.20 acquisition"
+    },
+    "qcom/a650_sqe.fw": {
+      "bytes": 31964,
+      "sha256": "c863ceac3a823af215205d7803776bfdc68098c2c2a5d2fd05b4aa77cd336b4b",
+      "git_blob": "acdb81b45d79a113aa0a319eb34f80324a45475e",
+      "origin": "linux-firmware",
+      "repository": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/",
+      "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb",
+      "path": "qcom/a650_sqe.fw",
+      "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/qcom/a650_sqe.fw",
+      "version": "1.12",
+      "version_word_offset": 4,
+      "version_low_12_bits": 274
+    },
+    "qcom/LICENSE.qcom": {
+      "bytes": 13962,
+      "sha256": "be904cd28cb292b80cdb6cf412ab0d9159d431671e987ad433c1f62e0988a9bc",
+      "git_blob": "faacf9cf9e1f3638ad1f65f433db4081b8a6478f",
+      "origin": "linux-firmware",
+      "repository": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/",
+      "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb",
+      "path": "LICENSE.qcom",
+      "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/LICENSE.qcom"
+    },
+    "qcom/NOTICE.txt": {
+      "bytes": 23966,
+      "sha256": "fa43e1b9a13b341a07adca9dbe73d0f9072d7966fdfe811c01f0dd2872d7309a",
+      "git_blob": "184f88f26c43eb488f20cb3e13d7462c976f8a7f",
+      "origin": "linux-firmware",
+      "repository": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/",
+      "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb",
+      "path": "qcom/NOTICE.txt",
+      "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/qcom/NOTICE.txt"
+    }
+  },
+  "partition_backup": false
+}

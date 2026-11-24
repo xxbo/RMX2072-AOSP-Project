@@ -98,6 +98,14 @@ if [ -x /bin/drm-panel-smoke ]; then
             ;;
         esac
     fi
+    # Save the early CPU/thermal result even if the following modeset blocks.
+    # The serial observer streams kmsg independently of this process.
+    for p in /sys/devices/system/cpu/cpufreq/policy* /sys/class/thermal/thermal_zone*; do
+        [ -d "$p" ] || continue
+        for f in scaling_driver scaling_governor scaling_cur_freq scaling_min_freq scaling_max_freq type temp; do
+            [ ! -r "$p/$f" ] || printf '<6>M3PERF before-modeset path=%s field=%s value=%s\n' "$p" "$f" "$(cat "$p/$f")" > /dev/kmsg
+        done
+    done
     sha256sum /m3-pattern.rgb >> /run/m3-display.txt
     probe_timeout=50
     [ ! -f /m3-solid-fill-test ] || probe_timeout=75

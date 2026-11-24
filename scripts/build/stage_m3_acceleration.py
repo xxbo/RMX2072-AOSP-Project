@@ -2,6 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
+import struct
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -17,7 +18,7 @@ def acceleration_policy(cil):
 
 
 def gpu_firmware(directory):
-    proof = json.loads((ROOT/'build/device/m3-gpu-firmware-2026-11-24.json').read_text())
+    proof = json.loads((ROOT/'build/m3-gpu-firmware-source.json').read_text())
     if json.loads((directory/'provenance.json').read_text()) != proof:
         raise ValueError('GPU firmware provenance changed')
     files = {}
@@ -28,6 +29,11 @@ def gpu_firmware(directory):
         if len(data) != entry['bytes'] or hashlib.sha256(data).hexdigest() != entry['sha256']:
             raise ValueError('GPU firmware digest mismatch: ' + name)
         files[name] = data
+    # adreno_fw_create_bo() skips the first firmware dword. ACK checks the
+    # low twelve bits of the first uploaded SQE word, requiring >= 0x095.
+    version = struct.unpack_from('<I', files['qcom/a650_sqe.fw'], 4)[0] & 0xfff
+    if version < 0x095 or version != proof['files']['qcom/a650_sqe.fw']['version_low_12_bits']:
+        raise ValueError('A650 SQE firmware is below the native driver requirement')
     return files, proof
 
 
