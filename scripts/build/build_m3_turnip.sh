@@ -23,7 +23,7 @@ test "$(git -C "$SRC" rev-parse HEAD)" = "$PIN"
 cat > "$OUT/android-aarch64.ini" <<EOF
 [binaries]
 c = '$NDK/aarch64-linux-android${API}-clang'
-cpp = ['$NDK/aarch64-linux-android${API}-clang++', '-static-libstdc++']
+cpp = '$NDK/aarch64-linux-android${API}-clang++'
 ar = '$NDK/llvm-ar'
 strip = '$NDK/llvm-strip'
 pkg-config = '/usr/bin/pkg-config'
@@ -35,6 +35,8 @@ endian = 'little'
 [properties]
 needs_exe_wrapper = true
 pkg_config_libdir = ['$OUT/empty-pkgconfig']
+[built-in options]
+cpp_link_args = ['-static-libstdc++']
 EOF
 # Static libdrm avoids introducing a second libdrm.so ABI beside the accepted
 # AOSP minigbm/composer library. Its archive is checksum-pinned by Mesa's wrap.
