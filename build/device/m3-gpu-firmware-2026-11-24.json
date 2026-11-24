@@ -1,0 +1,37 @@
+{
+  "firmware": "RMX2072_11.F.20_3200_202401191645",
+  "purpose": "GPU SQE/GMU/secure ZAP firmware for the current native Adreno candidate; retained binary dependency, not an Android HAL",
+  "files": {
+    "qcom/a650_gmu.bin": {
+      "bytes": 41548,
+      "sha256": "df79fa8482fcc7587bb239b9c9e2b24bce4729893b990fe3f82b30da8175b01c",
+      "source": "/vendor/firmware/a650_gmu.bin"
+    },
+    "qcom/a650_sqe.fw": {
+      "bytes": 31632,
+      "sha256": "b4c27420fd6a5c6b511b254cc0fad8cdd40eea38ceb3418f895a1084f4460487",
+      "source": "/vendor/firmware/a650_sqe.fw"
+    },
+    "qcom/rmx2072/a650_zap.mdt": {
+      "bytes": 6860,
+      "sha256": "a0087c7efc41ff825055636c8f43372a703642287656ed7d392bfc6b17f0d333",
+      "source": "/vendor/firmware/a650_zap.mdt"
+    },
+    "qcom/rmx2072/a650_zap.b00": {
+      "bytes": 148,
+      "sha256": "ec9b9d5a67456384809624b14a00d15d36297e5f2e75728504cd872bc95e0947",
+      "source": "/vendor/firmware/a650_zap.b00"
+    },
+    "qcom/rmx2072/a650_zap.b01": {
+      "bytes": 6712,
+      "sha256": "dcf42c99a4c418850e962ae80e65f8f440db5c61ea88ac4a65e6cd405bdc59bf",
+      "source": "/vendor/firmware/a650_zap.b01"
+    },
+    "qcom/rmx2072/a650_zap.b02": {
+      "bytes": 1676,
+      "sha256": "a415e5452fa8f597670a6e51010e97bfabca7d20fbce8044caed64d9d5873113",
+      "source": "/vendor/firmware/a650_zap.b02"
+    }
+  },
+  "partition_backup": false
+}

@@ -1,0 +1,8 @@
+; Direct kernel firmware loading, restricted to the inventoried GPU blobs.
+(type rmx_gpu_firmware_file)
+(typeattributeset file_type (rmx_gpu_firmware_file))
+(typeattributeset vendor_file_type (rmx_gpu_firmware_file))
+(roletype object_r rmx_gpu_firmware_file)
+(allow kernel rmx_gpu_firmware_file (dir (search open read getattr)))
+(allow kernel rmx_gpu_firmware_file (file (open read getattr map)))
+(allow kernel rmx_gpu_firmware_file (system (firmware_load)))

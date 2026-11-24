@@ -62,6 +62,7 @@ def main():
     p.add_argument('--display-staged', action='store_true', help='Populate display providers only after the diagnostic USB gate')
     p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
     p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
+    p.add_argument('--performance', action='store_true', help='Include native CPUfreq, TSENS and Adreno resources')
     a = p.parse_args()
     if a.input_devices and not a.display:
         p.error('--input-devices requires --display')
@@ -69,6 +70,8 @@ def main():
         p.error('--battery-gauge requires --input-devices')
     if a.display_staged and not a.display:
         p.error('--display-staged requires --display')
+    if a.performance and not a.display:
+        p.error('--performance requires --display')
     repo = Path(__file__).resolve().parents[2]
     source, output = a.source.resolve(), a.output.resolve()
     if output.is_relative_to(repo) or output.is_relative_to(source):
@@ -126,6 +129,8 @@ def main():
         raise ValueError('DT binding header lock does not match the kernel source')
     headers = ACK_HEADERS + (('clock/qcom,dispcc-sm8250.h', 'clock/qcom,dsi-phy-28nm.h',
                               'power/qcom,rpmhpd.h', 'power/qcom-rpmpd.h', 'gpio/gpio.h') if a.display else ())
+    if a.performance:
+        headers += ('clock/qcom,gpucc-sm8250.h', 'thermal/thermal.h')
     for header in headers:
         rel = 'include/dt-bindings/' + header
         url = 'https://android.googlesource.com/kernel/common/+/' + ack['commit'] + '/' + rel + '?format=TEXT'
@@ -147,6 +152,7 @@ def main():
                *(['-DRMX2072_M3_STAGED=1'] if a.display_staged else []),
                *(['-DRMX2072_M3_INPUT=1'] if a.input_devices else []),
                *(['-DRMX2072_M3_BATTERY=1'] if a.battery_gauge else []),
+               *(['-DRMX2072_M3_PERFORMANCE=1'] if a.performance else []),
                str(project / (name + '.dts'))]
         with expanded.open('wb') as out:
             subprocess.run(cmd, stdout=out, check=True)
@@ -176,12 +182,15 @@ def main():
         final = lib.apply(final, display)
         overlays['rmx2072-m3-display'] = display
     effective = lib.apply(final, overlay)
+    if a.performance:
+        from check_m3_performance import check_m3_performance
+        checks['performance'] = check_m3_performance(effective, staged=a.display_staged)
     if a.input_devices:
         from check_m3_input import check_m3_input
         checks['input'] = check_m3_input(effective, staged=a.display_staged)
     if a.display:
         from check_m3_display import check_m3_display
-        checks['display'] = check_m3_display(effective, staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge)
+        checks['display'] = check_m3_display(effective, staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge, performance=a.performance)
     if a.battery_gauge:
         from check_m3_battery import check_m3_battery
         checks['battery'] = check_m3_battery(effective, staged=a.display_staged)
@@ -219,6 +228,7 @@ def main():
     report['battery_gauge'] = a.battery_gauge
     report['display'] = a.display
     report['display_staged'] = a.display_staged
+    report['performance'] = a.performance
     (output / 'source.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report['outputs'], indent=2))
 

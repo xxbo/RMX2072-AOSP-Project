@@ -1,0 +1,166 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Native ACK ecdaacc9 SM8250 resources, mapped onto the accepted board tree.
+// GPU upper OPP is capped at the measured F.20 587 MHz; no overclocking.
+#include <dt-bindings/clock/qcom,gpucc-sm8250.h>
+#include <dt-bindings/thermal/thermal.h>
+
+&cpufreq_hw { status = "disabled"; };
+&msm_gpu { status = "disabled"; };
+&gmu { status = "disabled"; };
+&clock_gpucc { status = "disabled"; };
+&kgsl_msm_iommu { status = "disabled"; };
+&tsens0 { status = "disabled"; };
+&tsens1 { status = "disabled"; };
+
+&CPU0 { qcom,freq-domain = <&m3_cpufreq 0>; clocks = <&m3_cpufreq 0>; capacity-dmips-mhz = <448>; dynamic-power-coefficient = <105>; };
+&CPU1 { qcom,freq-domain = <&m3_cpufreq 0>; clocks = <&m3_cpufreq 0>; capacity-dmips-mhz = <448>; dynamic-power-coefficient = <105>; };
+&CPU2 { qcom,freq-domain = <&m3_cpufreq 0>; clocks = <&m3_cpufreq 0>; capacity-dmips-mhz = <448>; dynamic-power-coefficient = <105>; };
+&CPU3 { qcom,freq-domain = <&m3_cpufreq 0>; clocks = <&m3_cpufreq 0>; capacity-dmips-mhz = <448>; dynamic-power-coefficient = <105>; };
+&CPU4 { qcom,freq-domain = <&m3_cpufreq 1>; clocks = <&m3_cpufreq 1>; capacity-dmips-mhz = <1024>; dynamic-power-coefficient = <379>; };
+&CPU5 { qcom,freq-domain = <&m3_cpufreq 1>; clocks = <&m3_cpufreq 1>; capacity-dmips-mhz = <1024>; dynamic-power-coefficient = <379>; };
+&CPU6 { qcom,freq-domain = <&m3_cpufreq 1>; clocks = <&m3_cpufreq 1>; capacity-dmips-mhz = <1024>; dynamic-power-coefficient = <379>; };
+&CPU7 { qcom,freq-domain = <&m3_cpufreq 2>; clocks = <&m3_cpufreq 2>; capacity-dmips-mhz = <1024>; dynamic-power-coefficient = <444>; };
+
+// Existing corrected QFPROM window starts at 0x784000, as in native SM8250.
+&qfprom {
+    m3_gpu_speed_bin: gpu-speed-bin@19b { reg = <0x19b 1>; bits = <5 3>; };
+};
+
+#ifdef RMX2072_M3_STAGED
+&{/soc/display-fabric-lab} {
+#else
+&{/soc} {
+#endif
+    m3_cpufreq: cpufreq@18591000 {
+        compatible = "qcom,sm8250-cpufreq-epss", "qcom,cpufreq-epss";
+        reg = <0x18591000 0x1000>, <0x18592000 0x1000>, <0x18593000 0x1000>;
+        reg-names = "freq-domain0", "freq-domain1", "freq-domain2";
+        clocks = <&diag_rpmhcc RPMH_CXO_CLK>, <&diag_gcc GPLL0>;
+        clock-names = "xo", "alternate";
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-names = "dcvsh-irq-0", "dcvsh-irq-1", "dcvsh-irq-2";
+        #freq-domain-cells = <1>;
+        #clock-cells = <1>;
+    };
+    m3_tsens0: thermal-sensor@c263000 {
+        compatible = "qcom,sm8250-tsens", "qcom,tsens-v2";
+        reg = <0x0c263000 0x1ff>, <0x0c222000 0x1ff>;
+        #qcom,sensors = <16>;
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-names = "uplow", "critical";
+        #thermal-sensor-cells = <1>;
+    };
+    m3_tsens1: thermal-sensor@c265000 {
+        compatible = "qcom,sm8250-tsens", "qcom,tsens-v2";
+        reg = <0x0c265000 0x1ff>, <0x0c223000 0x1ff>;
+        #qcom,sensors = <9>;
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-names = "uplow", "critical";
+        #thermal-sensor-cells = <1>;
+    };
+    m3_gpucc: clock-controller@3d90000 {
+        compatible = "qcom,sm8250-gpucc";
+        reg = <0x03d90000 0x9000>;
+        clocks = <&diag_rpmhcc RPMH_CXO_CLK>, <&diag_gcc GCC_GPU_GPLL0_CLK_SRC>, <&diag_gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
+        clock-names = "bi_tcxo", "gcc_gpu_gpll0_clk_src", "gcc_gpu_gpll0_div_clk_src";
+        #clock-cells = <1>;
+        #reset-cells = <1>;
+        #power-domain-cells = <1>;
+    };
+    m3_adreno_smmu: iommu@3da0000 {
+        compatible = "qcom,sm8250-smmu-500", "qcom,adreno-smmu", "qcom,smmu-500", "arm,mmu-500";
+        reg = <0x03da0000 0x10000>;
+        #iommu-cells = <2>;
+        #global-interrupts = <2>;
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>;
+        clocks = <&m3_gpucc GPU_CC_AHB_CLK>, <&diag_gcc GCC_GPU_MEMNOC_GFX_CLK>, <&diag_gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
+        clock-names = "ahb", "bus", "iface";
+        power-domains = <&m3_gpucc GPU_CX_GDSC>;
+        dma-coherent;
+    };
+    m3_gmu: gmu@3d6a000 {
+        compatible = "qcom,adreno-gmu-650.2", "qcom,adreno-gmu";
+        reg = <0x03d6a000 0x30000>, <0x03de0000 0x10000>, <0x0b290000 0x10000>, <0x0b490000 0x10000>;
+        reg-names = "gmu", "rscc", "gmu_pdc", "gmu_pdc_seq";
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-names = "hfi", "gmu";
+        clocks = <&m3_gpucc GPU_CC_AHB_CLK>, <&m3_gpucc GPU_CC_CX_GMU_CLK>, <&m3_gpucc GPU_CC_CXO_CLK>,
+                 <&diag_gcc GCC_DDRSS_GPU_AXI_CLK>, <&diag_gcc GCC_GPU_MEMNOC_GFX_CLK>;
+        clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
+        power-domains = <&m3_gpucc GPU_CX_GDSC>, <&m3_gpucc GPU_GX_GDSC>;
+        power-domain-names = "cx", "gx";
+        iommus = <&m3_adreno_smmu 5 0x400>;
+        operating-points-v2 = <&m3_gmu_opps>;
+        m3_gmu_opps: opp-table {
+            compatible = "operating-points-v2";
+            opp-200000000 { opp-hz = /bits/ 64 <200000000>; opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>; };
+        };
+    };
+    m3_gpu: gpu@3d00000 {
+        compatible = "qcom,adreno-650.2", "qcom,adreno";
+        reg = <0x03d00000 0x40000>;
+        reg-names = "kgsl_3d0_reg_memory";
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
+        iommus = <&m3_adreno_smmu 0 0x401>;
+        qcom,gmu = <&m3_gmu>;
+        nvmem-cells = <&m3_gpu_speed_bin>;
+        nvmem-cell-names = "speed_bin";
+        #cooling-cells = <2>;
+        operating-points-v2 = <&m3_gpu_opps>;
+        // Preserve this board's measured reservation, not generic MTP's address.
+        zap-shader { memory-region = <&pil_gpu_mem>; firmware-name = "qcom/rmx2072/a650_zap.mdt"; };
+        m3_gpu_opps: opp-table {
+            compatible = "operating-points-v2";
+            opp-587000000 { opp-hz = /bits/ 64 <587000000>; opp-level = <RPMH_REGULATOR_LEVEL_NOM>; opp-supported-hw = <0xb>; };
+            opp-525000000 { opp-hz = /bits/ 64 <525000000>; opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>; opp-supported-hw = <0xf>; };
+            opp-490000000 { opp-hz = /bits/ 64 <490000000>; opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>; opp-supported-hw = <0xf>; };
+            opp-441600000 { opp-hz = /bits/ 64 <441600000>; opp-level = <RPMH_REGULATOR_LEVEL_SVS_L0>; opp-supported-hw = <0xf>; };
+            opp-400000000 { opp-hz = /bits/ 64 <400000000>; opp-level = <RPMH_REGULATOR_LEVEL_SVS>; opp-supported-hw = <0xf>; };
+            opp-305000000 { opp-hz = /bits/ 64 <305000000>; opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>; opp-supported-hw = <0xf>; };
+        };
+    };
+};
+
+// Conservative bring-up trips below the native SM8250 CPU critical limits.
+// Per-core sensors and thermal policies will be qualified under measured load.
+&{/} {
+  thermal-zones {
+    m3-little-thermal {
+        polling-delay = <1000>; polling-delay-passive = <250>;
+        thermal-sensors = <&m3_tsens0 5>;
+        trips {
+            m3_little_hot: passive { temperature = <80000>; hysteresis = <2000>; type = "passive"; };
+            critical { temperature = <100000>; hysteresis = <1000>; type = "critical"; };
+        };
+        cooling-maps { map0 { trip = <&m3_little_hot>; cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>; }; };
+    };
+    m3-big-thermal {
+        polling-delay = <1000>; polling-delay-passive = <250>;
+        thermal-sensors = <&m3_tsens0 6>;
+        trips {
+            m3_big_hot: passive { temperature = <80000>; hysteresis = <2000>; type = "passive"; };
+            critical { temperature = <100000>; hysteresis = <1000>; type = "critical"; };
+        };
+        cooling-maps { map0 { trip = <&m3_big_hot>; cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>; }; };
+    };
+    m3-gpu-thermal {
+        polling-delay = <1000>; polling-delay-passive = <250>;
+        thermal-sensors = <&m3_tsens0 15>;
+        trips {
+            m3_gpu_hot: passive { temperature = <80000>; hysteresis = <2000>; type = "passive"; };
+            critical { temperature = <100000>; hysteresis = <1000>; type = "critical"; };
+        };
+        cooling-maps { map0 { trip = <&m3_gpu_hot>; cooling-device = <&m3_gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>; }; };
+    };
+  };
+};

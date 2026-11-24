@@ -45,6 +45,8 @@ def main():
     p.add_argument('--policy-proof', type=Path, help='Strict compilation record for the exact composed policy')
     p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
     p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
+    p.add_argument('--performance', action='store_true')
+    p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
     if a.battery_gauge and not a.input_devices:
         p.error('--battery-gauge requires --input-devices')
@@ -139,7 +141,8 @@ def main():
         '--board-source', a.board_source.resolve(), '--trial', a.trial, '--display',
         *(['--display-staged'] if a.display_staged else []),
         *(['--input-devices'] if a.input_devices else []),
-        *(['--battery-gauge'] if a.battery_gauge else []), *display_flags)
+        *(['--battery-gauge'] if a.battery_gauge else []),
+        *(['--performance'] if a.performance else []), '--panel-refresh', a.panel_refresh, *display_flags)
     if sha(current/'system.img') != system_sha or json.loads((current/'volumes/scratch.json').read_text()) != seeds:
         raise ValueError('GSI or scratch seed manifest changed during preparation')
     result = dict(trial=a.trial, graphics_source=provenance, vendor_payload_bytes=payload_size,

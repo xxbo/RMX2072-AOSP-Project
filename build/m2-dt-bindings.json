@@ -10,6 +10,8 @@
     "include/dt-bindings/clock/qcom,dsi-phy-28nm.h": "c381a37550a6bdbfd8e91abc832ac701113e1036769636513a6f79f2ae7882c7",
     "include/dt-bindings/power/qcom,rpmhpd.h": "842eca0509106aadeaebea51e0d01bccdd16d384d90d229a10f959fa990034bc",
     "include/dt-bindings/power/qcom-rpmpd.h": "fd0f3806f6e147c19b4e25a59214bbc0c24b65a13d58750119c985cba47c6d33",
-    "include/dt-bindings/gpio/gpio.h": "5423b3866877ead0920ec978b5b072f06087443033a72445b39faed8f288ddc1"
+    "include/dt-bindings/gpio/gpio.h": "5423b3866877ead0920ec978b5b072f06087443033a72445b39faed8f288ddc1",
+    "include/dt-bindings/clock/qcom,gpucc-sm8250.h": "e7fad11daa7fe0f0a3bc0be4f0d2ee51fbe7a16efa48157cbbba47315a35f153",
+    "include/dt-bindings/thermal/thermal.h": "d74d498871c3bf3d6aa985ad01c15dfa916614369dbcd832bdcb9d2d45b15e08"
   }
 }

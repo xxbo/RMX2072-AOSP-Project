@@ -34,6 +34,7 @@ def main():
     p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     p.add_argument('--input-devices', action='store_true', help='Require the GTX8 source digests and built-in driver')
     p.add_argument('--battery-gauge', action='store_true', help='Require the pinned BQ28Z610 driver without NVM updates')
+    p.add_argument('--performance', action='store_true', help='Require the native CPUfreq/TSENS performance fragment')
     a = p.parse_args()
     if a.display and a.kind != 'kernel':
         p.error('--display requires a kernel artifact')
@@ -41,6 +42,8 @@ def main():
         p.error('--input-devices requires --display')
     if a.battery_gauge and not a.input_devices:
         p.error('--battery-gauge requires --input-devices')
+    if a.performance and not a.display:
+        p.error('--performance requires --display')
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
     if work.is_relative_to(repo):
@@ -249,6 +252,8 @@ def main():
         wanted.add('display-source.sha256')
     if a.battery_gauge:
         wanted.add('battery-source.sha256')
+    if a.performance:
+        wanted.add('performance-fragment.sha256')
     with RemoteZip(url, session=session, timeout=120, support_suffix_range=False,
                    fetcher=BoundedRemoteFetcher) as z:
         files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
@@ -262,7 +267,12 @@ def main():
     if a.display:
         rows = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
                 for line in files['display-source.sha256'].decode().splitlines()}
-        if set(rows) != {'panel-samsung-rm19795.c', 'rm19795-commands.h'}:
+        expected_rows = {'panel-samsung-rm19795.c', 'rm19795-commands.h'}
+        if subprocess.run(['git', '-C', repo, 'cat-file', '-e', a.commit +
+                ':device/realme/bladerunner_48m/display/rm19795-commands-90.h'],
+                capture_output=True).returncode == 0:
+            expected_rows.add('rm19795-commands-90.h')
+        if set(rows) != expected_rows:
             raise ValueError('Incomplete panel source manifest')
         for name, expected in rows.items():
             data = subprocess.check_output(['git', '-C', repo, 'show',
@@ -305,6 +315,14 @@ def main():
                 or '# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set' not in config):
             raise ValueError('Gauge driver missing or nonvolatile writes enabled')
     output = work / 'current/kernel'
+    if a.performance:
+        fragment = subprocess.check_output(['git', '-C', repo, 'show', a.commit +
+            ':device/realme/bladerunner_48m/bootstrap/sm8250_performance.fragment'])
+        if digest(fragment) != files['performance-fragment.sha256'].decode().split()[0]:
+            raise ValueError('Performance fragment source mismatch')
+        for line in fragment.decode().splitlines():
+            if line.startswith('CONFIG_') and line not in config:
+                raise ValueError('Missing performance configuration: ' + line)
     provenance.update(installing=True)
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
     for name, data in files.items():
@@ -315,7 +333,7 @@ def main():
     old = output / 'pon-power-patch.sha256'
     if old.is_file():
         old.unlink()
-    provenance.update(installing=False, source_pon=True, display=a.display, input_devices=a.input_devices, battery_gauge=a.battery_gauge, source_digests_verified=True,
+    provenance.update(installing=False, source_pon=True, display=a.display, input_devices=a.input_devices, battery_gauge=a.battery_gauge, performance=a.performance, source_digests_verified=True,
                       dist_digests_verified=True, image_sha256=digest(raw),
                       selected_member_sha256={n: digest(d) for n, d in files.items()})
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')

@@ -22,6 +22,7 @@ def main():
     p.add_argument('--workspace', type=Path, required=True)
     p.add_argument('--record', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--acceleration', action='store_true', help='Include native GPU firmware labels')
     a = p.parse_args()
     w = a.workspace.resolve()
     repo = Path(__file__).resolve().parents[2]
@@ -59,6 +60,9 @@ def main():
     cil = files['/etc/selinux/vendor_sepolicy.cil']
     for kind in ('graphics','health','power','audio'):
         cil += (repo/'device/realme/bladerunner_48m/m3-vendor'/(kind+'.cil')).read_bytes().replace(b'\r\n',b'\n')
+    if a.acceleration:
+        from stage_m3_acceleration import acceleration_policy
+        cil = acceleration_policy(cil)
     payload['m3-vendor.cil'] = cil
     payload['plat_pub_versioned.cil'] = files['/etc/selinux/plat_pub_versioned.cil']
     local = w/'current/policy-check/f20-compile'

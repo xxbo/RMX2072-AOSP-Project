@@ -192,6 +192,9 @@ def compose(info, guard, graphics):
         files['/etc/selinux/vendor_file_contexts'] += (
             b'/vendor/overlay(/.*)? u:object_r:vendor_overlay_file:s0\n'
             b'/vendor/usr/idc(/.*)? u:object_r:vendor_idc_file:s0\n')
+    if b'ro.hardware.vulkan=freedreno\n' in files['/build.prop']:
+        from stage_m3_acceleration import add_acceleration
+        build = dict(build, acceleration=add_acceleration(files, graphics.parent))
     return files, build
 
 

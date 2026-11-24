@@ -265,13 +265,14 @@ int main(void)
 		if (call(fd, DRM_IOCTL_MODE_GETCONNECTOR, &conn, "connector-modes")) goto out;
 		if (conn.count_modes > LIMIT || conn.count_encoders > LIMIT) goto out;
 		for (uint32_t m = 0; m < conn.count_modes; m++) {
-			if (modes[m].hdisplay == 1080 && modes[m].vdisplay == 2400 && modes[m].vrefresh == 60) {
+			if (modes[m].hdisplay == 1080 && modes[m].vdisplay == 2400 &&
+			    (modes[m].vrefresh == 60 || modes[m].vrefresh == 90)) {
 				mode = modes[m]; connector = conn.connector_id; break;
 			}
 		}
 		if (connector) break;
 	}
-	if (!connector) { puts("DRMTEST blocked=no-1080x2400-60-DSI"); goto out; }
+	if (!connector) { puts("DRMTEST blocked=no-1080x2400-supported-DSI"); goto out; }
 	for (uint32_t i = 0; i < conn.count_encoders && !crtc; i++) {
 		struct drm_mode_get_encoder encoder = {.encoder_id = encoders[i]};
 		if (call(fd, DRM_IOCTL_MODE_GETENCODER, &encoder, "encoder")) goto out;
@@ -288,6 +289,7 @@ int main(void)
 	active = 1;
 	clock_snapshot("after-modeset");
 	printf("DRMTEST modeset=PASS crtc=%u connector=%u mode=%ux%u clock=%u\n", crtc, connector, mode.hdisplay, mode.vdisplay, mode.clock);
+	printf("DRMTEST requested_refresh_hz=%u\n", mode.vrefresh);
 	for (int i = 1; i <= 4; i++) {
 		sleep(1);
 		struct drm_mode_crtc_page_flip flip = {.crtc_id = crtc, .fb_id = buffers[i % 2].fb,
@@ -305,6 +307,10 @@ int main(void)
 		if (i > 1 && ((int32_t)(event.sequence - last_sequence) <= 0 || event_us <= last_event_us)) {
 			puts("DRMTEST failure=non-advancing-vblank"); goto out;
 		}
+		if (i > 1)
+			printf("DRMTEST measured_vblank_millihz=%llu\n",
+			       (unsigned long long)(event.sequence - last_sequence) * 1000000000ULL /
+			       (event_us - last_event_us));
 		last_sequence = event.sequence; last_event_us = event_us;
 	}
 	clock_snapshot("after-flips");

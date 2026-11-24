@@ -50,6 +50,7 @@ def main():
     parser.add_argument('--stock-phy-test', action='store_true')
     parser.add_argument('--first-frame-trace', action='store_true')
     parser.add_argument('--standard-pps-test', action='store_true')
+    parser.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
@@ -94,6 +95,14 @@ def main():
         if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
             raise ValueError('Display DT requires the matching deferred DSI clock-parent kernel patch')
     config = (kernel_dir / 'sm8250_bootstrap_dot_config').read_text().splitlines()
+    if dt.get('performance') and (not kernel.get('performance') or not provenance.get('gpu_firmware')):
+        raise ValueError('Native Adreno requires checked kernel options and early GPU firmware')
+    if a.panel_refresh == 90:
+        manifest = (kernel_dir/'display-source.sha256').read_text()
+        for name in ('panel-samsung-rm19795.c', 'rm19795-commands-90.h'):
+            data = (repo/'device/realme/bladerunner_48m/display'/name).read_bytes().replace(b'\r\n', b'\n')
+            if sha(data) not in manifest:
+                raise ValueError('90 Hz panel source does not match the kernel build')
     if dt.get('battery_gauge'):
         pinned = json.loads((repo / 'build/m3-battery-source.json').read_text())
         manifest = kernel_dir / 'battery-source.sha256'
@@ -206,6 +215,14 @@ def main():
     if a.standard_pps_test:
         cmdline += ' panel_samsung_rm19795.pps=1'
     cmdline += scratch_boot_argument(provenance)
+    if dt.get('performance'):
+        # Avoid per-trace console output during frame-time measurements. Keep
+        # the ring buffer, serial console and accepted physical display flags.
+        omit = {'earlycon', 'ignore_loglevel', 'tp_printk', 'tp_printk_stop_on_boot', 'initcall_debug'}
+        cmdline = ' '.join(x for x in cmdline.split() if x not in omit)
+        cmdline += ' firmware_class.path=/vendor/firmware'
+    if a.panel_refresh == 90:
+        cmdline += ' panel_samsung_rm19795.refresh_rate=90'
     if len(cmdline.encode()) >= 512:
         raise ValueError('Diagnostic command line exceeds the boot header field')
     header[64:576] = cmdline.encode().ljust(512, b'\0')
@@ -247,6 +264,8 @@ def main():
     record['stock_phy_test'] = a.stock_phy_test
     record['first_frame_trace'] = a.first_frame_trace
     record['standard_pps_test'] = a.standard_pps_test
+    record['panel_refresh'] = a.panel_refresh
+    record['performance'] = dt.get('performance', False)
     record['scratch_framework_start'] = bool(provenance.get('scratch_volumes'))
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))

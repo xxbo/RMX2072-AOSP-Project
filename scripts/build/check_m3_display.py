@@ -3,13 +3,18 @@ from inspect_boot_dt import fdt
 from check_m2_resources import check_m2_resources, normalized_node
 
 
-def check_m3_display(data, staged=False, input_devices=False, battery_gauge=False):
+def check_m3_display(data, staged=False, input_devices=False, battery_gauge=False, performance=False):
     preserved = check_m2_resources(data, display=True)
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
     for path, node in tree.items():
         if any(c in node.get('compatible', []) for c in ('qcom,kgsl-3d0', 'qcom,adreno', 'qcom,adreno-3xx', 'qcom,gpu-gmu')):
             if node.get('status') != ['disabled']:
-                raise ValueError('CPU-rendered display profile must not bind the unported GPU/GMU: '+path)
+                native_gpu = '/soc' + ('/display-fabric-lab' if staged else '') + '/gpu@3d00000'
+                if not performance or path != native_gpu:
+                    raise ValueError('Unexpected active GPU outside the selected profile: '+path)
+    if performance:
+        from check_m3_performance import check_m3_performance
+        check_m3_performance(data, staged)
     prefixes = {part: '/soc'+('/display-'+part+'-lab' if staged else '') for part in ('pins', 'fabric', 'core')}
     if staged:
         for path in prefixes.values():

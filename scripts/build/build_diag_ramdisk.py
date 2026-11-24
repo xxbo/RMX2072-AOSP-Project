@@ -50,6 +50,7 @@ def main():
     p.add_argument('--first-stage-source-build', type=pathlib.Path, help='M2 source build artifact directory with resolved manifest and digests')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
     p.add_argument('--display-smoke', type=pathlib.Path, help='Static physical DRM test; run before Android policy')
+    p.add_argument('--gpu-firmware', type=pathlib.Path, help='Verified peripheral firmware for the native Adreno candidate')
     p.add_argument('--solid-fill-test', action='store_true', help='Bounded native SSPP solid-fill isolation with independent parent cleanup')
     p.add_argument('--display-staged', action='store_true', help='Wait for USB log capture before binding the three display stages')
     p.add_argument('--first-frame-trace', action='store_true', help='Opt in to bounded native DSI/PLL/MDP tracing')
@@ -148,6 +149,16 @@ def main():
     add('dev/null', 0o20666, major=1, minor=3)
     add('dev/kmsg', 0o20600, major=1, minor=11)
     add('bin/busybox', 0o100755, binary)
+    gpu_firmware_proof = None
+    if a.gpu_firmware:
+        if not a.display_smoke:
+            p.error('--gpu-firmware requires the native display candidate')
+        from stage_m3_acceleration import gpu_firmware
+        firmware_files, gpu_firmware_proof = gpu_firmware(a.gpu_firmware)
+        for name in ['lib', 'lib/firmware', 'lib/firmware/qcom', 'lib/firmware/qcom/rmx2072']:
+            add(name, 0o40755)
+        for name, content in firmware_files.items():
+            add('lib/firmware/'+name, 0o100644, content)
     helper_hash = None
     carrier_hash = None
     if a.entry_carrier:
@@ -364,6 +375,7 @@ def main():
         report['scratch_volumes'] = scratch
     report['autonomous_ufs'] = a.autonomous_ufs
     report['display_staged'] = a.display_staged
+    report['gpu_firmware'] = gpu_firmware_proof
     report['first_frame_trace'] = a.first_frame_trace
     report['solid_fill_test'] = a.solid_fill_test
     if a.display_smoke:
