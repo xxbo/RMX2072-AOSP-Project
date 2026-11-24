@@ -59,6 +59,16 @@ See [VTS for HALs and kernels](https://source.android.com/docs/core/tests/vts), 
 
 ## Current priority: physical AOSP desktop
 
+November 24 resumed target: replace CPU software rendering with Adreno 650,
+enable native CPU/GPU frequency scaling and thermal feedback, and validate
+1080x2400 at 90 Hz with measured frame timing and physical interaction. The stock
+reference currently runs 90 Hz and exposes GPU frequencies 305–587 MHz; these
+are reference values, not target-system acceptance. Preserve the accepted DSC,
+touch, gauge, GSI and test volumes. Keep 60 Hz as a controlled fallback while
+qualifying source-derived 90 Hz commands. Do not repeat cold-start tests.
+The [hardware audit](docs/M3_HARDWARE_STATUS_2026-11-24.md) records the starting gaps.
+The November 23 pause below is historical and has been superseded by this request.
+
 On November 15 the user cancelled further unplug/power-key and watchdog fault-injection repeats. Keep the accepted source-boot GSI running and prioritize graphics userspace, display/panel and framework/launcher startup. Repeat recovery work only when a real failure requires it. The omitted M2 qualification checks remain explicitly unrun.
 
 November 23 priority: enable the board's Goodix Normandy touch and physical power/volume keys so the operator can navigate first-run setup and inspect Launcher directly. The measured firmware PID is 9885; the stock GT9886-family driver name does not identify the physical silicon. Volume keys have passed event/UI checks; trial 80 physical touch and scrolling pass. Power controls screen off/on; USB resume continuity remains open. Trial 81 real gauge-to-Health telemetry passes. Trial 82 physically passes the WLAN/offline setup pages and retains GSI ADB. Trial 83 supplies AppWidgetService and renders Launcher independently; the user pauses before physical confirmation. A power-key event precedes USB loss; reconnecting restores ADB in the same GSI boot. At the user's subsequent request, F.20 is restored and verified through boot completion, ADB and both original LP metadata slots. Work is paused; resume the recorded candidate only when requested. The GSI lock-skip callback regression remains separate and provisioning is not marked complete. [Setup results](docs/M3_SETUP_2026-11-23.md) Preserve the accepted display configuration, GSI and test volumes, and verify physical touch and Android UI response under enforcing. [Input work](docs/M3_INPUT_2026-11-23.md) · [Trial 77 baseline](docs/M3_APP_RENDERING_2026-11-22.md)

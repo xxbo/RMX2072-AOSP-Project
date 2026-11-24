@@ -72,7 +72,7 @@ if [[ "${RMX2072_DISPLAY:-0}" == 1 ]]; then
     sha256sum "$DSC_PATCH" > "$ARTIFACT_DIR/$DSC_PATCH_NAME.sha256"
   done
   PANEL_DIR="$ROOT_DIR/device/realme/bladerunner_48m/display"
-  cp "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" "$WORKSPACE/common/drivers/gpu/drm/panel/"
+  cp "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" "$PANEL_DIR/rm19795-commands-90.h" "$WORKSPACE/common/drivers/gpu/drm/panel/"
   cat >> "$WORKSPACE/common/drivers/gpu/drm/panel/Kconfig" <<'EOF'
 
 config DRM_PANEL_RMX2072_RM19795
@@ -81,7 +81,7 @@ config DRM_PANEL_RMX2072_RM19795
 	select DRM_DISPLAY_DSC_HELPER
 EOF
   printf '\nobj-$(CONFIG_DRM_PANEL_RMX2072_RM19795) += panel-samsung-rm19795.o\n' >> "$WORKSPACE/common/drivers/gpu/drm/panel/Makefile"
-  sha256sum "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" > "$ARTIFACT_DIR/display-source.sha256"
+  sha256sum "$PANEL_DIR/panel-samsung-rm19795.c" "$PANEL_DIR/rm19795-commands.h" "$PANEL_DIR/rm19795-commands-90.h" > "$ARTIFACT_DIR/display-source.sha256"
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_display.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
 fi
 if [[ "${RMX2072_INPUT:-0}" == 1 ]]; then
@@ -108,6 +108,11 @@ if [[ "${RMX2072_BATTERY:-0}" == 1 ]]; then
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_battery.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
   sha256sum "$WORKSPACE/common/drivers/power/supply/bq27xxx_battery.c" \
     "$WORKSPACE/common/drivers/power/supply/bq27xxx_battery_i2c.c" > "$ARTIFACT_DIR/battery-source.sha256"
+fi
+if [[ "${RMX2072_PERFORMANCE:-0}" == 1 ]]; then
+  test "${RMX2072_DISPLAY:-0}" == 1
+  cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_performance.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
+  sha256sum "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_performance.fragment" > "$ARTIFACT_DIR/performance-fragment.sha256"
 fi
 cd "$WORKSPACE"
 tools/bazel --output_user_root="${RUNNER_TEMP:-/tmp}/bazel-output-root" run \
@@ -146,6 +151,11 @@ if [[ "${RMX2072_BATTERY:-0}" == 1 ]]; then
     --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
     --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_battery.fragment"
   grep -Fx '# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set' "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config"
+fi
+if [[ "${RMX2072_PERFORMANCE:-0}" == 1 ]]; then
+  python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
+    --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
+    --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_performance.fragment"
 fi
 find "$ARTIFACT_DIR/dist" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DIR/SHA256SUMS"
 printf '%s\n' 'Platform compile candidate: Qualcomm hardware mutex and APSS watchdog required built-in. Physical kernel execution is not established by this build.' > "$ARTIFACT_DIR/STATUS.txt"

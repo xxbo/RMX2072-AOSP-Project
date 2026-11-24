@@ -30,6 +30,11 @@ static bool pps;
 module_param(pps, bool, 0400);
 MODULE_PARM_DESC(pps, "RM19795 standard PPS after vendor on-sequence isolation test");
 
+/* Fixed per boot until seamless switching is implemented and verified. */
+static unsigned int refresh_rate = 60;
+module_param(refresh_rate, uint, 0400);
+MODULE_PARM_DESC(refresh_rate, "RM19795 source timing: 60 (baseline) or 90 Hz");
+
 struct rm19795_cmd {
 	u8 type;
 	u8 wait_ms;
@@ -37,6 +42,7 @@ struct rm19795_cmd {
 	u8 data[128];
 };
 #include "rm19795-commands.h"
+#include "rm19795-commands-90.h"
 
 struct rm19795 {
 	struct drm_panel panel;
@@ -221,7 +227,10 @@ static int rm19795_prepare(struct drm_panel *panel)
 	msleep(10);
 	gpiod_set_value_cansleep(ctx->reset, 0);
 	usleep_range(5000, 6000);
-	ret = rm19795_send(ctx, rm19795_cmd_on, ARRAY_SIZE(rm19795_cmd_on), true);
+	if (refresh_rate == 90)
+		ret = rm19795_send(ctx, rm19795_cmd_on_90, ARRAY_SIZE(rm19795_cmd_on_90), true);
+	else
+		ret = rm19795_send(ctx, rm19795_cmd_on, ARRAY_SIZE(rm19795_cmd_on), true);
 	if (ret)
 		goto disable;
 	if (pps) {
@@ -246,7 +255,10 @@ static int rm19795_enable(struct drm_panel *panel)
 
 	if (!ctx->prepared)
 		return -EPERM;
-	ret = rm19795_send(ctx, rm19795_cmd_enable, ARRAY_SIZE(rm19795_cmd_enable), false);
+	if (refresh_rate == 90)
+		ret = rm19795_send(ctx, rm19795_cmd_enable_90, ARRAY_SIZE(rm19795_cmd_enable_90), false);
+	else
+		ret = rm19795_send(ctx, rm19795_cmd_enable, ARRAY_SIZE(rm19795_cmd_enable), false);
 
 	if (!ret) {
 		dev_info(&ctx->dsi->dev, "RM19795 display-on commands accepted\n");
@@ -263,7 +275,10 @@ static int rm19795_unprepare(struct drm_panel *panel)
 	if (!ctx->prepared)
 		return 0;
 
-	ret = rm19795_send(ctx, rm19795_cmd_off, ARRAY_SIZE(rm19795_cmd_off), false);
+	if (refresh_rate == 90)
+		ret = rm19795_send(ctx, rm19795_cmd_off_90, ARRAY_SIZE(rm19795_cmd_off_90), false);
+	else
+		ret = rm19795_send(ctx, rm19795_cmd_off, ARRAY_SIZE(rm19795_cmd_off), false);
 	ctx->prepared = false;
 	gpiod_set_value_cansleep(ctx->reset, 1);
 	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
@@ -282,7 +297,10 @@ static const struct drm_display_mode rm19795_mode = {
 
 static int rm19795_get_modes(struct drm_panel *panel, struct drm_connector *connector)
 {
-	return drm_connector_helper_get_modes_fixed(connector, &rm19795_mode);
+	struct drm_display_mode mode = rm19795_mode;
+
+	mode.clock = mode.htotal * mode.vtotal * refresh_rate / 1000;
+	return drm_connector_helper_get_modes_fixed(connector, &mode);
 }
 
 static const struct drm_panel_funcs rm19795_funcs = {
@@ -310,6 +328,9 @@ static int rm19795_probe(struct mipi_dsi_device *dsi)
 	};
 	struct rm19795 *ctx;
 	int ret;
+
+	if (refresh_rate != 60 && refresh_rate != 90)
+		return dev_err_probe(&dsi->dev, -EINVAL, "unsupported refresh rate\n");
 
 	ctx = devm_drm_panel_alloc(&dsi->dev, struct rm19795, panel, &rm19795_funcs,
 				   DRM_MODE_CONNECTOR_DSI);
@@ -352,7 +373,7 @@ static int rm19795_probe(struct mipi_dsi_device *dsi)
 		drm_panel_remove(&ctx->panel);
 		return dev_err_probe(&dsi->dev, ret, "DSI attach failed\n");
 	}
-	dev_info(&dsi->dev, "RMX2072 RM19795 source panel attached\n");
+	dev_info(&dsi->dev, "RMX2072 RM19795 source panel attached, %u Hz\n", refresh_rate);
 	return 0;
 }
 
