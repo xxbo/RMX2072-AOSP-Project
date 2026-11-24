@@ -3,7 +3,7 @@
 The user resumed implementation on November 24, targeting hardware rendering,
 90 Hz and CPU/GPU frequency control. Trial 83's working display, input, gauge,
 GSI and RAM test-volume seeds remain the baseline. Cold-start repeats are outside
-this task. The phone remains on F.20 during build preparation.
+this task. The phone was on F.20 during build preparation; the first trial result is recorded below.
 
 ## Source and build checks
 
@@ -64,3 +64,27 @@ HAL hints still need measurement and integration. The initial TSENS cooling
 trips are conservative bring-up values (80 C passive, 100 C critical), not a
 completed factory thermal-policy port. Sustained smooth operation remains
 unaccepted until hardware and frame-time evidence exists.
+
+
+## Trial 84: early provider lifetime failure
+
+[Device record](../build/device/m3-performance-84.json): candidate boot, DTBO and
+all 17 super chunks passed readback. The native display stage was not reached.
+Recovered pstore identifies a fatal `tsens_probe+0x17c/0x544` fault at 28 seconds,
+after the userspace display gate populated TSENS. The pinned ACK implements
+`init_common()` in `.init.text` (`drivers/thermal/qcom/tsens.c:889`), but the
+TSENS v2 ops table retains a pointer to it. Creating this built-in sensor only
+after `free_initmem()` is invalid. Pstore has ECC damage; the intact PC, fault
+and panic lines are retained as evidence and raw logs are hashed.
+
+The live stream separately shows Adreno SMMU clock lookup failing with `-110`
+before GPUCC is registered, plus boot-state clock warnings. Those warnings are
+not proof of the panic cause. The next DT moves EPSS, TSENS and GPUCC into normal
+boot population, and verifies that the applied overlay puts staged SMMU before
+GMU and Adreno. It keeps the exact kernel, firmware, signed vendor, GSI, 90 Hz
+selection and display electrical configuration. No GPU/90 Hz success is claimed.
+
+F.20 was restored automatically and passed ADB boot-completion and both LP-slot
+checks. The original recovery copy was reused; stock partitions were not read
+back again. Next target: reach native modeset, then prove an Adreno transaction
+and Android rendering before measuring interactive frame times.

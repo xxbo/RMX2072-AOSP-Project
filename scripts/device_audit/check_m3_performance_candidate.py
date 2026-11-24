@@ -72,8 +72,11 @@ def main():
             vendor['files']['/etc/selinux/vendor_sepolicy.cil'] == graphics['composed_vendor_cil_sha256'],
     )
     resources = check_m3_display((c/'source-dt/effective.dtb').read_bytes(), True, True, True, True)
+    resources['source_reference_panel_mode'] = resources.pop('panel_mode')
     report = dict(trial=a.trial, checks=checks, passed=all(checks.values()),
-        changed=changed, added=added, resources=resources, device_result='NOT RUN')
+        changed=changed, added=added, resources=resources,
+        selected_panel_refresh_hz=boot['panel_refresh'], measured_panel_refresh_hz=None,
+        device_result='NOT RUN')
     a.output.write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(dict(passed=report['passed'], failed=[k for k, v in checks.items() if not v])))
     if not report['passed']:

@@ -26,11 +26,10 @@
     m3_gpu_speed_bin: gpu-speed-bin@19b { reg = <0x19b 1>; bits = <5 3>; };
 };
 
-#ifdef RMX2072_M3_STAGED
-&{/soc/display-fabric-lab} {
-#else
+// TSENS init_common() is __init in the pinned ACK. Populate these providers
+// during normal boot, before free_initmem(); never create TSENS from the
+// userspace display gate. CPU frequency control also belongs to early boot.
 &{/soc} {
-#endif
     m3_cpufreq: cpufreq@18591000 {
         compatible = "qcom,sm8250-cpufreq-epss", "qcom,cpufreq-epss";
         reg = <0x18591000 0x1000>, <0x18592000 0x1000>, <0x18593000 0x1000>;
@@ -70,41 +69,16 @@
         #reset-cells = <1>;
         #power-domain-cells = <1>;
     };
-    m3_adreno_smmu: iommu@3da0000 {
-        compatible = "qcom,sm8250-smmu-500", "qcom,adreno-smmu", "qcom,smmu-500", "arm,mmu-500";
-        reg = <0x03da0000 0x10000>;
-        #iommu-cells = <2>;
-        #global-interrupts = <2>;
-        interrupt-parent = <&intc>;
-        interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
-                     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
-                     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
-                     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
-                     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>;
-        clocks = <&m3_gpucc GPU_CC_AHB_CLK>, <&diag_gcc GCC_GPU_MEMNOC_GFX_CLK>, <&diag_gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
-        clock-names = "ahb", "bus", "iface";
-        power-domains = <&m3_gpucc GPU_CX_GDSC>;
-        dma-coherent;
-    };
-    m3_gmu: gmu@3d6a000 {
-        compatible = "qcom,adreno-gmu-650.2", "qcom,adreno-gmu";
-        reg = <0x03d6a000 0x30000>, <0x03de0000 0x10000>, <0x0b290000 0x10000>, <0x0b490000 0x10000>;
-        reg-names = "gmu", "rscc", "gmu_pdc", "gmu_pdc_seq";
-        interrupt-parent = <&intc>;
-        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-        interrupt-names = "hfi", "gmu";
-        clocks = <&m3_gpucc GPU_CC_AHB_CLK>, <&m3_gpucc GPU_CC_CX_GMU_CLK>, <&m3_gpucc GPU_CC_CXO_CLK>,
-                 <&diag_gcc GCC_DDRSS_GPU_AXI_CLK>, <&diag_gcc GCC_GPU_MEMNOC_GFX_CLK>;
-        clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
-        power-domains = <&m3_gpucc GPU_CX_GDSC>, <&m3_gpucc GPU_GX_GDSC>;
-        power-domain-names = "cx", "gx";
-        iommus = <&m3_adreno_smmu 5 0x400>;
-        operating-points-v2 = <&m3_gmu_opps>;
-        m3_gmu_opps: opp-table {
-            compatible = "operating-points-v2";
-            opp-200000000 { opp-hz = /bits/ 64 <200000000>; opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>; };
-        };
-    };
+};
+
+#ifdef RMX2072_M3_STAGED
+&{/soc/display-fabric-lab} {
+#else
+&{/soc} {
+#endif
+    // libfdt overlay insertion prepends children. Declare consumers first so
+    // the effective tree creates SMMU before GMU and Adreno. GPUCC is already
+    // available from normal boot; late clk_get must not hit deferred timeout.
     m3_gpu: gpu@3d00000 {
         compatible = "qcom,adreno-650.2", "qcom,adreno";
         reg = <0x03d00000 0x40000>;
@@ -128,6 +102,41 @@
             opp-400000000 { opp-hz = /bits/ 64 <400000000>; opp-level = <RPMH_REGULATOR_LEVEL_SVS>; opp-supported-hw = <0xf>; };
             opp-305000000 { opp-hz = /bits/ 64 <305000000>; opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>; opp-supported-hw = <0xf>; };
         };
+    };
+    m3_gmu: gmu@3d6a000 {
+        compatible = "qcom,adreno-gmu-650.2", "qcom,adreno-gmu";
+        reg = <0x03d6a000 0x30000>, <0x03de0000 0x10000>, <0x0b290000 0x10000>, <0x0b490000 0x10000>;
+        reg-names = "gmu", "rscc", "gmu_pdc", "gmu_pdc_seq";
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-names = "hfi", "gmu";
+        clocks = <&m3_gpucc GPU_CC_AHB_CLK>, <&m3_gpucc GPU_CC_CX_GMU_CLK>, <&m3_gpucc GPU_CC_CXO_CLK>,
+                 <&diag_gcc GCC_DDRSS_GPU_AXI_CLK>, <&diag_gcc GCC_GPU_MEMNOC_GFX_CLK>;
+        clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
+        power-domains = <&m3_gpucc GPU_CX_GDSC>, <&m3_gpucc GPU_GX_GDSC>;
+        power-domain-names = "cx", "gx";
+        iommus = <&m3_adreno_smmu 5 0x400>;
+        operating-points-v2 = <&m3_gmu_opps>;
+        m3_gmu_opps: opp-table {
+            compatible = "operating-points-v2";
+            opp-200000000 { opp-hz = /bits/ 64 <200000000>; opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>; };
+        };
+    };
+    m3_adreno_smmu: iommu@3da0000 {
+        compatible = "qcom,sm8250-smmu-500", "qcom,adreno-smmu", "qcom,smmu-500", "arm,mmu-500";
+        reg = <0x03da0000 0x10000>;
+        #iommu-cells = <2>;
+        #global-interrupts = <2>;
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
+                     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>;
+        clocks = <&m3_gpucc GPU_CC_AHB_CLK>, <&diag_gcc GCC_GPU_MEMNOC_GFX_CLK>, <&diag_gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
+        clock-names = "ahb", "bus", "iface";
+        power-domains = <&m3_gpucc GPU_CX_GDSC>;
+        dma-coherent;
     };
 };
 

@@ -6,7 +6,7 @@ from check_m2_resources import normalized_node
 def check_m3_performance(data, staged):
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
     fabric = '/soc' + ('/display-fabric-lab' if staged else '')
-    cpu = fabric + '/cpufreq@18591000'
+    cpu = '/soc/cpufreq@18591000'
     gpu = fabric + '/gpu@3d00000'
     gmu = fabric + '/gmu@3d6a000'
     smmu = fabric + '/iommu@3da0000'
@@ -23,11 +23,21 @@ def check_m3_performance(data, staged):
         gpu: {'compatible': ['qcom,adreno-650.2', 'qcom,adreno'],
               'reg': [0x3d00000, 0x40000], 'interrupts': [0, 300, 4]},
         gmu: {'reg': [0x3d6a000, 0x30000, 0x3de0000, 0x10000, 0xb290000, 0x10000, 0xb490000, 0x10000]},
-        fabric + '/thermal-sensor@c263000': {'reg': [0xc263000, 0x1ff, 0xc222000, 0x1ff]},
+        '/soc/thermal-sensor@c263000': {'reg': [0xc263000, 0x1ff, 0xc222000, 0x1ff]},
+        '/soc/thermal-sensor@c265000': {'reg': [0xc265000, 0x1ff, 0xc223000, 0x1ff]},
+        '/soc/clock-controller@3d90000': {'compatible': ['qcom,sm8250-gpucc']},
         gpu + '/zap-shader': {'firmware-name': ['qcom/rmx2072/a650_zap.mdt']},
     }.items():
         if any(tree.get(path, {}).get(k) != v for k, v in expected.items()):
             raise ValueError('Performance resource mismatch: ' + path)
+    if staged:
+        paths = list(tree)
+        if not paths.index(smmu) < paths.index(gmu) < paths.index(gpu):
+            raise ValueError('Staged GPU consumers precede their SMMU provider')
+        if any(p.startswith(fabric + '/') and any(c in n.get('compatible', [])
+                for c in ('qcom,tsens-v2', 'qcom,cpufreq-epss', 'qcom,sm8250-gpucc'))
+               for p, n in tree.items()):
+            raise ValueError('Early performance provider was placed behind the userspace gate')
     for i in range(8):
         path = '/cpus/cpu@' + (format(i << 8, 'x') if i else '0')
         node = tree[path]
@@ -59,5 +69,6 @@ def check_m3_performance(data, staged):
     return dict(cpu_domains=[list(range(4)), [4, 5, 6], [7]],
                 cpu_frequency_source='hardware LUT; native EPSS driver',
                 gpu_max_hz=max(opps), thermal_control='TSENS with cooling maps',
+                provider_lifetime='TSENS, EPSS and GPUCC populated during normal boot',
                 firmware='retained F.20 GPU firmware, separately inventoried',
                 status='compiled-resource-check-only; device execution NOT RUN')
