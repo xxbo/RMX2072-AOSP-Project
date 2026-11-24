@@ -6,13 +6,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define CHECK(expr) do { VkResult r_ = (expr); if (r_ != VK_SUCCESS) { \
     fprintf(stderr, "VKTEST fail=%s result=%d\n", #expr, r_); exit(1); } } while (0)
 
-int main(void)
+static double monotonic_seconds(void)
+{
+    struct timespec now;
+    if (clock_gettime(CLOCK_MONOTONIC, &now)) exit(1);
+    return now.tv_sec + now.tv_nsec / 1e9;
+}
+
+int main(int argc, char **argv)
 {
     setvbuf(stdout, NULL, _IONBF, 0);
+    unsigned load_seconds = 0;
+    if (argc != 1) {
+        if (argc != 3 || strcmp(argv[1], "--load-seconds") ||
+            strlen(argv[2]) != 1 || argv[2][0] < '1' || argv[2][0] > '8') {
+            fputs("Usage: vulkan-gpu-smoke [--load-seconds 1..8]\n", stderr);
+            return 2;
+        }
+        load_seconds = argv[2][0] - '0';
+    }
     VkApplicationInfo app = {.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pApplicationName="RMX2072 GPU transfer audit", .apiVersion=VK_API_VERSION_1_1};
     VkInstanceCreateInfo ic = {.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
@@ -54,7 +71,7 @@ int main(void)
     CHECK(vkCreateDevice(physical, &dc, NULL, &device));
     VkQueue queue;
     vkGetDeviceQueue(device, qi, 0, &queue);
-    const VkDeviceSize bytes=1024*1024;
+    const VkDeviceSize bytes=(load_seconds ? 16 : 1)*1024*1024;
     VkBufferCreateInfo bc = {.sType=VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
         .size=bytes, .usage=VK_BUFFER_USAGE_TRANSFER_DST_BIT, .sharingMode=VK_SHARING_MODE_EXCLUSIVE};
     VkBuffer buffer;
@@ -90,7 +107,15 @@ int main(void)
     VkCommandBufferBeginInfo begin={.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
     CHECK(vkBeginCommandBuffer(cmd, &begin));
     const uint32_t pattern=0xa6500090;
-    vkCmdFillBuffer(cmd, buffer, 0, bytes, pattern);
+    const unsigned fills = load_seconds ? 32 : 1;
+    VkMemoryBarrier transfer={.sType=VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+        .srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT, .dstAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT};
+    for (unsigned n=0; n<fills; n++) {
+        vkCmdFillBuffer(cmd, buffer, 0, bytes, pattern);
+        if (n+1 < fills)
+            vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 1, &transfer, 0, NULL, 0, NULL);
+    }
     VkMemoryBarrier barrier={.sType=VK_STRUCTURE_TYPE_MEMORY_BARRIER,
         .srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT, .dstAccessMask=VK_ACCESS_HOST_READ_BIT};
     vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_HOST_BIT,
@@ -101,12 +126,19 @@ int main(void)
     CHECK(vkCreateFence(device, &fc, NULL, &fence));
     VkSubmitInfo submit={.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO,
         .commandBufferCount=1, .pCommandBuffers=&cmd};
-    CHECK(vkQueueSubmit(queue, 1, &submit, fence));
-    CHECK(vkWaitForFences(device, 1, &fence, VK_TRUE, 5000000000ULL));
+    const double started = monotonic_seconds();
+    unsigned submissions = 0;
+    do {
+        CHECK(vkResetFences(device, 1, &fence));
+        CHECK(vkQueueSubmit(queue, 1, &submit, fence));
+        CHECK(vkWaitForFences(device, 1, &fence, VK_TRUE, 5000000000ULL));
+        submissions++;
+    } while (load_seconds && monotonic_seconds()-started < load_seconds);
     CHECK(vkInvalidateMappedMemoryRanges(device, 1, &range));
     for (size_t i=0; i<bytes/4; i++)
         if (mapped[i] != pattern) { printf("VKTEST fail=readback word=%zu value=%#x\n", i, mapped[i]); return 1; }
-    puts("VKTEST PASS hardware-submit-fence-readback bytes=1048576; frame-rate NOT TESTED");
+    printf("VKTEST PASS hardware-submit-fence-readback bytes=%llu submissions=%u fills_per_submit=%u elapsed=%.3f; frame-rate NOT TESTED\n",
+        (unsigned long long)bytes, submissions, fills, monotonic_seconds()-started);
     vkDestroyFence(device, fence, NULL);
     vkDestroyCommandPool(device, pool, NULL);
     vkUnmapMemory(device, memory);
