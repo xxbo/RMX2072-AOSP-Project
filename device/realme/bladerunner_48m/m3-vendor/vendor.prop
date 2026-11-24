@@ -4,6 +4,10 @@ ro.hardware.egl=angle
 ro.hardware.vulkan=freedreno
 ro.hardware.gralloc=minigbm
 ro.hwui.renderer=skiagl
+# Android 17's deferred swapchain binding reaches an unimplemented Android
+# branch in the pinned Turnip tu_image_bind (trial 89). Keep GPU rendering and
+# use ordinary upfront window-buffer allocation until that path is implemented.
+debug.angle.feature_overrides_disabled=swapchainDeferredMemoryAllocation
 # Keep the accepted linear scanout layout while qualifying hardware rendering.
 vendor.minigbm.debug=nocompression
 

@@ -1,5 +1,8 @@
 <resources>
-    <!-- SwiftShader's ColorFade JIT violates system_server's execmem neverallow.
-         Use the supported non-ColorFade screen transition for this CPU profile. -->
+    <!-- Preserve the accepted non-ColorFade transition during GPU bring-up. -->
     <bool name="config_displayColorFadeDisabled">true</bool>
+    <!-- The generic 60 Hz render ceiling divides the 90 Hz-only panel mode
+         to 45 Hz. Allow 90 Hz; the actual DRM mode still bounds refresh. -->
+    <integer name="config_defaultRefreshRate">90</integer>
+    <integer name="config_defaultPeakRefreshRate">90</integer>
 </resources>

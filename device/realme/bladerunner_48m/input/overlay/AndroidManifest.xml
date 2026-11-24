@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.rmx2072.overlay.cpuinput" android:versionCode="1" android:versionName="1">
+    package="org.rmx2072.overlay.cpuinput" android:versionCode="2" android:versionName="2">
     <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="37" />
-    <application android:hasCode="false" android:label="RMX2072 CPU display configuration" />
+    <application android:hasCode="false" android:label="RMX2072 display configuration" />
     <overlay android:targetPackage="android" android:isStatic="true" android:priority="1" />
 </manifest>

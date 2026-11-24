@@ -9,6 +9,14 @@ from pathlib import Path
 import shlex
 import subprocess
 import time
+import re
+
+
+def latency_layer_name(line):
+    # Android 17 --list wraps the real name/id in RequestedLayerState. Passing
+    # the wrapper back to --latency returns only the period, with no samples.
+    match = re.fullmatch(r'RequestedLayerState\{(.+?#\d+)(?:\s+.*)?\}', line)
+    return match[1] if match else line
 
 
 def main():
@@ -70,7 +78,7 @@ done'''
         result = shell(command)
         (out / (name+'.json')).write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
         if name == 'layer-list':
-            layers = [n for n in result['stdout'].splitlines() if any(package in n
+            layers = [latency_layer_name(n) for n in result['stdout'].splitlines() if any(package in n
                       for package in ('com.android.launcher3', 'com.android.settings'))]
             for index, layer in enumerate(layers[:8]):
                 latency = shell('timeout 12 dumpsys SurfaceFlinger --latency '+shlex.quote(layer))

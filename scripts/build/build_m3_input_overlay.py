@@ -51,7 +51,7 @@ def main():
                   aapt2_sha256=digest(tools / 'aapt2.exe'),
                   apksigner_sha256=digest(tools / 'lib/apksigner.jar'),
                   signing='Local engineering certificate; no factory/platform signing key',
-                  scope='Only config_displayColorFadeDisabled=true; no code or policy changes',
+                  scope='Retain non-ColorFade transitions; default and peak refresh 90 Hz bounded by the DRM mode; no code or policy changes',
                   handset_result='NOT RUN')
     (out / 'provenance.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))

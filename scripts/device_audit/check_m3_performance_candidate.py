@@ -66,7 +66,7 @@ def main():
         turnip_verified=turnip['source_verified'] and turnip['archive_digest_verified'] and
             all(vendor['files'][n] == h for n, h in turnip['files'].items()),
         firmware_verified=all(vendor['files']['/firmware/'+n] == fp['files'][n]['sha256'] for n in firmware),
-        vendor_change_scope=set(changed) == {'/build.prop', '/etc/selinux/vendor_file_contexts', '/etc/selinux/vendor_sepolicy.cil'},
+        vendor_change_scope=set(changed) == {'/build.prop', '/etc/selinux/vendor_file_contexts', '/etc/selinux/vendor_sepolicy.cil', '/overlay/RmxCpuInputOverlay.apk'},
         vendor_addition_scope=set(added) == expected_additions,
         no_removed_files=set(ov['files']) <= set(vendor['files']),
         strict_policy=graphics['policy_proof_reused_for_identical_statements'] and

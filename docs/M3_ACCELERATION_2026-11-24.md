@@ -207,3 +207,48 @@ probe now prints the physical-device count, including enumeration failure.
 
 Current goal: obtain a real Adreno submission and stable hardware-rendered
 SurfaceFlinger, then measure interactive frames and load/idle clock transitions.
+
+
+## Trial 89: Adreno submission, window-path diagnosis and visible desktop
+
+[Device record](../build/device/m3-performance-89.json): the DRM labels fixed
+enumeration. The enforced GSI reports one Turnip Adreno 650 (`0x06050002`), and
+the transfer test submitted to the GPU, waited for its fence, and verified all
+1 MiB on the CPU. SurfaceFlinger reports ANGLE GLES over Turnip Vulkan 1.3.346.
+
+The first physical result was **white**, while internal screenshots were black.
+Launcher, SystemUI and boot animation crashed in RenderThread at driver offset
+`0x9fbc98`, reading address `0x70`. The caller is Android's AcquireNextImageKHR,
+which invokes BindImageMemory2 with null memory plus VkNativeBufferANDROID for
+a deferred swapchain. The pinned [Turnip image binding implementation](https://android.googlesource.com/platform/external/mesa3d/+/875160ed32cc5bc32777fa04870a0a57ed38c987/src/freedreno/vulkan/tu_image.cc)
+has an explicit unimplemented Android null-memory branch. The null dereference
+observed in the binary matches its subsequent access to `mem->iova`.
+
+Setting `debug.angle.feature_overrides_disabled=swapchainDeferredMemoryAllocation`
+uses ANGLE's supported upfront-allocation path and stopped that crash on the
+same boot. A full Launcher wallpaper and icons appeared; the user confirmed
+normal physical output and clearly more responsive scrolling. This is a narrow
+window-allocation compatibility setting, not a complete implementation of
+native Vulkan deferred binding. Hardware rendering remains active.
+
+The generic GSI's 60 Hz render ceiling selected 45 Hz on the physical 90 Hz mode.
+Temporary `peak_refresh_rate=90` and `min_refresh_rate=90` selected 90 Hz and an
+11111111 ns scheduling period. The most recent Launcher layer had 63 valid
+present timestamps; 60/62 positive intervals were below 13 ms, with median
+11.074 ms. This small recent window does not prove sustained 90 FPS. Cumulative
+Launcher stats include startup/first-use work: 1105 frames, 89 janky (8.05%),
+p50 11 ms, p90 30 ms and p99 77 ms.
+
+A bounded 90-second frequency trace observed multiple CPU OPPs on all three
+clusters (policy 0: 691200-1804800, policy 4: 710400-2419200, policy 7:
+844800-2841600 kHz). Trace controls were restored. GPU sysfs reads were denied
+and no generic devfreq transition was recorded; dynamic GPU clocks remain to
+be established. No fixed maximum-frequency setting was applied.
+
+The next vendor candidate persists the tested ANGLE compatibility property and
+uses a source RRO for default/peak refresh 90 Hz, retaining ColorFade/input
+behavior. Read-only GPU devfreq labeling enables direct observation without
+grants to change clocks/governors. Kernel, GSI and test-volume seeds stay fixed.
+The Android 17 layer-list parser also now removes RequestedLayerState wrappers
+before requesting per-layer presentation history; the unmodified wrapper gave
+an empty sample list and was not valid frame evidence.

@@ -15,3 +15,6 @@
 (allow gpu_sphal_domain rmx_display_sysfs (dir (search)))
 (genfscon sysfs "/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller" (u object_r sysfs_gpu ((s0) (s0))))
 (genfscon sysfs "/devices/platform/soc/ae00000.display-subsystem/ae01000.display-controller" (u object_r sysfs_gpu ((s0) (s0))))
+; Read native GPU governor/counter data using existing GPU-client permissions.
+; No write grant is added for governor, min_freq, max_freq or polling_interval.
+(genfscon sysfs "/devices/platform/soc/soc:display-fabric-lab/3d00000.gpu/devfreq" (u object_r sysfs_gpu ((s0) (s0))))
