@@ -5,6 +5,9 @@ OUT="$ROOT/artifacts/m3-turnip"
 SRC="${RUNNER_TEMP:?}/rmx2072-turnip"
 export PATH="$RUNNER_TEMP/mesa-tools/bin:$PATH"
 mkdir -p "$OUT" "$SRC"
+mkdir -p "$OUT/empty-pkgconfig"
+export PKG_CONFIG_LIBDIR="$OUT/empty-pkgconfig"
+export PKG_CONFIG_PATH=
 read -r PIN NDK_VERSION API < <(python3 - "$ROOT/build/m3-turnip-source.json" <<'PY'
 import json,sys
 d=json.load(open(sys.argv[1]));print(d['commit'], d['ndk'], d['api'])
@@ -31,7 +34,7 @@ cpu = 'armv8-a'
 endian = 'little'
 [properties]
 needs_exe_wrapper = true
-pkg_config_libdir = []
+pkg_config_libdir = ['$OUT/empty-pkgconfig']
 EOF
 # Static libdrm avoids introducing a second libdrm.so ABI beside the accepted
 # AOSP minigbm/composer library. Its archive is checksum-pinned by Mesa's wrap.
@@ -41,7 +44,7 @@ meson setup "$SRC/out" "$SRC" --cross-file "$OUT/android-aarch64.ini" \
   -Degl=disabled -Dglx=disabled -Dopengl=false -Dgles1=disabled -Dgles2=disabled \
   -Dgallium-drivers= -Dvulkan-drivers=freedreno -Dfreedreno-kmds=msm \
   -Dllvm=disabled -Dzstd=disabled -Dbuild-tests=false -Dprefer_static=true \
-  -Dallow-fallback-for=libdrm -Dlibdrm:default_library=static \
+  -Dwrap_mode=nofallback -Dallow-fallback-for=libdrm -Dlibdrm:default_library=static \
   2>&1 | tee "$OUT/configure.log"
 meson compile -C "$SRC/out" -j 2 2>&1 | tee "$OUT/build.log"
 mkdir -p "$OUT/vendor/lib64/hw"
