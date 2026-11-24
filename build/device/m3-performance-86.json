@@ -1,0 +1,80 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-86",
+  "boot_id": "21d5a3f2-cde9-45e5-914c-f549ce55bfc0",
+  "result": "NATIVE_PATTERN_PASS_ANDROID_HANDOFF_STALLED",
+  "kernel": "f928e65271d38ba749ec4fb126a09109034969b30b364350339691a5f0dedf52",
+  "boot": "404dd50f877d9630fb0007c852c02d91ed4e1255e594c8a1d812fd4b5a9c57ec",
+  "candidate_super": "c287e39684093c811c42070013a7ba9bd251266767c656d2f5e5778d34a83d1f",
+  "selected_panel_hz": 90,
+  "measured_panel_hz": null,
+  "physical_pattern": "User confirmed display normal; timing measurement log was not recovered.",
+  "native_initialization": "SQE minimum-version rejection and PHY 660 MHz guard rejection no longer reproduced; GMU firmware v2.1.8 loaded; native KMS pattern reached.",
+  "early_cpu_thermal": {
+    "/sys/devices/system/cpu/cpufreq/policy0": {
+      "scaling_driver": "qcom-cpufreq-hw",
+      "scaling_governor": "schedutil",
+      "scaling_cur_freq": "1344000",
+      "scaling_min_freq": "300000",
+      "scaling_max_freq": "1804800"
+    },
+    "/sys/devices/system/cpu/cpufreq/policy4": {
+      "scaling_driver": "qcom-cpufreq-hw",
+      "scaling_governor": "schedutil",
+      "scaling_cur_freq": "2419200",
+      "scaling_min_freq": "710400",
+      "scaling_max_freq": "2419200"
+    },
+    "/sys/devices/system/cpu/cpufreq/policy7": {
+      "scaling_driver": "qcom-cpufreq-hw",
+      "scaling_governor": "schedutil",
+      "scaling_cur_freq": "2841600",
+      "scaling_min_freq": "844800",
+      "scaling_max_freq": "2841600"
+    },
+    "/sys/class/thermal/thermal_zone0": {
+      "type": "m3-little-thermal",
+      "temp": "39100"
+    },
+    "/sys/class/thermal/thermal_zone1": {
+      "type": "m3-big-thermal",
+      "temp": "38400"
+    },
+    "/sys/class/thermal/thermal_zone2": {
+      "type": "m3-gpu-thermal",
+      "temp": "36400"
+    },
+    "/sys/class/thermal/thermal_zone3": {
+      "type": "bq28z610-0",
+      "temp": "32300"
+    }
+  },
+  "cpu_dvfs": "Native policies registered with schedutil; startup snapshot only, load/idle transitions not yet measured.",
+  "gpu_submission": "NOT RUN",
+  "android_adb": false,
+  "handoff": "Last streamed message is mdss_runtime_suspend after native pattern teardown. Exact blocking call not yet known.",
+  "restored": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "0ec71e9c-7c5c-4189-8107-2bacc2996482",
+    "super_sha256": null,
+    "boot_sha256": null,
+    "dtbo_sha256": null,
+    "lp_slots": [
+      0,
+      1
+    ],
+    "stock_full_partition_readback": false,
+    "stock_write_acknowledged": true,
+    "expected_image_sha256": {
+      "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+    },
+    "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata"
+  },
+  "raw_sha256": {
+    "acm.log": "c9c99f1fa209267e3af3b066219b1f6cb08c2025deb5a6f0ee1f275542ef2181",
+    "host-events.jsonl": "4c7a889b9e37e84d64ca7c03ed79d77e5dab702c423e9b73f6b3a49eba8b661f",
+    "readbacks.jsonl": "bd9d05483f2b704c7cd04ba4400b43ee82158f1d8c14e57480759ae85adf3622"
+  }
+}

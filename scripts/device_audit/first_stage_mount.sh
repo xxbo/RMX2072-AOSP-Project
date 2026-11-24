@@ -67,6 +67,9 @@ for part in /sys/class/block/sd*; do
     rm "$base/ro-node"
 done
 if [ -x /bin/drm-panel-smoke ]; then
+    m3_phase() {
+        printf '<6>M3HANDOFF phase=%s uptime=%s\n' "$1" "$(cut -d' ' -f1 /proc/uptime)" > /dev/kmsg
+    }
     # Only the explicitly selected display trial can modeset. A missing or
     # failing display must not prevent the existing GSI/ADB diagnostics.
     echo "M3DISPLAY boot_id=$(cat /proc/sys/kernel/random/boot_id)" > /run/m3-display.txt
@@ -109,7 +112,9 @@ if [ -x /bin/drm-panel-smoke ]; then
     sha256sum /m3-pattern.rgb >> /run/m3-display.txt
     probe_timeout=50
     [ ! -f /m3-solid-fill-test ] || probe_timeout=75
+    m3_phase native-probe-enter
     timeout "$probe_timeout" /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
+    m3_phase native-probe-returned
     if [ -f /m3-solid-fill-test ]; then
         # Independent cleanup even when timeout killed the native probe.
         # This changes a driver input only; the next atomic update restores
@@ -122,10 +127,14 @@ if [ -x /bin/drm-panel-smoke ]; then
         echo 'M3SOLID parent_cleanup=ok parameter=0' >> /run/m3-display.txt
     fi
     if [ -f /m3-display-staged ]; then
+        m3_phase clock-trace-end-enter
         /bin/busybox sh /bin/display-clock-trace end >> /run/m3-display.txt 2>&1 ||
             echo 'M3CLKTRACE capture_failed' >> /run/m3-display.txt
+        m3_phase clock-trace-end-returned
     fi
+    m3_phase snapshot-enter
     /bin/busybox sh /bin/display-snapshot >> /run/m3-display.txt 2>&1 || true
+    m3_phase snapshot-returned
 fi
 # Check that the trace sees the correct exec before permitting the handoff.
 if [ "${2:-}" = install ]; then

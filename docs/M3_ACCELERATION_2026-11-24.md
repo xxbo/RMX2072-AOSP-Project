@@ -122,3 +122,29 @@ Trial 85 did not reach Android ADB or a valid physical pattern. F.20 was restore
 and passed boot completion plus both LP-slot checks, without another full stock
 readback. The goal remains native GPU submission, 90 Hz physical scanout and
 measured interactive frame times on the same GSI/test volumes.
+
+
+## Trial 86: normal native pattern, blocked Android handoff
+
+[Device record](../build/device/m3-performance-86.json): the user confirmed the
+native pattern is normal with the 90 Hz mode selected. The SQE version rejection
+and 660 MHz PHY guard failure did not recur. GMU firmware v2.1.8 loaded. The
+physical refresh measurement remains unavailable because the pre-init log was
+not recovered; this is not a 90 FPS acceptance result.
+
+Pre-modeset serial evidence reports CPU policies 0/4/7 using native
+`qcom-cpufreq-hw` and `schedutil`, with maxima 1804800/2419200/2841600 kHz.
+TSENS reported 39.1/38.4/36.4 C and the battery 32.3 C. These are startup
+snapshots, not measured load/idle frequency transitions.
+
+The native pattern ended, but Android ADB never appeared. The last streamed
+message is `mdss_runtime_suspend` at 67.05 s; this alone does not identify the
+blocking call. The existing recovery timer returned the phone to EDL and F.20
+was restored and verified by boot completion/LP metadata. The original recovery
+copy was reused without a full stock readback.
+
+The next trial retains this kernel, firmware, vendor, GSI, test-volume seeds and
+display configuration. It adds handoff stage markers and a same-boot read-only
+serial snapshot of logs and task stacks if ADB has not arrived after 90 seconds.
+The goal is to locate and fix the handoff block, then prove hardware submission
+and interactive frame timing.

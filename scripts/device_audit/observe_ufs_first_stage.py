@@ -21,6 +21,30 @@ def mark(output, event, boot_id):
                                   utc=datetime.now(timezone.utc).isoformat()))+'\n')
 
 
+def handoff_diagnostic_command(boot_id):
+    """Bounded, read-only evidence from a stalled pre-Android display handoff."""
+    boot = str(UUID(str(boot_id)))
+    return (f'\nif [ "$(cat /proc/sys/kernel/random/boot_id)" = "{boot}" ] '
+            '&& [ -r /run/m3-display.txt ]; then\n'
+            "printf '\\nM3HANDOFF_DIAG begin\\n'\n"
+            "grep -E 'DRMTEST|DRMPATTERN|DRMSNAPSHOT' /run/m3-display.txt | tail -40\n"
+            'tail -120 /run/m3-display.txt\n'
+            'tail -60 /run/gsi17-run.log\n'
+            'ps\n'
+            'count=0\n'
+            'for task in /proc/[0-9]*; do\n'
+            ' [ "$count" -lt 20 ] || break\n'
+            ' name=$(cat "$task/comm" 2>/dev/null)\n'
+            ' state=$(sed -n "s/^State:[[:space:]]*//p" "$task/status" 2>/dev/null)\n'
+            ' case "$state:$name" in D*|*:drm-panel-smoke|*:cat|*:sh|*:timeout)\n'
+            '  echo "M3TASK path=$task name=$name state=$state"\n'
+            '  cat "$task/wchan" "$task/stack" 2>/dev/null\n'
+            '  count=$((count+1));;\n'
+            ' esac\n'
+            'done\n'
+            "printf '\\nM3HANDOFF_DIAG end\\n'\nfi\n").encode()
+
+
 def watch_adb(output, stop, retain=False, autonomous=False):
     """Record transport states, including offline and unauthorized, throughout the trial."""
     start = time.monotonic()
@@ -176,11 +200,20 @@ def observe(trial, output, timeout, staged_display=False):
                       b"> /run/gsi17-run.log 2>&1; x=$?; tail -80 /run/gsi17-run.log; "
                       b"echo UFS_STAGE_RC=$x; /bin/reboot-edl edl\n")
         deadline = time.monotonic() + identity['timer_seconds'] + 25
+        diagnostic_at = time.monotonic() + 90 if staged_display else None
         with (output/'acm.log').open('xb') as capture:
             tail = b''
             while time.monotonic() < deadline:
                 if (output/'gsi-accepted.json').exists(): break
                 try:
+                    if diagnostic_at is not None and time.monotonic() >= diagnostic_at:
+                        # The staged gate leaves this shell free while the
+                        # handoff runs separately. Keep its existing stream;
+                        # never compete for the COM port or renew a timer here.
+                        diagnostic_at = None
+                        console.write(handoff_diagnostic_command(original))
+                        console.flush()
+                        mark(output, 'display_handoff_diagnostic_requested', original)
                     data = console.read(16384)
                 except SerialException:
                     break
