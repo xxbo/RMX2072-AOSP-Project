@@ -95,8 +95,6 @@ def main():
         if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
             raise ValueError('Display DT requires the matching deferred DSI clock-parent kernel patch')
     config = (kernel_dir / 'sm8250_bootstrap_dot_config').read_text().splitlines()
-    if dt.get('performance') and (not kernel.get('performance') or not provenance.get('gpu_firmware')):
-        raise ValueError('Native Adreno requires checked kernel options and early GPU firmware')
     if a.panel_refresh == 90:
         manifest = (kernel_dir/'display-source.sha256').read_text()
         for name in ('panel-samsung-rm19795.c', 'rm19795-commands-90.h'):
@@ -172,6 +170,8 @@ def main():
         raise ValueError('Upstream PON/PS_HOLD drivers are not built in')
     rd = (current / 'ramdisk/ramdisk.cpio.gz').read_bytes()
     provenance = json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())
+    if dt.get('performance') and (not kernel.get('performance') or not provenance.get('gpu_firmware')):
+        raise ValueError('Native Adreno requires checked kernel options and early GPU firmware')
     if bool(provenance.get('first_frame_trace')) != a.first_frame_trace:
         raise ValueError('First-frame trace request and ramdisk marker must agree')
     if bool(provenance.get('solid_fill_test')) != a.solid_fill_test:
