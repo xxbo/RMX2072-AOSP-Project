@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-24",
+  "timezone": "Asia/Shanghai",
+  "scope": "Read-only stock hardware identification plus saved GSI trial 83 and source audit",
+  "source_commit": "626ae2e46becf110e58361c3921019c7daa88cfc",
+  "stock_current": {
+    "firmware": "RMX2072_11_F.20",
+    "kernel": "4.19.157-perf+",
+    "boot_id": "a91a450d-f8e8-4ffb-a9b4-80446d8fc65f",
+    "adb_available": true,
+    "boot_completed": true,
+    "wifi": {
+      "netdev": "wlan0",
+      "pci_endpoint": "0000:01:00.0",
+      "pci_id": "17cb:1101",
+      "driver": "cnss_pci",
+      "identification": "QCA6390, matched against Linux v6.18 ath11k PCI table and OEM board 20607 DTS"
+    },
+    "audio": {
+      "card": "kona-mtp-snd-card",
+      "speaker_amplifier_bindings": ["4-0034:tfa98xx", "4-0035:tfa98xx"],
+      "main_codec_configuration": "Not established by this audit"
+    },
+    "haptics": {
+      "i2c_device": "7-005a",
+      "controller": "a8c000.i2c",
+      "name_and_driver": "aw8697_haptic",
+      "led_device": "/sys/devices/platform/soc/a8c000.i2c/i2c-7/7-005a/leds/vibrator"
+    },
+    "cpufreq": {
+      "driver": "qcom-cpufreq-hw",
+      "governor": "schedutil",
+      "policy_min_max_kHz": {"0": [300000, 1804800], "4": [710400, 2419200], "7": [844800, 2841600]},
+      "scope": "Stock policy limits, not GSI measured frequencies"
+    }
+  },
+  "gsi_reference": {
+    "trial": 83,
+    "boot_id": "5b10cfc2-a792-47f1-ad7b-a5d1c875288e",
+    "kernel_sha256": "846380b48466996a2df81d690352166d753ddd542d8c4f5195076932c666ac34",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 16.0.0) (0x0000C0DE)), SwiftShader driver-5.0.0)",
+    "display_mode_hz": 60,
+    "rendered_fps_and_input_latency": "Not measured in this audit",
+    "power_hal": "No implemented performance modes, boosts or hint sessions",
+    "disabled_kernel_options": [
+      "CONFIG_ARM_QCOM_CPUFREQ_HW", "CONFIG_ARM_QCOM_CPUFREQ_NVMEM", "CONFIG_QCOM_TSENS",
+      "CONFIG_CFG80211", "CONFIG_WLAN_VENDOR_ATH", "CONFIG_QRTR",
+      "CONFIG_SND_SOC_QCOM", "CONFIG_QCOM_Q6V5_ADSP"
+    ],
+    "wifi": "Framework service started; physical scan, association and traffic not accepted",
+    "audio_log": "RMX Audio getAudioPorts: 0, PCM backend unavailable",
+    "audio_source": "Empty ports/routes/microphones; no real PCM backend",
+    "vibration": "No project AW8697 port or device-specific vibrator HAL implementation found; physical function not accepted"
+  },
+  "actions_not_performed": [
+    "New GSI boot or firmware write", "Stock partition backup/readback",
+    "Wi-Fi scan or state change", "Audio playback/capture", "Vibration pulse", "Cold-start test"
+  ],
+  "local_evidence": {
+    "work/current/kernel/sm8250_bootstrap_dot_config": "f221f05393fcd8df5fbe1fffa752218bceb3cbaa2df4ec62870825b29b159eac",
+    "work/records/ufs-host-g3-gsi17-firststage-ufs-83/live/framework-1-logcat.txt": "a48d9c79b3ac775da82ff8e95d7327043b967d657a7cdf3df6688c7edfe2a262",
+    "work/checks/status-2026-11-24/identity.txt": "817a63216ce84d4f122df2136fb7f89d00eacce8c77524fa6eb026ca174d32db",
+    "work/checks/status-2026-11-24/wifi.txt": "a57ec8ec45bac28c8474f3365ada2bf7cd45d5b53d61d764ad2a0cd951ca0de0",
+    "work/checks/status-2026-11-24/i2c-haptics.txt": "60d99e3b5f02182f41eebed3d5afdb36d43b5112cb1407840dfe97b1310d10db",
+    "work/checks/status-2026-11-24/audio.txt": "c8953986b77631c3be4be24e2683b2d4147a6cbf37c75575e1dd1da829f9ff0b",
+    "work/checks/status-2026-11-24/cpufreq.txt": "18f849268128fcd83b56ac1f010932cd838cb55638d0132a1a2248e96acd4315",
+    "work/checks/status-2026-11-24/hal.txt": "719f5e95acd46f703a36628ecd27f65faea99d9d027bb1523a4d437ebebf8cd0"
+  },
+  "oem_reference_commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+  "recommended_next_target": "Adreno rendering and CPU/thermal foundations; preserve accepted display settings and measure frame/input timing"
+}
