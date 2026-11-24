@@ -6,3 +6,12 @@
 (allow kernel rmx_gpu_firmware_file (dir (search open read getattr)))
 (allow kernel rmx_gpu_firmware_file (file (open read getattr map)))
 (allow kernel rmx_gpu_firmware_file (system (firmware_load)))
+
+; Trial 88: libdrm enumeration first reads /dev/dri, then follows the DRM
+; device to its platform uevent. The nodes already had gpu_device, but their
+; directory inherited device and the sysfs identity inherited the display-only
+; type. Reuse Android's GPU client read rules for this exact DRM subtree.
+; Parent traversal grants no register, mode, clock or other sysfs writes.
+(allow gpu_sphal_domain rmx_display_sysfs (dir (search)))
+(genfscon sysfs "/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller" (u object_r sysfs_gpu ((s0) (s0))))
+(genfscon sysfs "/devices/platform/soc/ae00000.display-subsystem/ae01000.display-controller" (u object_r sysfs_gpu ((s0) (s0))))

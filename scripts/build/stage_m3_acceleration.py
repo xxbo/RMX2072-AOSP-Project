@@ -54,6 +54,7 @@ def add_acceleration(files, current):
     for name, data in firmware.items():
         files['/firmware/'+name] = data
     files['/etc/selinux/vendor_file_contexts'] += (
+        b'/dev/dri u:object_r:gpu_device:s0\n'
         b'/vendor/lib64/hw/vulkan\\.freedreno\\.so u:object_r:same_process_hal_file:s0\n'
         b'/vendor/firmware(/.*)? u:object_r:rmx_gpu_firmware_file:s0\n')
     files['/etc/selinux/vendor_sepolicy.cil'] = acceleration_policy(files['/etc/selinux/vendor_sepolicy.cil'])

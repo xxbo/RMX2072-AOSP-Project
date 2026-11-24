@@ -21,7 +21,11 @@ int main(void)
     CHECK(vkCreateInstance(&ic, NULL, &instance));
     uint32_t count = 0;
     CHECK(vkEnumeratePhysicalDevices(instance, &count, NULL));
-    if (!count || count > 16) return 2;
+    printf("VKTEST physical_device_count=%u\n", count);
+    if (!count || count > 16) {
+        puts("VKTEST fail=no-usable-physical-device-enumeration");
+        return 2;
+    }
     VkPhysicalDevice devices[16], physical = VK_NULL_HANDLE;
     CHECK(vkEnumeratePhysicalDevices(instance, &count, devices));
     for (uint32_t i=0; i<count; i++) {

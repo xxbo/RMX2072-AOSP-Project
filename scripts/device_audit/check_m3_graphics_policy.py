@@ -19,6 +19,7 @@ def main():
     p.add_argument('--workspace', type=Path, required=True)
     p.add_argument('--record', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--performance', action='store_true', help='Compile the exact hardware acceleration policy')
     a = p.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work, record = a.workspace.resolve(), a.record.resolve()
@@ -43,6 +44,9 @@ def main():
     cil += (repo/'device/realme/bladerunner_48m/m3-vendor/health.cil').read_bytes().replace(b'\r\n', b'\n')
     cil += (repo/'device/realme/bladerunner_48m/m3-vendor/power.cil').read_bytes().replace(b'\r\n', b'\n')
     cil += (repo/'device/realme/bladerunner_48m/m3-vendor/audio.cil').read_bytes().replace(b'\r\n', b'\n')
+    if a.performance:
+        from stage_m3_acceleration import acceleration_policy
+        cil = acceleration_policy(cil)
     local = work/'current/policy-check'
     candidate = local/'candidate-vendor.cil'
     candidate.write_bytes(cil)

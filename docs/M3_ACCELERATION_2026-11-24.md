@@ -180,3 +180,30 @@ parameters or the fixed image pattern.
 F.20 was restored with boot completion and both LP metadata slots verified.
 No full original-partition readback was repeated. Next target: execute Android
 init, establish real Adreno submissions, then collect interactive frame times.
+
+
+## Trial 88: native 90 Hz scanout and Android handoff, GPU enumeration blocked
+
+[Device record](../build/device/m3-performance-88.json): restoring the two trace
+boot parameters fixed the handoff regression on the handset. Android first-stage
+mounted verified system/vendor, second-stage init ran, and enforcing GSI ADB was
+retained in the same boot. The 60 continuous native KMS intervals took 670250 us,
+about 89.518 scanout completions per second. This does not measure GPU rendering
+or Android UI FPS. The physical pattern was confirmed normal in trial 86; no
+additional physical observation was requested in trial 88.
+
+SurfaceFlinger aborts during ANGLE Vulkan initialization (-3); the transfer probe
+returns before choosing a physical device, so GPU submission remains unproved.
+The log records SurfaceFlinger denied read on `/dev/dri`, whose directory label
+is `device` although both nodes use `gpu_device`. DRM platform identity also
+inherits a display-only sysfs label and shell identity reads are denied.
+
+The next candidate labels the directory `gpu_device`, labels only the DRM
+controller identity subtree `sysfs_gpu`, and allows GPU clients to traverse its
+display parent. It retains enforcing and uses Android's existing GPU client read
+rules; no broad device access or sysfs write permission is added. Strict policy
+compilation passed on the retained GSI with neverallow checks enabled. The GPU
+probe now prints the physical-device count, including enumeration failure.
+
+Current goal: obtain a real Adreno submission and stable hardware-rendered
+SurfaceFlinger, then measure interactive frames and load/idle clock transitions.
