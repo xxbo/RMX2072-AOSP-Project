@@ -216,9 +216,12 @@ def main():
         cmdline += ' panel_samsung_rm19795.pps=1'
     cmdline += scratch_boot_argument(provenance)
     if dt.get('performance'):
-        # Avoid per-trace console output during frame-time measurements. Keep
-        # the ring buffer, serial console and accepted physical display flags.
-        omit = {'earlycon', 'ignore_loglevel', 'tp_printk', 'tp_printk_stop_on_boot', 'initcall_debug'}
+        # ufs-init-trace needs tp_printk to allocate tracepoint_print_iter at
+        # boot. Without it, the sysctl silently stays zero and the handoff
+        # exits before Android init. Keep stop_on_boot to suppress early noise;
+        # omit optional console verbosity/DRM debug to fit the 512-byte field.
+        # The independent ACM /dev/kmsg capture retains all ring messages.
+        omit = {'earlycon', 'ignore_loglevel', 'initcall_debug', 'drm.debug=0x2', 'loglevel=8'}
         cmdline = ' '.join(x for x in cmdline.split() if x not in omit)
         cmdline += ' firmware_class.path=/vendor/firmware'
     if a.panel_refresh == 90:

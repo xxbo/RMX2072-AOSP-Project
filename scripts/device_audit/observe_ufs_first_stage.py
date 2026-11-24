@@ -30,6 +30,9 @@ def handoff_diagnostic_command(boot_id):
             "grep -E 'DRMTEST|DRMPATTERN|DRMSNAPSHOT' /run/m3-display.txt | tail -40\n"
             'tail -120 /run/m3-display.txt\n'
             'tail -60 /run/gsi17-run.log\n'
+            'tail -30 /run/m1-autoboot.events\n'
+            'ls -l /sys/class/watchdog\n'
+            'readlink -f /sys/class/watchdog/watchdog0/device\n'
             'ps\n'
             'count=0\n'
             'for task in /proc/[0-9]*; do\n'

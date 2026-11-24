@@ -148,3 +148,35 @@ display configuration. It adds handoff stage markers and a same-boot read-only
 serial snapshot of logs and task stacks if ADB has not arrived after 90 seconds.
 The goal is to locate and fix the handoff block, then prove hardware submission
 and interactive frame timing.
+
+
+## Trial 87: the handoff script exits before Android
+
+[Device record](../build/device/m3-performance-87.json): same kernel, firmware,
+vendor, GSI, volumes and panel settings as trial 86. Native probe returned at
+67.07 s, clock capture at 67.13 s and device snapshot at 67.68 s. The serial
+diagnostic recovered `DRMTEST exit=0`; neither the probe nor the handoff script
+was still running. No blocked D-state task was reported.
+
+The performance packer had removed `tp_printk` and `tp_printk_stop_on_boot` to
+reduce console noise and fit the header. This violates `ufs-init-trace.sh`'s
+existing precondition. In the pinned ACK's `kernel/trace/trace.c`, the trace
+iterator is allocated at boot only when requested; without it the sysctl
+handler silently resets `tracepoint_printk` to zero. The shell's readback check
+then exits under `set -e`, before starting the Android init witness. The next
+candidate restores both parameters and removes optional console/DRM verbosity,
+retaining the accepted display flags within 501 command-line bytes. Preflight
+now checks for both required trace parameters, and a future failed readback
+prints an explicit error. On-device confirmation is still pending.
+
+The recovered four flips were spaced one second apart. Their sequence-derived
+rates were about 7/s; these are not physical panel-rate or Android FPS results.
+The updated probe uses 61 continuous flips and reports both presentation and
+vblank-counter rates over 60 intervals. Its parser still rejects stale events
+and now rejects incomplete continuous captures. ARM64 compilation and the five
+KMS evidence tests passed. This measurement change does not alter electrical
+parameters or the fixed image pattern.
+
+F.20 was restored with boot completion and both LP metadata slots verified.
+No full original-partition readback was repeated. Next target: execute Android
+init, establish real Adreno submissions, then collect interactive frame times.

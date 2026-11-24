@@ -29,6 +29,12 @@ class KmsEvidenceTest(unittest.TestCase):
     def test_missing_device_is_not_a_pass(self):
         self.assertFalse(evaluate_kms('DRMTEST blocked=no-card0 errno=2\n')['probe_reported_pass'])
 
+    def test_continuous_capture_requires_all_events(self):
+        rows = [f'DRMTEST flip={n} sequence={n+10} time=40.{n*11111:06d}' for n in range(1, 62)]
+        suffix = '\nDRMTEST continuous_intervals=60 elapsed_us=666660 presents_millihz=90000 vblank_counter_millihz=90000\nDRMTEST kms_events=PASS\n'
+        self.assertEqual(evaluate_kms('\n'.join(rows)+suffix)['drm_kms_result'], 'PASS_EVENTS_ONLY')
+        self.assertFalse(evaluate_kms('\n'.join(rows[:-1])+suffix)['advancing_vblank_events'])
+
 
 if __name__ == '__main__':
     unittest.main()

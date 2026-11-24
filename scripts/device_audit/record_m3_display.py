@@ -12,7 +12,8 @@ from gsi_adb_accept import inspect, shell
 def evaluate_kms(snapshot):
     flips = [tuple(map(int, row)) for row in re.findall(
         r'^DRMTEST flip=(\d+) sequence=(\d+) time=(\d+)\.(\d{6})$', snapshot, re.M)]
-    advancing = len(flips) == 4 and [row[0] for row in flips] == [1, 2, 3, 4]
+    expected = 61 if 'DRMTEST continuous_intervals=60 ' in snapshot else 4
+    advancing = len(flips) == expected and [row[0] for row in flips] == list(range(1, expected+1))
     for before, after in zip(flips, flips[1:]):
         advancing &= (0 < (after[1]-before[1]) % (1 << 32) < (1 << 31)
                       and after[2:] > before[2:])

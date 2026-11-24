@@ -57,6 +57,7 @@ def main():
         same_test_volumes=read(c/'volumes/scratch.json') == old['scratch'] == rd['scratch_volumes'],
         performance_enabled=kernel.get('performance') and boot.get('performance') and usb.get('performance'),
         panel_90=boot.get('panel_refresh') == 90,
+        init_trace_boot_support={'tp_printk', 'tp_printk_stop_on_boot'} <= set(boot['cmdline'].split()),
         kernel_verified=kernel['source_digests_verified'] and kernel['dist_digests_verified'] and not kernel['installing'],
         same_kernel=sha(c/'kernel/Image') == kernel['image_sha256'] == boot['kernel_sha256'],
         boot_digest=sha(c/'boot/boot-diag.img') == boot['boot_sha256'],

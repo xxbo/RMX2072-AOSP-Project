@@ -290,8 +290,12 @@ int main(void)
 	clock_snapshot("after-modeset");
 	printf("DRMTEST modeset=PASS crtc=%u connector=%u mode=%ux%u clock=%u\n", crtc, connector, mode.hdisplay, mode.vdisplay, mode.clock);
 	printf("DRMTEST requested_refresh_hz=%u\n", mode.vrefresh);
-	for (int i = 1; i <= 4; i++) {
-		sleep(1);
+	/* Keep flips continuous. One-second idle gaps let DRM disable its vblank
+	 * reference, so counter delta / wall time is not a panel-rate measurement.
+	 * These are scanout completions, not GPU rendering or Android frame times. */
+	uint64_t first_event_us = 0;
+	uint32_t first_sequence = 0;
+	for (int i = 1; i <= 61; i++) {
 		struct drm_mode_crtc_page_flip flip = {.crtc_id = crtc, .fb_id = buffers[i % 2].fb,
 			.flags = DRM_MODE_PAGE_FLIP_EVENT, .user_data = (uint64_t)i};
 		if (call(fd, DRM_IOCTL_MODE_PAGE_FLIP, &flip, "page-flip")) goto out;
@@ -307,12 +311,14 @@ int main(void)
 		if (i > 1 && ((int32_t)(event.sequence - last_sequence) <= 0 || event_us <= last_event_us)) {
 			puts("DRMTEST failure=non-advancing-vblank"); goto out;
 		}
-		if (i > 1)
-			printf("DRMTEST measured_vblank_millihz=%llu\n",
-			       (unsigned long long)(event.sequence - last_sequence) * 1000000000ULL /
-			       (event_us - last_event_us));
+		if (i == 1) { first_event_us = event_us; first_sequence = event.sequence; }
 		last_sequence = event.sequence; last_event_us = event_us;
 	}
+	printf("DRMTEST continuous_intervals=60 elapsed_us=%llu presents_millihz=%llu vblank_counter_millihz=%llu\n",
+	       (unsigned long long)(last_event_us - first_event_us),
+	       60000000000ULL / (last_event_us - first_event_us),
+	       (unsigned long long)(last_sequence - first_sequence) * 1000000000ULL /
+	       (last_event_us - first_event_us));
 	clock_snapshot("after-flips");
 	if (solid_test) {
 		static const struct { const char *name, *snapshot; uint32_t value; } colors[] = {
