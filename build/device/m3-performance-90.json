@@ -1,0 +1,73 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-90",
+  "source_commit": "5d6680312758461ac92510f569eb01350061ecd7",
+  "boot_id": "6eeccb22-1d31-4c13-bea4-1991de6a6cb7",
+  "result": "AUTOMATIC_HARDWARE_RENDERING_AND_90HZ_DEFAULTS_VERIFIED_THEN_PAUSED",
+  "kernel_sha256": "f928e65271d38ba749ec4fb126a09109034969b30b364350339691a5f0dedf52",
+  "boot_sha256": "10fec0c8db3eb1aa7cdd3e7d9781a64070aadcc9c5cb2670957a5f304d47692a",
+  "super_sha256": "9532c72bae2c40dfc26d9947d88aa414c84c3f2a524ecbbf09c1007e9813bd7b",
+  "enforcing": true,
+  "boot_completed": true,
+  "adb_retained": true,
+  "same_boot_observed_seconds": 195.235,
+  "guardian": "retained",
+  "automatic_configuration": {
+    "angle_disabled_feature": "swapchainDeferredMemoryAllocation",
+    "rro_default_refresh_hz": 90,
+    "rro_default_peak_refresh_hz": 90,
+    "settings_peak_refresh_rate": null,
+    "settings_min_refresh_rate": null,
+    "surfaceflinger_render_hz": 90,
+    "physical_mode": "1080x2400@90",
+    "renderer": "ANGLE GLES 3.2 over Turnip Vulkan 1.3.346; Adreno 650"
+  },
+  "visible_evidence": {
+    "internal_screenshot": "Complete Hi there welcome page",
+    "physical_observation_this_trial": null,
+    "prior_trial_89_user_feedback": "Normal image, clearly more responsive scrolling"
+  },
+  "gpu_dvfs": {
+    "governor": "simple_ondemand",
+    "polling_ms": 50,
+    "available_hz": [
+      305000000,
+      400000000,
+      441600000,
+      490000000,
+      525000000,
+      587000000
+    ],
+    "startup_snapshot_total_transitions": 119,
+    "startup_305_to_587_mhz": 58,
+    "startup_587_to_305_mhz": 55,
+    "interpretation": "Kernel devfreq accounting shows upward/downward transitions during normal startup; not a controlled load/idle benchmark or independent hardware-clock measurement.",
+    "controlled_load_test": "NOT_RUN_USER_PAUSED"
+  },
+  "pause": {
+    "reason": "User ended work for today",
+    "phone_left_in": "Android 17 GSI",
+    "f20_restored": false,
+    "new_interaction_or_load_tests_after_pause": false,
+    "retention_scope": "current-boot-only",
+    "host_start_required_after_every_reboot": true,
+    "restart_note": "Existing display diagnostic gate still needs host release after reboot; this run only retained the current boot."
+  },
+  "remaining": [
+    "Bounded GPU load and idle return verification",
+    "Steady interactive frame-time and thermal evaluation",
+    "Further CPU/GPU scheduling and bandwidth tuning only when measurements justify it"
+  ],
+  "limitations": [
+    "Default 90 Hz and short presentation samples do not establish sustained 90 FPS.",
+    "ANGLE uses upfront allocation; native deferred Android buffer binding remains unimplemented in pinned Turnip."
+  ],
+  "evidence_sha256": {
+    "inputs.json": "8fd52d06a02cff54e6f70938cd489478020ca9b911769893a5b7a8f60768d4bb",
+    "readbacks.jsonl": "aa383673059e0dd8aebf4ac294f099cddf3c7590176573768e2fde1358e697ed",
+    "gsi-retained.json": "cf92d6fee5aa88aa8fe63e21a467d3975487e76609ade8155ee5fbe48c74d736",
+    "live/gsi-stable.json": "d96df104b103a30884ed551018f39d78532c1e2a7dabd14d3f037d5f2df24d6f",
+    "live/pause-state.txt": "3c33e297a4a88331f62f31698aea9912592d32b63c1cdd591d38c3ee883ddd15",
+    "live/pause-screen.png": "0d6589413b9f781861477f187f61331edae1dc745cc6a73f513931dc95aacc7a",
+    "live/pause-final-identity.txt": "63cb6c26df098d60c476a65c55b676cf6d7e4bd001380c519e1f82be03571af7"
+  }
+}

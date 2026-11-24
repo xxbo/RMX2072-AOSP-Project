@@ -252,3 +252,35 @@ grants to change clocks/governors. Kernel, GSI and test-volume seeds stay fixed.
 The Android 17 layer-list parser also now removes RequestedLayerState wrappers
 before requesting per-layer presentation history; the unmodified wrapper gave
 an empty sample list and was not valid frame evidence.
+
+
+## Trial 90: automatic hardware rendering and 90 Hz defaults; paused
+
+[Device record](../build/device/m3-performance-90.json): the persistent ANGLE
+compatibility property and source RRO took effect on the handset without host
+property or refresh-setting changes. Both refresh settings remained null, while
+the framework resources returned 90 and SurfaceFlinger selected render/physical
+90 Hz. ANGLE still uses Turnip on Adreno 650. The internal screenshot shows the
+complete welcome page; no new physical observation was requested. Trial 89's
+user-confirmed normal and more responsive desktop remains the manual result.
+
+The exact GPU devfreq subtree is now readable under enforcing. Its governor is
+`simple_ondemand`, polling interval 50 ms, and the six OPPs span 305-587 MHz.
+During normal startup, its accounting recorded 119 transitions, including 58
+from 305 to 587 MHz and 55 back to 305 MHz. This establishes recorded dynamic
+OPP changes, not independent hardware-clock verification or a controlled
+load/idle benchmark. The new bounded load-probe option was compiled but was
+not run because the user ended work for today.
+
+The in-progress flash was safely completed: all candidate readback chunks
+matched, Android boot completed, and enforcing ADB stayed on the same boot for
+195.235 seconds. The guardian is retained and the handset is left in GSI.
+Collection processes exited; no new interaction/load test followed the pause.
+The existing host display gate remains: after a restart, host release is still
+required, and current-boot retention does not validate unattended restart.
+
+Current target on resumption: verify bounded GPU load and idle return, then
+measure sustained interactive frame times and remaining stalls. CPU DVFS has
+real transition evidence from trial 89. Default 90 Hz and its short frame
+window do not yet establish sustained 90 FPS. Preserve the accepted display,
+GSI and test-volume seeds. No cold-start requalification is scheduled.
