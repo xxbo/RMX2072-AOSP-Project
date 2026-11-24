@@ -42,7 +42,7 @@ meson setup "$SRC/out" "$SRC" --cross-file "$OUT/android-aarch64.ini" \
   -Degl=disabled -Dglx=disabled -Dopengl=false -Dgles1=disabled -Dgles2=disabled \
   -Dgallium-drivers= -Dvulkan-drivers=freedreno -Dfreedreno-kmds=msm \
   -Dllvm=disabled -Dzstd=disabled -Dbuild-tests=false -Dprefer_static=true \
-  --allow-fallback-for=libdrm -Dlibdrm:default_library=static \
+  -Dallow-fallback-for=libdrm -Dlibdrm:default_library=static \
   2>&1 | tee "$OUT/configure.log"
 meson compile -C "$SRC/out" -j 2 2>&1 | tee "$OUT/build.log"
 mkdir -p "$OUT/vendor/lib64/hw"
