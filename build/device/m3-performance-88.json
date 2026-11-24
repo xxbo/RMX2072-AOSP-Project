@@ -17,9 +17,9 @@
   "android_first_stage_mount": "Verified system and project vendor mounted; second-stage init and authenticated ADB active.",
   "vulkan_probe": {
     "returncode": 2,
-    "physical_device_count": null,
+    "physical_device_count": 0,
     "hardware_submission": false,
-    "limit": "Original harness returned 2 for zero or greater-than-16 devices without printing the count."
+    "limit": "Updated source probe confirmed zero devices in the same boot; no GPU command submitted."
   },
   "surfaceflinger": "Repeating EGL initialization failure; ANGLE Vulkan result -3.",
   "observed_blockers": [
@@ -42,6 +42,7 @@
     "live\\graphics-early.txt": "a725473a18a6942e2a0518d23e9785eb70706e1cadaa8b09b77ba460adf4fb4e",
     "live\\gpu-early-logcat.txt": "92eaf3c37d8ae70f6f6f3fa51e8664586db6a4a62ee524dcc9eaa551ae9b700c",
     "live\\gsi-stable.json": "9ba4605b10aedef7eedaae8e1d94b6dbb879f2d66de16abc85112c6951ca0d47",
-    "live\\vulkan-gpu-smoke.json": "205d27ba142492743c06ef83bb84d816c2e39f9a89166175a7fa9a9170172666"
+    "live\\vulkan-gpu-smoke.json": "205d27ba142492743c06ef83bb84d816c2e39f9a89166175a7fa9a9170172666",
+    "live/vulkan-count.txt": "e764185273b02f07faa64a4f6ea54f928cb8c1b15409472a8cfbbf476f1bab5a"
   }
 }
