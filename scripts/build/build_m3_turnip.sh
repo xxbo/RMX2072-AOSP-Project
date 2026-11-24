@@ -31,7 +31,6 @@ cpu = 'armv8-a'
 endian = 'little'
 [properties]
 needs_exe_wrapper = true
-[built-in options]
 pkg_config_libdir = []
 EOF
 # Static libdrm avoids introducing a second libdrm.so ABI beside the accepted
