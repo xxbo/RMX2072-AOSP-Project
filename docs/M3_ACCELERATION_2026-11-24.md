@@ -33,8 +33,10 @@ timestamps. A mode declaration alone is not a 90 FPS result.
 The new userspace route is retained source ANGLE EGL/GLES over source Turnip
 Vulkan and native MSM DRM. Mesa is pinned to the Android 17 source commit in
 [the build lock](../build/m3-turnip-source.json). Cross-build fixes are recorded
-in GitHub Actions; Turnip is not accepted until the successful artifact, ELF
-architecture, dependencies and source/digest checks all pass.
+in GitHub Actions. [Build 45394293633](https://github.com/xxbo/RMX2072-AOSP-Project/actions/runs/45394293633)
+passed; its artifact digest, ARM64 ELF, SONAME and dependencies are verified.
+The existing source-built `libcutils.so` and `libhardware.so` supply its Android
+vendor dependencies. No new shared libdrm or C++ runtime is introduced.
 
 The exact acceleration policy passed strict Android 17 `secilc` compilation
 on the restored F.20 runtime, without loading policy or changing enforcing.

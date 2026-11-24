@@ -105,12 +105,21 @@ def main():
     elf = subprocess.check_output([str(a.readelf), '--dynamic', str(target)], text=True)
     needed = re.findall(r'Shared library: \[(.*?)\]', elf)
     allowed = {'libc.so', 'libm.so', 'libdl.so', 'liblog.so', 'libz.so',
-               'libnativewindow.so', 'libsync.so', 'libandroid.so'}
+               'libnativewindow.so', 'libsync.so', 'libandroid.so', 'libcutils.so', 'libhardware.so'}
     if not needed or set(needed)-allowed or '[vulkan.freedreno.so]' not in elf:
         raise ValueError('Unexpected runtime dependency or SONAME: '+repr(needed))
+    graphics = output.parent/'graphics'
+    gp = json.loads((graphics/'provenance.json').read_text())
+    providers = {}
+    for lib in ('libcutils.so', 'libhardware.so'):
+        key = '/lib64/'+lib
+        h = digest((graphics/'vendor'/key.lstrip('/')).read_bytes())
+        if not gp['source_verified'] or not gp['archive_digest_verified'] or gp['files'][key] != h:
+            raise ValueError('Source-built Android support library changed: '+lib)
+        providers[lib] = h
     proof = dict(run_id=a.run_id, source_commit=a.commit, artifact_id=a.artifact_id,
         artifact_archive_digest=artifact['digest'], archive_digest_verified=True,
-        source_verified=True, source=pin, needed=needed,
+        source_verified=True, source=pin, needed=needed, android_vendor_providers=providers,
         files={'/lib64/hw/vulkan.freedreno.so': digest(driver)},
         hardware_result='NOT RUN')
     for name, data in files.items():
