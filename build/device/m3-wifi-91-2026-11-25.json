@@ -1,0 +1,53 @@
+{
+  "boot_id": "960e335e-f865-4ae8-84c7-2b0f25f1a804",
+  "same_boot": true,
+  "enforcing": true,
+  "qca6390_enumerated": null,
+  "wlan_netdev": false,
+  "discovery_read_errors": true,
+  "files": {
+    "pci.txt": "8e21429dea887ff769dfdffc9294ccc0c7cfccc2e19bbd2931acc680f20e9d76",
+    "network.txt": "45f94d388bcf87c65500be7d1a80026f2644d16fd1c812c6c32d4d2e6e6495b2",
+    "wifi-status.txt": "d53f963656b4ebd4ece74391dcdcb3b9ab9f83e894238073a6b02c5444007067",
+    "wifi-service.txt": "09fba8cfd34712a642e9a626e1a3885b201aa702d03dc35c14d02c25948e8b91",
+    "battery.txt": "30cca17e1d41518991832d05f55fe33d75299420047480d7b5456209ec8482da",
+    "kernel-wlan.txt": "61ea5d956270fd019cc2a9c03a73bd0c9071b041dc6a1858ed77c7300c8cd8f5"
+  },
+  "kernel_log_sha256": {
+    "boot-events.txt": "f15a18d09fdc31e5c68b2c0fdbbd82ec64614d8af7ed6eddcdca27a0218d15cd",
+    "acm.log": "2338c72d580f54d6a36932b50d74641c518366b36690df658968ada46a616072"
+  },
+  "scan": "NOT RUN",
+  "association": "NOT RUN",
+  "dhcp": "NOT RUN",
+  "traffic": "NOT RUN",
+  "scope": "Discovery only; no RF enable, credentials or network configuration changes",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-91",
+  "source_commit": "9b9a8665c90290788c1f1a8c3c3e8b3309ced93e",
+  "kernel_image_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "kernel_run_id": 45620405787,
+  "retained_seconds": 196.031,
+  "identity": [
+    "37",
+    "6.18.32-android17-5-maybe-dirty-4k",
+    "960e335e-f865-4ae8-84c7-2b0f25f1a804",
+    "Enforcing",
+    "running",
+    "",
+    "retained",
+    "adb"
+  ],
+  "early_kernel_evidence": [
+    "6,810,820463,-,caller=T14;m3_wlan_digital: Setting 950000-952000uV",
+    "3,812,820573,-,caller=T14;m3_wlan_digital: failed to get the current voltage: -ENOTRECOVERABLE",
+    "3,814,820859,-,caller=T14;qcom-rpmh-regulator 18200000.rsc:wlan-digital-regulators: smps2: devm_regulator_register() failed, ret=-131",
+    "6,1154,30256181,-,caller=T12;qcom-pcie 1c00000.pcie: Phy link never came up",
+    "6,1159,30260048,-,caller=T12;pci 0000:00:00.0: [17cb:010b] type 01 class 0x060400 PCIe Root Port"
+  ],
+  "pci_root_port_from_kernel": true,
+  "endpoint_link": "FAIL: Phy link never came up; no endpoint reported",
+  "first_failure": "PM8009 S2 constraint contains no ACK selector; regulator register returns -131",
+  "same_candidate_and_test_seeds": true,
+  "preflight_sha256": "6ff6a2c62a91b02d3da07dfc8220d5f8bd6636d5ed3c9b5d0da2b92d273ac190",
+  "retention_scope": "This boot only. Host-gated image; no cold-start qualification."
+}

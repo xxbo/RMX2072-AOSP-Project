@@ -56,8 +56,8 @@ def check_m3_wifi(data, staged=False):
     expect(pmu, {'compatible': ['qcom,qca6390-pmu']})
     rails = {
         'vddaon': ('diag-regulators/smps6', 950000, 952000),
-        'vddpmu': ('wlan-digital-regulators/smps2', 950000, 952000),
-        'vddrfa0p95': ('wlan-digital-regulators/smps2', 950000, 952000),
+        'vddpmu': ('wlan-digital-regulators/smps2', 900000, 952000),
+        'vddrfa0p95': ('wlan-digital-regulators/smps2', 900000, 952000),
         'vddrfa1p3': ('display-regulators/smps8', 1350000, 1352000),
         'vddpcie1p3': ('display-regulators/smps8', 1350000, 1352000),
         'vddrfa1p9': ('diag-regulators/smps5', 1900000, 1904000),
@@ -68,7 +68,18 @@ def check_m3_wifi(data, staged=False):
         ref(pmu, name + '-supply', target)
         expect(target, {'regulator-min-microvolt': [low], 'regulator-max-microvolt': [high]})
     expect('/soc/rsc@18200000/wlan-digital-regulators',
-           {'compatible': ['qcom,pm8009-rpmh-regulators'], 'qcom,pmic-id': ['f']})
+           {'compatible': ['qcom,pm8009-1-rpmh-regulators'], 'qcom,pmic-id': ['f']})
+    # Pinned ACK ecdaacc9 regulator tables. A range copied from downstream's
+    # millivolt-voting driver can contain no selector in the upstream driver.
+    grids = {'diag-regulators/smps6': (300000, 4000, 264),
+             'wlan-digital-regulators/smps2': (900000, 16000, 5),
+             'display-regulators/smps8': (320000, 8000, 216),
+             'diag-regulators/smps5': (320000, 8000, 216)}
+    for suffix, (base, step, count) in grids.items():
+        node = tree['/soc/rsc@18200000/' + suffix]
+        low, high = node['regulator-min-microvolt'][0], node['regulator-max-microvolt'][0]
+        if not any(low <= base + i * step <= high for i in range(count)):
+            raise ValueError('No ACK voltage selector in WLAN constraint: ' + suffix)
     ref(pmu, 'vddio-supply', symbols['diag_ufs_s4'][0])
     expect(host + '/pcie@0', {'reg': [0, 0, 0, 0, 0], '#address-cells': [3], '#size-cells': [2]})
     expect(endpoint, {'compatible': ['pci17cb,1101'], 'reg': [0x10000, 0, 0, 0, 0]})

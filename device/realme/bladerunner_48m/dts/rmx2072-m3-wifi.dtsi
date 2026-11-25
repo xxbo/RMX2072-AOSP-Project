@@ -40,11 +40,14 @@
 };
 &{/soc/rsc@18200000} {
     m3_pm8009: wlan-digital-regulators {
-        compatible = "qcom,pm8009-rpmh-regulators";
+        compatible = "qcom,pm8009-1-rpmh-regulators";
         qcom,pmic-id = "f";
         m3_wlan_s2f: smps2 {
             regulator-name = "m3_wlan_digital";
-            regulator-min-microvolt = <950000>;
+            // SM8250 PM8009-1: ACK selectors are 900 + n*16 mV.
+            // Use the upstream RB5 constraint, not downstream's direct
+            // 950 mV RPMh vote: 950..952 contains no ACK selector.
+            regulator-min-microvolt = <900000>;
             regulator-max-microvolt = <952000>;
         };
     };

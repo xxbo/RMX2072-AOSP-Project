@@ -52,8 +52,15 @@ def main():
         'battery': 'dumpsys battery',
     }
     captures = {name: shell(command) for name, command in commands.items()}
-    boot = a.record / 'live/boot-events.txt'
-    events = boot.read_text(encoding='utf-8', errors='replace')
+    # boot-events is the supervisor event stream, not the full kernel log.
+    # Early regulator/PCI failures are in the same-boot diagnostic ACM stream.
+    logs = {name: a.record / 'live' / name for name in ('boot-events.txt', 'acm.log')}
+    streams = {name: path.read_text(encoding='utf-8', errors='replace')
+               for name, path in logs.items()}
+    for name, stream in streams.items():
+        if expected not in stream:
+            raise ValueError('Missing expected boot identity in ' + name)
+    events = '\n'.join(streams.values())
     captures['kernel-wlan'] = '\n'.join(line for line in events.splitlines()
         if re.search(r'\bpci\b|pcie|\bmhi\b|pwrseq|ath11k|qca6390|wcn|wlan|pm8009|smpf2|qrtr|firmware|defer', line, re.I)) + '\n'
     after = identity()
@@ -66,7 +73,8 @@ def main():
         hashes[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
     result = dict(boot_id=expected, same_boot=True, enforcing=True,
                   **discovery(captures['pci'], captures['network']),
-                  files=hashes, kernel_log_sha256=hashlib.sha256(boot.read_bytes()).hexdigest(),
+                  files=hashes, kernel_log_sha256={name: hashlib.sha256(path.read_bytes()).hexdigest()
+                                                 for name, path in logs.items()},
                   scan='NOT RUN', association='NOT RUN', dhcp='NOT RUN', traffic='NOT RUN',
                   scope='Discovery only; no RF enable, credentials or network configuration changes')
     (a.output / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
