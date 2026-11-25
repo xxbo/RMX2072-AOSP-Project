@@ -7,6 +7,17 @@ import re
 import subprocess
 
 
+def discovery(pci, network):
+    endpoint = bool(re.search(r'PCI=[^\n]+\n0x17cb\n0x1101\n', pci))
+    wlan = bool(re.search(r'^\d+: wlan\d+[:@]', network, re.M))
+    denied = r'Permission denied|Operation not permitted'
+    return dict(qca6390_enumerated=True if endpoint else
+                None if re.search(denied, pci, re.I) else False,
+                wlan_netdev=True if wlan else
+                None if re.search(denied, network, re.I) else False,
+                discovery_read_errors=bool(re.search(denied, pci + network, re.I)))
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--adb', default='adb')
@@ -17,7 +28,7 @@ def main():
     a.output.mkdir(parents=True, exist_ok=False)
 
     def shell(command):
-        r = subprocess.run([a.adb, '-s', 'RMX2072-M1', 'shell', command],
+        r = subprocess.run([a.adb, '-s', 'RMX2072-M1', 'shell', '( ' + command + ' ) 2>&1'],
                            capture_output=True, timeout=30)
         if r.returncode:
             raise RuntimeError(r.stderr.decode('utf-8', 'replace'))
@@ -31,7 +42,8 @@ def main():
     if before != [expected, 'Enforcing', 'retained', '1']:
         raise ValueError('Not the expected retained GSI boot')
     commands = {
-        'pci': 'for d in /sys/bus/pci/devices/*; do [ -d "$d" ] || continue; '
+        'pci': 'ls -ld /sys/bus/pci/devices; ls -l /sys/bus/pci/devices; '
+               'for d in /sys/bus/pci/devices/*; do [ -d "$d" ] || continue; '
                'echo "PCI=$d"; cat "$d/vendor" "$d/device" "$d/subsystem_vendor" '
                '"$d/subsystem_device"; readlink -f "$d/driver"; done; true',
         'network': 'ip -details link; ls -l /sys/class/ieee80211 2>&1; true',
@@ -52,10 +64,8 @@ def main():
         path = a.output / (name + '.txt')
         path.write_text(text, encoding='utf-8')
         hashes[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
-    endpoint = bool(re.search(r'PCI=[^\n]+\n0x17cb\n0x1101\n', captures['pci']))
     result = dict(boot_id=expected, same_boot=True, enforcing=True,
-                  qca6390_enumerated=endpoint,
-                  wlan_netdev=bool(re.search(r'^\d+: wlan\d+[:@]', captures['network'], re.M)),
+                  **discovery(captures['pci'], captures['network']),
                   files=hashes, kernel_log_sha256=hashlib.sha256(boot.read_bytes()).hexdigest(),
                   scan='NOT RUN', association='NOT RUN', dhcp='NOT RUN', traffic='NOT RUN',
                   scope='Discovery only; no RF enable, credentials or network configuration changes')
