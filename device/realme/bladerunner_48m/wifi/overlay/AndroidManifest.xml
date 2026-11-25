@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.rmx2072.wifi.overlay">
+    <uses-sdk android:minSdkVersion="37" android:targetSdkVersion="37" />
+    <overlay android:targetPackage="com.google.android.wifi.resources"
+        android:targetName="WifiCustomization" android:isStatic="true"
+        android:priority="200" />
+    <application android:hasCode="false" />
+</manifest>
