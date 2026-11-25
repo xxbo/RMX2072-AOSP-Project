@@ -3,7 +3,7 @@ from inspect_boot_dt import fdt
 from check_m2_resources import check_m2_resources, normalized_node
 
 
-def check_m3_display(data, staged=False, input_devices=False, battery_gauge=False, performance=False):
+def check_m3_display(data, staged=False, input_devices=False, battery_gauge=False, performance=False, wifi=False):
     preserved = check_m2_resources(data, display=True)
     tree = {n['path']: n['properties'] for n in fdt(data, ('**',))['matching_nodes']}
     for path, node in tree.items():
@@ -53,6 +53,10 @@ def check_m3_display(data, staged=False, input_devices=False, battery_gauge=Fals
         if not input_devices:
             raise ValueError('Gauge candidate must retain the accepted input wiring')
         expected_pads |= {48, 49}
+    if wifi:
+        if not (performance and battery_gauge):
+            raise ValueError('Wi-Fi candidate must retain the accepted performance and gauge paths')
+        expected_pads |= {20, 21, 79, 80, 81}
     if valid != expected_pads:
         raise ValueError('TLMM may expose only the requested display/input pads; unmasked registration previously rebooted')
     legacy = ['pinctrl@f000000', 'qcom,dispcc@af00000', 'qcom,mdss_mdp@ae00000',

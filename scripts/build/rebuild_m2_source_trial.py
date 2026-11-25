@@ -27,8 +27,11 @@ def main():
     p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
     p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
     p.add_argument('--performance', action='store_true', help='Include native Adreno, EPSS and TSENS')
+    p.add_argument('--wifi', action='store_true', help='Include native QCA6390 PCIe0 and board power resources')
     p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
+    if a.wifi and not (a.performance and a.battery_gauge):
+        p.error('--wifi requires --performance and --battery-gauge')
     if a.battery_gauge and not a.input_devices:
         p.error('--battery-gauge requires --input-devices')
     if (a.performance or a.panel_refresh == 90) and not a.display:
@@ -72,6 +75,8 @@ def main():
         raise ValueError('Install the checked source-PON kernel before packaging')
     if a.performance and not kernel.get('performance'):
         raise ValueError('Install the checked native performance kernel first')
+    if a.wifi and not kernel.get('wifi'):
+        raise ValueError('Install the checked native WLAN kernel first')
     previous = json.loads((current / 'usb-build.json').read_text())
     if sha(current / 'rmx-m1-guard') != previous['guard'] or sha(current / 'vendor-signed.img') != previous['vendor_signed']:
         raise ValueError('M2 must retain the accepted vendor/guard')
@@ -90,7 +95,8 @@ def main():
         *(['--display-staged'] if a.display_staged else []),
         *(['--input-devices'] if a.input_devices else []),
         *(['--battery-gauge'] if a.battery_gauge else []),
-        *(['--performance'] if a.performance else []))
+        *(['--performance'] if a.performance else []),
+        *(['--wifi'] if a.wifi else []))
     if a.display:
         if not kernel.get('display'):
             raise ValueError('Install the checked DRM/panel kernel before packaging M3')
@@ -127,7 +133,7 @@ def main():
                   source_first_stage=init, source_device_trees=True,
                   display=a.display,
                   display_staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge,
-                  performance=a.performance, panel_refresh=a.panel_refresh,
+                  performance=a.performance, wifi=a.wifi, panel_refresh=a.panel_refresh,
                   single_dsc_test=a.single_dsc_test,
                   solid_fill_test=a.solid_fill_test,
                   panel_readback_test=a.panel_readback_test,

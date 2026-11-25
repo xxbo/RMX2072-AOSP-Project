@@ -35,7 +35,10 @@ def main():
     p.add_argument('--input-devices', action='store_true', help='Require the GTX8 source digests and built-in driver')
     p.add_argument('--battery-gauge', action='store_true', help='Require the pinned BQ28Z610 driver without NVM updates')
     p.add_argument('--performance', action='store_true', help='Require the native CPUfreq/TSENS performance fragment')
+    p.add_argument('--wifi', action='store_true', help='Require the native QCA6390 driver and power-sequencing fragment')
     a = p.parse_args()
+    if a.wifi and not (a.performance and a.battery_gauge):
+        p.error('--wifi requires --performance and --battery-gauge')
     if a.display and a.kind != 'kernel':
         p.error('--display requires a kernel artifact')
     if a.input_devices and not a.display:
@@ -254,6 +257,8 @@ def main():
         wanted.add('battery-source.sha256')
     if a.performance:
         wanted.add('performance-fragment.sha256')
+    if a.wifi:
+        wanted.add('wifi-fragment.sha256')
     with RemoteZip(url, session=session, timeout=120, support_suffix_range=False,
                    fetcher=BoundedRemoteFetcher) as z:
         files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
@@ -323,6 +328,14 @@ def main():
         for line in fragment.decode().splitlines():
             if line.startswith('CONFIG_') and line not in config:
                 raise ValueError('Missing performance configuration: ' + line)
+    if a.wifi:
+        fragment = subprocess.check_output(['git', '-C', repo, 'show', a.commit +
+            ':device/realme/bladerunner_48m/bootstrap/sm8250_wifi.fragment'])
+        if digest(fragment) != files['wifi-fragment.sha256'].decode().split()[0]:
+            raise ValueError('Wi-Fi fragment source mismatch')
+        for line in fragment.decode().splitlines():
+            if line.startswith('CONFIG_') and line not in config:
+                raise ValueError('Missing Wi-Fi configuration: ' + line)
     provenance.update(installing=True)
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
     for name, data in files.items():
@@ -333,7 +346,7 @@ def main():
     old = output / 'pon-power-patch.sha256'
     if old.is_file():
         old.unlink()
-    provenance.update(installing=False, source_pon=True, display=a.display, input_devices=a.input_devices, battery_gauge=a.battery_gauge, performance=a.performance, source_digests_verified=True,
+    provenance.update(installing=False, source_pon=True, display=a.display, input_devices=a.input_devices, battery_gauge=a.battery_gauge, performance=a.performance, wifi=a.wifi, source_digests_verified=True,
                       dist_digests_verified=True, image_sha256=digest(raw),
                       selected_member_sha256={n: digest(d) for n, d in files.items()})
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')

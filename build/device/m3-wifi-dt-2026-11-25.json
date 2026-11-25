@@ -1,0 +1,338 @@
+{
+  "date": "2026-11-25",
+  "scope": "Offline source DT build and negative supply test; not device acceptance",
+  "official_commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "outputs": {
+    "rmx2072.dtb": {
+      "size_bytes": 538364,
+      "sha256": "85e7d1439a056f1e5cef3caece45f42bf1223abf0c0790c5861bf8f44397f182"
+    },
+    "rmx2072.dtbo": {
+      "size_bytes": 351704,
+      "sha256": "24f6837c6c35f9ca9a03b75e660afa141006a7c98e16e97f35a25a58b04c24ed"
+    },
+    "dtbo.img": {
+      "size_bytes": 356352,
+      "sha256": "dc95700f6a8ff603e6ba199ffd4a8e31574e1cbf9be43a466fabc3a6fda7424a"
+    },
+    "effective.dtb": {
+      "size_bytes": 844805,
+      "sha256": "7db4dbefa023c6474287703dd435f19374f1c0d915d47bc88c7df0b48328c0b7"
+    }
+  },
+  "checks": {
+    "watchdog_base": {
+      "path": "/soc/qcom,wdt@17c10000",
+      "reg": [
+        398524416,
+        4096
+      ],
+      "interrupts": [
+        0,
+        0,
+        1
+      ],
+      "gic": "/soc/interrupt-controller@17a00000",
+      "sleep_clock_hz": 32764,
+      "changed_properties": [
+        "clocks",
+        "compatible",
+        "interrupts"
+      ],
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "ufs_base": {
+      "host": "/soc/ufs-host-lab/ufs@1d84000",
+      "parked": "/soc/ufshc@1d84000",
+      "phy": "/soc/ufs-phy-lab/phy@1d87000",
+      "board_xo_hz": 38400000,
+      "max_core_hz": 300000000,
+      "interconnect_providers": 5,
+      "smmu_stream_ids": [
+        224,
+        1248
+      ],
+      "relocated_reference_cells": 0,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pdc_base": {
+      "changed_path": "/soc/interrupt-controller@b220000",
+      "changed_properties": [
+        "compatible"
+      ],
+      "spmi_parent_pin": 1,
+      "spmi_gic_spi": 481,
+      "other_nodes_identical": true,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pstore_base": {
+      "reg": [
+        0,
+        2952790016,
+        0,
+        4194304
+      ],
+      "record-size": [
+        262144
+      ],
+      "console-size": [
+        262144
+      ],
+      "pmsg-size": [
+        2097152
+      ],
+      "ftrace-size": [
+        0
+      ],
+      "ecc-size": [
+        16
+      ]
+    },
+    "usb_base": [
+      0,
+      0
+    ],
+    "watchdog_board": {
+      "path": "/soc/qcom,wdt@17c10000",
+      "reg": [
+        398524416,
+        4096
+      ],
+      "interrupts": [
+        0,
+        0,
+        1
+      ],
+      "gic": "/soc/interrupt-controller@17a00000",
+      "sleep_clock_hz": 32764,
+      "changed_properties": [
+        "clocks",
+        "compatible",
+        "interrupts"
+      ],
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "ufs_board": {
+      "host": "/soc/ufs-host-lab/ufs@1d84000",
+      "parked": "/soc/ufshc@1d84000",
+      "phy": "/soc/ufs-phy-lab/phy@1d87000",
+      "board_xo_hz": 38400000,
+      "max_core_hz": 300000000,
+      "interconnect_providers": 5,
+      "smmu_stream_ids": [
+        224,
+        1248
+      ],
+      "relocated_reference_cells": 556,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pdc_board": {
+      "changed_path": "/soc/interrupt-controller@b220000",
+      "changed_properties": [
+        "compatible"
+      ],
+      "spmi_parent_pin": 1,
+      "spmi_gic_spi": 481,
+      "other_nodes_identical": true,
+      "primary_usb_sid_mask": [
+        0,
+        0
+      ]
+    },
+    "pstore_board": {
+      "reg": [
+        0,
+        2952790016,
+        0,
+        4194304
+      ],
+      "record-size": [
+        262144
+      ],
+      "console-size": [
+        262144
+      ],
+      "pmsg-size": [
+        2097152
+      ],
+      "ftrace-size": [
+        0
+      ],
+      "ecc-size": [
+        16
+      ]
+    },
+    "usb_board": [
+      0,
+      0
+    ],
+    "performance": {
+      "cpu_domains": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          6
+        ],
+        [
+          7
+        ]
+      ],
+      "cpu_frequency_source": "hardware LUT; native EPSS driver",
+      "gpu_max_hz": 587000000,
+      "thermal_control": "TSENS with cooling maps",
+      "provider_lifetime": "TSENS, EPSS and GPUCC populated during normal boot",
+      "firmware": "retained F.20 GPU firmware, separately inventoried",
+      "status": "compiled-resource-check-only; device execution NOT RUN"
+    },
+    "input": {
+      "touch": "RMX2072 Normandy, measured firmware PID 9885, SE13 0xa94000/address 0x5d",
+      "coordinates": [
+        1080,
+        2400
+      ],
+      "reset_gpio": 38,
+      "irq_gpio": 39,
+      "volume_up": "PM8150 GPIO6 active-low, KEY_VOLUMEUP",
+      "volume_down": "PM8150 GPIO7 active-low, KEY_VOLUMEDOWN",
+      "power": "Existing upstream PON power-key binding retained",
+      "hardware_result": "NOT RUN"
+    },
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        20,
+        21,
+        36,
+        37,
+        38,
+        39,
+        48,
+        49,
+        66,
+        75,
+        79,
+        80,
+        81
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    },
+    "wifi": {
+      "controller": "PCIe0",
+      "endpoint": "17cb:1101 (F.20 inventory)",
+      "gpio": [
+        20,
+        21,
+        79,
+        80,
+        81
+      ],
+      "digital_rail": "PM8009 S2 (20607)",
+      "physical_result": "NOT RUN",
+      "firmware_supplied": false,
+      "connectivity": "NOT TESTED"
+    },
+    "battery": {
+      "gauge": "BQ28Z610, OEM board selection; hardware identity not yet read",
+      "bus": "SE16 0x888000",
+      "address": 85,
+      "gpio": [
+        48,
+        49
+      ],
+      "rate_hz": 100000,
+      "charging_control": false,
+      "hardware_result": "NOT RUN"
+    },
+    "m1_resource_reference": {
+      "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+      "checked_nodes": 79,
+      "phandles_resolved_to_paths": true,
+      "source_pon": "upstream-parent-child",
+      "pon_reboot_modes": [],
+      "first_stage_fstab": "project-ramdisk",
+      "recovery_board_identity": true,
+      "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+    }
+  },
+  "negative_validation": {
+    "controller": "PCIe0",
+    "endpoint": "17cb:1101 (F.20 inventory)",
+    "gpio": [
+      20,
+      21,
+      79,
+      80,
+      81
+    ],
+    "digital_rail": "PM8009 S2 (20607)",
+    "physical_result": "NOT RUN",
+    "firmware_supplied": false,
+    "connectivity": "NOT TESTED",
+    "wrong_board_digital_rail_rejected": "RMX2072 WLAN supply/provider mismatch: /soc/display-fabric-lab/qca6390-pmu/vddpmu-supply",
+    "baseline_display_check": "PASS"
+  },
+  "source_report_sha256": "9bc98647ee29221b66b1339348a6ed0d13dc5cbede547dda441701fdb882f850"
+}

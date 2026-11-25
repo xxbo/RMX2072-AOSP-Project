@@ -172,6 +172,11 @@ def main():
     provenance = json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())
     if dt.get('performance') and (not kernel.get('performance') or not provenance.get('gpu_firmware')):
         raise ValueError('Native Adreno requires checked kernel options and early GPU firmware')
+    if dt.get('wifi'):
+        if not kernel.get('wifi') or not dt.get('checks', {}).get('wifi'):
+            raise ValueError('Native WLAN requires checked kernel and board power resources')
+        from check_m3_wifi import check_m3_wifi
+        check_m3_wifi((source / 'effective.dtb').read_bytes(), dt.get('display_staged', False))
     if bool(provenance.get('first_frame_trace')) != a.first_frame_trace:
         raise ValueError('First-frame trace request and ramdisk marker must agree')
     if bool(provenance.get('solid_fill_test')) != a.solid_fill_test:
@@ -269,6 +274,7 @@ def main():
     record['standard_pps_test'] = a.standard_pps_test
     record['panel_refresh'] = a.panel_refresh
     record['performance'] = dt.get('performance', False)
+    record['wifi'] = dt.get('wifi', False)
     record['scratch_framework_start'] = bool(provenance.get('scratch_volumes'))
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))

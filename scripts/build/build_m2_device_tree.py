@@ -63,7 +63,10 @@ def main():
     p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
     p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
     p.add_argument('--performance', action='store_true', help='Include native CPUfreq, TSENS and Adreno resources')
+    p.add_argument('--wifi', action='store_true', help='Include native PCIe0 and board QCA6390 power sequencing')
     a = p.parse_args()
+    if a.wifi and not (a.performance and a.battery_gauge):
+        p.error('--wifi requires the accepted performance and battery profiles')
     if a.input_devices and not a.display:
         p.error('--input-devices requires --display')
     if a.battery_gauge and not a.input_devices:
@@ -153,6 +156,7 @@ def main():
                *(['-DRMX2072_M3_INPUT=1'] if a.input_devices else []),
                *(['-DRMX2072_M3_BATTERY=1'] if a.battery_gauge else []),
                *(['-DRMX2072_M3_PERFORMANCE=1'] if a.performance else []),
+               *(['-DRMX2072_M3_WIFI=1'] if a.wifi else []),
                str(project / (name + '.dts'))]
         with expanded.open('wb') as out:
             subprocess.run(cmd, stdout=out, check=True)
@@ -190,7 +194,10 @@ def main():
         checks['input'] = check_m3_input(effective, staged=a.display_staged)
     if a.display:
         from check_m3_display import check_m3_display
-        checks['display'] = check_m3_display(effective, staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge, performance=a.performance)
+        checks['display'] = check_m3_display(effective, staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge, performance=a.performance, wifi=a.wifi)
+    if a.wifi:
+        from check_m3_wifi import check_m3_wifi
+        checks['wifi'] = check_m3_wifi(effective, staged=a.display_staged)
     if a.battery_gauge:
         from check_m3_battery import check_m3_battery
         checks['battery'] = check_m3_battery(effective, staged=a.display_staged)
@@ -229,6 +236,7 @@ def main():
     report['display'] = a.display
     report['display_staged'] = a.display_staged
     report['performance'] = a.performance
+    report['wifi'] = a.wifi
     (output / 'source.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report['outputs'], indent=2))
 

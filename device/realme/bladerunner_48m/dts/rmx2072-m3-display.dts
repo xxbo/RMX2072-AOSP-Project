@@ -272,3 +272,6 @@
 #ifdef RMX2072_M3_PERFORMANCE
 #include "rmx2072-m3-performance.dtsi"
 #endif
+#ifdef RMX2072_M3_WIFI
+#include "rmx2072-m3-wifi.dtsi"
+#endif
