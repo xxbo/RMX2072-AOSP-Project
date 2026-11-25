@@ -59,6 +59,14 @@ See [VTS for HALs and kernels](https://source.android.com/docs/core/tests/vts), 
 
 ## Current priority: physical AOSP desktop
 
+November 25 requested continuation: GPU load/idle verification, real Wi-Fi
+connectivity, sound and haptics, fingerprint, and the setup protection-skip bug.
+The bounded GPU transfer/clock-return check now passes on retained trial 90;
+WLAN, audible output, motor output and biometric enrollment remain unaccepted.
+Track each separately in [today's hardware record](docs/M3_HARDWARE_2026-11-25.md).
+Preserve the working hardware renderer and 90 Hz defaults. The November 24
+paragraph below describes the previous stage and is not the current GPU status.
+
 November 24 resumed target: replace CPU software rendering with Adreno 650,
 enable native CPU/GPU frequency scaling and thermal feedback, and validate
 1080x2400 at 90 Hz with measured frame timing and physical interaction. The stock

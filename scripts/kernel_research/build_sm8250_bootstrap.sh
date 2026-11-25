@@ -114,6 +114,11 @@ if [[ "${RMX2072_PERFORMANCE:-0}" == 1 ]]; then
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_performance.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
   sha256sum "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_performance.fragment" > "$ARTIFACT_DIR/performance-fragment.sha256"
 fi
+if [[ "${RMX2072_WIFI:-0}" == 1 ]]; then
+  test "${RMX2072_PERFORMANCE:-0}" == 1
+  cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_wifi.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
+  sha256sum "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_wifi.fragment" > "$ARTIFACT_DIR/wifi-fragment.sha256"
+fi
 cd "$WORKSPACE"
 tools/bazel --output_user_root="${RUNNER_TEMP:-/tmp}/bazel-output-root" run \
   --jobs=2 --local_resources=cpu=2 --local_resources=memory=5500 --verbose_failures \
@@ -158,4 +163,9 @@ if [[ "${RMX2072_PERFORMANCE:-0}" == 1 ]]; then
     --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_performance.fragment"
 fi
 find "$ARTIFACT_DIR/dist" -type f -print0 | sort -z | xargs -0 -r sha256sum > "$ARTIFACT_DIR/SHA256SUMS"
+if [[ "${RMX2072_WIFI:-0}" == 1 ]]; then
+  python3 "$ROOT_DIR/scripts/build/check_config_fragment.py" \
+    --config "$ARTIFACT_DIR/dist/sm8250_bootstrap_dot_config" \
+    --fragment "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_wifi.fragment"
+fi
 printf '%s\n' 'Platform compile candidate: Qualcomm hardware mutex and APSS watchdog required built-in. Physical kernel execution is not established by this build.' > "$ARTIFACT_DIR/STATUS.txt"

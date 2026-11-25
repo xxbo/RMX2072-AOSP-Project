@@ -1,0 +1,39 @@
+{
+  "boot_id": "6eeccb22-1d31-4c13-bea4-1991de6a6cb7",
+  "same_boot": true,
+  "controls_unchanged": true,
+  "probe_sha256": "c524de7952c4b83c7318f0043e5c96818c9d6c6a86da56cfcfc1cd41d01762ae",
+  "scope": "Vulkan transfer/fence/readback; devfreq-reported frequency, not sustained UI FPS",
+  "phases": {
+    "baseline": [
+      305000000
+    ],
+    "load": [
+      305000000,
+      587000000
+    ],
+    "recovery": [
+      305000000
+    ]
+  },
+  "last_recovery_hz": 305000000,
+  "date": "2026-11-25",
+  "result": "PASS_BOUNDED_TRANSFER_LOAD_AND_IDLE_RETURN",
+  "load_seconds_observed": 8.45,
+  "load_submissions": 70,
+  "fills_per_submission": 32,
+  "readback_bytes": 16777216,
+  "physical_ui_fps_test": "NOT_RUN",
+  "evidence_sha256": {
+    "gpu-dvfs/controls-after.txt": "fc8688068cd2eecd6820b8c498cae1ac885cf71900a338d09fad660d493284b5",
+    "gpu-dvfs/controls-before.txt": "fc8688068cd2eecd6820b8c498cae1ac885cf71900a338d09fad660d493284b5",
+    "gpu-dvfs/load.txt": "d4f6a4f6bab07b63b46313c7dd92ec910cdfa88676f532eeadf792c54f5773aa",
+    "gpu-dvfs/result.json": "9247dc07e659ea330275b222efd24d61845fdd8ddfdf686a4eda4b5a74641808",
+    "gpu-dvfs/samples.json": "647196f6a717b37f7d5c48db1863b0f22b60c5f4c6ad2ac12428e0ea2e251d71",
+    "gpu-dvfs/smoke.txt": "de268a0f372f5e9500dd7fa1d5ee9e70cfa409eae17233cb161448a2403b2d48",
+    "gpu-dvfs/thermal-after.txt": "354d0603838ed56ff96f4161511b2901bcfd5f174121837c50116fa3c2c58c8c",
+    "gpu-dvfs/thermal-before.txt": "354d0603838ed56ff96f4161511b2901bcfd5f174121837c50116fa3c2c58c8c",
+    "gpu-dvfs/transitions-after.txt": "c0fc5151185def90a1a4af19f18cb3aafb63b5e629f445751ed7dacbd7d28888",
+    "gpu-dvfs/transitions-before.txt": "e6deb58895c352032e96420e07366610df8dae32538719576284111b57dcb148"
+  }
+}
