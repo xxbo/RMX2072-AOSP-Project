@@ -1,0 +1,100 @@
+{
+  "firmware": "RMX2072_11_F.20",
+  "boot_id": "904f6fb5-6801-4c40-a91c-b632ea013c94",
+  "scope": "Read-only comparison after trial 94 recovery",
+  "root_access_confirmed": true,
+  "sys_boot_completed": 1,
+  "wifi": {
+    "root_pci": "17cb:010b",
+    "endpoint_pci": "17cb:1101",
+    "root_bdf": "0000:00:00.0",
+    "endpoint_bdf": "0000:01:00.0",
+    "link_speed_GT_per_s": 5,
+    "link_width": 1,
+    "netdev": "wlan0",
+    "supplicant_state": "COMPLETED",
+    "framework_validated": true,
+    "connection": "Stock automatically reconnected saved WLAN",
+    "credentials_read": false,
+    "network_settings_changed": false,
+    "network_identifiers_published": false,
+    "gsi_connectivity_acceptance": false
+  },
+  "live_dt": {
+    "sha256": "56445e4b3a8dc3f7853164b71aaf9c9adbafc600300ccbbf0d404cea61e7f56c",
+    "bytes": 813422,
+    "wlan_supply_mapping": {
+      "aon": "S6A",
+      "dig": "S2F",
+      "io": "S4A",
+      "rfa1": "S5A",
+      "rfa2": "S8C"
+    },
+    "cnss_voltage_requests_uV": {
+      "aon": [
+        950000,
+        950000
+      ],
+      "dig": [
+        950000,
+        952000
+      ],
+      "io": [
+        1800000,
+        1800000
+      ],
+      "rfa1": [
+        1900000,
+        1900000
+      ],
+      "rfa2": [
+        1350000,
+        1350000
+      ]
+    }
+  },
+  "regulator_caveat": "Sysfs values can be cached initial provider votes, not measured WLAN-on rail voltage.",
+  "physical_pm8009_revision": "UNIDENTIFIED",
+  "stock_debugfs_available": false,
+  "audio": {
+    "i2c_devices": {
+      "4-0034": "tfa98xx",
+      "4-0035": "tfa98xx"
+    },
+    "alsa_card": "kona-mtp-snd-card",
+    "playback_and_capture_pcm_ports_present": true,
+    "playback_test": "NOT RUN",
+    "gsi_audio_acceptance": false
+  },
+  "haptics": {
+    "i2c_device": "7-005a",
+    "driver_name": "aw8697_haptic",
+    "stock_aidl_instance": "android.hardware.vibrator.IVibrator/default",
+    "cached_attributes": {
+      "device_id": 832,
+      "state": 0,
+      "gain": "0x80",
+      "vmax": "0x18"
+    },
+    "show_handlers_source_reviewed": true,
+    "f0_calibration_register_reads": false,
+    "actuation_test": "NOT RUN",
+    "gsi_motor_acceptance": false
+  },
+  "fingerprint": {
+    "stock_control_node": "/dev/goodix_fp",
+    "framework_service_present": true,
+    "templates_read": false,
+    "enrollment_test": "NOT RUN",
+    "gsi_sensor_acceptance": false
+  },
+  "private_evidence_sha256": {
+    "f20-wlan-post94-pcie.txt": "25b5f074b800a7c4d29d8aa4f7c884bbf571163840469c28edadb681a69a7918",
+    "f20-wlan-post94-rails.txt": "7ab7799ba3d1d6104d8f604ee3235a0ddbe12fdd033b17820417a2e0c368e54d",
+    "f20-wlan-post94-dt.txt": "f55a0ae8da59eadf504610b8ee71a113b32fe060f8ca2896a90dc3f0b166070c",
+    "f20-hardware-post94.txt": "2f195a6972a8d72b41fdbb79e20bea5f76824b835af0ab142583d8d24a1124c5",
+    "f20-haptic-cached-post94.txt": "488a5fa7961a774ba84c2fe54dab07cded398de69cc668d38ee4b0e06c3417f9"
+  },
+  "stock_full_partition_readback": false,
+  "new_stock_image_copy": false
+}

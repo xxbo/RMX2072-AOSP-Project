@@ -1,0 +1,114 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-94",
+  "source_commit": "c8929241367b600d1067babba35f3fac310c2def",
+  "result": "FAIL",
+  "boot_id": "1220ed34-a171-4640-b6bc-a79b7ce33dbc",
+  "kernel_image_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "boot_sha256": "ae4dc8bf5ccef20b8ef4305c3771f07b62db2bd960ec97a407d106039df38ab3",
+  "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+  "effective_dt_delta": {
+    "before_effective_dtb_sha256": "bc539cac8636993b22d2301301a5f6fac58baf93e054691a329c13c21d808d43",
+    "after_effective_dtb_sha256": "c38e447bb785eeea7ac010143ebfed74949f1da0bb08d65427b7a9a7572b12d5",
+    "only_byte_change": {
+      "offset": 128208,
+      "before_uV": 900000,
+      "after_uV": 948000
+    },
+    "reconstructed_before_digest_matches": true
+  },
+  "preflight": {
+    "passed": true,
+    "sha256": "83a5aaf7bad8e0f2bef601b0f02365ebe725f417a6768bf93b69804fb6add69e",
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "wifi_enabled": true,
+      "accepted_features": true,
+      "same_display_flags": true,
+      "same_cmdline": true,
+      "same_boot_policy": true,
+      "same_source_init": true,
+      "same_guard_and_keys": true,
+      "same_super": true,
+      "same_vendor": true,
+      "same_test_volumes": true,
+      "same_gpu_firmware": true,
+      "same_nonwifi_kernel_sources": true,
+      "baseline_config_verified": true,
+      "no_existing_builtin_removed": true,
+      "kernel_verified": true,
+      "kernel_digest": true,
+      "boot_digest": true,
+      "dtbo_digest": true
+    }
+  },
+  "observed": {
+    "kernel_digital_vote_range_uV": [
+      948000,
+      952000
+    ],
+    "phy_link_never_came_up": true,
+    "host_adb_observed": false,
+    "gsi_retention_passed": false,
+    "surfaceflinger_service_started": true,
+    "adbd_service_started": true,
+    "usb_gadget_bind_returned_success": true,
+    "usb_bind_uptime_seconds": 102.680507,
+    "last_retained_console_uptime_seconds": 103.027774,
+    "early_snapshot_recovered": false,
+    "actual_postpolicy_digital_voltage_uV": null,
+    "reset_cause": "UNRESOLVED",
+    "fatal_panic_in_retained_console": false,
+    "console_start_truncated": true,
+    "limitations": [
+      "Service start is not host ADB retention.",
+      "Last busybox execute denial is not a proven reset cause.",
+      "No inference that DIG change or watchdog caused reset."
+    ]
+  },
+  "recovery_boot": {
+    "boot_id": "713f9745-82da-460f-a7fa-19c2385e32b1",
+    "identity": {
+      "kernel": "6.18.32-android17-5-maybe-dirty-4k",
+      "trial": "ufs-host-g3-gsi17-firststage-ufs-94",
+      "udc": "configured",
+      "uptime_seconds": 22.97,
+      "timer_seconds": 180
+    }
+  },
+  "restoration": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "904f6fb5-6801-4c40-a91c-b632ea013c94",
+    "super_sha256": null,
+    "boot_sha256": null,
+    "dtbo_sha256": null,
+    "lp_slots": [
+      0,
+      1
+    ],
+    "stock_full_partition_readback": false,
+    "stock_write_acknowledged": true,
+    "expected_image_sha256": {
+      "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+    },
+    "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata"
+  },
+  "retained_evidence_sha256": {
+    "live/acm.log": "488fa2d30d673b45f4cfdce9fc448d44d52daa20a9b61a5001d0411ba346000d",
+    "live/console-ramoops-0": "9fd212f7ebb698bc4966233194bf55225de455f352bcb8df5390b86b7e558096",
+    "live/pmsg-ramoops-0": "e3698c6147c6bf411da22edfcffbfe4ca0b431c7b7bee901dd7871f8d8cadf95",
+    "live/host-events.jsonl": "61a3720eb73dd5f872c1ecbba3f0ac61c49edaecb1967d4c871fd1253117fb4b",
+    "live/adb.jsonl": "247070a898926488211bcebaafe67fd077cbd51d354fd089a07bc9bc41e11e39",
+    "timeline.jsonl": "ed803766f65b029fef53c4fe55d5fdb69019cd99cbb1f4bac4f3d46fb9881fdd",
+    "restored.json": "e32ff902c33e0fda4a7fa9a8bc8262c6c16380a4cbd2b0e8ef01fd3612b95879"
+  },
+  "scan": "NOT RUN",
+  "association": "NOT RUN",
+  "dhcp": "NOT RUN",
+  "traffic": "NOT RUN",
+  "disposition": "Revert DIG minimum to boot-tested 900000 uV range; preserve logs, replace failed current candidate with unflashed baseline package.",
+  "next_evidence": "Initial WLAN_EN value and power/PERST/link order; separately diagnose the ADB/reset failure."
+}

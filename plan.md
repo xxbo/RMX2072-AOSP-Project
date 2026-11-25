@@ -64,6 +64,11 @@ connectivity, sound and haptics, fingerprint, and the setup protection-skip bug.
 The bounded GPU transfer/clock-return check now passes on retained trial 90;
 WLAN, audible output, motor output and biometric enrollment remain unaccepted.
 Track each separately in [today's hardware record](docs/M3_HARDWARE_2026-11-25.md).
+Trials 92/93 bind the WLAN power graph but do not enumerate QCA6390. Trial 94's
+DIG vote change does not fix the link and does not retain host ADB; automatic
+recovery returns to F.20. Revert that vote, retain the failure record and use
+stock PCIe/enable/reset evidence to choose the next WLAN change. The current
+phone is F.20; any rebuilt baseline package is unflashed, not a new device pass.
 Preserve the working hardware renderer and 90 Hz defaults. The November 24
 paragraph below describes the previous stage and is not the current GPU status.
 
