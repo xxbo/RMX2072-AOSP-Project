@@ -55,7 +55,7 @@ def main():
     boot = a.record / 'live/boot-events.txt'
     events = boot.read_text(encoding='utf-8', errors='replace')
     captures['kernel-wlan'] = '\n'.join(line for line in events.splitlines()
-        if re.search(r'pcie|ath11k|qca6390|wcn|wlan|pm8009|smpf2|qrtr|firmware|defer', line, re.I)) + '\n'
+        if re.search(r'\bpci\b|pcie|\bmhi\b|pwrseq|ath11k|qca6390|wcn|wlan|pm8009|smpf2|qrtr|firmware|defer', line, re.I)) + '\n'
     after = identity()
     if after != before:
         raise ValueError('Device changed identity during capture')
