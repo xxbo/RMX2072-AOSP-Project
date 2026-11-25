@@ -1,0 +1,211 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-95",
+  "baseline": "ufs-host-g3-gsi17-firststage-ufs-90",
+  "passed": true,
+  "checks": {
+    "correct_trial": true,
+    "clean_recipe": true,
+    "wifi_enabled": true,
+    "accepted_features": true,
+    "same_display_flags": true,
+    "same_cmdline": true,
+    "same_boot_policy": true,
+    "same_source_init": true,
+    "same_guard_and_keys": true,
+    "same_super": true,
+    "same_vendor": true,
+    "same_test_volumes": true,
+    "same_gpu_firmware": true,
+    "same_nonwifi_kernel_sources": true,
+    "baseline_config_verified": true,
+    "no_existing_builtin_removed": true,
+    "kernel_verified": true,
+    "kernel_digest": true,
+    "boot_digest": true,
+    "dtbo_digest": true
+  },
+  "config_changes": {
+    "CONFIG_ATH11K": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_ATH11K_PCI": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_ATH_COMMON": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_CFG80211": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_CFG80211_CRDA_SUPPORT": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_CFG80211_DEFAULT_PS": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_CFG80211_REQUIRE_SIGNED_REGDB": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_CFG80211_USE_KERNEL_REGDB_KEYS": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_CRYPTO_LIB_ARC4": {
+      "before": "m",
+      "after": "y"
+    },
+    "CONFIG_CRYPTO_MICHAEL_MIC": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_MAC80211": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_MAC80211_HAS_RC": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_MAC80211_RC_DEFAULT": {
+      "before": "n",
+      "after": "\"minstrel_ht\""
+    },
+    "CONFIG_MAC80211_RC_DEFAULT_MINSTREL": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_MAC80211_RC_MINSTREL": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_MHI_BUS": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_PCI_PWRCTRL_PWRSEQ": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_POWER_SEQUENCING": {
+      "before": "m",
+      "after": "y"
+    },
+    "CONFIG_POWER_SEQUENCING_QCOM_WCN": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_QCOM_QMI_HELPERS": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_QRTR": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_QRTR_MHI": {
+      "before": "n",
+      "after": "y"
+    },
+    "CONFIG_RFKILL": {
+      "before": "m",
+      "after": "y"
+    },
+    "CONFIG_WLAN_VENDOR_ATH": {
+      "before": "n",
+      "after": "y"
+    }
+  },
+  "display": {
+    "m1_resources": {
+      "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+      "checked_nodes": 79,
+      "phandles_resolved_to_paths": true,
+      "source_pon": "upstream-parent-child",
+      "pon_reboot_modes": [],
+      "first_stage_fstab": "project-ramdisk",
+      "recovery_board_identity": true,
+      "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+    },
+    "native_resources": [
+      "/soc/display-core-lab/display-subsystem@ae00000",
+      "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+      "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+      "/soc/display-fabric-lab/clock-controller@af00000",
+      "/soc/display-fabric-lab/interconnect@1740000",
+      "/soc/display-fabric-lab/regulator@88e7000",
+      "/soc/display-pins-lab/pinctrl@f100000"
+    ],
+    "staged": true,
+    "overlapping_legacy_providers_disabled": [
+      "pinctrl@f000000",
+      "qcom,dispcc@af00000",
+      "qcom,mdss_mdp@ae00000",
+      "qcom,mdss_dsi_ctrl0@ae94000",
+      "qcom,mdss_dsi_ctrl1@ae96000",
+      "qcom,mdss_dsi_phy0@ae94400",
+      "qcom,mdss_dsi_phy1@ae96400",
+      "qcom,mdss_dsi_pll@ae94900",
+      "qcom,mdss_dsi_pll@ae96900",
+      "refgen-regulator@88e7000"
+    ],
+    "reciprocal_endpoints": {
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+      "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+    },
+    "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+    "reset": "TLMM75 active-low",
+    "te": "TLMM66 mdp_vsync",
+    "valid_gpio_offsets": [
+      20,
+      21,
+      36,
+      37,
+      38,
+      39,
+      48,
+      49,
+      66,
+      75,
+      79,
+      80,
+      81
+    ],
+    "hardware_result": "NOT RUN; this is a source resource check"
+  },
+  "wifi": {
+    "controller": "PCIe0",
+    "endpoint": "17cb:1101 (F.20 inventory)",
+    "gpio": [
+      20,
+      21,
+      79,
+      80,
+      81
+    ],
+    "digital_rail": "PM8009 S2 (20607)",
+    "physical_result": "NOT RUN",
+    "firmware_supplied": false,
+    "connectivity": "NOT TESTED"
+  },
+  "kernel": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "boot": "494fed15c031f5b7e7052161714b47db3a5e9d3be3918c3d11205b4ad7f2c8c4",
+  "dtbo": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+  "device_result": "NOT RUN",
+  "source_commit": "49502ef56038656726de74c23c8c9e3c0ef6101e",
+  "flashed": false,
+  "purpose": "Replace failed current 94 package with trial 93-equivalent hardware baseline; no new handset trial.",
+  "effective_dtb_sha256": "bc539cac8636993b22d2301301a5f6fac58baf93e054691a329c13c21d808d43",
+  "same_effective_dtb_as_trial93": true,
+  "phone_state": "F.20 after trial 94 recovery; boot 904f6fb5-6801-4c40-a91c-b632ea013c94",
+  "candidate_retention": "Single work/current package overwritten; no extra image archive."
+}

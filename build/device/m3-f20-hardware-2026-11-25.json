@@ -64,7 +64,13 @@
     "alsa_card": "kona-mtp-snd-card",
     "playback_and_capture_pcm_ports_present": true,
     "playback_test": "NOT RUN",
-    "gsi_audio_acceptance": false
+    "gsi_audio_acceptance": false,
+    "live_dt_firmware_name": "tfa98xx.cnt",
+    "live_dt_reset_gpios": {
+      "0x34": 130,
+      "0x35": 91
+    },
+    "live_dt_supply": "S4A"
   },
   "haptics": {
     "i2c_device": "7-005a",
@@ -79,7 +85,14 @@
     "show_handlers_source_reviewed": true,
     "f0_calibration_register_reads": false,
     "actuation_test": "NOT RUN",
-    "gsi_motor_acceptance": false
+    "gsi_motor_acceptance": false,
+    "live_dt": {
+      "controller": "a8c000.i2c",
+      "address": "0x5a",
+      "device_id": 832,
+      "reset_gpio": 72,
+      "irq_gpio": 47
+    }
   },
   "fingerprint": {
     "stock_control_node": "/dev/goodix_fp",
@@ -96,5 +109,11 @@
     "f20-haptic-cached-post94.txt": "488a5fa7961a774ba84c2fe54dab07cded398de69cc668d38ee4b0e06c3417f9"
   },
   "stock_full_partition_readback": false,
-  "new_stock_image_copy": false
+  "new_stock_image_copy": false,
+  "final_same_boot_check": {
+    "uptime_seconds": 1174.0,
+    "boot_id": "904f6fb5-6801-4c40-a91c-b632ea013c94",
+    "sys_boot_completed": 1,
+    "sha256": "87086a9a5c7386a712272279555390b0b5652d6d451405c562a6488a27000e82"
+  }
 }
