@@ -4,7 +4,7 @@
   "wifi_resources_sha256": "0838fe0e6454de12f485c47bf5ca8a510b1f20121f747dd575fe36b12ea51663",
   "source_sha256": {
     "AndroidManifest.xml": "5f51fa7a266f279ebdce35a83c633e840f94118f7524a900ab14809cd3166951",
-    "res/values/config.xml": "26416ed8f028e28f6e8fc94c4e6dd763c7aecea990533090d9bc8ab459fcdc98"
+    "res/values/config.xml": "8db9a034b7cf862f6be0f816b2b6c2ce5326940b3fb54218e1a87262e6acf2ec"
   },
   "target_package": "com.google.android.wifi.resources",
   "target_name": "WifiCustomization",
@@ -18,6 +18,7 @@
   "requires": [
     "native WLAN netdev",
     "Android 17 policy",
-    "mainline supplicant flag and binary"
+    "mainline supplicant binary",
+    "supported device form factor"
   ]
 }

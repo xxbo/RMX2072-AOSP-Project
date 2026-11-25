@@ -56,7 +56,8 @@ def main():
         signing='Existing local engineering RRO key; no platform key',
         aapt2_sha256=sha(tools / 'aapt2.exe'), apksigner_sha256=sha(tools / 'lib/apksigner.jar'),
         installed=False, device_result='NOT RUN',
-        requires=['native WLAN netdev', 'Android 17 policy', 'mainline supplicant flag and binary'])
+        requires=['native WLAN netdev', 'Android 17 policy', 'mainline supplicant binary',
+                  'supported device form factor'])
     (out / 'provenance.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 
