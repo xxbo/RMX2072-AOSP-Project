@@ -45,9 +45,10 @@
         m3_wlan_s2f: smps2 {
             regulator-name = "m3_wlan_digital";
             // SM8250 PM8009-1: ACK selectors are 900 + n*16 mV.
-            // Use the upstream RB5 constraint, not downstream's direct
-            // 950 mV RPMh vote: 950..952 contains no ACK selector.
-            regulator-min-microvolt = <900000>;
+            // Trial 93 reads 900 mV with the RB5 900..952 range while
+            // this board requests 950 mV downstream. Isolate the nearest
+            // available selector below that request; retain the ceiling.
+            regulator-min-microvolt = <948000>;
             regulator-max-microvolt = <952000>;
         };
     };

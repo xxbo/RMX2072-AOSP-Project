@@ -1,0 +1,86 @@
+{
+  "boot_id": "af1c1d1e-9ef2-4599-af75-746f13330a2d",
+  "same_boot": true,
+  "enforcing": true,
+  "qca6390_enumerated": null,
+  "wlan_netdev": false,
+  "discovery_read_errors": true,
+  "kernel_discovery": {
+    "pci_root_port_reported": true,
+    "qca6390_reported": false,
+    "link_down_reported": true,
+    "digital_rail_registration_failed": false
+  },
+  "files": {
+    "pci.txt": "2f17a77a40f61554d543d3b92c99cd37876f674be7b869c72665aef1e88f557c",
+    "network.txt": "39e9361ed635ec019988fe6c3d17e3df6970980ed5b23699f870ba8452609c17",
+    "wifi-status.txt": "d53f963656b4ebd4ece74391dcdcb3b9ab9f83e894238073a6b02c5444007067",
+    "wifi-service.txt": "93dec5f4bf64e8cbde53bb66931ea52c388dd25180390afc1b6af65ad1202ba7",
+    "battery.txt": "edf50fa1c8bf09020831620d16f44950619a869aa570429b4a428dafe6717029",
+    "kernel-wlan.txt": "52c1804412e6e0952c4ebce5a242983971cfe59d933403047ef19631b047c00c"
+  },
+  "kernel_log_sha256": {
+    "boot-events.txt": "131770ccedc66476654dbc25362ce331c54f6b4251dc586f7844aebc0aeaf77b",
+    "acm.log": "406e589977ec3bbbdeacfb3eb89ba2253814040662c2274d11c11d56ca91f3b0"
+  },
+  "scan": "NOT RUN",
+  "association": "NOT RUN",
+  "dhcp": "NOT RUN",
+  "traffic": "NOT RUN",
+  "scope": "Discovery only; no RF enable, credentials or network configuration changes",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-93",
+  "source_commit": "9d545c1c9aaff04c24da101826e4e810ee461017",
+  "kernel_image_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "boot_sha256": "4a94b82a8d3244f6801c1a9045e8be6c37bae603d9e5e6a7af63464da2e6b449",
+  "identity": [
+    "37",
+    "6.18.32-android17-5-maybe-dirty-4k",
+    "af1c1d1e-9ef2-4599-af75-746f13330a2d",
+    "Enforcing",
+    "running",
+    "",
+    "retained",
+    "adb"
+  ],
+  "preflight_sha256": "775f47595c1bbbbb57f5f489c13d6109a9977b66e609837032d42728f4bdc0fb",
+  "same_candidate_and_test_seeds": true,
+  "retention_scope": "This boot only; no cold-start qualification.",
+  "early_snapshot": {
+    "file_sha256": "4cdbe04dcc801b5b9407d3a9b487bc5487a38eae211f7db7b316c13d9bc55bb3",
+    "boot_id": "af1c1d1e-9ef2-4599-af75-746f13330a2d",
+    "uptime_seconds": 65.33,
+    "complete": true,
+    "read_errors": false,
+    "source": "Pre-policy debugfs/provider and standard PCI config reads; not an oscilloscope measurement",
+    "regulators": [
+      "m3_wlan_digital               2    2      0 unknown   900mV     0mA   900mV   948mV",
+      "m3_wlan_aon                   1    1      0 unknown   952mV     0mA   952mV   952mV",
+      "m3_wlan_rfa2                  2    2      0 unknown  1352mV     0mA  1352mV  1352mV",
+      "m3_wlan_rfa1                  2    2      0 unknown  1904mV     0mA  1904mV  1904mV",
+      "diag_pm8150_s4                3    2      0 unknown  1800mV     0mA  1800mV  1800mV",
+      "diag_pm8150_l9                1    3      0 unknown  1200mV     0mA  1200mV  1200mV",
+      "diag_pm8150_l5                2    4      0 unknown   880mV     0mA   880mV   880mV"
+    ],
+    "clock_evidence": [
+      "gcc_pcie_wifi_clkref_en             1       1        0        0           0          0     50000      Y   1c06000.phy                     ref",
+      "gcc_pcie_0_pipe_clk                 2       2        0        0           0          0     50000      Y   pcie@1c00000                    no_connection_id",
+      "gcc_pcie_phy_aux_clk       1       1        0        19200000    0          0     50000      Y            1c06000.phy                     aux",
+      "gcc_pcie_0_aux_clk         1       1        0        19200000    0          0     50000      Y            pcie@1c00000                    no_connection_id",
+      "gcc_pcie0_phy_refgen_clk 2       2        0        100000000   0          0     50000      Y               1c06000.phy                     refgen"
+    ],
+    "gpio_evidence": [
+      "gpio20  : out high func0 16mA pull up",
+      "gpio21  : out low  func0 2mA no pull",
+      "gpio79  : out high func0 2mA pull down",
+      "gpio80  : in  low  func1 2mA pull up",
+      "gpio81  : in  high func0 2mA pull up"
+    ],
+    "pci_devices": [
+      "/sys/bus/pci/devices/0000:00:00.0"
+    ],
+    "root_link_status_hex": "0x1011",
+    "root_dll_active": false,
+    "link_speed_width_caveat": "Speed/width fields alone do not prove an active link; DLLLA is clear."
+  },
+  "retained_seconds": 194.781
+}

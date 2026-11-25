@@ -56,8 +56,8 @@ def check_m3_wifi(data, staged=False):
     expect(pmu, {'compatible': ['qcom,qca6390-pmu']})
     rails = {
         'vddaon': ('diag-regulators/smps6', 950000, 952000),
-        'vddpmu': ('wlan-digital-regulators/smps2', 900000, 952000),
-        'vddrfa0p95': ('wlan-digital-regulators/smps2', 900000, 952000),
+        'vddpmu': ('wlan-digital-regulators/smps2', 948000, 952000),
+        'vddrfa0p95': ('wlan-digital-regulators/smps2', 948000, 952000),
         'vddrfa1p3': ('display-regulators/smps8', 1350000, 1352000),
         'vddpcie1p3': ('display-regulators/smps8', 1350000, 1352000),
         'vddrfa1p9': ('diag-regulators/smps5', 1900000, 1904000),
