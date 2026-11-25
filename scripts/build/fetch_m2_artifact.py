@@ -258,7 +258,7 @@ def main():
     if a.performance:
         wanted.add('performance-fragment.sha256')
     if a.wifi:
-        wanted.add('wifi-fragment.sha256')
+        wanted.update({'wifi-fragment.sha256', 'wifi-builtin-modules.json'})
     with RemoteZip(url, session=session, timeout=120, support_suffix_range=False,
                    fetcher=BoundedRemoteFetcher) as z:
         files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
@@ -336,6 +336,11 @@ def main():
         for line in fragment.decode().splitlines():
             if line.startswith('CONFIG_') and line not in config:
                 raise ValueError('Missing Wi-Fi configuration: ' + line)
+        if json.loads(files['wifi-builtin-modules.json']) != {
+                'libarc4.ko': 'CONFIG_CRYPTO_LIB_ARC4',
+                'pwrseq-core.ko': 'CONFIG_POWER_SEQUENCING',
+                'rfkill.ko': 'CONFIG_RFKILL'}:
+            raise ValueError('Unexpected WLAN built-in module transitions')
     provenance.update(installing=True)
     (output / 'provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
     for name, data in files.items():

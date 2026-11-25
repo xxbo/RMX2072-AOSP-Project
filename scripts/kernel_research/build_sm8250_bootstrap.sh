@@ -118,6 +118,25 @@ if [[ "${RMX2072_WIFI:-0}" == 1 ]]; then
   test "${RMX2072_PERFORMANCE:-0}" == 1
   cat "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_wifi.fragment" >> "$WORKSPACE/rmx2072/bootstrap/sm8250_defconfig"
   sha256sum "$ROOT_DIR/device/realme/bladerunner_48m/bootstrap/sm8250_wifi.fragment" > "$ARTIFACT_DIR/wifi-fragment.sha256"
+  # These GKI modules become built-in with native WLAN. Keep Kleaf's strict
+  # module-output check, changing only the three observed transitions.
+  python3 - "$WORKSPACE/rmx2072/bootstrap/gki_modules.bzl" "$ARTIFACT_DIR/wifi-builtin-modules.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+text = p.read_text()
+builtins = {'libarc4.ko': 'CONFIG_CRYPTO_LIB_ARC4',
+            'pwrseq-core.ko': 'CONFIG_POWER_SEQUENCING',
+            'rfkill.ko': 'CONFIG_RFKILL'}
+for name in builtins:
+    line = '    "' + name + '",\n'
+    if text.count(line) != 1:
+        raise ValueError('Pinned GKI module declaration changed: ' + name)
+    text = text.replace(line, '')
+p.write_text(text)
+Path(sys.argv[2]).write_text(json.dumps(builtins, indent=2) + '\n')
+PY
 fi
 cd "$WORKSPACE"
 tools/bazel --output_user_root="${RUNNER_TEMP:-/tmp}/bazel-output-root" run \
