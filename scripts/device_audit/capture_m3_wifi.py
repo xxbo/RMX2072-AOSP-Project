@@ -18,6 +18,17 @@ def discovery(pci, network):
                 discovery_read_errors=bool(re.search(denied, pci + network, re.I)))
 
 
+def kernel_discovery(events):
+    # Exact enumerated device identities, not DT nodes or a driver filename.
+    return dict(pci_root_port_reported=bool(re.search(
+                    r'pci \S+: \[17cb:010b\]', events)),
+                qca6390_reported=bool(re.search(
+                    r'pci \S+: \[17cb:1101\]', events)),
+                link_down_reported='Phy link never came up' in events,
+                digital_rail_registration_failed=bool(re.search(
+                    r'wlan-digital-regulators: smps2: devm_regulator_register\(\) failed', events)))
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--adb', default='adb')
@@ -73,10 +84,13 @@ def main():
         hashes[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
     result = dict(boot_id=expected, same_boot=True, enforcing=True,
                   **discovery(captures['pci'], captures['network']),
+                  kernel_discovery=kernel_discovery(events),
                   files=hashes, kernel_log_sha256={name: hashlib.sha256(path.read_bytes()).hexdigest()
                                                  for name, path in logs.items()},
                   scan='NOT RUN', association='NOT RUN', dhcp='NOT RUN', traffic='NOT RUN',
                   scope='Discovery only; no RF enable, credentials or network configuration changes')
+    if result['kernel_discovery']['qca6390_reported']:
+        result['qca6390_enumerated'] = True
     (a.output / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
 
