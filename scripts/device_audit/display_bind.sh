@@ -20,23 +20,25 @@ mark() {
 }
 wlan_pins() {
     # Observe the inherited enable/reset state before the fabric creates the
-    # PCIe and PMU devices. Debugfs pinconf reads do not request/change a GPIO.
+    # PCIe and PMU devices. Debugfs GPIO reads do not request/change a GPIO.
     # Duplicate this small record to kmsg so a failed Android handoff cannot
     # hide it in the RAM-only display report.
     [ -d /sys/firmware/devicetree/base/soc/display-fabric-lab/qca6390-pmu ] || return 0
     echo "M3WLANSEQ boot=$boot stage=$stage boundary=$1 uptime=$(cut -d' ' -f1 /proc/uptime)" > /dev/kmsg
-    wlan_pin_files=0
-    for path in /sys/kernel/debug/pinctrl/*f100000*/pinconf-pins; do
-        [ -r "$path" ] || continue
-        wlan_pin_files=1
-        grep -E 'pin (20|21|79|80|81) |gpio(20|21|79|80|81)([^0-9]|$)' "$path" |
+    # MSM's pinconf-pins contains labels only on this kernel; actual direction
+    # and level come from its gpio debug show callback (verified in trial 93).
+    wlan_levels=
+    if [ -r /sys/kernel/debug/gpio ]; then
+        wlan_levels=$(grep -E '^[[:space:]]*gpio(20|21|79|80|81)[[:space:]]*:' /sys/kernel/debug/gpio || true)
+    fi
+    if [ -n "$wlan_levels" ]; then
+        printf '%s\n' "$wlan_levels" |
         while IFS= read -r line; do
             echo "M3WLANSEQ stage=$stage boundary=$1 $line"
             echo "M3WLANSEQ stage=$stage boundary=$1 $line" > /dev/kmsg
         done
-    done
-    if [ "$wlan_pin_files" = 0 ]; then
-        echo "M3WLANSEQ stage=$stage boundary=$1 pinconf=unavailable" > /dev/kmsg
+    else
+        echo "M3WLANSEQ stage=$stage boundary=$1 levels=unavailable" > /dev/kmsg
     fi
 }
 wlan_pins before || echo 'M3WLANSEQ read_failed=before'

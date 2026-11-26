@@ -28,6 +28,8 @@ def main():
     for name in ('workspace', 'baseline', 'baseline-config', 'output'):
         p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--wifi-disabled-against', type=Path,
+                   help='Isolation: retain this trial kernel but use the baseline non-WLAN DT')
     a = p.parse_args()
     c = a.workspace / 'current'
     old = read(a.baseline / 'inputs.json')
@@ -44,7 +46,8 @@ def main():
     checks = dict(
         correct_trial=usb['trial'] == rd['trial_id'] == a.trial,
         clean_recipe=usb['recipe_dirty'] is False and source['project_dirty'] is False,
-        wifi_enabled=all(x.get('wifi') is True for x in (kernel, boot, usb, source)),
+        wifi_profile=(kernel.get('wifi') is True and all(
+            x.get('wifi') is (a.wifi_disabled_against is None) for x in (boot, usb, source))),
         accepted_features=all(usb.get(k) is True and kernel.get(k) is True for k in
             ('display', 'input_devices', 'battery_gauge', 'performance')),
         same_display_flags=all(boot[k] == old['boot'][k] for k in flags),
@@ -68,8 +71,19 @@ def main():
         dtbo_digest=sha(c / 'boot/dtbo-diag.img') == boot['dtbo_sha256'],
     )
     data = (c / 'source-dt/effective.dtb').read_bytes()
-    display = check_m3_display(data, True, True, True, True, wifi=True)
-    wifi = check_m3_wifi(data, staged=True)
+    checks['effective_device_tree_digest'] = (hashlib.sha256(data).hexdigest() ==
+        source['outputs']['effective.dtb']['sha256'])
+    display = check_m3_display(data, True, True, True, True,
+                               wifi=a.wifi_disabled_against is None)
+    if a.wifi_disabled_against:
+        isolated = read(a.wifi_disabled_against / 'inputs.json')
+        checks['same_isolated_kernel'] = kernel['image_sha256'] == isolated['kernel']['image_sha256']
+        checks['exact_baseline_device_tree'] = (source['outputs']['effective.dtb'] ==
+            old['boot']['device_tree_build']['outputs']['effective.dtb'])
+        wifi = dict(enabled=False, isolation_against=a.wifi_disabled_against.name,
+                    hardware_result='NOT RUN; no WLAN discovery/connection pass is possible')
+    else:
+        wifi = check_m3_wifi(data, staged=True)
     delta = {k: dict(before=before.get(k, 'n'), after=after.get(k, 'n'))
              for k in sorted(before.keys() | after.keys()) if before.get(k) != after.get(k)}
     report = dict(trial=a.trial, baseline=a.baseline.name, passed=all(checks.values()),

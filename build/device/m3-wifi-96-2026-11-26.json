@@ -1,0 +1,264 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-96",
+  "source_commit": "e3953cc3165230a4e9655826e88a86dc2c05c2de",
+  "result": "FAIL",
+  "boot_id": "b912ef7f-3224-4611-b268-6bc0dbb2f7a6",
+  "kernel_image_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "boot_sha256": "0fbde0f3b294c7e1e38b83285d9c032f38c2ab0493cdec4e852c01472e7d7722",
+  "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+  "effective_dt": {
+    "size_bytes": 844809,
+    "sha256": "bc539cac8636993b22d2301301a5f6fac58baf93e054691a329c13c21d808d43"
+  },
+  "preflight": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-96",
+    "baseline": "ufs-host-g3-gsi17-firststage-ufs-90",
+    "passed": true,
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "wifi_enabled": true,
+      "accepted_features": true,
+      "same_display_flags": true,
+      "same_cmdline": true,
+      "same_boot_policy": true,
+      "same_source_init": true,
+      "same_guard_and_keys": true,
+      "same_super": true,
+      "same_vendor": true,
+      "same_test_volumes": true,
+      "same_gpu_firmware": true,
+      "same_nonwifi_kernel_sources": true,
+      "baseline_config_verified": true,
+      "no_existing_builtin_removed": true,
+      "kernel_verified": true,
+      "kernel_digest": true,
+      "boot_digest": true,
+      "dtbo_digest": true
+    },
+    "config_changes": {
+      "CONFIG_ATH11K": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_ATH11K_PCI": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_ATH_COMMON": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_CFG80211": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_CFG80211_CRDA_SUPPORT": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_CFG80211_DEFAULT_PS": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_CFG80211_REQUIRE_SIGNED_REGDB": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_CFG80211_USE_KERNEL_REGDB_KEYS": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_CRYPTO_LIB_ARC4": {
+        "before": "m",
+        "after": "y"
+      },
+      "CONFIG_CRYPTO_MICHAEL_MIC": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_MAC80211": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_MAC80211_HAS_RC": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_MAC80211_RC_DEFAULT": {
+        "before": "n",
+        "after": "\"minstrel_ht\""
+      },
+      "CONFIG_MAC80211_RC_DEFAULT_MINSTREL": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_MAC80211_RC_MINSTREL": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_MHI_BUS": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_PCI_PWRCTRL_PWRSEQ": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_POWER_SEQUENCING": {
+        "before": "m",
+        "after": "y"
+      },
+      "CONFIG_POWER_SEQUENCING_QCOM_WCN": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_QCOM_QMI_HELPERS": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_QRTR": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_QRTR_MHI": {
+        "before": "n",
+        "after": "y"
+      },
+      "CONFIG_RFKILL": {
+        "before": "m",
+        "after": "y"
+      },
+      "CONFIG_WLAN_VENDOR_ATH": {
+        "before": "n",
+        "after": "y"
+      }
+    },
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        20,
+        21,
+        36,
+        37,
+        38,
+        39,
+        48,
+        49,
+        66,
+        75,
+        79,
+        80,
+        81
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    },
+    "wifi": {
+      "controller": "PCIe0",
+      "endpoint": "17cb:1101 (F.20 inventory)",
+      "gpio": [
+        20,
+        21,
+        79,
+        80,
+        81
+      ],
+      "digital_rail": "PM8009 S2 (20607)",
+      "physical_result": "NOT RUN",
+      "firmware_supplied": false,
+      "connectivity": "NOT TESTED"
+    },
+    "kernel": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+    "boot": "0fbde0f3b294c7e1e38b83285d9c032f38c2ab0493cdec4e852c01472e7d7722",
+    "dtbo": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+    "device_result": "NOT RUN"
+  },
+  "observed": {
+    "phy_link_never_came_up": true,
+    "host_adb_observed": false,
+    "gsi_retention_passed": false,
+    "guard_armed_uptime_seconds": 92.919456,
+    "usb_bind_uptime_seconds": 101.534949,
+    "last_retained_console_uptime_seconds": 101.560244,
+    "pin_levels_captured": false,
+    "pinconf_limitation": "Only pin labels returned; do not infer electrical levels",
+    "reset_cause": "UNRESOLVED",
+    "explicit_panic_in_retained_console": false
+  },
+  "recovery_boot_id": "62976eda-57ed-41a4-bb51-fb8477631037",
+  "restoration": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "c9b99306-e612-4125-827e-af3af9bf28ff",
+    "super_sha256": null,
+    "boot_sha256": null,
+    "dtbo_sha256": null,
+    "lp_slots": [
+      0,
+      1
+    ],
+    "stock_full_partition_readback": false,
+    "stock_write_acknowledged": true,
+    "expected_image_sha256": {
+      "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+    },
+    "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata"
+  },
+  "retained_evidence_sha256": {
+    "inputs.json": "fc7d761b36fc1ea11d87d97cec26aeb057a1a34b1e3bc7ff1ab04e614287c490",
+    "live/acm.log": "652773929ca684cb5897fb0f1096ef0289c81c34c5bc11e0b9d958603070cc5e",
+    "live/console-ramoops-0": "745c6f7d28e7a52458d4c07973b12dc5729d46472ca5a1e0cc66162e91b98e5a",
+    "live/pmsg-ramoops-0": "6a09e7f04437fc925bb5303d60c7ce80f0ee606feaad5091f8156294af46cb3f",
+    "live/host-events.jsonl": "f591d737f0096b21a1eea2587453264a7ed2114ef81019e7787d689271037db7",
+    "live/adb.jsonl": "e0835d8c75166013777bf6bfbb71ffbaf7d2d278afff93ea414a0ba52d178928",
+    "timeline.jsonl": "955091eaa9211b05d2afc530a8511d9aa0fc50303ab30b39e02c86eec855e909",
+    "restored.json": "8efcd3fac9eadad4806880450c569a2ccef3dd6c382aaf113927061ce69ed191"
+  },
+  "scan": "NOT RUN",
+  "association": "NOT RUN",
+  "dhcp": "NOT RUN",
+  "traffic": "NOT RUN"
+}
