@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-26",
+  "firmware": "RMX2072_11_F.20",
+  "boot_id": "904f6fb5-6801-4c40-a91c-b632ea013c94",
+  "source": "Read-only live F.20 comparison",
+  "physical_sensor_names_reported_by_hal": [
+    {
+      "name": "bmi26x Accelerometer Non-wakeup",
+      "vendor": "BOSCH",
+      "type": "android.sensor.accelerometer(1)"
+    },
+    {
+      "name": "mmc5603x Magnetometer Non-wakeup",
+      "vendor": "memsic",
+      "type": "android.sensor.magnetic_field(2)"
+    },
+    {
+      "name": "bmi26x Gyroscope Non-wakeup",
+      "vendor": "BOSCH",
+      "type": "android.sensor.gyroscope(4)"
+    },
+    {
+      "name": "stk33502 Ambient Light Sensor Non-wakeup",
+      "vendor": "oplus",
+      "type": "android.sensor.light(5)"
+    },
+    {
+      "name": "stk33502 Proximity Sensor Wakeup",
+      "vendor": "oplus",
+      "type": "android.sensor.proximity(8)"
+    }
+  ],
+  "silicon_id_measured": false,
+  "subsystems": {
+    "adsp": "ONLINE",
+    "slpi": "ONLINE",
+    "external_modem_esoc0": "ONLINE"
+  },
+  "modem": {
+    "pci_vendor_device": "17cb:0306",
+    "controller_domain": 2,
+    "mhi_channels": [
+      "IPCR",
+      "QMI0",
+      "QMI1",
+      "RMNET_CTL",
+      "IP_HW0",
+      "AUDIO_VOICE_0"
+    ],
+    "multisim_configuration": "dsds",
+    "sim_states": [
+      "LOADED",
+      "ABSENT"
+    ],
+    "baseband_version": "Q_V1_P14,Q_V1_P14"
+  },
+  "target_system_acceptance": {
+    "sensors": "NOT RUN",
+    "gnss": "NOT RUN",
+    "fingerprint": "NOT RUN",
+    "dual_sim": "NOT RUN",
+    "sms": "NOT RUN",
+    "calls": "NOT RUN",
+    "4g_5g_data": "NOT RUN"
+  },
+  "collection_scope": {
+    "subscriber_identifiers": false,
+    "message_or_call_history": false,
+    "location_coordinates": false,
+    "sensor_activation": false,
+    "new_stock_partition_readback": false
+  },
+  "private_evidence_sha256": {
+    "f20-hal-names.txt": "1eb8b617358da4bf20d4f42df4f324509368ce10e0a7bc490f4c0ad6aa0de9f4",
+    "f20-sensor-list.txt": "2e2fbfe8990a40e32e7703bd999415a789a4a0cd1ce01afc5ffcae89368be353",
+    "f20-stock-perf.txt": "e05dddb850f4df7e6ebda14bf7130b0e33ebf8277e24e46d499d59462e17deb0",
+    "f20-subsystems.txt": "0e328170e097f309bd0e82efc2049cb401bc2f24bad13a91c65bdb98311d29b6"
+  }
+}

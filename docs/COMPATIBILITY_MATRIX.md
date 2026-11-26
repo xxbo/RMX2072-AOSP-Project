@@ -4,7 +4,10 @@ Status values: **Unknown**, **Source-reviewed**, **Build-tested**, **Boot-tested
 
 Driver-specific source evidence and proposed migration dispositions are tracked in [DRIVER_MIGRATION_MATRIX.md](./DRIVER_MIGRATION_MATRIX.md); shared prerequisites and sequencing are in [DRIVER_DEPENDENCY_MAP.md](./DRIVER_DEPENDENCY_MAP.md). Most entries remain source-reviewed. NQ-NCI strict DDK and CRC validation passed in run 42226214281; module loading remains untested. The [development plan](../plan.md) defines target-system acceptance. The table also includes hardware results recorded on the bring-up branches.
 
-Current M3 hardware audit: [2026-11-24 responsiveness, Wi-Fi, audio and haptics](M3_HARDWARE_STATUS_2026-11-24.md). Historical cold-start/recovery results below apply to their named kernels, not automatically to trial 83. The phone was restored to F.20 after trial 83 and remains there during this read-only audit.
+Current acceptance: [November 26 six-goal hardware record](M3_HARDWARE_2026-11-26.md).
+Trial 90 supplies the accepted Adreno/90 Hz baseline and November 25 bounded
+GPU load/idle result. WLAN trial 94 failed and F.20 was restored; package 95
+is unflashed. Historical cold-start results apply only to their named builds.
 
 ## Platform layers
 
@@ -20,7 +23,7 @@ Current M3 hardware audit: [2026-11-24 responsiveness, Wi-Fi, audio and haptics]
 | ACK/GKI | Android 17 6.18.32 generic ARM64 | Generic distribution build-tested | [Kleaf build](GKI_618_BUILD.md) |
 | Platform kernel | 6.18.32 with source-built board DTB/DTBO | M3 display, touch and battery tested | Trial 83 reuses the trial 81 kernel and board trees; unattended restart is not accepted for this host-gated candidate. [Trial 83](../build/device/m3-setup83-result-2026-11-23.json) |
 | Board DTB/DTBO | Source-built RMX2072 trees | M2 boot verified; M3 physical display/input verified | Trial 36 reached GSI with source trees/init. Trial 69 fixed physical corruption; trial 80 verified touch; trial 81 added real battery telemetry. No repeat cold-start qualification is requested. [Display](../build/device/m3-display-69-2026-11-21.json) · [Input](../build/device/m3-input80-result-2026-11-23.json) |
-| Graphics userspace | Source SwiftShader / minigbm / DRM HWC3; GSI ANGLE selected | Correct physical output; CPU rendering | Trial 69 operator confirmed complete native and Android patterns without noise. Trial 83 SurfaceFlinger still uses SwiftShader; Adreno acceleration and frame/input latency acceptance remain open. [Hardware audit](M3_HARDWARE_STATUS_2026-11-24.md) |
+| Graphics userspace | Source Turnip/minigbm/DRM HWC3 with GSI ANGLE | Hardware rendering and physical interaction passed | Trial 89 operator confirmed normal, smoother UI; trial 90 verifies automatic Adreno/90 Hz settings. Sustained 90 FPS remains unmeasured. [Trial 90](../build/device/m3-performance-90.json) |
 | Device-specific modules | Built for the project kernel | Per driver | Record module load and hardware results by subsystem. |
 
 ## Hardware test matrix
@@ -28,23 +31,23 @@ Current M3 hardware audit: [2026-11-24 responsiveness, Wi-Fi, audio and haptics]
 | Feature | Status | Test evidence / notes |
 | --- | --- | --- |
 | Boot / reboot | Trial 83 framework boot completed; current unattended restart open | Trial 35 passed a historical disconnected headless start. Current display candidate has a host-gated test entry and screen-off/on USB gap; do not transfer old acceptance to it. [Trial 83](../build/device/m3-setup83-result-2026-11-23.json) |
-| Display / brightness / refresh rate | Native and Android patterns physically confirmed | Trial 69 fixed corruption, confirmed by operator in both stages. Trial 83 selects 60 Hz; rendered frame rate and brightness-range acceptance remain open. [Trial 69](../build/device/m3-display-69-2026-11-21.json) |
+| Display / brightness / refresh rate | Correct physical output; 1080x2400 at 90 Hz | Trial 69 fixes DSC corruption. Trial 90 verifies 90 Hz defaults; brightness-range and sustained frame-rate acceptance remain open. [Trial 90](../build/device/m3-performance-90.json) |
 | Touch / gestures | Physical tap and scroll passed | Trial 80 Goodix touch opens the language list and scrolls without reported offset/jumps; direct input, 1080 x 2400 range. Quantitative latency remains unmeasured. [Trial 80](../build/device/m3-input80-result-2026-11-23.json) |
 | USB / ADB / MTP | Authenticated ADB after disconnected startup passed | Trial 35 passed exact 6.18/API 37/enforcing/PID 1/UFS identity, soak and 1 MiB transfer after power-key startup without USB. The older trial 28 failure remains recorded separately. MTP remains untested. [Trial 35](../build/device/m1-disconnected-start-35-2026-11-14.json) |
 | UFS | Warm HS-G3 reads and cold verified GSI mounts hardware-tested | Earlier direct reads established two-lane HS-G3 and six LUNs. Trial 35's disconnected start verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
 | Encrypted userdata | Open | Writable RAM-backed ext4 data and metadata passed write and fsync checks. Persistent encrypted UFS userdata across reboot remains untested. [Scratch volumes](M1_UFS_FIRST_STAGE.md#writable-data-and-metadata-trial) |
-| SIM / calls / SMS / mobile data | Unknown | |
-| Wi-Fi | Framework service only; physical WLAN not ported | Candidate disables cfg80211/Atheros wireless stack. Fresh F.20 binding identifies QCA6390, PCI 17cb:1101; no GSI scan/association/traffic acceptance. [Audit](M3_HARDWARE_STATUS_2026-11-24.md) |
+| SIM / calls / SMS / mobile data | Target path not ported | Stock external modem 17cb:0306 exposes MHI/QMI/IPCR and reports DSDS, LOADED/ABSENT. No target network-service acceptance. [Inventory](../build/device/m3-f20-subsystems-2026-11-26.json) |
+| Wi-Fi | Power graph binds; PCIe endpoint still absent | Native PCIe/PMU/ath11k stack is built. Trial 93 has no QCA6390 endpoint; trial 94 voltage change failed and was reverted. Scan/association/DHCP/traffic remain blocked. [WLAN record](M3_HARDWARE_2026-11-25.md) |
 | Bluetooth | Unknown | |
 | NFC | Unknown | |
-| GPS / location | Unknown | |
+| GPS / location | Target GNSS path not ported | GNSS transport/HAL and real location fix remain open; no location coordinates collected. |
 | Speakers / microphones / earpiece | AudioService boots; no PCM backend | Source audio HAL returns empty ports/routes/microphones. Qualcomm ASoC/ADSP disabled; stock speaker amps bind tfa98xx. No physical playback/capture acceptance. [Audit](M3_HARDWARE_STATUS_2026-11-24.md) |
 | Vibration / haptics | Stock binding identified; project hardware path not ported | F.20 binds aw8697_haptic at I2C 7-005a. No project AW8697 port or device-specific vibrator HAL implementation found. [Audit](M3_HARDWARE_STATUS_2026-11-24.md) |
 | Camera (front/rear/video) | Unknown | |
-| Fingerprint | Unknown | |
-| Sensors | Unknown | |
+| Fingerprint | Stock Goodix path identified; GSI HAL absent | Requires secure matching/auth tokens and optical illumination, not only a control node. [Evidence](M3_HARDWARE_2026-11-25.md) |
+| Sensors | Stock HAL models inventoried; target not ported | bmi26x acceleration/gyro, mmc5603x compass, stk33502 light/proximity; stock SLPI is online. Names are HAL reports, not direct chip-ID reads. [Inventory](../build/device/m3-f20-subsystems-2026-11-26.json) |
 | Battery telemetry / charging | Real gauge passed; charging integration open | Trial 81 reads BQ28Z610 and matches Android capacity, voltage and temperature without overrides. Charging/fast-charging acceptance does not follow from a working gauge. [Trial 81](../build/device/m3-battery81-result-2026-11-23.json) |
-| Thermal / sustained performance | Incomplete | Candidate disables QCOM CPUfreq HW and TSENS; Power HAL implements no boosts/hint sessions. GPU rendering and quantitative performance acceptance remain open. [Audit](M3_HARDWARE_STATUS_2026-11-24.md) |
+| Thermal / sustained performance | Native EPSS/TSENS and GPU devfreq enabled; thermal acceptance incomplete | GPU bounded transfer load passes 305 -> 587 -> 305 MHz. CPU load/idle, cooling operation, scheduling/frame times and sustained thermals remain open. [GPU result](../build/device/m3-gpu-dvfs-2026-11-25.json) |
 | Widevine / DRM | Unknown | |
 | OTA / recovery / rollback | Prepared-host automatic recovery passed on the cold-start kernel | Trial 35 expired the cold-start boot's lease, correlated its journal and 29-second pretimeout, disabled the recovery watchdog and autonomously entered EDL at 176.094 seconds. The waiting host restored F.20 and verified all original bytes and boot completion. No physical keys or host reboot command were used. Unattended long EDL hold and OTA remain open. [Trial 35 recovery](../build/device/m1-autonomous-recovery-35-2026-11-14.json) |
 
