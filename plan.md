@@ -66,9 +66,14 @@ SMS, calls and mobile data. Each has independent acceptance gates in the
 [current hardware record](docs/M3_HARDWARE_2026-11-26.md).
 
 Retain working Adreno/90 Hz, DSC, touch and the existing GSI/test seeds.
-First capture WLAN enable/reset takeover on the unchanged trial 93 hardware
-configuration, then fix endpoint discovery and proceed to scanning/connection.
-Use a retained GSI for target CPU/thermal inspection. Stock sensor and modem
+Trial 98 passes short CPU load/recovery frequency observation in retained GSI;
+thermal readings and cooling maps are visible under enforcing. Android Thermal
+HAL, scheduling and sustained-performance acceptance remain open. Trial 96
+fails WLAN/ADB retention; trial 97 isolates successful startup with the same
+kernel and no WLAN DT. Next test the prepared GPIO20 initial-low correction
+(trial 99, not yet flashed), record enable/reset state and fix PCIe discovery
+before firmware/scan/connection. Work stops after trial 98 at the user's request,
+with GSI retained and no further trial launched. Stock sensor and modem
 inventory is a prerequisite, not a claim of GSI functionality. No repeated
 cold-start/watchdog qualification. Keep one recovery set and one candidate;
 commit code and same-boot evidence after each phase.

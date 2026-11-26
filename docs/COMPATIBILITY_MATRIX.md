@@ -6,8 +6,10 @@ Driver-specific source evidence and proposed migration dispositions are tracked 
 
 Current acceptance: [November 26 six-goal hardware record](M3_HARDWARE_2026-11-26.md).
 Trial 90 supplies the accepted Adreno/90 Hz baseline and November 25 bounded
-GPU load/idle result. WLAN trial 94 failed and F.20 was restored; package 95
-is unflashed. Historical cold-start results apply only to their named builds.
+GPU load/idle result. Trial 98 adds bounded CPU frequency-response and thermal
+readout evidence, with current-boot GSI retained. WLAN trial 96 failed; trial 97
+isolates successful startup without WLAN DT. Trial 99 is prepared but unflashed.
+Historical cold-start results apply only to their named builds.
 
 ## Platform layers
 
@@ -37,7 +39,7 @@ is unflashed. Historical cold-start results apply only to their named builds.
 | UFS | Warm HS-G3 reads and cold verified GSI mounts hardware-tested | Earlier direct reads established two-lane HS-G3 and six LUNs. Trial 35's disconnected start verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
 | Encrypted userdata | Open | Writable RAM-backed ext4 data and metadata passed write and fsync checks. Persistent encrypted UFS userdata across reboot remains untested. [Scratch volumes](M1_UFS_FIRST_STAGE.md#writable-data-and-metadata-trial) |
 | SIM / calls / SMS / mobile data | Target path not ported | Stock external modem 17cb:0306 exposes MHI/QMI/IPCR and reports DSDS, LOADED/ABSENT. No target network-service acceptance. [Inventory](../build/device/m3-f20-subsystems-2026-11-26.json) |
-| Wi-Fi | Power graph binds; PCIe endpoint still absent | Native PCIe/PMU/ath11k stack is built. Trial 93 has no QCA6390 endpoint; trial 94 voltage change failed and was reverted. Scan/association/DHCP/traffic remain blocked. [WLAN record](M3_HARDWARE_2026-11-25.md) |
+| Wi-Fi | Power graph binds; PCIe endpoint still absent | Trial 96 with original rail ranges still fails PCIe/ADB. Trial 97 retains GSI with the same kernel and WLAN DT disabled. GPIO20 initial-low experiment is prepared, not flashed. Scan/association/DHCP/traffic remain blocked. [WLAN record](M3_HARDWARE_2026-11-26.md) |
 | Bluetooth | Unknown | |
 | NFC | Unknown | |
 | GPS / location | Target GNSS path not ported | GNSS transport/HAL and real location fix remain open; no location coordinates collected. |
@@ -47,7 +49,8 @@ is unflashed. Historical cold-start results apply only to their named builds.
 | Fingerprint | Stock Goodix path identified; GSI HAL absent | Requires secure matching/auth tokens and optical illumination, not only a control node. [Evidence](M3_HARDWARE_2026-11-25.md) |
 | Sensors | Stock HAL models inventoried; target not ported | bmi26x acceleration/gyro, mmc5603x compass, stk33502 light/proximity; stock SLPI is online. Names are HAL reports, not direct chip-ID reads. [Inventory](../build/device/m3-f20-subsystems-2026-11-26.json) |
 | Battery telemetry / charging | Real gauge passed; charging integration open | Trial 81 reads BQ28Z610 and matches Android capacity, voltage and temperature without overrides. Charging/fast-charging acceptance does not follow from a working gauge. [Trial 81](../build/device/m3-battery81-result-2026-11-23.json) |
-| Thermal / sustained performance | Native EPSS/TSENS and GPU devfreq enabled; thermal acceptance incomplete | GPU bounded transfer load passes 305 -> 587 -> 305 MHz. CPU load/idle, cooling operation, scheduling/frame times and sustained thermals remain open. [GPU result](../build/device/m3-gpu-dvfs-2026-11-25.json) |
+| CPU frequency / scheduling | Short pinned load/recovery frequency observation passed; scheduling open | Trial 98 reaches 1804.8/2419.2/2841.6 MHz on the three CPU policies and samples lower values after each load, with unchanged schedutil/bounds. Background work/ADB sampling remain active; this is not idle residency or EAS placement acceptance. [CPU result](../build/device/m3-cpu-thermal-98-2026-11-26.json) |
+| Thermal / sustained performance | Kernel sensors/cooling associations visible; Android Thermal HAL absent | Trial 98 reads TSENS and gauge under enforcing; no thermal trip is induced. GPU bounded transfer load passes 305 -> 587 -> 305 MHz. Thermal mitigation, scheduling/frame times and sustained performance remain open. [Thermal result](../build/device/m3-cpu-thermal-98-2026-11-26.json) · [GPU result](../build/device/m3-gpu-dvfs-2026-11-25.json) |
 | Widevine / DRM | Unknown | |
 | OTA / recovery / rollback | Prepared-host automatic recovery passed on the cold-start kernel | Trial 35 expired the cold-start boot's lease, correlated its journal and 29-second pretimeout, disabled the recovery watchdog and autonomously entered EDL at 176.094 seconds. The waiting host restored F.20 and verified all original bytes and boot completion. No physical keys or host reboot command were used. Unattended long EDL hold and OTA remain open. [Trial 35 recovery](../build/device/m1-autonomous-recovery-35-2026-11-14.json) |
 
