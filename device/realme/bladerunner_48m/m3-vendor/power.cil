@@ -1,4 +1,13 @@
 ; Capability-only Power endpoint: no board sysfs, performance or device writes.
+; Native thermal class nodes otherwise inherit generic sysfs on this GSI.
+; Label only the thermal subtree with the platform's public thermal type.
+; Engineering shell may observe temperatures/trips/cooling state, but cannot
+; write emul_temp, trip points, cooling state, policy or governor controls.
+; This is measurement access, not a Thermal HAL or a thermal-policy change.
+(genfscon sysfs "/devices/virtual/thermal" (u object_r sysfs_thermal ((s0) (s0))))
+(allow shell sysfs_thermal (dir (getattr search open read)))
+(allow shell sysfs_thermal (lnk_file (getattr read)))
+(allow shell sysfs_thermal (file (getattr open read)))
 (type rmx_power)
 (type rmx_power_exec)
 (roletype r rmx_power)
