@@ -25,7 +25,7 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access', 'thermal-readout'), default='health')
     p.add_argument('--keymaster-build', type=Path, help='Source HAL build report for the keymaster stage')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
@@ -42,7 +42,8 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    hal_kind = 'audio' if a.stage in ('heap', 'keymaster', 'render-access') else a.stage
+    hal_kind = ('power' if a.stage == 'thermal-readout' else
+                'audio' if a.stage in ('heap', 'keymaster', 'render-access') else a.stage)
     extra = read(current/hal_kind/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
     flags = ('single_dsc_test', 'solid_fill_test', 'panel_readback_test',
@@ -87,7 +88,7 @@ def main():
             {'/bin/hw/rmx-keymaster-info-service', '/bin/hw/rmx-keymaster-info-client',
              '/etc/init/keymaster.rc', '/etc/ueventd.rc', '/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}
             if a.stage == 'keymaster' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
-        'only_selected_hal_files_added': set(added) == (set() if a.stage in ('heap', 'keymaster', 'render-access') else set(extra['files'])-set(old_files['files'])),
+        'only_selected_hal_files_added': set(added) == (set() if a.stage in ('heap', 'keymaster', 'render-access', 'thermal-readout') else set(extra['files'])-set(old_files['files'])),
         'no_vendor_files_removed': set(old_files['files']) <= set(vendor['files']),
         'scratch_profile_consistent': scratch == rd['scratch_volumes'] == graphics['scratch'],
         'same_metadata_seed': scratch['metadata'] == old['scratch']['metadata'],
@@ -102,8 +103,29 @@ def main():
             hal_kind+'_source_verified': (extra.get('kind') == hal_kind and extra.get('source_verified') is True
                                         and extra.get('archive_digest_verified') is True),
             hal_kind+'_is_composed': graphics['graphics_source'].get(hal_kind) == extra})
-        if a.stage not in ('heap', 'keymaster', 'render-access'):
+        if a.stage not in ('heap', 'keymaster', 'render-access', 'thermal-readout'):
             checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
+    if a.stage == 'thermal-readout':
+        before = (a.baseline/'vendor-sepolicy.cil').read_bytes()
+        after = subprocess.check_output([str(current/'fs-tools/debugfs.exe'), '-R',
+            'cat /etc/selinux/vendor_sepolicy.cil', str(current/'vendor/vendor.img')],
+            stderr=subprocess.DEVNULL)
+        lines = lambda data: [x.strip() for x in data.splitlines()
+                              if x.strip() and not x.lstrip().startswith(b';')]
+        expected = {
+            b'(genfscon sysfs "/devices/virtual/thermal" (u object_r sysfs_thermal ((s0) (s0))))',
+            b'(allow shell sysfs_thermal (dir (getattr search open read)))',
+            b'(allow shell sysfs_thermal (lnk_file (getattr read)))',
+            b'(allow shell sysfs_thermal (file (getattr open read)))',
+        }
+        old_lines, new_lines = lines(before), lines(after)
+        checks.update(
+            baseline_policy_digest=hashlib.sha256(before).hexdigest() == old_files['files']['/etc/selinux/vendor_sepolicy.cil'],
+            current_policy_digest=hashlib.sha256(after).hexdigest() == vendor['files']['/etc/selinux/vendor_sepolicy.cil'],
+            only_policy_file_changed=changed == ['/etc/selinux/vendor_sepolicy.cil'] and not added,
+            exact_readonly_thermal_delta=(not expected.intersection(old_lines)
+                and all(new_lines.count(x) == 1 for x in expected)
+                and [x for x in new_lines if x not in expected] == old_lines))
     if a.stage != 'keymaster':
         checks['same_kernel'] = boot['kernel_sha256'] == old['boot']['kernel_sha256']
     else:
