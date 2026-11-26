@@ -63,11 +63,13 @@ def main():
     if sha(payload['secilc']) != 'ace5b9b5b26f28e0c81a070ac2be0106269f6a9f3912c80ea48663706444fac1':
         raise ValueError('Unexpected GSI compiler')
     sys.path.insert(0, str(repo/'scripts/build'))
-    from stage_keymaster_reference import inventory
-    files, _ = inventory(True, work/'current/rmx-m1-guard')
+    # Use the same complete composition as the image builder. In particular,
+    # hardware acceleration removes SwiftShader execmem exceptions and adds
+    # GPU firmware labels; manually appending four CIL files misses that delta.
+    from stage_m3_graphics import compose
+    files, _ = compose(work/'current/info-input', work/'current/rmx-m1-guard',
+                       work/'current/graphics')
     cil = files['/etc/selinux/vendor_sepolicy.cil']
-    for kind in ('graphics', 'health', 'power', 'audio'):
-        cil += (repo/'device/realme/bladerunner_48m/m3-vendor'/(kind+'.cil')).read_bytes().replace(b'\r\n', b'\n')
     payload['m3-vendor.cil'] = cil
     payload['plat_pub_versioned.cil'] = files['/etc/selinux/plat_pub_versioned.cil']
     local = work/'current/policy-check/gsi-compile'
@@ -95,7 +97,8 @@ def main():
         compiler_matches_pinned_gsi=True, live_policy_inputs_match_pinned_gsi=True,
         input_sha256={n: sha(d) for n, d in payload.items()},
         combined_vendor_policy_sha256=sha(cil), compiled_policy_sha256=compiled,
-        cil_statements_match_current_sources=True, loaded=False, compiler_output=result,
+        cil_statements_match_current_sources=True, exact_image_composition=True,
+        loaded=False, compiler_output=result,
         scope='Pinned Android 17 compiler and live-matched inputs; neverallow enabled; no policy load or enforcing change')
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(report, indent=2)+'\n')

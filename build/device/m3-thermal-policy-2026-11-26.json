@@ -1,6 +1,6 @@
 {
   "result": "PASS_STRICT_COMPILE_ONLY",
-  "utc": "2026-11-26T15:01:03.399322+00:00",
+  "utc": "2026-11-26T15:03:34.122497+00:00",
   "host_firmware": "Android 17 GSI",
   "boot_id": "f38d2058-d406-42b9-9e81-a3b40834b059",
   "command": "/data/local/tmp/rmx-m3-policy-gsi/secilc -m -M true -G -c 30 /data/local/tmp/rmx-m3-policy-gsi/plat_sepolicy.cil /data/local/tmp/rmx-m3-policy-gsi/202604.cil /data/local/tmp/rmx-m3-policy-gsi/system_ext_sepolicy.cil /data/local/tmp/rmx-m3-policy-gsi/product_sepolicy.cil /data/local/tmp/rmx-m3-policy-gsi/plat_pub_versioned.cil /data/local/tmp/rmx-m3-policy-gsi/m3-vendor.cil /data/local/tmp/rmx-m3-policy-gsi/plat_sepolicy_genfs_202604.cil -o /data/local/tmp/rmx-m3-policy-gsi/policy -f /data/local/tmp/rmx-m3-policy-gsi/contexts",
@@ -15,12 +15,13 @@
     "system_ext_sepolicy.cil": "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014",
     "product_sepolicy.cil": "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014",
     "plat_sepolicy_genfs_202604.cil": "3bdfcfba699936cb12d007fee7bca2feb1a88c75cc947f98b14c55fe4932b0d3",
-    "m3-vendor.cil": "325e8c4f2d3f3e15f096099abdd10154b6223562b5fe155d349a93067ee96073",
+    "m3-vendor.cil": "43a7a97409e8fbd2ce4627867a5d4229e368d4cb2f8d4d8f0a327ec0f1d70519",
     "plat_pub_versioned.cil": "b0ebe55553d5e1533e939cbd049d1a1b5693fdd5251f77d382b1431041e28f49"
   },
-  "combined_vendor_policy_sha256": "325e8c4f2d3f3e15f096099abdd10154b6223562b5fe155d349a93067ee96073",
-  "compiled_policy_sha256": "9f15caa93d31657b198570ea25c1dd26cf7f2a6afee6219fc64c07d79d5208fe",
+  "combined_vendor_policy_sha256": "43a7a97409e8fbd2ce4627867a5d4229e368d4cb2f8d4d8f0a327ec0f1d70519",
+  "compiled_policy_sha256": "4f12f6771a57f700e3ed91f4b88d6058c9b32fa64c56518ccea9c71448f8fc17",
   "cil_statements_match_current_sources": true,
+  "exact_image_composition": true,
   "loaded": false,
   "compiler_output": "",
   "scope": "Pinned Android 17 compiler and live-matched inputs; neverallow enabled; no policy load or enforcing change"
