@@ -53,6 +53,10 @@ def check_m3_wifi(data, staged=False):
             raise ValueError('WLAN GPIO mismatch: ' + key)
     expect(pins + '/pcie0-default-state/clkreq-pins',
            {'pins': ['gpio80'], 'function': ['pci_e0']})
+    expect(pins + '/wlan-enable-state', {'pins': ['gpio20'], 'function': ['gpio'],
+        'drive-strength': [16], 'bias-pull-up': [], 'output-low': []})
+    if 'output-high' in tree[pins + '/wlan-enable-state']:
+        raise ValueError('WLAN enable must start low before power sequencing')
     expect(pmu, {'compatible': ['qcom,qca6390-pmu']})
     rails = {
         'vddaon': ('diag-regulators/smps6', 950000, 952000),
@@ -95,4 +99,5 @@ def check_m3_wifi(data, staged=False):
         expect(path, {'status': ['disabled'], 'compatible': [compatible]})
     return dict(controller='PCIe0', endpoint='17cb:1101 (F.20 inventory)',
                 gpio=[20, 21, 79, 80, 81], digital_rail='PM8009 S2 (20607)',
+                wlan_enable_initial='output-low before native supply/enable sequence',
                 physical_result='NOT RUN', firmware_supplied=False, connectivity='NOT TESTED')

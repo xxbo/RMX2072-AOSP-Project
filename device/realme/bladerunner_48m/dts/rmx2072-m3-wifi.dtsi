@@ -9,6 +9,10 @@
     gpio-reserved-ranges = <0 20>, <22 14>, <40 8>, <50 16>, <67 8>, <76 3>, <82 99>;
     m3_wlan_enable: wlan-enable-state {
         pins = "gpio20"; function = "gpio"; drive-strength = <16>; bias-pull-up;
+        // The native sequencer acquires ASIS and preserves the initial level.
+        // Start disabled so its later enable occurs after the supply votes.
+        // Same QCA6390 initialization used by upstream SM8250 RB5/elish.
+        output-low;
     };
     m3_bt_enable: bt-enable-state {
         pins = "gpio21"; function = "gpio"; drive-strength = <2>; bias-disable;
