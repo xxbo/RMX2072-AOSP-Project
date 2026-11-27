@@ -1,13 +1,17 @@
 """Firmware and board-data boundaries in the actual initramfs payload."""
 import gzip
 import hashlib
+import json
 from pathlib import Path
 import sys
 import tempfile
+import struct
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/build'))
 from stage_m3_wifi_firmware import PREFIX, ramdisk_manifest, verify_ramdisk_firmware
+import stage_m3_wifi_firmware as stage
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/device_audit'))
 from run_ufs_trial import validate_live_trial_battery
 
@@ -51,3 +55,46 @@ class FirmwareTests(unittest.TestCase):
             with self.subTest(value=value):
                 with self.assertRaises(ValueError):validate_live_trial_battery(value)
         self.assertEqual(validate_live_trial_battery('25\n'),25)
+
+
+class BoardFirmwareTests(unittest.TestCase):
+    def fixture(self, directory):
+        root=Path(directory)
+        path=root/'bdwlan.elf'
+        data=bytearray(1032)
+        data[:7]=b'\x7fELF\x01\x01\x01'
+        struct.pack_into('<HHIIIIIHHHHHH',data,16,2,40,1,0x8000,52,0,0,52,32,1,40,0,0)
+        struct.pack_into('<IIIIIIII',data,52,1,1024,4096,4096,8,8,6,1024)
+        data[1024:]=b'BDF-data'
+        path.write_bytes(data)
+        self.pin(root,data)
+        return root,path,bytes(data)
+
+    def pin(self,root,data):
+        pin=root/'build/device/m3-wifi-firmware-source-2026-11-25.json'
+        pin.parent.mkdir(parents=True,exist_ok=True)
+        pin.write_text(json.dumps(dict(board_candidate=dict(bytes=len(data),
+            sha256=hashlib.sha256(data).hexdigest(),origin='unit fixture'))))
+
+    def test_entire_elf_is_retained_and_digest_change_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root,path,data=self.fixture(temp)
+            with patch.object(stage,'ROOT',root):
+                payload,proof=stage.board_firmware(path)
+                self.assertEqual(payload,data)
+                self.assertTrue(proof['elf_wrapper_preserved'])
+                self.assertEqual(proof['target_name'],'board.bin')
+                path.write_bytes(data[:-1]+b'x')
+                with self.assertRaises(ValueError): stage.board_firmware(path)
+
+    def test_truncated_load_or_unwrapped_data_cannot_be_admitted(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root,path,data=self.fixture(temp)
+            invalid=bytearray(data)
+            struct.pack_into('<I',invalid,52+16,10000)
+            for broken in (bytes(invalid), data[1024:]):
+                with self.subTest(length=len(broken)):
+                    path.write_bytes(broken)
+                    self.pin(root,broken)
+                    with patch.object(stage,'ROOT',root):
+                        with self.assertRaises(ValueError): stage.board_firmware(path)

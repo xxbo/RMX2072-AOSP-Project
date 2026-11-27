@@ -29,9 +29,12 @@ def main():
         p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--trial', required=True)
     p.add_argument('--wifi-firmware', type=Path, help='Require an additive firmware-only ramdisk delta against the baseline manifest')
+    p.add_argument('--wifi-board-file', type=Path, help='Require only the exact F.20 board ELF addition to a boot-firmware baseline')
     p.add_argument('--wifi-disabled-against', type=Path,
                    help='Isolation: retain this trial kernel but use the baseline non-WLAN DT')
     a = p.parse_args()
+    if a.wifi_board_file and not a.wifi_firmware:
+        p.error('--wifi-board-file requires --wifi-firmware')
     c = a.workspace / 'current'
     old = read(a.baseline / 'inputs.json')
     kernel, boot, usb, rd, source = [read(c / n) for n in (
@@ -79,7 +82,7 @@ def main():
         if a.wifi_disabled_against:
             p.error('Firmware cannot be added to the disabled WLAN profile')
         from stage_m3_wifi_firmware import wifi_firmware, ramdisk_manifest, verify_ramdisk_firmware
-        payloads, proof = wifi_firmware(a.wifi_firmware)
+        payloads, proof = wifi_firmware(a.wifi_firmware, a.wifi_board_file)
         manifest = ramdisk_manifest(c/'ramdisk/ramdisk.cpio.gz')
         verify_ramdisk_firmware(manifest, proof)
         baseline_manifest = read(a.baseline/'ramdisk-manifest.json')
@@ -89,9 +92,16 @@ def main():
         changed = sorted(n for n in old_entries.keys() & manifest.keys() if old_entries[n] != manifest[n])
         added = sorted(manifest.keys() - old_entries.keys())
         removed = sorted(old_entries.keys() - manifest.keys())
-        expected_additions = sorted(['lib/firmware/'+n for n in payloads] +
-            ['lib/firmware/ath11k', 'lib/firmware/ath11k/QCA6390', 'lib/firmware/ath11k/QCA6390/hw2.0'])
-        checks['only_boot_firmware_and_trial_id_added'] = changed == ['trial-id'] and added == expected_additions and not removed
+        if a.wifi_board_file:
+            _, baseline_proof = wifi_firmware(a.wifi_firmware)
+            checks['baseline_has_reviewed_boot_firmware_only'] = old['ramdisk'].get('wifi_firmware') == baseline_proof
+            expected_additions = ['lib/firmware/ath11k/QCA6390/hw2.0/board.bin']
+            delta_check = 'only_same_handset_board_and_trial_id_added'
+        else:
+            expected_additions = sorted(['lib/firmware/'+n for n in payloads] +
+                ['lib/firmware/ath11k', 'lib/firmware/ath11k/QCA6390', 'lib/firmware/ath11k/QCA6390/hw2.0'])
+            delta_check = 'only_boot_firmware_and_trial_id_added'
+        checks[delta_check] = changed == ['trial-id'] and added == expected_additions and not removed
         checks['wifi_firmware_provenance'] = rd.get('wifi_firmware') == usb.get('wifi_firmware') == proof
         checks['same_firmware_trial_kernel'] = kernel['image_sha256'] == old['kernel']['image_sha256']
         checks['same_firmware_trial_dt'] = source['outputs']['effective.dtb'] == old['boot']['device_tree_build']['outputs']['effective.dtb']

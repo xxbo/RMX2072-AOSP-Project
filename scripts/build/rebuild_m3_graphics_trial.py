@@ -30,14 +30,14 @@ def retained_display_flags(prior, display_staged):
     return ['--' + key.replace('_', '-') for key in DISPLAY_OPTIONS if prior.get(key)]
 
 
-def retained_wifi_flags(prior, firmware):
+def retained_wifi_flags(prior, firmware, board_file=None):
     """Vendor changes must keep the existing WLAN DT and boot firmware."""
     enabled = prior.get('wifi', False)
     if not isinstance(enabled, bool):
         raise ValueError('Invalid prior Wi-Fi option')
     previous = prior.get('wifi_firmware')
     if not enabled:
-        if previous or firmware is not None:
+        if previous or firmware is not None or board_file is not None:
             raise ValueError('Wi-Fi firmware requires an existing WLAN profile')
         return []
     flags = ['--wifi']
@@ -45,11 +45,13 @@ def retained_wifi_flags(prior, firmware):
         if firmware is None:
             raise ValueError('Provide --wifi-firmware to retain the existing boot firmware')
         from stage_m3_wifi_firmware import wifi_firmware
-        _, actual = wifi_firmware(firmware)
+        _, actual = wifi_firmware(firmware, board_file)
         if actual != previous:
             raise ValueError('A vendor rebuild must retain the exact WLAN boot firmware')
         flags += ['--wifi-firmware', str(firmware.resolve())]
-    elif firmware is not None:
+        if board_file is not None:
+            flags += ['--wifi-board-file', str(board_file.resolve())]
+    elif firmware is not None or board_file is not None:
         raise ValueError('Stage new WLAN firmware separately from a vendor rebuild')
     return flags
 
@@ -77,6 +79,7 @@ def main():
     p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
     p.add_argument('--performance', action='store_true')
     p.add_argument('--wifi-firmware', type=Path, help='Retain exactly the previous WLAN boot firmware')
+    p.add_argument('--wifi-board-file', type=Path, help='Retain the exact previously included same-handset board ELF')
     p.add_argument('--wifi-overlay', type=Path, help='Explicitly compose the reviewed mainline supplicant RRO')
     p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
@@ -105,7 +108,7 @@ def main():
     prior = json.loads((current/'usb-build.json').read_text())
     check_retained_peripherals(prior, vars(a))
     display_flags = retained_display_flags(prior, a.display_staged)
-    wifi_flags = retained_wifi_flags(prior, a.wifi_firmware)
+    wifi_flags = retained_wifi_flags(prior, a.wifi_firmware, a.wifi_board_file)
     if prior.get('wifi') and not (a.performance and a.battery_gauge):
         p.error('Retaining Wi-Fi requires --performance and --battery-gauge')
     if a.wifi_overlay and not prior.get('wifi'):

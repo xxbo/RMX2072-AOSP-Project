@@ -77,6 +77,17 @@ class WifiAndroidTests(unittest.TestCase):
             with self.subTest(prior=prior):
                 with self.assertRaises(ValueError): retained_wifi_flags(prior, Path('new'))
 
+    def test_vendor_rebuild_must_explicitly_retain_board_file(self):
+        proof={'board_data_included':True,'files':{'board.bin':'same handset'}}
+        prior={'wifi':True,'wifi_firmware':proof}
+        firmware,board=Path('firmware'),Path('bdwlan.elf')
+        def checked(directory, board_file=None):
+            return {}, proof if board_file==board else {'board_data_included':False}
+        with patch('stage_m3_wifi_firmware.wifi_firmware',side_effect=checked):
+            with self.assertRaises(ValueError): retained_wifi_flags(prior,firmware)
+            self.assertEqual(retained_wifi_flags(prior,firmware,board),
+                ['--wifi','--wifi-firmware',str(firmware.resolve()),'--wifi-board-file',str(board.resolve())])
+
     def test_vendor_rebuild_cannot_silently_drop_90hz_gpu_or_touch(self):
         accepted = dict(panel_refresh=90, performance=True, input_devices=True, battery_gauge=True)
         check_retained_peripherals(accepted, accepted)

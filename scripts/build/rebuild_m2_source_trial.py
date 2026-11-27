@@ -29,8 +29,11 @@ def main():
     p.add_argument('--performance', action='store_true', help='Include native Adreno, EPSS and TSENS')
     p.add_argument('--wifi', action='store_true', help='Include native QCA6390 PCIe0 and board power resources')
     p.add_argument('--wifi-firmware', type=Path, help='Verified QCA6390 boot firmware directory, without board data')
+    p.add_argument('--wifi-board-file', type=Path, help='Exact retained same-handset F.20 board ELF')
     p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
+    if a.wifi_board_file and not a.wifi_firmware:
+        p.error('--wifi-board-file requires --wifi-firmware')
     if a.wifi and not (a.performance and a.battery_gauge):
         p.error('--wifi requires --performance and --battery-gauge')
     if a.wifi_firmware and not (a.wifi and a.display_staged):
@@ -119,6 +122,7 @@ def main():
         *(['--display-smoke', current / 'display-smoke/drm-panel-smoke'] if a.display else []),
         *(['--gpu-firmware', current / 'gpu-firmware'] if a.performance else []),
         *(['--wifi-firmware', a.wifi_firmware.resolve()] if a.wifi_firmware else []),
+        *(['--wifi-board-file', a.wifi_board_file.resolve()] if a.wifi_board_file else []),
         *(['--display-staged'] if a.display_staged else []),
         *(['--solid-fill-test'] if a.solid_fill_test else []),
         *(['--first-frame-trace'] if a.first_frame_trace else []))

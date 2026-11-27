@@ -52,6 +52,7 @@ def main():
     p.add_argument('--display-smoke', type=pathlib.Path, help='Static physical DRM test; run before Android policy')
     p.add_argument('--gpu-firmware', type=pathlib.Path, help='Verified peripheral firmware for the native Adreno candidate')
     p.add_argument('--wifi-firmware', type=pathlib.Path, help='Pinned QCA6390 boot firmware only; no board/calibration data')
+    p.add_argument('--wifi-board-file', type=pathlib.Path, help='Explicitly add the exact retained F.20 board ELF')
     p.add_argument('--solid-fill-test', action='store_true', help='Bounded native SSPP solid-fill isolation with independent parent cleanup')
     p.add_argument('--display-staged', action='store_true', help='Wait for USB log capture before binding the three display stages')
     p.add_argument('--first-frame-trace', action='store_true', help='Opt in to bounded native DSI/PLL/MDP tracing')
@@ -73,6 +74,8 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.wifi_board_file and not a.wifi_firmware:
+        p.error('--wifi-board-file requires --wifi-firmware')
     if a.first_frame_trace and not a.display_staged:
         p.error('--first-frame-trace requires --display-staged')
     if a.first_stage_source_build and not a.android_first_stage:
@@ -165,7 +168,7 @@ def main():
         if not a.gpu_firmware or not a.display_staged:
             p.error('--wifi-firmware requires the retained staged native performance profile')
         from stage_m3_wifi_firmware import wifi_firmware
-        firmware_files, wifi_firmware_proof = wifi_firmware(a.wifi_firmware)
+        firmware_files, wifi_firmware_proof = wifi_firmware(a.wifi_firmware, a.wifi_board_file)
         for name in ['lib/firmware/ath11k', 'lib/firmware/ath11k/QCA6390',
                      'lib/firmware/ath11k/QCA6390/hw2.0']:
             add(name, 0o40755)
