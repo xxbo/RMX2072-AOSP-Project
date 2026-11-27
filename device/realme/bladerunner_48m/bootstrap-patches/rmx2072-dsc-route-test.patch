@@ -1,0 +1,71 @@
+Subject: [RMX2072 M3] opt-in single DSC topology isolation and input mux snapshot
+
+ACK base ecdaacc9a0ee87eaf9544e1836d86bd9d590312e. Default topology is unchanged.
+The official 20607 RM19795 timing lists <1 1 1> and <2 2 1> (default 1).
+The test selects the former without changing panel PPS, slices per packet or
+clock configuration. This is a diagnostic switch, not an established fix.
+
+Also capture all four SM8250 DSC input mux words at DPU 0x81800..0x8180c
+inside the existing runtime-PM-owned snapshot. The normal 0x140-byte DSC
+banks do not include these words. No register writes are added by the witness.
+
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -10,6 +10,7 @@
+ #define pr_fmt(fmt)	"[drm:%s:%d] " fmt, __func__, __LINE__
+ #include <linux/debugfs.h>
+ #include <linux/kthread.h>
++#include <linux/moduleparam.h>
+ #include <linux/seq_file.h>
+ 
+ #include <drm/drm_atomic.h>
+@@ -56,6 +57,14 @@
+ 	(MAX_H_TILES_PER_DISPLAY * NUM_PHYS_ENCODER_TYPES)
+ 
+ #define MAX_CHANNELS_PER_ENC 2
++
++/* Opt-in RM19795 diagnostic: the official 20607 timing lists <1 1 1>
++ * as well as the default <2 2 1>. Keep two soft slices and the same PPS.
++ * Read-only after boot; never change topology underneath an active CRTC.
++ */
++static bool rmx2072_single_dsc;
++module_param_named(rmx2072_single_dsc, rmx2072_single_dsc, bool, 0400);
++MODULE_PARM_DESC(rmx2072_single_dsc, "RM19795 1080x2400 single DSC isolation test");
+ 
+ #define IDLE_SHORT_TIMEOUT	1
+ 
+@@ -689,6 +698,15 @@
+ 			topology->num_dsc = 2;
+ 		else
+ 			topology->num_dsc = 1;
++
++		if (rmx2072_single_dsc &&
++		    dpu_kms->catalog->mdss_ver->core_major_ver == 6 &&
++		    dpu_kms->catalog->mdss_ver->core_minor_ver == 0 &&
++		    disp_info->intf_type == INTF_DSI && topology->num_intf == 1 &&
++		    adj_mode->hdisplay == 1080 && adj_mode->vdisplay == 2400 &&
++		    dsc->slice_count == 2 && dsc->slice_width == 540 &&
++		    dsc->slice_height == 48)
++			topology->num_dsc = 1;
+ 	}
+ 
+ 	connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -1036,6 +1036,16 @@
+ 	for (i = 0; i < cat->cwb_count; i++)
+ 		msm_disp_snapshot_add_block(disp_state, cat->cwb[i].len,
+ 					    dpu_kms->mmio + cat->cwb[i].base, cat->cwb[i].name);
++
++	/* SM8250 v1.1 DSC input muxes sit outside the encoder bank lengths.
++	 * Four contiguous words: DSC_CTL(DSC_0..3), see dpu_hw_dsc.c.
++	 * Snapshot utility reads aligned 16-byte rows, so capture all four.
++	 */
++	if (cat->mdss_ver->core_major_ver == 6 &&
++	    cat->mdss_ver->core_minor_ver == 0 && cat->dsc_count == 4)
++		msm_disp_snapshot_add_block(disp_state, 0x10,
++			dpu_kms->mmio + cat->dsc[0].base + 0x1800,
++			"dsc_input_mux");
+ 
+ 	/* dump DSC sub-blocks HW regs info */
+ 	for (i = 0; i < cat->dsc_count; i++) {

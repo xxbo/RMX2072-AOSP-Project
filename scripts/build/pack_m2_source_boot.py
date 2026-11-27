@@ -8,6 +8,7 @@ import gzip
 import hashlib
 import json
 from pathlib import Path
+import re
 import struct
 
 from avb_footer import retain_envelope
@@ -21,9 +22,35 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def scratch_boot_argument(provenance):
+    """Identify only the checked RAM scratch profile, never physical userdata."""
+    volumes = provenance.get('scratch_volumes')
+    if volumes is None:
+        return ''
+    if (not provenance.get('autonomous_ufs') or not provenance.get('guarded_adb')
+            or set(volumes) != {'data', 'metadata'}):
+        raise ValueError('Scratch framework startup requires guarded isolated volumes')
+    for name, sizes in [('data', (512 << 20, 2048 << 20)), ('metadata', (32 << 20,))]:
+        info = volumes[name]
+        if (info.get('bytes') not in sizes or any(
+                not re.fullmatch(r'[0-9a-f]{64}', info.get(key, ''))
+                for key in ('sha256', 'gzip_sha256'))):
+            raise ValueError('Unchecked scratch volume for framework startup: ' + name)
+    return ' androidboot.rmx_scratch=1'
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--workspace', required=True, type=Path)
+    parser.add_argument('--single-dsc-test', action='store_true')
+    parser.add_argument('--solid-fill-test', action='store_true')
+    parser.add_argument('--panel-readback-test', action='store_true')
+    parser.add_argument('--stock-linkclock-test', action='store_true')
+    parser.add_argument('--stock-dsc-test', action='store_true')
+    parser.add_argument('--stock-phy-test', action='store_true')
+    parser.add_argument('--first-frame-trace', action='store_true')
+    parser.add_argument('--standard-pps-test', action='store_true')
+    parser.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work = a.workspace.resolve()
@@ -34,6 +61,22 @@ def main():
     dt = json.loads((source / 'source.json').read_text())
     if dt.get('factory_binary_inputs') is not False or dt.get('project_dirty'):
         raise ValueError('Requires committed, source-only device tree build')
+    if a.single_dsc_test and not dt.get('display'):
+        raise ValueError('Single DSC test requires the display device tree')
+    if a.solid_fill_test and not dt.get('display'):
+        raise ValueError('Solid-fill test requires the display device tree')
+    if a.panel_readback_test and not dt.get('display'):
+        raise ValueError('Panel readback requires the display device tree')
+    if a.stock_linkclock_test and not dt.get('display'):
+        raise ValueError('Stock link clock test requires the display device tree')
+    if a.stock_dsc_test and (not a.stock_linkclock_test or not a.single_dsc_test):
+        raise ValueError('Stock DSC comparison requires the trial 65 stock clock and single DSC route')
+    if a.stock_phy_test and not a.stock_dsc_test:
+        raise ValueError('Stock PHY timing test requires the trial 66 stock DSC configuration')
+    if a.first_frame_trace and (not a.stock_phy_test or not dt.get('display_staged')):
+        raise ValueError('First-frame tracing requires the staged trial 67 baseline')
+    if a.standard_pps_test and (not a.first_frame_trace or not a.panel_readback_test):
+        raise ValueError('Standard PPS isolation requires the complete trial 68 baseline')
     for name, expected in dt['outputs'].items():
         data = (source / name).read_bytes()
         if len(data) != expected['size_bytes'] or sha(data) != expected['sha256']:
@@ -46,16 +89,105 @@ def main():
     patch = (repo / 'device/realme/bladerunner_48m/bootstrap-patches/rmx2072-source-pon.patch').read_bytes().replace(b'\r\n', b'\n')
     if (kernel_dir / 'source-pon-patch.sha256').read_text().split()[0] != sha(patch):
         raise ValueError('Kernel does not contain the reviewed source-tree PON patch')
+    if dt.get('display'):
+        patch = (repo / 'device/realme/bladerunner_48m/bootstrap-patches/rmx2072-display-clock.patch').read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / 'display-clock-patch.sha256'
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Display DT requires the matching deferred DSI clock-parent kernel patch')
     config = (kernel_dir / 'sm8250_bootstrap_dot_config').read_text().splitlines()
+    if a.panel_refresh == 90:
+        manifest = (kernel_dir/'display-source.sha256').read_text()
+        for name in ('panel-samsung-rm19795.c', 'rm19795-commands-90.h'):
+            data = (repo/'device/realme/bladerunner_48m/display'/name).read_bytes().replace(b'\r\n', b'\n')
+            if sha(data) not in manifest:
+                raise ValueError('90 Hz panel source does not match the kernel build')
+    if dt.get('battery_gauge'):
+        pinned = json.loads((repo / 'build/m3-battery-source.json').read_text())
+        manifest = kernel_dir / 'battery-source.sha256'
+        if not kernel.get('battery_gauge') or not manifest.is_file():
+            raise ValueError('Gauge DT requires the verified battery kernel artifact')
+        actual = {Path(line.split(maxsplit=1)[1]).name: line.split()[0]
+                  for line in manifest.read_text().splitlines()}
+        if actual != pinned['files'] or any('CONFIG_' + k + '=y' not in config
+                for k in ('BATTERY_BQ27XXX', 'BATTERY_BQ27XXX_I2C')):
+            raise ValueError('Gauge source or configuration differs')
+        if '# CONFIG_BATTERY_BQ27XXX_DT_UPDATES_NVM is not set' not in config:
+            raise ValueError('Gauge nonvolatile updates must stay disabled')
+    if dt.get('input_devices'):
+        if 'CONFIG_TOUCHSCREEN_GOODIX_GTX8=y' not in config or not kernel.get('input_devices'):
+            raise ValueError('Input DT requires the verified GTX8 kernel artifact')
+        for filename, manifest in [('goodix_gtx8.c', 'touch-source.sha256'),
+                                   ('goodix_gtx8.h', 'touch-header.sha256')]:
+            source_bytes = (repo / 'device/realme/bladerunner_48m/input' / filename).read_bytes().replace(b'\r\n', b'\n')
+            if (kernel_dir / manifest).read_text().split()[0] != sha(source_bytes):
+                raise ValueError('Input DT and compiled touch driver differ')
+    if dt.get('display') and 'CONFIG_REGULATOR_QCOM_REFGEN=y' not in config:
+        raise ValueError('Display DT requires the native REFGEN regulator driver')
+    if a.single_dsc_test:
+        name = 'rmx2072-dsc-route-test'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Single DSC test requires the verified matching kernel patch')
+    if a.solid_fill_test:
+        name = 'rmx2072-dpu-solid-fill-test'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Solid-fill test requires the verified matching kernel patch')
+    if a.stock_linkclock_test:
+        name = 'rmx2072-stock-linkclock-test'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Stock link clock test requires the verified matching kernel patch')
+    if a.stock_dsc_test:
+        name = 'rmx2072-stock-dsc-test'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Stock DSC test requires the verified matching kernel patch')
+    if a.stock_phy_test:
+        name = 'rmx2072-stock-phy-timing-test'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('Stock PHY timing test requires the verified matching kernel patch')
+    if a.panel_readback_test:
+        panel = repo / 'device/realme/bladerunner_48m/display/panel-samsung-rm19795.c'
+        manifest = kernel_dir / 'display-source.sha256'
+        hashes = {Path(row.split()[1]).name:row.split()[0]
+                  for row in manifest.read_text().splitlines()} if manifest.is_file() else {}
+        if hashes.get(panel.name) != sha(panel.read_bytes().replace(b'\r\n', b'\n')):
+            raise ValueError('Panel readback requires the verified matching panel source')
+    if a.first_frame_trace:
+        name = 'rmx2072-first-frame-trace'
+        patch = (repo / ('device/realme/bladerunner_48m/bootstrap-patches/' + name + '.patch')).read_bytes().replace(b'\r\n', b'\n')
+        manifest = kernel_dir / (name + '.sha256')
+        if not manifest.is_file() or manifest.read_text().split()[0] != sha(patch):
+            raise ValueError('First-frame tracing requires the verified matching kernel patch')
     if any('CONFIG_' + name + '=y' not in config for name in ('INPUT_PM8941_PWRKEY', 'POWER_RESET_MSM', 'POWER_RESET_QCOM_PON')):
         raise ValueError('Upstream PON/PS_HOLD drivers are not built in')
     rd = (current / 'ramdisk/ramdisk.cpio.gz').read_bytes()
     provenance = json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())
+    if dt.get('performance') and (not kernel.get('performance') or not provenance.get('gpu_firmware')):
+        raise ValueError('Native Adreno requires checked kernel options and early GPU firmware')
+    if dt.get('wifi'):
+        if not kernel.get('wifi') or not dt.get('checks', {}).get('wifi'):
+            raise ValueError('Native WLAN requires checked kernel and board power resources')
+        from check_m3_wifi import check_m3_wifi
+        check_m3_wifi((source / 'effective.dtb').read_bytes(), dt.get('display_staged', False))
+    if bool(provenance.get('first_frame_trace')) != a.first_frame_trace:
+        raise ValueError('First-frame trace request and ramdisk marker must agree')
+    if bool(provenance.get('solid_fill_test')) != a.solid_fill_test:
+        raise ValueError('Solid-fill boot request and ramdisk marker must agree')
     if (not provenance.get('autonomous_ufs') or not provenance.get('guarded_adb') or
             provenance.get('first_stage_source', {}).get('origin') != 'project-source-build'):
         raise ValueError('M2 requires autonomous guarded source-init ramdisk')
     if sha(rd) != provenance['gzip_sha256'] or gzip.decompress(rd)[:6] != b'070701':
         raise ValueError('Invalid ramdisk')
+    if bool(dt.get('display_staged')) != bool(provenance.get('display_staged')):
+        raise ValueError('Staged display DT and ramdisk gate must agree')
     stock = (work / 'recovery/f20/boot.img').read_bytes()
     stock_dtbo = (work / 'recovery/f20/dtbo.img').read_bytes()
     if sha(stock) != '9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3' or sha(stock_dtbo) != '61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef':
@@ -72,6 +204,35 @@ def main():
                'panic=30 androidboot.hardware=qcom '
                'androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs '
                'tp_printk tp_printk_stop_on_boot')
+    if dt.get('display'):
+        # MSM's DBG clock/PHY messages use DRM_UT_DRIVER (bit 1).
+        cmdline += ' initcall_debug drm.debug=0x2'
+    if a.single_dsc_test:
+        cmdline += ' msm.rmx2072_single_dsc=1'
+    if a.panel_readback_test:
+        cmdline += ' panel_samsung_rm19795.readback=1'
+    if a.stock_linkclock_test:
+        cmdline += ' msm.rmx2072_stock_linkclk=1'
+    if a.stock_dsc_test:
+        cmdline += ' msm.rmx2072_stock_dsc=1'
+    if a.stock_phy_test:
+        cmdline += ' msm.rmx2072_stock_phy=1'
+    if a.standard_pps_test:
+        cmdline += ' panel_samsung_rm19795.pps=1'
+    cmdline += scratch_boot_argument(provenance)
+    if dt.get('performance'):
+        # ufs-init-trace needs tp_printk to allocate tracepoint_print_iter at
+        # boot. Without it, the sysctl silently stays zero and the handoff
+        # exits before Android init. Keep stop_on_boot to suppress early noise;
+        # omit optional console verbosity/DRM debug to fit the 512-byte field.
+        # The independent ACM /dev/kmsg capture retains all ring messages.
+        omit = {'earlycon', 'ignore_loglevel', 'initcall_debug', 'drm.debug=0x2', 'loglevel=8'}
+        cmdline = ' '.join(x for x in cmdline.split() if x not in omit)
+        cmdline += ' firmware_class.path=/vendor/firmware'
+    if a.panel_refresh == 90:
+        cmdline += ' panel_samsung_rm19795.refresh_rate=90'
+    if len(cmdline.encode()) >= 512:
+        raise ValueError('Diagnostic command line exceeds the boot header field')
     header[64:576] = cmdline.encode().ljust(512, b'\0')
     header[608:1632] = bytes(1024)
     for offset, value in ((8, len(wrapped)), (16, len(rd)), (1648, len(tree))):
@@ -99,6 +260,22 @@ def main():
                   device_tree_build=dt, cmdline=cmdline, entry_probe=False,
                   avb_envelopes=dict(boot=boot_avb, dtbo=dtbo_avb),
                   status='packaged-not-device-tested')
+    # The autonomous UFS ramdisk variant also hosts gated display experiments.
+    # A retained Android guardian does not remove that next-boot host gate.
+    record['boot_start_policy'] = 'host-gated-display' if provenance.get('display_staged') else 'autonomous-ufs'
+    record['host_start_required_after_every_reboot'] = bool(provenance.get('display_staged'))
+    record['single_dsc_test'] = a.single_dsc_test
+    record['solid_fill_test'] = a.solid_fill_test
+    record['panel_readback_test'] = a.panel_readback_test
+    record['stock_linkclock_test'] = a.stock_linkclock_test
+    record['stock_dsc_test'] = a.stock_dsc_test
+    record['stock_phy_test'] = a.stock_phy_test
+    record['first_frame_trace'] = a.first_frame_trace
+    record['standard_pps_test'] = a.standard_pps_test
+    record['panel_refresh'] = a.panel_refresh
+    record['performance'] = dt.get('performance', False)
+    record['wifi'] = dt.get('wifi', False)
+    record['scratch_framework_start'] = bool(provenance.get('scratch_volumes'))
     (output / 'control.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({k: record[k] for k in ('boot_sha256', 'dtbo_sha256', 'kernel_sha256')}))
 

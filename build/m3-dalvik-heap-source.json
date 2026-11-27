@@ -1,0 +1,15 @@
+{
+  "project": "frameworks/native",
+  "revision": "ae266dcb706d083868578cfedce381ef44488a07",
+  "path": "build/phone-xhdpi-6144-dalvik-heap.mk",
+  "sha256": "cf7a62797537dc479ec633b33bdcb18c6dcaded1a7aef8425a3401985bf164e9",
+  "properties": {
+    "dalvik.vm.heapstartsize": "16m",
+    "dalvik.vm.heapgrowthlimit": "256m",
+    "dalvik.vm.heapsize": "512m",
+    "dalvik.vm.heaptargetutilization": "0.5",
+    "dalvik.vm.heapminfree": "8m",
+    "dalvik.vm.heapmaxfree": "32m"
+  },
+  "scope": "Use AOSP 6 GiB phone heap profile conservatively on handset with MemTotal 7607848 kB; no system image changes"
+}

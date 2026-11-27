@@ -1,0 +1,5 @@
+service vendor.power-rmx2072 /vendor/bin/hw/android.hardware.power-service.rmx2072
+    class hal
+    user system
+    group system
+    interface aidl android.hardware.power.IPower/default

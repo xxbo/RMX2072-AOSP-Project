@@ -1,0 +1,135 @@
+{
+  "candidate": "ufs-host-g3-gsi17-firststage-ufs-78",
+  "goal": "Physical GT9886 touch and power/volume keys for direct welcome/Launcher navigation",
+  "stock_firmware": "RMX2072_11_F.20",
+  "stock_input": {
+    "touch_controller": "GT9886",
+    "linux_i2c_bus": 8,
+    "hardware_controller": "SE13 at 0xa94000",
+    "address": "0x5d",
+    "mt_slots": 10,
+    "x_range": [
+      0,
+      1079
+    ],
+    "y_range": [
+      0,
+      2399
+    ],
+    "direct": true,
+    "gpio_volume_up": 6,
+    "gpio_volume_down": 7,
+    "touch_reset_gpio": 38,
+    "touch_irq_gpio": 39
+  },
+  "dt_checks": {
+    "input": {
+      "touch": "GT9886 at native SE13 0xa94000, address 0x5d",
+      "coordinates": [
+        1080,
+        2400
+      ],
+      "reset_gpio": 38,
+      "irq_gpio": 39,
+      "volume_up": "PM8150 GPIO6 active-low, KEY_VOLUMEUP",
+      "volume_down": "PM8150 GPIO7 active-low, KEY_VOLUMEDOWN",
+      "power": "Existing upstream PON power-key binding retained",
+      "hardware_result": "NOT RUN"
+    },
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        36,
+        37,
+        38,
+        39,
+        66,
+        75
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    },
+    "unchanged_display_nodes": 26,
+    "effective_dtb_sha256": "8d20d5d65cc57e3b1df201851316ab13f9bbfd91ed4cc59bd6dda7986abdd2e5",
+    "device_result": "NOT RUN"
+  },
+  "kernel_run_id": 45166498874,
+  "kernel_source_commit": "1b49cb6a4f7c44788d6a33c1da7f6289264530fd",
+  "kernel_result": "PASS_BUILD_AND_SELECTED_MEMBER_SOURCE_DIGESTS",
+  "overlay": {
+    "framework_sha256": "b77f17c2f4014fdb2754e3ed5fc020e3912507e2e92a837d9eca341f021fa05a",
+    "apk_sha256": "309c02cbc5ca815d4e190a42a4737ab355637f5480ab0cbeac4c4c5f0f475f8c",
+    "source_sha256": {
+      "AndroidManifest.xml": "adc90037bff6dfeda21e9c59e42a7caa89f4c9d257af3315f0b2f4637610e455",
+      "res/values/config.xml": "745a941adebb2f2123b04ef34640f2d36aca8e27441781912616cef6abd6b0b6"
+    },
+    "aapt2_sha256": "4b09f89d449cc4498fcf5076a4ad6b28f079e565d2737f7881a674580960c8df",
+    "apksigner_sha256": "2defad215d7ff52968a409cde528cdaef7918b115e276b8e3378ca7a178e4180",
+    "signing": "Local engineering certificate; no factory/platform signing key",
+    "scope": "Only config_displayColorFadeDisabled=true; no code or policy changes",
+    "handset_result": "NOT RUN"
+  },
+  "vendor_diff_from_77": {
+    "changed": [
+      "/etc/init/rmx-m1-usb.rc",
+      "/etc/selinux/vendor_file_contexts"
+    ],
+    "added": [
+      "/overlay/RmxCpuInputOverlay.apk",
+      "/usr/idc/Goodix_GTX8_Capacitive_TouchScreen.idc"
+    ],
+    "removed": [],
+    "cil_unchanged": true
+  },
+  "evidence_sha256": {
+    "stock-input.txt": "f221063f4fb118516f06c4a56bf35408d7ad080714db1ff65df8619cf1782d15",
+    "stock-touch.txt": "abb598c04a5094f6165f3186601b7f1b77741b5bbc7ca1697adc5397e8629491",
+    "stock-power-pins.txt": "7ccf8d31a51b24dd644008ed082492b6f262f638d00d4e6f430b64dc5d3def1e",
+    "stock-input-android.txt": "6263a3ec3651d2724243247028f5f604b1056c973230d0885eb3f3d9b44ad7e6",
+    "stock-touch-dmesg.txt": "24e2882162e604719543660813717d7d57fdf2053843a4f7ab7dafbf849817cf",
+    "dt-check.json": "0347c54b546cd55bc48a4c81f3359fdc7c14740ed3680055d2985765620e62f3"
+  },
+  "device_result": "NOT RUN; handset remains on F20",
+  "kernel_sha256": "dd83e66cbd275e70532c647a4c3b6b439b2b72e0b4619e9bc13f039df4c8928a",
+  "candidate_preflight": "m3-input78-preflight-2026-11-23.json"
+}

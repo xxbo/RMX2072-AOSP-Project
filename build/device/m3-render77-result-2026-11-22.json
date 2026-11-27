@@ -1,0 +1,88 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-77",
+  "boot_id": "5b62d1b7-66fd-4041-94a3-3e142b2b2dd5",
+  "result": "WELCOME_RENDER_PASS_LAUNCHER_NOT_ACCEPTED_USB_LOST",
+  "boot_sha256": "36a0d3bd2d381ead7afb875ac28e0f3aaf6212dc39ca6b5835dfa4c4f915c8d4",
+  "kernel_sha256": "6bbf89b900d3d303dc92d197f9f971294eda63949d6f41d15684f18c211abca2",
+  "vendor_sha256": "370caab4d46694f0243698978e92b38b62972c03dd67dd03b22953738f1914c6",
+  "super_sha256": "f76268fcbe298967050c5a690a950109bf6f93342aac3270a84a75b2e7d425db",
+  "graphics": {
+    "single_vendor_change": "renderD* 0660 -> 0666 system graphics",
+    "primary_node": "card0 remains 0660 system graphics",
+    "selinux": "gpu_device, enforcing; no policy change",
+    "application_import_errors": "absent from framework-3 and framework-4 logs after previous repeated driver-uninitialized failures",
+    "screen": "1080x2400 Hi there welcome screen, actual screencap reviewed",
+    "operator": "still at welcome page after ADB disappeared",
+    "launcher": "explicit start returned OK but focused window remained SetupWizard; no Launcher desktop image accepted"
+  },
+  "framework": {
+    "sys_boot_completed": 1,
+    "audio_service": "registered; no PCM devices/routes yet",
+    "system_server_pid": 2352,
+    "audioserver_pid": 2096,
+    "surfaceflinger_pid": 2100,
+    "early_aes_selftest": "import -49 unchanged; not passed",
+    "stay_awake": "early helper called before Settings/Input ready and failed; later explicit retry returned 15 and mStayOn=true"
+  },
+  "failure": {
+    "trigger_attempt": "read 0/0 for device_provisioned/user_setup_complete, then attempt setting both to 1 and launching Home",
+    "last_output": "boot UUID, scratch=1, prior flags 0/0; no post-write values returned",
+    "usb": "ADB and all observed USB interfaces disappeared; guarded retention aborted",
+    "cause": "not yet established; framework USB/provisioning state is a hypothesis, not proven",
+    "manual_reset": "power+volume-up and then three-button hold reported no response",
+    "recovery": "Battery-connector reset entered 9008; F.20 restored with stock ADB, boot completion and both LP slots verified"
+  },
+  "sources": {
+    "minigbm_commit": "ce79bbee67b3e2ea7abb110e1415e9ceceaa6471",
+    "driver_file_sha256": "98e9054d5f98c3d107c25be6ac240c0b4bb858717860657641479595d3ec3103",
+    "gsi_framework_res_sha256": "b77f17c2f4014fdb2754e3ed5fc020e3912507e2e92a837d9eca341f021fa05a",
+    "gsi_colorfade_resource": "bool/config_displayColorFadeDisabled is present and false"
+  },
+  "evidence_sha256": {
+    "inputs.json": "7e723c9a4fe189beda236a65abba798f88a73a3dc2ff7184c837f56f25b022e3",
+    "readbacks.jsonl": "a04ba91161f92c514488e46e926d3cd572e1e55d3c215deda5da1b7c7f185b2a",
+    "live/framework-0-logcat.txt": "3fbe656b03d3edce527ae383fddb808c56787ad3cf91556fb49f5dd0d475ae80",
+    "live/framework-4-logcat.txt": "b256c7c0f47d1f84d57ee6c9c6d04ad41a157c83f61328aae5b75f824abd8b84",
+    "live/framework-4-identity.txt": "7e8bef543328a7259e7ce26e4870433ff1fdc67396ce080e1c7df8d1b4be1c91",
+    "live/graphics-stay-awake-ready.txt": "5b7f2f6ec85c0911f555bbdc8360c78eeb9135aeebe5b27257f3f77770f8988f",
+    "live/graphics-first-windows.txt": "3e44a253fe695f70b504c0bc729eea5fd1d3a58779adcbfed7e45a8a4832ba36",
+    "live/launcher-start.txt": "0d91cbb8e0f15b40756e8775f0ce89e590b041b6e46af597b74492a8d153bcc1",
+    "live/launcher-state.txt": "8c6d725ef4d258601ec498a6baf4a805a3cf8720d22f4aefb3d9f2128b7db608",
+    "live/launcher-test-setup.txt": "fd96394b9316d555d15160037128bc51e7ec67600858593c1a7880ce77dfaf22",
+    "live/welcome-screen.png": "35b5bf608cda98af8ca52381d903423015dc548cc66dbdd09faf324f452f1a19"
+  },
+  "recovery": {
+    "record": "ufs-host-g3-gsi17-firststage-ufs-77-battery-reset-restore",
+    "result": {
+      "firmware": "RMX2072_11_F.20",
+      "sys_boot_completed": 1,
+      "boot_id": "98ff2915-30ed-4531-8469-e207976552cc",
+      "super_sha256": null,
+      "boot_sha256": null,
+      "dtbo_sha256": null,
+      "lp_slots": [
+        0,
+        1
+      ],
+      "stock_full_partition_readback": false,
+      "stock_write_acknowledged": true,
+      "expected_image_sha256": {
+        "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+      },
+      "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata"
+    },
+    "physical_screen": "Operator confirmed normal stock display with no repeated reboot",
+    "evidence_sha256": {
+      "restored.json": "16a1892a39b97e4b9a553ed9185cbfde943cc2cbcae116dfbe29033f4cd65550",
+      "recovery-ready.json": "e6cc51959b51a28f891de67f000791e660f39c0e62547e5553bcd6de087f79c1",
+      "recovery-entry.log": "e28d1cc7709d21b1ef0af02f9c7950d76af60831b2476393208f3d74b933108a",
+      "restore-super.log": "2c6229ab7429209a893b96fbbdb789e1116f35f3af10e1a5ce8f25cff437dcf4",
+      "restore-boot.log": "3aa141d081d1f8f1cb9789a2453595fc85fadb7cbf19aacb366d0626b7414ddc",
+      "restore-dtbo.log": "e8f5d67551ad8d2c52af6c59f20494bde71b237abf00fe0b582498a485ede43b",
+      "stock-reset.log": "4d3cd634b0e4c4f3468bc71702cf891cbd620829a815d889c203e4c1281a94f1",
+      "timeline.jsonl": "ead62ee2bf6105d5201d79236948a6a1535cf6bc1a664eecdc78d2ce680539c9"
+    }
+  }
+}

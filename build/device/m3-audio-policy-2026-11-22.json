@@ -1,0 +1,24 @@
+{
+  "result": "PASS_STRICT_COMPILE_ONLY",
+  "utc": "2026-11-22T10:29:31.431767+00:00",
+  "command": "/system/bin/timeout 180 /system/bin/linker64 /data/local/tmp/rmx-m3-policy/secilc -m -M true -G -c 30 /system/etc/selinux/plat_sepolicy.cil /system/etc/selinux/mapping/202604.cil /system_ext/etc/selinux/system_ext_sepolicy.cil /product/etc/selinux/product_sepolicy.cil /vendor/etc/selinux/plat_pub_versioned.cil /data/local/tmp/rmx-m3-policy/m3-vendor.cil /system/etc/selinux/plat_sepolicy_genfs_202604.cil -o /data/local/tmp/rmx-m3-policy/policy -f /data/local/tmp/rmx-m3-policy/contexts",
+  "boot_id": "b32f1c72-fb87-41e1-8a49-33dac9bdda38",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-72",
+  "source_gsi_sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "compiler_sha256": "ace5b9b5b26f28e0c81a070ac2be0106269f6a9f3912c80ea48663706444fac1",
+  "input_sha256": [
+    "f6422dd5853e815d340f2e9c4dcba2bb1016b55ffc2a073fc916ac23dfe66fc2  /system/etc/selinux/plat_sepolicy.cil",
+    "34f9db1571f43aab25ee785130fb2a080c99a49bd87a8a8a4f5c574969b5365e  /system/etc/selinux/mapping/202604.cil",
+    "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014  /system_ext/etc/selinux/system_ext_sepolicy.cil",
+    "bcdaa16015d01771f85972ef7a2eb885708294898030d6ab78fbfa30f8090014  /product/etc/selinux/product_sepolicy.cil",
+    "b0ebe55553d5e1533e939cbd049d1a1b5693fdd5251f77d382b1431041e28f49  /vendor/etc/selinux/plat_pub_versioned.cil",
+    "2babfa84b8dadc507877d3b0e55abaf0b7b096e85a9897d453a9acdf201c4cff  /data/local/tmp/rmx-m3-policy/m3-vendor.cil",
+    "3bdfcfba699936cb12d007fee7bca2feb1a88c75cc947f98b14c55fe4932b0d3  /system/etc/selinux/plat_sepolicy_genfs_202604.cil"
+  ],
+  "compiler_matches_pinned_gsi": true,
+  "combined_vendor_policy_sha256": "2babfa84b8dadc507877d3b0e55abaf0b7b096e85a9897d453a9acdf201c4cff",
+  "compiled_policy_sha256": "1ea40be673fc8c194d8b54b061b58623e7e373ee72724d2d1c458032c8a28f14",
+  "cil_statements_match_current_sources": true,
+  "loaded": false,
+  "scope": "Strict compiler through GSI ADB; neverallow checks enabled; no policy load or enforcing change"
+}

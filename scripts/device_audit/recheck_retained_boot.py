@@ -52,7 +52,8 @@ def main():
         from check_m2_boot import check_m2_boot
         text = shell('cat /data/local/tmp/rmx-m2-boot.txt')
         checked = check_m2_boot(text, boot, inputs['ramdisk']['first_stage_init_sha256'],
-                                proof['identity'][1], (live / 'boot-events.txt').read_text())
+                                proof['identity'][1], (live / 'boot-events.txt').read_text(),
+                                display=inputs['boot'].get('device_tree_build', {}).get('display', False))
         (live / 'm2-components.txt').write_text(text)
         (live / 'm2-components.json').write_text(json.dumps(checked, indent=2) + '\n')
     start = time.monotonic()

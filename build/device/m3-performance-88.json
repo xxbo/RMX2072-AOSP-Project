@@ -1,0 +1,48 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-88",
+  "boot_id": "e181e8c0-287c-4df3-bb4e-d85aa78c4105",
+  "result": "NATIVE_90HZ_SCANOUT_ANDROID_ADB_GPU_ENUMERATION_BLOCKED",
+  "kernel": "f928e65271d38ba749ec4fb126a09109034969b30b364350339691a5f0dedf52",
+  "boot": "8cddf038a116b7f97a3d56107462f86a4ba6ffbaa140e37ea84cb71d8de8d46c",
+  "candidate_super": "c287e39684093c811c42070013a7ba9bd251266767c656d2f5e5778d34a83d1f",
+  "same_boot_adb_retained": true,
+  "guardian": "retained",
+  "enforcing": "Enforcing",
+  "requested_refresh_hz": 90,
+  "native_continuous_intervals": 60,
+  "native_elapsed_us": 670250,
+  "native_presents_millihz": 89518,
+  "native_vblank_counter_millihz": 89518,
+  "measurement_limit": "Native KMS scanout completions, not GPU-rendered frames or Android UI FPS.",
+  "android_first_stage_mount": "Verified system and project vendor mounted; second-stage init and authenticated ADB active.",
+  "vulkan_probe": {
+    "returncode": 2,
+    "physical_device_count": 0,
+    "hardware_submission": false,
+    "limit": "Updated source probe confirmed zero devices in the same boot; no GPU command submitted."
+  },
+  "surfaceflinger": "Repeating EGL initialization failure; ANGLE Vulkan result -3.",
+  "observed_blockers": [
+    "/dev/dri directory labeled device; SurfaceFlinger denied directory read under enforcing.",
+    "DRM platform identity subtree labeled rmx_display_sysfs, read access restricted to composer. ADB shell identity read denied."
+  ],
+  "cpu_governor": "qcom-cpufreq-hw + schedutil on policies 0/4/7",
+  "gpu_governor": "simple_ondemand",
+  "gpu_available_hz": [
+    305000000,
+    400000000,
+    441600000,
+    490000000,
+    525000000,
+    587000000
+  ],
+  "gpu_snapshot_hz": 305000000,
+  "scope": "No completed desktop, GPU submission or interactive smoothness result. Same GSI, volume seeds, kernel and accepted display parameters retained.",
+  "evidence": {
+    "live\\graphics-early.txt": "a725473a18a6942e2a0518d23e9785eb70706e1cadaa8b09b77ba460adf4fb4e",
+    "live\\gpu-early-logcat.txt": "92eaf3c37d8ae70f6f6f3fa51e8664586db6a4a62ee524dcc9eaa551ae9b700c",
+    "live\\gsi-stable.json": "9ba4605b10aedef7eedaae8e1d94b6dbb879f2d66de16abc85112c6951ca0d47",
+    "live\\vulkan-gpu-smoke.json": "205d27ba142492743c06ef83bb84d816c2e39f9a89166175a7fa9a9170172666",
+    "live/vulkan-count.txt": "e764185273b02f07faa64a4f6ea54f928cb8c1b15409472a8cfbbf476f1bab5a"
+  }
+}

@@ -1,0 +1,28 @@
+Subject: [RMX2072 M3] record DSC packet registers after command-mode setup
+
+Read-only register witness after existing writes, limited to the new all-slices
+mode. No per-frame log or additional hardware write. Apply after the two
+upstream DSC packet backports.
+
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -1121,6 +1121,19 @@
+ 		dsi_write(msm_host, REG_DSI_CMD_MDP_STREAM0_TOTAL,
+ 			DSI_CMD_MDP_STREAM0_TOTAL_H_TOTAL(hdisplay) |
+ 			DSI_CMD_MDP_STREAM0_TOTAL_V_TOTAL(mode->vdisplay));
++
++		/* Bounded modeset witness for the RM19795 packet-layout trial. */
++		if (msm_host->dsc &&
++		    (msm_host->mode_flags & MIPI_DSI_MODE_DSC_ALL_SLICES_IN_PKT))
++			dev_info(&msm_host->pdev->dev,
++				 "RMXDSC packet slices=%u per_pkt=%u chunk=%u clk_width=%u "
++				 "compression=%#x compression2=%#x stream=%#x total=%#x\n",
++				 msm_host->dsc->slice_count, msm_host->dsc_slice_per_pkt,
++				 msm_host->dsc->slice_chunk_size, hdisplay,
++				 dsi_read(msm_host, REG_DSI_COMMAND_COMPRESSION_MODE_CTRL),
++				 dsi_read(msm_host, REG_DSI_COMMAND_COMPRESSION_MODE_CTRL2),
++				 dsi_read(msm_host, REG_DSI_CMD_MDP_STREAM0_CTRL),
++				 dsi_read(msm_host, REG_DSI_CMD_MDP_STREAM0_TOTAL));
+ 	}
+ }
+ 

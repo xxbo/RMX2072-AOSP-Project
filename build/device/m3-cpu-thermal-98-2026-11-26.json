@@ -1,0 +1,431 @@
+{
+  "date": "2026-11-26",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-98",
+  "result": "PASS_BOUNDED_CPU_FREQUENCY_RESPONSE_AND_THERMAL_READOUT",
+  "boot_id": "983d6173-c946-47fb-a657-3c9e57198e7b",
+  "source": {
+    "recipe_commit": "9b26bd297da84dfa71d664332fd4c1278476c1ad",
+    "runner_commit": "e21d46e6646f0849a0ddaa787bf07615b4b82feb",
+    "kernel_image_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+    "boot_sha256": "e39dea024127ff65e0d6c8926c5db672f010303f1ad7d0d7083e11199616e184",
+    "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+    "effective_dt": {
+      "size_bytes": 839036,
+      "sha256": "ba1f2cfe1a4ef9d848d5ef7e417be51218ff8075a1a59ff5d762d1ad16a0826b"
+    },
+    "vendor_unsigned_sha256": "2a94b33a4e4e36e79b3a3c7dd17a6bd6c11d1c2b3aaee2d0864d58c71d0dc0ca",
+    "vendor_signed_sha256": "4a8939e0baec4281667161bd10a80cf9b4d9aa3a5bf1646163815bd7309af1d5",
+    "super_sha256": "f0713d20544a57ec94b4c95c698d6ab574b886c9086106ffba61d324ed39d799"
+  },
+  "preflight": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-98",
+    "baseline": "ufs-host-g3-gsi17-firststage-ufs-97",
+    "recipe_commit": "9b26bd297da84dfa71d664332fd4c1278476c1ad",
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "same_display_flags": true,
+      "standard_pps_retained": true,
+      "same_boot_components": true,
+      "same_dt_outputs": true,
+      "same_graphics_guard_and_keys": true,
+      "same_native_pattern": true,
+      "bounded_cmdline": true,
+      "scratch_framework_start": true,
+      "boot_digest": true,
+      "dtbo_digest": true,
+      "kernel_digest": true,
+      "ramdisk_digest": true,
+      "vendor_digest": true,
+      "same_gsi_content": true,
+      "same_vendor_key": true,
+      "same_original_container": true,
+      "same_active_other_partitions": true,
+      "same_inactive_nonalias_partitions": true,
+      "health_source_verified": true,
+      "health_is_composed": true,
+      "no_unrelated_vendor_change": true,
+      "only_selected_hal_files_added": true,
+      "no_vendor_files_removed": true,
+      "scratch_profile_consistent": true,
+      "same_metadata_seed": true,
+      "same_data_seed": true,
+      "power_source_verified": true,
+      "power_is_composed": true,
+      "baseline_policy_digest": true,
+      "current_policy_digest": true,
+      "only_policy_file_changed": true,
+      "exact_readonly_thermal_delta": true,
+      "same_kernel": true
+    },
+    "passed": true,
+    "boot_sha256": "e39dea024127ff65e0d6c8926c5db672f010303f1ad7d0d7083e11199616e184",
+    "kernel_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+    "vendor_sha256": "4a8939e0baec4281667161bd10a80cf9b4d9aa3a5bf1646163815bd7309af1d5",
+    "super_sha256": "f0713d20544a57ec94b4c95c698d6ab574b886c9086106ffba61d324ed39d799",
+    "health_build": 45002345247,
+    "health_source_commit": "e08c6a18d1eab8561913f17594b0eefb9691cf6f",
+    "stage": "thermal-readout",
+    "selected_hal_build": 45008097656,
+    "selected_hal_source_commit": "efa6846c8ad2fb2abc01004e44beea27a36dc31a",
+    "vendor_files_changed": [
+      "/etc/selinux/vendor_sepolicy.cil"
+    ],
+    "vendor_files_added": [],
+    "metadata_and_extents_unchanged": true,
+    "headroom_bytes": 829120512,
+    "scope": "Local input comparison only; no handset or desktop acceptance implied"
+  },
+  "deployment": {
+    "vendor_update_from": "ufs-host-g3-gsi17-firststage-ufs-97",
+    "changed_chunks_written": [
+      0
+    ],
+    "original_recovery_set_reused": true,
+    "full_stock_reread": false,
+    "new_recovery_copy": false,
+    "same_kernel_and_dt": true,
+    "same_gsi_and_test_seeds": true,
+    "scratch_seeds": {
+      "data": {
+        "bytes": 2147483648,
+        "sha256": "b977daeb060fbb8c97de93d20562bf257011cf61dfd7627d03f9a391fcdb8ab4",
+        "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+        "gzip_sha256": "770748bcbc21d8bb042d40329ef2fe798338165800897a63036781b600c4d8c2"
+      },
+      "metadata": {
+        "bytes": 33554432,
+        "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+        "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+        "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+      }
+    }
+  },
+  "retention": {
+    "result": "PASS_CURRENT_BOOT_ONLY",
+    "seconds": 195.484,
+    "adb_authenticated": true,
+    "enforcing": true,
+    "boot_completed": 1,
+    "guard": "retained",
+    "host_start_required_after_every_reboot": true
+  },
+  "cpu": {
+    "result": "PASS_BOUNDED_DRIVER_REPORTED_FREQUENCY_RESPONSE",
+    "policies": [
+      {
+        "policy": 0,
+        "cpus": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "driver": "qcom-cpufreq-hw",
+        "governor": "schedutil",
+        "bounds_hz": [
+          300000000,
+          1804800000
+        ],
+        "load_observed_hz": [
+          1804800000
+        ],
+        "recovery_observed_hz": [
+          691200000
+        ]
+      },
+      {
+        "policy": 4,
+        "cpus": [
+          4,
+          5,
+          6
+        ],
+        "driver": "qcom-cpufreq-hw",
+        "governor": "schedutil",
+        "bounds_hz": [
+          710400000,
+          2419200000
+        ],
+        "load_observed_hz": [
+          2419200000
+        ],
+        "recovery_observed_hz": [
+          710400000,
+          940800000
+        ]
+      },
+      {
+        "policy": 7,
+        "cpus": [
+          7
+        ],
+        "driver": "qcom-cpufreq-hw",
+        "governor": "schedutil",
+        "bounds_hz": [
+          844800000,
+          2841600000
+        ],
+        "load_observed_hz": [
+          2841600000
+        ],
+        "recovery_observed_hz": [
+          1075200000,
+          2841600000
+        ]
+      }
+    ],
+    "measurement": {
+      "boot_id": "983d6173-c946-47fb-a657-3c9e57198e7b",
+      "same_boot": true,
+      "controls_unchanged": true,
+      "probe_sha256": "c1a5e062a04b7c05f99c44c14ceb47f98de50b95cd966b5e9d9b072c02b9fcca",
+      "loads": [
+        {
+          "cpu": 0,
+          "seconds": 4.000003,
+          "cpu_seconds": 3.973128,
+          "iterations": 1182900224,
+          "checksum": "fc56860fb97ff453",
+          "last_cpu": 0,
+          "affinity_verified": true
+        },
+        {
+          "cpu": 4,
+          "seconds": 4.0,
+          "cpu_seconds": 4.000853,
+          "iterations": 3189960704,
+          "checksum": "58a8fbe328cf0d74",
+          "last_cpu": 4,
+          "affinity_verified": true
+        },
+        {
+          "cpu": 7,
+          "seconds": 4.000003,
+          "cpu_seconds": 3.99829,
+          "iterations": 3765223424,
+          "checksum": "03c48a3db58986c8",
+          "last_cpu": 7,
+          "affinity_verified": true
+        }
+      ],
+      "phases": {
+        "preflight": {
+          "0": [
+            691200000
+          ],
+          "4": [
+            940800000
+          ],
+          "7": [
+            2841600000
+          ]
+        },
+        "baseline": {
+          "0": [
+            691200000,
+            1804800000
+          ],
+          "4": [
+            1056000000,
+            2419200000
+          ],
+          "7": [
+            2841600000
+          ]
+        },
+        "load-0": {
+          "0": [
+            1804800000
+          ],
+          "4": [
+            710400000,
+            940800000,
+            1056000000,
+            1766400000
+          ],
+          "7": [
+            1075200000,
+            2841600000
+          ]
+        },
+        "recovery-0": {
+          "0": [
+            691200000
+          ],
+          "4": [
+            710400000,
+            825600000,
+            1056000000,
+            1171200000
+          ],
+          "7": [
+            960000000,
+            1075200000,
+            2841600000
+          ]
+        },
+        "load-4": {
+          "0": [
+            691200000
+          ],
+          "4": [
+            2419200000
+          ],
+          "7": [
+            844800000,
+            2841600000
+          ]
+        },
+        "recovery-4": {
+          "0": [
+            691200000,
+            1612800000,
+            1804800000
+          ],
+          "4": [
+            710400000,
+            940800000
+          ],
+          "7": [
+            1075200000,
+            2841600000
+          ]
+        },
+        "load-7": {
+          "0": [
+            691200000
+          ],
+          "4": [
+            940800000,
+            1171200000,
+            2419200000
+          ],
+          "7": [
+            2841600000
+          ]
+        },
+        "recovery-7": {
+          "0": [
+            691200000,
+            1804800000
+          ],
+          "4": [
+            940800000,
+            1056000000,
+            1171200000,
+            1766400000
+          ],
+          "7": [
+            1075200000,
+            2841600000
+          ]
+        }
+      },
+      "scope": "Driver-reported CPU frequency under a short pinned integer load; not scheduler placement, sustained performance or thermal throttling acceptance"
+    },
+    "sample_count": 39,
+    "sampling_span_seconds": 35.313,
+    "cpu_capacity": {
+      "0": 284,
+      "4": 871,
+      "7": 1024
+    },
+    "runtime_eas_switch": "READ_DENIED",
+    "probe_removed": true
+  },
+  "thermal": {
+    "readable_under_enforcing": true,
+    "type": "sysfs_thermal",
+    "observation_only": true,
+    "measured_range_mC": {
+      "m3-little-thermal": {
+        "min": 38400,
+        "max": 41800
+      },
+      "m3-big-thermal": {
+        "min": 37600,
+        "max": 41800
+      },
+      "m3-gpu-thermal": {
+        "min": 35200,
+        "max": 37600
+      },
+      "bq28z610-0": {
+        "min": 32200,
+        "max": 32300
+      }
+    },
+    "cooling_maps": {
+      "m3-little-thermal": [
+        "cpufreq-cpu0"
+      ],
+      "m3-big-thermal": [
+        "cpufreq-cpu4",
+        "cpufreq-cpu7"
+      ],
+      "m3-gpu-thermal": [
+        "devfreq-3d00000.gpu"
+      ]
+    },
+    "governor": "step_wise",
+    "mode": "enabled",
+    "passive_trip_mC": 80000,
+    "critical_trip_mC": 100000,
+    "cooling_states_after": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "cooling_max_states": [
+      16,
+      17,
+      19,
+      5
+    ],
+    "android_thermal_hal_ready": false,
+    "thermal_throttling_test": "NOT_RUN"
+  },
+  "limitations": [
+    "Short pinned integer work only; no scheduler placement or sustained frame-time acceptance",
+    "Screen and background Android work remain active; ADB sampling adds observer load",
+    "Prime CPU baseline is already maximum; lower post-load values do not isolate its upward transition",
+    "Recovery contains peaks; no full-idle residency or idle-power acceptance",
+    "Cluster/GPU-top TSENS only; per-core/GPU-bottom and qualified mitigation policy remain open",
+    "No Android Thermal HAL; physical cooling action not exercised"
+  ],
+  "end_of_day": {
+    "user_requested_stop_after_current_measurement": true,
+    "next_trial_99": "NOT_RUN",
+    "mode": "Android 17 GSI retained",
+    "final_boot_id": "983d6173-c946-47fb-a657-3c9e57198e7b",
+    "final_uptime_seconds": 547.65,
+    "adb": true,
+    "surfaceflinger_pid": 2214,
+    "system_server_pid": 2387,
+    "no_additional_reboot": true,
+    "next_task": "Prepared WLAN GPIO20 initial-low experiment and GPIO/PCIe evidence, preserving accepted graphics and test seeds"
+  },
+  "evidence_sha256": {
+    "records/ufs-host-g3-gsi17-firststage-ufs-98/inputs.json": "e441b845cf49dd32197f8bcdc7f863ffbdbaae8e491f378072f8680527f2d54c",
+    "records/ufs-host-g3-gsi17-firststage-ufs-98/live/gsi-stable.json": "aecd640bec5a8f532b120c0d087c05046f6d00a09ba4c88519870171aa0a9e6c",
+    "records/ufs-host-g3-gsi17-firststage-ufs-98/gsi-retained.json": "d184079829e6d4624c6509ad76020fc1b2509429d9d71fe751eef67e92817baa",
+    "records/ufs-host-g3-gsi17-firststage-ufs-98/timeline.jsonl": "01abbde755f9a0b784b0e6ed14945698e6fe2853b443249799577148aee819d1",
+    "records/ufs-host-g3-gsi17-firststage-ufs-98/vendor-update-source.json": "ab39456c44b3d4c8599ffc381e3a44b9dbbb940a5411d9c99aeeefabd531794d",
+    "records/ufs-host-g3-gsi17-firststage-ufs-98/vendor-inventory.json": "e22007a4cc720862524559c81811548ca9fe1cbd6fbe915f7abde1d45ce2b03b",
+    "records/ufs-host-g3-gsi17-firststage-ufs-98/readbacks.jsonl": "b14ab2c374cdd1d9636c32189ff1abf1abae67ddb0c52f631d0b23f2421622a4",
+    "checks/hardware-2026-11-26/trial98-thermal-live.txt": "b2a319d0df760c70c60f357b4ec70140d3314680e979b149a4fe4222be8ec7a5",
+    "checks/hardware-2026-11-26/trial98-thermal-map.txt": "bbf703558e3ae28ce47a4d37871e693c5ede642eb07a31b02f054e2b8d0b8ff0",
+    "checks/hardware-2026-11-26/trial98-service-gaps.txt": "d49a08bab2f472f25ca4b4116ff43d2d16566f35d4750a127e5d504d337c5380",
+    "checks/hardware-2026-11-26/trial98-final-live.txt": "e582fbec416c931b91912626a763a1bea7c6de9892f50a32f04e6dc7c76df427",
+    "checks/hardware-2026-11-26/cpu-trial98/result.json": "127e71335e52b7a7780c02fb02a4a2cecd8e1c6909bdf94b473d6c820598aad6",
+    "checks/hardware-2026-11-26/cpu-trial98/samples.json": "e4ba28cea97f977e49cb835ffa1b7e0a7b36d15bd042494bdafe02b722739f72",
+    "checks/hardware-2026-11-26/cpu-trial98/controls-before.txt": "769b687728b5a9000386a401259daf872fe48e5ff37560a567311261ceadb549",
+    "checks/hardware-2026-11-26/cpu-trial98/controls-after.txt": "769b687728b5a9000386a401259daf872fe48e5ff37560a567311261ceadb549",
+    "checks/hardware-2026-11-26/cpu-trial98/battery-before.txt": "20260ebf24cb880eb21925cbf062b65553902a43f4fa6ed5d92707fa8f389b1c",
+    "checks/hardware-2026-11-26/cpu-trial98/load-0.txt": "c4c008b5435c0c25ee6251cb53bec7ea5cd096e8bb15d2bab99e9bc967894543",
+    "checks/hardware-2026-11-26/cpu-trial98/load-4.txt": "cdbf6e6395ded9fcfa6e551d57267a4c0c2f708aa7a98356ee39d5dbe5a899e3",
+    "checks/hardware-2026-11-26/cpu-trial98/load-7.txt": "a53dbb1c356617e8e43db6bbb061ae31b47e129ca7c8df2f20962fef30409f89"
+  }
+}

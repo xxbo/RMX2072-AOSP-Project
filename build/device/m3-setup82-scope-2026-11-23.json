@@ -1,0 +1,17 @@
+{
+  "result": "PASS_LOCAL_ADDITIVE_WIFI_DECLARATION",
+  "baseline_trial": 81,
+  "trial": 82,
+  "vendor_added": [
+    "/etc/permissions/android.hardware.wifi.xml"
+  ],
+  "vendor_changed": [],
+  "feature": "android.hardware.wifi",
+  "policy_unchanged": true,
+  "label": "Existing /vendor/etc rule: vendor_configs_file",
+  "framework_base_commit": "94b4c163b7dfe5ce3607f7bb8456f9573f7de57d",
+  "system_server_source_sha256": "5138c483c8495bac185e1bdbd328d287a1235ff0549e124e8c3d2d3a4fc473bd",
+  "live_trial81_wifi_apex": "/apex/com.android.wifi/javalib/service-wifi.jar exists",
+  "handset_result": "NOT RUN",
+  "radio_driver_and_hal": "NOT IMPLEMENTED; this starts framework services only"
+}

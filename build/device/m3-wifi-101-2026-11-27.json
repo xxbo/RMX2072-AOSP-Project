@@ -1,0 +1,416 @@
+{
+  "date": "2026-11-27",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-101",
+  "result": "PASS_NATIVE_PHY_AND_WLAN0_WITH_ORIGINAL_BOARD_ELF__ANDROID_SUPPLICANT_PENDING",
+  "boot_id": "c68d4272-31fa-4dc9-ba7f-0335d3badc36",
+  "recipe_commit": "f68885d984c4215ea60d75a06fbc5fe5197d8c8b",
+  "runner_commit": "f68885d984c4215ea60d75a06fbc5fe5197d8c8b",
+  "boot_sha256": "ee320c118375d7121ee50b228f646c3fed472e722c7e2853823814659d29d5a9",
+  "kernel_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+  "vendor_signed_sha256": "4a8939e0baec4281667161bd10a80cf9b4d9aa3a5bf1646163815bd7309af1d5",
+  "super_sha256": "f0713d20544a57ec94b4c95c698d6ab574b886c9086106ffba61d324ed39d799",
+  "preflight": {
+    "passed": true,
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "wifi_profile": true,
+      "accepted_features": true,
+      "same_display_flags": true,
+      "same_cmdline": true,
+      "same_boot_policy": true,
+      "same_source_init": true,
+      "same_guard_and_keys": true,
+      "same_super": true,
+      "same_vendor": true,
+      "same_test_volumes": true,
+      "same_gpu_firmware": true,
+      "same_nonwifi_kernel_sources": true,
+      "baseline_config_verified": true,
+      "no_existing_builtin_removed": true,
+      "kernel_verified": true,
+      "kernel_digest": true,
+      "boot_digest": true,
+      "dtbo_digest": true,
+      "effective_device_tree_digest": true,
+      "baseline_ramdisk_manifest": true,
+      "baseline_has_reviewed_boot_firmware_only": true,
+      "only_same_handset_board_and_trial_id_added": true,
+      "wifi_firmware_provenance": true,
+      "same_firmware_trial_kernel": true,
+      "same_firmware_trial_dt": true
+    },
+    "config_changes": {},
+    "added": [
+      "lib/firmware/ath11k/QCA6390/hw2.0/board.bin"
+    ],
+    "changed": [
+      "trial-id"
+    ],
+    "removed": []
+  },
+  "firmware_payload": {
+    "files": {
+      "ath11k/QCA6390/hw2.0/amss.bin": {
+        "bytes": 3628672,
+        "sha256": "8ab2a06422e3989012df423bb6a156fde2c3feb4cd5db4c5d3588f674dc872ff",
+        "git_blob": "95bab09e0575a5533bca407bbc0401cb2af0b85d",
+        "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/amss.bin",
+        "origin": "linux-firmware",
+        "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+      },
+      "ath11k/QCA6390/hw2.0/m3.bin": {
+        "bytes": 266684,
+        "sha256": "1921d25edb52f90a7a0acc7275861e14399f904d579aae9f7ab1c4d28533fad6",
+        "git_blob": "39f0dfec42d6531836866a97c8153ae0a73356bd",
+        "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/m3.bin",
+        "origin": "linux-firmware",
+        "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+      },
+      "ath11k/QCA6390/hw2.0/Notice.txt": {
+        "bytes": 189707,
+        "sha256": "2facd28901420b9b58248ec3c17d4ea4693165b72f36106d5537ea4bb9380f1b",
+        "git_blob": "fd4fa45f559ed6e1dfa41da8681ea00df717601e",
+        "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/Notice.txt",
+        "origin": "linux-firmware",
+        "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+      },
+      "ath11k/QCA6390/hw2.0/LICENSE.QualcommAtheros_ath10k": {
+        "bytes": 2713,
+        "sha256": "337a55102138d7baa143ee4a4c6c91693e0113fece35d380b2a12109e8c23b3f",
+        "git_blob": "c68935c11adf858abd0de3bbf7a2f53d0be33699",
+        "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/LICENSE.QualcommAtheros_ath10k",
+        "origin": "linux-firmware",
+        "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+      },
+      "ath11k/QCA6390/hw2.0/board.bin": {
+        "bytes": 57908,
+        "sha256": "05685bc7eddaf160fe54fb1f5086d810a8000949e1faa46f9d53b21827701a18",
+        "origin": "existing F.20 recovery ODM /etc/wifi/bdwlan.elf",
+        "source_name": "bdwlan.elf",
+        "target_name": "board.bin",
+        "elf_wrapper_preserved": true,
+        "elf": {
+          "machine": 40,
+          "entry": 32768,
+          "segment_offset": 1024,
+          "segment_bytes": 56180,
+          "vaddr": 4096,
+          "paddr": 4096
+        },
+        "acceptance": "NOT RUN"
+      }
+    },
+    "board_data_included": true,
+    "calibration_data_included": null,
+    "partition_backup": false,
+    "scope": "Exact same-handset F.20 board ELF via ath11k API1; internal calibration contents not decoded; firmware acceptance and RF remain untested",
+    "separate_calibration_file_included": false
+  },
+  "discovery": {
+    "boot_id": "c68d4272-31fa-4dc9-ba7f-0335d3badc36",
+    "same_boot": true,
+    "enforcing": true,
+    "qca6390_enumerated": true,
+    "wlan_netdev": true,
+    "discovery_read_errors": true,
+    "kernel_discovery": {
+      "pci_root_port_reported": true,
+      "qca6390_reported": true,
+      "link_down_reported": true,
+      "digital_rail_registration_failed": false
+    },
+    "firmware_discovery": {
+      "mhi_setup_reported": true,
+      "qmi_target_response_observed": true,
+      "target_info": [
+        {
+          "chip_id": 0,
+          "chip_family": 11,
+          "board_id": 255,
+          "soc_id": 4294967295,
+          "board_id_may_be_default": true
+        }
+      ],
+      "firmware_versions": [
+        {
+          "version": "0x10121492",
+          "timestamp": "2021-11-04 11:23",
+          "build_id": ""
+        }
+      ],
+      "amss_missing": false,
+      "board_data_missing": false,
+      "mhi_start_errors": [],
+      "regulatory_db_missing": true,
+      "board_compatibility_verified": false,
+      "scope": "Observed boot messages only; QMI response is not board-data, WLAN interface or RF acceptance"
+    },
+    "files": {
+      "pci.txt": "c2abba231c80b0a69f2a5c4ef4abd616ce22be176a423b4032bed44882ce6b6b",
+      "network.txt": "d56e9beeb9147ad154a2a8436632b66941eb2fe83d680ceadcef04a3a777b169",
+      "wifi-status.txt": "d53f963656b4ebd4ece74391dcdcb3b9ab9f83e894238073a6b02c5444007067",
+      "wifi-service.txt": "41102d405d8823fbacb64ba127edf9efc4f66f88e16f6fccae5260d0bfad68c2",
+      "battery.txt": "40a963d36e2bd034d2c55ecc6ae56d0e68f833fe2b6cb9358e5ef1e75d610539",
+      "kernel-wlan.txt": "cb36483f8c5747dee19b2c2de514f09dbd42a13bb8252d8413c6465b365902d4"
+    },
+    "kernel_log_sha256": {
+      "boot-events.txt": "007c7c1fc38e7dbe1508a45b7b866b660b1f5a8ab5b8d1d34602bcc4810a4964",
+      "acm.log": "40068d0121c134cd3940c8386b4298e2e65323c4e315c7b9e76b1a1687685df0"
+    },
+    "scan": "NOT RUN",
+    "association": "NOT RUN",
+    "dhcp": "NOT RUN",
+    "traffic": "NOT RUN",
+    "scope": "Discovery only; no RF enable, credentials or network configuration changes"
+  },
+  "selected_kernel_messages": [
+    "4,928,952924,-,caller=T98;faux_driver regulatory: Direct firmware load for regulatory.db failed with error -2",
+    "6,1193,30541328,-,caller=T1479;pci 0000:01:00.0: [17cb:1101] type 00 class 0xff0000 PCIe Endpoint",
+    "6,1207,30551236,-,caller=T1479;ath11k_pci 0000:01:00.0: BAR 0 [mem 0x60300000-0x603fffff 64bit]: assigned",
+    "6,1208,30551384,-,caller=T1479;ath11k_pci 0000:01:00.0: enabling device (0000 -> 0002)",
+    "6,1209,30551869,-,caller=T1479;ath11k_pci 0000:01:00.0: MSI vectors: 32",
+    "6,1210,30551933,-,caller=T1479;ath11k_pci 0000:01:00.0: qca6390 hw2.0",
+    "6,1211,30708883,-,caller=T1479;mhi mhi0: Requested to power ON",
+    "6,1212,30708932,-,caller=T1479;mhi mhi0: Power on setup success",
+    "6,1213,30765654,-,caller=T103;mhi mhi0: Wait for device to enter SBL or Mission mode",
+    "6,1214,30882197,-,caller=T88;ath11k_pci 0000:01:00.0: chip_id 0x0 chip_family 0xb board_id 0xff soc_id 0xffffffff",
+    "6,1215,30882310,-,caller=T88;ath11k_pci 0000:01:00.0: fw_version 0x10121492 fw_build_timestamp 2021-11-04 11:23 fw_build_id "
+  ],
+  "native_interfaces": {
+    "wlan0": true,
+    "phy0": true,
+    "phy0_device_path": "/soc/soc:display-fabric-lab/1c00000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/ieee80211/phy0",
+    "inference": "Whole same-handset board ELF enables driver initialization far enough to register native phy0/wlan0; RF calibration/scan/association remain untested"
+  },
+  "android": {
+    "mainline_supplicant_enabled": false,
+    "mainline_supplicant_binder": false,
+    "wificond_binder": true,
+    "mainline_directories_declared_in_gsi_init": true
+  },
+  "retention": {
+    "seconds": 194.11,
+    "samples": 18,
+    "identity": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "c68d4272-31fa-4dc9-ba7f-0335d3badc36",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "stock_restored": false,
+    "scope": "Current guarded boot only"
+  },
+  "battery_before": {
+    "capacity_percent": 34,
+    "boot_id": "71e84643-cafb-4650-875c-2f2a413a9f96",
+    "source": "bq28z610-0",
+    "utc": "2026-11-27T14:12:50.561924+00:00"
+  },
+  "battery_after": {
+    "POWER_SUPPLY_CAPACITY": "36",
+    "POWER_SUPPLY_VOLTAGE_NOW": "7862000",
+    "POWER_SUPPLY_TEMP": "376",
+    "POWER_SUPPLY_STATUS": "Charging"
+  },
+  "programming": {
+    "xml_files": [
+      "test-boot.xml"
+    ],
+    "boot_only": true,
+    "super_rewritten": false,
+    "dtbo_rewritten": false,
+    "stock_reread": false,
+    "readbacks": [
+      {
+        "label": "before-boot",
+        "lun": 4,
+        "start_sector": 79366,
+        "sectors": 24576,
+        "sha256": "03a28c7c1f492fa77be1594d2fc83b685aa584f0a6bbc3569b8cb595d59e6fa5",
+        "utc": "2026-11-27T14:12:56.809625+00:00"
+      },
+      {
+        "label": "before-dtbo",
+        "lun": 4,
+        "start_sector": 104298,
+        "sectors": 6144,
+        "sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+        "utc": "2026-11-27T14:12:57.724339+00:00"
+      },
+      {
+        "label": "candidate-super-read-00",
+        "lun": 0,
+        "start_sector": 193032,
+        "sectors": 131072,
+        "sha256": "7065a9487b16b6a539dcff378b10dcd379b795a2933bfc690f0139e26d685cdf",
+        "utc": "2026-11-27T14:13:10.136905+00:00"
+      },
+      {
+        "label": "candidate-super-read-01",
+        "lun": 0,
+        "start_sector": 324104,
+        "sectors": 131072,
+        "sha256": "93dbb785e8ada90db4c71b16154903c6bc54b7eb1f0201d29a1bf1ada232f57f",
+        "utc": "2026-11-27T14:13:22.593687+00:00"
+      },
+      {
+        "label": "candidate-super-read-02",
+        "lun": 0,
+        "start_sector": 455176,
+        "sectors": 131072,
+        "sha256": "196b6125da2e20b29103d382d396273473cf0d4f8bd1b34988683110204c9d0a",
+        "utc": "2026-11-27T14:13:35.014944+00:00"
+      },
+      {
+        "label": "candidate-super-read-03",
+        "lun": 0,
+        "start_sector": 586248,
+        "sectors": 131072,
+        "sha256": "12320276ccea8cbc62d203e2cae17b17ac39b6ab483a6f69158640823ca588aa",
+        "utc": "2026-11-27T14:13:47.465449+00:00"
+      },
+      {
+        "label": "candidate-super-read-04",
+        "lun": 0,
+        "start_sector": 717320,
+        "sectors": 131072,
+        "sha256": "590d3d6f642acc58865245d3989f2490919a8fc0991b3538b32c4caa8dec61ac",
+        "utc": "2026-11-27T14:13:59.905631+00:00"
+      },
+      {
+        "label": "candidate-super-read-05",
+        "lun": 0,
+        "start_sector": 848392,
+        "sectors": 131072,
+        "sha256": "da9e4d3919a9544cbcea4f163723b91553bec1ee21f3f01cc1a7d1fc51627ef7",
+        "utc": "2026-11-27T14:14:12.361257+00:00"
+      },
+      {
+        "label": "candidate-super-read-06",
+        "lun": 0,
+        "start_sector": 979464,
+        "sectors": 131072,
+        "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+        "utc": "2026-11-27T14:14:24.781965+00:00"
+      },
+      {
+        "label": "candidate-super-read-07",
+        "lun": 0,
+        "start_sector": 1110536,
+        "sectors": 131072,
+        "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+        "utc": "2026-11-27T14:14:37.205804+00:00"
+      },
+      {
+        "label": "candidate-super-read-08",
+        "lun": 0,
+        "start_sector": 1241608,
+        "sectors": 131072,
+        "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+        "utc": "2026-11-27T14:14:49.645325+00:00"
+      },
+      {
+        "label": "candidate-super-read-09",
+        "lun": 0,
+        "start_sector": 1372680,
+        "sectors": 131072,
+        "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+        "utc": "2026-11-27T14:15:02.088472+00:00"
+      },
+      {
+        "label": "candidate-super-read-10",
+        "lun": 0,
+        "start_sector": 1503752,
+        "sectors": 131072,
+        "sha256": "4ec756d9944b5a15e37763807a37a25e56779a1b04b48e9f693d1c4bfdc72205",
+        "utc": "2026-11-27T14:15:14.561274+00:00"
+      },
+      {
+        "label": "candidate-super-read-11",
+        "lun": 0,
+        "start_sector": 1634824,
+        "sectors": 131072,
+        "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+        "utc": "2026-11-27T14:15:27.041774+00:00"
+      },
+      {
+        "label": "candidate-super-read-12",
+        "lun": 0,
+        "start_sector": 1765896,
+        "sectors": 131072,
+        "sha256": "5fd942c256a28c55fbb5efdc991b53aec209bd86c4563039ddfc20034d6a0284",
+        "utc": "2026-11-27T14:15:39.500135+00:00"
+      },
+      {
+        "label": "candidate-super-read-13",
+        "lun": 0,
+        "start_sector": 1896968,
+        "sectors": 131072,
+        "sha256": "d9a9f672099620da96187b02c4f72400eb34eb96543fcd2cd2478e1399b5046d",
+        "utc": "2026-11-27T14:15:51.947455+00:00"
+      },
+      {
+        "label": "candidate-super-read-14",
+        "lun": 0,
+        "start_sector": 2028040,
+        "sectors": 131072,
+        "sha256": "f3ac61615e2b28b49119e98050374ba0f5fe4bb9b692694c3f2b8a528a511d4f",
+        "utc": "2026-11-27T14:16:04.405748+00:00"
+      },
+      {
+        "label": "candidate-super-read-15",
+        "lun": 0,
+        "start_sector": 2159112,
+        "sectors": 131072,
+        "sha256": "e2917640ed8b1f29ffefc41851f07eb78e2b01c688f745b07b8db80c7d77c342",
+        "utc": "2026-11-27T14:16:16.768989+00:00"
+      },
+      {
+        "label": "candidate-super-read-16",
+        "lun": 0,
+        "start_sector": 2290184,
+        "sectors": 67584,
+        "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+        "utc": "2026-11-27T14:16:23.208706+00:00"
+      },
+      {
+        "label": "candidate-boot",
+        "lun": 4,
+        "start_sector": 79366,
+        "sectors": 24576,
+        "sha256": "ee320c118375d7121ee50b228f646c3fed472e722c7e2853823814659d29d5a9",
+        "utc": "2026-11-27T14:16:28.191842+00:00"
+      },
+      {
+        "label": "candidate-dtbo",
+        "lun": 4,
+        "start_sector": 104298,
+        "sectors": 6144,
+        "sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+        "utc": "2026-11-27T14:16:28.896587+00:00"
+      }
+    ]
+  },
+  "screen_timeout": {
+    "previous_ms": 121000,
+    "current_ms": 1800000,
+    "temporary_RAM_setting": true
+  },
+  "board_identity": "Raw 0xff is ambiguous; exact board ID and RF calibration are not qualified",
+  "private_records": {
+    "records/ufs-host-g3-gsi17-firststage-ufs-101/inputs.json": "a251d8a3fac71bef47a962ed5e6d87f4c9dd8188ee45fd88eb85f27bc77d4479",
+    "records/ufs-host-g3-gsi17-firststage-ufs-101/timeline.jsonl": "98ca7091a15d1ec55adc0f3f4abfbd872ac43d3b32319dd68b868ee6a11dda77",
+    "records/ufs-host-g3-gsi17-firststage-ufs-101/live/gsi-stable.json": "dad2dca27462ddaac1cd674987fb889bbeb6fc047633c06cd48bd720ca7a9c4a",
+    "records/ufs-host-g3-gsi17-firststage-ufs-101/ramdisk-manifest.json": "770b01ef8a085cc5063b692ab7103e4efbdeeb286bc36f18d0379054b635307a",
+    "records/ufs-host-g3-gsi17-firststage-ufs-101/vendor-inventory.json": "e22007a4cc720862524559c81811548ca9fe1cbd6fbe915f7abde1d45ce2b03b",
+    "checks/hardware-2026-11-27/trial101-final-live.json": "56612fdf50ae8bbfeb2e9e31d1544c9c3ea6e3f6240c2aad970d898f13031e30",
+    "checks/hardware-2026-11-27/trial101-preflight.json": "6a2309b8e9baaff078c32ad2a4abbb4392aadc0479a2fe1c209c19668a3cade6"
+  },
+  "next": "Compose the reviewed mainline-supplicant RRO while retaining this kernel, board ELF, display/GPU and test seeds; validate Android Wi-Fi enable and scan before association"
+}

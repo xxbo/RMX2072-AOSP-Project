@@ -1,0 +1,13 @@
+{
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "files": {
+    "bq27xxx_battery.c": "33e26b782ee696098be2093bee8226e1a5a4df52205bc8440b169e1df31bdf62",
+    "bq27xxx_battery_i2c.c": "a167ef07e528b282340e5ac5b526eefe758342b027b1dffae088e5ff6cd4b011"
+  },
+  "driver": "Pinned upstream bq27xxx, ti,bq28z610",
+  "scope": "Measurement path only; no monitored-battery programming properties; DT_UPDATES_NVM disabled",
+  "oem_commit": "24a15224fbae8ab0e8ba29a9046c06ee7a9f53a4",
+  "oem_path": "arch/arm64/boot/dts/20607/kona-mtp.dtsi",
+  "bus": "SE16 I2C 0x888000, wrapper2 0x8c0000, gpio48/49, address 0x55",
+  "hardware_identity": "NOT READ on 6.18; board source has qcom,batt_bq28z610"
+}

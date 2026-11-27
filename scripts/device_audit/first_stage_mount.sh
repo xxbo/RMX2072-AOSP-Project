@@ -66,6 +66,76 @@ for part in /sys/class/block/sd*; do
     [ "$(cat "$part/ro")" = 1 ]
     rm "$base/ro-node"
 done
+if [ -x /bin/drm-panel-smoke ]; then
+    m3_phase() {
+        printf '<6>M3HANDOFF phase=%s uptime=%s\n' "$1" "$(cut -d' ' -f1 /proc/uptime)" > /dev/kmsg
+    }
+    # Only the explicitly selected display trial can modeset. A missing or
+    # failing display must not prevent the existing GSI/ADB diagnostics.
+    echo "M3DISPLAY boot_id=$(cat /proc/sys/kernel/random/boot_id)" > /run/m3-display.txt
+    if [ -f /m3-display-staged ]; then
+        /bin/busybox sh /bin/display-clock-trace begin >> /run/m3-display.txt 2>&1 ||
+            echo 'M3CLKTRACE setup_failed' >> /run/m3-display.txt
+        for stage in pins fabric core; do
+            /bin/busybox sh /bin/display-bind "$stage" >> /run/m3-display.txt 2>&1 || {
+                echo "M3DISPLAY binding_failed=$stage rc=$?" >> /run/m3-display.txt
+                break
+            }
+        done
+    fi
+    # This GKI profile has no devtmpfs. Android's later ueventd creates the
+    # device, but the pre-policy KMS probe must use its measured sysfs dev_t.
+    if [ ! -e /dev/dri/card0 ] && [ -r /sys/class/drm/card0/dev ]; then
+        card=$(readlink -f /sys/class/drm/card0/device)
+        case "$card" in */ae01000.display-controller)
+            if [ "$(tr -d '\000' < "$card/of_node/compatible")" = qcom,sm8250-dpu ]; then
+                number=$(cat /sys/class/drm/card0/dev)
+                case "$number" in *[!0-9:]*|:*) echo 'M3DISPLAY invalid_card_dev_t' >> /run/m3-display.txt ;;
+                *)
+                    mkdir -p /dev/dri && mknod /dev/dri/card0 c "${number%:*}" "${number#*:}" &&
+                        echo "M3DISPLAY created=/dev/dri/card0 dev=$number source=$card" >> /run/m3-display.txt ||
+                        echo 'M3DISPLAY card_node_creation_failed' >> /run/m3-display.txt
+                    ;;
+                esac
+            fi
+            ;;
+        esac
+    fi
+    # Save the early CPU/thermal result even if the following modeset blocks.
+    # The serial observer streams kmsg independently of this process.
+    for p in /sys/devices/system/cpu/cpufreq/policy* /sys/class/thermal/thermal_zone*; do
+        [ -d "$p" ] || continue
+        for f in scaling_driver scaling_governor scaling_cur_freq scaling_min_freq scaling_max_freq type temp; do
+            [ ! -r "$p/$f" ] || printf '<6>M3PERF before-modeset path=%s field=%s value=%s\n' "$p" "$f" "$(cat "$p/$f")" > /dev/kmsg
+        done
+    done
+    sha256sum /m3-pattern.rgb >> /run/m3-display.txt
+    probe_timeout=50
+    [ ! -f /m3-solid-fill-test ] || probe_timeout=75
+    m3_phase native-probe-enter
+    timeout "$probe_timeout" /bin/drm-panel-smoke >> /run/m3-display.txt 2>&1 || echo "M3DISPLAY smoke_rc=$?" >> /run/m3-display.txt
+    m3_phase native-probe-returned
+    if [ -f /m3-solid-fill-test ]; then
+        # Independent cleanup even when timeout killed the native probe.
+        # This changes a driver input only; the next atomic update restores
+        # framebuffer scanout. Never hand a forced solid fill to Android.
+        control=/sys/module/msm/parameters/rmx2072_solid_fill
+        if ! printf '0\n' > "$control" || [ "$(cat "$control")" != 0 ]; then
+            echo 'M3SOLID parent_cleanup=FAILED' >> /run/m3-display.txt
+            exit 1
+        fi
+        echo 'M3SOLID parent_cleanup=ok parameter=0' >> /run/m3-display.txt
+    fi
+    if [ -f /m3-display-staged ]; then
+        m3_phase clock-trace-end-enter
+        /bin/busybox sh /bin/display-clock-trace end >> /run/m3-display.txt 2>&1 ||
+            echo 'M3CLKTRACE capture_failed' >> /run/m3-display.txt
+        m3_phase clock-trace-end-returned
+    fi
+    m3_phase snapshot-enter
+    /bin/busybox sh /bin/display-snapshot >> /run/m3-display.txt 2>&1 || true
+    m3_phase snapshot-returned
+fi
 # Check that the trace sees the correct exec before permitting the handoff.
 if [ "${2:-}" = install ]; then
     [ "$mode" = observe-vendor ]

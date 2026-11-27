@@ -1,0 +1,149 @@
+{
+  "boot_id": "d328f362-2da1-4cf7-bb53-49c69e04eed5",
+  "source_sha256": "95de26a3f2033d2cc3e10e2791d3a5619f0b4d64e6704771e98ee494e861ad2e",
+  "phases": {
+    "red": {
+      "checks": {
+        "single_dsc_route": true,
+        "unchanged_dsc": true,
+        "unchanged_packets": true,
+        "solid_fill_bit": true,
+        "constant_color": true,
+        "no_source_addresses": true,
+        "no_source_strides": true,
+        "full_frame_source": true,
+        "full_frame_destination": true
+      },
+      "snapshot_bytes": 153049,
+      "snapshot_sha256": "cf629d72f6f1e3e6cd53edfd367694b0ec02093e18d0d6107e622558dc587290",
+      "sspp0": {
+        "0x0": "0x9600438",
+        "0xc": "0x9600438",
+        "0x14": "0x0",
+        "0x18": "0x0",
+        "0x1c": "0x0",
+        "0x20": "0x0",
+        "0x24": "0x0",
+        "0x28": "0x0",
+        "0x30": "0x4237ff",
+        "0x34": "0x3010002",
+        "0x38": "0x80000000",
+        "0x3c": "0xff0000ff"
+      }
+    },
+    "green": {
+      "checks": {
+        "single_dsc_route": true,
+        "unchanged_dsc": true,
+        "unchanged_packets": true,
+        "solid_fill_bit": true,
+        "constant_color": true,
+        "no_source_addresses": true,
+        "no_source_strides": true,
+        "full_frame_source": true,
+        "full_frame_destination": true
+      },
+      "snapshot_bytes": 153049,
+      "snapshot_sha256": "8de35128d7b9993e5d0be625e9c90b5c68934412c640ad5f9245c9b91b46e820",
+      "sspp0": {
+        "0x0": "0x9600438",
+        "0xc": "0x9600438",
+        "0x14": "0x0",
+        "0x18": "0x0",
+        "0x1c": "0x0",
+        "0x20": "0x0",
+        "0x24": "0x0",
+        "0x28": "0x0",
+        "0x30": "0x4237ff",
+        "0x34": "0x3010002",
+        "0x38": "0x80000000",
+        "0x3c": "0xff00ff00"
+      }
+    },
+    "blue": {
+      "checks": {
+        "single_dsc_route": true,
+        "unchanged_dsc": true,
+        "unchanged_packets": true,
+        "solid_fill_bit": true,
+        "constant_color": true,
+        "no_source_addresses": true,
+        "no_source_strides": true,
+        "full_frame_source": true,
+        "full_frame_destination": true
+      },
+      "snapshot_bytes": 153049,
+      "snapshot_sha256": "ea4887302682e49861a5c1b93dafdde6125a3e4b72ccae9a389aba0517bc833b",
+      "sspp0": {
+        "0x0": "0x9600438",
+        "0xc": "0x9600438",
+        "0x14": "0x0",
+        "0x18": "0x0",
+        "0x1c": "0x0",
+        "0x20": "0x0",
+        "0x24": "0x0",
+        "0x28": "0x0",
+        "0x30": "0x4237ff",
+        "0x34": "0x3010002",
+        "0x38": "0x80000000",
+        "0x3c": "0xffff0000"
+      }
+    },
+    "memory_red": {
+      "checks": {
+        "single_dsc_route": true,
+        "unchanged_dsc": true,
+        "unchanged_packets": true,
+        "normal_fetch": true,
+        "matching_pitch": true,
+        "sufficient_allocation": true,
+        "full_frame_source": true,
+        "full_frame_destination": true,
+        "same_fetch_format": true,
+        "separate_pattern_buffer": true
+      },
+      "framebuffer": {
+        "id": 91,
+        "offset": 0,
+        "pitch": 4352,
+        "iova": 8192
+      },
+      "cpu_pixel_value": "0x00ff0000",
+      "snapshot_bytes": 153049,
+      "snapshot_sha256": "9806ee0251a8dd05658c36067bf41a535f1dbfa0de51a666df8fb6a746245c50",
+      "content_scope": "Probe writes RGB red using returned pitch; fetched pixels are not read back."
+    }
+  },
+  "restored_framebuffer": {
+    "id": 92,
+    "offset": 0,
+    "pitch": 4352,
+    "iova": 10452992
+  },
+  "cleanup": {
+    "probe_finished": true,
+    "probe_cleared": true,
+    "parent_cleared": true,
+    "normal_fetch_restored": true
+  },
+  "bypass_checks_pass": true,
+  "physical_acceptance": "FAIL_HARDWARE_COLORS; MEMORY_RED_NOT_OBSERVED",
+  "scope": "Native KMS only. Hardware colors bypass source addresses; compare hardware red with fetched red. Clean colors alone do not exclude content-dependent compression faults.",
+  "operator_observations": [
+    {
+      "phase": "hardware red, green, blue",
+      "quote": "我能看到颜色的变化，但是还是有一条一条的噪声和缺失",
+      "result": "FAIL"
+    },
+    {
+      "phase": "memory red",
+      "quote": "没注意，今天先到这里吧，你总结一下我们结束",
+      "result": "NOT_OBSERVED"
+    }
+  ],
+  "trial62_baseline_checks": {
+    "dsc_fields_unchanged": true,
+    "dsi_packets_unchanged": true,
+    "route_unchanged": true
+  }
+}

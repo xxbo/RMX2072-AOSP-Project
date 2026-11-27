@@ -1,0 +1,160 @@
+{
+  "result": "PASS_LOCAL_DT_SCOPE_ONLY",
+  "baseline_trial": 80,
+  "trial": 81,
+  "baseline_sha256": "b2e49f2e7758d6d3b5292f30ac6f76dfdb642b20c5ecff6d917cc47e5e2d97df",
+  "candidate_sha256": "bed3742f0c7e63569807b366d349050551f32b2c556a79c7f3b12d349018ad76",
+  "added": [
+    "/soc/display-fabric-lab/geniqup@8c0000",
+    "/soc/display-fabric-lab/geniqup@8c0000/i2c@888000",
+    "/soc/display-fabric-lab/geniqup@8c0000/i2c@888000/battery@55",
+    "/soc/display-pins-lab/pinctrl@f100000/gauge-i2c-state"
+  ],
+  "removed": [],
+  "changed": {
+    "/soc/display-pins-lab/pinctrl@f100000": {
+      "gpio-reserved-ranges": [
+        [
+          0,
+          36,
+          40,
+          26,
+          67,
+          8,
+          76,
+          105
+        ],
+        [
+          0,
+          36,
+          40,
+          8,
+          50,
+          16,
+          67,
+          8,
+          76,
+          105
+        ]
+      ]
+    },
+    "/soc/i2c@888000": {
+      "status": [
+        [
+          "okay"
+        ],
+        [
+          "disabled"
+        ]
+      ],
+      "compatible": [
+        [
+          "qcom,i2c-geni"
+        ],
+        [
+          "realme,rmx2072-parked-i2c"
+        ]
+      ]
+    },
+    "/soc/qcom,qupv3_2_geni_se@8c0000": {
+      "compatible": [
+        [
+          "qcom,qupv3-geni-se"
+        ],
+        [
+          "realme,rmx2072-parked-qup"
+        ]
+      ],
+      "status": [
+        null,
+        [
+          "disabled"
+        ]
+      ]
+    }
+  },
+  "phandle_only_reference_changes": 198,
+  "resources": {
+    "battery": {
+      "gauge": "BQ28Z610, OEM board selection; hardware identity not yet read",
+      "bus": "SE16 0x888000",
+      "address": 85,
+      "gpio": [
+        48,
+        49
+      ],
+      "rate_hz": 100000,
+      "charging_control": false,
+      "hardware_result": "NOT RUN"
+    },
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        36,
+        37,
+        38,
+        39,
+        48,
+        49,
+        66,
+        75
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    },
+    "input": {
+      "touch": "RMX2072 Normandy, measured firmware PID 9885, SE13 0xa94000/address 0x5d",
+      "coordinates": [
+        1080,
+        2400
+      ],
+      "reset_gpio": 38,
+      "irq_gpio": 39,
+      "volume_up": "PM8150 GPIO6 active-low, KEY_VOLUMEUP",
+      "volume_down": "PM8150 GPIO7 active-low, KEY_VOLUMEDOWN",
+      "power": "Existing upstream PON power-key binding retained",
+      "hardware_result": "NOT RUN"
+    }
+  },
+  "hardware_result": "NOT RUN"
+}

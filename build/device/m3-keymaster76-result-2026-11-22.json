@@ -1,0 +1,42 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-76",
+  "boot_id": "f45b52da-66fc-4b1b-98de-b78df636a718",
+  "result": "GSI_BOOT_COMPLETED_LOCKSETTINGS_IMPORT_PASS_DESKTOP_FAIL",
+  "kernel_sha256": "6bbf89b900d3d303dc92d197f9f971294eda63949d6f41d15684f18c211abca2",
+  "boot_sha256": "c270f4482d4fe0e0c415b5acb50c77583c1d8eb6e91721563287b94144168e87",
+  "vendor_sha256": "87ad4cc7bc3f004104ff2dc30dc22a3701694b15fe3f96d80641c125b42be95f",
+  "super_sha256": "d1cbb5f4e26b9cfd810f4cdf9a5577110fcff42dce48ea594c4f225f64bb2a06",
+  "same_boot_adb_seconds": 197.907,
+  "retained": true,
+  "stock_restored": false,
+  "findings": {
+    "configure": 0,
+    "hmac_parameters": 0,
+    "compute_shared_hmac": 0,
+    "maintenance_registered": true,
+    "early_boot_ended_rpc": "success, but boot-level HMAC key creation failed -49",
+    "startup_aes_selftest": "FAILED import -49 before HIDL registration; no roundtrip or tamper acceptance",
+    "synthetic_password": "rollback-resistant import -67, framework fallback import 0 / 455 bytes; user 0 successfully initialized",
+    "boot_completed": "1 on GSI",
+    "desktop": "not accepted; SystemUI/Launcher/SetupWizard mapper initialization fails, then HWUI no-surface abort",
+    "late_system_server": "pid 2361 SIGSEGV in swiftshader_jit after execmem denial during PowerManager screen transition; later pid 13191, same kernel boot",
+    "render_nodes": "card0 and renderD128 both 0660 system:graphics gpu_device",
+    "screenshot": "timed out after 30 seconds; no image accepted"
+  },
+  "controls": {
+    "display_kernel_dt_gsi_seeds": "unchanged from preflight",
+    "no_cold_boot_test": true,
+    "single_recovery_set": true,
+    "no_stock_partition_reread": true,
+    "live_followup": "svc power stayon usb, previous stay_on_while_plugged_in=0, temporary RAM data only"
+  },
+  "evidence_sha256": {
+    "live/framework-0-logcat.txt": "996291cf14146a029be9a42f83c0397800416d9deaadd53acb01c2e6be8baf2f",
+    "live/framework-2-logcat.txt": "eb654f6615b2a255f78e19c1df0be0ba1dfc55bf43377f04a26b981e1d7bb5e7",
+    "live/framework-final-crash.txt": "caf4636a536f17dd8e5313c7006f4856ccc4bbcdd7376e86f9e46ab7589225e7",
+    "live/framework-final-identity.txt": "5dc023960c8db7fcae9c810317f1e02493e06b195ab1b09b7c76fb27b9ac1bd2",
+    "live/gsi-stable.json": "25503e8210d4555a60005acefd88b6ad7d785d3f9ecade34ff8d7a9c74c38563",
+    "readbacks.jsonl": "a9f616ea6b31b0108e41b0d4e6676fdd04c5365352bc31a6ac349a721c8a9185",
+    "gsi-retained.json": "b3757b3ccf9f684c0325de23b6cda3fbf771db8a135b0c4ce8af8496bf43b57d"
+  }
+}

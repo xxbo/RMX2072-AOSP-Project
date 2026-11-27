@@ -1,0 +1,249 @@
+{
+  "date": "2026-11-27",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-103",
+  "result": "PASS_FAILED_RRO_REMOVAL__SCAN_BLOCKED_INTERFACE_DOWN",
+  "boot_id": "262e1a05-4114-4f0f-af28-e9117c91a3b7",
+  "recipe_commit": "ee460fc912a620a9cbae991b3f15a70f03de1887",
+  "boot_sha256": "f6b95dc34122c4abd5b7a9ce4aa812db3a836808db2f682193ea3409af26c7d4",
+  "kernel_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+  "vendor_signed_sha256": "4a8939e0baec4281667161bd10a80cf9b4d9aa3a5bf1646163815bd7309af1d5",
+  "super_sha256": "f0713d20544a57ec94b4c95c698d6ab574b886c9086106ffba61d324ed39d799",
+  "preflight": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-103",
+    "baseline": "ufs-host-g3-gsi17-firststage-ufs-102",
+    "recipe_commit": "ee460fc912a620a9cbae991b3f15a70f03de1887",
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "same_display_flags": true,
+      "standard_pps_retained": true,
+      "same_boot_components": true,
+      "same_dt_outputs": true,
+      "same_graphics_guard_and_keys": true,
+      "same_native_pattern": true,
+      "bounded_cmdline": true,
+      "scratch_framework_start": true,
+      "boot_digest": true,
+      "dtbo_digest": true,
+      "kernel_digest": true,
+      "ramdisk_digest": true,
+      "vendor_digest": true,
+      "same_gsi_content": true,
+      "same_vendor_key": true,
+      "same_original_container": true,
+      "same_active_other_partitions": true,
+      "same_inactive_nonalias_partitions": true,
+      "health_source_verified": true,
+      "health_is_composed": true,
+      "no_unrelated_vendor_change": true,
+      "only_selected_hal_files_added": true,
+      "scratch_profile_consistent": true,
+      "same_metadata_seed": true,
+      "same_data_seed": true,
+      "power_source_verified": true,
+      "power_is_composed": true,
+      "only_reviewed_rro_removed": true,
+      "no_overlay_composed": true,
+      "accepted_boot_was_retained": true,
+      "exact_accepted_vendor": true,
+      "exact_accepted_container": true,
+      "accepted_manifest_digest": true,
+      "only_trial_id_differs_from_accepted_ramdisk": true,
+      "same_wifi_firmware": true,
+      "same_input_battery_gpu_and_radio": true,
+      "same_kernel": true
+    },
+    "passed": true,
+    "boot_sha256": "f6b95dc34122c4abd5b7a9ce4aa812db3a836808db2f682193ea3409af26c7d4",
+    "kernel_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+    "vendor_sha256": "4a8939e0baec4281667161bd10a80cf9b4d9aa3a5bf1646163815bd7309af1d5",
+    "super_sha256": "f0713d20544a57ec94b4c95c698d6ab574b886c9086106ffba61d324ed39d799",
+    "health_build": 45002345247,
+    "health_source_commit": "e08c6a18d1eab8561913f17594b0eefb9691cf6f",
+    "stage": "wifi-rollback",
+    "selected_hal_build": 45008097656,
+    "selected_hal_source_commit": "efa6846c8ad2fb2abc01004e44beea27a36dc31a",
+    "vendor_files_changed": [
+      "/overlay/RmxWifiOverlay.apk"
+    ],
+    "vendor_files_added": [],
+    "vendor_files_removed": [
+      "/overlay/RmxWifiOverlay.apk"
+    ],
+    "metadata_and_extents_unchanged": true,
+    "headroom_bytes": 829120512,
+    "scope": "Local input comparison only; no handset or desktop acceptance implied"
+  },
+  "retention": {
+    "same_boot": true,
+    "enforcing": true,
+    "seconds": 194.516,
+    "guardian": "retained",
+    "current_mode": "Android 17 GSI",
+    "stock_restored": false,
+    "scope": "current-boot-only",
+    "host_start_required_after_every_reboot": true
+  },
+  "wifi": {
+    "mainline_resource": false,
+    "supplicant_process_count": 0,
+    "crash_buffer_bytes": 0,
+    "wificond_registered": true,
+    "vendor_supplicant_registered": false,
+    "scan": "ATTEMPTED: EADDRNOTAVAIL on interface UP, then ENETDOWN",
+    "association": "NOT RUN",
+    "dhcp": "NOT RUN",
+    "traffic": "NOT RUN"
+  },
+  "battery": {
+    "capacity_percent": 48,
+    "voltage_uv": 7942000,
+    "temperature_deci_c": 397,
+    "charging_policy_qualified": false
+  },
+  "writes": {
+    "matching_readbacks": 38,
+    "candidate_super_chunks_written": [
+      0
+    ],
+    "stock_partition_reread": false,
+    "historical_images_copied": false
+  },
+  "next": "Finish pinned ARMv8-A source supplicant build, verify ELF/closure, integrate standard vendor AIDL under enforcing, then scan and connect; retain accepted kernel/DT/firmware/display/GPU/input/test seeds",
+  "private_records": {
+    "records/ufs-host-g3-gsi17-firststage-ufs-103/inputs.json": "b4d80168319829f0617496abd096335c421ebca4671ffbb9e56cb67c4553a221",
+    "records/ufs-host-g3-gsi17-firststage-ufs-103/timeline.jsonl": "9909a6e9bb41c53bf290856b5b35c8a1973ec4e7a6808ae5c3cb8ab32b853695",
+    "records/ufs-host-g3-gsi17-firststage-ufs-103/readbacks.jsonl": "05cee96b1956f28027c2aac0ac676754e4c10aed01c5774e04241f96def0b05c",
+    "records/ufs-host-g3-gsi17-firststage-ufs-103/live/gsi-stable.json": "b62bb3f2510a7216eb8d34b35d97c98d981e1b57af7b11dda60e23517c9cd7e0",
+    "records/ufs-host-g3-gsi17-firststage-ufs-103/gsi-retained.json": "898f76d4c4ca8f76ef5fc2ef8a6fabacd7b3b3d0ab41de2648191ae5bc707d86",
+    "records/ufs-host-g3-gsi17-firststage-ufs-103/ramdisk-manifest.json": "bc3a255caa4c5602fb36783244223f7146fc49de0145440e9ee6d143365e6ef3",
+    "records/ufs-host-g3-gsi17-firststage-ufs-103/vendor-inventory.json": "e22007a4cc720862524559c81811548ca9fe1cbd6fbe915f7abde1d45ce2b03b",
+    "checks/hardware-2026-11-27/trial103-live.json": "36f6a45deae3e664cf6c5101c84aa0316c01c778feb5e4cd504609425ab6e215",
+    "checks/hardware-2026-11-27/trial103-screen-timeout.json": "22e13b85c2ffbe8e6741541d1f9a30c9916fc03da41d7665d403dbee72f3206e",
+    "checks/hardware-2026-11-27/trial103-preflight.json": "4bacbaf2629598bbd20b7d7249760b5dc4de599c9fafe590f4551d312771ffb1"
+  },
+  "discovery": {
+    "boot_id": "262e1a05-4114-4f0f-af28-e9117c91a3b7",
+    "same_boot": true,
+    "enforcing": true,
+    "qca6390_enumerated": true,
+    "wlan_netdev": true,
+    "discovery_read_errors": true,
+    "kernel_discovery": {
+      "pci_root_port_reported": true,
+      "qca6390_reported": true,
+      "link_down_reported": true,
+      "digital_rail_registration_failed": false
+    },
+    "firmware_discovery": {
+      "mhi_setup_reported": true,
+      "qmi_target_response_observed": true,
+      "target_info": [
+        {
+          "chip_id": 0,
+          "chip_family": 11,
+          "board_id": 255,
+          "soc_id": 4294967295,
+          "board_id_may_be_default": true
+        }
+      ],
+      "firmware_versions": [
+        {
+          "version": "0x10121492",
+          "timestamp": "2021-11-04 11:23",
+          "build_id": ""
+        }
+      ],
+      "amss_missing": false,
+      "board_data_missing": false,
+      "mhi_start_errors": [],
+      "regulatory_db_missing": true,
+      "board_compatibility_verified": false,
+      "scope": "Observed boot messages only; QMI response is not board-data, WLAN interface or RF acceptance"
+    },
+    "files": {
+      "pci.txt": "c2abba231c80b0a69f2a5c4ef4abd616ce22be176a423b4032bed44882ce6b6b",
+      "network.txt": "6cbec70b136ce507d49fc4dee56164958bb4e5eb83bfcced3199c51d7c73e026",
+      "wifi-status.txt": "d53f963656b4ebd4ece74391dcdcb3b9ab9f83e894238073a6b02c5444007067",
+      "wifi-service.txt": "165d168fd5ddfe25ec88d385345ba1e58e68ea63a2f9165f3671cc2e27daf2ae",
+      "battery.txt": "96e2ca542cb9150b66b3151535bfda879ce1901f92ef3c49c95ffd6b8eb4039e",
+      "kernel-wlan.txt": "1af15112c76c55214c0eb24bf9dfa064ce582f7f6e6fe19c611c4726a87b63e7"
+    },
+    "kernel_log_sha256": {
+      "boot-events.txt": "ee7effab32bd16a6fba7211cc43ee23e31da3a476acae0cf3209c5f6ba60c806",
+      "acm.log": "52829d047f59a40a9189e1f951406a1c796d70c75ddcb1c24effdc3e576e0dd9"
+    },
+    "scan": "NOT RUN",
+    "association": "NOT RUN",
+    "dhcp": "NOT RUN",
+    "traffic": "NOT RUN",
+    "scope": "Discovery only; no RF enable, credentials or network configuration changes"
+  },
+  "runner_commit": "ee460fc912a620a9cbae991b3f15a70f03de1887",
+  "scan_only_test": {
+    "boot_id": "262e1a05-4114-4f0f-af28-e9117c91a3b7",
+    "scan_only_iface_created": true,
+    "bands_discovered_ghz": [
+      2.4,
+      5
+    ],
+    "interface_up": false,
+    "interface_up_errno": 99,
+    "interface_up_error": "EADDRNOTAVAIL",
+    "scan_request_nl80211_errno": 100,
+    "scan_request_error": "ENETDOWN",
+    "scan_result_count": 0,
+    "supplicant_started": false,
+    "hardware_address_validity": "UNKNOWN: shell SIOCGIFHWADDR is denied with errno 13; sysfs also denied",
+    "readonly_probe": {
+      "source_sha256": "ddea94cdae3f8f8ed78ccbc830daa9571f4f9242f65180aa62936d46b7e10385",
+      "binary_sha256": "856db355bbcd425d035f14b7805797e2fa61e14d12894cab85d74e194db83121",
+      "compiler": "G:\\devProgram\\Android\\SDK\\ndk\\28.2.13676358\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android35-clang.cmd",
+      "target": "aarch64-linux-android35",
+      "scope": "Only SIOCGIFINDEX/SIOCGIFFLAGS/SIOCGIFHWADDR; no identifiers emitted or network writes"
+    },
+    "scan_setting_restored": true,
+    "connection_attempted": false,
+    "scope": "No source HAL installed or address modified; native interface setup exists but actual scan fails before RF results",
+    "private_records": {
+      "checks/hardware-2026-11-27/trial103-scan-only/battery-after.json": "47b150b4fc01fb68284032c2512bbebce798509eb34753f01b18335453ad94b9",
+      "checks/hardware-2026-11-27/trial103-scan-only/enable-scan-only.json": "0f54b82d537a2195aaf1b602e1e1940138c5a728d736e77db3771c6dc8cf5a00",
+      "checks/hardware-2026-11-27/trial103-scan-only/identity-after.json": "543c991835110506f43ae2d9279c53cf3d24aa3978e4b7eac76a6cafff32b0fd",
+      "checks/hardware-2026-11-27/trial103-scan-only/identity-before.json": "11130c1eb50ce519283c251849d4e8a49c41a028303f30061c80e9b5b9a0ffb8",
+      "checks/hardware-2026-11-27/trial103-scan-only/identity-ready.json": "9f18facafa7735132527123bbb192e809cc714f382cef5cf138c5ec603643b0d",
+      "checks/hardware-2026-11-27/trial103-scan-only/ifconfig.json": "5a343bb45b754903aae137cb413bc982fd006723d7966bfe9c02cb9beaa08d69",
+      "checks/hardware-2026-11-27/trial103-scan-only/logcat.json": "b52e08deecda2ce8624720a668b44bb07d274dd7937ba7a2044801b9138b86c1",
+      "checks/hardware-2026-11-27/trial103-scan-only/netd.json": "5d7e7f23377ee8415b4ee7b212ed00e8be86474bbede386dc46a6da8295a5b03",
+      "checks/hardware-2026-11-27/trial103-scan-only/netdev-address.json": "1d2f48b904260963c3cbab2c751f609e67df1a867a318aaac895d07c03661696",
+      "checks/hardware-2026-11-27/trial103-scan-only/phy.json": "487aebea8392c728e8c065b295ed6bf2fbca1fd7fd7f05ba4b37030cf9254516",
+      "checks/hardware-2026-11-27/trial103-scan-only/process.json": "b9deb8d77554f3c94b8bd618bb40d94b2bd3e133193c6e868fa419c3ed393bee",
+      "checks/hardware-2026-11-27/trial103-scan-only/readonly-probe.json": "a9dfeb3fa5e263b3e508ad2b50cb087063ed42b15be8c0c0e2d4e43c65681306",
+      "checks/hardware-2026-11-27/trial103-scan-only/restore-scan-setting.json": "d59ce14e77c875323d2985e7cc7a99b13d45acc80089ded505b9f62310147b55",
+      "checks/hardware-2026-11-27/trial103-scan-only/restored-state.json": "b7741de82c5baf0278da4b692a0474a697b743d7b8315fd223c9ce27756d3498",
+      "checks/hardware-2026-11-27/trial103-scan-only/scan-after.json": "9c331b19596a1f08765fb0a276727551b7c05263968cb5cd40e48220d05cb659",
+      "checks/hardware-2026-11-27/trial103-scan-only/scan-before.json": "dea89ee49667498b1fe6db9e423081e583211ab9a1fcb9b752c346686048522e",
+      "checks/hardware-2026-11-27/trial103-scan-only/scan-request.json": "359bea9592197c2186b278b1dfd9b8512e933f98ec73f610378a27f89ae91bb1",
+      "checks/hardware-2026-11-27/trial103-scan-only/screen-timeout.json": "53b860e321144cfb525ecbc92e1ab4a3a0bd68c7bc089f4340ae0c25080999b0",
+      "checks/hardware-2026-11-27/trial103-scan-only/status-after.json": "3e9b36ed8c0ee4372ea25fe8f3aa51ae0ce7eab3cc49293c49d01a37bd867878",
+      "checks/hardware-2026-11-27/trial103-scan-only/status-ready.json": "df73a53b692a8f2d2695f781d8cdef58f46bf429db1e77253f86e2b5e04c90f0",
+      "checks/hardware-2026-11-27/trial103-scan-only/wifi-before.json": "560035fd59f138e685775331c41d265c0f21028cea48c11ad8141924354603d8",
+      "checks/hardware-2026-11-27/trial103-scan-only/wifi-dump.json": "10388581ecd05dbf6b529292243b282d5515211d40f01368fe5350be6aa64907"
+    },
+    "source_analysis": {
+      "kernel_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+      "iface_c_sha256": "9220033ce8f290c94af140eac6d70d22dc1b8c80a05b6722420b4a4bb07bc022",
+      "source_url": "https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/net/mac80211/iface.c",
+      "inference": "ieee80211_open checks is_valid_ether_addr and returns EADDRNOTAVAIL; prioritize address initialization, actual hardware address not yet observed"
+    },
+    "stock_mac_path": {
+      "source_super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+      "symlink": "/firmware/wlan/qca_cld/qca6390/wlan_mac.bin",
+      "target": "/mnt/vendor/persist/qca6390/wlan_mac.bin",
+      "source": "Existing single F.20 recovery copy",
+      "handset_io": false,
+      "image_copy": false,
+      "mac_address_read": false
+    }
+  }
+}

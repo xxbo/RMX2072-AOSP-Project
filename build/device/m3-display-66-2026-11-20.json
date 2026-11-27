@@ -1,0 +1,480 @@
+{
+  "utc": "2026-11-20T14:23:29.258689+00:00",
+  "goal": "Correct physical display, then AOSP desktop on project ACK 6.18 + Android 17 GSI + source/ported drivers",
+  "status": "DISPLAY_FAILED_F20_RESTORED",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-66",
+  "boot_id": "fa161396-0e8d-4c8d-b947-6bf547c0b956",
+  "kernel": {
+    "run_id": 44744298788,
+    "source_commit": "1b43f9a8a80bac4032a6c1c83614e1b3dae543aa",
+    "artifact_id": 14633697619,
+    "artifact_archive_digest": "sha256:8fa24bdb57550398ce8f43441bcaa3e9b11da80e59b305b5179551792706af74",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "547f82c2f81777550a95aef91d24c11adadad2351c070203751c86aadf7896fb",
+    "selected_member_sha256": {
+      "SHA256SUMS": "3491676093b9043aa755f02dfa9868ffab709e9d464f3c906cf1a8fd99249bcc",
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "build-metadata.txt": "4f9fb8641efb558933b154fdfebef1381378f880d6c59da1d85c4d91e1e411ee",
+      "display-clock-patch.sha256": "d61a6e071f4d95e1b4b78523f1aa0d0fe30d21380e845490921bd96baebfccd1",
+      "display-source.sha256": "6739de5becacf1cdb8e028ca0fc885058b632d97bffaa2795c1b4ad9030adc2e",
+      "Image.gz": "fd01d0a58103982d6395df25ff7c19a92df22f27e12971aec2b8d0f4334cd966",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "4b00d7b70feb80e4a80176cb10c73291b013c1da54cefc70693dbfa19c97a998",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "rmx2072-dsc-packet-trace.sha256": "6bf2fd3fc742d2b897753519cc9003c091351a8af8cea560622ac48a9cb9bd39",
+      "rmx2072-dpu-solid-fill-test.sha256": "23d9f30f6452c901ef6457761d6efa48380f35da179f107617e9f228d85f0d20",
+      "rmx2072-dsc-route-test.sha256": "0e8dd497379f704771996add7f72fce0d0972d73e971a39bd0ebb4aad8c1d4f3",
+      "rmx2072-stock-dsc-test.sha256": "c44cabb0bf548b927d631f0a9c53d0f47bd3de5eff57306bc20cb1562800e28e",
+      "rmx2072-stock-linkclock-test.sha256": "2d4d012fa54a5c058b8bc49f1224702e756682f44809c50aa86d30af6d25ee8b",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309",
+      "upstream-dsi-dsc-all-slices-flag.sha256": "8a0f473a130c0159cb0d7badcd6f37a128915e08098de90ff010b58dc871a05d",
+      "upstream-msm-dsi-dsc-slices-per-packet.sha256": "130c7139f1104b38050febbff6c19bc10a41d13ff840d81f522562619f77fc0b"
+    }
+  },
+  "recipe_commit": "7a32af4dfa4657f110a1ef7d567681d2626b145c",
+  "boot_sha256": "021aef09508aa1c177563735a567dfa006cf6e74eaa8b09070d0652961239bdb",
+  "dtbo_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "physical_acceptance": false,
+  "operator_observations": [
+    {
+      "utc": "2026-11-20T14:05:33.005366+00:00",
+      "phase": "native",
+      "quote": "没有改善",
+      "physical_result": "corruption remains; no improvement"
+    },
+    {
+      "utc": "2026-11-20T14:06:45.802587+00:00",
+      "phase": "android",
+      "quote": "一样花屏",
+      "physical_result": "same corruption"
+    }
+  ],
+  "setup_checks": {
+    "count": 32,
+    "passed": true,
+    "record": "m3-stock-dsc-66-runtime-2026-11-20.json"
+  },
+  "native_result": {
+    "drm_kms_result": "PASS_EVENTS_ONLY",
+    "probe_reported_pass": true,
+    "advancing_vblank_events": true,
+    "transport_errors": []
+  },
+  "android": {
+    "identity": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "fa161396-0e8d-4c8d-b947-6bf547c0b956",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "stable_seconds": 196.625,
+    "service_observations": [
+      "Service android.security.maintenance: found\nService SurfaceFlinger: found\nService android.hardware.graphics.composer3.IComposer/default: found\nService android.hardware.graphics.allocator.IAllocator/default: found\nService activity: not found\nService window: not found",
+      "Service android.security.maintenance: found\nService SurfaceFlinger: found\nService android.hardware.graphics.composer3.IComposer/default: found\nService android.hardware.graphics.allocator.IAllocator/default: found\nService activity: not found\nService window: not found",
+      "Service android.security.maintenance: found\nService SurfaceFlinger: found\nService android.hardware.graphics.composer3.IComposer/default: found\nService android.hardware.graphics.allocator.IAllocator/default: found\nService activity: not found\nService window: not found",
+      "Service android.security.maintenance: found\nService SurfaceFlinger: found\nService android.hardware.graphics.composer3.IComposer/default: found\nService android.hardware.graphics.allocator.IAllocator/default: found\nService activity: not found\nService window: not found"
+    ],
+    "desktop_accepted": false
+  },
+  "preflight": {
+    "checks": {
+      "same_candidate": true,
+      "same_scratch": true,
+      "same_source_dt": true,
+      "same_dtbo": true,
+      "stock_dsc_opt_in": true,
+      "same_stock_linkclock_test": true,
+      "same_single_dsc_test": true,
+      "same_panel_readback_test": true,
+      "same_solid_fill_test": true,
+      "same_display_probe_sha256": true,
+      "same_pattern_rgb_sha256": true,
+      "same_first_stage_init_sha256": true,
+      "same_witness_sha256": true
+    },
+    "all_pass": true,
+    "recipe_commit": "7a32af4dfa4657f110a1ef7d567681d2626b145c",
+    "kernel_sha256": "547f82c2f81777550a95aef91d24c11adadad2351c070203751c86aadf7896fb",
+    "boot_sha256": "021aef09508aa1c177563735a567dfa006cf6e74eaa8b09070d0652961239bdb",
+    "ramdisk_sha256": "addb419501f201d206c801a810e135797c24a0d0e9ec1defde47b8f13a88eb62",
+    "host_start_required_after_every_reboot": true
+  },
+  "trial_readbacks": [
+    {
+      "label": "before-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "utc": "2026-11-20T13:58:17.686002+00:00"
+    },
+    {
+      "label": "before-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "utc": "2026-11-20T13:58:18.392935+00:00"
+    },
+    {
+      "label": "candidate-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "021aef09508aa1c177563735a567dfa006cf6e74eaa8b09070d0652961239bdb",
+      "utc": "2026-11-20T14:00:42.311250+00:00"
+    },
+    {
+      "label": "candidate-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+      "utc": "2026-11-20T14:00:43.010936+00:00"
+    },
+    {
+      "label": "candidate-super-read-00",
+      "lun": 0,
+      "start_sector": 193032,
+      "sectors": 131072,
+      "sha256": "e625d0ef13273544e21c2131640c43ba3f61eee332a11205abab67bda38733d1",
+      "utc": "2026-11-20T14:00:55.498097+00:00"
+    },
+    {
+      "label": "candidate-super-read-01",
+      "lun": 0,
+      "start_sector": 324104,
+      "sectors": 131072,
+      "sha256": "5966cadc6bdbf42920f191b9295452dc54fb5f33b6d98c2db929b5b7884c8260",
+      "utc": "2026-11-20T14:01:08.014602+00:00"
+    },
+    {
+      "label": "candidate-super-read-02",
+      "lun": 0,
+      "start_sector": 455176,
+      "sectors": 131072,
+      "sha256": "2672cbd1f6906371963c62fa279d2b7ff1a036c0f87bd2ac0cd01a093d4ee4e4",
+      "utc": "2026-11-20T14:01:20.522385+00:00"
+    },
+    {
+      "label": "candidate-super-read-03",
+      "lun": 0,
+      "start_sector": 586248,
+      "sectors": 131072,
+      "sha256": "b773ca12b0a1eb5e0a3101281c03a20a0d16f1aa3fd435ca9888f5fdd7fbd0ee",
+      "utc": "2026-11-20T14:01:33.051192+00:00"
+    },
+    {
+      "label": "candidate-super-read-04",
+      "lun": 0,
+      "start_sector": 717320,
+      "sectors": 131072,
+      "sha256": "d9ec0569cf19a76d80e4f5bf3d305ccc785ff38ba4837594b69a3c92eced4715",
+      "utc": "2026-11-20T14:01:45.553658+00:00"
+    },
+    {
+      "label": "candidate-super-read-05",
+      "lun": 0,
+      "start_sector": 848392,
+      "sectors": 131072,
+      "sha256": "6d5207f2dc41d25cc72072a9a2ce78c3c942362d7bb84548a3c8da04f868d1f7",
+      "utc": "2026-11-20T14:01:58.054970+00:00"
+    },
+    {
+      "label": "candidate-super-read-06",
+      "lun": 0,
+      "start_sector": 979464,
+      "sectors": 131072,
+      "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+      "utc": "2026-11-20T14:02:10.555461+00:00"
+    },
+    {
+      "label": "candidate-super-read-07",
+      "lun": 0,
+      "start_sector": 1110536,
+      "sectors": 131072,
+      "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+      "utc": "2026-11-20T14:02:23.063178+00:00"
+    },
+    {
+      "label": "candidate-super-read-08",
+      "lun": 0,
+      "start_sector": 1241608,
+      "sectors": 131072,
+      "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+      "utc": "2026-11-20T14:02:35.591370+00:00"
+    },
+    {
+      "label": "candidate-super-read-09",
+      "lun": 0,
+      "start_sector": 1372680,
+      "sectors": 131072,
+      "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+      "utc": "2026-11-20T14:02:48.124389+00:00"
+    },
+    {
+      "label": "candidate-super-read-10",
+      "lun": 0,
+      "start_sector": 1503752,
+      "sectors": 131072,
+      "sha256": "b84e8cad1bcd574e5f1ca44475dc99ac1f1f39577ad86edb8ab42408157e894f",
+      "utc": "2026-11-20T14:03:00.622602+00:00"
+    },
+    {
+      "label": "candidate-super-read-11",
+      "lun": 0,
+      "start_sector": 1634824,
+      "sectors": 131072,
+      "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+      "utc": "2026-11-20T14:03:13.161810+00:00"
+    },
+    {
+      "label": "candidate-super-read-12",
+      "lun": 0,
+      "start_sector": 1765896,
+      "sectors": 131072,
+      "sha256": "31b33d4846a8353239b0f792ffe775664096115b91f6bccabbec84502603efe4",
+      "utc": "2026-11-20T14:03:25.651711+00:00"
+    },
+    {
+      "label": "candidate-super-read-13",
+      "lun": 0,
+      "start_sector": 1896968,
+      "sectors": 131072,
+      "sha256": "64806dc93ca06d60f25de50deb8084a8d648725271fd8ffcf4248ba6e61fa832",
+      "utc": "2026-11-20T14:03:38.161029+00:00"
+    },
+    {
+      "label": "candidate-super-read-14",
+      "lun": 0,
+      "start_sector": 2028040,
+      "sectors": 131072,
+      "sha256": "aa72d4e321e3ab53387af844e407f7b0d16d626b3cd320604cea539cc214582e",
+      "utc": "2026-11-20T14:03:50.646519+00:00"
+    },
+    {
+      "label": "candidate-super-read-15",
+      "lun": 0,
+      "start_sector": 2159112,
+      "sectors": 131072,
+      "sha256": "8cb68db5119ab5e0ba46d6f209b71a9bb5398cee6152806c75c1a941f3266ae6",
+      "utc": "2026-11-20T14:04:03.091211+00:00"
+    },
+    {
+      "label": "candidate-super-read-16",
+      "lun": 0,
+      "start_sector": 2290184,
+      "sectors": 67584,
+      "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+      "utc": "2026-11-20T14:04:09.584889+00:00"
+    }
+  ],
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "2114bf80-253d-44c3-b015-4670eab5535b",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ],
+    "readbacks": [
+      {
+        "label": "restored-boot",
+        "lun": 4,
+        "start_sector": 79366,
+        "sectors": 24576,
+        "sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+        "utc": "2026-11-20T14:14:29.074376+00:00"
+      },
+      {
+        "label": "restored-dtbo",
+        "lun": 4,
+        "start_sector": 104298,
+        "sectors": 6144,
+        "sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+        "utc": "2026-11-20T14:14:29.783022+00:00"
+      },
+      {
+        "label": "restored-super-00",
+        "lun": 0,
+        "start_sector": 193032,
+        "sectors": 131072,
+        "sha256": "a9332fa0b9aa072d60ad5f7987071335869e0ce643b3b91871f7cfecb1a10d5e",
+        "utc": "2026-11-20T14:14:42.213284+00:00"
+      },
+      {
+        "label": "restored-super-01",
+        "lun": 0,
+        "start_sector": 324104,
+        "sectors": 131072,
+        "sha256": "9a95c42f2888884be24437e221e9ee32c5b3727ae6b832eb9ed4d6143e965145",
+        "utc": "2026-11-20T14:14:54.701549+00:00"
+      },
+      {
+        "label": "restored-super-02",
+        "lun": 0,
+        "start_sector": 455176,
+        "sectors": 131072,
+        "sha256": "2026c8db928bbbccc1e39a9fa869b947edee41bffa16a276147c2b6a042b8a54",
+        "utc": "2026-11-20T14:15:07.214302+00:00"
+      },
+      {
+        "label": "restored-super-03",
+        "lun": 0,
+        "start_sector": 586248,
+        "sectors": 131072,
+        "sha256": "4ec16ef55f48f5433c2aff8f5c534a7a7af182bcadc70f8f46d5c9d87a931dda",
+        "utc": "2026-11-20T14:15:19.728931+00:00"
+      },
+      {
+        "label": "restored-super-04",
+        "lun": 0,
+        "start_sector": 717320,
+        "sectors": 131072,
+        "sha256": "c2ee89be4ecfb5dd777fdae81c84d48399649edf10b78fa25bd2c1439266bc39",
+        "utc": "2026-11-20T14:15:32.237393+00:00"
+      },
+      {
+        "label": "restored-super-05",
+        "lun": 0,
+        "start_sector": 848392,
+        "sectors": 131072,
+        "sha256": "928fad1aa687ee66608025deddbc85388ea90e8ef3b9db2af25b4c9c7e9ff9b5",
+        "utc": "2026-11-20T14:15:44.717174+00:00"
+      },
+      {
+        "label": "restored-super-06",
+        "lun": 0,
+        "start_sector": 979464,
+        "sectors": 131072,
+        "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+        "utc": "2026-11-20T14:15:57.215665+00:00"
+      },
+      {
+        "label": "restored-super-07",
+        "lun": 0,
+        "start_sector": 1110536,
+        "sectors": 131072,
+        "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+        "utc": "2026-11-20T14:16:09.730396+00:00"
+      },
+      {
+        "label": "restored-super-08",
+        "lun": 0,
+        "start_sector": 1241608,
+        "sectors": 131072,
+        "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+        "utc": "2026-11-20T14:16:22.240930+00:00"
+      },
+      {
+        "label": "restored-super-09",
+        "lun": 0,
+        "start_sector": 1372680,
+        "sectors": 131072,
+        "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+        "utc": "2026-11-20T14:16:34.741117+00:00"
+      },
+      {
+        "label": "restored-super-10",
+        "lun": 0,
+        "start_sector": 1503752,
+        "sectors": 131072,
+        "sha256": "4bb3f1c100939461c15a5678d656f1c7f2d0556f75cf0e3effe8603547198d64",
+        "utc": "2026-11-20T14:16:47.248420+00:00"
+      },
+      {
+        "label": "restored-super-11",
+        "lun": 0,
+        "start_sector": 1634824,
+        "sectors": 131072,
+        "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+        "utc": "2026-11-20T14:16:59.755783+00:00"
+      },
+      {
+        "label": "restored-super-12",
+        "lun": 0,
+        "start_sector": 1765896,
+        "sectors": 131072,
+        "sha256": "b7ef2594f9e6fb627dd2761059ea626357d491a455b9bf9da27636b2064699cf",
+        "utc": "2026-11-20T14:17:12.239020+00:00"
+      },
+      {
+        "label": "restored-super-13",
+        "lun": 0,
+        "start_sector": 1896968,
+        "sectors": 131072,
+        "sha256": "6c91b96c0b0bbbe0ece568ee8dc160699578b6233908f48bf720c255f4f3bac4",
+        "utc": "2026-11-20T14:17:24.701763+00:00"
+      },
+      {
+        "label": "restored-super-14",
+        "lun": 0,
+        "start_sector": 2028040,
+        "sectors": 131072,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+        "utc": "2026-11-20T14:17:37.132881+00:00"
+      },
+      {
+        "label": "restored-super-15",
+        "lun": 0,
+        "start_sector": 2159112,
+        "sectors": 131072,
+        "sha256": "9acca8e8c22201155389f65abbf6bc9723edc7384ead80503839f49dcc56d767",
+        "utc": "2026-11-20T14:17:49.550255+00:00"
+      },
+      {
+        "label": "restored-super-16",
+        "lun": 0,
+        "start_sector": 2290184,
+        "sectors": 67584,
+        "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+        "utc": "2026-11-20T14:17:56.029583+00:00"
+      }
+    ]
+  },
+  "raw_local_evidence": {
+    "inputs.json": {
+      "bytes": 134251,
+      "sha256": "3da357116b6713f2e315f1e38bcb1c8ff3bfa76d63215d40f718dd6a83468150"
+    },
+    "live/m3-display.txt": {
+      "bytes": 213238,
+      "sha256": "03d3286fa306124f6632d6c33c2b9a815245fff7b399c28c30bad2d23fcafe57"
+    },
+    "live/acm.log": {
+      "bytes": 235201,
+      "sha256": "fb0b3492608739414d2386ee7d57fd4b431ff0158687f9f63c505b80d2ec0876"
+    },
+    "live/gsi-stable.json": {
+      "bytes": 18234,
+      "sha256": "b8e3470ab716e98d770b0c016b0faa9a19679a8d569172d81f4c885b3f13ba1a"
+    },
+    "operator-observations.jsonl": {
+      "bytes": 274,
+      "sha256": "9631c793e73056edfd45c656bca49fac5020e722ee3ca7d522ef080934ae2ccc"
+    }
+  },
+  "next_hypothesis": "Three PHY timing fields differ from original table; trial 67 retains all trial 66 DSC/clock/route and fixed system inputs",
+  "cold_start_test": "NOT_RUN",
+  "watchdog_fault_injection": "NOT_RUN",
+  "handset_left": "F.20",
+  "retained_images": "original recovery set and current candidate only",
+  "limitation": "Host-transmitted PPS is not verified panel-internal readback. Error-status snapshot cannot exclude transient or cleared faults."
+}

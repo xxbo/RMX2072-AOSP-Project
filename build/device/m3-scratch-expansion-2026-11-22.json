@@ -1,0 +1,38 @@
+{
+  "old": {
+    "data": {
+      "bytes": 536870912,
+      "sha256": "3609b84f64c748ec526b9a5cad9c8d60fa75fb95246d883d73e5300ea663e561",
+      "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+      "gzip_sha256": "b083742d72df2140ef211aa9332d5ce221fc4e159caf2c23f0da3392faeac3c0"
+    },
+    "metadata": {
+      "bytes": 33554432,
+      "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+      "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+      "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+    }
+  },
+  "new": {
+    "data": {
+      "bytes": 2147483648,
+      "sha256": "b977daeb060fbb8c97de93d20562bf257011cf61dfd7627d03f9a391fcdb8ab4",
+      "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+      "gzip_sha256": "770748bcbc21d8bb042d40329ef2fe798338165800897a63036781b600c4d8c2"
+    },
+    "metadata": {
+      "bytes": 33554432,
+      "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+      "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+      "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+    }
+  },
+  "metadata_byte_identical": true,
+  "data_uuid_retained": true,
+  "expanded_bytes_verified": 2147483648,
+  "compressed_data_bytes": 2089420,
+  "labels_checked_by_builder": true,
+  "e2fsck": "PASS",
+  "reason": "Trial70 ENOSPC during GSI system stub APK decompression",
+  "storage": "volatile RAM-backed loop0 only; no physical userdata"
+}

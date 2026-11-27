@@ -1,0 +1,40 @@
+name: M3 source graphics for physical display
+on:
+  workflow_dispatch:
+  push:
+    branches: [bringup/m3-display]
+    paths:
+      - '.github/workflows/m3-graphics.yml'
+      - 'scripts/build/build_m3_graphics.sh'
+      - 'scripts/build/prepare_m3_hardwarebuffer.py'
+      - 'scripts/build/prepare_m2_aosp_manifest.py'
+      - 'device/realme/bladerunner_48m/m3-graphics/**'
+permissions:
+  contents: read
+concurrency:
+  group: m3-graphics-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install source build tools
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/share/swift /opt/hostedtoolcache
+          sudo apt-get update
+          sudo apt-get install -y repo git-core gnupg flex bison build-essential zip curl zlib1g-dev libc6-dev-i386 libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
+      - name: Prepare pinned graphics source workspace
+        run: bash scripts/build/build_m3_graphics.sh prepare
+      - name: Build real graphics libraries and HAL services
+        run: bash scripts/build/build_m3_graphics.sh build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m3-graphics-${{ github.run_number }}
+          path: artifacts/m3-graphics/
+          if-no-files-found: error
+          retention-days: 7

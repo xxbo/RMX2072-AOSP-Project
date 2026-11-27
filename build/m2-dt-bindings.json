@@ -5,6 +5,13 @@
     "include/dt-bindings/clock/qcom,rpmh.h": "22b835f0cd23c489fa688e1fbe2a8ace0ad6fd3015eef15655dbbf1df4cfb267",
     "include/dt-bindings/interrupt-controller/arm-gic.h": "80dc56e8aa61b3681ee42fb0bfd34bf35ea2578ac6d82f1fa972b963667e8ff7",
     "include/dt-bindings/interrupt-controller/irq.h": "392400a309a54ea5b1a2ac2e52773d3ab68e07323109b9aed88a69fedc74e082",
-    "include/dt-bindings/interconnect/qcom,sm8250.h": "cb00fd45ec40cdc25a05f25ee1bc18582c3d72869df2fb2e20459a0af3e6e846"
+    "include/dt-bindings/interconnect/qcom,sm8250.h": "cb00fd45ec40cdc25a05f25ee1bc18582c3d72869df2fb2e20459a0af3e6e846",
+    "include/dt-bindings/clock/qcom,dispcc-sm8250.h": "60d70bc3edecd4a2654a33de467f5051708cb847a0ec816001251c10537af1ef",
+    "include/dt-bindings/clock/qcom,dsi-phy-28nm.h": "c381a37550a6bdbfd8e91abc832ac701113e1036769636513a6f79f2ae7882c7",
+    "include/dt-bindings/power/qcom,rpmhpd.h": "842eca0509106aadeaebea51e0d01bccdd16d384d90d229a10f959fa990034bc",
+    "include/dt-bindings/power/qcom-rpmpd.h": "fd0f3806f6e147c19b4e25a59214bbc0c24b65a13d58750119c985cba47c6d33",
+    "include/dt-bindings/gpio/gpio.h": "5423b3866877ead0920ec978b5b072f06087443033a72445b39faed8f288ddc1",
+    "include/dt-bindings/clock/qcom,gpucc-sm8250.h": "e7fad11daa7fe0f0a3bc0be4f0d2ee51fbe7a16efa48157cbbba47315a35f153",
+    "include/dt-bindings/thermal/thermal.h": "d74d498871c3bf3d6aa985ad01c15dfa916614369dbcd832bdcb9d2d45b15e08"
   }
 }

@@ -1,0 +1,195 @@
+{
+  "images": {
+    "dtb": {
+      "image_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "index": 12,
+      "tree_sha256": "490c33efd2cf232b39950447dde31153ea13b854a95f015bd90cc55c0ae2e1dd"
+    },
+    "dtbo": {
+      "image_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "index": 17,
+      "tree_sha256": "03f920608f4fbf46aaface2b2641711b3194081fe4a588b42232b7e60e07db9d"
+    }
+  },
+  "command_line_sha256": "f3a95500ecc52e38d97af3f65e0e46c61b0f3889849e40f6f51f56379e81d7e5",
+  "selected_panel": "qcom,mdss_dsi_rm19795samsung_ams641rw01_1080_2340_cmd",
+  "source_sha256": "219f47d58006b129d9f46628389c161283debc5e04892e88ad6ff02a12074372",
+  "arrays": {
+    "on-command": {
+      "equal": true,
+      "q_bytes": 375,
+      "f20_bytes": 375,
+      "q_sha256": "5b2bfaf56a3aa9b8438350a85e7ff93c0374b193bdbac9103ca0b0c67eb6cf6f",
+      "f20_sha256": "5b2bfaf56a3aa9b8438350a85e7ff93c0374b193bdbac9103ca0b0c67eb6cf6f"
+    },
+    "post-on-backlight": {
+      "equal": true,
+      "q_bytes": 36,
+      "f20_bytes": 36,
+      "q_sha256": "1145c3cb7e4dce25181058c756a3703cd650e8f6393dda53247a3dd09167a033",
+      "f20_sha256": "1145c3cb7e4dce25181058c756a3703cd650e8f6393dda53247a3dd09167a033"
+    },
+    "off-command": {
+      "equal": true,
+      "q_bytes": 36,
+      "f20_bytes": 36,
+      "q_sha256": "b4cc8ad7548036bcd1dc6fee3d25b8ac96c9de9f80de993aa155f494b4a82550",
+      "f20_sha256": "b4cc8ad7548036bcd1dc6fee3d25b8ac96c9de9f80de993aa155f494b4a82550"
+    },
+    "panel-phy-timings": {
+      "equal": true,
+      "q_bytes": 14,
+      "f20_bytes": 14,
+      "q_sha256": "b62f479dad6efc5f2d1b29876a18b97c3b42e8f8899fe9ad8532fdb538ba6984",
+      "f20_sha256": "b62f479dad6efc5f2d1b29876a18b97c3b42e8f8899fe9ad8532fdb538ba6984"
+    }
+  },
+  "scalars": {
+    "qcom,mdss-dsi-panel-width": {
+      "q": [
+        1080
+      ],
+      "f20": [
+        1080
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-panel-height": {
+      "q": [
+        2400
+      ],
+      "f20": [
+        2400
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-panel-framerate": {
+      "q": [
+        60
+      ],
+      "f20": [
+        60
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-panel-clockrate": {
+      "q": [
+        660000000
+      ],
+      "f20": [
+        660000000
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-h-front-porch": {
+      "q": [
+        48
+      ],
+      "f20": [
+        48
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-h-back-porch": {
+      "q": [
+        48
+      ],
+      "f20": [
+        48
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-h-pulse-width": {
+      "q": [
+        24
+      ],
+      "f20": [
+        24
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-v-front-porch": {
+      "q": [
+        16
+      ],
+      "f20": [
+        16
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-v-back-porch": {
+      "q": [
+        20
+      ],
+      "f20": [
+        20
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsi-v-pulse-width": {
+      "q": [
+        4
+      ],
+      "f20": [
+        4
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsc-encoders": {
+      "q": [
+        2
+      ],
+      "f20": [
+        2
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsc-slice-height": {
+      "q": [
+        48
+      ],
+      "f20": [
+        48
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsc-slice-width": {
+      "q": [
+        540
+      ],
+      "f20": [
+        540
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsc-slice-per-pkt": {
+      "q": [
+        2
+      ],
+      "f20": [
+        2
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsc-bit-per-component": {
+      "q": [
+        8
+      ],
+      "f20": [
+        8
+      ],
+      "equal": true
+    },
+    "qcom,mdss-dsc-bit-per-pixel": {
+      "q": [
+        8
+      ],
+      "f20": [
+        8
+      ],
+      "equal": true
+    }
+  },
+  "all_compared_equal": true,
+  "scope": "Selected factory DT configuration compared with source; not runtime F.20 registers or panel readback. No handset writes."
+}

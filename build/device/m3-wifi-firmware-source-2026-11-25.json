@@ -1,0 +1,41 @@
+{
+  "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb",
+  "files": {
+    "amss.bin": {
+      "bytes": 3628672,
+      "sha256": "8ab2a06422e3989012df423bb6a156fde2c3feb4cd5db4c5d3588f674dc872ff",
+      "git_blob": "95bab09e0575a5533bca407bbc0401cb2af0b85d",
+      "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/amss.bin"
+    },
+    "m3.bin": {
+      "bytes": 266684,
+      "sha256": "1921d25edb52f90a7a0acc7275861e14399f904d579aae9f7ab1c4d28533fad6",
+      "git_blob": "39f0dfec42d6531836866a97c8153ae0a73356bd",
+      "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/m3.bin"
+    },
+    "Notice.txt": {
+      "bytes": 189707,
+      "sha256": "2facd28901420b9b58248ec3c17d4ea4693165b72f36106d5537ea4bb9380f1b",
+      "git_blob": "fd4fa45f559ed6e1dfa41da8681ea00df717601e",
+      "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/Notice.txt"
+    },
+    "LICENSE.QualcommAtheros_ath10k": {
+      "bytes": 2713,
+      "sha256": "337a55102138d7baa143ee4a4c6c91693e0113fece35d380b2a12109e8c23b3f",
+      "git_blob": "c68935c11adf858abd0de3bbf7a2f53d0be33699",
+      "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/LICENSE.QualcommAtheros_ath10k"
+    }
+  },
+  "installed": false,
+  "board_2_bin_used": false,
+  "firmware_version": "WLAN.HST.1.0.1-05266-QCAHSTSWPLZ_V2_TO_X86-1",
+  "board_candidate": {
+    "origin": "existing F.20 recovery ODM /etc/wifi/bdwlan.elf",
+    "bytes": 57908,
+    "sha256": "05685bc7eddaf160fe54fb1f5086d810a8000949e1faa46f9d53b21827701a18",
+    "format": "ELF wrapper retained",
+    "installed": false,
+    "acceptance": "NOT RUN; verify QMI board identity and firmware response before RF tests"
+  },
+  "scope": "Source inventory only; no firmware installed, foreign board-2.bin omitted"
+}

@@ -1,0 +1,94 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Board 20607 GT9886 and volume keys; native ACK 6.18 providers.
+// Included after the display overlay so its staged TLMM is shared.
+&m3_tlmm {
+    // Admit only I2C13, touch reset/IRQ and the two accepted panel pads.
+    gpio-reserved-ranges = <0 36>, <40 26>, <67 8>, <76 105>;
+    m3_touch_i2c: touch-i2c-state {
+        pins = "gpio36", "gpio37";
+        function = "qup13";
+        drive-strength = <2>;
+        bias-disable;
+    };
+    m3_touch_irq: touch-irq-state {
+        pins = "gpio39";
+        function = "gpio";
+        drive-strength = <2>;
+        bias-disable;
+        input-enable;
+    };
+    m3_touch_reset: touch-reset-state {
+        pins = "gpio38";
+        function = "gpio";
+        drive-strength = <2>;
+        bias-disable;
+    };
+};
+
+// OEM DTBO enables this legacy path; park its compatible to avoid overlap.
+&qupv3_se13_i2c { compatible = "realme,rmx2072-parked-i2c"; };
+&qupv3_1 { compatible = "realme,rmx2072-parked-qup"; };
+
+&{/soc/rsc@18200000/diag-regulators} {
+    m3_touch_avdd: ldo13 {
+        regulator-name = "m3_touch_avdd";
+        regulator-min-microvolt = <3008000>;
+        regulator-max-microvolt = <3008000>;
+    };
+};
+
+#ifdef RMX2072_M3_STAGED
+&{/soc/display-fabric-lab} {
+#else
+&{/soc} {
+#endif
+    #address-cells = <1>;
+    #size-cells = <1>;
+    m3_qup_virt: interconnect-qup {
+        compatible = "qcom,sm8250-qup-virt";
+        #interconnect-cells = <2>;
+        qcom,bcm-voters = <&diag_ufs_bcm>;
+    };
+    m3_qup1: geniqup@ac0000 {
+        compatible = "qcom,geni-se-qup";
+        reg = <0x00ac0000 0x6000>;
+        clocks = <&diag_gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+                 <&diag_gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+        clock-names = "m-ahb", "s-ahb";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+        iommus = <&apps_smmu 0x43 0>;
+        m3_i2c13: i2c@a94000 {
+            compatible = "qcom,geni-i2c";
+            reg = <0x00a94000 0x4000>;
+            clocks = <&diag_gcc GCC_QUPV3_WRAP1_S5_CLK>;
+            clock-names = "se";
+            interrupt-parent = <&intc>;
+            interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&m3_touch_i2c>;
+            power-domains = <&m3_rpmhpd RPMHPD_CX>;
+            interconnects = <&m3_qup_virt MASTER_QUP_CORE_1 0 &m3_qup_virt SLAVE_QUP_CORE_1 0>,
+                            <&diag_ufs_gem MASTER_AMPSS_M0 0 &diag_ufs_cnoc SLAVE_QUP_1 0>,
+                            <&diag_ufs_a1 MASTER_QUP_1 0 &diag_ufs_mc SLAVE_EBI_CH0 0>;
+            interconnect-names = "qup-core", "qup-config", "qup-memory";
+            clock-frequency = <400000>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            touchscreen@5d {
+                compatible = "realme,rmx2072-goodix-normandy";
+                reg = <0x5d>;
+                interrupt-parent = <&m3_tlmm>;
+                interrupts = <39 IRQ_TYPE_EDGE_FALLING>;
+                reset-gpios = <&m3_tlmm 38 GPIO_ACTIVE_LOW>;
+                pinctrl-names = "default";
+                pinctrl-0 = <&m3_touch_irq &m3_touch_reset>;
+                avdd-supply = <&m3_touch_avdd>;
+                vddio-supply = <&m3_l14a>;
+                touchscreen-size-x = <1080>;
+                touchscreen-size-y = <2400>;
+            };
+        };
+    };
+};

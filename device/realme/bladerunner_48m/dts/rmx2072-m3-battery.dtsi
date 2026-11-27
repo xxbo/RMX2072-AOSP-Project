@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Board 20607 external gauge, using the pinned upstream BQ28Z610 driver.
+// No gauge data-memory programming, charger, divider or fast-charge bindings.
+&m3_tlmm {
+    gpio-reserved-ranges = <0 36>, <40 8>, <50 16>, <67 8>, <76 105>;
+    m3_gauge_i2c: gauge-i2c-state {
+        pins = "gpio48", "gpio49";
+        function = "qup16";
+        drive-strength = <2>;
+        bias-disable;
+    };
+};
+
+&qupv3_se16_i2c { compatible = "realme,rmx2072-parked-i2c"; };
+&qupv3_2 { compatible = "realme,rmx2072-parked-qup"; };
+
+#ifdef RMX2072_M3_STAGED
+&{/soc/display-fabric-lab} {
+#else
+&{/soc} {
+#endif
+    m3_qup2: geniqup@8c0000 {
+        compatible = "qcom,geni-se-qup";
+        reg = <0x008c0000 0x6000>;
+        clocks = <&diag_gcc GCC_QUPV3_WRAP_2_M_AHB_CLK>,
+                 <&diag_gcc GCC_QUPV3_WRAP_2_S_AHB_CLK>;
+        clock-names = "m-ahb", "s-ahb";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+        iommus = <&apps_smmu 0x63 0>;
+        m3_i2c16: i2c@888000 {
+            compatible = "qcom,geni-i2c";
+            reg = <0x00888000 0x4000>;
+            clocks = <&diag_gcc GCC_QUPV3_WRAP2_S2_CLK>;
+            clock-names = "se";
+            interrupt-parent = <&intc>;
+            interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&m3_gauge_i2c>;
+            power-domains = <&m3_rpmhpd RPMHPD_CX>;
+            interconnects = <&m3_qup_virt MASTER_QUP_CORE_2 0 &m3_qup_virt SLAVE_QUP_CORE_2 0>,
+                            <&diag_ufs_gem MASTER_AMPSS_M0 0 &diag_ufs_cnoc SLAVE_QUP_2 0>,
+                            <&diag_ufs_a1 MASTER_QUP_2 0 &diag_ufs_mc SLAVE_EBI_CH0 0>;
+            interconnect-names = "qup-core", "qup-config", "qup-memory";
+            clock-frequency = <100000>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            battery@55 {
+                compatible = "ti,bq28z610";
+                reg = <0x55>;
+            };
+        };
+    };
+};

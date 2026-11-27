@@ -1,0 +1,575 @@
+{
+  "utc": "2026-11-15T12:25:56.540977+00:00",
+  "goal": "Physical display, then SurfaceFlinger and AOSP desktop",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-58",
+  "boot_id": "7d750f14-c07c-4145-b9c5-5305af9c83f1",
+  "kernel": {
+    "run_id": 43704231848,
+    "source_commit": "7eef6528eca11d2444cbdc3e49de295373e71081",
+    "artifact_id": 14158810407,
+    "artifact_archive_digest": "sha256:32c0cf693f006c836f4beb57bfbe20444b4830c5a5699fd037c859d18f6c07e6",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "6e5bb1cab0282755b47322e7bc89222f81167f83eb60e294ddd9d477b950f466",
+    "selected_member_sha256": {
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "SHA256SUMS": "64242140af096172975fc3bec3221e57a82f0486ba6a777a31c57e3bb847f573",
+      "build-metadata.txt": "1c23a0f30cf9e810e8efd0ce9a5d859c86062f56fbf2953f027de8539dd277f6",
+      "display-clock-patch.sha256": "d61a6e071f4d95e1b4b78523f1aa0d0fe30d21380e845490921bd96baebfccd1",
+      "display-source.sha256": "e4532bd88c54a1d36db53065ccc992a8f9fd3ffb78c19141fa88593037cfb681",
+      "Image.gz": "3783bdc43f655e989c8188fbdaaff968cacf2f7c8f1d4b90e7e5fd7199e4378f",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "4b00d7b70feb80e4a80176cb10c73291b013c1da54cefc70693dbfa19c97a998",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+    }
+  },
+  "boot_sha256": "de9903d2d4a71c0db799535c7859fe79ffea838c980e6ab2f5911a2c5602cce6",
+  "dtbo_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "effective_dtb": {
+    "size_bytes": 830980,
+    "sha256": "c78799b4461dc0a5bbb0265f7178899131346420e862a8c1b93fb5aa4e8fe456"
+  },
+  "system": {
+    "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+    "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+    "bytes": 3953213440,
+    "tree": {
+      "version": 1,
+      "image_bytes": 3890753536,
+      "tree_offset": 3890753536,
+      "tree_bytes": 30642176,
+      "data_block_bytes": 4096,
+      "hash_block_bytes": 4096,
+      "fec_roots": 2,
+      "fec_offset": 3921395712,
+      "fec_bytes": 31006720,
+      "algorithm": "sha256",
+      "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+      "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+      "flags": 0
+    }
+  },
+  "vendor": {
+    "sha256": "5352d47533406808d61bb55677f875de6f7310f261bc8b2688f611603291ebaa",
+    "key_sha256": "0d4dd0f2fc523adbf286204adfa27dbae6d2b2c280ed58208f5f60cbdf439d6e",
+    "bytes": 63963136,
+    "tree": {
+      "version": 1,
+      "image_bytes": 62914560,
+      "tree_offset": 62914560,
+      "tree_bytes": 495616,
+      "data_block_bytes": 4096,
+      "hash_block_bytes": 4096,
+      "fec_roots": 0,
+      "fec_offset": 0,
+      "fec_bytes": 0,
+      "algorithm": "sha256",
+      "salt": "36c7cfd1c2c4cfd134a18850fd103ca26452dc20f92d4c10f8400a3436f8e558",
+      "root_digest": "f2a76d2f4d9036547aa1d38c2875eb983cc63cf4612761df1dadce629357c8a0",
+      "flags": 0
+    }
+  },
+  "drm_kms_result": "PASS_EVENTS_ONLY",
+  "probe_reported_pass": true,
+  "advancing_vblank_events": true,
+  "transport_errors": [],
+  "physical_screen_observation": "FAILED: user photograph shows regular horizontal bands of partially correct color/markers separated by dense noisy regions. This differs clearly from the complete CPU screenshot.",
+  "display_snapshot": "M3DISPLAY boot_id=7d750f14-c07c-4145-b9c5-5305af9c83f1\nM3CLKTRACE armed=1 buffer_kb_per_cpu=64 stack_limit=16\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=pins state=begin uptime=26.12\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=pins state=populated uptime=26.12\nM3BIND child=f100000.pinctrl driver=../../../../../bus/platform/drivers/sm8250-pinctrl\n0.gpio-regulator\t\n1.gpio-regulator\t\n3.gpio-regulator\t\n2.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n5.gpio-regulator\t\n4.gpio-regulator\t\n7.gpio-regulator\t\nsoc:gpio_keys\t\n6.gpio-regulator\t\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=pins state=bound uptime=28.14\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=fabric state=begin uptime=28.16\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=fabric state=populated uptime=28.17\nM3BIND child=1740000.interconnect driver=../../../../../bus/platform/drivers/qnoc-sm8250\nM3BIND child=88e7000.regulator driver=../../../../../bus/platform/drivers/qcom-refgen-regulator\nM3BIND child=af00000.clock-controller driver=../../../../../bus/platform/drivers/disp_cc-sm8250\n7.gpio-regulator\t\nsoc:gpio_keys\t\n6.gpio-regulator\t\n0.gpio-regulator\t\n1.gpio-regulator\t\n3.gpio-regulator\t\n2.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n5.gpio-regulator\t\n4.gpio-regulator\t\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=fabric state=bound uptime=30.19\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=core state=begin uptime=30.21\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=core state=populated uptime=30.25\nM3BIND child=ae00000.display-subsystem driver=../../../../../bus/platform/drivers/msm-mdss\n3.gpio-regulator\t\n2.gpio-regulator\t\n1.gpio-regulator\t\n0.gpio-regulator\t\nsoc:gpio_keys\t\n4.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n5.gpio-regulator\t\n6.gpio-regulator\t\n7.gpio-regulator\t\nM3BIND boot=7d750f14-c07c-4145-b9c5-5305af9c83f1 stage=core state=inspected uptime=32.26\nM3DISPLAY created=/dev/dri/card0 dev=226:0 source=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller\nDRMTEST driver=msm\nDRMTEST connector=34 type=16 connection=1 modes=1\nDRMTEST buffer=91 size=10444800 pitch=4352\nDRMTEST buffer=92 size=10444800 pitch=4352\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_rate value=660000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_parent value=bi_tcxo truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_flags value=CLK_IGNORE_UNUSED truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_rate value=660000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_parent value=dsi0vco_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_rate value=660000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_parent value=dsi0_pll_out_div_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_rate value=330000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_flags value= truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_rate value=330000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_parent value=dsi0_pll_by_2_bit_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_flags value= truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_rate value=82500000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_rate value=110000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_parent value=dsi0_pclk_mux truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_flags value= truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_rate value=82500000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_parent value=dsi0_phy_pll_out_byteclk truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT,0x4000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_rate value=82500000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_parent value=disp_cc_mdss_byte0_clk_src truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_flags value=CLK_SET_RATE_PARENT,0x4000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_rate value=110000000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_parent value=dsi0_phy_pll_out_dsiclk truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT,CLK_OPS_PARENT_ENABLE,0x4000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_rate value=110000000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_parent value=disp_cc_mdss_pclk0_clk_src truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_prepare_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_enable_count value=0 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_flags value=CLK_SET_RATE_PARENT,0x4000 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_rate value=843263964 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_parent value=bi_tcxo truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_flags value=CLK_IGNORE_UNUSED truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_rate value=421631982 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_parent value=dsi0vco_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_rate value=421631982 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_parent value=dsi0_pll_out_div_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_rate value=210815991 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_flags value= truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_rate value=210815991 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_parent value=dsi0_pll_by_2_bit_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_flags value= truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_rate value=52703997 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_rate value=70271997 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_parent value=dsi0_pclk_mux truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_flags value= truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_rate value=52703997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_parent value=dsi0_phy_pll_out_byteclk truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT,0x4000 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_rate value=52703997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_parent value=disp_cc_mdss_byte0_clk_src truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_flags value=CLK_SET_RATE_PARENT,0x4000 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_rate value=70271997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_parent value=dsi0_phy_pll_out_dsiclk truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT,CLK_OPS_PARENT_ENABLE,0x4000 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_rate value=70271997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_parent value=disp_cc_mdss_pclk0_clk_src truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_flags value=CLK_SET_RATE_PARENT,0x4000 truncated=0\nDRMTEST modeset=PASS crtc=89 connector=34 mode=1080x2400 clock=175680\nDRMTEST flip=1 sequence=7 time=33.584131\nDRMTEST flip=2 sequence=13 time=34.585206\nDRMTEST flip=3 sequence=18 time=35.585699\nDRMTEST flip=4 sequence=23 time=36.586418\nDRMTEST kms_events=PASS physical_observation=REQUIRED\nDRMTEST exit=0\nM3CLKTRACE begin\n# tracer: nop\n#\n# entries-in-buffer/entries-written: 225/225   #P:8\n#\n#                                _-----=> irqs-off/BH-disabled\n#                               / _----=> need-resched\n#                              | / _---=> hardirq/softirq\n#                              || / _--=> preempt-depth\n#                              ||| / _-=> migrate-disable\n#                              |||| /     delay\n#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION\n#              | |         |   |||||     |         |\n         busybox-1409    [003] .....    30.238582: clk_prepare: dsi0vco_clk\n         busybox-1409    [003] .....    30.238591: <stack trace>\n => trace_event_raw_event_clk\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare_enable\n => __clk_set_parent_before\n => clk_core_reparent_orphans_nolock\n => of_clk_add_hw_provider\n => devm_of_clk_add_hw_provider\n => dsi_phy_driver_probe\n => platform_probe\n => really_probe\n => really_probe_debug\n => __driver_probe_device\n => driver_probe_device\n => __device_attach_driver\n => bus_for_each_drv\n => __device_attach\n => device_initial_probe\n => bus_probe_device\n => device_add\n => of_platform_device_create_pdata\n => of_platform_bus_create\n => of_platform_populate\n => mdss_probe\n => platform_probe\n => really_probe\n => really_probe_debug\n => __driver_probe_device\n => driver_probe_device\n => __device_attach_driver\n => bus_for_each_drv\n => __device_attach\n => device_initial_probe\n => bus_probe_device\n => device_add\n => of_platform_device_create_pdata\n => of_platform_bus_create\n => of_platform_populate\n => devm_of_platform_populate\n => rmx_phy_bus_probe\n => platform_probe\n => really_probe\n => really_probe_debug\n => __driver_probe_device\n => device_driver_attach\n => bind_store\n => drv_attr_store\n => sysfs_kf_write\n => kernfs_fop_write_iter\n => vfs_write\n => ksys_write\n => __arm64_sys_write\n => invoke_syscall\n => el0_svc_common\n => do_el0_svc\n => el0_svc\n => el0t_64_sync_handler\n => el0t_64_sync\n         busybox-1409    [003] d..1.    30.238738: clk_enable: dsi0vco_clk\n         busybox-1409    [003] d..1.    30.238752: clk_disable: dsi0vco_clk\n         busybox-1409    [003] .....    30.238762: clk_unprepare: dsi0vco_clk\n drm-panel-smoke-1442    [006] .....    32.422881: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [006] .....    32.423850: clk_prepare: dsi0vco_clk\n drm-panel-smoke-1442    [006] .....    32.423856: <stack trace>\n => trace_event_raw_event_clk\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare_enable\n => clk_change_rate\n => clk_change_rate\n => clk_change_rate\n => clk_change_rate\n => clk_change_rate\n => clk_change_rate\n => clk_change_rate\n => clk_core_set_rate_nolock\n => clk_set_rate\n => _opp_config_clk_single\n => _set_opp\n => dev_pm_opp_set_rate\n => dsi_link_clk_set_rate_6g\n => msm_dsi_host_power_on\n => dsi_mgr_bridge_pre_enable\n => drm_atomic_bridge_chain_pre_enable\n => drm_atomic_helper_commit_encoder_bridge_pre_enable\n => drm_atomic_helper_commit_modeset_enables\n => msm_atomic_commit_tail\n => commit_tail\n => drm_atomic_helper_commit\n => drm_atomic_commit\n => drm_atomic_helper_set_config\n => drm_mode_setcrtc\n => drm_ioctl_kernel\n => drm_ioctl\n => __arm64_sys_ioctl\n => invoke_syscall\n => el0_svc_common\n => do_el0_svc\n => el0_svc\n => el0t_64_sync_handler\n => el0t_64_sync\n drm-panel-smoke-1442    [006] d..1.    32.424230: clk_enable: dsi0vco_clk\n drm-panel-smoke-1442    [006] .....    32.424233: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [006] d..1.    32.424296: clk_disable: dsi0vco_clk\n drm-panel-smoke-1442    [006] .....    32.424300: clk_unprepare: dsi0vco_clk\n drm-panel-smoke-1442    [006] .....    32.424641: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [006] .....    32.424643: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [006] .....    32.424673: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [006] .....    32.424685: clk_prepare: dsi0vco_clk\n drm-panel-smoke-1442    [006] .....    32.424687: <stack trace>\n => trace_event_raw_event_clk\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_core_prepare\n => clk_prepare\n => dsi_link_clk_enable_6g\n => msm_dsi_host_power_on\n => dsi_mgr_bridge_pre_enable\n => drm_atomic_bridge_chain_pre_enable\n => drm_atomic_helper_commit_encoder_bridge_pre_enable\n => drm_atomic_helper_commit_modeset_enables\n => msm_atomic_commit_tail\n => commit_tail\n => drm_atomic_helper_commit\n => drm_atomic_commit\n => drm_atomic_helper_set_config\n => drm_mode_setcrtc\n => drm_ioctl_kernel\n => drm_ioctl\n => __arm64_sys_ioctl\n => invoke_syscall\n => el0_svc_common\n => do_el0_svc\n => el0_svc\n => el0t_64_sync_handler\n => el0t_64_sync\n drm-panel-smoke-1442    [006] .....    32.425052: clk_prepare: disp_cc_mdss_byte0_clk_src\n drm-panel-smoke-1442    [006] .....    32.425053: <stack trace>\n => trace_event_raw_event_clk\n => clk_core_prepare\n => clk_core_prepare\n => clk_prepare\n => dsi_link_clk_enable_6g\n => msm_dsi_host_power_on\n => dsi_mgr_bridge_pre_enable\n => drm_atomic_bridge_chain_pre_enable\n => drm_atomic_helper_commit_encoder_bridge_pre_enable\n => drm_atomic_helper_commit_modeset_enables\n => msm_atomic_commit_tail\n => commit_tail\n => drm_atomic_helper_commit\n => drm_atomic_commit\n => drm_atomic_helper_set_config\n => drm_mode_setcrtc\n => drm_ioctl_kernel\n => drm_ioctl\n => __arm64_sys_ioctl\n => invoke_syscall\n => el0_svc_common\n => do_el0_svc\n => el0_svc\n => el0t_64_sync_handler\n => el0t_64_sync\n drm-panel-smoke-1442    [006] .....    32.425055: clk_prepare: disp_cc_mdss_byte0_clk\n drm-panel-smoke-1442    [006] .....    32.425056: <stack trace>\n => trace_event_raw_event_clk\n => clk_core_prepare\n => clk_prepare\n => dsi_link_clk_enable_6g\n => msm_dsi_host_power_on\n => dsi_mgr_bridge_pre_enable\n => drm_atomic_bridge_chain_pre_enable\n => drm_atomic_helper_commit_encoder_bridge_pre_enable\n => drm_atomic_helper_commit_modeset_enables\n => msm_atomic_commit_tail\n => commit_tail\n => drm_atomic_helper_commit\n => drm_atomic_commit\n => drm_atomic_helper_set_config\n => drm_mode_setcrtc\n => drm_ioctl_kernel\n => drm_ioctl\n => __arm64_sys_ioctl\n => invoke_syscall\n => el0_svc_common\n => do_el0_svc\n => el0_svc\n => el0t_64_sync_handler\n => el0t_64_sync\n drm-panel-smoke-1442    [006] d..1.    32.425057: clk_enable: dsi0vco_clk\n drm-panel-smoke-1442    [006] d..1.    32.425059: clk_enable: disp_cc_mdss_byte0_clk_src\n drm-panel-smoke-1442    [006] d..1.    32.425060: clk_enable: disp_cc_mdss_byte0_clk\n drm-panel-smoke-1442    [006] .....    32.425071: clk_prepare: disp_cc_mdss_pclk0_clk_src\n drm-panel-smoke-1442    [006] .....    32.425072: <stack trace>\n => trace_event_raw_event_clk\n => clk_core_prepare\n => clk_core_prepare\n => clk_prepare\n => dsi_link_clk_enable_6g\n => msm_dsi_host_power_on\n => dsi_mgr_bridge_pre_enable\n => drm_atomic_bridge_chain_pre_enable\n => drm_atomic_helper_commit_encoder_bridge_pre_enable\n => drm_atomic_helper_commit_modeset_enables\n => msm_atomic_commit_tail\n => commit_tail\n => drm_atomic_helper_commit\n => drm_atomic_commit\n => drm_atomic_helper_set_config\n => drm_mode_setcrtc\n => drm_ioctl_kernel\n => drm_ioctl\n => __arm64_sys_ioctl\n => invoke_syscall\n => el0_svc_common\n => do_el0_svc\n => el0_svc\n => el0t_64_sync_handler\n => el0t_64_sync\n drm-panel-smoke-1442    [006] .....    32.425073: clk_prepare: disp_cc_mdss_pclk0_clk\n drm-panel-smoke-1442    [006] .....    32.425074: <stack trace>\n => trace_event_raw_event_clk\n => clk_core_prepare\n => clk_prepare\n => dsi_link_clk_enable_6g\n => msm_dsi_host_power_on\n => dsi_mgr_bridge_pre_enable\n => drm_atomic_bridge_chain_pre_enable\n => drm_atomic_helper_commit_encoder_bridge_pre_enable\n => drm_atomic_helper_commit_modeset_enables\n => msm_atomic_commit_tail\n => commit_tail\n => drm_atomic_helper_commit\n => drm_atomic_commit\n => drm_atomic_helper_set_config\n => drm_mode_setcrtc\n => drm_ioctl_kernel\n => drm_ioctl\n => __arm64_sys_ioctl\n => invoke_syscall\n => el0_svc_common\n => do_el0_svc\n => el0_svc\n => el0t_64_sync_handler\n => el0t_64_sync\n drm-panel-smoke-1442    [006] d..1.    32.425078: clk_enable: disp_cc_mdss_pclk0_clk_src\n drm-panel-smoke-1442    [006] d..1.    32.425079: clk_enable: disp_cc_mdss_pclk0_clk\n drm-panel-smoke-1442    [005] .....    32.507667: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.508725: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.508765: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.508767: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.508795: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.510143: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.511174: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.511210: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.511212: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.511239: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.512302: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.513229: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.513265: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.513267: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.513294: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.536605: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.537640: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.537676: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.537678: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.537704: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.538650: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.539680: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.539715: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.539717: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.539743: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.540798: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.541727: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.541764: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.541766: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.541792: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.542839: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.543867: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.543903: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.543905: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.543931: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.544979: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.545909: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.545944: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.545946: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.545972: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.547022: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.548053: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.548089: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.548090: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.548116: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.549057: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.550083: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.550118: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.550120: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.550146: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.551100: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.552026: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.552062: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.552063: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.552089: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.553075: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.554099: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.554135: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.554136: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.554162: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.555212: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.556139: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.556176: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.556178: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.556204: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.557288: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.558316: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.558353: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.558355: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.558381: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.559425: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.560364: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.560399: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.560401: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.560428: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.561495: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.562422: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.562457: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.562459: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.562489: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.563535: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.564566: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.564601: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.564603: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.564629: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.565670: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.566503: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.566539: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.566540: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.566566: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.567607: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.568641: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.568676: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.568678: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.568704: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.569752: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.570685: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.570721: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.570722: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.570749: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.571792: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.572727: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.572762: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.572764: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.572790: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.573835: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.574855: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.574891: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.574892: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.574918: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.575960: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.576891: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.576926: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.576928: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.576954: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.578004: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.579031: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.579066: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.579068: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.579094: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.580134: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.581066: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.581101: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.581103: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.581129: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.582170: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.583101: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.583137: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.583139: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.583165: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.584204: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.585230: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.585265: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.585267: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.585293: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.588072: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.589005: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.589041: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.589042: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.589069: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.590134: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.591069: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.591105: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.591106: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.591133: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.592173: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.593202: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.593237: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.593239: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.593265: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.594309: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.595235: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.595271: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.595272: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.595298: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    32.596569: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    32.597494: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    32.597530: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    32.597534: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    32.597561: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    36.603538: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    36.604499: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    36.604539: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    36.604542: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    36.604568: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    36.624763: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    36.625696: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    36.625732: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    36.625734: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    36.625760: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    36.626818: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    36.627849: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    36.627885: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    36.627887: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    36.627913: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    36.652610: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    36.653536: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    36.653572: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    36.653573: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    36.653600: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] .....    36.654654: clk_set_rate: dsi0vco_clk 843264000\n drm-panel-smoke-1442    [005] .....    36.655583: clk_set_rate: disp_cc_mdss_pclk0_clk_src 70272000\n drm-panel-smoke-1442    [005] .....    36.655619: clk_set_rate: disp_cc_mdss_pclk0_clk 70272000\n drm-panel-smoke-1442    [005] .....    36.655621: clk_set_rate: disp_cc_mdss_byte0_clk_src 52704000\n drm-panel-smoke-1442    [005] .....    36.655647: clk_set_rate: disp_cc_mdss_byte0_clk 52704000\n drm-panel-smoke-1442    [005] d..1.    36.836453: clk_disable: disp_cc_mdss_pclk0_clk\n drm-panel-smoke-1442    [005] d..1.    36.836466: clk_disable: disp_cc_mdss_pclk0_clk_src\n drm-panel-smoke-1442    [005] .....    36.836472: clk_unprepare: disp_cc_mdss_pclk0_clk\n drm-panel-smoke-1442    [005] .....    36.836473: clk_unprepare: disp_cc_mdss_pclk0_clk_src\n drm-panel-smoke-1442    [005] d..1.    36.836488: clk_disable: disp_cc_mdss_byte0_clk\n drm-panel-smoke-1442    [005] d..1.    36.836497: clk_disable: disp_cc_mdss_byte0_clk_src\n drm-panel-smoke-1442    [005] d..1.    36.836499: clk_disable: dsi0vco_clk\n drm-panel-smoke-1442    [005] .....    36.836500: clk_unprepare: disp_cc_mdss_byte0_clk\n drm-panel-smoke-1442    [005] .....    36.836501: clk_unprepare: disp_cc_mdss_byte0_clk_src\n drm-panel-smoke-1442    [005] .....    36.836503: clk_unprepare: dsi0vco_clk\nM3CLKTRACE end\nM3DISPLAY boot_id=7d750f14-c07c-4145-b9c5-5305af9c83f1\nM3DISPLAY kernel=6.18.32-android17-5-maybe-dirty-4k\nPATH=/sys/class/drm/card0 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/card0\nFIELD=dev\n226:0\nPATH=/sys/class/drm/card0-DSI-1 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/card0/card0-DSI-1\nFIELD=status\nconnected\nFIELD=enabled\ndisabled\nFIELD=modes\n1080x2400\nPATH=/sys/class/drm/card0-Writeback-1 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/card0/card0-Writeback-1\nFIELD=status\nunknown\nFIELD=enabled\ndisabled\nFIELD=modes\nPATH=/sys/class/drm/renderD128 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/renderD128\nFIELD=dev\n226:128\nPATH=/sys/class/drm/version TARGET=/sys/class/drm/version\nPATH=/sys/class/backlight/rm19795 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae94000.dsi/ae94000.dsi.0/backlight/rm19795\nFIELD=brightness\n400\nFIELD=max_brightness\n1023\nFIELD=actual_brightness\n400\nDEVICE=/sys/bus/platform/devices/1740000.interconnect DRIVER=../../../../../bus/platform/drivers/qnoc-sm8250\nDEVICE=/sys/bus/platform/devices/88e7000.regulator DRIVER=../../../../../bus/platform/drivers/qcom-refgen-regulator\nDEVICE=/sys/bus/platform/devices/ae00000.display-subsystem DRIVER=../../../../../bus/platform/drivers/msm-mdss\nDEVICE=/sys/bus/platform/devices/ae01000.display-controller DRIVER=../../../../../../bus/platform/drivers/msm_dpu\nDEVICE=/sys/bus/platform/devices/ae94000.dsi DRIVER=../../../../../../bus/platform/drivers/msm_dsi\nDEVICE=/sys/bus/platform/devices/ae94400.phy DRIVER=../../../../../../bus/platform/drivers/msm_dsi_phy\nDEVICE=/sys/bus/platform/devices/af00000.clock-controller DRIVER=../../../../../bus/platform/drivers/disp_cc-sm8250\nDEVICE=/sys/bus/platform/devices/f100000.pinctrl DRIVER=../../../../../bus/platform/drivers/sm8250-pinctrl\nDEFERRED\n3.gpio-regulator\t\n2.gpio-regulator\t\n1.gpio-regulator\t\n0.gpio-regulator\t\nsoc:gpio_keys\t\n4.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n5.gpio-regulator\t\n6.gpio-regulator\t\n7.gpio-regulator\t\nDISPLAY_LOG\n[   32.572012][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.572244][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.572576][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.572799][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.573044][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.573277][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.573398][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.573619][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.573841][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.574053][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.574379][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.574612][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.574927][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.575075][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.575305][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.575428][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.575650][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.575966][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.576181][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.576419][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.576650][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.576963][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.577214][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.577351][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.577569][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.577695][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.578010][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.578224][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.578552][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.578787][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.579103][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.579252][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.579481][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.579604][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.579822][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.580139][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.580259][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.580589][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.580822][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.581138][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.581380][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.581518][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.581735][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.581862][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.582176][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.582389][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.582621][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.582951][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.583174][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.583414][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.583645][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.583769][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.583990][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.584210][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.584429][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.584753][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.584986][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.585302][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.585561][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.585700][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.585824][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.586045][ T1442] panel-samsung-rm19795 ae94000.dsi.0: RM19795 prepared 1080x2400@60 DSC 540x48\n[   32.586262][ T1442] [drm:dpu_encoder_phys_cmd_enable] enc33 intf1 pp 0\n[   32.586388][ T1442] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 pp 0, enabling mode:\n[   32.586620][ T1442] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 intf 1 pp 0\n[   32.586841][ T1442] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc vsync_clk_speed_hz 19200000 vtotal 2440 vrefresh 60\n[   32.587059][ T1442] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc enable 1 start_pos 2400 rd_ptr_irq 2401\n[   32.587276][ T1442] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc hw_vsync_mode 1 vsync_count 131 vsync_init_val 2400\n[   32.587495][ T1442] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc cfgheight 4880 thresh_start 4 thresh_cont 4\n[   32.587757][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.588078][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.588198][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.588529][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.588762][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.589082][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.589340][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.589479][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.589693][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.589824][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.590140][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.590355][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.590588][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.590920][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.591145][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.591384][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.591611][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.591734][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.591958][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.592179][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.592398][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.592723][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.592958][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.593278][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.593421][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.593654][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.593776][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.593998][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.594315][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.594529][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.594759][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.594991][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.595311][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.595554][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.595690][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.595910][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.596042][ T1442] panel-samsung-rm19795 ae94000.dsi.0: RM19795 display-on commands accepted\n[   32.596256][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   32.596575][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   32.596791][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   32.597023][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   32.597254][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   32.597574][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   32.597816][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   32.598049][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   32.598173][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   32.598428][ T1442] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   32.620828][    C0] [drm:dsi_host_irq] isr=0xaa20af00, id=0\n[   33.600251][  T731] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   33.617386][    C0] [drm:dsi_host_irq] isr=0xaa20af00, id=0\n[   34.601049][  T731] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   34.630678][    C0] [drm:dsi_host_irq] isr=0xaa20af00, id=0\n[   35.601813][  T731] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   35.627425][    C0] [drm:dsi_host_irq] isr=0xaa20af00, id=0\n[   36.602532][  T731] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   36.602948][ T1442] [drm:dpu_kms_wait_flush] [crtc:89] not enable\n[   36.603187][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   36.603547][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   36.603764][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   36.603996][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   36.604229][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   36.604586][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   36.604843][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   36.604986][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   36.605203][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   36.624128][    C0] [drm:dsi_host_irq] isr=0xaa20af00, id=0\n[   36.624437][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   36.624770][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   36.624891][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   36.625217][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   36.625452][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   36.625773][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   36.626016][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   36.626156][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   36.626376][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   36.626508][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   36.626824][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   36.627037][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   36.627364][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   36.627601][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   36.627926][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   36.628071][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   36.628301][ T1442] [drm:dsi_cmds2buf_tx] ret=49\n[   36.628426][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   36.652291][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   36.652616][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   36.652738][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   36.653062][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   36.653294][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   36.653612][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   36.653855][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   36.653996][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   36.654213][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   36.654343][ T1442] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   36.654660][ T1442] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   36.654876][ T1442] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   36.655107][ T1442] [drm:dsi_pll_7nm_vco_set_rate] M3 DSI0 set-rate pll_on=1 bias_refs=2 ctrl0=0x7f pll_ctrl=0x1 cfg1=0x31 lock=0x51\n[   36.655340][ T1442] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   36.655660][ T1442] [drm:msm_dsi_host_xfer_prepare] intr=aa20aa02 enable=1\n[   36.655900][    C0] [drm:dsi_host_irq] isr=0xaa20aa03, id=0\n[   36.656133][ T1442] [drm:dsi_cmds2buf_tx] ret=50\n[   36.656257][ T1442] [drm:msm_dsi_host_xfer_restore] intr=aa20aa00 enable=0\n[   36.812341][ T1442] [drm:dsi_mgr_bridge_post_disable] id=0\n[   36.812472][ T1442] [drm:msm_dsi_host_disable] intr=aa20a800 enable=0\n[   36.836319][ T1442] [drm:dsi_7nm_pll_save_state] DSI PLL0 outdiv 1 bit_clk_div 1 pix_clk_div 3 pll_mux 1\n[   36.836534][ T1442] [drm:dsi_pll_7nm_vco_unprepare] M3 DSI0 unprepare pll_on=0 bias_refs=0 ctrl0=0x5f pll_ctrl=0x0 cfg1=0x11 lock=0x0\n[   36.836788][ T1442] [drm:msm_dsi_host_power_off] -\n[   36.836911][ T1442] [drm:dsi_7nm_phy_disable] \n[   36.837047][ T1442] [drm:dsi_7nm_phy_disable] DSI0 PHY disabled\n[   36.837402][ T1442] [drm:dpu_kms_wait_flush] [crtc:89] not enable\n[   36.837655][   T99] [drm:mdss_runtime_suspend] \n",
+  "android_graphics": {
+    "graphics-status.txt": {
+      "sha256": "a683c2cbb4efebb7f595288384bc1c5e098857966d74a005faaf6191e41ef655",
+      "bytes": 188,
+      "local_record": "live/graphics-status.txt",
+      "text": "running\nrunning\n\n\n\nService SurfaceFlinger: found\nService android.hardware.graphics.composer3.IComposer/default: found\nService android.hardware.graphics.allocator.IAllocator/default: found",
+      "text_truncated": false,
+      "exit_status": 0
+    },
+    "drm-live.txt": {
+      "sha256": "228351105822ada3c58e5fee481bb58ba5012541bcdc83757ce018c60ff7ad87",
+      "bytes": 346,
+      "local_record": "live/drm-live.txt",
+      "text": "total 0\ncrw-rw---- 1 system graphics 226,   0 1970-01-01 00:01 card0\ncrw-rw---- 1 system graphics 226, 128 1970-01-01 00:01 renderD128\nCONNECTOR=/sys/class/drm/card0-DSI-1\ncat: /sys/class/drm/card0-DSI-1/status: Permission denied\ncat: /sys/class/drm/card0-DSI-1/enabled: Permission denied\ncat: /sys/class/drm/card0-DSI-1/modes: Permission denied",
+      "text_truncated": false,
+      "exit_status": 1
+    },
+    "surfaceflinger.txt": {
+      "sha256": "46a4a7845cfc9117396b9f4bbac5e6f579764a961c48480fd1fed9983839997f",
+      "bytes": 34426,
+      "local_record": "live/surfaceflinger.txt",
+      "text": "Build configuration: [sf PRESENT_TIME_OFFSET=0 FORCE_HWC_FOR_RBG_TO_YUV=0 MAX_VIRT_DISPLAY_DIM=0 RUNNING_WITHOUT_SYNC_FRAMEWORK=0 NUM_FRAMEBUFFER_SURFACE_BUFFERS=2]\n\nDisplay identification data:\nDisplay 0 (HWC display 0): no display identification data\n\nWide-Color information:\nDevice supports wide color: 0\nDisplayColorSetting: Enhanced\nDisplay 0 color modes:\n    ColorMode::NATIVE (0)\n    Current color mode: ColorMode::NATIVE (0)\n\nSync configuration: [using: EGL_KHR_fence_sync EGL_KHR_wait_sync]\n\nScheduler:\nFeatures\n    PresentFences=true\n    KernelIdleTimer=false\n    ContentDetection=true\n\nPolicy\n    pacesetterDisplayId=0\n    forcedPacesetterDisplayId=nullopt\n    layerHistory={size=2, active=1}\n\tdisplayArea=2592000\n\tGameFrameRateOverrides=\n\t\t(uid, gameModeOverride, gameDefaultOverride)=\n    touchTimer=200.000 ms\n\nFrameRateOverrides=none\n\n           app phase:      1000000 ns\t         SF phase:      1000000 ns\n           app duration:  16666667 ns\t         SF duration:  15666667 ns\n     early app phase:      1000000 ns\t   early SF phase:      1000000 ns\n     early app duration:  16666667 ns\t   early SF duration:  15666667 ns\n  GL early app phase:      1000000 ns\tGL early SF phase:      1000000 ns\n  GL early app duration:  16666667 ns\tGL early SF duration:  15666667 ns\n       HWC min duration:         0 ns\n\nScreenOff: 0d00:00:00.005\n60.00 Hz: 0d00:01:03.171\n\nPacesetter Display 0\n    renderRate=60.00 Hz\n    activeMode={id=0, hwcId=2, resolution=1080x2400, vsyncRate=60.00 Hz, dpi=409.43x409.43, group=1, vrrConfig=N/A, hdrOutputType=SDR}\n    displayModes=\n        {id=0, hwcId=2, resolution=1080x2400, vsyncRate=60.00 Hz, dpi=409.43x409.43, group=1, vrrConfig=N/A, hdrOutputType=SDR}\n    displayManagerPolicy={defaultModeId=0, allowGroupSwitching=false, primaryRanges={physical=[0.00 Hz, 340282346638528859811704183484516925440.00 Hz], render=[0.00 Hz, 340282346638528859811704183484516925440.00 Hz]}, appRequestRanges={physical=[0.00 Hz, 340282346638528859811704183484516925440.00 Hz], render=[0.00 Hz, 340282346638528859811704183484516925440.00 Hz]} idleScreenConfig=nullptr}\n    enableFrameRateOverride=true\n    idleTimer=\n        interval=nullopt\n        controller=Platform\n    Total missed frame count: 1\n    HWC missed frame count: 1\n    GPU missed frame count: 0\n    isModeChangePending=false\n    displayPowerTimer=nullopt\n\n\ndebugDisplayModeSetByBackdoor=false\n\napp: state=Idle VSyncState={displayId=0, count=0}\nmWorkDuration=16.67 mReadyDuration=15.67 last vsync time -63176.23ms relative to now\n with vsync committed at -63176.23ms  pending events (count=0):\n  connections (count=2):\n    Connection{0xb400007a2cc16810, VSyncRequest::None, owned by (pid=2122, uid=1003)}\n    Connection{0xb400007a2cc16450, VSyncRequest::None, owned by (pid=2219, uid=1000)}\n\nVsyncSchedule for pacesetter 0:\nhwVsyncState=Disabled\npendingHwVsyncState=Disabled\n\nVsyncController:\nVsyncReactor in use\nHas 0 unfired fences\nmInternalIgnoreFences=0 mExternalIgnoreFences=0\nmMoreSamplesNeeded=0 mPeriodConfirmationInProgress=0\nmModePtrTransitioningTo=nullptr\nNo Last HW vsync\nVSyncTracker:\n\tmDisplayModePtr={id=0, hwcId=2, resolution=1080x2400, vsyncRate=60.00 Hz, dpi=409.43x409.43, group=1, vrrConfig=N/A, hdrOutputType=SDR}\n\tRefresh Rate Map:\n\t\tFor ideal period 16.67ms: period = 16.61ms, intercept = -42046\n\tmTimelines.size()=1\nVsyncDispatch:\n\tTimer:\n\t\tDebugState: Waiting\n\tmTimerSlack: 0.50ms mMinVsyncDistance: 3.00ms\n\tmIntendedWakeupTime: 9223372013568.00ms from now\n\tmLastTimerCallback: 969.08ms ago mLastTimerSchedule: 981.92ms ago\n\tCallbacks:\n\t\tsf:  \n\t\t\tworkDuration: 15.67ms readyDuration: 0.00ms lastVsync: -1949.91ms relative to now committedVsync: -1949.91ms relative to now\n\t\t\tmLastDispatchTime: 953.50ms ago\n\t\tapp:  \n\t\t\tworkDuration: 0.00ms readyDuration: 0.00ms lastVsync: -140803.00ms relative to now committedVsync: -140803.00ms relative to now\n\t\t\tmLastDispatchTime unknown\n Early Wakeup Requests (count=0):\n\nActive Layers - layers with client handles (count = 2)\n\nComposition list (top to bottom)\nLayerStack=0\n  Layer [2] [BBQ] BootAnimation#1#2\n    visible reason= buffer=9113920602128 frame=30 contentDirty\n    bounds={0,0,2400,1080}\n    opaqueRegion={0,0,2400,1080} \n    input{(NO_INPUT_CHANNEL) touchableRegion={0,0,0,0}}\n\nInput list\nLayerStack=0\n  Layer [2] [BBQ] BootAnimation#1#2\n    visible reason= buffer=9113920602128 frame=30 contentDirty\n    bounds={0,0,2400,1080}\n    opaqueRegion={0,0,2400,1080} \n    input{(NO_INPUT_CHANNEL) touchableRegion={0,0,0,0}}\n\nLayer Hierarchy\n ROOT\n └─ BootAnimation#1 alpha=1 opaque=1 pid=2122 uid=1003",
+      "text_truncated": true,
+      "exit_status": 0
+    },
+    "graphics-logcat.txt": {
+      "sha256": "d87b85377d7e63e46666be57c92208e92cc8cdf35a4f6293765348daeecb67a9",
+      "bytes": 64643,
+      "local_record": "live/graphics-logcat.txt",
+      "text": "--------- beginning of main\n01-01 00:01:16.953  2033  2033 I drmhwc  : hwc3-drm starting up\n01-01 00:01:16.953  2033  2033 I drmhwc  : HWC3 service name android.hardware.graphics.composer3.IComposer/default\n01-01 00:01:17.087  2041  2041 I SurfaceFlinger: Using HWComposer service: default\n01-01 00:01:17.088  2041  2041 I SurfaceFlinger: SurfaceFlinger is starting\n01-01 00:01:17.088  2041  2041 I SurfaceFlinger: Enabling backpressure for GPU composition\n01-01 00:01:17.088  2041  2041 I SurfaceFlinger: Disabling blur effects, they are not supported.\n01-01 00:01:17.092  2041  2041 I SurfaceFlinger: SurfaceFlinger's main thread ready to run. Initializing graphics H/W...\n01-01 00:01:17.092  2041  2041 D SurfaceFlinger: Threaded RenderEngine with SkiaGL Backend (Ganesh)\n01-01 00:01:17.093  2041  2076 D SurfaceFlinger: Waited 0.1285ms for disk to be ready\n01-01 00:01:17.267  2041  2076 W libEGL  : ANGLE Warn:vulkan_icd.cpp:388 (ChoosePhysicalDevice): Preferred device ICD not found. Using default physicalDevice instead.\n01-01 00:01:17.274  2091  2091 E DEBUG   : failed to read process info: failed to open /proc/2034: No such file or directory\n01-01 00:01:17.298  2041  2076 I SurfaceFlinger: Realtime priority unsupported, degrading gracefully to high priority\n01-01 00:01:17.320  2041  2076 D SurfaceFlinger: Background Blurs Enabled (Kawase dual-filtering V2 algorithm)\n01-01 00:01:17.339  2041  2076 I SurfaceFlinger: OpenGL ES informations:\n01-01 00:01:17.339  2041  2076 I SurfaceFlinger: vendor    : Google Inc. (Google)\n01-01 00:01:17.339  2041  2076 I SurfaceFlinger: renderer  : ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 16.0.0) (0x0000C0DE)), SwiftShader driver-5.0.0)\n01-01 00:01:17.339  2041  2076 I SurfaceFlinger: version   : OpenGL ES 3.1 (ANGLE 2.1 git hash: 89ef25f8f92e103b5bec64e19e36f308aac15164)\n01-01 00:01:17.339  2041  2076 I SurfaceFlinger: extensions: GL_AMD_performance_monitor GL_ANGLE_base_vertex_base_instance_shader_builtin GL_ANGLE_blob_cache GL_ANGLE_client_arrays GL_ANGLE_clip_cull_distance GL_ANGLE_compressed_texture_etc GL_ANGLE_copy_texture_3d GL_ANGLE_depth_texture GL_ANGLE_framebuffer_blit GL_ANGLE_framebuffer_multisample GL_ANGLE_get_image GL_ANGLE_get_serialized_context_string GL_ANGLE_get_tex_level_parameter GL_ANGLE_instanced_arrays GL_ANGLE_memory_object_flags GL_ANGLE_memory_size GL_ANGLE_multi_draw GL_ANGLE_pack_reverse_row_order GL_ANGLE_polygon_mode GL_ANGLE_program_binary_readiness_query GL_ANGLE_program_cache_control GL_ANGLE_read_only_depth_stencil_feedback_loops GL_ANGLE_relaxed_vertex_attribute_type GL_ANGLE_renderability_validation GL_ANGLE_request_extension GL_ANGLE_rgbx_internal_format GL_ANGLE_robust_client_memory GL_ANGLE_robust_fragment_shader_output GL_ANGLE_shader_pixel_local_storage GL_ANGLE_shader_pixel_local_storage_coherent GL_ANGLE_stencil_texturing GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compre\n01-01 00:01:17.339  2041  2076 I SurfaceFlinger: GL_MAX_TEXTURE_SIZE = 8192\n01-01 00:01:17.339  2041  2076 I SurfaceFlinger: GL_MAX_VIEWPORT_DIMS = 8192\n01-01 00:01:17.346  2041  2041 I SurfaceFlinger: Loaded AIDL composer3 HAL service\n01-01 00:01:17.347  2041  2041 E SurfaceFlinger: getOverlaySupport failed Status(-8, EX_SERVICE_SPECIFIC): '8: '\n01-01 00:01:17.347  2041  2041 W SurfaceFlinger: getHdrConversionCapabilities is UNSUPPORTED\n01-01 00:01:17.347  2041  2041 W SurfaceFlinger: loadHdrConversionCapabilities is UNSUPPORTED\n--------- beginning of crash\n01-01 00:01:17.420  2091  2091 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n01-01 00:01:17.420  2091  2091 F DEBUG   : Build fingerprint: 'google/gsi_gms_arm64/generic_arm64:17/CP3A.260905.010/16176746:user/release-keys'\n01-01 00:01:17.420  2091  2091 F DEBUG   : Kernel Release: '6.18.32-android17-5-maybe-dirty-4k'\n01-01 00:01:17.420  2091  2091 F DEBUG   : Revision: '0'\n01-01 00:01:17.420  2091  2091 F DEBUG   : ABI: 'arm64'\n01-01 00:01:17.420  2091  2091 F DEBUG   : Timestamp: 1970-01-01 00:01:17.274352158+0000\n01-01 00:01:17.420  2091  2091 F DEBUG   : Process uptime: 0s\n01-01 00:01:17.420  2091  2091 F DEBUG   : Executable: /system/bin/audioserver\n01-01 00:01:17.420  2091  2091 F DEBUG   : Cmdline: /system/bin/audioserver\n01-01 00:01:17.420  2091  2091 F DEBUG   : pid: 2034, ppid: 1, tid: 2034, name: audioserver  >>> /system/bin/audioserver <<<\n01-01 00:01:17.420  2091  2091 F DEBUG   : uid: 1041\n01-01 00:01:17.420  2091  2091 F DEBUG   : tagged_addr_ctrl: 0000000000000001 (PR_TAGGED_ADDR_ENABLE)\n01-01 00:01:17.420  2091  2091 F DEBUG   : esr: 0000000092000005 (Data Abort Exception 0x24)\n01-01 00:01:17.420  2091  2091 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0000000000000000 (read)\n01-01 00:01:17.420  2091  2091 F DEBUG   : Cause: null pointer dereference\n01-01 00:01:17.420  2091  2091 F DEBUG   : \n01-01 00:01:17.420  2091  2091 F DEBUG   :     x0  0000000000000001  x1  b400007170e0f810  x2  0000000000000030  x3  0000000000000010\n01-01 00:01:17.420  2091  2091 F DEBUG   :     x4  0000000000000001  x5  0200007170e0f820  x6  0000000000000018  x7  7f7f7f7f7f7f7f7f\n01-01 00:01:17.420  2091  2091 F DEBUG   :     x8  0000000010000000  x9  00000061acab1a96  x10 0000007367cb4400  x11 0000000000000000\n01-01 00:01:17.420  2091  2091 F DEBUG   :     x12 ffffffffffffffff  x13 0000000000000001  x14 0000000000000000  x15 0000000000000001\n01-01 00:01:17.420  2091  2091 F DEBUG   :     x16 0000000000000001  x17 0000007360fa2914  x18 00000073694c0000  x19 b400007140e05680\n01-01 00:01:17.420  2091  2091 F DEBUG   :     x20 000000000000388e  x21 0000000000000000  x22 0000007fc7db9008  x23 000000736854cd80\n01-01 00:01:17.420  2091  2091 F DEBUG   :     x24 00000061acd414d0  x25 00000061acd414d0  x26 0000000000000000  x27 0000000000000000\n01-01 00:01:17.420  2091  2091 F DEBUG   :     x28 0000000000000000  x29 0000007fc7db8e90\n01-01 00:01:17.420  2091  2091 F DEBUG   :     lr  00000061acb5aed8  sp  0000007fc7db8e50  pc  00000061acb5aedc  pst 0000000080001000\n01-01 00:01:17.420  2091  2091 F DEBUG   :     esr 0000000092000005  vg  0000000000000000\n01-01 00:01:17.420  2091  2091 F DEBUG   : \n01-01 00:01:17.420  2091  2091 F DEBUG   : 3 total frames\n01-01 00:01:17.420  2091  2091 F DEBUG   : backtrace:\n01-01 00:01:17.420  2091  2091 F DEBUG   :       #00 pc 00000000000deedc  /system/bin/audioserver (android::AudioFlinger::onFirstRef()+712) (BuildId: 322d95fb5c8e907a189dd150a282f654)\n01-01 00:01:17.420  2091  2091 F DEBUG   :       #01 pc 0000000000085100  /system/bin/audioserver (main.cfi+404) (BuildId: 322d95fb5c8e907a189dd150a282f654)\n01-01 00:01:17.420  2091  2091 F DEBUG   :       #02 pc 000000000006f8b8  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+124) (BuildId: 0d3b5783cbffbdfc266e8cf07088d547)\n01-01 00:01:17.420  2091  2091 F DEBUG   : \n01-01 00:01:17.420  2091  2091 F DEBUG   : Note: To display stack pointer information, use the pbtombstone tool:\n01-01 00:01:17.420  2091  2091 F DEBUG   :         pbtombstone --display-sp tombstone_XX.pb\n01-01 00:01:17.421  2033  2033 I drmhwc  : Attaching connector DSI-1\n01-01 00:01:17.421  2033  2033 I drmhwc  : Found Backend 'generic' for 'DSI-1' and driver 'msm'\n01-01 00:01:17.423  2033  2033 I drmhwc  : Attaching pipeline 'DSI-1' to the display #0 (Primary)\n01-01 00:01:17.423  2033  2033 W drmhwc  : Failed to create a LibdisplayInfo parser.\n01-01 00:01:17.423  2033  2033 E drmhwc  : Could not open the backlight sysfs node (13)\n01-01 00:01:17.439  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:17.612  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:17.618  2041  2041 E SurfaceFlinger: getDisplayIdentificationData failed Status(-8, EX_SERVICE_SPECIFIC): '8: '\n01-01 00:01:17.619  2041  2041 I SurfaceFlinger: Switching to legacy multi-display mode\n01-01 00:01:17.619  2033  2033 E drmhwc  : Failed to get display bounds for d=0\n01-01 00:01:17.620  2041  2041 I SurfaceFlinger: Connecting display 0(HAL ID 0)\n01-01 00:01:17.620  2041  2041 W SurfaceFlinger: getMaxLayerPictureProfiles is UNSUPPORTED\n01-01 00:01:17.620  2041  2041 W SurfaceFlinger: getMaxLayerPictureProfiles is UNSUPPORTED for display 0\n01-01 00:01:17.621  2033  2033 W drmhwc  : No panel orientation property available.\n01-01 00:01:17.621  2041  2041 E SurfaceFlinger: getPerFrameMetadataKeys failed Status(-8, EX_SERVICE_SPECIFIC): '8: '\n01-01 00:01:17.625  2041  2041 D SurfaceFlinger: processDisplayAdded: Optimizing thread scheduling: optimizeForPower\n01-01 00:01:17.626  2041  2041 I SurfaceFlinger: createTracker: Using default prediction mode for display 0\n01-01 00:01:17.626  2041  2041 I SurfaceFlinger: Display 0 is the pacesetter\n01-01 00:01:17.627  2041  2116 W SurfaceFlinger: Ignoring VSYNC request while display is disconnected\n01-01 00:01:17.628  2041  2041 D SurfaceFlinger: setDesiredMode 0 {mode={fps=60.00 Hz, modePtr={id=0, vsyncRate=60.00 Hz, peakRefreshRate=60.00 Hz}}, emitEvent=true, force=false}\n01-01 00:01:17.628  2041  2120 W SurfaceFlinger: Failed to set thread name on dispatch thread\n01-01 00:01:17.630  2041  2041 D SurfaceFlinger: Setting power mode 0 on physical display 0\n01-01 00:01:17.630  2041  2041 D SurfaceFlinger: Setting power mode 2 on physical display 0\n01-01 00:01:17.630  2041  2041 D SurfaceFlinger: setPhysicalDisplayPowerModeAsync: Optimizing thread scheduling: optimizeForPerformance\n01-01 00:01:17.631  2041  2041 W SurfaceFlinger: getDisplayKnownVsyncSample is UNSUPPORTED\n01-01 00:01:17.631  2041  2041 W SurfaceFlinger: getDisplayKnownVsyncSample: getDisplayKnownVsyncSample is UNSUPPORTED for display 0\n01-01 00:01:17.631  2041  2041 D SurfaceFlinger: Finished setting power mode 2 on physical display 0\n01-01 00:01:18.068  2122  2135 W libEGL  : ANGLE Warn:vulkan_icd.cpp:388 (ChoosePhysicalDevice): Preferred device ICD not found. Using default physicalDevice instead.\n01-01 00:01:18.912  2041  2041 I SurfaceFlinger: Enter boot animation\n01-01 00:01:18.914  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:18.914  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:18.914  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:19.410  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:19.410  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:19.410  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:20.308  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:20.308  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:20.308  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:21.288  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:21.288  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:21.288  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:22.163  2271  2271 E DEBUG   : failed to read process info: failed to open /proc/2249: No such file or directory\n01-01 00:01:22.318  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:22.318  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:22.318  2033  2033 W drmhwc  : Encountered multiple cursor planes for CRTC 89. Ignoring plane 83\n01-01 00:01:22.340  2271  2271 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n01-01 00:01:22.340  2271  2271 F DEBUG   : Build fingerprint: 'google/gsi_gms_arm64/generic_arm64:17/CP3A.260",
+      "text_truncated": true,
+      "exit_status": 0
+    },
+    "graphics-services.txt": {
+      "sha256": "1d9d2113f0b43e44b0346682e90a8262b19ea4d7396c8c18f935fdf27e54429c",
+      "bytes": 2848,
+      "local_record": "live/graphics-services.txt",
+      "text": "angle\npastel\nminigbm\nnocompression\n420\nzygote64_32\nu:r:zygote:s0                  root          2025     1   13626604 204144 0                   0 S zygote64\nu:r:zygote:s0                  root          2026     1     516148 112556 0                   0 S zygote\nu:r:hal_allocator_default:s0   system        2031     1   10894820   4684 0                   0 S android.hidl.allocator@1.0-service\nu:r:rmx_graphics_allocator:s0  system        2032     1   10869808   9196 0                   0 S android.hardware.graphics.allocator-service.minigbm\nu:r:rmx_graphics_composer:s0   system        2033     1   10944948  11120 0                   0 S android.hardware.composer.hwc3-service.rmx2072\nu:r:surfaceflinger:s0          system        2041     1   11802328 102284 0                   0 S surfaceflinger\nu:r:system_server:s0           system        2219  2025   17154168 214536 0                   0 S system_server\n/dev/dri:\ntotal 0\ncrw-rw---- 1 system graphics u:object_r:gpu_device:s0  226,   0 1970-01-01 00:01 card0\ncrw-rw---- 1 system graphics u:object_r:gpu_device:s0  226, 128 1970-01-01 00:01 renderD128\n\n/vendor/bin/hw:\ntotal 416\n-????????? ? ?    ?    ?                                     ?                ? android.hardware.composer.hwc3-service.rmx2072\n-????????? ? ?    ?    ?                                     ?                ? android.hardware.graphics.allocator-service.minigbm\n-????????? ? ?    ?    ?                                     ?                ? rmx-keymaster-info-client\n-????????? ? ?    ?    ?                                     ?                ? rmx-keymaster-info-service\n-rwxr-xr-x 1 root root u:object_r:vendor_shell_exec:s0  424288 2009-01-01 00:00 rmx-m1-control\n-????????? ? ?    ?    ?                                     ?                ? rmx-m1-guard\n\n/vendor/lib64/egl:\ntotal 6764\n-rw-r--r-- 1 root root u:object_r:same_process_hal_file:s0   746392 2009-01-01 00:00 libEGL_angle.so\n-rw-r--r-- 1 root root u:object_r:same_process_hal_file:s0    52960 2009-01-01 00:00 libGLESv1_CM_angle.so\n-rw-r--r-- 1 root root u:object_r:same_process_hal_file:s0  6174944 2009-01-01 00:00 libGLESv2_angle.so\n\n/vendor/lib64/hw:\ntotal 26932\n-rw-r--r-- 1 root root u:object_r:same_process_hal_file:s0     52568 2009-01-01 00:00 gralloc.minigbm.so\n-rw-r--r-- 1 root root u:object_r:same_process_hal_file:s0    170208 2009-01-01 00:00 mapper.minigbm.so\n-rw-r--r-- 1 root root u:object_r:same_process_hal_file:s0  27438808 2009-01-01 00:00 vulkan.pastel.so\n0\tSurfaceFlinger: [android.ui.ISurfaceComposer]\n1\tSurfaceFlingerAIDL: [android.gui.ISurfaceComposer]\n2\tactivity_task: [android.app.IActivityTaskManager]\n4\tandroid.hardware.graphics.allocator.IAllocator/default: [android.hardware.graphics.allocator.IAllocator]\n5\tandroid.hardware.graphics.composer3.IComposer/default: []\n26\tgpu: [android.graphicsenv.IGpuService]",
+      "text_truncated": false,
+      "exit_status": 0
+    },
+    "graphics-startup-logcat.txt": {
+      "sha256": "edb99ee0ef41ec7e545f3ad11f1a52cae3231e3dada7cb6aff6ac35c18a901a2",
+      "bytes": 124042,
+      "local_record": "live/graphics-startup-logcat.txt",
+      "text": "--------- beginning of events\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1279): avc:  denied  { search } for  comm=\"sh\" name=\"dm-21\" dev=\"sysfs\" ino=82656 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1280): avc:  denied  { search } for  comm=\"sh\" name=\"dm-21\" dev=\"sysfs\" ino=82656 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1281): avc:  denied  { search } for  comm=\"sh\" name=\"dm-22\" dev=\"sysfs\" ino=82766 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1282): avc:  denied  { search } for  comm=\"sh\" name=\"dm-22\" dev=\"sysfs\" ino=82766 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1283): avc:  denied  { search } for  comm=\"sh\" name=\"dm-23\" dev=\"sysfs\" ino=82876 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1284): avc:  denied  { search } for  comm=\"sh\" name=\"dm-23\" dev=\"sysfs\" ino=82876 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1285): avc:  denied  { search } for  comm=\"sh\" name=\"dm-24\" dev=\"sysfs\" ino=82986 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1286): avc:  denied  { search } for  comm=\"sh\" name=\"dm-24\" dev=\"sysfs\" ino=82986 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1287): avc:  denied  { search } for  comm=\"sh\" name=\"dm-25\" dev=\"sysfs\" ino=83096 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1288): avc:  denied  { search } for  comm=\"sh\" name=\"dm-25\" dev=\"sysfs\" ino=83096 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1289): avc:  denied  { search } for  comm=\"sh\" name=\"dm-26\" dev=\"sysfs\" ino=83206 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1290): avc:  denied  { search } for  comm=\"sh\" name=\"dm-26\" dev=\"sysfs\" ino=83206 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1291): avc:  denied  { search } for  comm=\"sh\" name=\"dm-27\" dev=\"sysfs\" ino=83316 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1292): avc:  denied  { search } for  comm=\"sh\" name=\"dm-27\" dev=\"sysfs\" ino=83316 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1293): avc:  denied  { search } for  comm=\"sh\" name=\"dm-28\" dev=\"sysfs\" ino=83426 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1294): avc:  denied  { search } for  comm=\"sh\" name=\"dm-28\" dev=\"sysfs\" ino=83426 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1295): avc:  denied  { search } for  comm=\"sh\" name=\"dm-29\" dev=\"sysfs\" ino=83536 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1296): avc:  denied  { search } for  comm=\"sh\" name=\"dm-29\" dev=\"sysfs\" ino=83536 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1297): avc:  denied  { search } for  comm=\"sh\" name=\"dm-3\" dev=\"sysfs\" ino=76192 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1298): avc:  denied  { search } for  comm=\"sh\" name=\"dm-3\" dev=\"sysfs\" ino=76192 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1299): avc:  denied  { search } for  comm=\"sh\" name=\"dm-30\" dev=\"sysfs\" ino=83646 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1300): avc:  denied  { search } for  comm=\"sh\" name=\"dm-30\" dev=\"sysfs\" ino=83646 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1301): avc:  denied  { search } for  comm=\"sh\" name=\"dm-31\" dev=\"sysfs\" ino=83756 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1302): avc:  denied  { search } for  comm=\"sh\" name=\"dm-31\" dev=\"sysfs\" ino=83756 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1303): avc:  denied  { search } for  comm=\"sh\" name=\"dm-32\" dev=\"sysfs\" ino=83866 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1304): avc:  denied  { search } for  comm=\"sh\" name=\"dm-32\" dev=\"sysfs\" ino=83866 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1305): avc:  denied  { search } for  comm=\"sh\" name=\"dm-33\" dev=\"sysfs\" ino=83976 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1306): avc:  denied  { search } for  comm=\"sh\" name=\"dm-33\" dev=\"sysfs\" ino=83976 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1307): avc:  denied  { search } for  comm=\"sh\" name=\"dm-34\" dev=\"sysfs\" ino=84086 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.319  2700  2700 I auditd  : type=1400 audit(0.0:1308): avc:  denied  { search } for  comm=\"sh\" name=\"dm-34\" dev=\"sysfs\" ino=84086 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1309): avc:  denied  { search } for  comm=\"sh\" name=\"dm-35\" dev=\"sysfs\" ino=84196 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1310): avc:  denied  { search } for  comm=\"sh\" name=\"dm-35\" dev=\"sysfs\" ino=84196 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1311): avc:  denied  { search } for  comm=\"sh\" name=\"dm-36\" dev=\"sysfs\" ino=84306 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1312): avc:  denied  { search } for  comm=\"sh\" name=\"dm-36\" dev=\"sysfs\" ino=84306 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1313): avc:  denied  { search } for  comm=\"sh\" name=\"dm-37\" dev=\"sysfs\" ino=84416 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1314): avc:  denied  { search } for  comm=\"sh\" name=\"dm-37\" dev=\"sysfs\" ino=84416 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1315): avc:  denied  { search } for  comm=\"sh\" name=\"dm-38\" dev=\"sysfs\" ino=84526 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1316): avc:  denied  { search } for  comm=\"sh\" name=\"dm-38\" dev=\"sysfs\" ino=84526 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1317): avc:  denied  { search } for  comm=\"sh\" name=\"dm-39\" dev=\"sysfs\" ino=84636 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1318): avc:  denied  { search } for  comm=\"sh\" name=\"dm-39\" dev=\"sysfs\" ino=84636 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1319): avc:  denied  { search } for  comm=\"sh\" name=\"dm-4\" dev=\"sysfs\" ino=76304 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1320): avc:  denied  { search } for  comm=\"sh\" name=\"dm-4\" dev=\"sysfs\" ino=76304 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1321): avc:  denied  { search } for  comm=\"sh\" name=\"dm-40\" dev=\"sysfs\" ino=84746 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1322): avc:  denied  { search } for  comm=\"sh\" name=\"dm-40\" dev=\"sysfs\" ino=84746 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1323): avc:  denied  { search } for  comm=\"sh\" name=\"dm-41\" dev=\"sysfs\" ino=84856 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1324): avc:  denied  { search } for  comm=\"sh\" name=\"dm-41\" dev=\"sysfs\" ino=84856 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1325): avc:  denied  { search } for  comm=\"sh\" name=\"dm-42\" dev=\"sysfs\" ino=84966 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1326): avc:  denied  { search } for  comm=\"sh\" name=\"dm-42\" dev=\"sysfs\" ino=84966 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1327): avc:  denied  { search } for  comm=\"sh\" name=\"dm-43\" dev=\"sysfs\" ino=85076 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1328): avc:  denied  { search } for  comm=\"sh\" name=\"dm-43\" dev=\"sysfs\" ino=85076 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1329): avc:  denied  { search } for  comm=\"sh\" name=\"dm-44\" dev=\"sysfs\" ino=85186 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1330): avc:  denied  { search } for  comm=\"sh\" name=\"dm-44\" dev=\"sysfs\" ino=85186 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1331): avc:  denied  { search } for  comm=\"sh\" name=\"dm-45\" dev=\"sysfs\" ino=85296 scontext=u:r:shell:s0 tcontext=u:object_r:sysfs_dm:s0 tclass=dir permissive=0\n01-01 00:01:52.323  2700  2700 I auditd  : type=1400 audit(0.0:1332): avc:  denied  { search } for  comm=\"sh\" name=\"dm-45\" dev=\"sysfs\" ino=85296 scontext=u",
+      "text_truncated": true,
+      "exit_status": 0
+    }
+  },
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "handset_left": "retained Android 17 GSI",
+  "result": "OEM diagnostic loads under enforcing. CPU screenshot shows the complete known-color pattern; physical output differs according to corrected operator observation. Do not advance to desktop HAL work on this evidence.",
+  "retention_seconds": 197.015,
+  "frame_capture": {
+    "boot_id": "7d750f14-c07c-4145-b9c5-5305af9c83f1",
+    "bytes": 16038,
+    "sha256": "05b419f7036c750cb44e90654ceb0a574d999a4c4fa8504e74638d12d298da49",
+    "size": [
+      1080,
+      2400
+    ],
+    "mode": "RGBA",
+    "colors": [
+      [
+        313880,
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ],
+      [
+        1,
+        [
+          1,
+          2,
+          254,
+          255
+        ]
+      ],
+      [
+        2079,
+        [
+          254,
+          1,
+          255,
+          255
+        ]
+      ],
+      [
+        1,
+        [
+          2,
+          4,
+          2,
+          255
+        ]
+      ],
+      [
+        80,
+        [
+          253,
+          255,
+          253,
+          255
+        ]
+      ],
+      [
+        60,
+        [
+          0,
+          252,
+          0,
+          255
+        ]
+      ],
+      [
+        179,
+        [
+          0,
+          0,
+          252,
+          255
+        ]
+      ],
+      [
+        60,
+        [
+          0,
+          252,
+          252,
+          255
+        ]
+      ],
+      [
+        479,
+        [
+          2,
+          2,
+          2,
+          255
+        ]
+      ],
+      [
+        150912,
+        [
+          32,
+          32,
+          32,
+          255
+        ]
+      ],
+      [
+        179,
+        [
+          1,
+          1,
+          255,
+          255
+        ]
+      ],
+      [
+        180,
+        [
+          1,
+          255,
+          255,
+          255
+        ]
+      ],
+      [
+        1,
+        [
+          254,
+          2,
+          255,
+          255
+        ]
+      ],
+      [
+        325404,
+        [
+          255,
+          0,
+          0,
+          255
+        ]
+      ],
+      [
+        349760,
+        [
+          0,
+          255,
+          255,
+          255
+        ]
+      ],
+      [
+        152801,
+        [
+          0,
+          0,
+          0,
+          255
+        ]
+      ],
+      [
+        302040,
+        [
+          255,
+          255,
+          0,
+          255
+        ]
+      ],
+      [
+        350160,
+        [
+          0,
+          255,
+          0,
+          255
+        ]
+      ],
+      [
+        338877,
+        [
+          255,
+          0,
+          255,
+          255
+        ]
+      ],
+      [
+        320,
+        [
+          0,
+          253,
+          253,
+          255
+        ]
+      ],
+      [
+        1,
+        [
+          0,
+          1,
+          250,
+          255
+        ]
+      ],
+      [
+        180,
+        [
+          252,
+          252,
+          0,
+          255
+        ]
+      ],
+      [
+        1048,
+        [
+          254,
+          254,
+          254,
+          255
+        ]
+      ],
+      [
+        1678,
+        [
+          0,
+          1,
+          254,
+          255
+        ]
+      ],
+      [
+        319,
+        [
+          0,
+          2,
+          0,
+          255
+        ]
+      ],
+      [
+        163,
+        [
+          255,
+          1,
+          255,
+          255
+        ]
+      ],
+      [
+        300362,
+        [
+          0,
+          0,
+          255,
+          255
+        ]
+      ],
+      [
+        180,
+        [
+          255,
+          255,
+          1,
+          255
+        ]
+      ],
+      [
+        80,
+        [
+          2,
+          255,
+          255,
+          255
+        ]
+      ],
+      [
+        180,
+        [
+          1,
+          255,
+          1,
+          255
+        ]
+      ],
+      [
+        356,
+        [
+          255,
+          1,
+          1,
+          255
+        ]
+      ]
+    ],
+    "scope": "CPU RenderEngine screenshot, not DPU readback or physical acceptance",
+    "capture_seconds": 36.91,
+    "reference": {
+      "sha256": "a92b72b4a2ce1f87ec39438ff4ad9f2238614900a5f37768388ad320afaa3774",
+      "maximum_channel_error": 5,
+      "exact": false,
+      "all_pixels_within_one": false
+    },
+    "public_image": "m3-display-58-android-frame.png"
+  },
+  "pixel_comparison": {
+    "pixels": 2592000,
+    "exact_pixels": 2584196,
+    "different_pixels": 7804,
+    "maximum_channel_error": 5,
+    "error_pixel_histogram": {
+      "0": 2584196,
+      "1": 6043,
+      "2": 1280,
+      "3": 479,
+      "4": 1,
+      "5": 1
+    },
+    "different_pixels_outside_reference_edge_neighborhood": 0,
+    "scope": "CPU screenshot only. All differences occur near reference edges; their origin is not established. Physical frame equality was explicitly rejected by the operator."
+  },
+  "focused_evidence": {
+    "operator-observation.json": {
+      "sha256": "052ae5ab98122fde0c16d4961de7d0904d6c5a957d3544c6ada0044f8a7eb856",
+      "local_record": "live/operator-observation.json",
+      "excerpt": "{\r\n  \"utc\": \"2026-11-15T12:27:57.140589+00:00\",\r\n  \"boot_id\": \"7d750f14-c07c-4145-b9c5-5305af9c83f1\",\r\n  \"reports\": [\r\n    \"规律的彩条\",\r\n    \"黑块、两条白杠和白边都能看清\",\r\n    \"不对不对，和你截图的不一样！\",\r\n    \"User supplies IMG20261115202937.jpg: visible corruption with repeated horizontal valid pattern bands separated by dense noise.\"\r\n  ],\r\n  \"current_result\": \"Physical corruption confirmed by supplied photograph; full display acceptance FAILED.\",\r\n  \"next_goal\": \"Keep focus on physical display; do not advance to Health HAL based on this result.\",\r\n  \"photo\": {\r\n    \"sha256\": \"70d6083bf9ea734b39275b504fe2ffd1d888bcd65e9cd16771b28fa465b556c4\",\r\n    \"bytes\": 14810257,\r\n    \"size\": [\r\n      3072,\r\n      4096\r\n    ],\r\n    \"local_record\": \"live/physical-screen.jpg\",\r\n    \"observation\": \"Regular horizontal bands retain portions of the six-color pattern; large intervening horizontal regions are corrupted. The physical frame does not match the complete CPU screenshot.\",\r\n    \"inference\": \"Prioritize scanout/DSC/DSI packet geometry; exact root cause not established by the photo.\"\r\n  }\r\n}\r\n"
+    },
+    "first-capture-status.txt": {
+      "sha256": "f1bae61a5bf4f578deaaaf37853d3041a47caff15cff99c9ed8f6de26498889e",
+      "local_record": "live/first-capture-status.txt",
+      "excerpt": "7d750f14-c07c-4145-b9c5-5305af9c83f1\nuid=2000(shell) gid=2000(shell) groups=2000(shell),1003(graphics) context=u:r:shell:s0\n82.58 582.67\ncapture_exit=0\n119.49 764.77\n16038 /data/local/tmp/rmx-m3-frame.png\n"
+    },
+    "bootpattern-live.txt": {
+      "sha256": "cea7147c86fea9e091fcc2d6dee4f2566684cc06aefdb4c2d8e0e1b96325088a",
+      "local_record": "live/bootpattern-live.txt",
+      "excerpt": "7d750f14-c07c-4145-b9c5-5305af9c83f1\ndrwxr-xr-x 3 root root u:object_r:oemfs:s0  4096 2009-01-01 00:00 /oem\ndrwxr-xr-x 2 root root u:object_r:oemfs:s0  4096 2009-01-01 00:00 /oem/media\n140 70 254:15 /etc/rmx-m3-oem /oem ro,relatime shared:8 - ext4 /dev/block/dm-15 ro,seclabel,norecovery\n7d750f14-c07c-4145-b9c5-5305af9c83f1\nuid=2000(shell) gid=2000(shell) groups=2000(shell),1003(graphics) context=u:r:shell:s0\n82.58 582.67\n01-01 00:01:17.971  2122  2122 D BootAnimation: BootAnimationStartTiming start time: 77971ms\n01-01 00:01:17.971  2122  2122 D BootAnimation: BootAnimationPreloadTiming start time: 77971ms\n01-01 00:01:17.974  2122  2122 D BootAnimation: /oem/media/bootanimation.zip is loaded successfully\n01-01 00:01:17.974  2122  2122 D BootAnimation: BootAnimationPreloadTiming stop time: 77974ms\n01-01 00:01:18.059  2122  2122 W BootAnimation: type=1400 audit(0.0:36): avc:  denied  { search } for  name=\"local\" dev=\"loop0\" ino=16385 scontext=u:r:bootanim:s0 tcontext=u:object_r:shell_data_file:s0 tclass=dir permissive=0\n01-01 00:01:18.127  2122  2135 E BootAnimation: couldn't find shader.txt\n01-01 00:01:18.182  2122  2135 D BootAnimation: Multi-threaded image decode enabled. Bootanim will use 4 threads\n01-01 00:01:18.184  2122  2135 D BootAnimation: BootAnimationShownTiming start time: 78184ms\n01-01 00:01:18.184  2122  2135 D BootAnimation: Playing files = /oem/media/bootanimation.zip/part0, Requested repeat = 0, playUntilComplete = false\n01-01 00:01:20.184  2122  2135 D BootAnimation: Playing files = /oem/media/bootanimation.zip/part0, Requested repeat = 0, playUntilComplete = false\n01-01 00:01:22.185  2122  2135 D BootAnimation: Playing files = /oem/media/bootanimation.zip/part0, Requested repeat = 0, playUntilComplete = false\n01-01 00:01:24.186  2122  2135 D BootAnimation: Playing files = /oem/media/bootanimation.zip/part0, Requested repeat = 0, playUntilComplete = false\n"
+    },
+    "graphics-first-0-services.txt": {
+      "sha256": "afd26b7cdd5f54d1d55aaad33ce1fa8327d9b11595c3d8bc0674d89cc5b57b8c",
+      "local_record": "live/graphics-first-0-services.txt",
+      "excerpt": "Service android.security.maintenance: found\nService SurfaceFlinger: found\nService android.hardware.graphics.composer3.IComposer/default: found\nService android.hardware.graphics.allocator.IAllocator/default: found\nService activity: not found\nService window: not found\n"
+    },
+    "graphics-first-3-services.txt": {
+      "sha256": "afd26b7cdd5f54d1d55aaad33ce1fa8327d9b11595c3d8bc0674d89cc5b57b8c",
+      "local_record": "live/graphics-first-3-services.txt",
+      "excerpt": "Service android.security.maintenance: found\nService SurfaceFlinger: found\nService android.hardware.graphics.composer3.IComposer/default: found\nService android.hardware.graphics.allocator.IAllocator/default: found\nService activity: not found\nService window: not found\n"
+    }
+  },
+  "next_step": "Compare DPU scanout/DSC and DSI packet programming with the factory configuration and pinned source, then test one justified transport change with the same loaded pattern. Health HAL remains deferred.",
+  "physical_photo": {
+    "sha256": "70d6083bf9ea734b39275b504fe2ffd1d888bcd65e9cd16771b28fa465b556c4",
+    "bytes": 14810257,
+    "size": [
+      3072,
+      4096
+    ],
+    "local_record": "live/physical-screen.jpg",
+    "observation": "Regular horizontal bands retain portions of the six-color pattern; large intervening horizontal regions are corrupted. The physical frame does not match the complete CPU screenshot.",
+    "inference": "Prioritize scanout/DSC/DSI packet geometry; exact root cause not established by the photo."
+  },
+  "photo_band_analysis": {
+    "method": "Threshold red dominance in original photo columns 720..849; no image modification or geometric correction",
+    "bands_y_photo_pixels": [
+      [
+        295,
+        327
+      ],
+      [
+        749,
+        808
+      ],
+      [
+        991,
+        1050
+      ],
+      [
+        1232,
+        1292
+      ],
+      [
+        1474,
+        1533
+      ],
+      [
+        1716,
+        1776
+      ],
+      [
+        1959,
+        2019
+      ],
+      [
+        2203,
+        2264
+      ],
+      [
+        2449,
+        2509
+      ],
+      [
+        2695,
+        2755
+      ],
+      [
+        2942,
+        3002
+      ],
+      [
+        3190,
+        3251
+      ],
+      [
+        3440,
+        3500
+      ],
+      [
+        3691,
+        3751
+      ]
+    ],
+    "center_gaps_photo_pixels": [
+      467.5,
+      242.0,
+      241.5,
+      241.5,
+      242.5,
+      243.0,
+      244.5,
+      245.5,
+      246.0,
+      247.0,
+      248.5,
+      249.5,
+      251.0
+    ],
+    "scope": "Photo-space periodicity only; perspective/camera effects and exact panel-line period not calibrated. Does not prove a DSC cause."
+  }
+}

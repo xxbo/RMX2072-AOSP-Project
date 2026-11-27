@@ -6,6 +6,12 @@
 #include <linux/kobject.h>
 #include <linux/of.h>
 #include <linux/sysfs.h>
+#include <linux/compat.h>
+#include <linux/fs.h>
+#include <linux/miscdevice.h>
+#include <linux/module.h>
+#include <linux/slab.h>
+#include <linux/uaccess.h>
 #include "qcom_scm.h"
 #include "rmx2072-keymaster-transport.h"
 
@@ -111,10 +117,65 @@ static const struct bin_attribute rmx2072_hmac_attr = {
 	.read = rmx2072_hmac_read,
 };
 
+static long rmx2072_keymaster_ioctl(struct file *file, unsigned int cmd,
+				  unsigned long arg)
+{
+	struct rmx2072_km_xfer xfer;
+	void *request, *reply;
+	int rc;
+
+	if (cmd != RMX2072_KM_CALL)
+		return -ENOTTY;
+	if (copy_from_user(&xfer, (void __user *)arg, sizeof(xfer)))
+		return -EFAULT;
+	if (xfer.version || xfer.flags || xfer.request_size < 4 ||
+	    xfer.request_size > RMX2072_KM_MAX_REQUEST ||
+	    xfer.response_size != RMX2072_KM_CAPACITY - xfer.request_size)
+		return -EINVAL;
+	request = memdup_user(u64_to_user_ptr(xfer.request), xfer.request_size);
+	if (IS_ERR(request))
+		return PTR_ERR(request);
+	reply = kvzalloc(xfer.response_size, GFP_KERNEL);
+	if (!reply) {
+		rc = -ENOMEM;
+		goto out;
+	}
+	rc = rmx2072_keymaster_transact(request, xfer.request_size, reply);
+	if (!rc && copy_to_user(u64_to_user_ptr(xfer.response), reply, xfer.response_size))
+		rc = -EFAULT;
+	kvfree_sensitive(reply, xfer.response_size);
+out:
+	kfree_sensitive(request);
+	return rc;
+}
+
+static const struct file_operations rmx2072_keymaster_fops = {
+	.owner = THIS_MODULE,
+	.unlocked_ioctl = rmx2072_keymaster_ioctl,
+#ifdef CONFIG_COMPAT
+	.compat_ioctl = compat_ptr_ioctl,
+#endif
+};
+
+static struct miscdevice rmx2072_keymaster_device = {
+	.minor = MISC_DYNAMIC_MINOR,
+	.name = "rmx2072_keymaster",
+	.fops = &rmx2072_keymaster_fops,
+	.mode = 0600,
+};
+
 static int __init rmx2072_hmac_init(void)
 {
+	int rc;
+
 	if (!rmx2072_keymaster_board())
 		return 0;
-	return sysfs_create_bin_file(firmware_kobj, &rmx2072_hmac_attr);
+	rc = sysfs_create_bin_file(firmware_kobj, &rmx2072_hmac_attr);
+	if (rc)
+		return rc;
+	rc = misc_register(&rmx2072_keymaster_device);
+	if (rc)
+		sysfs_remove_bin_file(firmware_kobj, &rmx2072_hmac_attr);
+	return rc;
 }
 late_initcall(rmx2072_hmac_init);

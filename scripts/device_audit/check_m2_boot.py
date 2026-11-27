@@ -3,7 +3,7 @@ import re
 from uuid import UUID
 
 
-def check_m2_boot(text, boot, init_sha256, release, boot_events):
+def check_m2_boot(text, boot, init_sha256, release, boot_events, display=False):
     UUID(boot)
     rows = re.findall(r'^M2BOOT ([a-z_0-9]+)=(.*)$', text, re.M)
     values = dict(rows)
@@ -14,7 +14,8 @@ def check_m2_boot(text, boot, init_sha256, release, boot_events):
                     first_stage_init_sha256=init_sha256, board_id_hex='0000507f')
     if any(values.get(k) != v for k, v in expected.items()) or not re.fullmatch('[0-9a-f]{64}', values.get('runtime_fdt_sha256', '')):
         raise ValueError('Source DT/init witness does not match the candidate and current boot')
-    if values.get('root_compatible', '').split() != ['qcom,kona-mtp', 'qcom,kona', 'qcom,mtp']:
+    compatibles = ['qcom,kona-mtp', 'qcom,kona', 'qcom,mtp'] + (['qcom,sm8250'] if display else [])
+    if values.get('root_compatible', '').split() != compatibles:
         raise ValueError('Runtime tree does not identify the board for SCM/PON guards')
     disks = re.findall(r'^M1EVENT disk=(\S+) ro=(\S+)$', boot_events, re.M)
     if (set(re.findall(r'^M1EVENT boot_id=(.*)$', boot_events, re.M)) != {boot}

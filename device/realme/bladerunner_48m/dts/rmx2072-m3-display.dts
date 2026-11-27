@@ -1,0 +1,277 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SM8250 resources from ACK ecdaacc9; panel rails/pads from realme 24a15224.
+// Separate native nodes prevent OEM overlays from replacing modern bindings.
+/dts-v1/;
+/plugin/;
+#include <dt-bindings/clock/qcom,gcc-sm8250.h>
+#include <dt-bindings/clock/qcom,rpmh.h>
+#include <dt-bindings/clock/qcom,dispcc-sm8250.h>
+#include <dt-bindings/clock/qcom,dsi-phy-28nm.h>
+#include <dt-bindings/power/qcom,rpmhpd.h>
+#include <dt-bindings/power/qcom-rpmpd.h>
+#include <dt-bindings/interconnect/qcom,sm8250.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/gpio/gpio.h>
+
+&tlmm { status = "disabled"; };
+&clock_dispcc { status = "disabled"; };
+&mdss_mdp { status = "disabled"; };
+&mdss_dsi0 { status = "disabled"; };
+&mdss_dsi1 { status = "disabled"; };
+&mdss_dsi_phy0 { status = "disabled"; };
+&mdss_dsi_phy1 { status = "disabled"; };
+&mdss_dsi0_pll { status = "disabled"; };
+&mdss_dsi1_pll { status = "disabled"; };
+&refgen { status = "disabled"; };
+
+&{/soc/rsc@18200000/diag-regulators} {
+    m3_l14a: ldo14 {
+        regulator-name = "m3_panel_vddio";
+        regulator-min-microvolt = <1800000>;
+        regulator-max-microvolt = <1800000>;
+    };
+};
+&{/soc/rsc@18200000} {
+    m3_rpmhpd: power-controller {
+        compatible = "qcom,sm8250-rpmhpd";
+        #power-domain-cells = <1>;
+        operating-points-v2 = <&m3_rpmh_opps>;
+        m3_rpmh_opps: opp-table {
+            compatible = "operating-points-v2";
+            m3_low_svs: opp3 { opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>; };
+            m3_svs: opp4 { opp-level = <RPMH_REGULATOR_LEVEL_SVS>; };
+            m3_svs_l1: opp5 { opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>; };
+            m3_nom: opp6 { opp-level = <RPMH_REGULATOR_LEVEL_NOM>; };
+            m3_turbo: opp9 { opp-level = <RPMH_REGULATOR_LEVEL_TURBO>; };
+        };
+    };
+    m3_pm8150l: display-regulators {
+        compatible = "qcom,pm8150l-rpmh-regulators";
+        qcom,pmic-id = "c";
+        m3_l2c: ldo2 {
+            regulator-name = "m3_panel_vout";
+            regulator-min-microvolt = <1280000>;
+            regulator-max-microvolt = <1280000>;
+        };
+        m3_l11c: ldo11 {
+            regulator-name = "m3_panel_vdd";
+            regulator-min-microvolt = <3000000>;
+            regulator-max-microvolt = <3000000>;
+        };
+    };
+};
+&{/soc} {
+    #address-cells = <1>;
+    #size-cells = <1>;
+#ifdef RMX2072_M3_STAGED
+    display-pins-lab {
+        compatible = "realme,rmx2072-diag-ufs-phy-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+#endif
+    m3_tlmm: pinctrl@f100000 {
+        compatible = "qcom,sm8250-pinctrl";
+        reg = <0x0f100000 0x300000>, <0x0f500000 0x300000>, <0x0f900000 0x300000>;
+        reg-names = "west", "south", "north";
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+        gpio-controller;
+        #gpio-cells = <2>;
+        gpio-ranges = <&m3_tlmm 0 0 181>;
+        // gpiolib reads every valid GPIO's direction during registration.
+        // The November 9 unmasked probe rebooted this handset. Admit only
+        // the two panel pads; do not scan unrelated/firmware-owned GPIOs.
+        gpio-reserved-ranges = <0 66>, <67 8>, <76 105>;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+        wakeup-parent = <&pdc>;
+        m3_panel_reset: panel-reset-state {
+            pins = "gpio75";
+            function = "gpio";
+            drive-strength = <8>;
+            bias-disable;
+        };
+        m3_panel_te: panel-te-state {
+            pins = "gpio66";
+            function = "mdp_vsync";
+            drive-strength = <2>;
+            bias-pull-down;
+        };
+    };
+#ifdef RMX2072_M3_STAGED
+    };
+    display-fabric-lab {
+        compatible = "realme,rmx2072-diag-ufs-phy-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+#endif
+    // Same SM8250 REFGEN resource as the official board; native ACK driver.
+    m3_refgen: regulator@88e7000 {
+        compatible = "qcom,sm8250-refgen-regulator";
+        reg = <0x088e7000 0x84>;
+        regulator-name = "m3_dsi_refgen";
+    };
+    m3_mmss: interconnect@1740000 {
+        compatible = "qcom,sm8250-mmss-noc";
+        reg = <0x01740000 0x1f080>;
+        #interconnect-cells = <2>;
+        qcom,bcm-voters = <&diag_ufs_bcm>;
+    };
+    m3_dispcc: clock-controller@af00000 {
+        compatible = "qcom,sm8250-dispcc";
+        reg = <0x0af00000 0x10000>;
+        power-domains = <&m3_rpmhpd RPMHPD_MMCX>;
+        required-opps = <&m3_low_svs>;
+        clocks = <&diag_rpmhcc RPMH_CXO_CLK>,
+                 <&m3_dsi0_phy DSI_BYTE_PLL_CLK>, <&m3_dsi0_phy DSI_PIXEL_PLL_CLK>,
+                 <&m3_dsi1_phy DSI_BYTE_PLL_CLK>, <&m3_dsi1_phy DSI_PIXEL_PLL_CLK>;
+        clock-names = "bi_tcxo", "dsi0_phy_pll_out_byteclk", "dsi0_phy_pll_out_dsiclk",
+                      "dsi1_phy_pll_out_byteclk", "dsi1_phy_pll_out_dsiclk";
+        #clock-cells = <1>;
+        #reset-cells = <1>;
+        #power-domain-cells = <1>;
+    };
+#ifdef RMX2072_M3_STAGED
+    };
+    display-core-lab {
+        compatible = "realme,rmx2072-diag-ufs-phy-bus";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+#endif
+    m3_mdss: display-subsystem@ae00000 {
+        compatible = "qcom,sm8250-mdss";
+        reg = <0x0ae00000 0x1000>;
+        reg-names = "mdss";
+        interconnects = <&m3_mmss MASTER_MDP_PORT0 0 &diag_ufs_mc SLAVE_EBI_CH0 0>,
+                        <&m3_mmss MASTER_MDP_PORT1 0 &diag_ufs_mc SLAVE_EBI_CH0 0>;
+        interconnect-names = "mdp0-mem", "mdp1-mem";
+        power-domains = <&m3_dispcc MDSS_GDSC>;
+        clocks = <&m3_dispcc DISP_CC_MDSS_AHB_CLK>, <&diag_gcc GCC_DISP_HF_AXI_CLK>,
+                 <&diag_gcc GCC_DISP_SF_AXI_CLK>, <&m3_dispcc DISP_CC_MDSS_MDP_CLK>;
+        clock-names = "iface", "bus", "nrt_bus", "core";
+        interrupt-parent = <&intc>;
+        interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-controller;
+        #interrupt-cells = <1>;
+        iommus = <&apps_smmu 0x820 0x402>;
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+        m3_dpu: display-controller@ae01000 {
+            compatible = "qcom,sm8250-dpu";
+            reg = <0x0ae01000 0x8f000>, <0x0aeb0000 0x3000>;
+            reg-names = "mdp", "vbif";
+            clocks = <&m3_dispcc DISP_CC_MDSS_AHB_CLK>, <&diag_gcc GCC_DISP_HF_AXI_CLK>,
+                     <&m3_dispcc DISP_CC_MDSS_MDP_CLK>, <&m3_dispcc DISP_CC_MDSS_VSYNC_CLK>;
+            clock-names = "iface", "bus", "core", "vsync";
+            assigned-clocks = <&m3_dispcc DISP_CC_MDSS_VSYNC_CLK>;
+            assigned-clock-rates = <19200000>;
+            operating-points-v2 = <&m3_mdp_opps>;
+            power-domains = <&m3_rpmhpd RPMHPD_MMCX>;
+            interrupt-parent = <&m3_mdss>;
+            interrupts = <0>;
+            ports {
+                #address-cells = <1>;
+                #size-cells = <0>;
+                port@0 {
+                    reg = <0>;
+                    m3_dpu_out: endpoint { remote-endpoint = <&m3_dsi_in>; };
+                };
+            };
+            m3_mdp_opps: opp-table {
+                compatible = "operating-points-v2";
+                opp-200000000 { opp-hz = /bits/ 64 <200000000>; required-opps = <&m3_low_svs>; };
+                opp-300000000 { opp-hz = /bits/ 64 <300000000>; required-opps = <&m3_svs>; };
+                opp-345000000 { opp-hz = /bits/ 64 <345000000>; required-opps = <&m3_svs_l1>; };
+                opp-460000000 { opp-hz = /bits/ 64 <460000000>; required-opps = <&m3_nom>; };
+            };
+        };
+        m3_dsi0: dsi@ae94000 {
+            compatible = "qcom,sm8250-dsi-ctrl", "qcom,mdss-dsi-ctrl";
+            reg = <0x0ae94000 0x400>;
+            reg-names = "dsi_ctrl";
+            interrupt-parent = <&m3_mdss>;
+            interrupts = <4>;
+            clocks = <&m3_dispcc DISP_CC_MDSS_BYTE0_CLK>, <&m3_dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
+                     <&m3_dispcc DISP_CC_MDSS_PCLK0_CLK>, <&m3_dispcc DISP_CC_MDSS_ESC0_CLK>,
+                     <&m3_dispcc DISP_CC_MDSS_AHB_CLK>, <&diag_gcc GCC_DISP_HF_AXI_CLK>,
+                     <&m3_dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>, <&m3_dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>,
+                     <&m3_dsi0_phy DSI_BYTE_PLL_CLK>, <&m3_dsi0_phy DSI_PIXEL_PLL_CLK>;
+            // The paired kernel patch selects these parents after PHY enable.
+            clock-names = "byte", "byte_intf", "pixel", "core", "iface", "bus",
+                          "byte_src", "pixel_src", "dsi_pll_byte", "dsi_pll_pixel";
+            operating-points-v2 = <&m3_dsi_opps>;
+            power-domains = <&m3_rpmhpd RPMHPD_MMCX>;
+            phys = <&m3_dsi0_phy>;
+            vdda-supply = <&diag_ufs_l9>;
+            refgen-supply = <&m3_refgen>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&m3_panel_te>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            ports {
+                #address-cells = <1>;
+                #size-cells = <0>;
+                port@0 { reg = <0>; m3_dsi_in: endpoint { remote-endpoint = <&m3_dpu_out>; }; };
+                port@1 { reg = <1>; m3_dsi_out: endpoint { remote-endpoint = <&m3_panel_in>; }; };
+            };
+            panel@0 {
+                compatible = "realme,rmx2072-rm19795-panel";
+                reg = <0>;
+                vddio-supply = <&m3_l14a>;
+                vout-supply = <&m3_l2c>;
+                vdd-supply = <&m3_l11c>;
+                reset-gpios = <&m3_tlmm 75 GPIO_ACTIVE_LOW>;
+                pinctrl-names = "default";
+                pinctrl-0 = <&m3_panel_reset>;
+                port { m3_panel_in: endpoint { remote-endpoint = <&m3_dsi_out>; }; };
+            };
+            m3_dsi_opps: opp-table {
+                compatible = "operating-points-v2";
+                opp-187500000 { opp-hz = /bits/ 64 <187500000>; required-opps = <&m3_low_svs>; };
+                opp-300000000 { opp-hz = /bits/ 64 <300000000>; required-opps = <&m3_svs>; };
+                opp-358000000 { opp-hz = /bits/ 64 <358000000>; required-opps = <&m3_svs_l1>; };
+            };
+        };
+        m3_dsi0_phy: phy@ae94400 {
+            compatible = "qcom,dsi-phy-7nm";
+            reg = <0x0ae94400 0x200>, <0x0ae94600 0x280>, <0x0ae94900 0x260>;
+            reg-names = "dsi_phy", "dsi_phy_lane", "dsi_pll";
+            #clock-cells = <1>;
+            #phy-cells = <0>;
+            clocks = <&m3_dispcc DISP_CC_MDSS_AHB_CLK>, <&diag_rpmhcc RPMH_CXO_CLK>;
+            clock-names = "iface", "ref";
+            vdds-supply = <&diag_l5>;
+        };
+        // Not populated. Only names unused DISPCC parents, as in upstream SM8250.
+        m3_dsi1_phy: phy@ae96400 {
+            compatible = "qcom,dsi-phy-7nm";
+            reg = <0x0ae96400 0x200>, <0x0ae96600 0x280>, <0x0ae96900 0x260>;
+            reg-names = "dsi_phy", "dsi_phy_lane", "dsi_pll";
+            #clock-cells = <1>;
+            #phy-cells = <0>;
+            clocks = <&m3_dispcc DISP_CC_MDSS_AHB_CLK>, <&diag_rpmhcc RPMH_CXO_CLK>;
+            clock-names = "iface", "ref";
+            status = "disabled";
+        };
+    };
+#ifdef RMX2072_M3_STAGED
+    };
+#endif
+};
+
+#ifdef RMX2072_M3_INPUT
+#include "rmx2072-m3-input.dtsi"
+#endif
+#ifdef RMX2072_M3_BATTERY
+#include "rmx2072-m3-battery.dtsi"
+#endif
+#ifdef RMX2072_M3_PERFORMANCE
+#include "rmx2072-m3-performance.dtsi"
+#endif
+#ifdef RMX2072_M3_WIFI
+#include "rmx2072-m3-wifi.dtsi"
+#endif

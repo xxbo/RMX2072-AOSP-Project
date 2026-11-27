@@ -1,0 +1,101 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-39",
+  "goal": "Physical RM19795 panel output on ACK 6.18, then SurfaceFlinger and AOSP desktop",
+  "kernel": {
+    "run_id": 43668465944,
+    "source_commit": "68dc430e784e0fb84f9fab36ee7d8a78a43659c4",
+    "artifact_id": 14143344269,
+    "artifact_archive_digest": "sha256:db16d0137de495722fc640620fc2933d2c22b2a9b555dc527622e724e224c114",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "da083d2970bac47f58c2262e5c84fb29b93fa49a1ef5bf4433fff41ab42bf765",
+    "selected_member_sha256": {
+      "SHA256SUMS": "bc7e71e7d050ce85a71fa6828eca17cd6b68a3391ea4b8ef0bf818ec2159a9f5",
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "build-metadata.txt": "f9a6e422ae6eaa514346a4c3692ce52cdac82fcc2438f83ac50e0b94b75e44c8",
+      "display-source.sha256": "bb5cff96f97f8c5059cc70b4675efa0db3a168b8490b1a3a363acfd94b3c5774",
+      "Image.gz": "70f4b49c55d1a6fa5974edcd76de1189ef27770d0ee53bd058fe7171e32f6da8",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "c5938a3af480a8b4e311ce2889d9e012d924ac1e1368d5e655487c80edb4b50b",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+    }
+  },
+  "boot_sha256": "46008a85b8d4b3aba30a17c42a75952207594e886de168245840369bc40f0464",
+  "dtbo_sha256": "0e6912fb0af203e4845b5462fe91d22a4f8497aab3b48a1d6186d7d6da10358d",
+  "effective_dtb": {
+    "size_bytes": 830081,
+    "sha256": "6ad4308ec69dcab76a85555f5361f9e057aad38c1debfed007eb93ae5501ea8c"
+  },
+  "super_sha256": "bcaf350af6f3ccb5218e468837c6e37ef3a266df302f3b77cd6416df81a3988d",
+  "system": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "vendor": "10f8a24714d97d63fe5ed1b32eaa224e5df21e0e7d864a43dd847e0bcf2f976e",
+  "scratch": {
+    "data": {
+      "bytes": 536870912,
+      "sha256": "3609b84f64c748ec526b9a5cad9c8d60fa75fb95246d883d73e5300ea663e561",
+      "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+      "gzip_sha256": "b083742d72df2140ef211aa9332d5ce221fc4e159caf2c23f0da3392faeac3c0"
+    },
+    "metadata": {
+      "bytes": 33554432,
+      "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+      "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+      "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+    }
+  },
+  "result": "FAIL: kernel BUG during Adreno component binding before diagnostic USB or GSI ADB",
+  "operator_observation": "Not independently reported for trial 39. Host observed no diagnostic ACM or ADB, then EDL at 04:02 UTC.",
+  "adb_observed": false,
+  "diagnostic_acm_observed": false,
+  "kms_result": "BLOCKED: neither diagnostic ACM nor GSI ADB appeared; no KMS probe result recovered.",
+  "surfaceflinger": "NOT RUN with M3 userspace; source graphics build pending",
+  "root_cause": "ACK msm_gpu_match includes the legacy qcom,kgsl-3d0 compatible. The effective downstream GPU node remained status=ok and lacks the upstream qcom,gmu phandle. a6xx_gpu_init triggers BUG_ON(!node) at a6xx_gpu.c:2658.",
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "25dd35f3-e883-4eca-93db-1ea2d7305464",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "next": "Explicitly disable legacy GPU and GMU in the final M3 source DTBO, enforce this in effective-tree checks, and use the staged USB-captured display profile for trial 40.",
+  "execution_commit": "6761310853baa3e36064367a7f6962e485cd8218",
+  "changes": "Restrict valid TLMM GPIO offsets to TE 66 and reset 75. Retain the compiled kernel, GSI, vendor and test-volume seeds.",
+  "preserved_console": {
+    "sha256": "cb8cdb360890ed93617991a7d7443966e2a1d24bcc3221b768c95797e25ff9c0",
+    "bytes": 233028,
+    "archive_sha256": "ea0ea0597492a86c1b8a2ebec1b3e4ffc858a2d26066bae63f30421a2851da58",
+    "integrity": "375 corrected bytes, 1761 unrecoverable blocks. Only intact lines are quoted verbatim; damaged lines are not reconstructed.",
+    "intact_fatal_line": "[    2.226174][   T86] kernel BUG at drivers/gpu/drm/msm/adreno/a6xx_gpu.c:2658!",
+    "partial_context": "Damaged but recognizable source panel attached, DSI bind and a6xx_gpu_init/adreno_bind stack entries precede the fatal line. No physical screen output established."
+  },
+  "recipe_commit": "8e78f788f2ab028efad0a78ac37830dd83465348",
+  "source_reference": "https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/drivers/gpu/drm/msm/adreno/a6xx_gpu.c#2655",
+  "effective_legacy_gpu": {
+    "path": "/soc/qcom,kgsl-3d0@3d00000",
+    "compatible": [
+      "qcom,kgsl-3d0",
+      "qcom,kgsl-3d"
+    ],
+    "status": [
+      "ok"
+    ],
+    "qcom,gmu": "ABSENT"
+  }
+}

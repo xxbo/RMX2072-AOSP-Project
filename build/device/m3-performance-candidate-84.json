@@ -1,0 +1,99 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-84",
+  "checks": {
+    "correct_trial": true,
+    "clean_recipe": true,
+    "accepted_display_flags": true,
+    "accepted_input_and_gauge": true,
+    "source_init_unchanged": true,
+    "same_boot_policy": true,
+    "same_guard_and_keys": true,
+    "same_gsi": true,
+    "same_original": true,
+    "same_test_volumes": true,
+    "performance_enabled": true,
+    "panel_90": true,
+    "kernel_verified": true,
+    "same_kernel": true,
+    "boot_digest": true,
+    "dtbo_digest": true,
+    "vendor_digest": true,
+    "turnip_verified": true,
+    "firmware_verified": true,
+    "vendor_change_scope": true,
+    "vendor_addition_scope": true,
+    "no_removed_files": true,
+    "strict_policy": true
+  },
+  "passed": true,
+  "changed": [
+    "/build.prop",
+    "/etc/selinux/vendor_file_contexts",
+    "/etc/selinux/vendor_sepolicy.cil"
+  ],
+  "added": [
+    "/firmware/qcom/a650_gmu.bin",
+    "/firmware/qcom/a650_sqe.fw",
+    "/firmware/qcom/rmx2072/a650_zap.b00",
+    "/firmware/qcom/rmx2072/a650_zap.b01",
+    "/firmware/qcom/rmx2072/a650_zap.b02",
+    "/firmware/qcom/rmx2072/a650_zap.mdt",
+    "/lib64/hw/vulkan.freedreno.so"
+  ],
+  "resources": {
+    "m1_resources": {
+      "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+      "checked_nodes": 79,
+      "phandles_resolved_to_paths": true,
+      "source_pon": "upstream-parent-child",
+      "pon_reboot_modes": [],
+      "first_stage_fstab": "project-ramdisk",
+      "recovery_board_identity": true,
+      "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+    },
+    "native_resources": [
+      "/soc/display-core-lab/display-subsystem@ae00000",
+      "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+      "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+      "/soc/display-fabric-lab/clock-controller@af00000",
+      "/soc/display-fabric-lab/interconnect@1740000",
+      "/soc/display-fabric-lab/regulator@88e7000",
+      "/soc/display-pins-lab/pinctrl@f100000"
+    ],
+    "staged": true,
+    "overlapping_legacy_providers_disabled": [
+      "pinctrl@f000000",
+      "qcom,dispcc@af00000",
+      "qcom,mdss_mdp@ae00000",
+      "qcom,mdss_dsi_ctrl0@ae94000",
+      "qcom,mdss_dsi_ctrl1@ae96000",
+      "qcom,mdss_dsi_phy0@ae94400",
+      "qcom,mdss_dsi_phy1@ae96400",
+      "qcom,mdss_dsi_pll@ae94900",
+      "qcom,mdss_dsi_pll@ae96900",
+      "refgen-regulator@88e7000"
+    ],
+    "reciprocal_endpoints": {
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+      "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+      "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+    },
+    "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+    "reset": "TLMM75 active-low",
+    "te": "TLMM66 mdp_vsync",
+    "valid_gpio_offsets": [
+      36,
+      37,
+      38,
+      39,
+      48,
+      49,
+      66,
+      75
+    ],
+    "hardware_result": "NOT RUN; this is a source resource check"
+  },
+  "device_result": "NOT RUN"
+}

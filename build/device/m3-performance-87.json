@@ -1,0 +1,77 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-87",
+  "boot_id": "ba2624fb-1fd5-4e6a-8439-99f2a60c13f6",
+  "result": "HANDOFF_SCRIPT_PRECONDITION_REGRESSION_IDENTIFIED",
+  "kernel": "f928e65271d38ba749ec4fb126a09109034969b30b364350339691a5f0dedf52",
+  "boot": "f6c20f3ba371787b35f200b0dd7b26d2f6f2d600ae1c44be535ca5cf264eafbb",
+  "candidate_super": "c287e39684093c811c42070013a7ba9bd251266767c656d2f5e5778d34a83d1f",
+  "phases": [
+    [
+      "native-probe-enter",
+      "32.51"
+    ],
+    [
+      "native-probe-returned",
+      "67.07"
+    ],
+    [
+      "clock-trace-end-enter",
+      "67.07"
+    ],
+    [
+      "clock-trace-end-returned",
+      "67.13"
+    ],
+    [
+      "snapshot-enter",
+      "67.13"
+    ],
+    [
+      "snapshot-returned",
+      "67.68"
+    ]
+  ],
+  "native_probe_exit": 0,
+  "requested_refresh_hz": 90,
+  "measured_panel_hz": null,
+  "sparse_counter_rate_millihz": [
+    6994,
+    6993,
+    6993
+  ],
+  "rate_limit": "Four one-second-spaced flips do not keep vblank reference continuous. These counter rates are not panel scan frequency or Android FPS.",
+  "task_snapshot": "Native probe and handoff scripts no longer running. No blocked D-state task was reported.",
+  "command_line": "rdinit=/init console=ttyMSM0,115200n8 loglevel=8 printk.devkmsg=on clk_ignore_unused pd_ignore_unused fw_devlink=permissive panic=30 androidboot.hardware=qcom androidboot.boot_devices=soc/soc:ufs-host-lab/1d84000.ufs drm.debug=0x2 msm.rmx2072_single_dsc=1 panel_samsung_rm19795.readback=1 msm.rmx2072_stock_linkclk=1 msm.rmx2072_stock_dsc=1 msm.rmx2072_stock_phy=1 panel_samsung_rm19795.pps=1 androidboot.rmx_scratch=1 firmware_class.path=/vendor/firmware panel_samsung_rm19795.refresh_rate=90",
+  "diagnosis": {
+    "source": "kernel/trace/trace.c at pinned ACK ecdaacc9a0ee87eaf9544e1836d86bd9d590312e, tracepoint_printk_sysctl and early_trace_init",
+    "regression": "Performance packer removed tp_printk and tp_printk_stop_on_boot. Without the boot allocation tracepoint_print_iter is NULL; sysctl writes force tracepoint_printk back to zero. ufs-init-trace then fails its required readback check before first-stage-witness runs.",
+    "confidence": "Deterministic source regression matching the live stage/task evidence; corrected handset boot still pending."
+  },
+  "android_adb": false,
+  "gpu_submission": "NOT RUN",
+  "restored": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "adef424f-88ac-451a-9a08-e41e0ac5af96",
+    "super_sha256": null,
+    "boot_sha256": null,
+    "dtbo_sha256": null,
+    "lp_slots": [
+      0,
+      1
+    ],
+    "stock_full_partition_readback": false,
+    "stock_write_acknowledged": true,
+    "expected_image_sha256": {
+      "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+    },
+    "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata"
+  },
+  "raw_sha256": {
+    "acm.log": "be9edae8b49693446c5b93feba10f50c15ceac8ae49979a470944524db88d629",
+    "host-events.jsonl": "61f4cae89bd041818cfcfb120265377f921bf082c809e25f00b30582702a709e",
+    "readbacks.jsonl": "87c36a94baca850ca7472c57593b5f755dda754881df765d7c4d47f1e1aa1eea"
+  }
+}

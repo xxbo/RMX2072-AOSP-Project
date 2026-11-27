@@ -1,0 +1,37 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-78",
+  "boot_id": "8097409b-0bce-4f88-b7f4-63b941dd4119",
+  "result": "PARTIAL_VOLUME_KEYS_WORK_TOUCH_NODE_COLLISION",
+  "volume_input_registration": true,
+  "touch_input_registration": false,
+  "evidence": [
+    "6,3086,1038578,-,caller=T1;input: gpio-keys as /devices/platform/soc/soc:gpio_keys/input/input1",
+    "4,3512,29252154,-,caller=T1401;sysfs: cannot create duplicate filename '/bus/platform/devices/a94000.i2c'",
+    "7,3565,29256990,-,caller=T1401;probe of ac0000.geniqup returned 0 after 4976 usecs"
+  ],
+  "cause": "Legacy SE13 remained enabled after the OEM board overlay; its platform device name a94000.i2c prevents registration of the new native child. Parking only the compatible is insufficient.",
+  "next_change": "Disable legacy SE13 and wrapper in the final board overlay; retain kernel and vendor",
+  "physical_input_result": {
+    "volume_up": "Operator observed volume UI response; down/up events recorded",
+    "volume_down": "Operator observed the volume bar decrease; down/up events recorded",
+    "power": "NOT RUN",
+    "touch": "NOT RUN; native controller child could not register"
+  },
+  "gsi_adb_result": "PASS_SAME_BOOT_RETAINED",
+  "sys_boot_completed": 1,
+  "enforcing": true,
+  "overlay_color_fade_disabled": true,
+  "persistent_usb_config": {
+    "value": "none",
+    "vendor_init_write": "DENIED by enforcing system_prop ownership; requested persistence NOT achieved",
+    "current_sys_usb_state": "adb",
+    "adb_enabled": 1
+  },
+  "input_capture": {
+    "seconds": 240,
+    "samples": 76,
+    "same_boot_adb_system_server": true,
+    "raw_events_sha256": "8f85a2a603e49b19e5fe8fac6fcefeb843376b1f66cea4c79ad63cc9932b5c86",
+    "snapshot_sha256": "a38d2e01e571923cf0540b0c70cccfe0ed4cbf810843fa4a96f3692a9d1ad8c1"
+  }
+}

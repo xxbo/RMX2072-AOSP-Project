@@ -14,8 +14,53 @@ def main():
     for name in ('workspace', 'ndk', 'adb-public-key', 'board-source'):
         p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--display', action='store_true', help='Build the M3 DRM candidate and physical KMS probe')
+    p.add_argument('--display-staged', action='store_true', help='Gate staged display binding on diagnostic USB capture')
+    p.add_argument('--single-dsc-test', action='store_true', help='Opt in to the RM19795 single DSC isolation experiment')
+    p.add_argument('--solid-fill-test', action='store_true', help='Opt in to native SSPP hardware pixel generation')
+    p.add_argument('--panel-readback-test', action='store_true', help='Opt in to one-shot RM19795 status/PPS readback')
+    p.add_argument('--stock-linkclock-test', action='store_true', help='Opt in to the measured F.20 DSI transfer-clock budget')
+    p.add_argument('--stock-dsc-test', action='store_true', help='Match both encoder and panel to the original RM19795 PPS')
+    p.add_argument('--stock-phy-test', action='store_true', help='Match the original 660 MHz PHY timing table, retaining trial 66 DSC')
+    p.add_argument('--first-frame-trace', action='store_true', help='Capture the native first-frame event history without changing display settings')
+    p.add_argument('--standard-pps-test', action='store_true', help='Add one LP standard PPS after the unchanged vendor on-sequence')
+    p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
+    p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
+    p.add_argument('--performance', action='store_true', help='Include native Adreno, EPSS and TSENS')
+    p.add_argument('--wifi', action='store_true', help='Include native QCA6390 PCIe0 and board power resources')
+    p.add_argument('--wifi-firmware', type=Path, help='Verified QCA6390 boot firmware directory, without board data')
+    p.add_argument('--wifi-board-file', type=Path, help='Exact retained same-handset F.20 board ELF')
+    p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
-    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
+    if a.wifi_board_file and not a.wifi_firmware:
+        p.error('--wifi-board-file requires --wifi-firmware')
+    if a.wifi and not (a.performance and a.battery_gauge):
+        p.error('--wifi requires --performance and --battery-gauge')
+    if a.wifi_firmware and not (a.wifi and a.display_staged):
+        p.error('--wifi-firmware requires --wifi and --display-staged')
+    if a.battery_gauge and not a.input_devices:
+        p.error('--battery-gauge requires --input-devices')
+    if (a.performance or a.panel_refresh == 90) and not a.display:
+        p.error('Performance/90 Hz requires --display')
+    if a.display_staged and not a.display:
+        p.error('--display-staged requires --display')
+    if a.single_dsc_test and not a.display:
+        p.error('--single-dsc-test requires --display')
+    if a.solid_fill_test and not a.display:
+        p.error('--solid-fill-test requires --display')
+    if a.panel_readback_test and not a.display:
+        p.error('--panel-readback-test requires --display')
+    if a.stock_linkclock_test and not a.display:
+        p.error('--stock-linkclock-test requires --display')
+    if a.stock_dsc_test and (not a.stock_linkclock_test or not a.single_dsc_test):
+        p.error('--stock-dsc-test requires --stock-linkclock-test and --single-dsc-test')
+    if a.stock_phy_test and not a.stock_dsc_test:
+        p.error('--stock-phy-test requires --stock-dsc-test')
+    if a.first_frame_trace and (not a.stock_phy_test or not a.display_staged):
+        p.error('--first-frame-trace requires the staged trial 67 baseline')
+    if a.standard_pps_test and (not a.first_frame_trace or not a.panel_readback_test):
+        p.error('--standard-pps-test requires the complete trial 68 baseline')
+    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-[0-9]{2,3}', a.trial):
         p.error('Use the recorded handset trial naming')
     repo = Path(__file__).resolve().parents[2]
     if subprocess.check_output(['git', '-C', repo, 'status', '--porcelain']):
@@ -34,6 +79,10 @@ def main():
     kernel = json.loads((current / 'kernel/provenance.json').read_text())
     if not kernel.get('source_pon') or kernel.get('installing'):
         raise ValueError('Install the checked source-PON kernel before packaging')
+    if a.performance and not kernel.get('performance'):
+        raise ValueError('Install the checked native performance kernel first')
+    if a.wifi and not kernel.get('wifi'):
+        raise ValueError('Install the checked native WLAN kernel first')
     previous = json.loads((current / 'usb-build.json').read_text())
     if sha(current / 'rmx-m1-guard') != previous['guard'] or sha(current / 'vendor-signed.img') != previous['vendor_signed']:
         raise ValueError('M2 must retain the accepted vendor/guard')
@@ -47,7 +96,18 @@ def main():
         raise ValueError('M2 GSI/vendor/container differ from the verified profile')
     run(sys.executable, build / 'build_m2_device_tree.py', '--source', a.board_source.resolve(),
         '--output', current / 'source-dt', '--cpp', tools / 'clang.exe',
-        '--dtc', current / 'dtc-tools/dtc.exe', '--libfdt', current / 'dtc-tools/libfdt-1.dll')
+        '--dtc', current / 'dtc-tools/dtc.exe', '--libfdt', current / 'dtc-tools/libfdt-1.dll',
+        *(['--display'] if a.display else []),
+        *(['--display-staged'] if a.display_staged else []),
+        *(['--input-devices'] if a.input_devices else []),
+        *(['--battery-gauge'] if a.battery_gauge else []),
+        *(['--performance'] if a.performance else []),
+        *(['--wifi'] if a.wifi else []))
+    if a.display:
+        if not kernel.get('display'):
+            raise ValueError('Install the checked DRM/panel kernel before packaging M3')
+        run(sys.executable, build / 'build_display_smoke.py', '--ndk', a.ndk.resolve(),
+            '--output', current / 'display-smoke')
     run(tools / 'aarch64-linux-android35-clang.cmd', '-static', '-O2', '-Wall', '-Wextra', '-Werror',
         repo / 'scripts/device_audit/first_stage_witness.c', '-o', current / 'first-stage-witness')
     run(tools / 'llvm-strip.exe', '--strip-all', current / 'first-stage-witness')
@@ -58,12 +118,40 @@ def main():
         '--android-first-stage', current / 'init', '--first-stage-source-build', current / 'init-build',
         '--first-stage-witness', current / 'first-stage-witness',
         '--ufs-first-stage', current / 'verified-profile', '--scratch-volumes', current / 'volumes',
-        '--adb-public-key', a.adb_public_key.resolve(), '--output', current / 'ramdisk', '--autonomous-ufs')
-    run(sys.executable, build / 'pack_m2_source_boot.py', '--workspace', work)
+        '--adb-public-key', a.adb_public_key.resolve(), '--output', current / 'ramdisk', '--autonomous-ufs',
+        *(['--display-smoke', current / 'display-smoke/drm-panel-smoke'] if a.display else []),
+        *(['--gpu-firmware', current / 'gpu-firmware'] if a.performance else []),
+        *(['--wifi-firmware', a.wifi_firmware.resolve()] if a.wifi_firmware else []),
+        *(['--wifi-board-file', a.wifi_board_file.resolve()] if a.wifi_board_file else []),
+        *(['--display-staged'] if a.display_staged else []),
+        *(['--solid-fill-test'] if a.solid_fill_test else []),
+        *(['--first-frame-trace'] if a.first_frame_trace else []))
+    run(sys.executable, build / 'pack_m2_source_boot.py', '--workspace', work,
+        '--panel-refresh', a.panel_refresh,
+        *(['--single-dsc-test'] if a.single_dsc_test else []),
+        *(['--solid-fill-test'] if a.solid_fill_test else []),
+        *(['--panel-readback-test'] if a.panel_readback_test else []),
+        *(['--stock-linkclock-test'] if a.stock_linkclock_test else []),
+        *(['--stock-dsc-test'] if a.stock_dsc_test else []),
+        *(['--stock-phy-test'] if a.stock_phy_test else []),
+        *(['--first-frame-trace'] if a.first_frame_trace else []),
+        *(['--standard-pps-test'] if a.standard_pps_test else []))
     record = dict(previous, trial=a.trial, recipe_commit=commit, recipe_dirty=False,
                   kernel=kernel['image_sha256'], witness=sha(current / 'first-stage-witness'),
                   source_first_stage=init, source_device_trees=True,
+                  display=a.display,
+                  display_staged=a.display_staged, input_devices=a.input_devices, battery_gauge=a.battery_gauge,
+                  performance=a.performance, wifi=a.wifi, panel_refresh=a.panel_refresh,
+                  single_dsc_test=a.single_dsc_test,
+                  solid_fill_test=a.solid_fill_test,
+                  panel_readback_test=a.panel_readback_test,
+                  stock_linkclock_test=a.stock_linkclock_test,
+                  stock_dsc_test=a.stock_dsc_test,
+                  stock_phy_test=a.stock_phy_test,
+                  first_frame_trace=a.first_frame_trace,
+                  standard_pps_test=a.standard_pps_test,
                   adb_public_key_sha256=json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())['adb_public_key_sha256'])
+    record['wifi_firmware'] = json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())['wifi_firmware']
     (current / 'usb-build.json').write_text(json.dumps(record, indent=2) + '\n')
     print('M2 source candidate prepared; original GSI/vendor/container and scratch seeds retained.')
 

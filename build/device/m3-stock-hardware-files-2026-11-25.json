@@ -1,0 +1,64 @@
+{
+  "scope": "Selected F.20 hardware files from the one existing recovery set; no handset I/O",
+  "source_super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+  "files": {
+    "/vendor/etc/wifi/WCNSS_qcom_cfg.ini": {
+      "bytes": 18938,
+      "sha256": "96f4c8e68eead9f2154b488c8b70d5880bf5e0f5eca237619d3acd625823d6c1",
+      "source_layout": 3
+    },
+    "/firmware/tfa98xx.cnt": {
+      "bytes": 3877,
+      "sha256": "c1c74a5f50689a1f4b64ab9a1da121d322164b2075ea0ec83421bb15d687cc97",
+      "source_layout": 2
+    },
+    "/firmware/aw8697_haptic_235.bin": {
+      "bytes": 6115,
+      "sha256": "07d4d85d4d4fccdbf334c44add33be9f5088aa0662086b184a43dad32ea7e472",
+      "source_layout": 3
+    },
+    "/etc/wifi/bdwlan.elf": {
+      "bytes": 57908,
+      "sha256": "05685bc7eddaf160fe54fb1f5086d810a8000949e1faa46f9d53b21827701a18",
+      "source_layout": 3
+    }
+  },
+  "temporary_image_retained": false,
+  "tool": {
+    "repository": "sekaiacg/erofs-tools",
+    "tag": "v1.8.10-251217",
+    "asset": "erofs-utils-v1.8.10-gee46dd74-251217-Cygwin_x86_64.zip",
+    "sha256": "b6a24de0cfe49a95283cf306db1d158bdb63850e0687c8a8b0f4c4a540ba35ba",
+    "url": "https://github.com/sekaiacg/erofs-tools/releases/download/v1.8.10-251217/erofs-utils-v1.8.10-gee46dd74-251217-Cygwin_x86_64.zip"
+  },
+  "tool_binary_sha256": "85456613664605b40e752fc22eb2a6a24e2966a5c4029af442a52adf7b4286cb",
+  "wifi": {
+    "elf_class": "ELF32 little-endian ARM",
+    "payload_bytes": 56180,
+    "wrapper_preserved": true,
+    "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+    "ath11k_loader": "qmi.c selects BDF_TYPE_ELF on ELF magic; core.c has board.bin API-1 fallback",
+    "device_board_id": "NOT READ",
+    "firmware_acceptance": "NOT RUN"
+  },
+  "audio": {
+    "container_identifiers": [
+      "OPPO",
+      "9874",
+      "tfa9874",
+      "receiver",
+      "caspeaker",
+      "bcalibrate.cal"
+    ],
+    "physical_chip_id": "NOT READ",
+    "playback": "NOT RUN"
+  },
+  "vibration": {
+    "file": "aw8697_haptic_235.bin",
+    "header_checksum": 26183,
+    "computed_checksum": 26183,
+    "base_address": 2048,
+    "waveform_uploaded": false,
+    "actuation": "NOT RUN"
+  }
+}

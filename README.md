@@ -8,9 +8,15 @@ Independent Android platform research and porting project for the **realme X50 P
 
 On November 13 the RMX2072 ran Android 17 second-stage init under SELinux enforcing on ACK 6.18.32 with system and project vendor verified on internal UFS. PID 1 imported the 64/32-bit zygote definitions and vold read all 220 bytes of the vendor fstab. [Handset record](build/device/m1-ufs-first-stage-vendor-services-2026-11-13.json)
 
-**M1 is in progress; autonomous Android 17 ADB and automatic recovery with a prepared host work.** Trial 32 passed enforcing, second-stage PID 1, verified UFS mounts and ADB stability. Deliberate lease expiry caused a watchdog reset, autonomous diagnostics/9008, immediate host capture and fully verified F.20 restoration without keys or host reboot commands. A long unattended EDL hold remains unresolved. Stock disconnected power-key startup passed; GSI shutdown/cold-start remains open. Trial 33 now resolves SPMI binding and keeps GSI ADB stable; the separate upstream PON/poweroff kernel is building. [Trial 32](build/device/m1-autonomous-recovery-32-2026-11-14.json)
+**Current priority is correct physical output, then the AOSP desktop.** Trial 67 remains physically corrupted, as confirmed by the user on November 21. Offline review passes all 43 PHY/PPS/clock/route/input checks against the saved native capture and previously published pause digests. Matching the three original PHY timing fields did not repair the output; the root cause remains open. No GSI stability result is inferred from the interrupted test. F.20 restoration was verified on November 20; this review did not access the handset. [Trial 67 review](build/device/m3-display-67-reviewed-2026-11-21.json).
 
-Trial 25 already combined the temporary-key listener callback, subsequent version query, project HAL hardware information/HMAC parameters, maintenance registration and vdc earlyBootEnded status 0. Trial 27 again exposes maintenance through ADB. Shared-secret computation and HAL key generation remain incomplete; SurfaceFlinger reports no OpenGL ES implementation and audioserver crashes. Android boot completion and an interactive desktop are not established. The vendor patch date remains the engineering placeholder `1970-01-01`. [TEE evidence](build/device/m1-ufs-keymaster-transport-2026-11-14.json) · [M1 work list](plan.md#next-work-on-m1)
+Research has resumed on SM8250 display behavior. The next priority is evidence from takeover and the first frame: several DSI error IRQs are masked, and later snapshots cannot reconstruct errors already cleared by the handler. MDP transfer budgeting and runtime PLL reprogramming are hypotheses requiring measurement. No new image or handset experiment was made during this review. [Research and next investigation](docs/M3_DISPLAY_RESEARCH_2026-11-21.md) · [Display history](docs/M3_PHYSICAL_DISPLAY.md).
+
+Trial 66 previously ran enforcing Android 17 ADB, SurfaceFlinger and source graphics HALs on project ACK 6.18, init and board trees. Native tests reproduce corruption with single DSC and hardware-generated color, without Android composition or framebuffer fetching. Original link clocks and the complete original DSC PPS did not fix it. Trial 66 passed 32 setup checks and 196.625 seconds of GSI ADB observation, which do not establish physical display acceptance. Health HAL, Launcher and touch remain open. [Trial 66 result](build/device/m3-display-66-2026-11-20.json)
+
+M1 headless startup and prepared-host recovery passed on trial 35. Source boot components passed on trial 36. Further disconnected cold-start and watchdog repeat tests were cancelled to focus on the desktop. [Milestone results](plan.md#milestones-and-acceptance)
+
+Trial 25 combined the temporary-key listener callback, subsequent version query, project HAL hardware information/HMAC parameters, maintenance registration and vdc earlyBootEnded status 0. Graphics integration retains that path. Shared-secret computation and HAL key generation remain incomplete. Earlier framework diagnosis identified missing IHealth/default at BatteryService startup, missing audio HALs and a nearly full fixed test data volume. Trial 66 still has no activity/window services; Android boot completion and an interactive desktop are not established. The vendor patch date remains the engineering placeholder `1970-01-01`. [TEE evidence](build/device/m1-ufs-keymaster-transport-2026-11-14.json) · [Latest graphics record](build/device/m3-display-66-2026-11-20.json)
 
 ### Diagnostic and build records
 
@@ -22,7 +28,7 @@ Trial 25 already combined the temporary-key listener callback, subsequent versio
 ## Goals
 
 1. Boot the Android 17 GSI and project-built vendor from UFS with usable ADB.
-2. Replace the factory DTB/DTBO with source-built board trees and repeat the cold-boot, USB, UFS and recovery checks.
+2. Use source-built board DTB/DTBO and first-stage init; preserve the verified USB and UFS path while adding drivers.
 3. Bring up the display, graphics stack and touch until the Android launcher responds to physical input.
 4. Qualify daily-use hardware, encrypted storage, power management and updates. Publish the remaining boot-chain and firmware dependencies with the test results.
 

@@ -1,0 +1,26 @@
+; Use the GSI's public Health HAL server policy and real AIDL service type.
+; Only the board's external gauge bus is labeled for measurement access.
+(type rmx_health)
+(type rmx_health_exec)
+(roletype r rmx_health)
+(roletype object_r rmx_health_exec)
+(typeattributeset domain (rmx_health))
+; Matches pinned AOSP vendor/hal_health_default.te. The platform Health server
+; rules include vendor BPF reads/prog_run and require this domain attribute.
+(typeattributeset bpfdomain (rmx_health))
+(typeattributeset halserverdomain (rmx_health))
+(typeattributeset hal_health (rmx_health))
+(typeattributeset hal_health_server (rmx_health))
+(typeattributeset file_type (rmx_health_exec))
+(typeattributeset exec_type (rmx_health_exec))
+(typeattributeset vendor_file_type (rmx_health_exec))
+(typetransition init rmx_health_exec process rmx_health)
+(allow init rmx_health_exec (file (getattr open read execute map)))
+(allow init rmx_health (process (transition siginh rlimitinh)))
+(allow rmx_health rmx_health_exec (file (getattr open read execute entrypoint map)))
+(allow rmx_health init (process (sigchld)))
+; I2C adapter numbers can vary with probe order. The validated SE16 bus has
+; only one native child, BQ28Z610@55, and no charger/divider/fast-charge devices.
+; The platform Health-server policy grants read access to sysfs_batteryinfo.
+(genfscon sysfs "/devices/platform/soc/soc:display-fabric-lab/8c0000.geniqup/888000.i2c" (u object_r sysfs_batteryinfo ((s0) (s0))))
+(genfscon sysfs "/devices/platform/soc/8c0000.geniqup/888000.i2c" (u object_r sysfs_batteryinfo ((s0) (s0))))

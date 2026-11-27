@@ -35,7 +35,7 @@ The November 10–12 records come from the [bring-up PR stack](https://github.co
 | --- | --- | --- |
 | M1 · Headless Android 17 from UFS | **Passed on the recorded trial 35 artifacts.** Disconnected power-key startup, later authenticated ADB, enforcing/PID 1/UFS identity and same-boot soak/transfer passed. The same new kernel then passed watchdog-triggered EDL capture and fully verified F.20 restoration without keys or host reboot commands. Factory-derived trees, original DTBO, emulator first-stage init and secure firmware remain explicit M2/release dependencies. [Cold start](build/device/m1-disconnected-start-35-2026-11-14.json) · [Recovery](build/device/m1-autonomous-recovery-35-2026-11-14.json) | Cold-boot with the image-serving computer disconnected. After boot, connect ADB and record the 6.18 kernel release, Android API 37, Android init as PID 1, first- and second-stage init logs, and the UFS-backed sources of system and the project-built vendor. Record any factory boot/DT or firmware dependencies still in use. |
 | M2 · Project-built board description | Source boot passed on trial 36: source DTB/DTBO and AOSP first-stage init, six read-only UFS LUNs, verified GSI/vendor mounts, enforcing second-stage PID 1, ADB, upstream PON and 193.906-second soak/transfer. Cold-start and watchdog repeats were cancelled by the user to prioritize the desktop; they are not claimed passed. [Handset record](build/device/m2-source-boot-36-2026-11-15.json) | Boot with source-built board DTB/DTBO and ramdisk. Record packaged and selected tree identities. Reproduce cold boot, six UFS LUNs, verified partition reads, USB diagnostics and recovery. Repeat M1 on these exact artifacts. |
-| M3 · Interactive Android desktop | Active priority: physical AOSP desktop on the retained trial 36 GSI. SurfaceFlinger aborts for missing OpenGL ES; DRM/MSM and graphics vendor services are absent. Build the source graphics stack and connect the real display pipeline. [Initial blockers](build/device/m3-desktop-blockers-2026-11-15.json) | Show a test pattern on the physical panel and record GT9886 input events. Integrate the allocator, graphics composer and SurfaceFlinger with the project vendor. Record the launcher rendering, a physical tap opening an app and Android boot completion on the same build. |
+| M3 · Interactive Android desktop | Current: trials 89/90 provide Adreno rendering and 90 Hz defaults; the user confirmed improved responsiveness. Trial 90 bounded GPU load/idle return passed on November 25. Setup completion and the six hardware outcomes remain open; see the November 26 record. Historical framework bring-up: trial 69 passes physical display. Source Health/Power/Audio and heap configuration start the framework. Trial 76 adds real TEE HMAC negotiation and key import; LockSettings initializes user 0 and GSI reports sys.boot_completed=1 under enforcing. Trial 77 corrects render-node DAC and displays the real Android welcome page. Trial 78 records physical volume-up/down events and corresponding UI responses. Trial 80 validates firmware PID 9885 and registers the touch device; physical tap opens the language list and scrolling passes. Trial 81 exposes the external gauge and Health reports real 100% capacity, pack voltage and temperature under enforcing; the IDC file now loads. Setup Next on trial 81 reaches a black network page because WifiManager is absent. Trial 82 registers wifi/wifiscanner and physically passes the WLAN/offline setup pages. The installed GSI has a lock-skip callback regression returning to date/time. Trial 83 adds AppWidgetService and independently renders Launcher wallpaper/icons. Physical desktop confirmation is paused; a short power-key press is followed by USB loss, so final ADB retention is not passed. Physical power controls screen off/on without restarting system_server, but USB needs one cable replug. Authenticated ADB returns in the same GSI boot. At trial 83, Launcher interaction, charging control, AES roundtrip/tamper acceptance, real audio and Adreno remained open; later graphics evidence supersedes that historical GPU status. [Input results](docs/M3_INPUT_2026-11-23.md) | Keep the accepted display and source graphics stack. Resume the recorded GSI candidate from the verified F.20 restoration when requested, confirm physical desktop/app interaction, and resolve the GSI setup skip regression separately from provisioning acceptance. Preserve accepted gauge/input/display paths and resolve USB loss across screen off/on. |
 | M4 · Daily-use hardware and release | Open. Validate each subsystem independently. | Exercise calls and mobile data, Wi-Fi/Bluetooth, audio, camera, sensors and biometrics. Verify charging, thermal control, suspend/wake and encrypted userdata across reboot. Publish hardware results, remaining firmware dependencies, build inputs, image hashes and a tested update/recovery procedure. |
 
 ## Automated handset testing
@@ -46,7 +46,7 @@ CI builds the artifacts and checks the project vendor for reproducibility. On th
 | --- | --- | --- |
 | M1 bring-up, before ADB | Through ACM, identify the diagnostic trial and kernel, exercise paced USB, enumerate the six UFS LUNs and verify read-only partition mappings. On the USB-backed profile, check verity and GSI toybox separately. Use trial 05 as the regression control for the mounts, policy installation, enforcing and second-stage entry. On UFS, also record the backing devices and reads of system properties, init scripts and cgroup configuration across the transition. | Label USB-backed trials and UFS cold boots separately. |
 | M1 with ADB; repeat for M2 | After a disconnected cold start, attach ADB. Check the running kernel, API 37, the identity of PID 1 and the backing devices for system and the project vendor. For M2 also verify the selected DTB/DTBO and repeat the USB, UFS and recovery checks. | Match all observations to the same boot and image set. A boot of the restored F.20 reader gets its own report. |
-| M3 interactive desktop | As the relevant HALs come up, run matching VTS modules. Once the framework is ready, run focused CTS modules and use UI Automator for repeatable launcher and Settings flows. Record the seed and event count for Monkey stress runs so a crash or ANR can be replayed. | Verify panel output and record a real GT9886 touch opening an app. Injected input covers the Android UI path only. |
+| M3 interactive desktop | As the relevant HALs come up, run matching VTS modules. Once the framework is ready, run focused CTS modules and use UI Automator for repeatable launcher and Settings flows. Record the seed and event count for Monkey stress runs so a crash or ANR can be replayed. | Verify panel output and record a real Goodix touch opening an app. Injected input covers the Android UI path only. |
 | M4 daily use | Expand VTS/CTS and functional checks by enabled subsystem. Exercise suspend/wake, encrypted-data persistence and reconnection after reboot. | Use a fixture or operator for observations such as audible output, a completed call or the captured camera scene. Record the observation alongside the automated result. |
 
 ### Failure report and retest
@@ -57,9 +57,90 @@ CI builds the artifacts and checks the project vendor for reproducibility. On th
 
 See [VTS for HALs and kernels](https://source.android.com/docs/core/tests/vts), [CTS execution and retry](https://source.android.com/docs/compatibility/cts/run), [UI Automator](https://developer.android.com/training/testing/other-components/ui-automator) and [Monkey](https://developer.android.com/studio/test/other-testing-tools/monkey).
 
-## Current priority: physical AOSP desktop
+## Current priority: complete the six requested hardware outcomes
+
+November 26 goals: (1) CPU/GPU frequency, scheduling and thermal control;
+(2) real Wi-Fi; (3) speaker, earpiece and vibration; (4) fingerprint, GNSS and
+physical sensors; (5) complete setup into the desktop; (6) 4G/5G, dual SIM,
+SMS, calls and mobile data. Each has independent acceptance gates in the
+[current hardware record](docs/M3_HARDWARE_2026-11-27.md).
+
+Retain working Adreno/90 Hz, DSC, touch and the existing GSI/test seeds.
+Trial 98 passes short CPU load/recovery frequency observation in retained GSI;
+thermal readings and cooling maps are visible under enforcing. Android Thermal
+HAL, scheduling and sustained-performance acceptance remain open. Trial 96
+fails WLAN/ADB retention; trial 97 isolates successful startup with the same
+kernel and no WLAN DT. November 27 trial 99 with GPIO20 initial-low enumerates
+QCA6390 and retains GSI ADB; missing amss.bin blocks MHI/firmware startup.
+Trial 100 passes 26 offline checks, is flashed boot-only at 28% live capacity,
+and reaches QMI target/firmware response. Missing board data is now the observed
+stop; `board_id=0xff` may be the driver's default and is not a qualified board
+identity. Trial 101 adds only the original same-handset F.20 board ELF and now
+registers native phy0/wlan0. Trial 102 installs the reviewed mainline-supplicant
+RRO and retains GSI after 194.328 seconds of same-boot ADB checks. The resource
+resolves true, but the GSI supplicant crashes before main/binder registration:
+the matching executable uses an SVE INDEX instruction at 0x2cf584, while all
+eight live CPU feature lists lack SVE. Scan/connection are blocked. Next build
+the pinned source vendor AIDL supplicant for ARMv8-A, review its init/policy
+integration and remove the mainline RRO before retesting. A source build recipe
+is added; this is not a claim of a built or working replacement. Vendor rebuilds must retain
+WLAN firmware/board ELF, accepted display/GPU/input settings and the test seeds.
+Stock sensor and modem
+inventory is a prerequisite, not a claim of GSI functionality. No repeated
+cold-start/watchdog qualification. Keep one recovery set and one candidate;
+commit code and same-boot evidence after each phase.
+Trial 103 removes that failed RRO and retains Enforcing GSI/ADB for 194.516 s;
+no supplicant process/crash remains, native wlan0 stays present. Source vendor
+AIDL integration and strict policy compilation are prepared; its GitHub build,
+actual ELF acceptance and enable/scan/connection remain pending.
+A scan-only trial in the same boot creates STA_SCAN and finds 2.4/5 GHz bands,
+but interface UP returns EADDRNOTAVAIL (99) and the scan returns ENETDOWN (100).
+Address validity is still unknown: shell read ioctls are denied. The next
+vendor candidate includes a fixed read-only probe in the Wi-Fi domain.
+
+November 28 pause after trial 104: the source ARMv8-A supplicant build and
+physical vendor integration pass. Its AIDL default instance is registered
+under `rmx_wpa` in Enforcing GSI; 194.031 seconds of same-boot ADB checks pass.
+The read-only probe confirms wlan0's address is all-zero and UP=0, explaining
+the invalid-address gate observed in trial 103. The underlying factory address
+provisioning path remains unfinished. The original persist partition is not
+mounted in GSI; acquire only its same-handset WLAN address file read-only on
+resume and correct initialization before attempting scan/connection. The
+source AIDL address method's private-driver-command dependency also needs
+review. Host enable/scan and association/DHCP/traffic are NOT RUN in trial 104
+because the user ended work. Leave the accepted current GSI boot available;
+no new trial starts until requested. [Trial 104](build/device/m3-wifi-104-2026-11-28.json).
+
+
+The dated entries below preserve earlier decisions and are not the latest
+acceptance summary.
+
+November 25 requested continuation: GPU load/idle verification, real Wi-Fi
+connectivity, sound and haptics, fingerprint, and the setup protection-skip bug.
+The bounded GPU transfer/clock-return check now passes on retained trial 90;
+WLAN, audible output, motor output and biometric enrollment remain unaccepted.
+Track each separately in [today's hardware record](docs/M3_HARDWARE_2026-11-25.md).
+Trials 92/93 bind the WLAN power graph but do not enumerate QCA6390. Trial 94's
+DIG vote change does not fix the link and does not retain host ADB; automatic
+recovery returns to F.20. Revert that vote, retain the failure record and use
+stock PCIe/enable/reset evidence to choose the next WLAN change. The current
+phone is F.20; any rebuilt baseline package is unflashed, not a new device pass.
+Preserve the working hardware renderer and 90 Hz defaults. The November 24
+paragraph below describes the previous stage and is not the current GPU status.
+
+November 24 resumed target: replace CPU software rendering with Adreno 650,
+enable native CPU/GPU frequency scaling and thermal feedback, and validate
+1080x2400 at 90 Hz with measured frame timing and physical interaction. The stock
+reference currently runs 90 Hz and exposes GPU frequencies 305–587 MHz; these
+are reference values, not target-system acceptance. Preserve the accepted DSC,
+touch, gauge, GSI and test volumes. Keep 60 Hz as a controlled fallback while
+qualifying source-derived 90 Hz commands. Do not repeat cold-start tests.
+The [hardware audit](docs/M3_HARDWARE_STATUS_2026-11-24.md) records the starting gaps.
+The November 23 pause below is historical and has been superseded by this request.
 
 On November 15 the user cancelled further unplug/power-key and watchdog fault-injection repeats. Keep the accepted source-boot GSI running and prioritize graphics userspace, display/panel and framework/launcher startup. Repeat recovery work only when a real failure requires it. The omitted M2 qualification checks remain explicitly unrun.
+
+November 23 priority: enable the board's Goodix Normandy touch and physical power/volume keys so the operator can navigate first-run setup and inspect Launcher directly. The measured firmware PID is 9885; the stock GT9886-family driver name does not identify the physical silicon. Volume keys have passed event/UI checks; trial 80 physical touch and scrolling pass. Power controls screen off/on; USB resume continuity remains open. Trial 81 real gauge-to-Health telemetry passes. Trial 82 physically passes the WLAN/offline setup pages and retains GSI ADB. Trial 83 supplies AppWidgetService and renders Launcher independently; the user pauses before physical confirmation. A power-key event precedes USB loss; reconnecting restores ADB in the same GSI boot. At the user's subsequent request, F.20 is restored and verified through boot completion, ADB and both original LP metadata slots. Work is paused; resume the recorded candidate only when requested. The GSI lock-skip callback regression remains separate and provisioning is not marked complete. [Setup results](docs/M3_SETUP_2026-11-23.md) Preserve the accepted display configuration, GSI and test volumes, and verify physical touch and Android UI response under enforcing. [Input work](docs/M3_INPUT_2026-11-23.md) · [Trial 77 baseline](docs/M3_APP_RENDERING_2026-11-22.md)
 
 ## Earlier work sequence after M1 headless acceptance
 

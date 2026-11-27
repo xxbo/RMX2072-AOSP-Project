@@ -1,0 +1,24 @@
+{
+  "ack_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "headers": {
+    "drm.h": "c6227b9338cc4b5f4d68e166b4620d7534bf040d401a3a343a90cf5d6b162e36",
+    "drm_mode.h": "d05ebad55fc3d3639dca75d58fd7a149e2efdd5ef8aaaf3c8e673e779fd6b39b"
+  },
+  "source_sha256": "bfc2cc888d164235883f4e4f0b716e9915143c29e41d222628cc23dc46e3e414",
+  "binary_sha256": "63d26e1fa4487e5d0363515f27d13fb946121141a56564d546cef16b04d9e53c",
+  "scanout_source_sha256": "dd19c76a4a002af6f54a099c8053f9ce7951c3b14218589eec8eb4ac30dc7748",
+  "scanout_binary_sha256": "1b83cb8577d27da9c27249d47a7f0e11cd0409fc9a0713ad3f3c66c378fa4fe4",
+  "pattern": {
+    "version": "m3-row-grid-v2",
+    "bytes": 7776000,
+    "rgb_sha256": "13bfb77e9ce8881bc13789b73144b06151b93f45ccb731cecbe6008b3e14f0ba",
+    "png_sha256": "8d81f83319b9dbc2febc4de9af1bb571694ec1dc4f557b6eb7ef443590d150cc"
+  },
+  "result": "BUILD_AND_SAME_PIXEL_TEST_PASS_NOT_PHYSICAL_PASS",
+  "diagnosis_commit": "3936dbe714000f0b7cb8ced8fb0c83fcbd160013",
+  "strict_policy_record": "m3-graphics-policy-2026-11-16.json",
+  "native_hold_seconds": 30,
+  "native_timeout_seconds": 50,
+  "android_probe_scope": "Two live DRM plane/framebuffer metadata samples; Android DPU registers, allocation length and fences not captured",
+  "graphics_artifact_unchanged": true
+}

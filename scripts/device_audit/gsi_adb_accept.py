@@ -10,19 +10,28 @@ RELEASE = '6.18.32-android17-5-maybe-dirty-4k'
 SERIAL = 'RMX2072-M1'
 
 def shell(command, timeout=8):
-    return subprocess.check_output(['adb','-s',SERIAL,'shell',command], text=True, timeout=timeout, stderr=subprocess.STDOUT).replace('\r','')
+    # Android emits UTF-8. A Windows GBK locale can otherwise make log collection
+    # fail after successful retention when framework messages contain Unicode.
+    return subprocess.check_output(['adb','-s',SERIAL,'shell',command], text=True,
+                                   encoding='utf-8', errors='backslashreplace',
+                                   timeout=timeout, stderr=subprocess.STDOUT).replace('\r','')
 
 def fetch_autonomous(output):
-    """Fetch pre-policy evidence; this observation never requests Android startup."""
+    """Fetch pre-policy evidence, distinguishing autonomous and host-gated boots."""
     boot=shell('cat /proc/sys/kernel/random/boot_id').strip()
     from uuid import UUID
     UUID(boot)
     evidence=shell('cat /data/local/tmp/rmx-m1-boot.txt')
-    if 'M1EVENT autonomous=1\n' not in evidence or set(re.findall(r'^M1EVENT boot_id=(.*)$',evidence,re.M))!={boot}:
+    gated = 'M1EVENT autonomous=0\n' in evidence and 'M1EVENT display_staged=1\n' in evidence
+    if ('M1EVENT autonomous=1\n' not in evidence and not gated) or set(re.findall(r'^M1EVENT boot_id=(.*)$',evidence,re.M))!={boot}:
         raise ValueError('Autonomous evidence absent or from another boot')
+    if gated:
+        events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
+        if not any(x.get('event') == 'display_gate_requested' and x.get('boot_id') == boot for x in events):
+            raise ValueError('Staged display evidence requires a matching USB host gate')
     (output/'boot-events.txt').write_text(evidence,encoding='utf-8')
     with (output/'host-events.jsonl').open('a') as log:
-        log.write(json.dumps(dict(event='autonomous_handoff_observed',boot_id=boot,monotonic=time.monotonic(),utc=datetime.now(timezone.utc).isoformat()))+'\n')
+        log.write(json.dumps(dict(event='staged_display_handoff_observed' if gated else 'autonomous_handoff_observed',boot_id=boot,monotonic=time.monotonic(),utc=datetime.now(timezone.utc).isoformat()))+'\n')
     return boot
 
 def verified_ufs_graph(mounts, backing):
@@ -72,7 +81,7 @@ def inspect(output, original):
         if not (output/'host-events.jsonl').is_file() or not transcript_path.is_file():
             raise ValueError('Restricted sysfs requires independent same-boot UFS witness')
         events = [json.loads(x) for x in (output/'host-events.jsonl').read_text().splitlines()]
-        if not any(x.get('event') in ('handoff_requested','autonomous_handoff_observed') and x.get('boot_id')==original for x in events):
+        if not any(x.get('event') in ('handoff_requested','autonomous_handoff_observed','staged_display_handoff_observed') and x.get('boot_id')==original for x in events):
             raise ValueError('UFS witness does not match current boot')
         transcript = transcript_path.read_text(errors='replace')
         if set(re.findall(r'^M1EVENT boot_id=(.*)$',transcript,re.M)) != {original} or not re.search(r'^M1EVENT ufs_super=.*/1d84000.ufs/.* dev=8:10 ro=1$',transcript,re.M):

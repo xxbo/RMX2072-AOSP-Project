@@ -1,0 +1,114 @@
+{
+  "utc": "2026-11-18T14:58:30.711439+00:00",
+  "status": "PAUSED_BY_USER",
+  "request": "先暂停",
+  "goal": "ACK 6.18 + Android 17 GSI + source/ported drivers: correct physical display, then AOSP desktop",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-65",
+  "record_directory": "ufs-host-g3-gsi17-firststage-ufs-65",
+  "boot_id": "d156e9a3-246e-4249-a618-54a0931f7aa0",
+  "kernel": {
+    "run_id": 44321852995,
+    "source_commit": "c0137943356794565b88e3eb2cdc2710411c5ec5",
+    "artifact_id": 14438385633,
+    "artifact_archive_digest": "sha256:9180dfd550069a1435ad9c0cb8b9d33940cfbdb04013e3ad0a7575209b89c36f",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "82a40935e3311d9977b3981618d7dc8af7237c1b47eaae986e737c504427615f",
+    "selected_member_sha256": {
+      "SHA256SUMS": "8310e6c582c8d1bff67c9e67f1f635ec6452a01c0fcee4b99725023fa29aa49a",
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "build-metadata.txt": "910abbae2b29844c7b35644f360717d3db5e2b2e75d3c1c0351cdaafea69ce34",
+      "display-source.sha256": "6739de5becacf1cdb8e028ca0fc885058b632d97bffaa2795c1b4ad9030adc2e",
+      "display-clock-patch.sha256": "d61a6e071f4d95e1b4b78523f1aa0d0fe30d21380e845490921bd96baebfccd1",
+      "Image.gz": "0630aebcdf392d74bdd471f645cb939baa21b5f17effb7a7f5a2768600d1a6ea",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "4b00d7b70feb80e4a80176cb10c73291b013c1da54cefc70693dbfa19c97a998",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "rmx2072-dpu-solid-fill-test.sha256": "23d9f30f6452c901ef6457761d6efa48380f35da179f107617e9f228d85f0d20",
+      "rmx2072-dsc-packet-trace.sha256": "6bf2fd3fc742d2b897753519cc9003c091351a8af8cea560622ac48a9cb9bd39",
+      "rmx2072-dsc-route-test.sha256": "0e8dd497379f704771996add7f72fce0d0972d73e971a39bd0ebb4aad8c1d4f3",
+      "rmx2072-stock-linkclock-test.sha256": "2d4d012fa54a5c058b8bc49f1224702e756682f44809c50aa86d30af6d25ee8b",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309",
+      "upstream-dsi-dsc-all-slices-flag.sha256": "8a0f473a130c0159cb0d7badcd6f37a128915e08098de90ff010b58dc871a05d",
+      "upstream-msm-dsi-dsc-slices-per-packet.sha256": "130c7139f1104b38050febbff6c19bc10a41d13ff840d81f522562619f77fc0b"
+    }
+  },
+  "recipe_commit": "ccee801162b588dce14dd6df1ae151ac14c0503f",
+  "boot_sha256": "336fe129a7d72be94df8fa3d115d7dc01aa2dc76b0d8f2c216f48295177160bc",
+  "preflight": {
+    "checks": {
+      "kernel_pin": true,
+      "kernel_verified": true,
+      "kernel_hash": true,
+      "boot_hash": true,
+      "ramdisk_hash": true,
+      "container_identical": true,
+      "scratch_identical": true,
+      "device_trees_identical": true,
+      "dtbo_identical": true,
+      "experiment_opt_in": true,
+      "same_topology_readback": true,
+      "same_ramdisk_payloads": true,
+      "same_base_payloads": true,
+      "clean_recipe": true
+    },
+    "passed": true,
+    "recipe_commit": "ccee801162b588dce14dd6df1ae151ac14c0503f",
+    "kernel": "82a40935e3311d9977b3981618d7dc8af7237c1b47eaae986e737c504427615f",
+    "boot": "336fe129a7d72be94df8fa3d115d7dc01aa2dc76b0d8f2c216f48295177160bc"
+  },
+  "readbacks": {
+    "count": 21,
+    "candidate_boot": true,
+    "candidate_dtbo": true,
+    "full_super_chunks": 17
+  },
+  "physical_observation": "NOT_REPORTED: user requested pause instead of describing the native frame; Android observation not requested",
+  "clock_isolation_evaluation": "NOT_COMPLETED_BEFORE_PAUSE",
+  "host_soak": "INTERRUPTED_AT_USER_REQUEST; no gsi-stable.json and no 190-second pass claim",
+  "handset": {
+    "system": "Android 17 GSI",
+    "adb": "available",
+    "guardian": "retained",
+    "uptime_at_pause": "151.81 1021.78",
+    "acceptance_guard_mode": "retained",
+    "powered_off": false
+  },
+  "host_jobs": {
+    "trial_runner": "stopped after verifying same-boot retained state",
+    "observer": "stopped",
+    "usb_watcher": "stopped",
+    "graphics_capture": "stopped"
+  },
+  "local_evidence": {
+    "acm.log": {
+      "bytes": 235052,
+      "sha256": "747245e8e8d0a73450a3445129ef722dd86273026503a2b5313c33410027f6d5"
+    },
+    "graphics-first-0-display.txt": {
+      "bytes": 213238,
+      "sha256": "085ae3c76dba7fcfc42b5fef594dca099bcf8a8e3d8af46c34f4571ce406ad01"
+    },
+    "gsi-accepted.json": {
+      "bytes": 13288,
+      "sha256": "420639c4ea9707ec36089dad2f204397f009a29bec3c8cdd6a56dea6f749ae16"
+    },
+    "pause-state.txt": {
+      "bytes": 64,
+      "sha256": "cf4727c5d014d64f9b83e0f86fac501f1a5f4a474f231e4a5e29c3db1303cbda"
+    }
+  },
+  "cold_start_test": "NOT_RUN",
+  "watchdog_fault_injection": "NOT_RUN",
+  "root_cause": "UNRESOLVED",
+  "resume_scope": "Review saved same-boot clocks/PPS/route; obtain physical observation before declaring a display result. Do not start another flash merely because the previous observation was paused."
+}

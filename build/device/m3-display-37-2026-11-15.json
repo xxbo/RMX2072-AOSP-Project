@@ -1,0 +1,92 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-37",
+  "goal": "Physical RM19795 panel output on ACK 6.18, then SurfaceFlinger and AOSP desktop",
+  "recipe_commit": "ac89941abde946bbd0acb80b0408ed627b01be4e",
+  "kernel": {
+    "run_id": 43668465944,
+    "source_commit": "68dc430e784e0fb84f9fab36ee7d8a78a43659c4",
+    "artifact_id": 14143344269,
+    "artifact_archive_digest": "sha256:db16d0137de495722fc640620fc2933d2c22b2a9b555dc527622e724e224c114",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "da083d2970bac47f58c2262e5c84fb29b93fa49a1ef5bf4433fff41ab42bf765",
+    "selected_member_sha256": {
+      "SHA256SUMS": "bc7e71e7d050ce85a71fa6828eca17cd6b68a3391ea4b8ef0bf818ec2159a9f5",
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "build-metadata.txt": "f9a6e422ae6eaa514346a4c3692ce52cdac82fcc2438f83ac50e0b94b75e44c8",
+      "display-source.sha256": "bb5cff96f97f8c5059cc70b4675efa0db3a168b8490b1a3a363acfd94b3c5774",
+      "Image.gz": "70f4b49c55d1a6fa5974edcd76de1189ef27770d0ee53bd058fe7171e32f6da8",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "c5938a3af480a8b4e311ce2889d9e012d924ac1e1368d5e655487c80edb4b50b",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+    }
+  },
+  "boot_sha256": "d56caca25a85d815fee3c2abc3cc7ee1a817e5d1d4ac9de81826a5d96fa18141",
+  "dtbo_sha256": "e109d669d633e45978cb3fd41a15a82cb374ad44c321ce27807c7e2709fa6d3f",
+  "effective_dtb": {
+    "size_bytes": 830012,
+    "sha256": "f2709f14bec5bfa4424f442ca386b07be69f82b11e5c746122a0582baf357727"
+  },
+  "super_sha256": "bcaf350af6f3ccb5218e468837c6e37ef3a266df302f3b77cd6416df81a3988d",
+  "system": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+  "vendor": "10f8a24714d97d63fe5ed1b32eaa224e5df21e0e7d864a43dd847e0bcf2f976e",
+  "scratch": {
+    "data": {
+      "bytes": 536870912,
+      "sha256": "3609b84f64c748ec526b9a5cad9c8d60fa75fb95246d883d73e5300ea663e561",
+      "uuid": "56baa650-68d8-498b-95f3-a9ac4e11127d",
+      "gzip_sha256": "b083742d72df2140ef211aa9332d5ce221fc4e159caf2c23f0da3392faeac3c0"
+    },
+    "metadata": {
+      "bytes": 33554432,
+      "sha256": "be897bbfb0c0fc242b3f5e893baae810d3e6a90d8eb26d5defcfce3908a30e67",
+      "uuid": "bc013e05-6b24-476b-ab5c-dd4ccf0d5308",
+      "gzip_sha256": "db75b24234a949ba588eb7483607b86f8093f263330deb99189b2e5d8f6f87c7"
+    }
+  },
+  "result": "FAIL: reboot loop before diagnostic USB or GSI ADB",
+  "operator_observation": "Repeated reboots; no color-bar observation was reported",
+  "adb_observed": false,
+  "diagnostic_acm_observed": false,
+  "kms_result": "BLOCKED: no pre-policy display evidence recovered yet",
+  "surfaceflinger": "NOT RUN with M3 userspace; source graphics build pending",
+  "root_cause": "Confirmed MDSS probe blocker: effective root lacks qcom,sm8250 required by ACK qcom_ubwc_config_get_data. Reboot-loop cause remains unresolved; recovered console stops at 0.813605 seconds.",
+  "recovery": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "9c4bfbd3-7037-4a84-8881-d6d239dc77cb",
+    "super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+    "boot_sha256": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+    "dtbo_sha256": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+    "lp_slots": [
+      0,
+      1
+    ]
+  },
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "next": "Add the upstream SoC compatible while preserving measured SCM/PON identities; enable initcall_debug to locate any remaining early boot stall. Keep the same kernel binary, GSI and test-volume seeds.",
+  "preserved_console": {
+    "sha256": "615d11713fcc042b394d66ec058d9deaa015fffdee1425bb9abaa2e1fe94dc50",
+    "bytes": 77345,
+    "archive_sha256": "00f183debccb3239728125f6a769f85ab880309f39c6ed85f31c9a57fe6c4a31",
+    "integrity": "1208 corrected bytes, 28 unrecoverable blocks; damaged lines are not reconstructed",
+    "last_complete_line": "[    0.813605][   T87] Freeing initrd memory: 8236K",
+    "display_failure": [
+      "[    0.706854][    T1] Couldn't find UBWC config data for this platform!",
+      "[    0.706972][    T1] msm-mdss ae00000.display-subsystem: probe with driver msm-mdss failed with error -22"
+    ],
+    "panic_trace": "No complete panic/Oops trace recovered"
+  },
+  "source_reference": "https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/drivers/soc/qcom/ubwc_config.c"
+}

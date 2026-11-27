@@ -49,6 +49,13 @@ def main():
     p.add_argument('--android-first-stage', type=pathlib.Path, help='Verified API 37 static first-stage /init')
     p.add_argument('--first-stage-source-build', type=pathlib.Path, help='M2 source build artifact directory with resolved manifest and digests')
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
+    p.add_argument('--display-smoke', type=pathlib.Path, help='Static physical DRM test; run before Android policy')
+    p.add_argument('--gpu-firmware', type=pathlib.Path, help='Verified peripheral firmware for the native Adreno candidate')
+    p.add_argument('--wifi-firmware', type=pathlib.Path, help='Pinned QCA6390 boot firmware only; no board/calibration data')
+    p.add_argument('--wifi-board-file', type=pathlib.Path, help='Explicitly add the exact retained F.20 board ELF')
+    p.add_argument('--solid-fill-test', action='store_true', help='Bounded native SSPP solid-fill isolation with independent parent cleanup')
+    p.add_argument('--display-staged', action='store_true', help='Wait for USB log capture before binding the three display stages')
+    p.add_argument('--first-frame-trace', action='store_true', help='Opt in to bounded native DSI/PLL/MDP tracing')
     p.add_argument('--project-vendor', type=pathlib.Path, help='Directory with CI-built vendor.img and vendor.json')
     p.add_argument('--ufs-first-stage', type=pathlib.Path, metavar='PROFILE',
                    help='UFS first-stage profile with signed system and vendor public keys')
@@ -67,8 +74,18 @@ def main():
                    help='Wait 1..120 seconds after UDC discovery before binding')
     p.add_argument('--snapshot-delays', help='Comma-separated 1..60 second snapshot intervals')
     a = p.parse_args()
+    if a.wifi_board_file and not a.wifi_firmware:
+        p.error('--wifi-board-file requires --wifi-firmware')
+    if a.first_frame_trace and not a.display_staged:
+        p.error('--first-frame-trace requires --display-staged')
     if a.first_stage_source_build and not a.android_first_stage:
         p.error('Source build evidence requires the first-stage binary')
+    if a.display_smoke and not a.autonomous_ufs:
+        p.error('Display smoke requires autonomous UFS and the pre-policy witness')
+    if a.display_staged and not a.display_smoke:
+        p.error('Staged display requires the physical display probe')
+    if a.solid_fill_test and not a.display_smoke:
+        p.error('Solid-fill test requires the native display probe')
     if a.autonomous_ufs and not (a.adb_public_key and a.ufs_first_stage and a.entry_carrier):
         p.error('Autonomous UFS requires the guarded signed profile and recovery evidence carrier')
     if a.adb_public_key and not a.scratch_volumes:
@@ -136,6 +153,27 @@ def main():
     add('dev/null', 0o20666, major=1, minor=3)
     add('dev/kmsg', 0o20600, major=1, minor=11)
     add('bin/busybox', 0o100755, binary)
+    gpu_firmware_proof = None
+    if a.gpu_firmware:
+        if not a.display_smoke:
+            p.error('--gpu-firmware requires the native display candidate')
+        from stage_m3_acceleration import gpu_firmware
+        firmware_files, gpu_firmware_proof = gpu_firmware(a.gpu_firmware)
+        for name in ['lib', 'lib/firmware', 'lib/firmware/qcom', 'lib/firmware/qcom/rmx2072']:
+            add(name, 0o40755)
+        for name, content in firmware_files.items():
+            add('lib/firmware/'+name, 0o100644, content)
+    wifi_firmware_proof = None
+    if a.wifi_firmware:
+        if not a.gpu_firmware or not a.display_staged:
+            p.error('--wifi-firmware requires the retained staged native performance profile')
+        from stage_m3_wifi_firmware import wifi_firmware
+        firmware_files, wifi_firmware_proof = wifi_firmware(a.wifi_firmware, a.wifi_board_file)
+        for name in ['lib/firmware/ath11k', 'lib/firmware/ath11k/QCA6390',
+                     'lib/firmware/ath11k/QCA6390/hw2.0']:
+            add(name, 0o40755)
+        for name, content in firmware_files.items():
+            add('lib/firmware/'+name, 0o100644, content)
     helper_hash = None
     carrier_hash = None
     if a.entry_carrier:
@@ -176,6 +214,23 @@ def main():
             add('android-first-stage', 0o100755, first)
             witness = read_static_arm64(a.first_stage_witness)
             add('bin/first-stage-witness', 0o100755, witness)
+            if a.display_smoke:
+                add('bin/drm-panel-smoke', 0o100755, read_static_arm64(a.display_smoke))
+                if a.solid_fill_test:
+                    add('m3-solid-fill-test', 0o100444, b'1\n')
+                from m3_boot_pattern import rgb_bytes
+                pattern_rgb = rgb_bytes()
+                add('m3-pattern.rgb', 0o100444, pattern_rgb)
+                add('bin/display-snapshot', 0o100755,
+                    (root/'scripts/device_audit/display_snapshot.sh').read_bytes().replace(b'\r\n', b'\n'))
+                if a.display_staged:
+                    add('m3-display-staged', 0o100444, b'1\n')
+                    if a.first_frame_trace:
+                        add('m3-first-frame-trace', 0o100444, b'1\n')
+                    add('bin/display-clock-trace', 0o100755,
+                        (root/'scripts/device_audit/display_clock_trace.sh').read_bytes().replace(b'\r\n', b'\n'))
+                    add('bin/display-bind', 0o100755,
+                        (root/'scripts/device_audit/display_bind.sh').read_bytes().replace(b'\r\n', b'\n'))
             stage_script = (root/'scripts/device_audit/first_stage_mount.sh').read_bytes().replace(b'\r\n', b'\n')
             add('bin/first-stage-mount', 0o100755, stage_script)
             if a.trace_init_fault:
@@ -211,13 +266,15 @@ def main():
             add('bin/ufs-init-trace', 0o100755, (root/'scripts/device_audit/ufs_init_trace.sh').read_bytes().replace(b'\r\n', b'\n'))
             if a.scratch_volumes:
                 scratch = json.loads((a.scratch_volumes/'scratch.json').read_text())
-                for name, mib in [('data', 512), ('metadata', 32)]:
+                for name, sizes in [('data', (512 << 20, 2048 << 20)), ('metadata', (32 << 20,))]:
                     packed = (a.scratch_volumes/(name+'.ext4.gz')).read_bytes()
                     info = scratch[name]
-                    if info['bytes'] != mib * 1024**2 or hashlib.sha256(packed).hexdigest() != info['gzip_sha256']:
+                    if info['bytes'] not in sizes or hashlib.sha256(packed).hexdigest() != info['gzip_sha256']:
                         raise ValueError('Wrong scratch volume: '+name)
                     add(name+'.ext4.gz', 0o100444, packed)
                     add(name+'.ext4.sha256', 0o100444, (info['sha256']+'\n').encode())
+                limit_mib = (sum(v['bytes'] for v in scratch.values()) >> 20) + 96
+                add('m1-scratch-limit-mib', 0o100444, (str(limit_mib)+'\n').encode())
                 script = (root/'scripts/device_audit/ufs_scratch.sh').read_bytes().replace(b'\r\n', b'\n')
                 add('bin/ufs-scratch', 0o100755, script)
                 if a.adb_public_key:
@@ -329,7 +386,17 @@ def main():
     if a.adb_public_key:
         report['adb_public_key_sha256'] = hashlib.sha256((key+' M1-host\n').encode()).hexdigest()
         report['guarded_adb'] = True
+    if a.scratch_volumes:
+        report['scratch_volumes'] = scratch
     report['autonomous_ufs'] = a.autonomous_ufs
+    report['display_staged'] = a.display_staged
+    report['gpu_firmware'] = gpu_firmware_proof
+    report['wifi_firmware'] = wifi_firmware_proof
+    report['first_frame_trace'] = a.first_frame_trace
+    report['solid_fill_test'] = a.solid_fill_test
+    if a.display_smoke:
+        report['display_probe_sha256'] = hashlib.sha256(read_static_arm64(a.display_smoke)).hexdigest()
+        report['pattern_rgb_sha256'] = hashlib.sha256(pattern_rgb).hexdigest()
     if a.autonomous_ufs:
         report['autoboot_sha256'] = hashlib.sha256((root/'device/realme/bladerunner_48m/bootstrap/m1-autoboot.sh').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     if a.ufs_reset_info:

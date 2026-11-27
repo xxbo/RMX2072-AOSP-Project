@@ -1,0 +1,333 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-79",
+  "baseline": "ufs-host-g3-gsi17-firststage-ufs-77",
+  "recipe_commit": "5f73412b4e6f6d5f439666ad7b4c13d8976bb7de",
+  "kernel_run": 45166498874,
+  "kernel_source": "1b49cb6a4f7c44788d6a33c1da7f6289264530fd",
+  "checks": {
+    "correct_trial": true,
+    "clean_recipe": true,
+    "input_requested": true,
+    "baseline_inventory": true,
+    "same_display_flags": true,
+    "same_boot_policy": true,
+    "same_guard_and_keys": true,
+    "same_native_pattern": true,
+    "kernel_checked": true,
+    "existing_kernel_sources_unchanged": true,
+    "only_touch_config_added": true,
+    "boot_digest": true,
+    "dtbo_digest": true,
+    "kernel_digest": true,
+    "ramdisk_digest": true,
+    "effective_dt_digest": true,
+    "vendor_digest": true,
+    "same_gsi": true,
+    "same_vendor_key": true,
+    "same_original": true,
+    "same_volumes": true,
+    "same_layout": true,
+    "only_input_vendor_changes": true,
+    "only_input_vendor_additions": true,
+    "no_removed_files": true,
+    "overlay_matches": true,
+    "same_strict_policy": true
+  },
+  "passed": true,
+  "config_delta": {
+    "CONFIG_TOUCHSCREEN_GOODIX_GTX8": [
+      null,
+      "y"
+    ]
+  },
+  "resources": {
+    "input": {
+      "touch": "GT9886 at native SE13 0xa94000, address 0x5d",
+      "coordinates": [
+        1080,
+        2400
+      ],
+      "reset_gpio": 38,
+      "irq_gpio": 39,
+      "volume_up": "PM8150 GPIO6 active-low, KEY_VOLUMEUP",
+      "volume_down": "PM8150 GPIO7 active-low, KEY_VOLUMEDOWN",
+      "power": "Existing upstream PON power-key binding retained",
+      "hardware_result": "NOT RUN"
+    },
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        36,
+        37,
+        38,
+        39,
+        66,
+        75
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    }
+  },
+  "vendor_changed": [
+    "/etc/init/rmx-m1-usb.rc",
+    "/etc/selinux/vendor_file_contexts"
+  ],
+  "vendor_added": [
+    "/overlay/RmxCpuInputOverlay.apk",
+    "/usr/idc/Goodix_GTX8_Capacitive_TouchScreen.idc"
+  ],
+  "boot_sha256": "66ad7543aabd1b674e2b771f5c33c4ff9a22da616efdeef71d2f6904fdab9117",
+  "super_sha256": "60ace60ec20cc3af44f6ab6004338c5a63fb0c6436dee70467a82378d4dd6e09",
+  "device_result": "NOT RUN",
+  "same_container_as_78": true,
+  "same_vendor_as_78": true,
+  "effective_dt_changes_from_78": {
+    "/soc/qcom,qupv3_1_geni_se@ac0000": {
+      "before": {
+        "compatible": [
+          "realme,rmx2072-parked-qup"
+        ],
+        "reg": [
+          11272192,
+          8192
+        ],
+        "qcom,bus-mas-id": [
+          152
+        ],
+        "qcom,bus-slv-id": [
+          512
+        ],
+        "iommus": [
+          51,
+          67,
+          0
+        ],
+        "qcom,iommu-dma-addr-pool": [
+          1073741824,
+          3221225472
+        ],
+        "qcom,iommu-dma": [
+          "fastmap"
+        ],
+        "phandle": [
+          654
+        ]
+      },
+      "after": {
+        "status": [
+          "disabled"
+        ],
+        "compatible": [
+          "realme,rmx2072-parked-qup"
+        ],
+        "reg": [
+          11272192,
+          8192
+        ],
+        "qcom,bus-mas-id": [
+          152
+        ],
+        "qcom,bus-slv-id": [
+          512
+        ],
+        "iommus": [
+          51,
+          67,
+          0
+        ],
+        "qcom,iommu-dma-addr-pool": [
+          1073741824,
+          3221225472
+        ],
+        "qcom,iommu-dma": [
+          "fastmap"
+        ],
+        "phandle": [
+          654
+        ]
+      }
+    },
+    "/soc/i2c@a94000": {
+      "before": {
+        "compatible": [
+          "realme,rmx2072-parked-i2c"
+        ],
+        "reg": [
+          11091968,
+          16384
+        ],
+        "interrupts": [
+          0,
+          358,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "clock-names": [
+          "se-clk",
+          "m-ahb",
+          "s-ahb"
+        ],
+        "clocks": [
+          22,
+          116,
+          22,
+          134,
+          22,
+          135
+        ],
+        "dmas": [
+          655,
+          0,
+          5,
+          3,
+          64,
+          0,
+          655,
+          1,
+          5,
+          3,
+          64,
+          0
+        ],
+        "dma-names": [
+          "tx",
+          "rx"
+        ],
+        "pinctrl-names": [
+          "default",
+          "sleep"
+        ],
+        "pinctrl-0": [
+          666
+        ],
+        "pinctrl-1": [
+          667
+        ],
+        "qcom,wrapper-core": [
+          654
+        ],
+        "status": [
+          "okay"
+        ],
+        "phandle": [
+          1428
+        ]
+      },
+      "after": {
+        "compatible": [
+          "realme,rmx2072-parked-i2c"
+        ],
+        "reg": [
+          11091968,
+          16384
+        ],
+        "interrupts": [
+          0,
+          358,
+          4
+        ],
+        "#address-cells": [
+          1
+        ],
+        "#size-cells": [
+          0
+        ],
+        "clock-names": [
+          "se-clk",
+          "m-ahb",
+          "s-ahb"
+        ],
+        "clocks": [
+          22,
+          116,
+          22,
+          134,
+          22,
+          135
+        ],
+        "dmas": [
+          655,
+          0,
+          5,
+          3,
+          64,
+          0,
+          655,
+          1,
+          5,
+          3,
+          64,
+          0
+        ],
+        "dma-names": [
+          "tx",
+          "rx"
+        ],
+        "pinctrl-names": [
+          "default",
+          "sleep"
+        ],
+        "pinctrl-0": [
+          666
+        ],
+        "pinctrl-1": [
+          667
+        ],
+        "qcom,wrapper-core": [
+          654
+        ],
+        "status": [
+          "disabled"
+        ],
+        "phandle": [
+          1428
+        ]
+      }
+    }
+  }
+}

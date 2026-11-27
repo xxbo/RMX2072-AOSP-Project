@@ -1,0 +1,65 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-80",
+  "result": "PHYSICAL_TOUCH_TAP_AND_SCROLL_PASS_DESKTOP_BLOCKED_BY_MISSING_BATTERY",
+  "boot_id": "0ba56e5b-d33c-4509-9b5a-fb09ac76f047",
+  "kernel_run": 45176831092,
+  "kernel_source": "e697e06cee2fe6e48176b54b249e81342910cf4b",
+  "firmware_pid": "9885",
+  "firmware_version": "5.3.0.4",
+  "full_version_checksum_valid": true,
+  "input_device": "Goodix GTX8 Capacitive TouchScreen",
+  "input_event": "/dev/input/event2",
+  "input_reader_mode": "DIRECT",
+  "coordinate_range": [
+    1080,
+    2400
+  ],
+  "first_operator_tap": [
+    345,
+    1767
+  ],
+  "operator_confirmation": [
+    "Language list opened on physical tap",
+    "Scrolling follows finger without obvious offset or jumps"
+  ],
+  "input_injected_for_touch": false,
+  "capture": {
+    "seconds": 300,
+    "same_boot_system_server_and_adb_samples": 94,
+    "x_observed": [
+      177,
+      906
+    ],
+    "y_observed": [
+      494,
+      2214
+    ],
+    "downs": 24,
+    "ups": 24
+  },
+  "keys_scope": "Volume events/UI passed trial78; physical power off/on passed trial79 with USB loss recovered by cable replug. Not repeated on trial80.",
+  "idc_file": "SELinux denied vendor_file; platform default inference works. Source label correction to vendor_idc_file prepared but NOT deployed.",
+  "battery": {
+    "hal_registered": true,
+    "power_supply_nodes": 0,
+    "present": false,
+    "level": 0,
+    "voltage": 0,
+    "scope": "Missing telemetry, not a measured empty battery",
+    "operator": "Low battery warning prevents setup continuation",
+    "board_reference": "External BQ28Z610 flag in OEM SE16 I2C 0x55 node; hardware identity not yet read on 6.18"
+  },
+  "launcher": "NOT ACCEPTED",
+  "enforcing": true,
+  "gsi_retained": true,
+  "evidence_sha256": {
+    "input-ready.txt": "46ae42a94929525085505f26820b3c660883606a83a5ad8abd5ea62b11033e6b",
+    "input-startup.txt": "ce3c2aca6f1c61e49ec97da685735180288de1c22d8d92cd8bd82f9761c6d977",
+    "input-boot-logcat.txt": "370474b24ff2f964bba39d588660ae37153287957f60a1c7202b7df450b801d0",
+    "battery-setup-block.txt": "09e359d4b89596439726e15b0eea4b8c64e5f7a54bb9750b4d5ac39dd8fa3675",
+    "input80-language.png": "4d4ed44ecae384c7e24e5816fbe5fcd7c516ee414457106c78808b78c385388d",
+    "input-touch/getevent.txt": "4c35e269238d0e1e11476ee2f03b8e0bdeb3ffab945762c2ac41673f79664f56",
+    "input-touch/session.json": "21cb5f7e344c3d77604eef1343b67e47cd1f5a4f6f7d1a73830de8abe2516be9",
+    "gsi-stable.json": "483bba93ded7c107436b9ed929a0c63365ac9bd730111726c18be38543b16e9d"
+  }
+}

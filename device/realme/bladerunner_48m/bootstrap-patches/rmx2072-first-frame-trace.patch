@@ -1,0 +1,400 @@
+Subject: [RMX2072 M3] opt-in first-frame trace without changing error handling
+
+Apply after trial 67 patches. Tracepoints default off; bounded raw samples
+precede IRQ clearing and record first command-mode kickoff/completion.
+No interrupt mask, reset, OPP, PPS, PHY or panel command changes.
+
+diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
+index 0c0dfb2..c341854 100644
+--- a/drivers/gpu/drm/msm/Makefile
++++ b/drivers/gpu/drm/msm/Makefile
+@@ -107,6 +107,7 @@ msm-display-$(CONFIG_DRM_MSM_KMS) += \
+ 	disp/msm_disp_snapshot_util.o \
+ 
+ msm-y += \
++	rmx2072_trace.o \
+ 	msm_debugfs.o \
+ 	msm_drv.o \
+ 	msm_fence.o \
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 13cc658..00fbc1a 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -4,6 +4,7 @@
+ 
+ #define pr_fmt(fmt)	"[drm:%s:%d] " fmt, __func__, __LINE__
+ 
++#include "rmx2072_trace.h"
+ #include <linux/debugfs.h>
+ #include <linux/errno.h>
+ #include <linux/mutex.h>
+@@ -395,7 +396,12 @@ int dpu_core_perf_crtc_update(struct drm_crtc *crtc,
+ 		trace_dpu_core_perf_update_clk(kms->dev, !crtc->enabled, clk_rate);
+ 
+ 		clk_rate = min(clk_rate, kms->perf.max_core_clk_rate);
++		trace_rmx_display_step("mdp-request", crtc->base.id,
++			clk_rate, kms->perf.core_clk_rate, new->bw_ctl, new->max_per_pipe_ib);
+ 		ret = dev_pm_opp_set_rate(&kms->pdev->dev, clk_rate);
++		if (trace_rmx_display_step_enabled())
++			trace_rmx_display_step("mdp-result", crtc->base.id,
++				clk_rate, dpu_kms_get_clk_rate(kms, "core"), (s64)ret, 0);
+ 		if (ret) {
+ 			DPU_ERROR("failed to set core clock rate %llu\n", clk_rate);
+ 			return ret;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+index 93db148..1e4991c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #define pr_fmt(fmt)	"[drm:%s:%d] " fmt, __func__, __LINE__
++#include "rmx2072_trace.h"
+ #include <linux/delay.h>
+ #include <linux/string_choices.h>
+ #include "dpu_encoder_phys.h"
+@@ -12,6 +13,9 @@
+ #include "dpu_core_irq.h"
+ #include "dpu_formats.h"
+ #include "dpu_trace.h"
++#if IS_ENABLED(CONFIG_DRM_MSM_DSI)
++#include "dsi/dsi.h"
++#endif
+ #include "disp/msm_disp_snapshot.h"
+ 
+ #include <drm/drm_managed.h>
+@@ -84,6 +88,21 @@ static void _dpu_encoder_phys_cmd_update_intf_cfg(
+ 		phys_enc->hw_intf->ops.program_intf_cmd_cfg(phys_enc->hw_intf, &cmd_mode_cfg);
+ }
+ 
++static void dpu_cmd_first_frame_sample(struct dpu_encoder_phys *phys_enc, u32 phase)
++{
++#if IS_ENABLED(CONFIG_DRM_MSM_DSI)
++	struct msm_kms *kms = &phys_enc->dpu_kms->base;
++	int i;
++
++	if (!trace_rmx_dsi_sample_enabled())
++		return;
++	for (i = 0; i < ARRAY_SIZE(kms->dsi); i++)
++		if (kms->dsi[i])
++			msm_dsi_host_first_frame_sample(kms->dsi[i]->host,
++				phase, DRMID(phys_enc->parent));
++#endif
++}
++
+ static void dpu_encoder_phys_cmd_pp_tx_done_irq(void *arg)
+ {
+ 	struct dpu_encoder_phys *phys_enc = arg;
+@@ -94,6 +113,7 @@ static void dpu_encoder_phys_cmd_pp_tx_done_irq(void *arg)
+ 	if (!phys_enc->hw_pp)
+ 		return;
+ 
++	dpu_cmd_first_frame_sample(phys_enc, 2);
+ 	DPU_ATRACE_BEGIN("pp_done_irq");
+ 	/* notify all synchronous clients first, then asynchronous clients */
+ 	dpu_encoder_frame_done_callback(phys_enc->parent, phys_enc, event);
+@@ -143,6 +163,7 @@ static void dpu_encoder_phys_cmd_underrun_irq(void *arg)
+ {
+ 	struct dpu_encoder_phys *phys_enc = arg;
+ 
++	dpu_cmd_first_frame_sample(phys_enc, 5);
+ 	dpu_encoder_underrun_callback(phys_enc->parent, phys_enc);
+ }
+ 
+@@ -600,6 +621,7 @@ static void dpu_encoder_phys_cmd_prepare_for_kickoff(
+ 			  phys_enc->hw_pp->idx - PINGPONG_0);
+ 	}
+ 
++	dpu_cmd_first_frame_sample(phys_enc, 1);
+ 	dpu_encoder_phys_cmd_enable_te(phys_enc);
+ 
+ 	DPU_DEBUG_CMDENC(cmd_enc, "pp:%d pending_cnt %d\n",
+diff --git a/drivers/gpu/drm/msm/dsi/dsi.h b/drivers/gpu/drm/msm/dsi/dsi.h
+index 93c028a..7123662 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi.h
++++ b/drivers/gpu/drm/msm/dsi/dsi.h
+@@ -58,6 +58,7 @@ void msm_dsi_manager_tpg_enable(void);
+ 
+ /* dsi host */
+ struct msm_dsi_host;
++void msm_dsi_host_first_frame_sample(struct mipi_dsi_host *host, u32 phase, u32 cookie);
+ int msm_dsi_host_xfer_prepare(struct mipi_dsi_host *host,
+ 					const struct mipi_dsi_msg *msg);
+ void msm_dsi_host_xfer_restore(struct mipi_dsi_host *host,
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index df8061f..8c49eb7 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2015, The Linux Foundation. All rights reserved.
+  */
+ 
++#include "rmx2072_trace.h"
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+@@ -199,6 +200,8 @@ struct msm_dsi_host {
+ 	bool power_on;
+ 	bool enabled;
+ 	int irq;
++	atomic_t ff_sample_count[6];
++	u32 ff_xfer_seq;
+ };
+ 
+ static inline u32 dsi_read(struct msm_dsi_host *msm_host, u32 reg)
+@@ -206,6 +209,32 @@ static inline u32 dsi_read(struct msm_dsi_host *msm_host, u32 reg)
+ 	return readl(msm_host->ctrl_base + reg);
+ }
+ 
++/* phase: 0=power-ready, 1=kickoff-ready, 2=PP-done, 3=IRQ-preclear,
++ * 4=host-enable, 5=DPU-underrun. The caller already owns active HW/PM.
++ * Reads use registers cleared by explicit writes in the normal IRQ path.
++ * First 16 samples per phase, per host, per boot; no rearming or writes.
++ */
++static void dsi_ff_sample(struct msm_dsi_host *msm_host, u32 phase, u32 cookie)
++{
++	u32 v[8];
++
++	if (!trace_rmx_dsi_sample_enabled() || msm_host->id != 0 ||
++	    phase >= ARRAY_SIZE(msm_host->ff_sample_count) ||
++	    atomic_read(&msm_host->ff_sample_count[phase]) >= 16)
++		return;
++	if (atomic_inc_return(&msm_host->ff_sample_count[phase]) > 16)
++		return;
++	v[0] = dsi_read(msm_host, REG_DSI_INTR_CTRL);
++	v[1] = dsi_read(msm_host, REG_DSI_STATUS0);
++	v[2] = dsi_read(msm_host, REG_DSI_FIFO_STATUS);
++	v[3] = dsi_read(msm_host, REG_DSI_ACK_ERR_STATUS);
++	v[4] = dsi_read(msm_host, REG_DSI_TIMEOUT_STATUS);
++	v[5] = dsi_read(msm_host, REG_DSI_DLN0_PHY_ERR);
++	v[6] = dsi_read(msm_host, REG_DSI_CLK_STATUS);
++	v[7] = dsi_read(msm_host, REG_DSI_ERR_INT_MASK0);
++	trace_rmx_dsi_sample(phase, msm_host->id, cookie, v);
++}
++
+ static inline void dsi_write(struct msm_dsi_host *msm_host, u32 reg, u32 data)
+ {
+ 	writel(data, msm_host->ctrl_base + reg);
+@@ -258,6 +287,16 @@ static inline struct msm_dsi_host *to_msm_dsi_host(struct mipi_dsi_host *host)
+ 	return container_of(host, struct msm_dsi_host, base);
+ }
+ 
++void msm_dsi_host_first_frame_sample(struct mipi_dsi_host *host,
++				   u32 phase, u32 cookie)
++{
++	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
++
++	/* DPU calls only on active command-mode commit/IRQ paths. */
++	if (READ_ONCE(msm_host->power_on))
++		dsi_ff_sample(msm_host, phase, cookie);
++}
++
+ int dsi_clk_init_v2(struct msm_dsi_host *msm_host)
+ {
+ 	struct platform_device *pdev = msm_host->pdev;
+@@ -420,6 +459,10 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
+ {
+ 	int ret;
+ 
++	trace_rmx_display_step("link-request", msm_host->id,
++		msm_host->byte_clk_rate, msm_host->pixel_clk_rate,
++		msm_host->byte_intf_clk_rate, msm_host->power_on);
++
+ 	DBG("Set clk rates: pclk=%lu, byteclk=%lu",
+ 	    msm_host->pixel_clk_rate, msm_host->byte_clk_rate);
+ 
+@@ -452,6 +495,11 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
+ 		}
+ 	}
+ 
++	if (trace_rmx_display_step_enabled())
++		trace_rmx_display_step("link-result", msm_host->id,
++			clk_get_rate(msm_host->byte_clk),
++			clk_get_rate(msm_host->pixel_clk),
++			clk_get_rate(msm_host->byte_intf_clk), 0);
+ 	return 0;
+ }
+ 
+@@ -1741,6 +1789,8 @@ static irqreturn_t dsi_host_irq(int irq, void *ptr)
+ 
+ 	spin_lock_irqsave(&msm_host->intr_lock, flags);
+ 	isr = dsi_read(msm_host, REG_DSI_INTR_CTRL);
++	if (isr & DSI_IRQ_ERROR)
++		dsi_ff_sample(msm_host, 3, isr);
+ 	dsi_write(msm_host, REG_DSI_INTR_CTRL, isr);
+ 	spin_unlock_irqrestore(&msm_host->intr_lock, flags);
+ 
+@@ -2253,6 +2303,14 @@ int msm_dsi_host_xfer_prepare(struct mipi_dsi_host *host,
+ 	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
+ 	const struct msm_dsi_cfg_handler *cfg_hnd = msm_host->cfg_hnd;
+ 
++	if (trace_rmx_display_step_enabled()) {
++		msm_host->ff_xfer_seq++;
++		trace_rmx_display_step("dcs-begin", msm_host->id,
++			msm_host->ff_xfer_seq,
++			((u64)msg->type << 32) | (msg->tx_len ? ((const u8 *)msg->tx_buf)[0] : 0),
++			msg->tx_len, ((u64)msm_host->power_on << 32) | msg->flags);
++	}
++
+ 	/* TODO: make sure dsi_cmd_mdp is idle.
+ 	 * Since DSI6G v1.2.0, we can set DSI_TRIG_CTRL.BLOCK_DMA_WITHIN_FRAME
+ 	 * to ask H/W to wait until cmd mdp is idle. S/W wait is not needed.
+@@ -2296,6 +2354,8 @@ void msm_dsi_host_xfer_restore(struct mipi_dsi_host *host,
+ 
+ 	/* TODO: unvote for bus bandwidth */
+ 
++	trace_rmx_display_step("dcs-end", msm_host->id,
++		msm_host->ff_xfer_seq, msg->type, msg->tx_len, msg->flags);
+ 	cfg_hnd->ops->link_clk_disable(msm_host);
+ 	pm_runtime_put(&msm_host->pdev->dev);
+ }
+@@ -2536,6 +2596,7 @@ int msm_dsi_host_enable(struct mipi_dsi_host *host)
+ 	 * }
+ 	 */
+ 	msm_host->enabled = true;
++	dsi_ff_sample(msm_host, 4, 0);
+ 	return 0;
+ }
+ 
+@@ -2620,6 +2681,7 @@ int msm_dsi_host_power_on(struct mipi_dsi_host *host,
+ 	dsi_ctrl_enable(msm_host, phy_shared_timings, phy);
+ 
+ 	msm_host->power_on = true;
++	dsi_ff_sample(msm_host, 0, 0);
+ 	mutex_unlock(&msm_host->dev_mutex);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+index aba2728..cd97680 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2018, The Linux Foundation
+  */
+ 
++#include "rmx2072_trace.h"
+ #include <dt-bindings/clock/qcom,dsi-phy-28nm.h>
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
+@@ -365,6 +366,8 @@ static int dsi_pll_7nm_vco_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct dsi_pll_7nm *pll_7nm = to_pll_7nm(hw);
+ 	struct dsi_pll_config config;
+ 
++	trace_rmx_display_step("pll-set-begin", pll_7nm->phy->id,
++		rate, parent_rate, pll_7nm->vco_current_rate, pll_7nm->phy->pll_on);
+ 	dsi_pll_enable_pll_bias(pll_7nm);
+ 	DBG("DSI PLL%d rate=%lu, parent's=%lu", pll_7nm->phy->id, rate,
+ 	    parent_rate);
+@@ -387,6 +390,8 @@ static int dsi_pll_7nm_vco_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	dsi_pll_disable_pll_bias(pll_7nm);
+ 	/* flush, ensure all register writes are done*/
+ 	wmb();
++	trace_rmx_display_step("pll-set-end", pll_7nm->phy->id,
++		rate, parent_rate, pll_7nm->vco_current_rate, pll_7nm->phy->pll_on);
+ 
+ 	return 0;
+ }
+@@ -509,6 +514,8 @@ static int dsi_pll_7nm_vco_prepare(struct clk_hw *hw)
+ 	struct dsi_pll_7nm *pll_7nm = to_pll_7nm(hw);
+ 	int rc;
+ 
++	trace_rmx_display_step("pll-prepare", pll_7nm->phy->id,
++		pll_7nm->vco_current_rate, pll_7nm->phy->pll_on, 0, 0);
+ 	dsi_pll_enable_pll_bias(pll_7nm);
+ 	if (pll_7nm->slave)
+ 		dsi_pll_enable_pll_bias(pll_7nm->slave);
+@@ -549,6 +556,8 @@ static int dsi_pll_7nm_vco_prepare(struct clk_hw *hw)
+ 		writel(0x1, pll_7nm->slave->phy->base + REG_DSI_7nm_PHY_CMN_RBUF_CTRL);
+ 
+ error:
++	trace_rmx_display_step("pll-prepare-result", pll_7nm->phy->id,
++		pll_7nm->vco_current_rate, pll_7nm->phy->pll_on, (s64)rc, 0);
+ 	dsi_pll_7nm_trace_state(pll_7nm, "prepare-result");
+ 	return rc;
+ }
+@@ -563,6 +572,8 @@ static void dsi_pll_7nm_vco_unprepare(struct clk_hw *hw)
+ {
+ 	struct dsi_pll_7nm *pll_7nm = to_pll_7nm(hw);
+ 
++	trace_rmx_display_step("pll-unprepare", pll_7nm->phy->id,
++		pll_7nm->vco_current_rate, pll_7nm->phy->pll_on, 0, 0);
+ 	/*
+ 	 * To avoid any stray glitches while abruptly powering down the PLL
+ 	 * make sure to gate the clock using the clock enable bit before
+diff --git a/drivers/gpu/drm/msm/rmx2072_trace.c b/drivers/gpu/drm/msm/rmx2072_trace.c
+new file mode 100644
+index 0000000..8e5ff79
+--- /dev/null
++++ b/drivers/gpu/drm/msm/rmx2072_trace.c
+@@ -0,0 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#define CREATE_TRACE_POINTS
++#include "rmx2072_trace.h"
+diff --git a/drivers/gpu/drm/msm/rmx2072_trace.h b/drivers/gpu/drm/msm/rmx2072_trace.h
+new file mode 100644
+index 0000000..9c7f624
+--- /dev/null
++++ b/drivers/gpu/drm/msm/rmx2072_trace.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM rmx2072_display
++
++#if !defined(_RMX2072_DISPLAY_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _RMX2072_DISPLAY_TRACE_H
++
++#include <linux/tracepoint.h>
++
++/* Fixed-size records only. No printing, allocation or clock API in IRQs. */
++TRACE_EVENT(rmx_dsi_sample,
++	TP_PROTO(u32 phase, u32 id, u32 cookie, const u32 *v),
++	TP_ARGS(phase, id, cookie, v),
++	TP_STRUCT__entry(
++		__field(u32, phase)
++		__field(u32, id)
++		__field(u32, cookie)
++		__array(u32, v, 8)
++	),
++	TP_fast_assign(
++		__entry->phase = phase;
++		__entry->id = id;
++		__entry->cookie = cookie;
++		memcpy(__entry->v, v, sizeof(__entry->v));
++	),
++	TP_printk("phase=%u id=%u cookie=%u irq=%#x status=%#x fifo=%#x ack=%#x timeout=%#x phy=%#x clk=%#x mask=%#x",
++		__entry->phase, __entry->id, __entry->cookie,
++		__entry->v[0], __entry->v[1], __entry->v[2], __entry->v[3],
++		__entry->v[4], __entry->v[5], __entry->v[6], __entry->v[7])
++);
++
++TRACE_EVENT(rmx_display_step,
++	TP_PROTO(const char *step, u32 id, u64 a, u64 b, u64 c, u64 d),
++	TP_ARGS(step, id, a, b, c, d),
++	TP_STRUCT__entry(
++		__string(step, step)
++		__field(u32, id)
++		__field(u64, a)
++		__field(u64, b)
++		__field(u64, c)
++		__field(u64, d)
++	),
++	TP_fast_assign(
++		__assign_str(step);
++		__entry->id = id;
++		__entry->a = a;
++		__entry->b = b;
++		__entry->c = c;
++		__entry->d = d;
++	),
++	TP_printk("step=%s id=%u a=%llu b=%llu c=%llu d=%llu",
++		__get_str(step), __entry->id, __entry->a, __entry->b,
++		__entry->c, __entry->d)
++);
++
++#endif
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE rmx2072_trace
++#include <trace/define_trace.h>

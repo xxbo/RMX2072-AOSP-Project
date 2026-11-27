@@ -1,0 +1,69 @@
+{
+  "goal": "Resolve the private Keymaster runtime under secure init execution",
+  "trial47_reference": "m3-display-47-2026-11-15.json",
+  "baseline_reproduction": {
+    "rmx-keymaster-info-service": "e66f3dc8730a4748e7775667219b03f854b439da07ae408bcefdb6975ad22102",
+    "rmx-keymaster-info-client": "3a2cf7e3689104587a48c7592ccc3603dbede63b2e1e119b39efd636c13bf964"
+  },
+  "rebuilt": {
+    "rmx-keymaster-info-service": {
+      "sha256": "eafd33426dd64549d3782233c74c8360dd0ce578fd267741fa2cf71907929130",
+      "needed": [
+        "android.hardware.keymaster@3.0.so",
+        "android.hardware.keymaster@4.0.so",
+        "libbase.so",
+        "libc++.so",
+        "libcutils.so",
+        "libhidlbase.so",
+        "libprocessgroup.so",
+        "libutils.so",
+        "liblog.so",
+        "libc.so"
+      ],
+      "runpath": [
+        "/vendor/lib64/rmx-keymaster"
+      ],
+      "source_sha256": "fd1c7a689744b9e27d6a64b99a00163a49691c89ddb4741d043e57ff8d7515d0"
+    },
+    "rmx-keymaster-info-client": {
+      "sha256": "0f38eb32cf6870b869f281639875e0450227242039cf1a7b9791d80787ed3344",
+      "needed": [
+        "android.hardware.keymaster@3.0.so",
+        "android.hardware.keymaster@4.0.so",
+        "libbase.so",
+        "libc++.so",
+        "libcutils.so",
+        "libhidlbase.so",
+        "libprocessgroup.so",
+        "libutils.so",
+        "liblog.so",
+        "libc.so"
+      ],
+      "runpath": [
+        "/vendor/lib64/rmx-keymaster"
+      ],
+      "source_sha256": "a3137d11df02652e9e657f4fe60f6cffc9cd1eba02e599c23706181a62c0c7ff"
+    }
+  },
+  "selinux_policy_changed": false,
+  "library_bytes_changed": false,
+  "device_result": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-48",
+    "boot_id": "10daf3a7-41a4-4f66-b345-a86eed9ab0cd",
+    "enforcing": true,
+    "maintenance_registered": true,
+    "service_process_domain": "u:r:rmx_keymaster:s0",
+    "adb_retained": true,
+    "reference": "m3-display-48-2026-11-15.json",
+    "limitation": "Direct getHardwareInfo/HMAC/earlyBootEnded lines absent from the collected late log ring; not independently re-claimed in this trial"
+  },
+  "followup_trial49": {
+    "boot_id": "f35092d2-e241-44db-875c-7ffc871e0428",
+    "reference": "m3-display-49-2026-11-15.json",
+    "registered": true,
+    "hardware_info": "TEE; RMX2072 keymaster64 API 4.0 TA 4.546",
+    "hmac_status": 0,
+    "earlyBootEnded_TEE": "succeeded",
+    "maintenance_registered": true
+  }
+}

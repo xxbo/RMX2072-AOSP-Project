@@ -1,0 +1,40 @@
+{
+  "purpose": "Static diagnostic image through GSI BootAnimation, not a boot-completion indicator",
+  "size": [
+    1080,
+    2400
+  ],
+  "frames": 2,
+  "fps": 1,
+  "frames_identical": true,
+  "archive_bytes": 56784,
+  "archive_sha256": "bafe09ef830c1d1f541c6ab819b8e666dcbf627f714902dcaccca449d48582e0",
+  "png_sha256": "a92b72b4a2ce1f87ec39438ff4ad9f2238614900a5f37768388ad320afaa3774",
+  "validation": "PNG fully decoded, archive stored entries checked, exact primary/secondary color and orientation samples passed; two generator runs byte-identical",
+  "gsi_bootanimation_source": "https://android.googlesource.com/platform/frameworks/base/+/94b4c163b7dfe5ce3607f7bb8456f9573f7de57d/cmds/bootanimation/BootAnimation.cpp",
+  "mount": "Read-only project vendor subtree at pre-existing /oem; no modification of GSI bytes",
+  "device_result": "Trial 58: read-only OEM bind mounted; BootAnimation loads /oem/media/bootanimation.zip successfully and plays part0. Captured pattern structure is correct, but operator corrects physical screen as different. Full physical acceptance NOT PASSED.",
+  "source_sha256": "24435900529ebfae34967242ff913f9061f11c3b5ded51fc2fa6af714c81f9d6",
+  "policy": {
+    "result": "PASS_STRICT_COMPILE_ONLY",
+    "reference": "m3-graphics-policy-2026-11-15.json",
+    "compiled_policy_sha256": "60c1de23837e7dc1789f9dc1aecb29da0f97d0c4d56c6f6e58887e60a288f22e",
+    "labels": "oemfs directories and bootanim_oem_file archive; existing platform BootAnimation read rules",
+    "added_access": "init oemfs:dir mounton only; previous ineffective vendor_init grant removed",
+    "rejected_attempt": "Custom vendor_file_type asset read by bootanim failed the platform Treble neverallow; no such grant is retained.",
+    "trial57_runtime_failure": "Permission targeted vendor_init, but mount executes in init. Replace it with init oemfs:dir mounton only; strict compilation and runtime retest required.",
+    "compile_boot_id": "e7debf6c-7e25-42f3-9c0d-818c8b9ff8ea",
+    "loaded": false
+  },
+  "engineering_scope": "Temporary OEM-labelled read-only subtree within the project vendor, mounted on the existing empty /oem. Not a production OEM partition layout or VTS file-context acceptance. Remove after pixel isolation.",
+  "packaging_regression": {
+    "stage": "Local prepare_ufs_verification rejected the first build; no handset write",
+    "only_mismatching_payload": "/etc/rmx-m3-oem/media/bootanimation.zip",
+    "source_sha256": "bafe09ef830c1d1f541c6ab819b8e666dcbf627f714902dcaccca449d48582e0",
+    "broken_image_payload_sha256": "1dd65525dffe9e6c04cbff122e6634b19552421843758102fc92d103613fbc9b",
+    "embedded_crlf_pairs": 2,
+    "cause": "Old builder normalized CRLF in every non-ELF payload, corrupting stored PNG bytes and ZIP structure",
+    "fix": "Normalize only named text formats; preserve ZIP, PNG, public keys and unknown binary payloads byte-for-byte",
+    "verification": "Regression tests pass; rebuilt ext4 payload is byte-identical to the generated ZIP, ZIP CRC passes, full signed candidate verification and physical UFS readback pass in trial 57."
+  }
+}

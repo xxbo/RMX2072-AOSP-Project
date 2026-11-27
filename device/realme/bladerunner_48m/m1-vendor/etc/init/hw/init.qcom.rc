@@ -1,2 +1,10 @@
 on early-init
     write /dev/kmsg "RMX2072: project vendor early-init"
+
+# The engineering ramdisk has already mounted and checked its isolated,
+# unencrypted data/metadata volumes. No second-stage mount_all runs to queue
+# this event. Let the GSI start its main/late_start classes (including installd)
+# only when the boot packer explicitly identifies that scratch-volume profile.
+# A future real userdata/FBE profile must use its own fs_mgr lifecycle.
+on boot && property:ro.boot.rmx_scratch=1
+    trigger nonencrypted

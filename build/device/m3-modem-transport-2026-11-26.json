@@ -1,0 +1,912 @@
+{
+  "source": "Previously captured F.20 live DT; no new device read",
+  "dtb_sha256": "56445e4b3a8dc3f7853164b71aaf9c9adbafc600300ccbbf0d404cea61e7f56c",
+  "path": "/soc/qcom,pcie@1c10000/pcie2_rp/qcom,mhi@0",
+  "channels": [
+    {
+      "reg": [
+        0
+      ],
+      "label": [
+        "LOOPBACK"
+      ],
+      "mhi,event-ring": [
+        2
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        1
+      ],
+      "label": [
+        "LOOPBACK"
+      ],
+      "mhi,event-ring": [
+        2
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        2
+      ],
+      "label": [
+        "SAHARA"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        128
+      ],
+      "mhi,ee": [
+        2
+      ]
+    },
+    {
+      "reg": [
+        3
+      ],
+      "label": [
+        "SAHARA"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        128
+      ],
+      "mhi,ee": [
+        2
+      ]
+    },
+    {
+      "reg": [
+        4
+      ],
+      "label": [
+        "DIAG"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        5
+      ],
+      "label": [
+        "DIAG"
+      ],
+      "mhi,event-ring": [
+        3
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        8
+      ],
+      "label": [
+        "QDSS"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        9
+      ],
+      "label": [
+        "QDSS"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        128
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        10
+      ],
+      "label": [
+        "EFS"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        11
+      ],
+      "label": [
+        "EFS"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        14
+      ],
+      "label": [
+        "QMI0"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        15
+      ],
+      "label": [
+        "QMI0"
+      ],
+      "mhi,event-ring": [
+        2
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        16
+      ],
+      "label": [
+        "QMI1"
+      ],
+      "mhi,event-ring": [
+        3
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        17
+      ],
+      "label": [
+        "QMI1"
+      ],
+      "mhi,event-ring": [
+        3
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        18
+      ],
+      "label": [
+        "IP_CTRL"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        19
+      ],
+      "label": [
+        "IP_CTRL"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        20
+      ],
+      "label": [
+        "IPCR"
+      ],
+      "mhi,event-ring": [
+        2
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        21
+      ],
+      "label": [
+        "IPCR"
+      ],
+      "mhi,event-ring": [
+        2
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        22
+      ],
+      "label": [
+        "TF"
+      ],
+      "mhi,event-ring": [
+        2
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        23
+      ],
+      "label": [
+        "TF"
+      ],
+      "mhi,event-ring": [
+        2
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        25
+      ],
+      "label": [
+        "BL"
+      ],
+      "mhi,event-ring": [
+        1
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        32
+      ],
+      "mhi,ee": [
+        2
+      ]
+    },
+    {
+      "reg": [
+        26
+      ],
+      "label": [
+        "DCI"
+      ],
+      "mhi,event-ring": [
+        3
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        27
+      ],
+      "label": [
+        "DCI"
+      ],
+      "mhi,event-ring": [
+        3
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        32
+      ],
+      "label": [
+        "DUN"
+      ],
+      "mhi,event-ring": [
+        3
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        33
+      ],
+      "label": [
+        "DUN"
+      ],
+      "mhi,event-ring": [
+        3
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        64
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        50
+      ],
+      "label": [
+        "ADSP_0"
+      ],
+      "mhi,event-ring": [
+        4
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        51
+      ],
+      "label": [
+        "ADSP_1"
+      ],
+      "mhi,event-ring": [
+        4
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        52
+      ],
+      "label": [
+        "SLPI_0"
+      ],
+      "mhi,event-ring": [
+        5
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        53
+      ],
+      "label": [
+        "SLPI_1"
+      ],
+      "mhi,event-ring": [
+        5
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        70
+      ],
+      "label": [
+        "ADSP_2"
+      ],
+      "mhi,event-ring": [
+        4
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        71
+      ],
+      "label": [
+        "ADSP_3"
+      ],
+      "mhi,event-ring": [
+        4
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        72
+      ],
+      "label": [
+        "SLPI_2"
+      ],
+      "mhi,event-ring": [
+        5
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        73
+      ],
+      "label": [
+        "SLPI_3"
+      ],
+      "mhi,event-ring": [
+        5
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        80
+      ],
+      "label": [
+        "AUDIO_VOICE_0"
+      ],
+      "mhi,event-ring": [
+        0
+      ],
+      "mhi,chan-dir": [
+        0
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": [],
+      "status": [
+        "ok"
+      ]
+    },
+    {
+      "reg": [
+        100
+      ],
+      "label": [
+        "IP_HW0"
+      ],
+      "mhi,event-ring": [
+        7
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        512
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        101
+      ],
+      "label": [
+        "IP_HW0"
+      ],
+      "mhi,event-ring": [
+        8
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        512
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        102
+      ],
+      "label": [
+        "IP_HW_ADPL"
+      ],
+      "mhi,event-ring": [
+        9
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        103
+      ],
+      "label": [
+        "IP_HW_QDSS"
+      ],
+      "mhi,event-ring": [
+        10
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        128
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        104
+      ],
+      "label": [
+        "IP_HW0_RSC"
+      ],
+      "mhi,event-ring": [
+        8
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        512
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        105
+      ],
+      "label": [
+        "IP_HW_MHIP_0"
+      ],
+      "mhi,event-ring": [
+        11
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        106
+      ],
+      "label": [
+        "IP_HW_MHIP_0"
+      ],
+      "mhi,event-ring": [
+        12
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        107
+      ],
+      "label": [
+        "IP_HW_MHIP_1"
+      ],
+      "mhi,event-ring": [
+        13
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        108
+      ],
+      "label": [
+        "IP_HW_MHIP_1"
+      ],
+      "mhi,event-ring": [
+        14
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,ee": [
+        4
+      ],
+      "mhi,offload-chan": []
+    },
+    {
+      "reg": [
+        109
+      ],
+      "label": [
+        "RMNET_CTL"
+      ],
+      "mhi,event-ring": [
+        15
+      ],
+      "mhi,chan-dir": [
+        1
+      ],
+      "mhi,num-elements": [
+        128
+      ],
+      "mhi,ee": [
+        4
+      ]
+    },
+    {
+      "reg": [
+        110
+      ],
+      "label": [
+        "RMNET_CTL"
+      ],
+      "mhi,event-ring": [
+        16
+      ],
+      "mhi,chan-dir": [
+        2
+      ],
+      "mhi,num-elements": [
+        128
+      ],
+      "mhi,ee": [
+        4
+      ]
+    }
+  ],
+  "upstream_reference": "https://github.com/torvalds/linux/blob/v6.18/drivers/bus/mhi/host/pci_generic.c",
+  "upstream_profile": "mhi_qcom_sdx55_info / modem_qcom_v1_mhi_channels",
+  "common_channel_ids": [
+    14,
+    15,
+    20,
+    21,
+    100,
+    101
+  ],
+  "stock_additional_target_paths": {
+    "QMI1": [
+      16,
+      17
+    ],
+    "AUDIO_VOICE_0": [
+      80
+    ],
+    "RMNET_CTL": [
+      109,
+      110
+    ]
+  },
+  "limitations": [
+    "Generic SDX55 binding is not a complete Android radio/IMS/audio implementation.",
+    "Channel names/numbers do not themselves establish SIM-slot or call support.",
+    "Firmware compatibility and exact channel/event routing need board-specific verification."
+  ],
+  "device_implementation": "NOT RUN",
+  "upstream_git_blob": "b188bbf7de042d8b9aa0dde1217d2c86558c3caf"
+}

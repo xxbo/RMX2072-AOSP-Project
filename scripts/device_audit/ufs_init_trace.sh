@@ -61,5 +61,8 @@ echo 'common_pid == 1 && (ino == 659 || ino == 757)' > "$i/events/m1reads/m1_fil
 echo 1 > "$i/events/m1reads/m1_file_read/enable"
 echo 1 > "$i/tracing_on"
 echo 1 > /proc/sys/kernel/tracepoint_printk
-[ "$(cat /proc/sys/kernel/tracepoint_printk)" = 1 ]
+if [ "$(cat /proc/sys/kernel/tracepoint_printk)" != 1 ]; then
+    echo 'M1ERROR tracepoint_printk stayed zero; tp_printk boot allocation is required' >&2
+    exit 1
+fi
 echo 'M1EVENT read_trace=pid1 inode=659,757 sink=printk' >> "$event_sink"

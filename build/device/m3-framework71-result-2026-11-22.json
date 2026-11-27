@@ -1,0 +1,60 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-71",
+  "attempt": "retry",
+  "boot_id": "c4b86563-5714-4f06-855e-26cf1525e734",
+  "result": "PASS_HEALTH_CALLBACK_BLOCKED_POWER_HINT_MANAGER",
+  "recipe_commit": "028265ad18cc5dceb784f1c89186f9f043843ef2",
+  "kernel_sha256": "7b1701283ca73e4b2536fbf053aaa01dbca9b8e5f77059b98dc5291a9569d7b3",
+  "boot_sha256": "54d3ef4662a2d00293e11c358dce7131850b7e2f87b5e8fd171720f03718f3d5",
+  "vendor_sha256": "3c716a81268a42d1df2260cbbbf6018436d3c566e9b0c3902ad88ac65be10585",
+  "super_sha256": "d9dd8c64fbf185cdba37f382090eb5c9cbfd960f2172a1bbf5c78ba45dd9f00f",
+  "candidate_readback": "PASS_BOOT_DTBO_AND_17_SUPER_CHUNKS",
+  "health_instance": "android.hardware.health.IHealth/default",
+  "health_domain": "u:r:rmx_health:s0",
+  "health_registration": "PASS",
+  "battery_service_initial_callback": "PASS_0_MS_WAIT",
+  "battery_service_persistence": "Unavailable after later system_server exit",
+  "next_fatal": "HintManagerService constructor dereferences null SupportInfo.headroom; no project Power HAL yet",
+  "framework_services": {
+    "activity": "NOT REGISTERED AT SAMPLE",
+    "window": "NOT REGISTERED AT SAMPLE",
+    "boot_completed": "NOT SET",
+    "desktop": "NOT REACHED"
+  },
+  "data": {
+    "bytes": 2147483648,
+    "sample_used_kib": 833152,
+    "sample_available_kib": 1214672,
+    "no_space_left_in_capture": false
+  },
+  "power_supply_nodes": "NONE",
+  "physical_display": "NOT RECHECKED_THIS_TRIAL; accepted trial69 inputs retained",
+  "stable_adb_seconds": 196.859,
+  "guardian": "retained",
+  "retained": "GSI_CURRENT_BOOT_ONLY",
+  "cold_boot_or_fault_injection": "NOT RUN",
+  "first_failure_excerpt": [
+    "01-01 00:03:25.475  2314  2314 I HealthServiceWrapperAidl: health: HealthServiceWrapper listening to AIDL HAL",
+    "01-01 00:03:25.475  2314  2314 I BatteryService: health: Waited 0ms and received the update.",
+    "01-01 00:03:26.574  2314  2314 E System  : java.lang.RuntimeException: Failed to create service com.android.server.power.hint.HintManagerService: service constructor threw an exception",
+    "01-01 00:03:26.574  2314  2314 E System  : Caused by: java.lang.NullPointerException: Attempt to read from field 'android.hardware.power.SupportInfo$HeadroomSupportInfo android.hardware.power.SupportInfo.headroom' on a null object reference in method 'void com.android.server.power.hint.HintManagerService.<init>(android.content.Context, com.android.server.power.hint.HintManagerService$Injector)'",
+    "01-01 00:03:26.574  2314  2314 E Zygote  : java.lang.RuntimeException: Failed to create service com.android.server.power.hint.HintManagerService: service constructor threw an exception",
+    "01-01 00:03:26.574  2314  2314 E Zygote  : Caused by: java.lang.NullPointerException: Attempt to read from field 'android.hardware.power.SupportInfo$HeadroomSupportInfo android.hardware.power.SupportInfo.headroom' on a null object reference in method 'void com.android.server.power.hint.HintManagerService.<init>(android.content.Context, com.android.server.power.hint.HintManagerService$Injector)'",
+    "01-01 00:03:26.575  2314  2314 E AndroidRuntime: java.lang.RuntimeException: Failed to create service com.android.server.power.hint.HintManagerService: service constructor threw an exception",
+    "01-01 00:03:26.575  2314  2314 E AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to read from field 'android.hardware.power.SupportInfo$HeadroomSupportInfo android.hardware.power.SupportInfo.headroom' on a null object reference in method 'void com.android.server.power.hint.HintManagerService.<init>(android.content.Context, com.android.server.power.hint.HintManagerService$Injector)'",
+    "01-01 00:03:26.577  2314  2314 I am_crash: [2314,0,system_server,-1,java.lang.NullPointerException,Attempt to read from field 'android.hardware.power.SupportInfo$HeadroomSupportInfo android.hardware.power.SupportInfo.headroom' on a null object reference in method 'void com.android.server.power.hint.HintManagerService.<init>(android.content.Context, com.android.server.power.hint.HintManagerService$Injector)',HintManagerService.java,334,0]"
+  ],
+  "limitations": [
+    "No gauge/charger driver claim",
+    "shell Health dumpsys denied by SELinux; framework callback independently confirmed",
+    "Existing audioserver null dereference remains"
+  ],
+  "evidence_sha256": {
+    "inputs.json": "830ffcdc89a37b903ad895b256295bc64d0c4d00f8674e65c683970ff0df701f",
+    "readbacks.jsonl": "7bd03f03a29148c9d561167bf6662fa52255b2c9e6284edcb4fe86e0675570ca",
+    "gsi-stable.json": "cba0adc938c2595472208966bec3c20f9ceaaaea7f85b2f56c999ea8aa507952",
+    "framework-2-logcat.txt": "dd65d3fa14558ee7ecbb53308102588c6f246889c617e415b3444a8c33d4c7a1",
+    "framework-1-storage.txt": "9b97f8397ceb009c4ef5574f772193e2791129cd9a77368998ed7308565298d9",
+    "framework-1-health.txt": "05fde803c5e16af96443d7fd74c5ab769766d299439481891c57f60ee1964d33"
+  }
+}

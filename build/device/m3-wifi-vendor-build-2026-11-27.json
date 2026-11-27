@@ -1,0 +1,45 @@
+{
+  "run_id": 46023708474,
+  "source_commit": "19f938a14af6e44e21905e368c2ebd342a5a73f1",
+  "artifact_id": 15213550212,
+  "artifact_archive_digest": "sha256:5298d0b314d94bde036b78bcfc9dc85310fbf1c3eee55bc6d83b5256172a2a1d",
+  "archive_digest_verified": true,
+  "isa_screen": {
+    "sha256": "cbfb86dfd051553979fe98fd905091c473d88024e790f46dcabc2a94f57c0182",
+    "machine": "AArch64",
+    "sve_register_instruction_count": 0,
+    "disassembly_sha256": "b1dd6e340ce50d55ca946486bfdf6d0b00e4dae0e25a581ebe19159aeb67238d",
+    "scope": "SVE register operand screen plus pinned ARMv8-A build; device startup/RF pending"
+  },
+  "source_verified": true,
+  "files": {
+    "/bin/hw/wpa_supplicant": "cbfb86dfd051553979fe98fd905091c473d88024e790f46dcabc2a94f57c0182",
+    "/etc/init/android.hardware.wifi.supplicant-service.rc": "72a3f1662472db5e34211de59ad71eb550e801bdd9e96c8c13badea734c01769",
+    "/etc/vintf/manifest/android.hardware.wifi.supplicant.xml": "d8dce6d4a6f9ecd85b1d8b3bf59a545bd7ac92bd84038c81c3e3876364c9190c",
+    "/lib64/android.hardware.security.keymint-V1-ndk.so": "99e78cf70b0a4d17069090db9f97d71ac5c95bf2af5e922bb430ca073e8be2f6",
+    "/lib64/android.hardware.security.secureclock-V1-ndk.so": "0b31b8084ceb070e675c248c0ee0bb82e91a4b3c5cb0f223b675d6d7a06ab6a6",
+    "/lib64/android.hardware.wifi.common-V2-ndk.so": "de0f95e26001e9afae04e490fb9fac05eb0b74f3ff1a0fad94e44a4bc214cf6d",
+    "/lib64/android.hardware.wifi.supplicant-V5-ndk.so": "b426e336b5f599baeeef429ca3b9d09e8052aa41a93b31b191190752f8533b90",
+    "/lib64/android.system.keystore2-V1-ndk.so": "31e337d537b74125008e0af40edd47d4f5c1567dd44132bdffa63217e75ee8cd",
+    "/lib64/libbase.so": "79cc9c2b80cb9d91ee866f9995552d53ce35e3fa6671c2687c6af38f1101eff1",
+    "/lib64/libc++.so": "cb118e98c74d3454858921123b9b51ba13df9cad7dfa141dd892c453661a4d78",
+    "/lib64/libcrypto.so": "1bc9c72e523c379d1329573864395e613d6c52698ec463e1cfbb0c7c2bd0f4a4",
+    "/lib64/libcutils.so": "aa3fd0306f880a56a54b0149aa0fa8a9ac85ed39e6d6ae412fadc6539831e073",
+    "/lib64/libkeystore-engine-wifi-hidl.so": "9a59b84c31cb93f05faab65a8f83ed007e53c32c1e2cca08691571ddce9f85ac",
+    "/lib64/libnl.so": "e539785149c6b90fa7d96b38cf2449b6f667d1af128495147eb9990b126a4c5f",
+    "/lib64/libssl.so": "07851770a8a12b52f1de7cecfb5dcb561ba5e0d582fa02a54b17655fe68dd1f2",
+    "/lib64/libutils.so": "b3c2d00e186d8340548f5bb4ef5974fdba0e6c89cb9bb78761555803c41e7687"
+  },
+  "kind": "wifi",
+  "target_closure": {
+    "target": "wpa_supplicant",
+    "graph": "out/combined-rmx2072_m3_graphics.ninja",
+    "method": "ninja -t commands (read only)",
+    "command_count": 2887,
+    "commands_sha256": "d73970dc8b74a0ba914118fbab117dc40864a814794ebd8bf3ac9c1ab442ad23",
+    "missing_dependency_commands": []
+  },
+  "payload_bytes": 8845052,
+  "scope": "PASS source artifact, complete dependency closure and bounded ISA screen; device startup and Wi-Fi still pending",
+  "compose_check": "No accepted vendor library replaced; only source Wi-Fi files, configuration and labels/policy added"
+}

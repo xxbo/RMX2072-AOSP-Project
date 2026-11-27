@@ -4,6 +4,12 @@
 > Basis: pinned RMX2072 4.19.81 source, SM8250 4.19.325 reference, RMX2072-specific device-tree/vendor manifests and the pinned Android 17 GKI 6.18 reference.
 > Status: architecture map for planning; exact DTS bindings, module symbols and physical component revisions remain to be verified.
 
+For current acceptance, use the [compatibility matrix](COMPATIBILITY_MATRIX.md).
+The [2026-11-24 stock hardware audit](M3_HARDWARE_STATUS_2026-11-24.md) now identifies
+WLAN as QCA6390 (PCI 17cb:1101), speaker amplifier bindings as tfa98xx, and the
+vibrator binding as aw8697_haptic (I2C 7-005a). These observations refine this
+original planning snapshot; they are not successful 6.18 hardware tests.
+
 ## 1. Why dependency order matters
 
 A phone kernel is not a bag of independent drivers. GPU, display, camera and audio all depend on lower-level services such as clocks, regulators, DMA, IOMMU and firmware/remote-processor communication. If those foundations are incomplete, porting an upper-level driver first creates misleading build success followed by probe failures, memory faults or runtime instability.

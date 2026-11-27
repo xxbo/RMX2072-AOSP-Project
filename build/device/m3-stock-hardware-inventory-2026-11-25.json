@@ -1,0 +1,117 @@
+{
+  "source": "One existing F.20 recovery set, local read only",
+  "new_original_images": 0,
+  "device_reads": false,
+  "inventory_only": true,
+  "partitions": {
+    "vendor": {
+      "inventory_sha256": "acefb367b5ea2fa11f542bce884526b32aeb2aeaa3427a4774d443d4d78b6614",
+      "matching_entries": 103,
+      "verified_local_chunks": [
+        0,
+        1,
+        2
+      ],
+      "selected": [
+        {
+          "path": "/bin/hw/android.hardware.gatekeeper@1.0-service-qti",
+          "size": 11496,
+          "mode": "0o100755",
+          "layout": 3
+        },
+        {
+          "path": "/etc/init/android.hardware.gatekeeper@1.0-service-qti.rc",
+          "size": 135,
+          "mode": "0o100644",
+          "layout": 2
+        },
+        {
+          "path": "/lib/modules/audio_tfa98xx-v6.ko",
+          "size": 319526,
+          "mode": "0o100644",
+          "layout": 3
+        }
+      ]
+    },
+    "odm": {
+      "inventory_sha256": "d1535dbc1b68a595067b199f09e4b6b0bcc6d43f8176653e61856f3f957181e2",
+      "matching_entries": 1139,
+      "verified_local_chunks": [
+        0,
+        1,
+        8,
+        9,
+        10
+      ],
+      "selected": [
+        {
+          "path": "/bin/hw/vendor.oplus.hardware.biometrics.fingerprint@2.1-service",
+          "size": 158040,
+          "mode": "0o100755",
+          "layout": 3
+        },
+        {
+          "path": "/etc/init/vendor.oplus.hardware.biometrics.fingerprint@2.1-service.rc",
+          "size": 3570,
+          "mode": "0o100644",
+          "layout": 2
+        },
+        {
+          "path": "/etc/wifi/bdwlan.elf",
+          "size": 57908,
+          "mode": "0o100644",
+          "layout": 3
+        },
+        {
+          "path": "/firmware/aw8697_haptic_235.bin",
+          "size": 6115,
+          "mode": "0o100644",
+          "layout": 3
+        },
+        {
+          "path": "/firmware/aw8697_haptic_235_19161.bin",
+          "size": 5081,
+          "mode": "0o100644",
+          "layout": 3
+        },
+        {
+          "path": "/firmware/tfa98xx.cnt",
+          "size": 3877,
+          "mode": "0o100644",
+          "layout": 2
+        },
+        {
+          "path": "/lib/hw/fingerprint.goodix_G3.default.so",
+          "size": 8368,
+          "mode": "0o100644",
+          "layout": 3
+        },
+        {
+          "path": "/lib64/hw/fingerprint.goodix_G3.default.so",
+          "size": 16624,
+          "mode": "0o100644",
+          "layout": 3
+        },
+        {
+          "path": "/vendor/firmware/goodixfp.mdt",
+          "size": 7464,
+          "mode": "0o100644",
+          "layout": 3
+        }
+      ]
+    },
+    "my_product": {
+      "inventory_sha256": "be97047e41bb961f3762d2e1871f40113d9485e3f267a491cee73fd65cbd2ea6",
+      "matching_entries": 8,
+      "verified_local_chunks": [
+        0,
+        1,
+        5,
+        6,
+        10,
+        13
+      ],
+      "selected": []
+    }
+  }
+}

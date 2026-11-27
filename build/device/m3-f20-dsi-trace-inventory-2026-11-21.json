@@ -1,0 +1,83 @@
+{
+  "utc": "2026-11-21T07:39:22.585115+00:00",
+  "firmware": "RMX2072_11_F.20",
+  "kernel": "4.19.157-perf+",
+  "boot_id": "357dcda6-83fa-46dc-9f61-3eb2eaedc0af",
+  "results": {
+    "debug-mount-state": {
+      "command": "grep -E \"debugfs|tracefs\" /proc/mounts; ls -ld /sys/kernel/debug /d",
+      "exit_status": 1,
+      "bytes": 177,
+      "sha256": "b149e9f5727e110b4b6bafa3b2d3dda96c3f5acf29a805af5018797c439674f2"
+    },
+    "events": {
+      "command": "grep -Ei \"dsi|dcs|sde.*(cmd|evtlog|dsc)|mdss.*(cmd|dsc)\" /sys/kernel/tracing/available_events",
+      "exit_status": 0,
+      "bytes": 65,
+      "sha256": "84aa25ff095f538da0b949a16acc04a4a019dce8759f3ee61907d3a0bd970c0b"
+    },
+    "functions": {
+      "command": "grep -E \"dsi_(ctrl_cmd|panel_tx|panel_update_pps|panel_send_pps|display_cmd|display_host|catalog|ctrl_hw).*|sde_hw_dsc\" /sys/kernel/tracing/available_filter_functions",
+      "exit_status": 2,
+      "bytes": 80,
+      "sha256": "ee0d8d8c988c2d5a4a334393355c7d353bec98afdf9d2d4806dd202342ba4fba"
+    },
+    "dynamic-debug": {
+      "command": "grep -E \"dsi_(ctrl|panel|display|host)\\.c\" /sys/kernel/debug/dynamic_debug/control",
+      "exit_status": 2,
+      "bytes": 73,
+      "sha256": "3ea17096cedcfd40356c53de8e6ee567f4042a38e673c44d563c899f4747f3bc"
+    },
+    "dri-interface-names": {
+      "command": "find /sys/kernel/debug/dri -maxdepth 4 -type f",
+      "exit_status": 1,
+      "bytes": 57,
+      "sha256": "3edcffc0a48aa08650059daee22f42e4b08530ce8315f225104ffadb0c290cc1"
+    },
+    "vendor-interface-names": {
+      "command": "ls /sys/kernel/oplus_display",
+      "exit_status": 0,
+      "bytes": 765,
+      "sha256": "5d926d0a619bcb2c891a800b0373cda293960b86347f3038a159cb9337ba6367"
+    },
+    "vendor-log-state": {
+      "command": "cat /sys/kernel/oplus_display/dsi_cmd_log_switch",
+      "exit_status": 0,
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "tracer-state": {
+      "command": "cat /sys/kernel/tracing/current_tracer /sys/kernel/tracing/tracing_on; ls /sys/kernel/tracing/instances; ls -l /sys/kernel/tracing/kprobe_events",
+      "exit_status": 1,
+      "bytes": 98,
+      "sha256": "1e6c96fde253fe27958f302d8adaae1d6d92bc53dc875e899c72144a53c4d0e9"
+    },
+    "display-event-formats": {
+      "command": "for f in /sys/kernel/tracing/events/dsi/*/format /sys/kernel/tracing/events/sde/sde_evtlog/format; do if [ -f \"$f\" ]; then echo FILE=$f; cat \"$f\"; fi; done",
+      "exit_status": 0,
+      "bytes": 905,
+      "sha256": "52c8e3f3b1f997a014ca155556daa1cee4daa256d241faf5d54fa3ecbfdfb810"
+    }
+  },
+  "scope": "Read-only interface names, trace formats and source-location inventory. No tracing writes, DCS commands, register access, display cycle, reboot or partition readback.",
+  "findings": {
+    "command_log_switch": 0,
+    "command_log_switch_present": true,
+    "command_log_payload_coverage": "NOT_ESTABLISHED",
+    "available_events": [
+      "sde:sde_cmd_release_bw",
+      "sde:sde_evtlog",
+      "sde_rotator:sde_rot_evtlog"
+    ],
+    "missing_interfaces": [
+      "available_filter_functions",
+      "kprobe_events",
+      "/sys/kernel/debug/dynamic_debug/control",
+      "/sys/kernel/debug/dri"
+    ],
+    "debugfs_mounted": false,
+    "limits": "Absent interfaces are not proof that the kernel lacks these features. No mounting or tracing-state writes were performed. Static command tables do not establish executed commands or panel decoder state.",
+    "source_reference": "https://github.com/SM8250-Common/android_kernel_realme_sm8250/blob/b76eb6c93add8152b1aa873da0d8d7f495cccab0/techpack/display/oplus/oplus_display_private_api.c#L2950",
+    "source_limit": "Same-platform source explains the getter/setter, not the exact F.20 binary or complete logging implementation."
+  }
+}

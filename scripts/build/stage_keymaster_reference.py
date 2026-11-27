@@ -26,7 +26,9 @@ def inventory(info=False, usb_guard=None):
         files['/etc/selinux/vendor_sepolicy.cil'] += (src / 'version.cil').read_bytes().replace(b'\r\n', b'\n')
         files['/etc/selinux/vendor_file_contexts'] = (
             (base / 'etc/selinux/vendor_file_contexts').read_bytes().replace(b'\r\n', b'\n') +
-            b'/vendor/bin/hw/rmx-keymaster-info-service u:object_r:rmx_keymaster_exec:s0\n')
+            b'/vendor/bin/hw/rmx-keymaster-info-service u:object_r:rmx_keymaster_exec:s0\n'
+            b'/dev/rmx2072_keymaster u:object_r:rmx_keymaster_device:s0\n')
+        files['/etc/ueventd.rc'] += b'/dev/rmx2072_keymaster 0600 root root\n'
         blobs = json.loads((src / 'inputs.json').read_text())
     if usb_guard:
         from build_diag_ramdisk import read_static_arm64

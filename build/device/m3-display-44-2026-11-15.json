@@ -1,0 +1,300 @@
+{
+  "utc": "2026-11-15T06:04:43.998678+00:00",
+  "goal": "Physical display, then SurfaceFlinger and AOSP desktop",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-44",
+  "boot_id": "c0756d90-97b4-41f6-b74e-0181a32d4884",
+  "kernel": {
+    "run_id": 43679894046,
+    "source_commit": "499057211fa3870c684cf5d373aa0069d947deb9",
+    "artifact_id": 14148213820,
+    "artifact_archive_digest": "sha256:d403f0223999ada20841154d5ea0496e1f9d288c56eeb072d966bd11317cbdd6",
+    "archive_digest_verified": false,
+    "installing": false,
+    "source_pon": true,
+    "display": true,
+    "source_digests_verified": true,
+    "dist_digests_verified": true,
+    "image_sha256": "1571dee26287393cf2572a314a1e1696ee58ca2eb0e855ed5e2857e82524cfd6",
+    "selected_member_sha256": {
+      "SHA256SUMS": "575a4e6e994fec5cb581e12f0216f06d82fe3fd4afe903d30383d3f13995f365",
+      "build-metadata.txt": "31195b00af42df436c8062ac3885b2a2f85da59e3334cce118c0d01d68d25404",
+      "board-patch.sha256": "8694fc87a411cef7bfe8763fd9e4f3ce11040b26d00a567bbd538d8189682bee",
+      "display-clock-patch.sha256": "fd16bb4bb70d50d223b4ab20f10ad7de152e1b39524cc1af6d60e3b15ed259fd",
+      "display-source.sha256": "bb5cff96f97f8c5059cc70b4675efa0db3a168b8490b1a3a363acfd94b3c5774",
+      "Image.gz": "916e38856bf168b9dbe23a476044477174c2ccc0e7e41d656e14b12ad78469e4",
+      "kernel.release": "d855b4f26716a4c1903183edb8be2f29e11cb0a12e0a447c56b6e904e5ace06d",
+      "sm8250_bootstrap_dot_config": "c5938a3af480a8b4e311ce2889d9e012d924ac1e1368d5e655487c80edb4b50b",
+      "keymaster-lookup.sha256": "e05b4c5f0761fcf3d9be179dd989fe33eb5757c69c52ecded2d8ad6bcb2b60aa",
+      "keymaster-transport.sha256": "ff5f8ab5680ad46228fadd4983a6a4345d4a9ff6a17a8a54cf56a66666ef83ee",
+      "listener.sha256": "33eff465edcf98d4cd964419d879fe6ccadd2109b789cead6d163eda1b04e68c",
+      "phy-test.sha256": "3d40c5a42793f8727ac65b03ae2a43c506287037b809a097edec1d5e22deadb6",
+      "source-pon-patch.sha256": "37fddd949bcef6d87e18efb2808f945ce6515e0d84e166fcf3166dbed01dee67",
+      "resolved-manifest.xml": "ab354d42cab5605dfbd3ecc90cd965d673c543d7da3364e8aadf861cbbae804a",
+      "tzmem-patch.sha256": "de01553a28599907da725bd06a7172751c8c01c13656e23b27b272ae1d8c1309"
+    }
+  },
+  "boot_sha256": "8db8b39081ff70da2aa38ad0d8075ad1edb5f83a0a792cf4cff119e0fdd57620",
+  "dtbo_sha256": "fdd5d7290fd23367fd61a1b75c57977f27561ec58d67f2a937f08819c2835d44",
+  "effective_dtb": {
+    "size_bytes": 830738,
+    "sha256": "b10bf24696bd715d21ddd924a2f4c2d41512f724fdb7cf49dbf7bbd3ee800509"
+  },
+  "system": {
+    "sha256": "8b525e2bff18a54b277c4b9a950a0ee667e50ad2e91bcc4c1daa6f081402407e",
+    "key_sha256": "e53f344beb2646b49651ea8dd336dbe75117183e96ef34beed4b367a4a0ae925",
+    "bytes": 3953213440,
+    "tree": {
+      "version": 1,
+      "image_bytes": 3890753536,
+      "tree_offset": 3890753536,
+      "tree_bytes": 30642176,
+      "data_block_bytes": 4096,
+      "hash_block_bytes": 4096,
+      "fec_roots": 2,
+      "fec_offset": 3921395712,
+      "fec_bytes": 31006720,
+      "algorithm": "sha256",
+      "salt": "cb3c3a48d51de25fa2fb7dddcb08ade209bfc6edb073cd1b722a325b6cc1e58d",
+      "root_digest": "96d3382c3c1c9d85f4a486674233a6b123ceee1c109263335a1e168ad71dcc6b",
+      "flags": 0
+    }
+  },
+  "vendor": {
+    "sha256": "10f8a24714d97d63fe5ed1b32eaa224e5df21e0e7d864a43dd847e0bcf2f976e",
+    "key_sha256": "0d4dd0f2fc523adbf286204adfa27dbae6d2b2c280ed58208f5f60cbdf439d6e",
+    "bytes": 17825792,
+    "tree": {
+      "version": 1,
+      "image_bytes": 16777216,
+      "tree_offset": 16777216,
+      "tree_bytes": 135168,
+      "data_block_bytes": 4096,
+      "hash_block_bytes": 4096,
+      "fec_roots": 0,
+      "fec_offset": 0,
+      "fec_bytes": 0,
+      "algorithm": "sha256",
+      "salt": "21952bdc3a043d7b04025dba1ccd95d79abc3c1fea797aa20e8337f8a5bc5081",
+      "root_digest": "6e1ed503b5ca4edb4cc452e81ff3721f5d4263484faeb7b98bba4c51de29bf9e",
+      "flags": 0
+    }
+  },
+  "drm_kms_result": "BLOCKED_OR_FAILED",
+  "probe_reported_pass": false,
+  "advancing_vblank_events": false,
+  "transport_errors": [
+    "[   31.402896][ T1443] disp_cc_mdss_pclk0_clk_src: rcg didn't update its configuration.",
+    "[   31.692745][ T1443] dsi_cmds2buf_tx: cmd dma tx failed, type=0x39, data0=0x9f, len=8, ret=-110",
+    "[   31.693098][ T1443] panel-samsung-rm19795 ae94000.dsi.0: packet 0 DCS=9f failed: -110",
+    "[   31.697899][ T1443] disp_cc_mdss_pclk0_clk_src: rcg didn't update its configuration.",
+    "[   31.908833][ T1443] dsi_cmds2buf_tx: cmd dma tx failed, type=0x39, data0=0x9f, len=8, ret=-110",
+    "[   31.909182][ T1443] panel-samsung-rm19795 ae94000.dsi.0: packet 0 DCS=9f failed: -110",
+    "[   31.996610][    C6] [drm:dpu_encoder_frame_done_timeout:2727] [dpu error]enc33 frame done timeout",
+    "[   33.000624][   T14] [drm:_dpu_encoder_phys_cmd_wait_for_idle] *ERROR* id:33 pp:0 kickoff timeout 0 cnt 1 koff_cnt 1",
+    "[   33.000903][   T14] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] *ERROR* failed wait_for_idle: id:33 ret:-110 pp:0",
+    "[   33.088612][    C7] [drm:dpu_encoder_frame_done_timeout:2727] [dpu error]enc33 frame done timeout",
+    "[   34.088626][   T14] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] *ERROR* failed wait_for_idle: id:33 ret:-110 pp:0",
+    "[   34.176617][    C0] [drm:dpu_encoder_frame_done_timeout:2727] [dpu error]enc33 frame done timeout",
+    "[   34.176785][ T1443] [drm:dpu_encoder_phys_cmd_wait_for_tx_complete] *ERROR* failed wait_for_idle: id:33 ret:-110 intf:1"
+  ],
+  "physical_screen_observation": "NOT REQUESTED: transport and advancing-event checks failed; no visible output claimed.",
+  "display_snapshot": "M3DISPLAY boot_id=c0756d90-97b4-41f6-b74e-0181a32d4884\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=pins state=begin uptime=25.11\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=pins state=populated uptime=25.12\nM3BIND child=f100000.pinctrl driver=../../../../../bus/platform/drivers/sm8250-pinctrl\n7.gpio-regulator\t\n1.gpio-regulator\t\n0.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n3.gpio-regulator\t\n2.gpio-regulator\t\n6.gpio-regulator\t\n5.gpio-regulator\t\nsoc:gpio_keys\t\n4.gpio-regulator\t\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=pins state=bound uptime=27.14\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=fabric state=begin uptime=27.15\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=fabric state=populated uptime=27.17\nM3BIND child=1740000.interconnect driver=../../../../../bus/platform/drivers/qnoc-sm8250\nM3BIND child=af00000.clock-controller driver=../../../../../bus/platform/drivers/disp_cc-sm8250\n4.gpio-regulator\t\n7.gpio-regulator\t\n1.gpio-regulator\t\n0.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n3.gpio-regulator\t\n2.gpio-regulator\t\n6.gpio-regulator\t\n5.gpio-regulator\t\nsoc:gpio_keys\t\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=fabric state=bound uptime=29.19\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=core state=begin uptime=29.20\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=core state=populated uptime=29.24\nM3BIND child=ae00000.display-subsystem driver=../../../../../bus/platform/drivers/msm-mdss\n6.gpio-regulator\t\n2.gpio-regulator\t\n7.gpio-regulator\t\n4.gpio-regulator\t\n0.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n1.gpio-regulator\t\nsoc:gpio_keys\t\n3.gpio-regulator\t\n5.gpio-regulator\t\nM3BIND boot=c0756d90-97b4-41f6-b74e-0181a32d4884 stage=core state=inspected uptime=31.26\nM3DISPLAY created=/dev/dri/card0 dev=226:0 source=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller\nDRMTEST driver=msm\nDRMTEST connector=34 type=16 connection=1 modes=1\nDRMTEST buffer=91 size=10444800 pitch=4352\nDRMTEST buffer=92 size=10444800 pitch=4352\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_rate value=660000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_parent value=bi_tcxo truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0vco_clk field=clk_flags value=CLK_IGNORE_UNUSED truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_rate value=660000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_parent value=dsi0vco_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_out_div_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_rate value=660000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_parent value=dsi0_pll_out_div_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_bit_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_rate value=330000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pll_by_2_bit_clk field=clk_flags value= truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_rate value=330000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_parent value=dsi0_pll_by_2_bit_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_pclk_mux field=clk_flags value= truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_rate value=82500000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_byteclk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_rate value=110000000 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_parent value=dsi0_pclk_mux truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_flags value= truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_rate value=82500000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_parent value=dsi0_phy_pll_out_byteclk truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_prepare_count value=3 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_enable_count value=3 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_rate value=82500000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_parent value=disp_cc_mdss_byte0_clk_src truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_byte0_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_rate value=110000000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_parent value=dsi0_phy_pll_out_dsiclk truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT,CLK_OPS_PARENT_ENABLE truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_rate value=110000000 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_parent value=disp_cc_mdss_pclk0_clk_src truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=before-modeset clock=disp_cc_mdss_pclk0_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_rate value=843263964 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_parent value=bi_tcxo truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0vco_clk field=clk_flags value=CLK_IGNORE_UNUSED truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_rate value=421631982 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_parent value=dsi0vco_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_out_div_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_rate value=421631982 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_parent value=dsi0_pll_out_div_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_bit_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_rate value=210815991 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pll_by_2_bit_clk field=clk_flags value= truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_rate value=210815991 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_parent value=dsi0_pll_by_2_bit_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_pclk_mux field=clk_flags value= truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_rate value=52703997 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_parent value=dsi0_pll_bit_clk truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_byteclk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_rate value=70271997 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_parent value=dsi0_pclk_mux truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_prepare_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_enable_count value=1 truncated=0\nDRMCLOCK phase=after-modeset clock=dsi0_phy_pll_out_dsiclk field=clk_flags value= truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_rate value=52703997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_parent value=dsi0_phy_pll_out_byteclk truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_prepare_count value=3 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_enable_count value=3 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_rate value=52703997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_parent value=disp_cc_mdss_byte0_clk_src truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_byte0_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_rate value=70271997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_parent value=dsi0_phy_pll_out_dsiclk truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk_src field=clk_flags value=CLK_SET_RATE_PARENT,CLK_OPS_PARENT_ENABLE truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_rate value=70271997 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_parent value=disp_cc_mdss_pclk0_clk_src truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_prepare_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_enable_count value=2 truncated=0\nDRMCLOCK phase=after-modeset clock=disp_cc_mdss_pclk0_clk field=clk_flags value=CLK_SET_RATE_PARENT truncated=0\nDRMTEST modeset=PASS crtc=89 connector=34 mode=1080x2400 clock=175680\nDRMTEST flip=1 sequence=40 time=32.977103\nDRMTEST flip=2 sequence=40 time=32.977103\nDRMTEST failure=non-advancing-vblank\nDRMTEST exit=1\nM3DISPLAY smoke_rc=1\nM3DISPLAY boot_id=c0756d90-97b4-41f6-b74e-0181a32d4884\nM3DISPLAY kernel=6.18.32-android17-5-maybe-dirty-4k\nPATH=/sys/class/drm/card0 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/card0\nFIELD=dev\n226:0\nPATH=/sys/class/drm/card0-DSI-1 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/card0/card0-DSI-1\nFIELD=status\nconnected\nFIELD=enabled\ndisabled\nFIELD=modes\n1080x2400\nPATH=/sys/class/drm/card0-Writeback-1 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/card0/card0-Writeback-1\nFIELD=status\nunknown\nFIELD=enabled\ndisabled\nFIELD=modes\nPATH=/sys/class/drm/renderD128 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae01000.display-controller/drm/renderD128\nFIELD=dev\n226:128\nPATH=/sys/class/drm/version TARGET=/sys/class/drm/version\nPATH=/sys/class/backlight/rm19795 TARGET=/sys/devices/platform/soc/soc:display-core-lab/ae00000.display-subsystem/ae94000.dsi/ae94000.dsi.0/backlight/rm19795\nFIELD=brightness\n400\nFIELD=max_brightness\n1023\nFIELD=actual_brightness\n400\nDEVICE=/sys/bus/platform/devices/1740000.interconnect DRIVER=../../../../../bus/platform/drivers/qnoc-sm8250\nDEVICE=/sys/bus/platform/devices/ae00000.display-subsystem DRIVER=../../../../../bus/platform/drivers/msm-mdss\nDEVICE=/sys/bus/platform/devices/ae01000.display-controller DRIVER=../../../../../../bus/platform/drivers/msm_dpu\nDEVICE=/sys/bus/platform/devices/ae94000.dsi DRIVER=../../../../../../bus/platform/drivers/msm_dsi\nDEVICE=/sys/bus/platform/devices/ae94400.phy DRIVER=../../../../../../bus/platform/drivers/msm_dsi_phy\nDEVICE=/sys/bus/platform/devices/af00000.clock-controller DRIVER=../../../../../bus/platform/drivers/disp_cc-sm8250\nDEVICE=/sys/bus/platform/devices/f100000.pinctrl DRIVER=../../../../../bus/platform/drivers/sm8250-pinctrl\nDEFERRED\n6.gpio-regulator\t\n2.gpio-regulator\t\n7.gpio-regulator\t\n4.gpio-regulator\t\n0.gpio-regulator\t\nsoc:regulator-dbb1\treg-fixed-voltage: can't get GPIO\n1.gpio-regulator\t\nsoc:gpio_keys\t\n3.gpio-regulator\t\n5.gpio-regulator\t\nDISPLAY_LOG\n[   21.585997][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 21:          0          0          0          0          0          0          0          0    GICv3 133 Level     arm-smmu-context-fault\n[   21.589689][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 22:          0          0          0          0          0          0          0          0    GICv3 134 Level     arm-smmu-context-fault\n[   21.593458][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 23:          0          0          0          0          0          0          0          0    GICv3 135 Level     arm-smmu-context-fault\n[   21.597169][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 24:          0          0          0          0          0          0          0          0    GICv3 136 Level     arm-smmu-context-fault\n[   21.600903][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 25:          0          0          0          0          0          0          0          0    GICv3 137 Level     arm-smmu-context-fault\n[   21.604710][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 26:          0          0          0          0          0          0          0          0    GICv3 138 Level     arm-smmu-context-fault\n[   21.608462][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 27:          0          0          0          0          0          0          0          0    GICv3 139 Level     arm-smmu-context-fault\n[   21.612151][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 28:          0          0          0          0          0          0          0          0    GICv3 140 Level     arm-smmu-context-fault\n[   21.615903][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 29:          0          0          0          0          0          0          0          0    GICv3 141 Level     arm-smmu-context-fault\n[   21.619645][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 30:          0          0          0          0          0          0          0          0    GICv3 142 Level     arm-smmu-context-fault\n[   21.622779][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 31:          0          0          0          0          0          0          0          0    GICv3 143 Level     arm-smmu-context-fault\n[   21.626397][  T279] RMX2072-RUNTIME kernel=6.18.32-android17-5-maybe-dirty-4k irq= 32:          0          0          0          0          0          0          0          0    GICv3 144 Level     arm-smmu-context-fault\n[   25.139505][ T1371] probe of f100000.pinctrl returned 0 after 1297 usecs\n[   25.139913][ T1371] probe of soc:display-pins-lab returned 0 after 2305 usecs\n[   27.177212][ T1388] /soc/display-core-lab/display-subsystem@ae00000/phy@ae94400: Fixed dependency cycle(s) with /soc/display-fabric-lab/clock-controller@af00000\n[   27.177438][ T1388] /soc/display-fabric-lab/clock-controller@af00000: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/phy@ae94400\n[   27.178497][ T1388] probe of mdss_gdsc returned 0 after 43 usecs\n[   27.185636][ T1388] probe of soc:display-fabric-lab returned 0 after 8723 usecs\n[   29.225972][ T1405] platform ae00000.display-subsystem: Adding to iommu group 17\n[   29.226503][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000\n[   29.226676][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0\n[   29.226905][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000\n[   29.227088][ T1405] /soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000\n[   29.228265][ T1405] [drm:mdss_runtime_resume] \n[   29.228910][ T1405] [drm:dsi_pll_7nm_init] DSI PLL0\n[   29.228982][ T1405] [drm:dsi_pll_7nm_init] DSI0\n[   29.229077][ T1405] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 660000000, dec = 11, frac = c000\n[   29.230040][ T1405] [drm:dsi_7nm_pll_save_state] DSI PLL0 outdiv 0 bit_clk_div 1 pix_clk_div 3 pll_mux 1\n[   29.230168][ T1405] [drm:dsi_pll_7nm_init] DSI PLL0 returning vco rate = 660000000, dec = 11, frac = c000\n[   29.231151][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000\n[   29.231357][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0\n[   29.231800][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000\n[   29.233013][ T1405] [drm:dsi_dev_probe] \n[   29.233082][ T1405] [drm:dsi_dev_probe] dsi probed=0000000042bede23\n[   29.233267][ T1405] [drm:msm_dsi_host_init] dsi_get_config: Version 3:20040000\n[   29.233562][ T1405] msm_dsi ae94000.dsi: supply refgen not found, using dummy regulator\n[   29.234143][ T1405] [drm:msm_dsi_host_init] Dsi Host 0 initialized\n[   29.234887][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0\n[   29.235125][ T1405] /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0: Fixed dependency cycle(s) with /soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000\n[   29.235866][ T1405] [drm:dsi_host_attach] id=0\n[   29.235934][ T1405] panel-samsung-rm19795 ae94000.dsi.0: RMX2072 RM19795 source panel attached\n[   29.236416][ T1405] probe of ae94000.dsi.0 returned 0 after 1043 usecs\n[   29.237241][ T1405] probe of ae94000.dsi returned 0 after 4770 usecs\n[   29.239076][ T1405] [drm:dpu_kms_mmap_dpu] VBIF NRT is not defined\n[   29.242299][ T1405] msm_dpu ae01000.display-controller: bound ae94000.dsi (ops dsi_ops)\n[   29.243405][ T1405] [drm:dpu_kms_hw_init:1173] dpu hardware revision:0x60000000\n[   29.243699][ T1405] [drm:dpu_encoder_init] dsi_info->num_of_h_tiles 1\n[   29.243817][ T1405] [drm:dpu_encoder_init] h_tile_instance 0 = 0, split_role 0\n[   29.243886][ T1405] [drm:dpu_encoder_phys_cmd_init] intf\n[   29.244000][ T1405] [drm:dpu_encoder_phys_cmd_init] enc33 intf1 created\n[   29.244189][ T1405] [drm:dpu_encoder_init] dsi_info->num_of_h_tiles 1\n[   29.244304][ T1405] [drm:dpu_encoder_init] h_tile_instance 0 = 3, split_role 0\n[   29.244417][ T1405] [drm:dpu_encoder_phys_wb_init] \n[   29.244486][ T1405] [drm:dpu_encoder_phys_wb_init] Created dpu_encoder_phys for wb 3\n[   29.244640][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 1 with features 2da4 (cur 0)\n[   29.244785][ T1405] [drm:dpu_plane_init_common] plane-0 created for pipe:1 id:41\n[   29.244853][ T1405] [drm:dpu_plane_init] plane-0 created for pipe:1 id:41\n[   29.244967][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 1 with features 2da4 (cur 0)\n[   29.245099][ T1405] [drm:dpu_plane_init_common] plane-1 created for pipe:2 id:47\n[   29.245166][ T1405] [drm:dpu_plane_init] plane-1 created for pipe:2 id:47\n[   29.245278][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 0 with features 2da4 (cur 0)\n[   29.245406][ T1405] [drm:dpu_plane_init_common] plane-2 created for pipe:3 id:53\n[   29.245475][ T1405] [drm:dpu_plane_init] plane-2 created for pipe:3 id:53\n[   29.245588][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 0 with features 2da4 (cur 0)\n[   29.245721][ T1405] [drm:dpu_plane_init_common] plane-3 created for pipe:4 id:59\n[   29.245790][ T1405] [drm:dpu_plane_init] plane-3 created for pipe:4 id:59\n[   29.245903][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 0 with features 3d80 (cur 0)\n[   29.246033][ T1405] [drm:dpu_plane_init_common] plane-4 created for pipe:9 id:65\n[   29.246102][ T1405] [drm:dpu_plane_init] plane-4 created for pipe:9 id:65\n[   29.246215][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 0 with features 3d80 (cur 0)\n[   29.246343][ T1405] [drm:dpu_plane_init_common] plane-5 created for pipe:10 id:71\n[   29.246412][ T1405] [drm:dpu_plane_init] plane-5 created for pipe:10 id:71\n[   29.246526][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 2 with features 3dc0 (cur 40)\n[   29.246662][ T1405] [drm:dpu_plane_init_common] plane-6 created for pipe:11 id:77\n[   29.246732][ T1405] [drm:dpu_plane_init] plane-6 created for pipe:11 id:77\n[   29.246845][ T1405] [drm:_dpu_kms_drm_obj_init] Create plane type 2 with features 3dc0 (cur 40)\n[   29.246976][ T1405] [drm:dpu_plane_init_common] plane-7 created for pipe:12 id:83\n[   29.247045][ T1405] [drm:dpu_plane_init] plane-7 created for pipe:12 id:83\n[   29.248867][ T1405] [drm] Initialized msm 1.13.0 for ae01000.display-controller on minor 0\n[   29.249560][ T1405] probe of ae01000.display-controller returned 0 after 11068 usecs\n[   29.250611][ T1405] probe of ae00000.display-subsystem returned 0 after 22998 usecs\n[   29.256063][ T1405] probe of soc:display-core-lab returned 0 after 30750 usecs\n[   31.307059][ T1443] msm_dpu ae01000.display-controller: no GPU device was found\n[   31.394789][ T1443] [drm:dpu_rm_reserve] ctl 1 caps 0x0\n[   31.394988][ T1443] [drm:dpu_rm_reserve] ctl 1 match\n[   31.395681][ T1443] [drm:dsi_mgr_bridge_mode_set] set mode: \"1080x2400\": 60 175680 1080 1128 1152 1200 2400 2416 2420 2440 0x48 0x0\n[   31.396515][ T1443] [drm:dsi_mgr_bridge_pre_enable] id=0\n[   31.396648][ T1443] [drm:dsi_mgr_bridge_pre_enable] id=0\n[   31.396849][ T1443] [drm:msm_dsi_host_reset_phy] \n[   31.398072][ T1443] [drm:dsi_calc_pclk] pclk=70272000, bclk=52704000\n[   31.398324][ T1443] [drm:dsi_7nm_phy_enable] \n[   31.398439][ T1443] [drm:msm_dsi_dphy_timing_calc_v4] 17, 20, 16, 5, 4, 30, 30, 4, 4, 2\n[   31.398705][ T1443] [drm:dsi_7nm_phy_enable] DSI PLL0\n[   31.398966][ T1443] [drm:dsi_7nm_phy_enable] DSI0 PHY enabled\n[   31.399192][ T1443] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=660000000, parent's=19200000\n[   31.399309][ T1443] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   31.399619][ T1443] [drm:dsi_7nm_pll_restore_state] DSI PLL0\n[   31.399900][ T1443] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   31.400156][ T1443] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   31.400361][ T1443] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   31.400696][ T1443] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   31.402896][ T1443] disp_cc_mdss_pclk0_clk_src: rcg didn't update its configuration.\n[   31.403476][ T1443] CPU: 7 UID: 0 PID: 1443 Comm: drm-panel-smoke Tainted: G        W           6.18.32-android17-5-maybe-dirty-4k #1 PREEMPT  15da1a721b35dd9d9b9137df93b8e5da5f34cb68\n[   31.408731][ T1443]  dsi_link_clk_set_rate_6g+0xb0/0x128\n[   31.408843][ T1443]  msm_dsi_host_power_on+0xfc/0x9ec\n[   31.409046][ T1443]  dsi_mgr_bridge_pre_enable+0x1e4/0x434\n[   31.409159][ T1443]  drm_atomic_bridge_chain_pre_enable+0x114/0x1cc\n[   31.409362][ T1443]  drm_atomic_helper_commit_encoder_bridge_pre_enable+0x80/0x100\n[   31.409479][ T1443]  drm_atomic_helper_commit_modeset_enables+0x128/0x1e8\n[   31.409999][ T1443]  drm_atomic_helper_commit+0x2a4/0x2c0\n[   31.410112][ T1443]  drm_atomic_commit+0xb0/0xdc\n[   31.410317][ T1443]  drm_atomic_helper_set_config+0x5c/0xdc\n[   31.410429][ T1443]  drm_mode_setcrtc+0x30c/0x8cc\n[   31.410634][ T1443]  drm_ioctl_kernel+0xe0/0x12c\n[   31.410748][ T1443]  drm_ioctl+0x328/0x514\n[   31.412188][ T1443] [drm:msm_dsi_host_power_on] \n[   31.412305][ T1443] [drm:msm_dsi_host_power_on] Mode 1080x2400\n[   31.432692][ T1443] [drm:msm_dsi_host_power_on] intr=2000500 enable=1\n[   31.432847][ T1443] [drm:msm_dsi_host_power_on] lane number=4\n[   31.433107][ T1443] [drm:msm_dsi_host_enable] intr=2000700 enable=1\n[   31.490631][ T1443] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   31.490883][ T1443] [drm:msm_dsi_host_xfer_prepare] intr=2000702 enable=1\n[   31.692623][ T1443] [drm:dsi_cmds2buf_tx] ret=0\n[   31.692745][ T1443] dsi_cmds2buf_tx: cmd dma tx failed, type=0x39, data0=0x9f, len=8, ret=-110\n[   31.692961][ T1443] [drm:msm_dsi_host_xfer_restore] intr=2000700 enable=0\n[   31.693098][ T1443] panel-samsung-rm19795 ae94000.dsi.0: packet 0 DCS=9f failed: -110\n[   31.693345][ T1443] [drm:dpu_encoder_phys_cmd_enable] enc33 intf1 pp 0\n[   31.693569][ T1443] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 pp 0, enabling mode:\n[   31.693707][ T1443] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 intf 1 pp 0\n[   31.693834][ T1443] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc vsync_clk_speed_hz 19200000 vtotal 2440 vrefresh 60\n[   31.694052][ T1443] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc enable 1 start_pos 2400 rd_ptr_irq 2401\n[   31.694270][ T1443] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc hw_vsync_mode 1 vsync_count 131 vsync_init_val 2400\n[   31.694487][ T1443] [drm:dpu_encoder_phys_cmd_enable_helper] enc33 intf1 tc cfgheight 4880 thresh_start 4 thresh_cont 4\n[   31.694749][ T1443] [drm:dsi_link_clk_set_rate_6g] Set clk rates: pclk=70272000, byteclk=52704000\n[   31.695095][ T1443] [drm:dsi_pll_7nm_vco_set_rate] DSI PLL0 rate=843264000, parent's=19200000\n[   31.695314][ T1443] [drm:dsi_pll_7nm_vco_set_rate] SSC not enabled\n[   31.695558][ T1443] [drm:dsi_pll_7nm_vco_recalc_rate] DSI PLL0 returning vco rate = 843263964, dec = 15, frac = 3d70a\n[   31.697899][ T1443] disp_cc_mdss_pclk0_clk_src: rcg didn't update its configuration.\n[   31.698474][ T1443] CPU: 5 UID: 0 PID: 1443 Comm: drm-panel-smoke Tainted: G        W           6.18.32-android17-5-maybe-dirty-4k #1 PREEMPT  15da1a721b35dd9d9b9137df93b8e5da5f34cb68\n[   31.703943][ T1443]  dsi_link_clk_set_rate_6g+0xb0/0x128\n[   31.704151][ T1443]  msm_dsi_host_xfer_prepare+0x58/0x134\n[   31.704270][ T1443]  msm_dsi_manager_cmd_xfer+0xd0/0x174\n[   31.704482][ T1443]  dsi_host_transfer+0x40/0x68\n[   31.704601][ T1443]  rm19795_enable+0x8c/0x29c\n[   31.704815][ T1443]  drm_panel_enable+0x68/0x1b0\n[   31.705052][ T1443]  drm_atomic_bridge_chain_enable+0x58/0xb4\n[   31.705262][ T1443]  drm_atomic_helper_commit_encoder_bridge_enable+0x78/0x178\n[   31.705476][ T1443]  drm_atomic_helper_commit_modeset_enables+0x134/0x1e8\n[   31.705922][ T1443]  drm_atomic_helper_commit+0x2a4/0x2c0\n[   31.706037][ T1443]  drm_atomic_commit+0xb0/0xdc\n[   31.706252][ T1443]  drm_atomic_helper_set_config+0x5c/0xdc\n[   31.706369][ T1443]  drm_mode_setcrtc+0x30c/0x8cc\n[   31.706582][ T1443]  drm_ioctl_kernel+0xe0/0x12c\n[   31.706701][ T1443]  drm_ioctl+0x328/0x514\n[   31.708195][ T1443] [drm:msm_dsi_host_xfer_prepare] intr=2000702 enable=1\n[   31.908617][ T1443] [drm:dsi_cmds2buf_tx] ret=0\n[   31.908833][ T1443] dsi_cmds2buf_tx: cmd dma tx failed, type=0x39, data0=0x9f, len=8, ret=-110\n[   31.908954][ T1443] [drm:msm_dsi_host_xfer_restore] intr=2000700 enable=0\n[   31.909182][ T1443] panel-samsung-rm19795 ae94000.dsi.0: packet 0 DCS=9f failed: -110\n[   31.911458][ T1443] [drm:dpu_hw_intf_disable_autorefresh] enc33 intf1 disabled autorefresh\n[   31.911582][ T1443] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   31.996610][    C6] [drm:dpu_encoder_frame_done_timeout:2727] [dpu error]enc33 frame done timeout\n[   33.000624][   T14] [drm:_dpu_encoder_phys_cmd_wait_for_idle] *ERROR* id:33 pp:0 kickoff timeout 0 cnt 1 koff_cnt 1\n[   33.000903][   T14] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] *ERROR* failed wait_for_idle: id:33 ret:-110 pp:0\n[   33.001135][   T14] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   33.088612][    C7] [drm:dpu_encoder_frame_done_timeout:2727] [dpu error]enc33 frame done timeout\n[   34.088626][   T14] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] *ERROR* failed wait_for_idle: id:33 ret:-110 pp:0\n[   34.088779][   T14] [drm:dpu_encoder_phys_cmd_prepare_for_kickoff] enc33 intf1 pp:0 pending_cnt 0\n[   34.089260][ T1443] [drm:dpu_kms_wait_flush] [crtc:89] not enable\n[   34.089506][ T1443] panel-samsung-rm19795 ae94000.dsi.0: Skipping disable of already disabled panel\n[   34.176617][    C0] [drm:dpu_encoder_frame_done_timeout:2727] [dpu error]enc33 frame done timeout\n[   34.176785][ T1443] [drm:dpu_encoder_phys_cmd_wait_for_tx_complete] *ERROR* failed wait_for_idle: id:33 ret:-110 intf:1\n[   34.177049][ T1443] panel-samsung-rm19795 ae94000.dsi.0: Skipping unprepare of already unprepared panel\n[   34.177257][ T1443] [drm:dsi_mgr_bridge_post_disable] id=0\n[   34.177479][ T1443] [drm:msm_dsi_host_disable] intr=2000500 enable=0\n[   34.200649][ T1443] [drm:dsi_7nm_pll_save_state] DSI PLL0 outdiv 1 bit_clk_div 1 pix_clk_div 3 pll_mux 1\n[   34.200908][ T1443] [drm:msm_dsi_host_power_off] -\n[   34.201027][ T1443] [drm:dsi_7nm_phy_disable] \n[   34.201256][ T1443] [drm:dsi_7nm_phy_disable] DSI0 PHY disabled\n[   34.201526][ T1443] [drm:dpu_kms_wait_flush] [crtc:89] not enable\n",
+  "android_graphics": {
+    "graphics-status.txt": {
+      "sha256": "e904315e224606dc8af1cdb2ca92358ff085bff804240a25d76a2c5ace8e6076",
+      "bytes": 206,
+      "local_record": "live/graphics-status.txt",
+      "text": "restarting\nrestarting\n\n\n\nService SurfaceFlinger: not found\nService android.hardware.graphics.composer3.IComposer/default: not found\nService android.hardware.graphics.allocator.IAllocator/default: not found",
+      "text_truncated": false,
+      "exit_status": 0
+    },
+    "drm-live.txt": {
+      "sha256": "9e996f54a0b5d6196f18d765b9ca73070e3f46e3d8b146d1f864a8da8135f1d0",
+      "bytes": 342,
+      "local_record": "live/drm-live.txt",
+      "text": "total 0\ncrw-rw-rw- 1 root graphics 226,   0 1970-01-01 00:00 card0\ncrw-rw-rw- 1 root graphics 226, 128 1970-01-01 00:00 renderD128\nCONNECTOR=/sys/class/drm/card0-DSI-1\ncat: /sys/class/drm/card0-DSI-1/status: Permission denied\ncat: /sys/class/drm/card0-DSI-1/enabled: Permission denied\ncat: /sys/class/drm/card0-DSI-1/modes: Permission denied",
+      "text_truncated": false,
+      "exit_status": 1
+    },
+    "surfaceflinger.txt": {
+      "sha256": "275b20461ef59584d254309ce99bc7c579705288c161969ba63f35cf2740cdd6",
+      "bytes": 35,
+      "local_record": "live/surfaceflinger.txt",
+      "text": "Can't find service: SurfaceFlinger",
+      "text_truncated": false,
+      "exit_status": 0
+    },
+    "graphics-logcat.txt": {
+      "sha256": "c6b9342727e167373c0a37718d3b8b14c31e95297456bb426ceb7ed96d2a5237",
+      "bytes": 482949,
+      "local_record": "live/graphics-logcat.txt",
+      "text": "--------- beginning of crash\n01-01 00:01:11.102  2066  2066 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n01-01 00:01:11.102  2066  2066 F DEBUG   : Build fingerprint: 'google/gsi_gms_arm64/generic_arm64:17/CP3A.260905.010/16176746:user/release-keys'\n01-01 00:01:11.102  2066  2066 F DEBUG   : Kernel Release: '6.18.32-android17-5-maybe-dirty-4k'\n01-01 00:01:11.102  2066  2066 F DEBUG   : Revision: '0'\n01-01 00:01:11.102  2066  2066 F DEBUG   : ABI: 'arm64'\n01-01 00:01:11.102  2066  2066 F DEBUG   : Timestamp: 1970-01-01 00:01:10.973649608+0000\n01-01 00:01:11.102  2066  2066 F DEBUG   : Process uptime: 1s\n01-01 00:01:11.103  2066  2066 F DEBUG   : Executable: /system/bin/surfaceflinger\n01-01 00:01:11.103  2066  2066 F DEBUG   : Cmdline: /system/bin/surfaceflinger\n01-01 00:01:11.103  2066  2066 F DEBUG   : pid: 2027, ppid: 1, tid: 2060, name: surfaceflinger  >>> /system/bin/surfaceflinger <<<\n01-01 00:01:11.103  2066  2066 F DEBUG   : uid: 1000\n01-01 00:01:11.103  2066  2066 F DEBUG   : tagged_addr_ctrl: 0000000000000001 (PR_TAGGED_ADDR_ENABLE)\n01-01 00:01:11.103  2066  2066 F DEBUG   : esr: 00000000ffffffff (Unrecognized Exception 0x3f)\n01-01 00:01:11.103  2066  2066 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------\n01-01 00:01:11.103  2066  2066 F DEBUG   : Abort message: 'couldn't find an OpenGL ES implementation, make sure one of persist.graphics.egl, ro.hardware.egl and ro.board.platform is set'\n01-01 00:01:11.103  2066  2066 F DEBUG   : \n01-01 00:01:11.103  2066  2066 F DEBUG   :     x0  0000000000000000  x1  000000000000080c  x2  0000000000000006  x3  00000078a23f7bf0\n01-01 00:01:11.103  2066  2066 F DEBUG   :     x4  646b6f6c681f5244  x5  646b6f6c681f5244  x6  646b6f6c681f5244  x7  7f7f7f7f7f7f7f7f\n01-01 00:01:11.103  2066  2066 F DEBUG   :     x8  00000000000000f0  x9  862b6bf6498bd0ea  x10 000000ff00000020  x11 000000003b9ac9ff\n01-01 00:01:11.103  2066  2066 F DEBUG   :     x12 0000007b416e5000  x13 000000007fffffff  x14 0000000000005736  x15 00000000554f5733\n01-01 00:01:11.103  2066  2066 F DEBUG   :     x16 0000007b3610d640  x17 0000007b360f0e40  x18 00000078a16b4000  x19 00000000000007eb\n01-01 00:01:11.103  2066  2066 F DEBUG   :     x20 000000000000080c  x21 00000000ffffffff  x22 0000000000000000  x23 0000000000000018\n01-01 00:01:11.103  2066  2066 F DEBUG   :     x24 000000108341ae0f  x25 0000007b35e88b77  x26 00000078a23f88c0  x27 00000078a23f8201\n01-01 00:01:11.103  2066  2066 F DEBUG   :     x28 0000007b35ebd748  x29 00000078a23f7c70\n01-01 00:01:11.103  2066  2066 F DEBUG   :     lr  0000007b3608f34c  sp  00000078a23f7bf0  pc  0000007b3608f370  pst 0000000000001000\n01-01 00:01:11.103  2066  2066 F DEBUG   :     esr 00000000ffffffff  vg  0000000000000000\n01-01 00:01:11.103  2066  2066 F DEBUG   : \n01-01 00:01:11.103  2066  2066 F DEBUG   : 12 total frames\n01-01 00:01:11.103  2066  2066 F DEBUG   : backtrace:\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #00 pc 000000000007d370  /apex/com.android.runtime/lib64/bionic/libc.so (abort+160) (BuildId: 0d3b5783cbffbdfc266e8cf07088d547)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #01 pc 000000000000c3d8  /system/lib64/liblog.so (__android_log_default_aborter+12) (BuildId: c51ea9135401f08aec1f786d025ab1f3)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #02 pc 000000000000c6b0  /system/lib64/liblog.so (__android_log_assert+292) (BuildId: c51ea9135401f08aec1f786d025ab1f3)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #03 pc 000000000002a618  /system/lib64/libEGL.so (android::Loader::open(android::egl_connection_t*)+3052) (BuildId: f3db58b06893613468b8c62d8718c466)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #04 pc 0000000000020c90  /system/lib64/libEGL.so (android::egl_init_drivers()+80) (BuildId: f3db58b06893613468b8c62d8718c466)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #05 pc 0000000000020fb8  /system/lib64/libEGL.so (eglGetDisplay+24) (BuildId: f3db58b06893613468b8c62d8718c466)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #06 pc 00000000005f2930  /system/bin/surfaceflinger (android::renderengine::skia::SkiaGLRenderEngine::create(android::renderengine::RenderEngineCreationArgs const&)+44) (BuildId: d2d4a2bd70c6b2e4dfcd5dc2cc9f388f)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #07 pc 000000000039b5e8  /system/bin/surfaceflinger (android::renderengine::threaded::RenderEngineThreaded::threadMain(std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>)+196) (BuildId: d2d4a2bd70c6b2e4dfcd5dc2cc9f388f)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #08 pc 00000000005dfb40  /system/bin/surfaceflinger (decltype(__builtin_invoke(std::declval<void (android::renderengine::threaded::RenderEngineThreaded::*)(std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>)>(), std::declval<android::renderengine::threaded::RenderEngineThreaded*>(), std::declval<std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>>())) std::__1::__invoke[abi:nn220000]<void (android::renderengine::threaded::RenderEngineThreaded::*)(std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>), android::renderengine::threaded::RenderEngineThreaded*, std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>>(void (android::renderengine::threaded::RenderEngineThreaded::*&&)(std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>), android::renderengine::threaded::RenderEngineThreaded*&&, std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>&&)+88) (BuildId: d2d4a2bd70c6b2e4dfcd5dc2cc9f388f)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #09 pc 00000000005dfa70  /system/bin/surfaceflinger (void* std::__1::__thread_proxy[abi:nn220000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (android::renderengine::threaded::RenderEngineThreaded::*)(std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>), android::renderengine::threaded::RenderEngineThreaded*, std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete<android::renderengine::RenderEngine>> ()>>>(void*)+80) (BuildId: d2d4a2bd70c6b2e4dfcd5dc2cc9f388f)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #10 pc 000000000008f804  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*) (.__uniq.67847048707805468364044055584648682506)+184) (BuildId: 0d3b5783cbffbdfc266e8cf07088d547)\n01-01 00:01:11.103  2066  2066 F DEBUG   :       #11 pc 0000000000080f0c  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+68) (BuildId: 0d3b5783cbffbdfc266e8cf07088d547)\n01-01 00:01:11.103  2066  2066 F DEBUG   : \n01-01 00:01:11.103  2066  2066 F DEBUG   : Note: To display stack pointer information, use the pbtombstone tool:\n01-01 00:01:11.103  2066  2066 F DEBUG   :         pbtombstone --display-sp tombstone_XX.pb\n01-01 00:01:15.934  2163  2163 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n01-01 00:01:15.934  2163  2163 F DEBUG   : Build fingerprint: 'google/gsi_gms_arm64/generic_arm64:17/CP3A.260905.010/16176746:user/release-keys'\n01-01 00:01:15.934  2163  2163 F DEBUG   : Kernel Release: '6.18.32-android17-5-maybe-dirty-4k'\n01-01 00:01:15.934  2163  2163 F DEBUG   : Revision: '0'\n01-01 00:01:15.934  2163  2163 F DEBUG   : ABI: 'arm64'\n01-01 00:01:15.934  2163  2163 F DEBUG   : Timestamp: 1970-01-01 00:01:15.805620023+0000\n01-01 00:01:15.934  2163  2163 F DEBUG   : Process uptime: 1s\n01-01 00:01:15.935  2163  2163 F DEBUG   : Executable: /system/bin/surfaceflinger\n01-01 00:01:15.935  2163  2163 F DEBUG   : Cmdline: /system/bin/surfaceflinger\n01-01 00:01:15.935  2163  2163 F DEBUG   : pid: 2136, ppid: 1, tid: 2155, name: surfaceflinger  >>> /system/bin/surfaceflinger <<<\n01-01 00:01:15.935  2163  2163 F DEBUG   : uid: 1000\n01-01 00:01:15.935  2163  2163 F DEBUG   : tagged_addr_ctrl: 0000000000000001 (PR_TAGGED_ADDR_ENABLE)\n01-01 00:01:15.935  2163  2163 F DEBUG   : esr: 00000000ffffffff (Unrecognized Exception 0x3f)\n01-01 00:01:15.935  2163  2163 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------\n01-01 00:01:15.935  2163  2163 F DEBUG   : Abort message: 'couldn't find an OpenGL ES implementation, make sure one of persist.graphics.egl, ro.hardware.egl and ro.board.platform is set'\n01-01 00:01:15.935  2163  2163 F DEBUG   : \n01-01 00:01:15.935  2163  2163 F DEBUG   :     x0  0000000000000000  x1  000000000000086b  x2  0000000000000006  x3  00000070fabf7bf0\n01-01 00:01:15.935  2163  2163 F DEBUG   :     x4  646b6f6c681f5244  x5  646b6f6c681f5244  x6  646b6f6c681f5244  x7  7f7f7f7f7f7f7f7f\n01-01 00:01:15.935  2163  2163 F DEBUG   :     x8  00000000000000f0  x9  611b013eadc9baf7  x10 000000ff00000020  x11 000000003b9ac9ff\n01-01 00:01:15.935  2163  2163 F DEBUG   :     x12 000000739aa15000  x13 000000007fffffff  x14 0000000000005c60  x15 000000005ad53c98\n01-01 00:01:15.935  2163  2163 F DEBUG   :     x16 000000738f1a8640  x17 000000738f18be40  x18 00000070f9ab4000  x19 0000000000000858\n01-01 00:01:15.935  2163  2163 F DEBUG   :     x20 000000000000086b  x21 00000000ffffffff  x22 0000000000000000  x23 0000000000000018\n01-01 00:01:15.935  2163  2163 F DEBUG   :     x24 00000011a2e628c6  x25 00000073929b2b77  x26 00000070fabf88c0  x27 00000070fabf8201\n01-01 00:01:15.935  2163  2163 F DEBUG   :     x28 00000073929e7748  x29 00000070fabf7c70\n01-01 00:01:15.935  2163  2163 F DEBUG   :     lr  000000738f12a34c  sp  00000070fabf7bf0  pc  000000738f12a370  pst 0000000000001000\n01-01 00:01:15.935  2163  2163 F DEBUG   :     esr 00000000ffffffff  vg  0000000000000000\n01-01 00:01:15.935  2163  2163 F DEBUG   : \n01-01 00:01:15.935  2163  2163 F DEBUG   : 12 total frames\n01-01 00:01:15.935  2163  2163 F DEBUG   : backtrace:\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #00 pc 000000000007d370  /apex/com.android.runtime/lib64/bionic/libc.so (abort+160) (BuildId: 0d3b5783cbffbdfc266e8cf07088d547)\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #01 pc 000000000000c3d8  /system/lib64/liblog.so (__android_log_default_aborter+12) (BuildId: c51ea9135401f08aec1f786d025ab1f3)\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #02 pc 000000000000c6b0  /system/lib64/liblog.so (__android_log_assert+292) (BuildId: c51ea9135401f08aec1f786d025ab1f3)\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #03 pc 000000000002a618  /system/lib64/libEGL.so (android::Loader::open(android::egl_connection_t*)+3052) (BuildId: f3db58b06893613468b8c62d8718c466)\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #04 pc 0000000000020c90  /system/lib64/libEGL.so (android::egl_init_drivers()+80) (BuildId: f3db58b06893613468b8c62d8718c466)\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #05 pc 0000000000020fb8  /system/lib64/libEGL.so (eglGetDisplay+24) (BuildId: f3db58b06893613468b8c62d8718c466)\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #06 pc 00000000005f2930  /system/bin/surfaceflinger (android::renderengine::skia::SkiaGLRenderEngine::create(android::renderengine::RenderEngineCreationArgs const&)+44) (BuildId: d2d4a2bd70c6b2e4dfcd5dc2cc9f388f)\n01-01 00:01:15.935  2163  2163 F DEBUG   :       #07 pc 000000000039b5e8  /system/bin/surfaceflinger (android::renderengine::threaded::RenderEngineThreaded::threadMain(std::__1::function<std::__1::unique_ptr<android::renderengine::RenderEngine, std::__1::default_delete",
+      "text_truncated": true,
+      "exit_status": 0
+    }
+  },
+  "cold_start_test": "NOT RUN",
+  "watchdog_fault_injection": "NOT RUN",
+  "handset_left": "retained Android 17 GSI",
+  "clock_snapshots": {
+    "before-modeset": {
+      "dsi0vco_clk": {
+        "clk_rate": "660000000",
+        "clk_parent": "bi_tcxo",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_IGNORE_UNUSED"
+      },
+      "dsi0_pll_out_div_clk": {
+        "clk_rate": "660000000",
+        "clk_parent": "dsi0vco_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "dsi0_pll_bit_clk": {
+        "clk_rate": "660000000",
+        "clk_parent": "dsi0_pll_out_div_clk",
+        "clk_prepare_count": "2",
+        "clk_enable_count": "2",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "dsi0_pll_by_2_bit_clk": {
+        "clk_rate": "330000000",
+        "clk_parent": "dsi0_pll_bit_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": ""
+      },
+      "dsi0_pclk_mux": {
+        "clk_rate": "330000000",
+        "clk_parent": "dsi0_pll_by_2_bit_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": ""
+      },
+      "dsi0_phy_pll_out_byteclk": {
+        "clk_rate": "82500000",
+        "clk_parent": "dsi0_pll_bit_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "dsi0_phy_pll_out_dsiclk": {
+        "clk_rate": "110000000",
+        "clk_parent": "dsi0_pclk_mux",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": ""
+      },
+      "disp_cc_mdss_byte0_clk_src": {
+        "clk_rate": "82500000",
+        "clk_parent": "dsi0_phy_pll_out_byteclk",
+        "clk_prepare_count": "3",
+        "clk_enable_count": "3",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "disp_cc_mdss_byte0_clk": {
+        "clk_rate": "82500000",
+        "clk_parent": "disp_cc_mdss_byte0_clk_src",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "disp_cc_mdss_pclk0_clk_src": {
+        "clk_rate": "110000000",
+        "clk_parent": "dsi0_phy_pll_out_dsiclk",
+        "clk_prepare_count": "2",
+        "clk_enable_count": "2",
+        "clk_flags": "CLK_SET_RATE_PARENT,CLK_OPS_PARENT_ENABLE"
+      },
+      "disp_cc_mdss_pclk0_clk": {
+        "clk_rate": "110000000",
+        "clk_parent": "disp_cc_mdss_pclk0_clk_src",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      }
+    },
+    "after-modeset": {
+      "dsi0vco_clk": {
+        "clk_rate": "843263964",
+        "clk_parent": "bi_tcxo",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_IGNORE_UNUSED"
+      },
+      "dsi0_pll_out_div_clk": {
+        "clk_rate": "421631982",
+        "clk_parent": "dsi0vco_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "dsi0_pll_bit_clk": {
+        "clk_rate": "421631982",
+        "clk_parent": "dsi0_pll_out_div_clk",
+        "clk_prepare_count": "2",
+        "clk_enable_count": "2",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "dsi0_pll_by_2_bit_clk": {
+        "clk_rate": "210815991",
+        "clk_parent": "dsi0_pll_bit_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": ""
+      },
+      "dsi0_pclk_mux": {
+        "clk_rate": "210815991",
+        "clk_parent": "dsi0_pll_by_2_bit_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": ""
+      },
+      "dsi0_phy_pll_out_byteclk": {
+        "clk_rate": "52703997",
+        "clk_parent": "dsi0_pll_bit_clk",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "dsi0_phy_pll_out_dsiclk": {
+        "clk_rate": "70271997",
+        "clk_parent": "dsi0_pclk_mux",
+        "clk_prepare_count": "1",
+        "clk_enable_count": "1",
+        "clk_flags": ""
+      },
+      "disp_cc_mdss_byte0_clk_src": {
+        "clk_rate": "52703997",
+        "clk_parent": "dsi0_phy_pll_out_byteclk",
+        "clk_prepare_count": "3",
+        "clk_enable_count": "3",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "disp_cc_mdss_byte0_clk": {
+        "clk_rate": "52703997",
+        "clk_parent": "disp_cc_mdss_byte0_clk_src",
+        "clk_prepare_count": "2",
+        "clk_enable_count": "2",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      },
+      "disp_cc_mdss_pclk0_clk_src": {
+        "clk_rate": "70271997",
+        "clk_parent": "dsi0_phy_pll_out_dsiclk",
+        "clk_prepare_count": "2",
+        "clk_enable_count": "2",
+        "clk_flags": "CLK_SET_RATE_PARENT,CLK_OPS_PARENT_ENABLE"
+      },
+      "disp_cc_mdss_pclk0_clk": {
+        "clk_rate": "70271997",
+        "clk_parent": "disp_cc_mdss_pclk0_clk_src",
+        "clk_prepare_count": "2",
+        "clk_enable_count": "2",
+        "clk_flags": "CLK_SET_RATE_PARENT"
+      }
+    }
+  },
+  "clock_interpretation": "Both snapshots show the correct DSI parents and nonzero software prepare/enable counts. These are not PLL-lock proof. The simplistic missing-parent-enable explanation is insufficient; investigate who enabled clocks before PHY reset and whether software/hardware states diverge."
+}

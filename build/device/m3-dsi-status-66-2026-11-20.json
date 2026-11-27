@@ -1,0 +1,153 @@
+{
+  "boot_id": "fa161396-0e8d-4c8d-b947-6bf547c0b956",
+  "scope": "One after-flips native snapshot; cleared or unsampled errors cannot be excluded",
+  "source_xml_sha256": "a101b08001e78786701be2caf4a568e56890c6ef23b94df0dc88bd7c92ab9cb9",
+  "registers": {
+    "CTRL": {
+      "offset": "0x0",
+      "value": "0x1f5",
+      "fields": {
+        "ENABLE": 1,
+        "VID_MODE_EN": 0,
+        "CMD_MODE_EN": 1,
+        "LANE0": 1,
+        "LANE1": 1,
+        "LANE2": 1,
+        "LANE3": 1,
+        "CLK_EN": 1,
+        "ECC_CHECK": 0,
+        "CRC_CHECK": 0
+      }
+    },
+    "STATUS0": {
+      "offset": "0x4",
+      "value": "0x0",
+      "fields": {
+        "CMD_MODE_ENGINE_BUSY": 0,
+        "CMD_MODE_DMA_BUSY": 0,
+        "CMD_MODE_MDP_BUSY": 0,
+        "VIDEO_MODE_ENGINE_BUSY": 0,
+        "DSI_BUSY": 0,
+        "INTERLEAVE_OP_CONTENTION": 0
+      }
+    },
+    "FIFO_STATUS": {
+      "offset": "0x8",
+      "value": "0x11111010",
+      "fields": {
+        "VIDEO_MDP_FIFO_OVERFLOW": 0,
+        "VIDEO_MDP_FIFO_UNDERFLOW": 0,
+        "CMD_MDP_FIFO_UNDERFLOW": 0,
+        "CMD_DMA_FIFO_RD_WATERMARK_REACH": 0,
+        "CMD_DMA_FIFO_WR_WATERMARK_REACH": 0,
+        "CMD_DMA_FIFO_UNDERFLOW": 0,
+        "DLN0_LP_FIFO_EMPTY": 1,
+        "DLN0_LP_FIFO_FULL": 0,
+        "DLN0_LP_FIFO_OVERFLOW": 0,
+        "DLN0_HS_FIFO_EMPTY": 1,
+        "DLN0_HS_FIFO_FULL": 0,
+        "DLN0_HS_FIFO_OVERFLOW": 0,
+        "DLN0_HS_FIFO_UNDERFLOW": 0,
+        "DLN1_HS_FIFO_EMPTY": 1,
+        "DLN1_HS_FIFO_FULL": 0,
+        "DLN1_HS_FIFO_OVERFLOW": 0,
+        "DLN1_HS_FIFO_UNDERFLOW": 0,
+        "DLN2_HS_FIFO_EMPTY": 1,
+        "DLN2_HS_FIFO_FULL": 0,
+        "DLN2_HS_FIFO_OVERFLOW": 0,
+        "DLN2_HS_FIFO_UNDERFLOW": 0,
+        "DLN3_HS_FIFO_EMPTY": 1,
+        "DLN3_HS_FIFO_FULL": 0,
+        "DLN3_HS_FIFO_OVERFLOW": 0,
+        "DLN3_HS_FIFO_UNDERFLOW": 0
+      }
+    },
+    "CMD_CFG0": {
+      "offset": "0x3c",
+      "value": "0x8",
+      "fields": {
+        "DST_FORMAT": 8,
+        "R_SEL": 0,
+        "G_SEL": 0,
+        "B_SEL": 0,
+        "INTERLEAVE_MAX": 0,
+        "RGB_SWAP": 0
+      }
+    },
+    "ACK_ERR_STATUS": {
+      "offset": "0x64",
+      "value": "0x0",
+      "fields": {}
+    },
+    "DLN0_PHY_ERR": {
+      "offset": "0xb0",
+      "value": "0x88888",
+      "fields": {
+        "DLN0_ERR_ESC": 0,
+        "DLN0_ERR_SYNC_ESC": 0,
+        "DLN0_ERR_CONTROL": 0,
+        "DLN0_ERR_CONTENTION_LP0": 0,
+        "DLN0_ERR_CONTENTION_LP1": 0
+      }
+    },
+    "TIMEOUT_STATUS": {
+      "offset": "0xbc",
+      "value": "0x0",
+      "fields": {}
+    },
+    "LANE_SWAP_CTRL": {
+      "offset": "0xac",
+      "value": "0x0",
+      "fields": {
+        "DLN_SWAP_SEL": 0
+      }
+    },
+    "ERR_INT_MASK0": {
+      "offset": "0x108",
+      "value": "0x13ff3be0",
+      "fields": {}
+    },
+    "CLK_STATUS": {
+      "offset": "0x11c",
+      "value": "0x2343",
+      "fields": {
+        "DSI_AON_AHBM_HCLK_ACTIVE": 1,
+        "DSI_DYN_AHBM_HCLK_ACTIVE": 1,
+        "DSI_AON_AHBS_HCLK_ACTIVE": 0,
+        "DSI_DYN_AHBS_HCLK_ACTIVE": 0,
+        "DSI_AON_DSICLK_ACTIVE": 0,
+        "DSI_DYN_DSICLK_ACTIVE": 0,
+        "DSI_AON_BYTECLK_ACTIVE": 1,
+        "DSI_DYN_BYTECLK_ACTIVE": 0,
+        "DSI_AON_ESCCLK_ACTIVE": 1,
+        "DSI_AON_PCLK_ACTIVE": 1,
+        "DSI_DYN_PCLK_ACTIVE": 0,
+        "DSI_DYN_CMD_PCLK_ACTIVE": 0,
+        "DSI_CMD_PCLK_ACTIVE": 1,
+        "DSI_VID_PCLK_ACTIVE": 0,
+        "DSI_CAM_BIST_PCLK_ACT": 0,
+        "PLL_UNLOCKED": 0
+      }
+    },
+    "CMD_MODE_MDP_CTRL2": {
+      "offset": "0x1b4",
+      "value": "0x10006",
+      "fields": {
+        "DST_FORMAT2": 6,
+        "R_SEL": 0,
+        "G_SEL": 0,
+        "B_SEL": 0,
+        "BYTE_MSB_LSB_FLIP": 0,
+        "RGB_SWAP": 0,
+        "INPUT_RGB_SWAP": 0,
+        "BURST_MODE": 1,
+        "DATABUS_WIDEN": 0
+      }
+    }
+  },
+  "source_pin": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+  "mirror_commit": "cfa72fb3d7f89372c7e449a4de2477551ea4c29c",
+  "source_url": "https://github.com/xxbo/RMX2072-AOSP-Project/blob/cfa72fb3d7f89372c7e449a4de2477551ea4c29c/drivers/gpu/drm/msm/registers/display/dsi.xml",
+  "source_git_blob": "c7a7b633d747bc281bc27845c9df858f33c8bd2a",
+  "source_verified_against_pin": true
+}

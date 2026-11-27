@@ -40,6 +40,12 @@ on property:apexd.status=activated
 on boot
     setprop sys.usb.config adb
 
+# AdbService initializes ADB_ENABLED from this property at systemReady. Keep
+# the framework and gadget consistent on the isolated RAM-data engineering
+# profile. Existing ADB authentication and the host key remain unchanged.
+on boot && property:ro.boot.rmx_scratch=1
+    setprop persist.sys.usb.config adb
+
 # Local readiness is independent of cable attachment or host authentication.
 # init bridges its service state into this vendor-owned engineering property.
 on property:sys.usb.state=adb && property:init.svc.adbd=running

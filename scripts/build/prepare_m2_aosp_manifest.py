@@ -46,6 +46,7 @@ system/unwinding system/update_engine'''.split()
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--graphics', action='store_true')
     a=p.parse_args(); root=Path(__file__).resolve().parents[2]
     pin=json.loads((root/'build/m2-first-stage-source.json').read_text())
     opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -56,6 +57,16 @@ def main():
     missing=sorted((set(EXACT) | set(SYSTEM))-projects.keys())
     if missing:raise ValueError('Unknown pinned project paths: '+repr(missing))
     selected=set(EXACT)|set(SYSTEM)|{x for x in projects if x.startswith('build/')}
+    if a.graphics:
+        graphics = set('''external/angle external/swiftshader external/minigbm
+external/libdrm external/drm_hwcomposer external/libdisplay-info external/perfetto
+external/libpng external/expat external/flatbuffers external/libjpeg-turbo
+external/libyuv external/libvpx external/vulkan-headers
+packages/modules/StatsD packages/modules/Gki test/vts-testcase/hal'''.split())
+        unknown = graphics - projects.keys()
+        if unknown:
+            raise ValueError('Unknown pinned graphics projects: ' + repr(sorted(unknown)))
+        selected |= graphics
     manifest=ET.Element('manifest')
     ET.SubElement(manifest,'remote',name='aosp',fetch='https://android.googlesource.com/')
     ET.SubElement(manifest,'default',remote='aosp',revision='refs/tags/'+pin['aosp_tag'])

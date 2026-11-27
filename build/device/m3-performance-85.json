@@ -1,0 +1,52 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-85",
+  "boot_id": "963cd4a9-e955-4e7c-8c4b-a1f2883cfe2e",
+  "result": "FAIL_FIRMWARE_AND_90HZ_MODESET",
+  "kernel": "07108686f8fb4827e6a1890fe0913067dab844cdb6683ea8b3ef529610f4676b",
+  "boot": "d170b2633dafe866eaf6cde0c93232538249973758f8672a18cbb9a5d0a74c2d",
+  "candidate_super": "4e4f5e86d30739d12abbfcf623e291001dcb125652d719d503ac3d3aedc5b0f2",
+  "native_bind": {
+    "adreno_smmu": true,
+    "gmu_iommu_group": 15,
+    "gpu_iommu_group": 16,
+    "adreno_gpu": "6.5.0.2",
+    "drm_minor": 0
+  },
+  "tsens_previous_panic": "Not reproduced; fabric population completed and native modeset was attempted.",
+  "cpu_dvfs": "NOT MEASURED",
+  "gpu_submission": "NOT RUN: SQE version 0.93 rejected; driver requires at least 0.95",
+  "selected_panel_hz": 90,
+  "measured_panel_hz": null,
+  "physical_pattern": "NOT REACHED: 660 MHz PHY guard returned -22",
+  "android_adb": false,
+  "diagnosis": {
+    "firmware": "Pinned ACK a6xx_ucode_check_version requires >=0x095; original F.20 SQE header contains 0x093.",
+    "linkclock": "Project dsi_rmx2072_stock_linkclk accepted only 60 Hz. For 90 Hz it fell back to the calculated rate, which the unchanged 660 MHz PHY guard rejects.",
+    "official_panel": "Pinned realme 24a15224 20607 RM19795 timing@0 and timing@1 both specify 660000000 Hz and the identical 14-byte PHY table."
+  },
+  "restored": {
+    "firmware": "RMX2072_11_F.20",
+    "sys_boot_completed": 1,
+    "boot_id": "2f17a9b7-03e4-4064-ba5b-6ed67dd8d05f",
+    "super_sha256": null,
+    "boot_sha256": null,
+    "dtbo_sha256": null,
+    "lp_slots": [
+      0,
+      1
+    ],
+    "stock_full_partition_readback": false,
+    "stock_write_acknowledged": true,
+    "expected_image_sha256": {
+      "boot": "9ae2f907fd029e88c841121f4fbeb6f3a1ae32322a6703d8d142bbba31bb93c3",
+      "dtbo": "61d9b3ac8426a886de63cf4cde0552e2cab3cd5c47f83ef4335a624b657949ef",
+      "super": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532"
+    },
+    "verification_policy": "reuse-original-backup-write-ack-boot-and-lp-metadata"
+  },
+  "raw_sha256": {
+    "acm.log": "93bb8b1ca153d3aa306818978b7c248883138505c6ecd8d78a0fcf9516e40f98",
+    "host-events.jsonl": "dad203f568814421e94610638b4612c83c142d91b993dcf51b8754594aea4301",
+    "readbacks.jsonl": "f89e71b8db55057a41624474d731a5bfc6f684b58192d75935f51312a64d67f1"
+  }
+}

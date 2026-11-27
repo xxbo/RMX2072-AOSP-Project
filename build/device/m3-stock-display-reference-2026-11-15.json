@@ -1,0 +1,38 @@
+{
+  "goal": "Determine whether native display bring-up needs an Iris bridge driver",
+  "source": "Previously captured F.20 handset boot; no new stock boot",
+  "source_record": "work/records/f20-disconnected-power-control-2026-11-14",
+  "source_sha256": "d5f918370cf1b1579ba1b34a4b2c247e005134d67cd6ac0bdd7eb36ef00f287b",
+  "source_digest_matches_original_record": true,
+  "stock_build": "RMX2072_11_F.20",
+  "stock_kernel": "4.19.157-perf+",
+  "stock_boot_id": "6783f265-27da-49aa-9e2c-286c62f18d69",
+  "evidence": [
+    {
+      "line": 842,
+      "text": "\u001b[32m[    1.708169] \u001b[33m(3)[1:swapper/0][    1.708162]@3 [drm:dsi_display_dev_probe] [msm-dsi-info]\u001b[0m: IRIS_LOG I UEFI display[0] name: qcom,mdss_dsi_rm19795samsung_ams641rw01_1080_2340_cmd"
+    },
+    {
+      "line": 846,
+      "text": "\u001b[32m[    1.708594] \u001b[33m(3)[1:swapper/0][    1.708590]@3 IRIS_LOG I iris_query_capability(), iris chip enable\u001b[31m: false, soft iris enable: false"
+    },
+    {
+      "line": 852,
+      "text": "\u001b[32m[    1.709205] \u001b[33m(3)[1:swapper/0][drm:dsi_panel_parse_oplus_config] [msm-dsi-info]\u001b[0m: is_pxlw_iris5: false"
+    },
+    {
+      "line": 1440,
+      "text": "\u001b[32m[    2.246732] \u001b[33m(1)[1:swapper/0][    2.246726]@1 [drm:dsi_display_bind] [msm-dsi-info]\u001b[0m: Successfully bind display panel 'qcom,mdss_dsi_rm19795samsung_ams641rw01_1080_2340_cmd'"
+    },
+    {
+      "line": 5437,
+      "text": "\u001b[32m[    8.878756] \u001b[33m(5)[536:crtc_commit:139][    8.878753]@5 [drm:dsi_display_set_mode] [msm-dsi-info]\u001b[0m: hactive= 1080,vactive= 2400,fps=60"
+    },
+    {
+      "line": 6323,
+      "text": "\u001b[32m[   12.291557] \u001b[33m(4)[536:crtc_commit:139][   12.291554]@4 [drm:dsi_display_set_mode] [msm-dsi-info]\u001b[0m: hactive= 1080,vactive= 2400,fps=90"
+    }
+  ],
+  "conclusion": "F.20 reports hardware Iris and software Iris disabled, and is_pxlw_iris5 false. Shared DTS Iris nodes alone do not establish an active bridge requirement.",
+  "next": "Continue native DSI clock and command transport; do not enable Iris GPIOs from shared DTS without new evidence."
+}

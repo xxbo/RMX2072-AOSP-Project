@@ -12,3 +12,13 @@
 (typeattributeset sysfs_type (rmx_keymaster_parameters))
 (genfscon sysfs "/firmware/rmx2072_hmac_parameters" (u object_r rmx_keymaster_parameters ((s0) (s0))))
 (allow rmx_keymaster rmx_keymaster_parameters (file (getattr open read)))
+
+; Only the source Keymaster service can submit the board-private ioctl.
+(type rmx_keymaster_device)
+(roletype object_r rmx_keymaster_device)
+(typeattributeset dev_type (rmx_keymaster_device))
+(allow rmx_keymaster rmx_keymaster_device (chr_file (getattr open read write ioctl)))
+(allowx rmx_keymaster rmx_keymaster_device (ioctl chr_file (0x524b)))
+
+; Configure uses the actual project vendor patch property before TEE calls.
+(allow rmx_keymaster vendor_security_patch_level_prop (file (getattr open read map)))

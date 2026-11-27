@@ -4,6 +4,19 @@ from pathlib import Path
 
 def load(path):return json.loads(path.read_text(encoding='utf-8-sig'))
 def rows(path):return [json.loads(x) for x in path.read_text(encoding='utf-8-sig').splitlines()] if path.exists() else []
+def requires_stock_readback(disposition):
+    # Historical receipts required full reads. Only the explicit new policy
+    # may omit them; expected image hashes are never fresh device evidence.
+    if disposition.get('stock_full_partition_readback', True):
+        return True
+    assert disposition['verification_policy']=='reuse-original-backup-write-ack-boot-and-lp-metadata'
+    assert disposition['stock_write_acknowledged'] is True
+    assert all(disposition[name+'_sha256'] is None for name in ('boot','dtbo','super'))
+    expected=disposition['expected_image_sha256']
+    assert set(expected)=={'boot','dtbo','super'}
+    assert all(isinstance(h,str) and len(h)==64 and all(c in '0123456789abcdef' for c in h) for h in expected.values())
+    return False
+
 def record(directory):
     live=directory/'live';inputs=load(directory/'inputs.json');events=rows(live/'host-events.jsonl')
     original=next(e['boot_id'] for e in events if e['event'] in ('handoff_requested','autonomous_handoff_observed'))
@@ -18,7 +31,7 @@ def record(directory):
         disposition=load(directory/'restored.json');assert disposition['sys_boot_completed']==1 and disposition['lp_slots']==[0,1]
         assert disposition['boot_id']!=original
     readbacks=rows(directory/'readbacks.jsonl')
-    for prefix in ['candidate-super-read']+([] if terminal.exists() else ['restored-super']):
+    for prefix in ['candidate-super-read']+(['restored-super'] if not terminal.exists() and requires_stock_readback(disposition) else []):
         blocks=[r for r in readbacks if r['label'].startswith(prefix+'-')]
         assert len(blocks)==17 and sum(r['sectors']*4096 for r in blocks)==8866758656
     assert not (directory/'readback.bin').exists()

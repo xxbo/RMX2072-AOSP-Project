@@ -1,0 +1,53 @@
+{
+  "review_date": "2026-11-21",
+  "timezone": "Asia/Shanghai",
+  "status": "PHYSICAL_FAILED_CONFIGURATION_VERIFIED_ROOT_CAUSE_OPEN",
+  "goal": "Correct physical display, then AOSP desktop on ACK 6.18 + Android 17 GSI + source/ported drivers",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-67",
+  "boot_id": "790e9ef8-5e41-4066-8117-12222897de92",
+  "kernel": "34e28227e62cc22c5b5125bd6e187a1879b24bc9008ff5820e3e3dcca3ee9d4c",
+  "kernel_source_commit": "7df9c64a916bfc8f10e866ceddc789468ca9446a",
+  "feedback": {
+    "quote": "67轮仍然没有改善，还是一样的花屏",
+    "source": "user conversation on review date",
+    "scope": "Overall trial feedback; native and Android phases not separately specified"
+  },
+  "setup_checks": {
+    "passed": 43,
+    "failed": 0
+  },
+  "result": "Matching the three PHY timing fields alone did not repair the physical output",
+  "native_evidence_scope": "published pause digests and host gate UUID; no GSI acceptance or stability claim",
+  "gsi_stability": "NOT_RUN_PAUSED; no retrospective acceptance created",
+  "historical_recovery": "73e2bf96-93f9-41cf-916e-c3b5686f919e",
+  "recovery_scope": "F.20 restoration verified on 2026-11-20; handset not accessed during this review",
+  "evidence": [
+    {
+      "path": "build/device/m3-display-67-paused-2026-11-20.json",
+      "bytes": 17363,
+      "sha256": "d7faf425095c4bea6598418151c905bed1069e22d045b61d6677763d80e6a11d",
+      "encoding": "repository LF bytes"
+    },
+    {
+      "path": "build/device/m3-stock-phy-67-runtime-2026-11-21.json",
+      "bytes": 9830,
+      "sha256": "d2ee2c934446f7dada318d357b98ed6d05d7afd3c68b0f69d1c872df0926f1e4",
+      "encoding": "repository LF bytes"
+    },
+    {
+      "path": "build/device/m3-first-frame-gap-2026-11-21.json",
+      "bytes": 4496,
+      "sha256": "4ddced8e0159c195c8421441058068148f674e4d5c462006cc83c660cc950437",
+      "encoding": "repository LF bytes"
+    }
+  ],
+  "new_device_actions": [],
+  "new_kernel_build": false,
+  "image_versions_created": 0,
+  "next_step": "Prepare bounded first-frame error/clock evidence before another parameter experiment",
+  "validation": {
+    "m3_tests_run": 21,
+    "passed": 17,
+    "skipped": 4
+  }
+}

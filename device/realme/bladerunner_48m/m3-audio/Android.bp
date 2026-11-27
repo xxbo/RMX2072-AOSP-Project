@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: Apache-2.0
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+cc_binary {
+    name: "android.hardware.audio-service.rmx2072",
+    defaults: [
+        "latest_android_hardware_audio_core_ndk_shared",
+        "latest_android_hardware_audio_effect_ndk_shared",
+        "latest_android_media_audio_common_types_ndk_shared",
+    ],
+    vendor: true,
+    relative_install_path: "hw",
+    srcs: ["service.cpp"],
+    shared_libs: ["libbase", "libbinder_ndk"],
+    init_rc: ["audio.rc"],
+    vintf_fragments: ["audio.xml"],
+    cflags: ["-Wall", "-Wextra", "-Werror"],
+}

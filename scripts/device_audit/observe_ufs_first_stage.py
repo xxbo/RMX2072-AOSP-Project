@@ -21,6 +21,33 @@ def mark(output, event, boot_id):
                                   utc=datetime.now(timezone.utc).isoformat()))+'\n')
 
 
+def handoff_diagnostic_command(boot_id):
+    """Bounded, read-only evidence from a stalled pre-Android display handoff."""
+    boot = str(UUID(str(boot_id)))
+    return (f'\nif [ "$(cat /proc/sys/kernel/random/boot_id)" = "{boot}" ] '
+            '&& [ -r /run/m3-display.txt ]; then\n'
+            "printf '\\nM3HANDOFF_DIAG begin\\n'\n"
+            "grep -E 'DRMTEST|DRMPATTERN|DRMSNAPSHOT' /run/m3-display.txt | tail -40\n"
+            'tail -120 /run/m3-display.txt\n'
+            'tail -60 /run/gsi17-run.log\n'
+            'tail -30 /run/m1-autoboot.events\n'
+            'ls -l /sys/class/watchdog\n'
+            'readlink -f /sys/class/watchdog/watchdog0/device\n'
+            'ps\n'
+            'count=0\n'
+            'for task in /proc/[0-9]*; do\n'
+            ' [ "$count" -lt 20 ] || break\n'
+            ' name=$(cat "$task/comm" 2>/dev/null)\n'
+            ' state=$(sed -n "s/^State:[[:space:]]*//p" "$task/status" 2>/dev/null)\n'
+            ' case "$state:$name" in D*|*:drm-panel-smoke|*:cat|*:sh|*:timeout)\n'
+            '  echo "M3TASK path=$task name=$name state=$state"\n'
+            '  cat "$task/wchan" "$task/stack" 2>/dev/null\n'
+            '  count=$((count+1));;\n'
+            ' esac\n'
+            'done\n'
+            "printf '\\nM3HANDOFF_DIAG end\\n'\nfi\n").encode()
+
+
 def watch_adb(output, stop, retain=False, autonomous=False):
     """Record transport states, including offline and unauthorized, throughout the trial."""
     start = time.monotonic()
@@ -120,7 +147,7 @@ def previous_boot(trial, original, output, deadline, return_on_accepted=True, re
         time.sleep(1)
 
 
-def observe(trial, output, timeout):
+def observe(trial, output, timeout, staged_display=False):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         ports = ports_with_id(comports(), ACM)
@@ -140,7 +167,7 @@ def observe(trial, output, timeout):
         # Preserve the allocator's boot-time result before Android fills pstore.
         bridge = console_query(console, b"dmesg | grep 'SHM Bridge'")
         (output/'shmbridge.txt').write_bytes(bridge + b'\n')
-        if console_query(console, b'test -r /sys/module/qcom_scm/parameters/temp_hmac_key && echo present') == b'present':
+        if not staged_display and console_query(console, b'test -r /sys/module/qcom_scm/parameters/temp_hmac_key && echo present') == b'present':
             before = int(console_query(console, b'/bin/busybox date -u +%s 2>/dev/null'))
             now = datetime.now(timezone.utc)
             command = now.strftime("/bin/busybox date -u -s '%Y-%m-%d %H:%M:%S' >/dev/null 2>&1 && /bin/busybox date -u +%%s 2>/dev/null")
@@ -154,18 +181,42 @@ def observe(trial, output, timeout):
         mark(output, 'handoff_requested', original)
         # Capture bootstrap failures too. A failed mount can stop PID 1 before
         # the witness observes a mount syscall, leaving the outer console alive.
-        console.write(b"\nstty -echo; cat /proc/sys/kernel/random/boot_id; "
+        if staged_display:
+            if console_query(console, b'test -f /m3-display-staged && echo staged') != b'staged':
+                raise ValueError('Expected the staged-display ramdisk gate')
+            ready = console_query(console, b'cat /run/m3-display-gate-ready 2>/dev/null')
+            if ready != str(original).encode():
+                (output/'display-gate-not-ready.txt').write_bytes(console_query(console, b'dmesg | tail -100'))
+                raise ValueError('Display gate is not ready for this boot; no display bind requested')
+            (output/'display-previous-guard.txt').write_bytes(console_query(
+                console, b'cat /run/m3-display-previous-guard 2>/dev/null') + b'\n')
+            mark(output, 'display_gate_requested', original)
+            # Start the independent stream before allowing any display bind.
+            # The host records the entire kernel stream, including fatal stacks.
+            console.write(b"\nstty -echo; (cat /dev/kmsg > /dev/ttyGS0) & "
+                          b"cat /proc/sys/kernel/random/boot_id > /run/m3-display-start\n")
+        else:
+            console.write(b"\nstty -echo; cat /proc/sys/kernel/random/boot_id; "
                       b"(cat /dev/kmsg | awk '/init:|libfs_mgr|libfstab|avb|verity|SELinux:|panic|enforcing=|m1_file_read/{print;fflush()}' "
                       b"> /dev/ttyGS0) & "
                       b"/bin/busybox sh -x /bin/first-stage-mount ufs install "
                       b"> /run/gsi17-run.log 2>&1; x=$?; tail -80 /run/gsi17-run.log; "
                       b"echo UFS_STAGE_RC=$x; /bin/reboot-edl edl\n")
         deadline = time.monotonic() + identity['timer_seconds'] + 25
+        diagnostic_at = time.monotonic() + 90 if staged_display else None
         with (output/'acm.log').open('xb') as capture:
             tail = b''
             while time.monotonic() < deadline:
                 if (output/'gsi-accepted.json').exists(): break
                 try:
+                    if diagnostic_at is not None and time.monotonic() >= diagnostic_at:
+                        # The staged gate leaves this shell free while the
+                        # handoff runs separately. Keep its existing stream;
+                        # never compete for the COM port or renew a timer here.
+                        diagnostic_at = None
+                        console.write(handoff_diagnostic_command(original))
+                        console.flush()
+                        mark(output, 'display_handoff_diagnostic_requested', original)
                     data = console.read(16384)
                 except SerialException:
                     break
@@ -190,14 +241,19 @@ if __name__ == '__main__':
     parser.add_argument('--observe-adb', action='store_true')
     parser.add_argument('--retain-gsi', action='store_true')
     parser.add_argument('--autonomous', action='store_true')
+    parser.add_argument('--staged-display', action='store_true')
     args = parser.parse_args()
+    if args.staged_display and not args.autonomous:
+        parser.error('Staged display requires the existing guarded autonomous handoff')
     stop = threading.Event()
     args.output.mkdir(parents=True, exist_ok=False)
     if args.observe_adb:
         monitor = threading.Thread(target=watch_adb, args=(args.output, stop, args.retain_gsi, args.autonomous))
         monitor.start()
     try:
-        if args.autonomous:
+        if args.staged_display:
+            observe(args.trial, args.output, args.wait, staged_display=True)
+        elif args.autonomous:
             deadline=time.monotonic()+400
             while ports_with_id(comports(),EDL) and time.monotonic()<deadline: time.sleep(.25)
             previous_boot(args.trial,UUID(int=0),args.output,deadline)

@@ -1,0 +1,43 @@
+{
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-79",
+  "boot_id": "31c067f9-477b-42e9-a365-c13e20b2cea4",
+  "result": "NATIVE_I2C_WORKS_FIRMWARE_PID_DIFFERS",
+  "legacy_name_collision_resolved": true,
+  "native_i2c_registered": true,
+  "firmware_product_id": "9885",
+  "input_registration": false,
+  "evidence": [
+    "3,3548,29592101,-,caller=T90;goodix-gtx8 1-005d: unexpected product ID, got: 9885",
+    "3,3549,29592215,-,caller=T90;goodix-gtx8 1-005d: failed to get version info",
+    "3,3550,29592538,-,caller=T90;goodix-gtx8 1-005d: probe with driver goodix-gtx8 failed with error -22",
+    "7,3552,29593295,-,caller=T90;probe of a94000.i2c returned 0 after 438079 usecs"
+  ],
+  "next": "Board-specific Normandy match for firmware PID 9885 plus full OEM version checksum validation; no broad PID bypass or firmware write",
+  "silicon_model_scope": "Firmware PID measured; physical silicon marking was not read",
+  "physical_touch": "NOT RUN",
+  "power_key_off_on": "Operator observed screen off/on; PowerManager records power_button sleep and wake; no system_server or SurfaceFlinger restart",
+  "gsi_adb_retained": true,
+  "sys_boot_completed": 1,
+  "enforcing": true,
+  "power_key_raw_capture": "NOT CAPTURED: operator pressed before bounded event capture started",
+  "usb_resume": {
+    "result": "FAIL_CONTINUITY_RECOVERED_BY_ONE_CABLE_REPLUG",
+    "same_boot_after_replug": true,
+    "system_server_pid": 2399,
+    "surfaceflinger_pid": 2131,
+    "adbd": "running",
+    "sys_usb_state": "adb",
+    "kernel_usb_registers": "NOT OBSERVED: shell cannot read dmesg or UDC sysfs",
+    "candidate_hypothesis": "QSCRATCH UTMI PIPE selection may be lost across suspend; pinned driver selects at probe only. Not established as handset root cause.",
+    "upstream_reference": "https://lkml.iu.edu/hypermail/linux/kernel/2610.3/04952.html"
+  },
+  "input80_kernel_run": 45176831092,
+  "input80_source": "e697e06cee2fe6e48176b54b249e81342910cf4b",
+  "runtime_evidence_sha256": {
+    "power-usb-return-state.txt": "3ef2cd10450931ebc08c9563eee675117152cd18274c59a9bfd96fca2763f175",
+    "power-usb-return-logcat.txt": "ea379846bdae2e643a17ea4eecbda7d72f51e41db5d9beeb54942861015c4b0a",
+    "power-usb-return-kernel.txt": "4fab29205d7ac81372a0b540ac4bf1ba5227e550611b194ab383233bfee9f033",
+    "power-usb-suspend-services.txt": "a97bcdb9a2dc634bbeca78a19ab70a025b9931e9becdde1303d90788b54d7cf5",
+    "gsi-stable.json": "6ea0598ba5f9e1f76bffe92dddb33cda66aa0f820052f749fd484454f4a21321"
+  }
+}

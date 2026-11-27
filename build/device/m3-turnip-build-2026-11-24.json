@@ -1,0 +1,37 @@
+{
+  "run_id": 45394293633,
+  "source_commit": "96963190521d7a009e727295193037b43bf58679",
+  "artifact_id": 14920477335,
+  "artifact_archive_digest": "sha256:3b13813529e219a7030ded38cb429409626112a16ac25bb7363ed9096f508ef8",
+  "archive_digest_verified": true,
+  "source_verified": true,
+  "source": {
+    "repository": "https://android.googlesource.com/platform/external/mesa3d",
+    "commit": "875160ed32cc5bc32777fa04870a0a57ed38c987",
+    "reference": "android-17.0.0_r1",
+    "version": "26.1.0-devel",
+    "ndk": "28.2.13676358",
+    "api": 35,
+    "kernel_interface": "msm DRM, not stock KGSL",
+    "scope": "Turnip Vulkan hardware driver; retain accepted ANGLE EGL/GLES, minigbm and DRM composer"
+  },
+  "needed": [
+    "libcutils.so",
+    "libhardware.so",
+    "liblog.so",
+    "libnativewindow.so",
+    "libsync.so",
+    "libm.so",
+    "libz.so",
+    "libdl.so",
+    "libc.so"
+  ],
+  "android_vendor_providers": {
+    "libcutils.so": "aa3fd0306f880a56a54b0149aa0fa8a9ac85ed39e6d6ae412fadc6539831e073",
+    "libhardware.so": "e62c7686b2c0802e44cd69a2cd8c9d4c9e8f01fc3802f00a54e4ef432524ca7a"
+  },
+  "files": {
+    "/lib64/hw/vulkan.freedreno.so": "51f4ed63c0196dc0911f0bcbf5a8dae85eebcbe67e582e74bb27d396063b063e"
+  },
+  "hardware_result": "NOT RUN"
+}

@@ -1,0 +1,57 @@
+{
+  "boot_id": "5308a1ed-93c7-4551-b018-782a55bbbf1b",
+  "same_boot": true,
+  "enforcing": true,
+  "qca6390_enumerated": null,
+  "wlan_netdev": false,
+  "discovery_read_errors": true,
+  "kernel_discovery": {
+    "pci_root_port_reported": true,
+    "qca6390_reported": false,
+    "link_down_reported": true,
+    "digital_rail_registration_failed": false
+  },
+  "files": {
+    "pci.txt": "4a1f9439b83de31de182f26e714906c10a036060210e9ad86be3b4841c942c4f",
+    "network.txt": "ddb860474da371e82610f076596c97403243848802737bf7aa07c601467b589a",
+    "wifi-status.txt": "d53f963656b4ebd4ece74391dcdcb3b9ab9f83e894238073a6b02c5444007067",
+    "wifi-service.txt": "428e2f3d6827047ef314dc2e3fff6c76d7560be8024b13ceed2b737bdaf7737c",
+    "battery.txt": "b9fb4f3e15bffc0df94d7a344ca53dbbaae1772f430ab8e2bb5659d2a3257156",
+    "kernel-wlan.txt": "0f2df989160c17157ee70bc06c531a1c742d2dda1f3c0e608c78a2f6fb96605e"
+  },
+  "kernel_log_sha256": {
+    "boot-events.txt": "db6cbdce0a7501cedf23e5c76fd49be9b54efaf457895ea2121d8602cddc09e2",
+    "acm.log": "efc7386b5cf5eeb8e635e0965c61c17b915599536732aaa155a006c2ec7d10cf"
+  },
+  "scan": "NOT RUN",
+  "association": "NOT RUN",
+  "dhcp": "NOT RUN",
+  "traffic": "NOT RUN",
+  "scope": "Discovery only; no RF enable, credentials or network configuration changes",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-92",
+  "source_commit": "bdbd258638ca6f8edf152dcc8fca9d4a5cf37816",
+  "kernel_image_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "boot_sha256": "13e9b98c670759d9df8996bbd2f01813d45c8f3546f7b412f7dbd2d1fdfeae35",
+  "retained_seconds": 195.828,
+  "identity": [
+    "37",
+    "6.18.32-android17-5-maybe-dirty-4k",
+    "5308a1ed-93c7-4551-b018-782a55bbbf1b",
+    "Enforcing",
+    "running",
+    "",
+    "retained",
+    "adb"
+  ],
+  "early_kernel_evidence": [
+    "6,812,819422,-,caller=T14;m3_wlan_digital: Setting 900000-952000uV",
+    "6,1151,29431977,-,caller=T750;qcom-pcie 1c00000.pcie: Phy link never came up",
+    "6,1156,29435684,-,caller=T750;pci 0000:00:00.0: [17cb:010b] type 01 class 0x060400 PCIe Root Port"
+  ],
+  "live_power_bindings": "/sys/bus/platform/drivers/pci-pwrctrl-pwrseq:\ntotal 0\nlrwxrwxrwx 1 root root 0 2026-08-26 02:58 1c00000.pcie:pcie@0:wifi@0 -> ../../../../devices/platform/soc/soc:display-fabric-lab/1c00000.pcie/pci0000:00/1c00000.pcie:pcie@0:wifi@0\n-????????? ? ?    ?    ?                ? bind\n-????????? ? ?    ?    ?                ? uevent\n-????????? ? ?    ?    ?                ? unbind\n\n/sys/bus/platform/drivers/pwrseq-qcom_wcn:\ntotal 0\n-????????? ? ?    ?    ?                ? bind\nlrwxrwxrwx 1 root root 0 2026-08-26 02:58 soc:display-fabric-lab:qca6390-pmu -> ../../../../devices/platform/soc/soc:display-fabric-lab/soc:display-fabric-lab:qca6390-pmu\n-????????? ? ?    ?    ?                ? uevent\n-????????? ? ?    ?    ?                ? unbind\n\n/sys/bus/pwrseq/devices:\ntotal 0\nlrwxrwxrwx 1 root root 0 2026-08-26 02:58 pwrseq.0 -> ../../../devices/platform/soc/soc:display-fabric-lab/soc:display-fabric-lab:qca6390-pmu/pwrseq.0\nlrwxrwxrwx 1 root root 0 2026-08-26 02:58 /sys/bus/platform/devices/1c00000.pcie:pcie@0:wifi@0 -> ../../../devices/platform/soc/soc:display-fabric-lab/1c00000.pcie/pci0000:00/1c00000.pcie:pcie@0:wifi@0\nlrwxrwxrwx 1 root root 0 2026-08-26 02:58 /sys/bus/platform/devices/soc:display-fabric-lab:qca6390-pmu -> ../../../devices/platform/soc/soc:display-fabric-lab/soc:display-fabric-lab:qca6390-pmu\nlrwxrwxrwx 1 root root 0 2026-08-26 02:58 /sys/bus/platform/devices/vendor:bt_qca6390 -> ../../../devices/platform/vendor/vendor:bt_qca6390\n5308a1ed-93c7-4551-b018-782a55bbbf1b\n1",
+  "digital_rail_registration": "PASS: regulator.3, power sequencer and PCI pwrctrl consumers bound",
+  "endpoint_link": "FAIL: no PCI endpoint; initial link down",
+  "same_candidate_and_test_seeds": true,
+  "preflight_sha256": "5e8773db7b045ab9965d26044cca8ae51e048ce8b0e53a7424f2359897f78442",
+  "retention_scope": "This boot only; no cold-start qualification."
+}

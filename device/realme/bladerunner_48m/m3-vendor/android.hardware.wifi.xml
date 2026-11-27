@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Board capability needed to start the GSI WifiService/ScanningService.
+     Radio driver, firmware transport and Wi-Fi HAL bring-up remain pending;
+     this declaration alone does not establish scan or connection support. -->
+<permissions>
+    <feature name="android.hardware.wifi" />
+</permissions>

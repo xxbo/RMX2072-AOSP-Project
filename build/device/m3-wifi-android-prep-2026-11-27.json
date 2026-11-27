@@ -1,0 +1,111 @@
+{
+  "status": "OFFLINE_COMPOSITION_PASS_DEVICE_NOT_INSTALLED",
+  "date": "2026-11-27",
+  "record_written_utc": "2026-11-27T12:49:01.463237+00:00",
+  "phone_observations": {
+    "source": "Read-only ADB and PnP tool outputs; compact transcription, not a complete device log",
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-99",
+    "last_observed_boot_id": "efd6da98-d720-4e55-bb77-703204189c3a",
+    "observed_capacity_percent": [
+      7,
+      10
+    ],
+    "last_observed_voltage_uv": 7623000,
+    "last_observed_temperature_tenths_c": 348,
+    "gauge_status": "Charging",
+    "charging_path_qualified": false,
+    "mainline_supplicant_enabled": false,
+    "supplicant_binder": "not found",
+    "wificond_binder": "found",
+    "wlan_netdev_present": false,
+    "later_state": "ADB absent; no matching present Qualcomm/Android USB PnP device; screen state requested",
+    "offline_cause": "UNCONFIRMED; no host flash or reboot issued"
+  },
+  "mainline_service": {
+    "path": "/apex/com.android.wifi/etc/mainline_supplicant.rc",
+    "service": "wpa_supplicant_mainline",
+    "binder": "wifi_mainline_supplicant",
+    "executable": "/apex/com.android.wifi/bin/wpa_supplicant_mainline",
+    "socket_directory": "/data/misc/wifi/mainline_supplicant/sockets",
+    "user": "wifi",
+    "groups": [
+      "wifi",
+      "net_raw",
+      "net_admin"
+    ],
+    "capabilities": [
+      "NET_RAW",
+      "NET_ADMIN"
+    ],
+    "mode": "disabled; oneshot; started on demand"
+  },
+  "composition": {
+    "baseline_vendor_unsigned_sha256": "2a94b33a4e4e36e79b3a3c7dd17a6bd6c11d1c2b3aaee2d0864d58c71d0dc0ca",
+    "baseline_source_matches_image_inventory": true,
+    "added": [
+      "/overlay/RmxWifiOverlay.apk"
+    ],
+    "changed": [],
+    "removed": [],
+    "added_bytes": 8538,
+    "apk_sha256": "946f088135318310964df8dfdce5e91a5b866f01e1d7c5effaddd3a10dfbe3bd",
+    "label": "u:object_r:vendor_overlay_file:s0",
+    "existing_label_reused": true,
+    "policy_changed": false,
+    "vendor_image_built": false,
+    "installed": false
+  },
+  "retained_wifi": {
+    "dt_enabled": true,
+    "firmware_exactly_matches_trial100": true,
+    "input_battery_gpu_and_90hz": true
+  },
+  "board_file": {
+    "origin": "existing F.20 recovery ODM /etc/wifi/bdwlan.elf",
+    "bytes": 57908,
+    "sha256": "05685bc7eddaf160fe54fb1f5086d810a8000949e1faa46f9d53b21827701a18",
+    "format": "ELF wrapper retained",
+    "installed": false,
+    "acceptance": "NOT RUN; verify QMI board identity and firmware response before RF tests",
+    "elf": {
+      "bits": 32,
+      "endian": "little",
+      "machine": 40,
+      "entry": 32768,
+      "segments": [
+        {
+          "type": 1,
+          "offset": 1024,
+          "vaddr": 4096,
+          "paddr": 4096,
+          "file_bytes": 56180,
+          "memory_bytes": 56180,
+          "flags": 6,
+          "alignment": 1024
+        }
+      ]
+    },
+    "qca6390_driver_board_limit_bytes": 262144,
+    "driver_sources": {
+      "ath11k-core.c": "818a0d48ca385daf048dd8c20220f7afa1fafa46fe98ec691d87db08a9473414",
+      "ath11k-qmi.c": "b7de59976e216fb6e8441c437ecd60dbb8d64538f9b5b10f9898f32e106454d8"
+    },
+    "board_id_decoded": false,
+    "firmware_compatibility_verified": false,
+    "interpretation": "ELF framing fits the driver transport; no QMI/board/calibration/RF acceptance implied"
+  },
+  "current_candidate": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-100",
+    "boot_sha256": "03a28c7c1f492fa77be1594d2fc83b685aa584f0a6bbc3569b8cb595d59e6fa5",
+    "unchanged": true,
+    "device_run": false
+  },
+  "device_actions": {
+    "flash": false,
+    "reboot": false,
+    "stock_reread": false,
+    "scan": false,
+    "connect": false
+  },
+  "next_gate": "Re-establish ADB and live battery >=25%, then run trial100 boot firmware for MHI/QMI board/chip response; review own-board BDF before RF tests"
+}
