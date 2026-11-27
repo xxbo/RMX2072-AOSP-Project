@@ -1,0 +1,21 @@
+{
+  "aosp_tag": "android-17.0.0_r1",
+  "target": "wpa_supplicant",
+  "interface": "android.hardware.wifi.supplicant.ISupplicant/default",
+  "version": 5,
+  "architecture": "arm64 armv8-a generic",
+  "projects": {
+    "external/wpa_supplicant_8": "3396e8b8365817b3a24b78b534b04bb9dcea330a",
+    "hardware/interfaces": "0162af698935100a590b7359581ac8b1b80693e5",
+    "system/security": "cbb2ef1617a94d6cdf2dc2ccb7a545575dbb20cb",
+    "external/libnl": "2be7f4458cf7c7831df8fbac395e6a7222d0d13f"
+  },
+  "sha256": {
+    "external/wpa_supplicant_8/wpa_supplicant/Android.bp": "157cc158787fe00c5a1d5e0ae5c954791dec8c957a65f48f726b66f042794958",
+    "external/wpa_supplicant_8/wpa_supplicant/aidl/android.hardware.wifi.supplicant-service.rc": "72a3f1662472db5e34211de59ad71eb550e801bdd9e96c8c13badea734c01769",
+    "external/wpa_supplicant_8/wpa_supplicant/aidl/android.hardware.wifi.supplicant.xml": "aff4e096edaf9fece9cd98eff7c5a8642f0a18f9d74e2134086adfb1fea2b375",
+    "hardware/interfaces/wifi/supplicant/aidl/aidl_api/android.hardware.wifi.supplicant/5/.hash": "2fee32c216e3971fe2867f39f0ef2d9c94f20e15074335b0af35da67255639a7",
+    "system/security/keystore-engine/Android.bp": "f4162419bac7def60fe28925f970a9b15347ef0c3b27d6e7d6e9e196cdc90793"
+  },
+  "scope": "Source provenance only. Station nl80211 acceptance pending; no P2P/NoA or private driver ioctl claim."
+}

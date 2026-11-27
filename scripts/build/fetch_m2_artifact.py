@@ -30,7 +30,8 @@ def main():
     p.add_argument('--run-id', type=int, required=True)
     p.add_argument('--artifact-id', type=int, required=True)
     p.add_argument('--commit', required=True)
-    p.add_argument('--kind', choices=('kernel', 'init', 'graphics', 'health', 'power', 'audio'), required=True)
+    p.add_argument('--kind', choices=('kernel', 'init', 'graphics', 'health', 'power', 'audio', 'wifi'), required=True)
+    p.add_argument('--llvm-objdump', type=Path, help='Required for source Wi-Fi artifact instruction screening')
     p.add_argument('--display', action='store_true', help='Require the M3 panel source digests and DRM configuration')
     p.add_argument('--input-devices', action='store_true', help='Require the GTX8 source digests and built-in driver')
     p.add_argument('--battery-gauge', action='store_true', help='Require the pinned BQ28Z610 driver without NVM updates')
@@ -78,7 +79,7 @@ def main():
         url = error.headers['Location']
     provenance = dict(run_id=a.run_id, source_commit=a.commit, artifact_id=a.artifact_id,
                       artifact_archive_digest=artifact['digest'], archive_digest_verified=False)
-    if a.kind in ('graphics', 'health', 'power', 'audio'):
+    if a.kind in ('graphics', 'health', 'power', 'audio', 'wifi'):
         archive_name = a.kind + '-vendor.tar.gz'
         if run['path'] != '.github/workflows/m3-'+a.kind+'.yml' or artifact['size_in_bytes'] > 512*1024*1024:
             raise ValueError('Unexpected graphics build or oversized artifact')
@@ -92,13 +93,15 @@ def main():
                   'hardwarebuffer-source.json', 'vendor-output-path.txt'}
         if a.kind == 'health':
             wanted.update({'health-source.sha256', 'connectivity-sparse.txt', 'bpf-sparse.txt'})
-        if a.kind in ('power', 'audio'):
+        if a.kind in ('power', 'audio', 'wifi'):
             wanted.update({a.kind+'-source.sha256', 'project-'+a.kind+'-source.sha256'})
+        if a.kind == 'wifi':
+            wanted.update({'BoardConfig.mk', 'WifiBoardConfig.mk', 'security-sparse.txt'})
         with zipfile.ZipFile(io.BytesIO(archive)) as z:
             files = {Path(n).name: z.read(n) for n in z.namelist() if Path(n).name in wanted}
         if files.keys() != wanted or files['project-commit.txt'].decode().strip() != a.commit:
             raise ValueError('Incomplete graphics artifact provenance')
-        if a.kind in ('power', 'audio'):
+        if a.kind in ('power', 'audio', 'wifi'):
             manifest = ET.fromstring(files['resolved-manifest.xml'])
             revisions = {x.get('path'): x.get('revision') for x in manifest.findall('project')}
             pinned = json.loads((repo/('build/m3-'+a.kind+'-source.json')).read_text())
@@ -111,12 +114,25 @@ def main():
             project_hashes = {line.split(maxsplit=1)[1]:line.split()[0]
                               for line in files['project-'+a.kind+'-source.sha256'].decode().splitlines()}
             source_dir = 'device/realme/bladerunner_48m/m3-'+a.kind+'/'
-            if set(project_hashes) != {source_dir+n for n in ('Android.bp', 'service.cpp', a.kind+'.rc', a.kind+'.xml')}:
+            names = ('WifiBoardConfig.mk',) if a.kind == 'wifi' else ('Android.bp', 'service.cpp', a.kind+'.rc', a.kind+'.xml')
+            if set(project_hashes) != {source_dir+n for n in names}:
                 raise ValueError('Incomplete project '+a.kind+' source inventory')
             for path, expected_sha in project_hashes.items():
                 data = subprocess.check_output(['git', '-C', str(repo), 'show', a.commit+':'+path])
                 if digest(data) != expected_sha:
                     raise ValueError('Project '+a.kind+' source mismatch: '+path)
+            if a.kind == 'wifi':
+                original_board = subprocess.check_output(['git', '-C', str(repo), 'show',
+                    a.commit+':device/realme/bladerunner_48m/m3-graphics/BoardConfig.mk'])
+                expected_board = original_board + b'\ninclude device/realme/rmx2072_m3/WifiBoardConfig.mk\n'
+                if (files['BoardConfig.mk'] != expected_board or
+                        b'TARGET_ARCH_VARIANT := armv8-a\n' not in expected_board or
+                        b'TARGET_CPU_VARIANT := generic\n' not in expected_board or
+                        digest(files['WifiBoardConfig.mk']) != project_hashes[source_dir+'WifiBoardConfig.mk']):
+                    raise ValueError('Source supplicant architecture/configuration changed')
+                if set(files['security-sparse.txt'].decode().splitlines()) != {
+                        '/Android.bp', '/NOTICE', '/keystore-engine/', '/keystore2/aidl/'}:
+                    raise ValueError('Supplicant native keystore selection changed')
         if a.kind == 'health':
             manifest = ET.fromstring(files['resolved-manifest.xml'])
             revisions = {x.get('path'): x.get('revision') for x in manifest.findall('project')}
@@ -172,6 +188,14 @@ def main():
                     raise ValueError('Graphics payload exceeds staging bounds')
         if {n:digest(data) for n,data in payload.items()} != expected:
             raise ValueError('Graphics files differ from build manifest')
+        if a.kind == 'wifi':
+            if not a.llvm_objdump or not a.llvm_objdump.is_file():
+                raise ValueError('Provide --llvm-objdump for the source supplicant ISA check')
+            from check_m3_wifi_binary import check_binary
+            provenance['isa_screen'] = check_binary(payload['/bin/hw/wpa_supplicant'],
+                                                    a.llvm_objdump, work/'checks')
+            if closure['target'] != 'wpa_supplicant':
+                raise ValueError('Wrong Wi-Fi build dependency closure')
         output = work/'current'/a.kind
         if output.exists():
             raise ValueError('Current graphics payload already exists; reconcile it before replacing')
