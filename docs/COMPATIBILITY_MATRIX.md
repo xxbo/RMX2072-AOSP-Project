@@ -9,10 +9,10 @@ Trial 90 supplies the accepted Adreno/90 Hz baseline and November 25 bounded
 GPU load/idle result. Trial 98 adds bounded CPU frequency-response and thermal
 readout evidence. Trial 99 enumerates QCA6390. Trial 100 adds boot firmware,
 reaches a QMI target response and retains GSI after 195.609 seconds of same-boot
-ADB checks. Board data is missing; `board_id=0xff` is not qualified as an exact
-board identity. The optional mainline-supplicant RRO passes source/artifact and
-additive vendor composition checks, but remains uninstalled. No WLAN netdev,
-scan or connection is claimed.
+ADB checks. Trial 101 adds the original F.20 board ELF and registers phy0/wlan0;
+GSI is retained. `board_id=0xff` remains unqualified as an exact board identity.
+The mainline-supplicant RRO is prepared but uninstalled; scan, connection and
+RF/calibration acceptance remain open.
 Historical cold-start results apply only to their named builds.
 
 ## Platform layers
@@ -43,7 +43,7 @@ Historical cold-start results apply only to their named builds.
 | UFS | Warm HS-G3 reads and cold verified GSI mounts hardware-tested | Earlier direct reads established two-lane HS-G3 and six LUNs. Trial 35's disconnected start verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
 | Encrypted userdata | Open | Writable RAM-backed ext4 data and metadata passed write and fsync checks. Persistent encrypted UFS userdata across reboot remains untested. [Scratch volumes](M1_UFS_FIRST_STAGE.md#writable-data-and-metadata-trial) |
 | SIM / calls / SMS / mobile data | Target path not ported | Stock external modem 17cb:0306 exposes MHI/QMI/IPCR and reports DSDS, LOADED/ABSENT. No target network-service acceptance. [Inventory](../build/device/m3-f20-subsystems-2026-11-26.json) |
-| Wi-Fi | QCA6390 firmware/QMI response; board data missing | Trial 100 enumerates 17cb:1101 and reports firmware version 0x10121492. Board-file loading fails with -2; no WLAN netdev. Board ID 0xff may be a default. GSI/ADB retained; scan/association/DHCP/traffic untested. [WLAN result](../build/device/m3-wifi-100-2026-11-27.json) |
+| Wi-Fi | Native phy0/wlan0 registered; Android integration pending | Trial 101 uses the unchanged original F.20 board ELF and passes 194.110 s retained GSI/ADB. Mainline supplicant remains disabled; scan/association/DHCP/traffic and RF/calibration untested. [WLAN result](../build/device/m3-wifi-101-2026-11-27.json) |
 | Bluetooth | Unknown | |
 | NFC | Unknown | |
 | GPS / location | Target GNSS path not ported | GNSS transport/HAL and real location fix remain open; no location coordinates collected. |

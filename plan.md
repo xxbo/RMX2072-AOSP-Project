@@ -75,12 +75,12 @@ QCA6390 and retains GSI ADB; missing amss.bin blocks MHI/firmware startup.
 Trial 100 passes 26 offline checks, is flashed boot-only at 28% live capacity,
 and reaches QMI target/firmware response. Missing board data is now the observed
 stop; `board_id=0xff` may be the driver's default and is not a qualified board
-identity. No WLAN netdev exists yet. The phone is retained on GSI after 195.609
-seconds of same-boot ADB checks; final capacity is 31%. Next review the saved
-same-handset F.20 board ELF, test its firmware acceptance, then validate a native
-WLAN interface and scan/connection. The source Wi-Fi supplicant RRO has a checked
-vendor composition path but remains uninstalled. Vendor rebuilds must retain
-WLAN firmware, accepted display/GPU/input settings and the test seeds.
+identity. Trial 101 adds only the original same-handset F.20 board ELF and now
+registers native phy0/wlan0. It retains GSI after 194.110 seconds of same-boot
+ADB checks; final capacity is 36%. Next enable the reviewed source mainline
+supplicant RRO and validate Android Wi-Fi control, scan and connection. The RRO
+is prepared but still uninstalled at trial 101. Vendor rebuilds must retain
+WLAN firmware/board ELF, accepted display/GPU/input settings and the test seeds.
 Stock sensor and modem
 inventory is a prerequisite, not a claim of GSI functionality. No repeated
 cold-start/watchdog qualification. Keep one recovery set and one candidate;
