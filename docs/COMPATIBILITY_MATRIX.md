@@ -8,7 +8,8 @@ Current acceptance: [November 27 hardware record](M3_HARDWARE_2026-11-27.md).
 Trial 90 supplies the accepted Adreno/90 Hz baseline and November 25 bounded
 GPU load/idle result. Trial 98 adds bounded CPU frequency-response and thermal
 readout evidence. Trial 99 enumerates QCA6390 and retains GSI, with firmware
-startup blocked by missing amss.bin. Trial 100 is being prepared offline only.
+startup blocked by missing amss.bin. Trial 100 has passed 26 offline candidate
+checks with boot firmware added; it is not flashed.
 Historical cold-start results apply only to their named builds.
 
 ## Platform layers

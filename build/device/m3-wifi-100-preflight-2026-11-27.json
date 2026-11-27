@@ -1,0 +1,207 @@
+{
+  "date": "2026-11-27",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-100",
+  "recipe_commit": "88cd829a462b74d9b7e15a51a5156d4189c34e1b",
+  "status": "BUILD_AND_PREFLIGHT_PASSED__DEVICE_NOT_RUN",
+  "physical_trial": "NOT RUN",
+  "deferred_reason": "User selected keeping low-battery GSI and computer-side preparation only",
+  "handset_still_running_trial": "ufs-host-g3-gsi17-firststage-ufs-99",
+  "preflight": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-100",
+    "baseline": "ufs-host-g3-gsi17-firststage-ufs-99",
+    "passed": true,
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "wifi_profile": true,
+      "accepted_features": true,
+      "same_display_flags": true,
+      "same_cmdline": true,
+      "same_boot_policy": true,
+      "same_source_init": true,
+      "same_guard_and_keys": true,
+      "same_super": true,
+      "same_vendor": true,
+      "same_test_volumes": true,
+      "same_gpu_firmware": true,
+      "same_nonwifi_kernel_sources": true,
+      "baseline_config_verified": true,
+      "no_existing_builtin_removed": true,
+      "kernel_verified": true,
+      "kernel_digest": true,
+      "boot_digest": true,
+      "dtbo_digest": true,
+      "effective_device_tree_digest": true,
+      "baseline_ramdisk_manifest": true,
+      "only_boot_firmware_and_trial_id_added": true,
+      "wifi_firmware_provenance": true,
+      "same_firmware_trial_kernel": true,
+      "same_firmware_trial_dt": true
+    },
+    "config_changes": {},
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        20,
+        21,
+        36,
+        37,
+        38,
+        39,
+        48,
+        49,
+        66,
+        75,
+        79,
+        80,
+        81
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    },
+    "wifi": {
+      "controller": "PCIe0",
+      "endpoint": "17cb:1101 (F.20 inventory)",
+      "gpio": [
+        20,
+        21,
+        79,
+        80,
+        81
+      ],
+      "digital_rail": "PM8009 S2 (20607)",
+      "wlan_enable_initial": "output-low before native supply/enable sequence",
+      "physical_result": "NOT RUN",
+      "firmware_supplied": false,
+      "connectivity": "NOT TESTED"
+    },
+    "kernel": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+    "boot": "03a28c7c1f492fa77be1594d2fc83b685aa584f0a6bbc3569b8cb595d59e6fa5",
+    "dtbo": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+    "firmware_delta": {
+      "added": [
+        "lib/firmware/ath11k",
+        "lib/firmware/ath11k/QCA6390",
+        "lib/firmware/ath11k/QCA6390/hw2.0",
+        "lib/firmware/ath11k/QCA6390/hw2.0/LICENSE.QualcommAtheros_ath10k",
+        "lib/firmware/ath11k/QCA6390/hw2.0/Notice.txt",
+        "lib/firmware/ath11k/QCA6390/hw2.0/amss.bin",
+        "lib/firmware/ath11k/QCA6390/hw2.0/m3.bin"
+      ],
+      "changed": [
+        "trial-id"
+      ],
+      "removed": [],
+      "proof": {
+        "files": {
+          "ath11k/QCA6390/hw2.0/amss.bin": {
+            "bytes": 3628672,
+            "sha256": "8ab2a06422e3989012df423bb6a156fde2c3feb4cd5db4c5d3588f674dc872ff",
+            "git_blob": "95bab09e0575a5533bca407bbc0401cb2af0b85d",
+            "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/amss.bin",
+            "origin": "linux-firmware",
+            "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+          },
+          "ath11k/QCA6390/hw2.0/m3.bin": {
+            "bytes": 266684,
+            "sha256": "1921d25edb52f90a7a0acc7275861e14399f904d579aae9f7ab1c4d28533fad6",
+            "git_blob": "39f0dfec42d6531836866a97c8153ae0a73356bd",
+            "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/m3.bin",
+            "origin": "linux-firmware",
+            "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+          },
+          "ath11k/QCA6390/hw2.0/Notice.txt": {
+            "bytes": 189707,
+            "sha256": "2facd28901420b9b58248ec3c17d4ea4693165b72f36106d5537ea4bb9380f1b",
+            "git_blob": "fd4fa45f559ed6e1dfa41da8681ea00df717601e",
+            "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/ath11k/QCA6390/hw2.0/Notice.txt",
+            "origin": "linux-firmware",
+            "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+          },
+          "ath11k/QCA6390/hw2.0/LICENSE.QualcommAtheros_ath10k": {
+            "bytes": 2713,
+            "sha256": "337a55102138d7baa143ee4a4c6c91693e0113fece35d380b2a12109e8c23b3f",
+            "git_blob": "c68935c11adf858abd0de3bbf7a2f53d0be33699",
+            "source": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/599764611a8ac213c6aa6dad17c941c2f46b53cb/LICENSE.QualcommAtheros_ath10k",
+            "origin": "linux-firmware",
+            "commit": "599764611a8ac213c6aa6dad17c941c2f46b53cb"
+          }
+        },
+        "board_data_included": false,
+        "calibration_data_included": false,
+        "partition_backup": false,
+        "scope": "QCA6390 hw2.0 boot firmware only; QMI board identity and board-data compatibility remain untested"
+      }
+    },
+    "device_result": "NOT RUN"
+  },
+  "ramdisk_gzip_sha256": "82eef502f4726732890cdce762e609cb32a8d0ce3bb2e09071a4404837ae90a2",
+  "vendor_signed_sha256": "4a8939e0baec4281667161bd10a80cf9b4d9aa3a5bf1646163815bd7309af1d5",
+  "firmware_payload_bytes": 4087776,
+  "acceptance_next": [
+    "Live battery recovered to at least 25 percent before next flash",
+    "Retain exact known GSI/vendor and writable test seeds",
+    "Verify QCA6390 enumeration and boot firmware/MHI startup",
+    "Capture firmware/QMI chip and board identity before board-data/RF integration",
+    "Retain authenticated GSI ADB or restore existing F.20 set on failure"
+  ],
+  "board_data_added": false,
+  "calibration_added": false,
+  "large_image_policy": "one stock recovery set and one current candidate; prior trials retain manifests/logs only",
+  "evidence_sha256": {
+    "checks/hardware-2026-11-27/trial100-preflight.json": "c3b08f66ce7cd2e2c498ab78bf8d75cac4ee6b140ce96f805cc962329a652520",
+    "checks/hardware-2026-11-27/trial100-package.log": "d5d358b33c43d12c92d5c38beede6d7b125ab50cce4411e87a4d37737a04f4a8",
+    "current/usb-build.json": "3b81dbb104581b3fd942cdd3b051ff0c4e20861a737c0d165e7d8d081712c89c",
+    "current/ramdisk/ramdisk-provenance.json": "88ecaf2ee423c4a0f6f64db537db45a7db70eaed658d8054d049e5a7f87b01b5",
+    "checks/hardware-2026-11-27/session-end-live.txt": "8c844e693f122cde471fd18d2f7140fb3cce8f12b75b7f7050bbee5e75ed3247"
+  },
+  "handset_after_offline_build": {
+    "boot_id": "efd6da98-d720-4e55-bb77-703204189c3a",
+    "enforcing": true,
+    "guard": "retained",
+    "boot_completed": 1,
+    "adb": true,
+    "capacity_percent": 4,
+    "running_trial": "ufs-host-g3-gsi17-firststage-ufs-99"
+  }
+}
