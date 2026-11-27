@@ -4,11 +4,11 @@ Status values: **Unknown**, **Source-reviewed**, **Build-tested**, **Boot-tested
 
 Driver-specific source evidence and proposed migration dispositions are tracked in [DRIVER_MIGRATION_MATRIX.md](./DRIVER_MIGRATION_MATRIX.md); shared prerequisites and sequencing are in [DRIVER_DEPENDENCY_MAP.md](./DRIVER_DEPENDENCY_MAP.md). Most entries remain source-reviewed. NQ-NCI strict DDK and CRC validation passed in run 42226214281; module loading remains untested. The [development plan](../plan.md) defines target-system acceptance. The table also includes hardware results recorded on the bring-up branches.
 
-Current acceptance: [November 26 six-goal hardware record](M3_HARDWARE_2026-11-26.md).
+Current acceptance: [November 27 hardware record](M3_HARDWARE_2026-11-27.md).
 Trial 90 supplies the accepted Adreno/90 Hz baseline and November 25 bounded
 GPU load/idle result. Trial 98 adds bounded CPU frequency-response and thermal
-readout evidence, with current-boot GSI retained. WLAN trial 96 failed; trial 97
-isolates successful startup without WLAN DT. Trial 99 is prepared but unflashed.
+readout evidence. Trial 99 enumerates QCA6390 and retains GSI, with firmware
+startup blocked by missing amss.bin. Trial 100 is being prepared offline only.
 Historical cold-start results apply only to their named builds.
 
 ## Platform layers
@@ -39,7 +39,7 @@ Historical cold-start results apply only to their named builds.
 | UFS | Warm HS-G3 reads and cold verified GSI mounts hardware-tested | Earlier direct reads established two-lane HS-G3 and six LUNs. Trial 35's disconnected start verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
 | Encrypted userdata | Open | Writable RAM-backed ext4 data and metadata passed write and fsync checks. Persistent encrypted UFS userdata across reboot remains untested. [Scratch volumes](M1_UFS_FIRST_STAGE.md#writable-data-and-metadata-trial) |
 | SIM / calls / SMS / mobile data | Target path not ported | Stock external modem 17cb:0306 exposes MHI/QMI/IPCR and reports DSDS, LOADED/ABSENT. No target network-service acceptance. [Inventory](../build/device/m3-f20-subsystems-2026-11-26.json) |
-| Wi-Fi | Power graph binds; PCIe endpoint still absent | Trial 96 with original rail ranges still fails PCIe/ADB. Trial 97 retains GSI with the same kernel and WLAN DT disabled. GPIO20 initial-low experiment is prepared, not flashed. Scan/association/DHCP/traffic remain blocked. [WLAN record](M3_HARDWARE_2026-11-26.md) |
+| Wi-Fi | QCA6390 PCIe endpoint identified; firmware startup blocked | Trial 99 initial-low WLAN pinctrl enumerates 17cb:1101, identifies hw2.0 and retains GSI. Missing amss.bin prevents MHI startup; no WLAN netdev yet. Scan/association/DHCP/traffic remain untested. [WLAN result](../build/device/m3-wifi-99-2026-11-27.json) |
 | Bluetooth | Unknown | |
 | NFC | Unknown | |
 | GPS / location | Target GNSS path not ported | GNSS transport/HAL and real location fix remain open; no location coordinates collected. |

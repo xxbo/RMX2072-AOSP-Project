@@ -65,6 +65,14 @@ def verify_edl_boot_only_readbacks(previous, read_boot, read_super):
     read_super('candidate-super-read', previous['candidate']['parts'])
 
 
+def validate_live_trial_battery(raw):
+    """Require a current gauge reading before a new GSI-origin trial."""
+    text = raw.strip()
+    if not re.fullmatch(r'[0-9]{1,3}', text) or not 25 <= int(text) <= 100:
+        raise ValueError('Trial requires a current battery capacity of at least 25 percent: '+repr(text))
+    return int(text)
+
+
 def validate_scratch_resize(old, new):
     """Only the explicit 512 MiB -> 2 GiB RAM data seed expansion is allowed."""
     if (set(old) != {'data', 'metadata'} or set(new) != set(old)
@@ -145,7 +153,7 @@ def main():
     from serial.tools.list_ports import comports
     from check_super_chunks import chunks, verify, stock_restore_xml
     w=args.workspace.resolve();p=w/'current';stock=w/'recovery/f20';tools=w/'recovery/OplusEdlTool/Tools';loader=w/'recovery/tools/devprg_865_1';audit=Path(__file__).resolve().parent
-    trial=args.trial;assert re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}',trial)
+    trial=args.trial;assert re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-[0-9]{2,3}',trial)
     restore_only=args.restore_only
     boot_only_from = args.boot_only_from or args.edl_boot_only_from
     from_gsi = boot_only_from or args.vendor_update_from
@@ -308,6 +316,9 @@ def main():
       (dest/'prewrite-resume.json').write_text(json.dumps(dict(interrupted_record=interrupted.name,scope='Saved pre-EDL identity only; fresh complete partition verification mandatory',drain=drain),indent=2)+'\n')
      else:
       proof=inspect(prior/'live',stable['identity'][2])
+      from gsi_adb_accept import shell
+      capacity=validate_live_trial_battery(shell('cat /sys/class/power_supply/bq28z610-0/capacity'))
+      (dest/'battery-before.json').write_text(json.dumps(dict(capacity_percent=capacity,boot_id=proof['identity'][2],source='bq28z610-0',utc=datetime.now(timezone.utc).isoformat()))+'\n')
      scratch=json.loads((p/'volumes/scratch.json').read_text())
      if args.edl_boot_only_from:
       previous_boot_sha=validate_edl_boot_only(previous,stable,candidate,scratch)

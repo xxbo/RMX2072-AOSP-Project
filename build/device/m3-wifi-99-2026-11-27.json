@@ -1,0 +1,432 @@
+{
+  "date": "2026-11-27",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-99",
+  "result": "PASS_PCIE_ENUMERATION_AND_CURRENT_BOOT_RETENTION__FIRMWARE_MISSING",
+  "boot_id": "efd6da98-d720-4e55-bb77-703204189c3a",
+  "recipe_commit": "6cc1437088b557250f47a4fc79b4d06bc3d22894",
+  "runner_commit": "2050f6ce9e2bade00dd6c64fe02390c57a515f9e",
+  "kernel_image_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "boot_sha256": "0e18261397bd3abc4b0e6a7f04b0d153fe0d61d450e64d5b97ab85305b9d631f",
+  "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+  "effective_dt": {
+    "size_bytes": 844821,
+    "sha256": "37f452285c28a1effb8dace31323becda057334e32d2fa529d3622f01a6ead3e"
+  },
+  "vendor_signed_sha256": "4a8939e0baec4281667161bd10a80cf9b4d9aa3a5bf1646163815bd7309af1d5",
+  "super_sha256": "f0713d20544a57ec94b4c95c698d6ab574b886c9086106ffba61d324ed39d799",
+  "preflight": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-99",
+    "baseline": "ufs-host-g3-gsi17-firststage-ufs-98",
+    "passed": true,
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "wifi_profile": true,
+      "accepted_features": true,
+      "same_display_flags": true,
+      "same_cmdline": true,
+      "same_boot_policy": true,
+      "same_source_init": true,
+      "same_guard_and_keys": true,
+      "same_super": true,
+      "same_vendor": true,
+      "same_test_volumes": true,
+      "same_gpu_firmware": true,
+      "same_nonwifi_kernel_sources": true,
+      "baseline_config_verified": true,
+      "no_existing_builtin_removed": true,
+      "kernel_verified": true,
+      "kernel_digest": true,
+      "boot_digest": true,
+      "dtbo_digest": true,
+      "effective_device_tree_digest": true
+    },
+    "config_changes": {},
+    "display": {
+      "m1_resources": {
+        "reference_boot_id": "2e26c4dd-3cab-41a9-8396-7912c0a0ffac",
+        "checked_nodes": 79,
+        "phandles_resolved_to_paths": true,
+        "source_pon": "upstream-parent-child",
+        "pon_reboot_modes": [],
+        "first_stage_fstab": "project-ramdisk",
+        "recovery_board_identity": true,
+        "scope": "M1 bound platform devices and reserved memory; does not qualify inactive hardware"
+      },
+      "native_resources": [
+        "/soc/display-core-lab/display-subsystem@ae00000",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000",
+        "/soc/display-core-lab/display-subsystem@ae00000/phy@ae94400",
+        "/soc/display-fabric-lab/clock-controller@af00000",
+        "/soc/display-fabric-lab/interconnect@1740000",
+        "/soc/display-fabric-lab/regulator@88e7000",
+        "/soc/display-pins-lab/pinctrl@f100000"
+      ],
+      "staged": true,
+      "overlapping_legacy_providers_disabled": [
+        "pinctrl@f000000",
+        "qcom,dispcc@af00000",
+        "qcom,mdss_mdp@ae00000",
+        "qcom,mdss_dsi_ctrl0@ae94000",
+        "qcom,mdss_dsi_ctrl1@ae96000",
+        "qcom,mdss_dsi_phy0@ae94400",
+        "qcom,mdss_dsi_phy1@ae96400",
+        "qcom,mdss_dsi_pll@ae94900",
+        "qcom,mdss_dsi_pll@ae96900",
+        "refgen-regulator@88e7000"
+      ],
+      "reciprocal_endpoints": {
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@1/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/panel@0/port/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint",
+        "/soc/display-core-lab/display-subsystem@ae00000/display-controller@ae01000/ports/port@0/endpoint": "/soc/display-core-lab/display-subsystem@ae00000/dsi@ae94000/ports/port@0/endpoint"
+      },
+      "panel_mode": "1080x2400@60, RGB888, DSC 8bpc/8bpp, 540x48 slices",
+      "reset": "TLMM75 active-low",
+      "te": "TLMM66 mdp_vsync",
+      "valid_gpio_offsets": [
+        20,
+        21,
+        36,
+        37,
+        38,
+        39,
+        48,
+        49,
+        66,
+        75,
+        79,
+        80,
+        81
+      ],
+      "hardware_result": "NOT RUN; this is a source resource check"
+    },
+    "wifi": {
+      "controller": "PCIe0",
+      "endpoint": "17cb:1101 (F.20 inventory)",
+      "gpio": [
+        20,
+        21,
+        79,
+        80,
+        81
+      ],
+      "digital_rail": "PM8009 S2 (20607)",
+      "wlan_enable_initial": "output-low before native supply/enable sequence",
+      "physical_result": "NOT RUN",
+      "firmware_supplied": false,
+      "connectivity": "NOT TESTED"
+    },
+    "kernel": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+    "boot": "0e18261397bd3abc4b0e6a7f04b0d153fe0d61d450e64d5b97ab85305b9d631f",
+    "dtbo": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+    "device_result": "NOT RUN"
+  },
+  "edl_entry": {
+    "previous_record": "ufs-host-g3-gsi17-firststage-ufs-98",
+    "historical_boot_id": "983d6173-c946-47fb-a657-3c9e57198e7b",
+    "live_gsi_identity": null,
+    "required_before_any_write": [
+      "boot",
+      "dtbo",
+      "all-17-super-chunks"
+    ]
+  },
+  "readback_records": [
+    {
+      "label": "before-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "e39dea024127ff65e0d6c8926c5db672f010303f1ad7d0d7083e11199616e184",
+      "utc": "2026-11-27T12:11:50.960192+00:00"
+    },
+    {
+      "label": "before-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+      "utc": "2026-11-27T12:11:51.663639+00:00"
+    },
+    {
+      "label": "candidate-super-read-00",
+      "lun": 0,
+      "start_sector": 193032,
+      "sectors": 131072,
+      "sha256": "7065a9487b16b6a539dcff378b10dcd379b795a2933bfc690f0139e26d685cdf",
+      "utc": "2026-11-27T12:12:04.039275+00:00"
+    },
+    {
+      "label": "candidate-super-read-01",
+      "lun": 0,
+      "start_sector": 324104,
+      "sectors": 131072,
+      "sha256": "93dbb785e8ada90db4c71b16154903c6bc54b7eb1f0201d29a1bf1ada232f57f",
+      "utc": "2026-11-27T12:12:16.463132+00:00"
+    },
+    {
+      "label": "candidate-super-read-02",
+      "lun": 0,
+      "start_sector": 455176,
+      "sectors": 131072,
+      "sha256": "196b6125da2e20b29103d382d396273473cf0d4f8bd1b34988683110204c9d0a",
+      "utc": "2026-11-27T12:12:28.882179+00:00"
+    },
+    {
+      "label": "candidate-super-read-03",
+      "lun": 0,
+      "start_sector": 586248,
+      "sectors": 131072,
+      "sha256": "12320276ccea8cbc62d203e2cae17b17ac39b6ab483a6f69158640823ca588aa",
+      "utc": "2026-11-27T12:12:41.300993+00:00"
+    },
+    {
+      "label": "candidate-super-read-04",
+      "lun": 0,
+      "start_sector": 717320,
+      "sectors": 131072,
+      "sha256": "590d3d6f642acc58865245d3989f2490919a8fc0991b3538b32c4caa8dec61ac",
+      "utc": "2026-11-27T12:12:53.715438+00:00"
+    },
+    {
+      "label": "candidate-super-read-05",
+      "lun": 0,
+      "start_sector": 848392,
+      "sectors": 131072,
+      "sha256": "da9e4d3919a9544cbcea4f163723b91553bec1ee21f3f01cc1a7d1fc51627ef7",
+      "utc": "2026-11-27T12:13:06.159340+00:00"
+    },
+    {
+      "label": "candidate-super-read-06",
+      "lun": 0,
+      "start_sector": 979464,
+      "sectors": 131072,
+      "sha256": "a9689c6d77a5c6bad12b30c7cdd7b3f910b6eaad523b65802b03814dfc52715f",
+      "utc": "2026-11-27T12:13:18.582720+00:00"
+    },
+    {
+      "label": "candidate-super-read-07",
+      "lun": 0,
+      "start_sector": 1110536,
+      "sectors": 131072,
+      "sha256": "ac8f5cd215a3663a3439970d1ed337ae8a5e1847de7892363cca9407656534bf",
+      "utc": "2026-11-27T12:13:31.017723+00:00"
+    },
+    {
+      "label": "candidate-super-read-08",
+      "lun": 0,
+      "start_sector": 1241608,
+      "sectors": 131072,
+      "sha256": "d3248d1f544a7230a877fa738905446224469bb0b5c8cb6b9187a86ca08135a6",
+      "utc": "2026-11-27T12:13:43.467195+00:00"
+    },
+    {
+      "label": "candidate-super-read-09",
+      "lun": 0,
+      "start_sector": 1372680,
+      "sectors": 131072,
+      "sha256": "086db586d710bbd4ea252590c6fedb061d25d8bcffaf7a8ce90163ceb46204c7",
+      "utc": "2026-11-27T12:13:55.933306+00:00"
+    },
+    {
+      "label": "candidate-super-read-10",
+      "lun": 0,
+      "start_sector": 1503752,
+      "sectors": 131072,
+      "sha256": "4ec756d9944b5a15e37763807a37a25e56779a1b04b48e9f693d1c4bfdc72205",
+      "utc": "2026-11-27T12:14:08.375545+00:00"
+    },
+    {
+      "label": "candidate-super-read-11",
+      "lun": 0,
+      "start_sector": 1634824,
+      "sectors": 131072,
+      "sha256": "69e97bd600707bae54fc1763b91f4dd965a419b28d0bbd460f2951647a28aa70",
+      "utc": "2026-11-27T12:14:20.846335+00:00"
+    },
+    {
+      "label": "candidate-super-read-12",
+      "lun": 0,
+      "start_sector": 1765896,
+      "sectors": 131072,
+      "sha256": "5fd942c256a28c55fbb5efdc991b53aec209bd86c4563039ddfc20034d6a0284",
+      "utc": "2026-11-27T12:14:33.282965+00:00"
+    },
+    {
+      "label": "candidate-super-read-13",
+      "lun": 0,
+      "start_sector": 1896968,
+      "sectors": 131072,
+      "sha256": "d9a9f672099620da96187b02c4f72400eb34eb96543fcd2cd2478e1399b5046d",
+      "utc": "2026-11-27T12:14:45.708888+00:00"
+    },
+    {
+      "label": "candidate-super-read-14",
+      "lun": 0,
+      "start_sector": 2028040,
+      "sectors": 131072,
+      "sha256": "f3ac61615e2b28b49119e98050374ba0f5fe4bb9b692694c3f2b8a528a511d4f",
+      "utc": "2026-11-27T12:14:58.134208+00:00"
+    },
+    {
+      "label": "candidate-super-read-15",
+      "lun": 0,
+      "start_sector": 2159112,
+      "sectors": 131072,
+      "sha256": "e2917640ed8b1f29ffefc41851f07eb78e2b01c688f745b07b8db80c7d77c342",
+      "utc": "2026-11-27T12:15:10.539147+00:00"
+    },
+    {
+      "label": "candidate-super-read-16",
+      "lun": 0,
+      "start_sector": 2290184,
+      "sectors": 67584,
+      "sha256": "34eaadb4bea654cc9aa3ca15c69fdf9aba829e736ccc04153666805c368bdd03",
+      "utc": "2026-11-27T12:15:16.985768+00:00"
+    },
+    {
+      "label": "candidate-boot",
+      "lun": 4,
+      "start_sector": 79366,
+      "sectors": 24576,
+      "sha256": "0e18261397bd3abc4b0e6a7f04b0d153fe0d61d450e64d5b97ab85305b9d631f",
+      "utc": "2026-11-27T12:15:21.954520+00:00"
+    },
+    {
+      "label": "candidate-dtbo",
+      "lun": 4,
+      "start_sector": 104298,
+      "sectors": 6144,
+      "sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+      "utc": "2026-11-27T12:15:22.635434+00:00"
+    }
+  ],
+  "programmed_partitions": [
+    "boot"
+  ],
+  "stock_restored": false,
+  "full_stock_reread": false,
+  "retention": {
+    "seconds": 194.906,
+    "identity": [
+      "37",
+      "6.18.32-android17-5-maybe-dirty-4k",
+      "efd6da98-d720-4e55-bb77-703204189c3a",
+      "Enforcing",
+      "running",
+      "",
+      "retained",
+      "adb"
+    ],
+    "guardian": "retained",
+    "host_start_required_after_every_reboot": true
+  },
+  "wlan": {
+    "boot_id": "efd6da98-d720-4e55-bb77-703204189c3a",
+    "same_boot": true,
+    "enforcing": true,
+    "qca6390_enumerated": true,
+    "wlan_netdev": false,
+    "discovery_read_errors": true,
+    "kernel_discovery": {
+      "pci_root_port_reported": true,
+      "qca6390_reported": true,
+      "link_down_reported": true,
+      "digital_rail_registration_failed": false
+    },
+    "files": {
+      "pci.txt": "80940ef077d6a3b980ab2f79cc3cccb528f0ac3b28120f3ac9ac52a3612c6a08",
+      "network.txt": "71879df444114b23baf24a4403abfa10b84ef33ec01ec5e17fbd52f3fc9f1ae1",
+      "wifi-status.txt": "d53f963656b4ebd4ece74391dcdcb3b9ab9f83e894238073a6b02c5444007067",
+      "wifi-service.txt": "bea5ffc1af7851c07c838ddb156ab253e44d6e0ff8207084221a19cf3923a98a",
+      "battery.txt": "06b2fea339f92bb066e3de5a97ef160c626dd1d5af9e62444af0148465a9868b",
+      "kernel-wlan.txt": "b1c8b1d9bdb544f33560c2b6e7c2e373f7a9550e5b9197f4a5406ae59306820b"
+    },
+    "kernel_log_sha256": {
+      "boot-events.txt": "71b80d81d3192932b4c884daf848d8dd4ffd3eececa70220cb74040e259d3538",
+      "acm.log": "adf17eeed3fee2ed5c99707184ff657021a337ccf80179aafa3f7fa7473ecbad"
+    },
+    "scan": "NOT RUN",
+    "association": "NOT RUN",
+    "dhcp": "NOT RUN",
+    "traffic": "NOT RUN",
+    "scope": "Discovery only; no RF enable, credentials or network configuration changes"
+  },
+  "selected_kernel_lines": [
+    "12,1123,27025121,-,caller=T1435;M3WLANSEQ boot=efd6da98-d720-4e55-bb77-703204189c3a stage=pins boundary=before uptime=27.01",
+    "12,1124,27032126,-,caller=T1435;M3WLANSEQ stage=pins boundary=before levels=unavailable",
+    "12,1127,29046037,-,caller=T1435;M3WLANSEQ boot=efd6da98-d720-4e55-bb77-703204189c3a stage=pins boundary=after uptime=29.03",
+    "12,1128,29055828,-,caller=T1451;M3WLANSEQ stage=pins boundary=after  gpio20  : in  low  func0 2mA pull down",
+    "12,1129,29055947,-,caller=T1451;M3WLANSEQ stage=pins boundary=after  gpio21  : in  low  func0 2mA pull down",
+    "12,1130,29056078,-,caller=T1451;M3WLANSEQ stage=pins boundary=after  gpio79  : in  low  func0 2mA pull down",
+    "12,1131,29056204,-,caller=T1451;M3WLANSEQ stage=pins boundary=after  gpio80  : in  high func0 2mA pull up",
+    "12,1132,29056331,-,caller=T1451;M3WLANSEQ stage=pins boundary=after  gpio81  : in  high func0 2mA no pull",
+    "12,1134,29094897,-,caller=T1458;M3WLANSEQ boot=efd6da98-d720-4e55-bb77-703204189c3a stage=fabric boundary=before uptime=29.08",
+    "12,1135,29102634,-,caller=T1467;M3WLANSEQ stage=fabric boundary=before  gpio20  : in  low  func0 2mA pull down",
+    "12,1136,29102788,-,caller=T1467;M3WLANSEQ stage=fabric boundary=before  gpio21  : in  low  func0 2mA pull down",
+    "12,1137,29102920,-,caller=T1467;M3WLANSEQ stage=fabric boundary=before  gpio79  : in  low  func0 2mA pull down",
+    "12,1138,29103046,-,caller=T1467;M3WLANSEQ stage=fabric boundary=before  gpio80  : in  high func0 2mA pull up",
+    "12,1139,29103141,-,caller=T1467;M3WLANSEQ stage=fabric boundary=before  gpio81  : in  high func0 2mA no pull",
+    "6,1167,30180830,-,caller=T14;qcom-pcie 1c00000.pcie: Phy link never came up",
+    "6,1199,30295313,-,caller=T1476;pcieport 0000:00:00.0: pciehp: Slot(0): Link Up",
+    "6,1201,30316030,-,caller=T1469;pci 0000:01:00.0: [17cb:1101] type 00 class 0xff0000 PCIe Endpoint",
+    "6,1204,30317410,-,caller=T1469;pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by 5.0 GT/s PCIe x1 link at 0000:00:00.0 (capable of 7.876 Gb/s with 8.0 GT/s PCIe x1 link)",
+    "6,1210,30328758,-,caller=T1469;ath11k_pci 0000:01:00.0: MSI vectors: 32",
+    "6,1211,30328896,-,caller=T1469;ath11k_pci 0000:01:00.0: qca6390 hw2.0",
+    "4,1214,30487778,-,caller=T102;mhi mhi0: Direct firmware load for ath11k/QCA6390/hw2.0/amss.bin failed with error -2",
+    "3,1215,30487887,-,caller=T102;mhi mhi0: Error loading firmware: -2",
+    "4,1216,30488045,-,caller=T1469;ath11k_pci 0000:01:00.0: failed to power up mhi: -110",
+    "12,1222,31149776,-,caller=T1458;M3WLANSEQ boot=efd6da98-d720-4e55-bb77-703204189c3a stage=fabric boundary=after uptime=31.13",
+    "12,1223,31159410,-,caller=T1485;M3WLANSEQ stage=fabric boundary=after  gpio20  : out high func0 16mA pull up",
+    "12,1224,31159564,-,caller=T1485;M3WLANSEQ stage=fabric boundary=after  gpio21  : out low  func0 2mA no pull",
+    "12,1225,31159695,-,caller=T1485;M3WLANSEQ stage=fabric boundary=after  gpio79  : out high func0 2mA pull down",
+    "12,1226,31159822,-,caller=T1485;M3WLANSEQ stage=fabric boundary=after  gpio80  : in  low  func1 2mA pull up",
+    "12,1227,31159949,-,caller=T1485;M3WLANSEQ stage=fabric boundary=after  gpio81  : in  high func0 2mA pull up",
+    "12,1229,31247157,-,caller=T1514;M3WLANSEQ boot=efd6da98-d720-4e55-bb77-703204189c3a stage=core boundary=before uptime=31.23",
+    "12,1230,31255901,-,caller=T1523;M3WLANSEQ stage=core boundary=before  gpio20  : out high func0 16mA pull up",
+    "12,1231,31256305,-,caller=T1523;M3WLANSEQ stage=core boundary=before  gpio21  : out low  func0 2mA no pull",
+    "12,1232,31256690,-,caller=T1523;M3WLANSEQ stage=core boundary=before  gpio79  : out high func0 2mA pull down",
+    "12,1233,31257455,-,caller=T1523;M3WLANSEQ stage=core boundary=before  gpio80  : in  low  func1 2mA pull up",
+    "12,1234,31258006,-,caller=T1523;M3WLANSEQ stage=core boundary=before  gpio81  : in  high func0 2mA pull up",
+    "12,1254,33287248,-,caller=T1514;M3WLANSEQ boot=efd6da98-d720-4e55-bb77-703204189c3a stage=core boundary=after uptime=33.27",
+    "12,1255,33299618,-,caller=T1565;M3WLANSEQ stage=core boundary=after  gpio20  : out high func0 16mA pull up",
+    "12,1256,33299951,-,caller=T1565;M3WLANSEQ stage=core boundary=after  gpio21  : out low  func0 2mA no pull",
+    "12,1257,33300253,-,caller=T1565;M3WLANSEQ stage=core boundary=after  gpio79  : out high func0 2mA pull down",
+    "12,1258,33300531,-,caller=T1565;M3WLANSEQ stage=core boundary=after  gpio80  : in  low  func1 2mA pull up",
+    "12,1259,33300706,-,caller=T1565;M3WLANSEQ stage=core boundary=after  gpio81  : in  high func0 2mA pull up"
+  ],
+  "interpretation": [
+    "The root controller initially reports link down, then reports Link Up and enumerates 17cb:1101 at 30.316030 seconds; the initial message alone is not the final outcome",
+    "ath11k identifies hw2.0 and allocates 32 MSI vectors; amss.bin request returns ENOENT before MHI startup failure",
+    "GPIO20 before fabric is input low; after fabric is output high. No waveform or intermediate pinctrl transition was measured",
+    "Initial-low pinctrl is the sole DT property delta against trial 96; boot history differs, so full causal timing qualification is not claimed",
+    "Live PCI sysfs inspection has permission errors; positive endpoint identity is from the matched pre-policy kernel stream"
+  ],
+  "power": {
+    "initial_capacity_percent": 1,
+    "later_capacity_percent": 3,
+    "gauge_status": "Charging",
+    "android_external_power_flags": false,
+    "charging_implementation_accepted": false,
+    "user_decision": "Keep GSI and prepare on the computer only",
+    "next_flash": "DEFERRED_PENDING_BATTERY_RECOVERY"
+  },
+  "next_task": "Add pinned amss.bin/m3.bin with notices to the early ramdisk; verify MHI/QMI identity before any board/calibration integration or RF test",
+  "evidence_sha256": {
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/inputs.json": "003d0ff23c7c25614d4649f4bd13015cb67104a9be451400459a50de16d899ba",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/edl-entry.json": "f6e6aa6a49a61cca882946474088d194ec538c2da3d9516725cf598fc76d730a",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/readbacks.jsonl": "969797b9f076b1b9ead630bdec2bf6eb70c16d02934d3919122149562b14f920",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/live/acm.log": "adf17eeed3fee2ed5c99707184ff657021a337ccf80179aafa3f7fa7473ecbad",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/live/gsi-stable.json": "8bd65fbff4068c37354829fe8eeb4531bdf495d8d80f34a19832f49beffa6309",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/gsi-retained.json": "9f301efbd03531957e06fa33ec619f169c3c63345ff55ccf808caea52bc88480",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/timeline.jsonl": "bff510981a895fad02583bd3b0bdcada8193cd8de3925a4daceaf6cb5b34321e",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/ramdisk-manifest.json": "bde8c0bcc090e52992b9cf49327c8f46d495bfd56985f5fbbe586ebd968762ec",
+    "records/ufs-host-g3-gsi17-firststage-ufs-99/vendor-inventory.json": "e22007a4cc720862524559c81811548ca9fe1cbd6fbe915f7abde1d45ce2b03b",
+    "checks/hardware-2026-11-27/trial99-preflight.json": "afc3ed5f770b6d3bd513faf95710055ecadb9e16771d020db143a002f9e6d972",
+    "checks/hardware-2026-11-27/trial99-battery-live.txt": "21e4b96505eb6c4c46fedbf7fbe3360e8944cd4ab52c6945cb788a203d40179c",
+    "checks/hardware-2026-11-27/trial99-final-live.txt": "b0d4dbd7a1946335da7d07029d1bf6dde0262bd543d5279f70d99ed6403dab63",
+    "checks/hardware-2026-11-27/wifi-trial99/result.json": "393e206487fc5165425ced320f93fd4cf553c9dd420a56b347be32fcc1743257"
+  }
+}

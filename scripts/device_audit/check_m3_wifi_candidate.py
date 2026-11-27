@@ -28,6 +28,7 @@ def main():
     for name in ('workspace', 'baseline', 'baseline-config', 'output'):
         p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--trial', required=True)
+    p.add_argument('--wifi-firmware', type=Path, help='Require an additive firmware-only ramdisk delta against the baseline manifest')
     p.add_argument('--wifi-disabled-against', type=Path,
                    help='Isolation: retain this trial kernel but use the baseline non-WLAN DT')
     a = p.parse_args()
@@ -73,6 +74,30 @@ def main():
     data = (c / 'source-dt/effective.dtb').read_bytes()
     checks['effective_device_tree_digest'] = (hashlib.sha256(data).hexdigest() ==
         source['outputs']['effective.dtb']['sha256'])
+    firmware_delta = None
+    if a.wifi_firmware:
+        if a.wifi_disabled_against:
+            p.error('Firmware cannot be added to the disabled WLAN profile')
+        from stage_m3_wifi_firmware import wifi_firmware, ramdisk_manifest, verify_ramdisk_firmware
+        payloads, proof = wifi_firmware(a.wifi_firmware)
+        manifest = ramdisk_manifest(c/'ramdisk/ramdisk.cpio.gz')
+        verify_ramdisk_firmware(manifest, proof)
+        baseline_manifest = read(a.baseline/'ramdisk-manifest.json')
+        # The baseline manifest is tied to the original compressed archive hash.
+        checks['baseline_ramdisk_manifest'] = baseline_manifest['gzip_sha256'] == old['ramdisk']['gzip_sha256']
+        old_entries = baseline_manifest['entries']
+        changed = sorted(n for n in old_entries.keys() & manifest.keys() if old_entries[n] != manifest[n])
+        added = sorted(manifest.keys() - old_entries.keys())
+        removed = sorted(old_entries.keys() - manifest.keys())
+        expected_additions = sorted(['lib/firmware/'+n for n in payloads] +
+            ['lib/firmware/ath11k', 'lib/firmware/ath11k/QCA6390', 'lib/firmware/ath11k/QCA6390/hw2.0'])
+        checks['only_boot_firmware_and_trial_id_added'] = changed == ['trial-id'] and added == expected_additions and not removed
+        checks['wifi_firmware_provenance'] = rd.get('wifi_firmware') == usb.get('wifi_firmware') == proof
+        checks['same_firmware_trial_kernel'] = kernel['image_sha256'] == old['kernel']['image_sha256']
+        checks['same_firmware_trial_dt'] = source['outputs']['effective.dtb'] == old['boot']['device_tree_build']['outputs']['effective.dtb']
+        firmware_delta = dict(added=added, changed=changed, removed=removed, proof=proof)
+    else:
+        checks['same_wifi_firmware'] = rd.get('wifi_firmware') == old['ramdisk'].get('wifi_firmware')
     display = check_m3_display(data, True, True, True, True,
                                wifi=a.wifi_disabled_against is None)
     if a.wifi_disabled_against:
@@ -89,7 +114,7 @@ def main():
     report = dict(trial=a.trial, baseline=a.baseline.name, passed=all(checks.values()),
         checks=checks, config_changes=delta, display=display, wifi=wifi,
         kernel=kernel['image_sha256'], boot=boot['boot_sha256'], dtbo=boot['dtbo_sha256'],
-        device_result='NOT RUN')
+        firmware_delta=firmware_delta, device_result='NOT RUN')
     a.output.write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(dict(passed=report['passed'], failed=[k for k, v in checks.items() if not v])))
     if not report['passed']:

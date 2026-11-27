@@ -51,6 +51,7 @@ def main():
     p.add_argument('--first-stage-witness', type=pathlib.Path, help='Static ARM64 mount observer')
     p.add_argument('--display-smoke', type=pathlib.Path, help='Static physical DRM test; run before Android policy')
     p.add_argument('--gpu-firmware', type=pathlib.Path, help='Verified peripheral firmware for the native Adreno candidate')
+    p.add_argument('--wifi-firmware', type=pathlib.Path, help='Pinned QCA6390 boot firmware only; no board/calibration data')
     p.add_argument('--solid-fill-test', action='store_true', help='Bounded native SSPP solid-fill isolation with independent parent cleanup')
     p.add_argument('--display-staged', action='store_true', help='Wait for USB log capture before binding the three display stages')
     p.add_argument('--first-frame-trace', action='store_true', help='Opt in to bounded native DSI/PLL/MDP tracing')
@@ -156,6 +157,17 @@ def main():
         from stage_m3_acceleration import gpu_firmware
         firmware_files, gpu_firmware_proof = gpu_firmware(a.gpu_firmware)
         for name in ['lib', 'lib/firmware', 'lib/firmware/qcom', 'lib/firmware/qcom/rmx2072']:
+            add(name, 0o40755)
+        for name, content in firmware_files.items():
+            add('lib/firmware/'+name, 0o100644, content)
+    wifi_firmware_proof = None
+    if a.wifi_firmware:
+        if not a.gpu_firmware or not a.display_staged:
+            p.error('--wifi-firmware requires the retained staged native performance profile')
+        from stage_m3_wifi_firmware import wifi_firmware
+        firmware_files, wifi_firmware_proof = wifi_firmware(a.wifi_firmware)
+        for name in ['lib/firmware/ath11k', 'lib/firmware/ath11k/QCA6390',
+                     'lib/firmware/ath11k/QCA6390/hw2.0']:
             add(name, 0o40755)
         for name, content in firmware_files.items():
             add('lib/firmware/'+name, 0o100644, content)
@@ -376,6 +388,7 @@ def main():
     report['autonomous_ufs'] = a.autonomous_ufs
     report['display_staged'] = a.display_staged
     report['gpu_firmware'] = gpu_firmware_proof
+    report['wifi_firmware'] = wifi_firmware_proof
     report['first_frame_trace'] = a.first_frame_trace
     report['solid_fill_test'] = a.solid_fill_test
     if a.display_smoke:

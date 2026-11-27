@@ -63,17 +63,19 @@ November 26 goals: (1) CPU/GPU frequency, scheduling and thermal control;
 (2) real Wi-Fi; (3) speaker, earpiece and vibration; (4) fingerprint, GNSS and
 physical sensors; (5) complete setup into the desktop; (6) 4G/5G, dual SIM,
 SMS, calls and mobile data. Each has independent acceptance gates in the
-[current hardware record](docs/M3_HARDWARE_2026-11-26.md).
+[current hardware record](docs/M3_HARDWARE_2026-11-27.md).
 
 Retain working Adreno/90 Hz, DSC, touch and the existing GSI/test seeds.
 Trial 98 passes short CPU load/recovery frequency observation in retained GSI;
 thermal readings and cooling maps are visible under enforcing. Android Thermal
 HAL, scheduling and sustained-performance acceptance remain open. Trial 96
 fails WLAN/ADB retention; trial 97 isolates successful startup with the same
-kernel and no WLAN DT. Next test the prepared GPIO20 initial-low correction
-(trial 99, not yet flashed), record enable/reset state and fix PCIe discovery
-before firmware/scan/connection. Work stops after trial 98 at the user's request,
-with GSI retained and no further trial launched. Stock sensor and modem
+kernel and no WLAN DT. November 27 trial 99 with GPIO20 initial-low enumerates
+QCA6390 and retains GSI ADB; missing amss.bin blocks MHI/firmware startup.
+Next prepare trial 100 with pinned boot firmware, then verify MHI/QMI board
+identity before board data and scan/connection. The user retains low-battery
+GSI and requests computer-side preparation only; no further flash now.
+Stock sensor and modem
 inventory is a prerequisite, not a claim of GSI functionality. No repeated
 cold-start/watchdog qualification. Keep one recovery set and one candidate;
 commit code and same-boot evidence after each phase.

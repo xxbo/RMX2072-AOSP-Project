@@ -28,10 +28,13 @@ def main():
     p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
     p.add_argument('--performance', action='store_true', help='Include native Adreno, EPSS and TSENS')
     p.add_argument('--wifi', action='store_true', help='Include native QCA6390 PCIe0 and board power resources')
+    p.add_argument('--wifi-firmware', type=Path, help='Verified QCA6390 boot firmware directory, without board data')
     p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
     if a.wifi and not (a.performance and a.battery_gauge):
         p.error('--wifi requires --performance and --battery-gauge')
+    if a.wifi_firmware and not (a.wifi and a.display_staged):
+        p.error('--wifi-firmware requires --wifi and --display-staged')
     if a.battery_gauge and not a.input_devices:
         p.error('--battery-gauge requires --input-devices')
     if (a.performance or a.panel_refresh == 90) and not a.display:
@@ -54,7 +57,7 @@ def main():
         p.error('--first-frame-trace requires the staged trial 67 baseline')
     if a.standard_pps_test and (not a.first_frame_trace or not a.panel_readback_test):
         p.error('--standard-pps-test requires the complete trial 68 baseline')
-    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
+    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-[0-9]{2,3}', a.trial):
         p.error('Use the recorded handset trial naming')
     repo = Path(__file__).resolve().parents[2]
     if subprocess.check_output(['git', '-C', repo, 'status', '--porcelain']):
@@ -115,6 +118,7 @@ def main():
         '--adb-public-key', a.adb_public_key.resolve(), '--output', current / 'ramdisk', '--autonomous-ufs',
         *(['--display-smoke', current / 'display-smoke/drm-panel-smoke'] if a.display else []),
         *(['--gpu-firmware', current / 'gpu-firmware'] if a.performance else []),
+        *(['--wifi-firmware', a.wifi_firmware.resolve()] if a.wifi_firmware else []),
         *(['--display-staged'] if a.display_staged else []),
         *(['--solid-fill-test'] if a.solid_fill_test else []),
         *(['--first-frame-trace'] if a.first_frame_trace else []))
@@ -143,6 +147,7 @@ def main():
                   first_frame_trace=a.first_frame_trace,
                   standard_pps_test=a.standard_pps_test,
                   adb_public_key_sha256=json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())['adb_public_key_sha256'])
+    record['wifi_firmware'] = json.loads((current / 'ramdisk/ramdisk-provenance.json').read_text())['wifi_firmware']
     (current / 'usb-build.json').write_text(json.dumps(record, indent=2) + '\n')
     print('M2 source candidate prepared; original GSI/vendor/container and scratch seeds retained.')
 
