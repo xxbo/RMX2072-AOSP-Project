@@ -98,6 +98,19 @@ but interface UP returns EADDRNOTAVAIL (99) and the scan returns ENETDOWN (100).
 Address validity is still unknown: shell read ioctls are denied. The next
 vendor candidate includes a fixed read-only probe in the Wi-Fi domain.
 
+November 28 pause after trial 104: the source ARMv8-A supplicant build and
+physical vendor integration pass. Its AIDL default instance is registered
+under `rmx_wpa` in Enforcing GSI; 194.031 seconds of same-boot ADB checks pass.
+The read-only probe confirms wlan0's address is all-zero and UP=0, explaining
+the invalid-address gate observed in trial 103. The underlying factory address
+provisioning path remains unfinished. The original persist partition is not
+mounted in GSI; acquire only its same-handset WLAN address file read-only on
+resume and correct initialization before attempting scan/connection. The
+source AIDL address method's private-driver-command dependency also needs
+review. Host enable/scan and association/DHCP/traffic are NOT RUN in trial 104
+because the user ended work. Leave the accepted current GSI boot available;
+no new trial starts until requested. [Trial 104](build/device/m3-wifi-104-2026-11-28.json).
+
 
 The dated entries below preserve earlier decisions and are not the latest
 acceptance summary.
