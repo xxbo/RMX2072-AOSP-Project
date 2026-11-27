@@ -229,6 +229,21 @@
       "checks/hardware-2026-11-27/trial103-scan-only/status-ready.json": "df73a53b692a8f2d2695f781d8cdef58f46bf429db1e77253f86e2b5e04c90f0",
       "checks/hardware-2026-11-27/trial103-scan-only/wifi-before.json": "560035fd59f138e685775331c41d265c0f21028cea48c11ad8141924354603d8",
       "checks/hardware-2026-11-27/trial103-scan-only/wifi-dump.json": "10388581ecd05dbf6b529292243b282d5515211d40f01368fe5350be6aa64907"
+    },
+    "source_analysis": {
+      "kernel_commit": "ecdaacc9a0ee87eaf9544e1836d86bd9d590312e",
+      "iface_c_sha256": "9220033ce8f290c94af140eac6d70d22dc1b8c80a05b6722420b4a4bb07bc022",
+      "source_url": "https://android.googlesource.com/kernel/common/+/ecdaacc9a0ee87eaf9544e1836d86bd9d590312e/net/mac80211/iface.c",
+      "inference": "ieee80211_open checks is_valid_ether_addr and returns EADDRNOTAVAIL; prioritize address initialization, actual hardware address not yet observed"
+    },
+    "stock_mac_path": {
+      "source_super_sha256": "f7785aedd24616b251143cbcf6006612274b1cae9dac8dea1f634c5800c50532",
+      "symlink": "/firmware/wlan/qca_cld/qca6390/wlan_mac.bin",
+      "target": "/mnt/vendor/persist/qca6390/wlan_mac.bin",
+      "source": "Existing single F.20 recovery copy",
+      "handset_io": false,
+      "image_copy": false,
+      "mac_address_read": false
     }
   }
 }
