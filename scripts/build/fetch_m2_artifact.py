@@ -131,7 +131,7 @@ def main():
                         digest(files['WifiBoardConfig.mk']) != project_hashes[source_dir+'WifiBoardConfig.mk']):
                     raise ValueError('Source supplicant architecture/configuration changed')
                 if set(files['security-sparse.txt'].decode().splitlines()) != {
-                        '/Android.bp', '/NOTICE', '/keystore-engine/', '/keystore2/aidl/'}:
+                        '/Android.bp', '/NOTICE', '/keystore-engine/', '/keystore/include/', '/keystore2/aidl/'}:
                     raise ValueError('Supplicant native keystore selection changed')
         if a.kind == 'health':
             manifest = ET.fromstring(files['resolved-manifest.xml'])

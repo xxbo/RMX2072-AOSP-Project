@@ -28,7 +28,7 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant', 'wifi-rollback'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant', 'wifi-rollback', 'wifi-native'), default='health')
     p.add_argument('--accepted-baseline', type=Path, help='Required for wifi-rollback: retained pre-overlay trial with exact vendor/container and ramdisk manifest')
     p.add_argument('--keymaster-build', type=Path, help='Source HAL build report for the keymaster stage')
     a = p.parse_args()
@@ -46,7 +46,8 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    hal_kind = ('power' if a.stage in ('thermal-readout', 'wifi-supplicant', 'wifi-rollback') else
+    hal_kind = ('wifi' if a.stage == 'wifi-native' else
+                'power' if a.stage in ('thermal-readout', 'wifi-supplicant', 'wifi-rollback') else
                 'audio' if a.stage in ('heap', 'keymaster', 'render-access') else a.stage)
     extra = read(current/hal_kind/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
@@ -108,8 +109,33 @@ def main():
             hal_kind+'_source_verified': (extra.get('kind') == hal_kind and extra.get('source_verified') is True
                                         and extra.get('archive_digest_verified') is True),
             hal_kind+'_is_composed': graphics['graphics_source'].get(hal_kind) == extra})
-        if a.stage not in ('heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant', 'wifi-rollback'):
+        if a.stage not in ('heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant', 'wifi-rollback', 'wifi-native'):
             checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
+    if a.stage == 'wifi-native':
+        from stage_m3_graphics import compose
+        from stage_m3_wifi_vendor import CONFIG_FILES
+        from stage_m3_wifi_firmware import ramdisk_manifest, verify_ramdisk_firmware
+        files, source = compose(current/'info-input', current/'rmx-m1-guard',
+                                current/'graphics', wifi_vendor=current/'wifi')
+        actual = {n: hashlib.sha256(data).hexdigest() for n, data in files.items()}
+        firmware = rd.get('wifi_firmware')
+        manifest = ramdisk_manifest(current/'ramdisk/ramdisk.cpio.gz')
+        verify_ramdisk_firmware(manifest, firmware)
+        before = read(a.baseline/'ramdisk-manifest.json')
+        allowed_rd = {'trial-id', 'vendor.verity-root'}
+        checks.update(
+            only_selected_hal_files_added=set(added) == (set(extra['files']) | set(CONFIG_FILES))-set(old_files['files']),
+            exact_composed_vendor=actual == vendor['files'],
+            exact_source_provenance=source == graphics['graphics_source'],
+            no_mainline_rro='/overlay/RmxWifiOverlay.apk' not in files and not source.get('wifi_android'),
+            source_supplicant_added='/bin/hw/wpa_supplicant' in added,
+            same_wifi_firmware=firmware == old['ramdisk'].get('wifi_firmware') == usb.get('wifi_firmware'),
+            baseline_manifest_digest=before['gzip_sha256'] == old['ramdisk']['gzip_sha256'],
+            only_vendor_root_and_trial_change_in_ramdisk=(set(before['entries']) == set(manifest)
+                and {n for n in manifest if manifest[n] != before['entries'][n]} <= allowed_rd),
+            same_input_battery_gpu_and_radio=same(usb, old['usb_build'], (
+                'input_devices', 'battery_gauge', 'performance', 'panel_refresh', 'wifi')),
+            wifi_enabled=usb.get('wifi') is True)
     if a.stage == 'wifi-rollback':
         if not a.accepted_baseline:
             p.error('--accepted-baseline is required for wifi-rollback')

@@ -20,6 +20,7 @@ def main():
     p.add_argument('--record', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--performance', action='store_true', help='Compile the exact hardware acceleration policy')
+    p.add_argument('--wifi-vendor', action='store_true', help='Compile the source vendor supplicant policy; never load it')
     a = p.parse_args()
     repo = Path(__file__).resolve().parents[2]
     work, record = a.workspace.resolve(), a.record.resolve()
@@ -47,6 +48,8 @@ def main():
     if a.performance:
         from stage_m3_acceleration import acceleration_policy
         cil = acceleration_policy(cil)
+    if a.wifi_vendor:
+        cil += (repo/'device/realme/bladerunner_48m/m3-vendor/wifi.cil').read_bytes().replace(b'\r\n', b'\n')
     local = work/'current/policy-check'
     candidate = local/'candidate-vendor.cil'
     candidate.write_bytes(cil)

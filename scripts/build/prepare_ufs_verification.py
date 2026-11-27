@@ -33,9 +33,9 @@ def image_profile(path, name, key_digest):
     return key, dict(sha256=full, key_sha256=key_digest, bytes=size, tree=tree)
 
 
-def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False, keymaster_info=False, usb_guard=None, graphics=None, graphics_keymaster_info=None, wifi_overlay=None):
-    if wifi_overlay is not None and graphics is None:
-        raise ValueError('Wi-Fi RRO verification requires the M3 graphics inventory')
+def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_reference=False, keymaster_info=False, usb_guard=None, graphics=None, graphics_keymaster_info=None, wifi_overlay=None, wifi_vendor=None):
+    if (wifi_overlay is not None or wifi_vendor is not None) and graphics is None:
+        raise ValueError('Wi-Fi verification requires the M3 graphics inventory')
     reference = json.loads((ROOT/'build/device/gsi17-mount-reference.json').read_text())
     inputs = [('system', system, reference['key_sha256']),
               ('vendor', vendor, hashlib.sha256(vendor_key.read_bytes()).hexdigest())]
@@ -51,7 +51,7 @@ def prepare(system, vendor, vendor_key, output, vendor_report=None, keymaster_re
         if not vendor_report or not graphics_keymaster_info or not usb_guard or keymaster_reference or keymaster_info:
             raise ValueError('M3 requires a source image report, exact Keymaster inputs and USB guardian')
         from stage_m3_graphics import compose, filesystem_size
-        graphics_files, _ = compose(graphics_keymaster_info, usb_guard, graphics, wifi_overlay)
+        graphics_files, _ = compose(graphics_keymaster_info, usb_guard, graphics, wifi_overlay, wifi_vendor)
         expected_size = filesystem_size(graphics_files)
     if payload_bytes != expected_size:
         raise ValueError('Unexpected project vendor filesystem size')
@@ -98,10 +98,11 @@ if __name__ == '__main__':
     parser.add_argument('--graphics', type=Path, help='Verified M3 graphics payload; validate the exact composed vendor inventory')
     parser.add_argument('--graphics-keymaster-info', type=Path)
     parser.add_argument('--wifi-overlay', type=Path)
+    parser.add_argument('--wifi-vendor', type=Path)
     args = parser.parse_args()
     if args.usb_guard and not (args.keymaster_info or args.graphics): parser.error('--usb-guard requires a Keymaster or M3 profile')
     if args.wifi_overlay and not args.graphics: parser.error('--wifi-overlay requires --graphics')
     if (args.keymaster_reference or args.keymaster_info) and not args.vendor_report:
         parser.error('A Keymaster profile requires its image report')
     prepare(args.system, args.vendor, args.vendor_key, args.output, args.vendor_report,
-            args.keymaster_reference, args.keymaster_info, args.usb_guard, args.graphics, args.graphics_keymaster_info, args.wifi_overlay)
+            args.keymaster_reference, args.keymaster_info, args.usb_guard, args.graphics, args.graphics_keymaster_info, args.wifi_overlay, args.wifi_vendor)

@@ -89,6 +89,11 @@ Stock sensor and modem
 inventory is a prerequisite, not a claim of GSI functionality. No repeated
 cold-start/watchdog qualification. Keep one recovery set and one candidate;
 commit code and same-boot evidence after each phase.
+Trial 103 removes that failed RRO and retains Enforcing GSI/ADB for 194.516 s;
+no supplicant process/crash remains, native wlan0 stays present. Source vendor
+AIDL integration and strict policy compilation are prepared; its GitHub build,
+actual ELF acceptance and enable/scan/connection remain pending.
+
 
 The dated entries below preserve earlier decisions and are not the latest
 acceptance summary.

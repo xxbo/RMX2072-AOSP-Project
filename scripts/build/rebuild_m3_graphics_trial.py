@@ -90,6 +90,7 @@ def main():
     p.add_argument('--wifi-firmware', type=Path, help='Retain exactly the previous WLAN boot firmware')
     p.add_argument('--wifi-board-file', type=Path, help='Retain the exact previously included same-handset board ELF')
     p.add_argument('--wifi-overlay', type=Path, help='Explicitly compose the reviewed mainline supplicant RRO')
+    p.add_argument('--wifi-vendor', type=Path, help='Explicitly compose the verified source vendor supplicant')
     p.add_argument('--remove-wifi-overlay', action='store_true', help='Explicitly withdraw the failed mainline RRO; use the wifi-rollback preflight before writing')
     p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
@@ -121,10 +122,15 @@ def main():
     wifi_flags = retained_wifi_flags(prior, a.wifi_firmware, a.wifi_board_file)
     if prior.get('wifi') and not (a.performance and a.battery_gauge):
         p.error('Retaining Wi-Fi requires --performance and --battery-gauge')
-    if a.wifi_overlay and not prior.get('wifi'):
-        p.error('--wifi-overlay requires the existing native WLAN profile')
+    if (a.wifi_overlay or a.wifi_vendor) and not prior.get('wifi'):
+        p.error('Wi-Fi userspace requires the existing native WLAN profile')
+    if a.wifi_overlay and a.wifi_vendor:
+        p.error('Choose either --wifi-overlay or --wifi-vendor')
     old_graphics = current/'graphics-candidate.json'
-    old_overlay = json.loads(old_graphics.read_text())['graphics_source'].get('wifi_android') if old_graphics.is_file() else None
+    old_sources = json.loads(old_graphics.read_text())['graphics_source'] if old_graphics.is_file() else {}
+    old_overlay = old_sources.get('wifi_android')
+    if old_sources.get('wifi') and not a.wifi_vendor:
+        raise ValueError('Retain the existing source supplicant explicitly with --wifi-vendor')
     check_wifi_overlay_choice(old_overlay, a.wifi_overlay, a.remove_wifi_overlay)
     if a.remove_wifi_overlay:
         from stage_m3_wifi_android import overlay_payload
@@ -132,6 +138,8 @@ def main():
         if old_overlay != expected_overlay:
             raise ValueError('Only the exact reviewed mainline RRO can be withdrawn')
     overlay_flags = ['--wifi-overlay', a.wifi_overlay.resolve()] if a.wifi_overlay else []
+    if a.wifi_vendor:
+        overlay_flags += ['--wifi-vendor', a.wifi_vendor.resolve()]
     if sha(current/'rmx-m1-guard') != prior['guard']:
         raise ValueError('USB guardian differs from the retained input')
     seeds = json.loads((current/'volumes/scratch.json').read_text())
@@ -141,7 +149,7 @@ def main():
         raise ValueError('GSI changed')
     subprocess.run([sys.executable, str(build/'build_display_smoke.py'),
                     '--ndk', str(a.ndk.resolve()), '--output', str(current/'display-smoke')], check=True)
-    files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics, a.wifi_overlay)
+    files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics, a.wifi_overlay, a.wifi_vendor)
     policy = json.loads((a.policy_proof or repo/'build/device/m3-graphics-policy-2026-11-16.json').read_text())
     cil = files['/etc/selinux/vendor_sepolicy.cil']
     cil_sha = hashlib.sha256(cil).hexdigest()

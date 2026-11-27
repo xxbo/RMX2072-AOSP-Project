@@ -30,6 +30,7 @@ def check_binary(data, objdump, scratch):
         path = Path(directory)/'wpa_supplicant'
         path.write_bytes(data)
         assembly = subprocess.check_output([str(objdump), '-d', str(path)], text=True)
+        assembly = assembly.replace(str(path), 'wpa_supplicant')
     if not re.search(r'^\s*[0-9a-f]+:\s+[0-9a-f]{8}\s+', assembly, re.M):
         raise ValueError('No AArch64 instructions decoded')
     unsupported = sve_register_instructions(assembly)

@@ -34,7 +34,7 @@ PY
   # Keep the real keystore engine and its AIDL declarations, not the unrelated
   # Rust keystore server or synthetic replacements for missing native modules.
   git -C "$SOURCE_DIR/system/security" sparse-checkout set --no-cone \
-    /Android.bp /NOTICE /keystore-engine/ /keystore2/aidl/
+    /Android.bp /NOTICE /keystore-engine/ /keystore/include/ /keystore2/aidl/
   git -C "$SOURCE_DIR/system/security" sparse-checkout list > "$ARTIFACT_DIR/security-sparse.txt"
   test "$(git -C "$SOURCE_DIR/external/wpa_supplicant_8" rev-parse HEAD)" = 3396e8b8365817b3a24b78b534b04bb9dcea330a
   cp "$ROOT_DIR/artifacts/m3-graphics/selected"*.xml "$ARTIFACT_DIR/"

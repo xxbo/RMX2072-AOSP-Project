@@ -34,7 +34,7 @@ def filesystem_size(files):
 def merge_native_hal_payload(files, directory, kind):
     """Admit a checked additive native HAL; never replace graphics libraries."""
     build = json.loads((directory/'provenance.json').read_text())
-    if kind not in ('health', 'power', 'audio'):
+    if kind not in ('health', 'power', 'audio', 'wifi'):
         raise ValueError('Unrecognized additive HAL')
     if (build.get('kind') != kind or not build.get('source_verified')
             or not build.get('archive_digest_verified')):
@@ -61,7 +61,8 @@ def merge_native_hal_payload(files, directory, kind):
         raise ValueError(kind+' inventory differs from verified artifact')
     service = {'health': 'android.hardware.health-service.example',
                'power': 'android.hardware.power-service.rmx2072',
-               'audio': 'android.hardware.audio-service.rmx2072'}[kind]
+               'audio': 'android.hardware.audio-service.rmx2072',
+               'wifi': 'wpa_supplicant'}[kind]
     if '/bin/hw/'+service not in incoming:
         raise ValueError(kind+' service missing')
     files.update(incoming)
@@ -73,7 +74,9 @@ def merge_native_hal_payload(files, directory, kind):
     return build, incoming
 
 
-def compose(info, guard, graphics, wifi_overlay=None):
+def compose(info, guard, graphics, wifi_overlay=None, wifi_vendor=None):
+    if wifi_overlay is not None and wifi_vendor is not None:
+        raise ValueError('Choose vendor supplicant or mainline RRO, not both')
     files, pinned = inventory(True, guard)
     for path, digest in pinned.items():
         data = (info/Path(path).name).read_bytes()
@@ -198,6 +201,10 @@ def compose(info, guard, graphics, wifi_overlay=None):
     if wifi_overlay is not None:
         from stage_m3_wifi_android import add_wifi_android
         build = dict(build, wifi_android=add_wifi_android(files, wifi_overlay))
+    if wifi_vendor is not None:
+        from stage_m3_wifi_vendor import add_wifi_vendor
+        proof, integration = add_wifi_vendor(files, wifi_vendor)
+        build = dict(build, wifi=proof, wifi_integration=integration)
     return files, build
 
 
@@ -206,11 +213,12 @@ def main():
     for name in ('info', 'guard', 'graphics', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--wifi-overlay', type=Path, help='Explicitly include the reviewed mainline supplicant RRO')
+    p.add_argument('--wifi-vendor', type=Path, help='Verified source ARMv8-A vendor AIDL supplicant, opt-in')
     a = p.parse_args()
     output = a.output.resolve()
     if output.is_relative_to(ROOT) or output.exists():
         p.error('Use a new staging directory outside the public checkout')
-    files, build = compose(a.info, a.guard, a.graphics, a.wifi_overlay)
+    files, build = compose(a.info, a.guard, a.graphics, a.wifi_overlay, a.wifi_vendor)
     for name,data in files.items():
         path = output/name.lstrip('/')
         path.parent.mkdir(parents=True, exist_ok=True)
