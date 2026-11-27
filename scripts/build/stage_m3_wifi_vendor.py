@@ -1,6 +1,7 @@
 """Explicit source vendor supplicant integration; no mainline RRO or RF claims."""
 import json
 import re
+import xml.etree.ElementTree as ET
 from stage_m3_graphics import ROOT, SOURCE, merge_native_hal_payload, sha
 
 PIN = ROOT/'build/m3-wifi-source.json'
@@ -10,6 +11,18 @@ CONFIG_FILES = {
     '/etc/wifi/wpa_supplicant.conf': 'wpa_supplicant.conf',
     '/etc/init/rmx-wifi-data.rc': 'wifi-data.rc',
 }
+
+
+def check_supplicant_manifest(data):
+    # assemble_vintf upgrades the wrapper and adds a provenance comment; the
+    # runtime declaration must still be exactly upstream's AIDL V5 instance.
+    root = ET.fromstring(data)
+    valid = (root.tag == 'manifest' and root.attrib == {'version': '9.0', 'type': 'device'}
+             and len(root) == 1 and root[0].tag == 'hal' and root[0].attrib == {'format': 'aidl'})
+    if not valid or [(x.tag, x.attrib, (x.text or '').strip(), len(x)) for x in root[0]] != [
+            ('name', {}, 'android.hardware.wifi.supplicant', 0),
+            ('version', {}, '5', 0), ('fqname', {}, 'ISupplicant/default', 0)]:
+        raise ValueError('Unexpected generated Wi-Fi VINTF declaration')
 
 
 def add_wifi_vendor(files, directory):
@@ -23,11 +36,11 @@ def add_wifi_vendor(files, directory):
     if isa.get('sha256') != sha(executable) or isa.get('sve_register_instruction_count') != 0:
         raise ValueError('Source supplicant has not passed the bound ISA screen')
     pins = json.loads(PIN.read_text())['sha256']
-    for name, prefix in [('android.hardware.wifi.supplicant-service.rc', '/etc/init/'),
-                         ('android.hardware.wifi.supplicant.xml', '/etc/vintf/manifest/')]:
-        key = 'external/wpa_supplicant_8/wpa_supplicant/aidl/'+name
-        if sha(incoming.get(prefix+name, b'')) != pins[key]:
-            raise ValueError('Supplicant init/VINTF payload differs from pinned upstream: '+name)
+    name = 'android.hardware.wifi.supplicant-service.rc'
+    key = 'external/wpa_supplicant_8/wpa_supplicant/aidl/'+name
+    if sha(incoming.get('/etc/init/'+name, b'')) != pins[key]:
+        raise ValueError('Supplicant init payload differs from pinned upstream: '+name)
+    check_supplicant_manifest(incoming['/etc/vintf/manifest/android.hardware.wifi.supplicant.xml'])
     labels = [
         '/vendor/bin/hw/wpa_supplicant u:object_r:rmx_wpa_exec:s0',
         '/vendor/etc/wifi(/.*)? u:object_r:vendor_configs_file:s0',

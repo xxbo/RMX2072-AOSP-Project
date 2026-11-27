@@ -13,6 +13,16 @@ from stage_m3_graphics import compose
 
 
 class WifiVendorTests(unittest.TestCase):
+    def test_assembled_manifest_preserves_only_the_pinned_instance(self):
+        xml = b'''<!-- Input: upstream -->
+<manifest version="9.0" type="device"><hal format="aidl">
+<name>android.hardware.wifi.supplicant</name><version>5</version>
+<fqname>ISupplicant/default</fqname></hal></manifest>'''
+        stage.check_supplicant_manifest(xml)
+        for changed in [xml.replace(b'>5<', b'>4<'), xml.replace(b'/default', b'/other'),
+                        xml.replace(b'</manifest>', b'<hal format="aidl"/></manifest>')]:
+            with self.assertRaises(ValueError): stage.check_supplicant_manifest(changed)
+
     def test_mainline_and_vendor_are_mutually_exclusive_before_io(self):
         with self.assertRaises(ValueError):
             compose(None, None, None, Path('rro'), Path('vendor'))
