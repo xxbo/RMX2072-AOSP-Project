@@ -40,6 +40,31 @@ def validate_boot_only(previous, stable, candidate, scratch, live):
     return digest
 
 
+def validate_edl_boot_only(previous, stable, candidate, scratch):
+    """Validate historical inputs, never claim that EDL is a live GSI boot."""
+    from gsi_adb_accept import RELEASE
+    if previous['candidate'] != candidate or previous['scratch'] != scratch:
+        raise ValueError('EDL boot-only update requires identical super and scratch inputs')
+    identity = stable.get('identity', [])
+    if (len(identity) != 8 or identity[:2] != ['37', RELEASE]
+            or identity[3:5] != ['Enforcing', 'running']
+            or identity[6:] != ['retained', 'adb']
+            or stable.get('guardian') != 'retained' or stable.get('seconds', 0) < 190):
+        raise ValueError('EDL boot-only update requires a previously accepted GSI record')
+    UUID(identity[2])
+    digests = [previous['boot'].get(k, '') for k in ('boot_sha256', 'dtbo_sha256')]
+    parts = candidate.get('parts', [])
+    if len(parts) != 17 or any(not re.fullmatch(r'[0-9a-f]{64}', h) for h in digests + parts):
+        raise ValueError('EDL boot-only update requires boot/DTBO and all 17 super digests')
+    return digests[0]
+
+
+def verify_edl_boot_only_readbacks(previous, read_boot, read_super):
+    """Fresh full physical-byte gate, before any candidate or recovery write."""
+    read_boot('before', previous['boot']['boot_sha256'], previous['boot']['dtbo_sha256'])
+    read_super('candidate-super-read', previous['candidate']['parts'])
+
+
 def validate_scratch_resize(old, new):
     """Only the explicit 512 MiB -> 2 GiB RAM data seed expansion is allowed."""
     if (set(old) != {'data', 'metadata'} or set(new) != set(old)
@@ -108,6 +133,7 @@ def main():
     parser.add_argument('--retain-gsi', action='store_true')
     retained = parser.add_mutually_exclusive_group()
     retained.add_argument('--boot-only-from', type=Path, help='Previous retained trial record; read all super bytes, then program boot and its paired DTBO')
+    retained.add_argument('--edl-boot-only-from', type=Path, help='Already in EDL: require historical accepted inputs plus fresh full boot/DTBO/super verification before any write; no live ADB identity is asserted')
     retained.add_argument('--vendor-update-from', type=Path, help='Verify the retained layout, update only vendor-related container changes and paired boot, then read back the complete candidate')
     parser.add_argument('--resize-scratch-data', action='store_true', help='With vendor update only: permit the checked 512 MiB to 2 GiB RAM data seed expansion, preserving metadata')
     parser.add_argument('--record-suffix', default='', help='New evidence directory for repeating the exact current image')
@@ -121,7 +147,8 @@ def main():
     w=args.workspace.resolve();p=w/'current';stock=w/'recovery/f20';tools=w/'recovery/OplusEdlTool/Tools';loader=w/'recovery/tools/devprg_865_1';audit=Path(__file__).resolve().parent
     trial=args.trial;assert re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}',trial)
     restore_only=args.restore_only
-    from_gsi = args.boot_only_from or args.vendor_update_from
+    boot_only_from = args.boot_only_from or args.edl_boot_only_from
+    from_gsi = boot_only_from or args.vendor_update_from
     assert not args.recovery_gate or restore_only
     assert not from_gsi or (args.retain_gsi and not restore_only)
     assert not args.record_suffix or re.fullmatch(r'[a-z0-9-]{1,32}',args.record_suffix)
@@ -146,7 +173,7 @@ def main():
       port=ports[0];configured=True
       event('Resuming drained Firehose at first read; all boot/DTBO/super reads will run again')
       return
-     if initial:subprocess.run(['adb','-s','RMX2072-M1' if from_gsi else '3c8304a6','reboot','edl'],check=True,timeout=15)
+     if initial and not args.edl_boot_only_from:subprocess.run(['adb','-s','RMX2072-M1' if from_gsi else '3c8304a6','reboot','edl'],check=True,timeout=15)
      end=time.monotonic()+timeout
      while time.monotonic()<end:
       ports=[x.device for x in comports() if (x.vid,x.pid)==(0x05c6,0x9008)]
@@ -254,7 +281,9 @@ def main():
      assert prior.parent==w/'records' and prior!=dest
      previous=json.loads((prior/'inputs.json').read_text())
      stable=json.loads((prior/'live/gsi-stable.json').read_text())
-     if args.resume_prewrite:
+     if args.edl_boot_only_from:
+      proof = None  # A historical retained record is not a current-boot identity.
+     elif args.resume_prewrite:
       interrupted=args.resume_prewrite.resolve()
       assert interrupted.parent==w/'records' and interrupted!=dest and interrupted.name==trial
       saved=json.loads((interrupted/'inputs.json').read_text())
@@ -280,13 +309,17 @@ def main():
      else:
       proof=inspect(prior/'live',stable['identity'][2])
      scratch=json.loads((p/'volumes/scratch.json').read_text())
-     if args.vendor_update_from:
+     if args.edl_boot_only_from:
+      previous_boot_sha=validate_edl_boot_only(previous,stable,candidate,scratch)
+     elif args.vendor_update_from:
       previous_boot_sha,update_chunks=validate_vendor_update(previous,stable,candidate,scratch,proof,args.resize_scratch_data)
      else:
       previous_boot_sha=validate_boot_only(previous,stable,candidate,scratch,proof)
      previous_dtbo_sha=previous['boot']['dtbo_sha256']
      assert re.fullmatch(r'[0-9a-f]{64}',previous_dtbo_sha)
      (dest/('vendor-update-source.json' if args.vendor_update_from else 'boot-only-source.json')).write_text(json.dumps(dict(previous_record=prior.name,previous_boot_sha256=previous_boot_sha,live=proof,chunks_to_write=update_chunks,resize_scratch_data=args.resize_scratch_data),indent=2)+'\n')
+     if args.edl_boot_only_from:
+      (dest/'edl-entry.json').write_text(json.dumps(dict(previous_record=prior.name,historical_boot_id=stable['identity'][2],live_gsi_identity=None,required_before_any_write=['boot','dtbo','all-17-super-chunks']),indent=2)+'\n')
     else:
      info=phone('getprop ro.product.model; getprop ro.build.display.id; getprop sys.boot_completed; getprop ro.boot.flash.locked').splitlines()
      assert info==['RMX2072','RMX2072_11_F.20','1','0']
@@ -299,11 +332,17 @@ def main():
      rd=json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())
      assert rd.get('guarded_adb') and rd['trial_id']==trial
     (dest/'inputs.json').write_text(json.dumps(dict(trial=trial,source_commit=subprocess.check_output(['git','-C',str(audit.parents[1]),'rev-parse','HEAD'],text=True).strip(),kernel=json.loads((p/'kernel/provenance.json').read_text()),boot=boot,candidate=candidate,scratch=json.loads((p/'volumes/scratch.json').read_text()),usb_build=json.loads((p/'usb-build.json').read_text()) if args.retain_gsi else None,ramdisk=json.loads((p/'ramdisk/ramdisk-provenance.json').read_text())),indent=2)+'\n')
-    event(('Retained GSI identity and checked vendor-update plan' if args.vendor_update_from else 'Retained GSI identity and unchanged container/volumes' if args.boot_only_from else 'F.20 identity and geometry')+'; complete recovery and candidate inputs verified')
+    event(('Historical GSI inputs only; fresh EDL partition verification required' if args.edl_boot_only_from else 'Retained GSI identity and checked vendor-update plan' if args.vendor_update_from else 'Retained GSI identity and unchanged container/volumes' if args.boot_only_from else 'F.20 identity and geometry')+'; complete recovery and candidate inputs verified')
     enter('entry',True)
+    if args.edl_boot_only_from:
+     # Keep this outside the write/recovery block. A mismatching or interrupted
+     # prewrite read must leave an unidentified handset unchanged in EDL.
+     verify_edl_boot_only_readbacks(previous,read_boot,read_super)
+     event('Fresh EDL boot/DTBO/all-super digests match the historical candidate; boot-only writes permitted')
     try:
-     if from_gsi or args.verify_stock_partitions:read_boot('before',previous_boot_sha,previous_dtbo_sha)
-     if args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
+     if not args.edl_boot_only_from:
+      if from_gsi or args.verify_stock_partitions:read_boot('before',previous_boot_sha,previous_dtbo_sha)
+      if args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
      if args.vendor_update_from:read_super('previous-super-read',previous['candidate']['parts'])
      write_boot('test-boot',p/'boot/boot-diag.img',boot['boot_sha256'])
      if candidate_dtbo_sha!=previous_dtbo_sha:
@@ -314,9 +353,9 @@ def main():
       for row in list(update):
        if int(row.attrib['filename'][11:13]) not in update_chunks:update.remove(row)
       if len(update):fh('candidate-super-update',update,p/'candidate')
-     elif not args.boot_only_from:fh('candidate-super',ET.parse(p/'candidate/candidate.xml').getroot(),p/'candidate')
+     elif not boot_only_from:fh('candidate-super',ET.parse(p/'candidate/candidate.xml').getroot(),p/'candidate')
      read_boot('candidate',boot['boot_sha256'],candidate_dtbo_sha)
-     if not args.boot_only_from:read_super('candidate-super-read',candidate['parts'])
+     if not boot_only_from:read_super('candidate-super-read',candidate['parts'])
     except BaseException:
      restore();raise
     event('Candidate boot and full super readback passed; starting physical test')
