@@ -62,6 +62,15 @@ def check_retained_peripherals(prior, requested):
             raise ValueError('Vendor rebuild must retain '+key)
 
 
+def check_wifi_overlay_choice(previous, overlay, remove):
+    if overlay and remove:
+        raise ValueError('Cannot retain and remove the Wi-Fi overlay together')
+    if remove and not previous:
+        raise ValueError('No previous Wi-Fi overlay to remove')
+    if previous and not overlay and not remove:
+        raise ValueError('Retain --wifi-overlay or explicitly --remove-wifi-overlay')
+
+
 def sha(path):
     with path.open('rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
@@ -81,6 +90,7 @@ def main():
     p.add_argument('--wifi-firmware', type=Path, help='Retain exactly the previous WLAN boot firmware')
     p.add_argument('--wifi-board-file', type=Path, help='Retain the exact previously included same-handset board ELF')
     p.add_argument('--wifi-overlay', type=Path, help='Explicitly compose the reviewed mainline supplicant RRO')
+    p.add_argument('--remove-wifi-overlay', action='store_true', help='Explicitly withdraw the failed mainline RRO; use the wifi-rollback preflight before writing')
     p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
     if a.battery_gauge and not a.input_devices:
@@ -114,8 +124,13 @@ def main():
     if a.wifi_overlay and not prior.get('wifi'):
         p.error('--wifi-overlay requires the existing native WLAN profile')
     old_graphics = current/'graphics-candidate.json'
-    if old_graphics.is_file() and json.loads(old_graphics.read_text())['graphics_source'].get('wifi_android') and not a.wifi_overlay:
-        p.error('Retain the existing --wifi-overlay when rebuilding vendor')
+    old_overlay = json.loads(old_graphics.read_text())['graphics_source'].get('wifi_android') if old_graphics.is_file() else None
+    check_wifi_overlay_choice(old_overlay, a.wifi_overlay, a.remove_wifi_overlay)
+    if a.remove_wifi_overlay:
+        from stage_m3_wifi_android import overlay_payload
+        _, expected_overlay = overlay_payload(current/'wifi-overlay')
+        if old_overlay != expected_overlay:
+            raise ValueError('Only the exact reviewed mainline RRO can be withdrawn')
     overlay_flags = ['--wifi-overlay', a.wifi_overlay.resolve()] if a.wifi_overlay else []
     if sha(current/'rmx-m1-guard') != prior['guard']:
         raise ValueError('USB guardian differs from the retained input')

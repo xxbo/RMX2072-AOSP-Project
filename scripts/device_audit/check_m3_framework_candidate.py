@@ -28,7 +28,8 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant', 'wifi-rollback'), default='health')
+    p.add_argument('--accepted-baseline', type=Path, help='Required for wifi-rollback: retained pre-overlay trial with exact vendor/container and ramdisk manifest')
     p.add_argument('--keymaster-build', type=Path, help='Source HAL build report for the keymaster stage')
     a = p.parse_args()
     if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2,3}', a.trial):
@@ -45,7 +46,7 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    hal_kind = ('power' if a.stage in ('thermal-readout', 'wifi-supplicant') else
+    hal_kind = ('power' if a.stage in ('thermal-readout', 'wifi-supplicant', 'wifi-rollback') else
                 'audio' if a.stage in ('heap', 'keymaster', 'render-access') else a.stage)
     extra = read(current/hal_kind/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
@@ -92,7 +93,7 @@ def main():
              '/etc/init/keymaster.rc', '/etc/ueventd.rc', '/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}
             if a.stage == 'keymaster' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
         'only_selected_hal_files_added': set(added) == ({'/overlay/RmxWifiOverlay.apk'} if a.stage == 'wifi-supplicant' else
-            set() if a.stage in ('heap', 'keymaster', 'render-access', 'thermal-readout') else set(extra['files'])-set(old_files['files'])),
+            set() if a.stage in ('heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-rollback') else set(extra['files'])-set(old_files['files'])),
         'no_vendor_files_removed': set(old_files['files']) <= set(vendor['files']),
         'scratch_profile_consistent': scratch == rd['scratch_volumes'] == graphics['scratch'],
         'same_metadata_seed': scratch['metadata'] == old['scratch']['metadata'],
@@ -107,8 +108,37 @@ def main():
             hal_kind+'_source_verified': (extra.get('kind') == hal_kind and extra.get('source_verified') is True
                                         and extra.get('archive_digest_verified') is True),
             hal_kind+'_is_composed': graphics['graphics_source'].get(hal_kind) == extra})
-        if a.stage not in ('heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant'):
+        if a.stage not in ('heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant', 'wifi-rollback'):
             checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
+    if a.stage == 'wifi-rollback':
+        if not a.accepted_baseline:
+            p.error('--accepted-baseline is required for wifi-rollback')
+        from stage_m3_wifi_android import APK, overlay_payload
+        from stage_m3_wifi_firmware import ramdisk_manifest, verify_ramdisk_firmware
+        accepted = read(a.accepted_baseline/'inputs.json')
+        accepted_stable = read(a.accepted_baseline/'live/gsi-stable.json')
+        accepted_manifest = read(a.accepted_baseline/'ramdisk-manifest.json')
+        _, overlay_proof = overlay_payload(current/'wifi-overlay')
+        actual_manifest = ramdisk_manifest(current/'ramdisk/ramdisk.cpio.gz')
+        firmware = rd.get('wifi_firmware')
+        verify_ramdisk_firmware(actual_manifest, firmware)
+        before = accepted_manifest['entries']
+        checks.pop('no_vendor_files_removed')
+        checks.update(
+            no_unrelated_vendor_change=changed == [APK] and not added,
+            only_reviewed_rro_removed=(set(old_files['files']) - set(vendor['files']) == {APK}
+                and old_files['files'][APK] == overlay_proof['apk_sha256']),
+            no_overlay_composed=not graphics['graphics_source'].get('wifi_android'),
+            accepted_boot_was_retained=accepted_stable.get('guardian') == 'retained' and accepted_stable.get('seconds', 0) >= 190,
+            exact_accepted_vendor=(usb['vendor_unsigned'] == accepted['usb_build']['vendor_unsigned']
+                and usb['vendor_signed'] == accepted['usb_build']['vendor_signed']),
+            exact_accepted_container=candidate['sha256'] == accepted['candidate']['sha256'],
+            accepted_manifest_digest=accepted_manifest['gzip_sha256'] == accepted['ramdisk']['gzip_sha256'],
+            only_trial_id_differs_from_accepted_ramdisk=(set(before) == set(actual_manifest)
+                and [n for n in before if before[n] != actual_manifest[n]] == ['trial-id']),
+            same_wifi_firmware=firmware == old['ramdisk'].get('wifi_firmware') == usb.get('wifi_firmware'),
+            same_input_battery_gpu_and_radio=same(usb, old['usb_build'], (
+                'input_devices', 'battery_gauge', 'performance', 'panel_refresh', 'wifi')))
     if a.stage == 'wifi-supplicant':
         from stage_m3_wifi_android import APK, overlay_payload
         from stage_m3_wifi_firmware import ramdisk_manifest, verify_ramdisk_firmware
@@ -238,6 +268,7 @@ def main():
                   stage=a.stage, selected_hal_build=extra['run_id'],
                   selected_hal_source_commit=extra['source_commit'],
                   vendor_files_changed=changed, vendor_files_added=added,
+                  vendor_files_removed=sorted(set(old_files['files'])-set(vendor['files'])),
                   metadata_and_extents_unchanged=(candidate['prefix_sha256'] == old['candidate']['prefix_sha256'] and candidate['targets'] == old['candidate']['targets']),
                   headroom_bytes=candidate['headroom'],
                   scope='Local input comparison only; no handset or desktop acceptance implied')

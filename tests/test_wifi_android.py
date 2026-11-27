@@ -10,10 +10,21 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts/build'))
 import stage_m3_wifi_android as stage
-from rebuild_m3_graphics_trial import retained_wifi_flags, check_retained_peripherals
+from rebuild_m3_graphics_trial import retained_wifi_flags, check_retained_peripherals, check_wifi_overlay_choice
 
 
 class WifiAndroidTests(unittest.TestCase):
+    def test_overlay_withdrawal_requires_existing_profile_and_explicit_choice(self):
+        existing = {'apk_sha256': 'reviewed'}
+        check_wifi_overlay_choice(existing, None, True)
+        check_wifi_overlay_choice(existing, Path('overlay'), False)
+        check_wifi_overlay_choice(None, None, False)
+        for previous, overlay, remove in [(existing, None, False),
+                (None, None, True), (existing, Path('overlay'), True)]:
+            with self.subTest(previous=previous, overlay=overlay, remove=remove):
+                with self.assertRaises(ValueError):
+                    check_wifi_overlay_choice(previous, overlay, remove)
+
     def test_existing_label_and_vendor_bytes_remain_unchanged(self):
         files = {stage.CONTEXTS: stage.LABEL, '/build.prop': b'original', '/lib64/libEGL.so': b'gpu'}
         original = deepcopy(files)
