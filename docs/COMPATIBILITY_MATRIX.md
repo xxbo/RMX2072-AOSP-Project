@@ -11,8 +11,10 @@ readout evidence. Trial 99 enumerates QCA6390. Trial 100 adds boot firmware,
 reaches a QMI target response and retains GSI after 195.609 seconds of same-boot
 ADB checks. Trial 101 adds the original F.20 board ELF and registers phy0/wlan0;
 GSI is retained. `board_id=0xff` remains unqualified as an exact board identity.
-The mainline-supplicant RRO is prepared but uninstalled; scan, connection and
-RF/calibration acceptance remain open.
+Trial 102 installs the mainline RRO, but the GSI supplicant's constructor uses
+SVE and faults on this non-SVE handset before binder registration. Source vendor
+AIDL supplicant ARMv8-A build work is pending; scan, connection and RF/calibration
+acceptance remain open.
 Historical cold-start results apply only to their named builds.
 
 ## Platform layers
@@ -43,7 +45,7 @@ Historical cold-start results apply only to their named builds.
 | UFS | Warm HS-G3 reads and cold verified GSI mounts hardware-tested | Earlier direct reads established two-lane HS-G3 and six LUNs. Trial 35's disconnected start verified and mounted both the GSI and project vendor from internal super. [G3 reads](../build/device/ufs-g3-2026-11-10.json) · [Verified mounts](M1_UFS_FIRST_STAGE.md) |
 | Encrypted userdata | Open | Writable RAM-backed ext4 data and metadata passed write and fsync checks. Persistent encrypted UFS userdata across reboot remains untested. [Scratch volumes](M1_UFS_FIRST_STAGE.md#writable-data-and-metadata-trial) |
 | SIM / calls / SMS / mobile data | Target path not ported | Stock external modem 17cb:0306 exposes MHI/QMI/IPCR and reports DSDS, LOADED/ABSENT. No target network-service acceptance. [Inventory](../build/device/m3-f20-subsystems-2026-11-26.json) |
-| Wi-Fi | Native phy0/wlan0 registered; Android integration pending | Trial 101 uses the unchanged original F.20 board ELF and passes 194.110 s retained GSI/ADB. Mainline supplicant remains disabled; scan/association/DHCP/traffic and RF/calibration untested. [WLAN result](../build/device/m3-wifi-101-2026-11-27.json) |
+| Wi-Fi | Native phy0/wlan0 registered; GSI supplicant ISA incompatibility blocks scan | Trial 102 retains GSI/ADB and enables the RRO. Its matching mainline executable hits SVE INDEX at 0x2cf584 (SIGILL) before binder registration; all eight CPU feature lists lack SVE. Source vendor AIDL ARMv8-A replacement build is pending. Scan/association/DHCP/traffic and RF/calibration remain untested. [WLAN result](../build/device/m3-wifi-102-2026-11-27.json) |
 | Bluetooth | Unknown | |
 | NFC | Unknown | |
 | GPS / location | Target GNSS path not ported | GNSS transport/HAL and real location fix remain open; no location coordinates collected. |

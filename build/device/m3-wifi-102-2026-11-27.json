@@ -1,0 +1,254 @@
+{
+  "date": "2026-11-27",
+  "trial": "ufs-host-g3-gsi17-firststage-ufs-102",
+  "result": "PASS_NATIVE_WLAN_AND_RRO__BLOCKED_GSI_MAINLINE_SUPPLICANT_SVE_SIGILL",
+  "boot_id": "f972c5da-7afa-43cd-a78a-b3a122bd9cd1",
+  "recipe_commit": "565f9f0a6573e990ca0981c600144d1bcc8ccd1e",
+  "runner_commit": "565f9f0a6573e990ca0981c600144d1bcc8ccd1e",
+  "boot_sha256": "b42710cc6e9da31e4325ff181a93cbc7072e4e2e4f01c27228b360a21f4103fe",
+  "kernel_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+  "dtbo_sha256": "fe9ab8ba173797f213f4a6fbcec038f681a2b8e3d994429a721db3a9ca09f4b3",
+  "vendor_signed_sha256": "c856fde1aa7f92f30042f7f8ccdbf26e94671519f6f7a7056002c4fd1b8b6381",
+  "super_sha256": "4015e8ef48acc99af66bb9bf4247a1c72bed679fde6554cbabb36d28ecf0de57",
+  "preflight": {
+    "trial": "ufs-host-g3-gsi17-firststage-ufs-102",
+    "baseline": "ufs-host-g3-gsi17-firststage-ufs-101",
+    "recipe_commit": "565f9f0a6573e990ca0981c600144d1bcc8ccd1e",
+    "checks": {
+      "correct_trial": true,
+      "clean_recipe": true,
+      "same_display_flags": true,
+      "standard_pps_retained": true,
+      "same_boot_components": true,
+      "same_dt_outputs": true,
+      "same_graphics_guard_and_keys": true,
+      "same_native_pattern": true,
+      "bounded_cmdline": true,
+      "scratch_framework_start": true,
+      "boot_digest": true,
+      "dtbo_digest": true,
+      "kernel_digest": true,
+      "ramdisk_digest": true,
+      "vendor_digest": true,
+      "same_gsi_content": true,
+      "same_vendor_key": true,
+      "same_original_container": true,
+      "same_active_other_partitions": true,
+      "same_inactive_nonalias_partitions": true,
+      "health_source_verified": true,
+      "health_is_composed": true,
+      "no_unrelated_vendor_change": true,
+      "only_selected_hal_files_added": true,
+      "no_vendor_files_removed": true,
+      "scratch_profile_consistent": true,
+      "same_metadata_seed": true,
+      "same_data_seed": true,
+      "power_source_verified": true,
+      "power_is_composed": true,
+      "only_wifi_rro_added": true,
+      "wifi_rro_actual_bytes": true,
+      "wifi_rro_inventory_digest": true,
+      "wifi_rro_provenance": true,
+      "same_wifi_firmware": true,
+      "same_input_battery_gpu_and_radio": true,
+      "wifi_enabled": true,
+      "same_kernel": true
+    },
+    "passed": true,
+    "boot_sha256": "b42710cc6e9da31e4325ff181a93cbc7072e4e2e4f01c27228b360a21f4103fe",
+    "kernel_sha256": "aedcbb7c78a4e267d0dbceb89c65dd26b7a85f0467d1180d600ac2f7082749a9",
+    "vendor_sha256": "c856fde1aa7f92f30042f7f8ccdbf26e94671519f6f7a7056002c4fd1b8b6381",
+    "super_sha256": "4015e8ef48acc99af66bb9bf4247a1c72bed679fde6554cbabb36d28ecf0de57",
+    "health_build": 45002345247,
+    "health_source_commit": "e08c6a18d1eab8561913f17594b0eefb9691cf6f",
+    "stage": "wifi-supplicant",
+    "selected_hal_build": 45008097656,
+    "selected_hal_source_commit": "efa6846c8ad2fb2abc01004e44beea27a36dc31a",
+    "vendor_files_changed": [],
+    "vendor_files_added": [
+      "/overlay/RmxWifiOverlay.apk"
+    ],
+    "metadata_and_extents_unchanged": true,
+    "headroom_bytes": 829120512,
+    "scope": "Local input comparison only; no handset or desktop acceptance implied"
+  },
+  "discovery": {
+    "boot_id": "f972c5da-7afa-43cd-a78a-b3a122bd9cd1",
+    "same_boot": true,
+    "enforcing": true,
+    "qca6390_enumerated": true,
+    "wlan_netdev": true,
+    "discovery_read_errors": true,
+    "kernel_discovery": {
+      "pci_root_port_reported": true,
+      "qca6390_reported": true,
+      "link_down_reported": true,
+      "digital_rail_registration_failed": false
+    },
+    "firmware_discovery": {
+      "mhi_setup_reported": true,
+      "qmi_target_response_observed": true,
+      "target_info": [
+        {
+          "chip_id": 0,
+          "chip_family": 11,
+          "board_id": 255,
+          "soc_id": 4294967295,
+          "board_id_may_be_default": true
+        }
+      ],
+      "firmware_versions": [
+        {
+          "version": "0x10121492",
+          "timestamp": "2021-11-04 11:23",
+          "build_id": ""
+        }
+      ],
+      "amss_missing": false,
+      "board_data_missing": false,
+      "mhi_start_errors": [],
+      "regulatory_db_missing": true,
+      "board_compatibility_verified": false,
+      "scope": "Observed boot messages only; QMI response is not board-data, WLAN interface or RF acceptance"
+    },
+    "files": {
+      "pci.txt": "85a18aeb42e68cf05ba1079b5193fb6dc071956bccfcdcd159713ef322221aad",
+      "network.txt": "f27988238517d587dd235f913f666de8df87a89c76b53bd4a6c156706920300a",
+      "wifi-status.txt": "d53f963656b4ebd4ece74391dcdcb3b9ab9f83e894238073a6b02c5444007067",
+      "wifi-service.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "battery.txt": "bcbef305c06163420b2dc01f03581acddb807a10bf69c50a746a73ea9c6ad4be",
+      "kernel-wlan.txt": "6d8fa4b6d3cd3197205325d4f2bf867ca8ac8ec5e5e7bdf18edda4b2e3571c94"
+    },
+    "kernel_log_sha256": {
+      "boot-events.txt": "e55be22ae80a43208de5974b53a11d814af98965c4733c9291c57e901c01da94",
+      "acm.log": "1d7ccb0325442a07de33330c13d2ed8f03bf9bebffa590fe24a832193bcbcac8"
+    },
+    "scan": "NOT RUN",
+    "association": "NOT RUN",
+    "dhcp": "NOT RUN",
+    "traffic": "NOT RUN",
+    "scope": "Discovery only; no RF enable, credentials or network configuration changes"
+  },
+  "retention": {
+    "same_boot": true,
+    "enforcing": true,
+    "seconds": 194.328,
+    "guardian": "retained",
+    "current_mode": "Android 17 GSI",
+    "stock_restored": false
+  },
+  "wifi": {
+    "mainline_resource": true,
+    "enable_command_exit": 0,
+    "framework_status": "Wifi is disabled\nWifi scanning is only available when wifi is enabled",
+    "mainline_binder_registered": false,
+    "supplicant_process_started": true,
+    "scan": "BLOCKED BEFORE SCANNING",
+    "association": "NOT RUN",
+    "dhcp": "NOT RUN",
+    "traffic": "NOT RUN",
+    "disable_command_exit": 0,
+    "disable_limitation": "wifi_on=0 and wifi_scan_always_enabled=0, but pending framework binder wait can continue restarting the crashed supplicant; stopped init state is not proof the retry loop ended"
+  },
+  "crash": {
+    "signal": "SIGILL",
+    "code": "ILL_ILLOPC",
+    "location": "__cxx_global_var_init+68",
+    "pc_relative": "0x2cf584",
+    "build_id": "a7409414aadb661e804b643fc80aba39",
+    "elf": {
+      "capex": {
+        "bytes": 7537257,
+        "sha256": "3159dfc597308c3639876396bfd532d597b7f5f28a826b6a1f205c517c6bff85"
+      },
+      "original_apex": {
+        "bytes": 19615744,
+        "sha256": "6102f223d3527590f811ab7fb500eaf1ebcddb9f98fd78a5d1c909ed4a2a25d1"
+      },
+      "payload": {
+        "bytes": 19410944,
+        "sha256": "a9c33ba1e7fc9243e9252e1e12cd62b067bf422071d662f4576ba4599ad328d3"
+      },
+      "executable": {
+        "bytes": 3603568,
+        "sha256": "3d09d55f3d51ace5dcf7e67e2eadbaa17b73ab1d6f6f41d1c30df4ddf61226be"
+      }
+    },
+    "instruction_word": "0x04f74000",
+    "instruction": "index z0.d, #0, #-9",
+    "next_sve_word": "0x25e0c620",
+    "next_sve_instruction": "add z0.d, z0.d, #0x31",
+    "cpu_features_per_cpu": [
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp",
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp",
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp",
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp",
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp",
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp",
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp",
+      "fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp"
+    ],
+    "all_eight_cpu_feature_lists_lack_sve": true,
+    "conclusion": "The matching GSI executable executes an SVE instruction in a constructor on this non-SVE handset, before main and binder registration",
+    "scope": "Explains this startup crash; does not establish remaining RF/scan/connection behavior",
+    "sources": [
+      "https://learn.arm.com/insights/sve/",
+      "https://android.googlesource.com/platform/external/wpa_supplicant_8/+/3396e8b8365817b3a24b78b534b04bb9dcea330a/wpa_supplicant/Android.bp"
+    ]
+  },
+  "writes": {
+    "program_xml": {
+      "candidate-super-update.xml": [
+        {
+          "SECTOR_SIZE_IN_BYTES": "4096",
+          "filename": "super-read-00.bin",
+          "physical_partition_number": "0",
+          "start_sector": "193032",
+          "num_partition_sectors": "131072",
+          "label": "super"
+        }
+      ],
+      "test-boot.xml": [
+        {
+          "SECTOR_SIZE_IN_BYTES": "4096",
+          "physical_partition_number": "4",
+          "start_sector": "79366",
+          "num_partition_sectors": "24576",
+          "filename": "boot-diag.img",
+          "label": "boot"
+        }
+      ]
+    },
+    "matching_readbacks": 38,
+    "candidate_super_chunks_written": [
+      0
+    ],
+    "stock_partition_reread": false,
+    "readback_temporary_file_left": false,
+    "historical_images_copied": false
+  },
+  "screen_timeout": {
+    "boot_id": "f972c5da-7afa-43cd-a78a-b3a122bd9cd1",
+    "utc": "2026-11-27T14:37:55.762313+00:00",
+    "before_ms": "121000",
+    "after_ms": "1800000",
+    "temporary_RAM_setting": true
+  },
+  "next": "Build pinned AOSP vendor AIDL supplicant for ARMv8-A, review real nl80211 and init/policy integration, remove mainline RRO in the next candidate, then retest enable/scan/association; do not binary-patch the signed GSI or change accepted kernel/DT/display/test seeds",
+  "private_records": {
+    "records/ufs-host-g3-gsi17-firststage-ufs-102/inputs.json": "9436136d5196ece298bb8a57c3cadb20bb305d534c586015f7d7439b0facc98b",
+    "records/ufs-host-g3-gsi17-firststage-ufs-102/timeline.jsonl": "93760aa577180c29a530155a9b3add21f1e924f82c68596a53b99dc29d210cab",
+    "records/ufs-host-g3-gsi17-firststage-ufs-102/live/gsi-stable.json": "ab8eb1ac06a12c675d76b31b78c68a64157dc1890cc14179b715d11a74d7f7c1",
+    "records/ufs-host-g3-gsi17-firststage-ufs-102/readbacks.jsonl": "31a5b2065956f41e82ac56d153be3670a4aab45ab6e024a4eea764c908f5fb2d",
+    "records/ufs-host-g3-gsi17-firststage-ufs-102/ramdisk-manifest.json": "f723d2d785369fa35100755d97eb7944318727e2d195b3712590a6de54e88b47",
+    "records/ufs-host-g3-gsi17-firststage-ufs-102/vendor-inventory.json": "70a3231eac9b73e4ef7da0198e79d84de7461e90fbc1e4eea43be2c34910e507",
+    "checks/hardware-2026-11-27/trial102-preflight.json": "92f338125ba1ae479ddb217ce3197ded56d4cb1d74b6db68c06da659a24e3fa9",
+    "checks/hardware-2026-11-27/trial102-initial-live.json": "45c3d724bd0e1ae56e5bd5151e828c829ea38abcf09f08bb0ab02fae9a23a6a6",
+    "checks/hardware-2026-11-27/trial102-supplicant-failure.json": "03cf5a79a5d6a7e9bc954f7b81625ef6c2c8c19fbd6222cecc3faf68871e487a",
+    "checks/hardware-2026-11-27/wifi102-actions/enable.json": "1a1232681d793e7b19bc21d33f130206c34ae320c607c32fd6fff35eeecba83f",
+    "checks/hardware-2026-11-27/supplicant-analysis/first-crash.txt": "0d444a501a422fc0fdb05a2284b7588f32ae522340716f73204049d41c230187",
+    "checks/hardware-2026-11-27/supplicant-analysis/fault-disassembly.txt": "1422e4f579a88a4e1e6c08e07b6ca0b6d99804b0751332f0f898ee630a700dae",
+    "checks/hardware-2026-11-27/supplicant-analysis/elf-notes.txt": "27e989b881539ed94b03df5bcd1b2eec827d0f77245c60ac3ca4e2a523f5f532",
+    "checks/hardware-2026-11-27/supplicant-analysis/provenance.json": "3cb24cf64011108b6b0e083dbda833277c992f9e6d7691b6bd14a302ad3af6b0"
+  }
+}

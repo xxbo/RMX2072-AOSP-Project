@@ -76,10 +76,14 @@ Trial 100 passes 26 offline checks, is flashed boot-only at 28% live capacity,
 and reaches QMI target/firmware response. Missing board data is now the observed
 stop; `board_id=0xff` may be the driver's default and is not a qualified board
 identity. Trial 101 adds only the original same-handset F.20 board ELF and now
-registers native phy0/wlan0. It retains GSI after 194.110 seconds of same-boot
-ADB checks; final capacity is 36%. Next enable the reviewed source mainline
-supplicant RRO and validate Android Wi-Fi control, scan and connection. The RRO
-is prepared but still uninstalled at trial 101. Vendor rebuilds must retain
+registers native phy0/wlan0. Trial 102 installs the reviewed mainline-supplicant
+RRO and retains GSI after 194.328 seconds of same-boot ADB checks. The resource
+resolves true, but the GSI supplicant crashes before main/binder registration:
+the matching executable uses an SVE INDEX instruction at 0x2cf584, while all
+eight live CPU feature lists lack SVE. Scan/connection are blocked. Next build
+the pinned source vendor AIDL supplicant for ARMv8-A, review its init/policy
+integration and remove the mainline RRO before retesting. A source build recipe
+is added; this is not a claim of a built or working replacement. Vendor rebuilds must retain
 WLAN firmware/board ELF, accepted display/GPU/input settings and the test seeds.
 Stock sensor and modem
 inventory is a prerequisite, not a claim of GSI functionality. No repeated
