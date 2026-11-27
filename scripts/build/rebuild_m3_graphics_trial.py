@@ -30,6 +30,36 @@ def retained_display_flags(prior, display_staged):
     return ['--' + key.replace('_', '-') for key in DISPLAY_OPTIONS if prior.get(key)]
 
 
+def retained_wifi_flags(prior, firmware):
+    """Vendor changes must keep the existing WLAN DT and boot firmware."""
+    enabled = prior.get('wifi', False)
+    if not isinstance(enabled, bool):
+        raise ValueError('Invalid prior Wi-Fi option')
+    previous = prior.get('wifi_firmware')
+    if not enabled:
+        if previous or firmware is not None:
+            raise ValueError('Wi-Fi firmware requires an existing WLAN profile')
+        return []
+    flags = ['--wifi']
+    if previous:
+        if firmware is None:
+            raise ValueError('Provide --wifi-firmware to retain the existing boot firmware')
+        from stage_m3_wifi_firmware import wifi_firmware
+        _, actual = wifi_firmware(firmware)
+        if actual != previous:
+            raise ValueError('A vendor rebuild must retain the exact WLAN boot firmware')
+        flags += ['--wifi-firmware', str(firmware.resolve())]
+    elif firmware is not None:
+        raise ValueError('Stage new WLAN firmware separately from a vendor rebuild')
+    return flags
+
+
+def check_retained_peripherals(prior, requested):
+    for key in ('input_devices', 'battery_gauge', 'performance', 'panel_refresh'):
+        if key in prior and requested.get(key) != prior[key]:
+            raise ValueError('Vendor rebuild must retain '+key)
+
+
 def sha(path):
     with path.open('rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
@@ -46,11 +76,13 @@ def main():
     p.add_argument('--input-devices', action='store_true', help='Include the M3 touch and volume-key bindings')
     p.add_argument('--battery-gauge', action='store_true', help='Include the external BQ28Z610 measurement path')
     p.add_argument('--performance', action='store_true')
+    p.add_argument('--wifi-firmware', type=Path, help='Retain exactly the previous WLAN boot firmware')
+    p.add_argument('--wifi-overlay', type=Path, help='Explicitly compose the reviewed mainline supplicant RRO')
     p.add_argument('--panel-refresh', type=int, choices=(60, 90), default=60)
     a = p.parse_args()
     if a.battery_gauge and not a.input_devices:
         p.error('--battery-gauge requires --input-devices')
-    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
+    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2,3}', a.trial):
         p.error('Use the recorded handset trial naming')
     repo = Path(__file__).resolve().parents[2]
     if subprocess.check_output(['git', '-C', repo, 'status', '--porcelain']):
@@ -71,7 +103,17 @@ def main():
     if a.input_devices and not (current/'input-overlay/provenance.json').is_file():
         raise ValueError('Input trial requires the source ColorFade overlay before power-key testing')
     prior = json.loads((current/'usb-build.json').read_text())
+    check_retained_peripherals(prior, vars(a))
     display_flags = retained_display_flags(prior, a.display_staged)
+    wifi_flags = retained_wifi_flags(prior, a.wifi_firmware)
+    if prior.get('wifi') and not (a.performance and a.battery_gauge):
+        p.error('Retaining Wi-Fi requires --performance and --battery-gauge')
+    if a.wifi_overlay and not prior.get('wifi'):
+        p.error('--wifi-overlay requires the existing native WLAN profile')
+    old_graphics = current/'graphics-candidate.json'
+    if old_graphics.is_file() and json.loads(old_graphics.read_text())['graphics_source'].get('wifi_android') and not a.wifi_overlay:
+        p.error('Retain the existing --wifi-overlay when rebuilding vendor')
+    overlay_flags = ['--wifi-overlay', a.wifi_overlay.resolve()] if a.wifi_overlay else []
     if sha(current/'rmx-m1-guard') != prior['guard']:
         raise ValueError('USB guardian differs from the retained input')
     seeds = json.loads((current/'volumes/scratch.json').read_text())
@@ -81,7 +123,7 @@ def main():
         raise ValueError('GSI changed')
     subprocess.run([sys.executable, str(build/'build_display_smoke.py'),
                     '--ndk', str(a.ndk.resolve()), '--output', str(current/'display-smoke')], check=True)
-    files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics)
+    files, provenance = compose(current/'info-input', current/'rmx-m1-guard', graphics, a.wifi_overlay)
     policy = json.loads((a.policy_proof or repo/'build/device/m3-graphics-policy-2026-11-16.json').read_text())
     cil = files['/etc/selinux/vendor_sepolicy.cil']
     cil_sha = hashlib.sha256(cil).hexdigest()
@@ -104,7 +146,7 @@ def main():
         subprocess.run([str(x) for x in args], check=True)
     run(sys.executable, build/'build_m1_vendor.py', '--output', current/'vendor',
         '--keymaster-info', current/'info-input', '--usb-guard', current/'rmx-m1-guard',
-        '--graphics', graphics)
+        '--graphics', graphics, *overlay_flags)
     report = json.loads((current/'vendor/vendor.json').read_text())
     unsigned = current/'vendor/vendor.img'
     if unsigned.stat().st_size != payload_size or sha(unsigned) != report['sha256']:
@@ -128,7 +170,7 @@ def main():
         '--vendor', current/'vendor-signed.img', '--vendor-key', current/'vendor.avbpubkey',
         '--vendor-report', current/'vendor/vendor.json', '--graphics', graphics,
         '--graphics-keymaster-info', current/'info-input', '--usb-guard', current/'rmx-m1-guard',
-        '--output', current/'verified-profile')
+        '--output', current/'verified-profile', *overlay_flags)
     run(sys.executable, repo/'scripts/device_audit/build_ufs_candidate.py',
         '--stock', work/'recovery/f20', '--system', current/'system.img',
         '--vendor', current/'vendor-signed.img', '--profile', current/'verified-profile',
@@ -142,7 +184,8 @@ def main():
         *(['--display-staged'] if a.display_staged else []),
         *(['--input-devices'] if a.input_devices else []),
         *(['--battery-gauge'] if a.battery_gauge else []),
-        *(['--performance'] if a.performance else []), '--panel-refresh', a.panel_refresh, *display_flags)
+        *(['--performance'] if a.performance else []), '--panel-refresh', a.panel_refresh,
+        *display_flags, *wifi_flags)
     if sha(current/'system.img') != system_sha or json.loads((current/'volumes/scratch.json').read_text()) != seeds:
         raise ValueError('GSI or scratch seed manifest changed during preparation')
     result = dict(trial=a.trial, graphics_source=provenance, vendor_payload_bytes=payload_size,
@@ -152,6 +195,7 @@ def main():
                   policy_proof_reused_for_identical_statements=True,
                   source_gsi_sha256=system_sha, scratch=seeds, display_staged=a.display_staged,
                   retained_display_flags=display_flags,
+                  retained_wifi_flags=wifi_flags,
                   openssl_version=openssl_version,
                   handset_write='NOT RUN')
     (current/'graphics-candidate.json').write_text(json.dumps(result, indent=2)+'\n')

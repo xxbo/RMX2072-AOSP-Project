@@ -73,7 +73,7 @@ def merge_native_hal_payload(files, directory, kind):
     return build, incoming
 
 
-def compose(info, guard, graphics):
+def compose(info, guard, graphics, wifi_overlay=None):
     files, pinned = inventory(True, guard)
     for path, digest in pinned.items():
         data = (info/Path(path).name).read_bytes()
@@ -195,6 +195,9 @@ def compose(info, guard, graphics):
     if b'ro.hardware.vulkan=freedreno\n' in files['/build.prop']:
         from stage_m3_acceleration import add_acceleration
         build = dict(build, acceleration=add_acceleration(files, graphics.parent))
+    if wifi_overlay is not None:
+        from stage_m3_wifi_android import add_wifi_android
+        build = dict(build, wifi_android=add_wifi_android(files, wifi_overlay))
     return files, build
 
 
@@ -202,11 +205,12 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ('info', 'guard', 'graphics', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
+    p.add_argument('--wifi-overlay', type=Path, help='Explicitly include the reviewed mainline supplicant RRO')
     a = p.parse_args()
     output = a.output.resolve()
     if output.is_relative_to(ROOT) or output.exists():
         p.error('Use a new staging directory outside the public checkout')
-    files, build = compose(a.info, a.guard, a.graphics)
+    files, build = compose(a.info, a.guard, a.graphics, a.wifi_overlay)
     for name,data in files.items():
         path = output/name.lstrip('/')
         path.parent.mkdir(parents=True, exist_ok=True)

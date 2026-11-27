@@ -10,6 +10,10 @@ GPU load/idle result. Trial 98 adds bounded CPU frequency-response and thermal
 readout evidence. Trial 99 enumerates QCA6390 and retains GSI, with firmware
 startup blocked by missing amss.bin. Trial 100 has passed 26 offline candidate
 checks with boot firmware added; it is not flashed.
+The optional mainline-supplicant RRO passes source/artifact and additive vendor
+composition checks, but remains uninstalled; no WLAN netdev or connection is
+claimed. The latest offline session ends with ADB absent after a 10% gauge read,
+without a host reboot/flash. See the hardware record for the pending USB check.
 Historical cold-start results apply only to their named builds.
 
 ## Platform layers

@@ -9,6 +9,9 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'build'))
 
 
 def read(path):
@@ -25,10 +28,10 @@ def main():
     for name in ('workspace', 'baseline', 'output'):
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--trial', required=True)
-    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access', 'thermal-readout'), default='health')
+    p.add_argument('--stage', choices=('health', 'power', 'audio', 'heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant'), default='health')
     p.add_argument('--keymaster-build', type=Path, help='Source HAL build report for the keymaster stage')
     a = p.parse_args()
-    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2}', a.trial):
+    if not re.fullmatch(r'ufs-host-g3-gsi17-firststage-ufs-\d{2,3}', a.trial):
         p.error('Use the recorded handset trial name')
     old = read(a.baseline/'inputs.json')
     old_files = read(a.baseline/'vendor-inventory.json')
@@ -42,7 +45,7 @@ def main():
     candidate = read(current/'candidate/candidate.json')
     graphics = read(current/'graphics-candidate.json')
     health = read(current/'health/provenance.json')
-    hal_kind = ('power' if a.stage == 'thermal-readout' else
+    hal_kind = ('power' if a.stage in ('thermal-readout', 'wifi-supplicant') else
                 'audio' if a.stage in ('heap', 'keymaster', 'render-access') else a.stage)
     extra = read(current/hal_kind/'provenance.json')
     scratch = read(current/'volumes/scratch.json')
@@ -88,7 +91,8 @@ def main():
             {'/bin/hw/rmx-keymaster-info-service', '/bin/hw/rmx-keymaster-info-client',
              '/etc/init/keymaster.rc', '/etc/ueventd.rc', '/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}
             if a.stage == 'keymaster' else {'/etc/selinux/vendor_sepolicy.cil', '/etc/selinux/vendor_file_contexts'}),
-        'only_selected_hal_files_added': set(added) == (set() if a.stage in ('heap', 'keymaster', 'render-access', 'thermal-readout') else set(extra['files'])-set(old_files['files'])),
+        'only_selected_hal_files_added': set(added) == ({'/overlay/RmxWifiOverlay.apk'} if a.stage == 'wifi-supplicant' else
+            set() if a.stage in ('heap', 'keymaster', 'render-access', 'thermal-readout') else set(extra['files'])-set(old_files['files'])),
         'no_vendor_files_removed': set(old_files['files']) <= set(vendor['files']),
         'scratch_profile_consistent': scratch == rd['scratch_volumes'] == graphics['scratch'],
         'same_metadata_seed': scratch['metadata'] == old['scratch']['metadata'],
@@ -103,8 +107,28 @@ def main():
             hal_kind+'_source_verified': (extra.get('kind') == hal_kind and extra.get('source_verified') is True
                                         and extra.get('archive_digest_verified') is True),
             hal_kind+'_is_composed': graphics['graphics_source'].get(hal_kind) == extra})
-        if a.stage not in ('heap', 'keymaster', 'render-access', 'thermal-readout'):
+        if a.stage not in ('heap', 'keymaster', 'render-access', 'thermal-readout', 'wifi-supplicant'):
             checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
+    if a.stage == 'wifi-supplicant':
+        from stage_m3_wifi_android import APK, overlay_payload
+        from stage_m3_wifi_firmware import ramdisk_manifest, verify_ramdisk_firmware
+        apk, proof = overlay_payload(current/'wifi-overlay')
+        # Read the actual ext4 payload, not just its generated inventory.
+        installed = subprocess.check_output([str(current/'fs-tools/debugfs.exe'),
+            '-R', 'cat '+APK, str(current/'vendor/vendor.img')], stderr=subprocess.DEVNULL)
+        firmware = rd.get('wifi_firmware')
+        if not firmware:
+            raise ValueError('Supplicant trial requires the retained boot firmware')
+        verify_ramdisk_firmware(ramdisk_manifest(current/'ramdisk/ramdisk.cpio.gz'), firmware)
+        checks.update(
+            only_wifi_rro_added=not changed and added == [APK],
+            wifi_rro_actual_bytes=installed == apk,
+            wifi_rro_inventory_digest=vendor['files'].get(APK) == proof['apk_sha256'],
+            wifi_rro_provenance=graphics['graphics_source'].get('wifi_android') == proof,
+            same_wifi_firmware=firmware == old['ramdisk'].get('wifi_firmware') == usb.get('wifi_firmware'),
+            same_input_battery_gpu_and_radio=same(usb, old['usb_build'], (
+                'input_devices', 'battery_gauge', 'performance', 'panel_refresh', 'wifi')),
+            wifi_enabled=usb.get('wifi') is True)
     if a.stage == 'thermal-readout':
         before = (a.baseline/'vendor-sepolicy.cil').read_bytes()
         after = subprocess.check_output([str(current/'fs-tools/debugfs.exe'), '-R',

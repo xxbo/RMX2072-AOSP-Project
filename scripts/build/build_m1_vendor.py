@@ -23,14 +23,16 @@ def source_bytes(path):
     return data
 
 
-def build(output, reference=None, info=None, usb_guard=None, graphics=None):
+def build(output, reference=None, info=None, usb_guard=None, graphics=None, wifi_overlay=None):
+    if wifi_overlay is not None and graphics is None:
+        raise ValueError('Wi-Fi RRO requires the M3 graphics vendor')
     output = output.resolve()
     if ROOT in output.parents or output == ROOT:
         raise ValueError('Select an output outside the checkout')
     output.mkdir(parents=True, exist_ok=True)
     if graphics:
         from stage_m3_graphics import compose, filesystem_size
-        files, _ = compose(info, usb_guard, graphics)
+        files, _ = compose(info, usb_guard, graphics, wifi_overlay)
         with tempfile.TemporaryDirectory(dir=output) as tmp:
             source = Path(tmp) / 'vendor'
             for name, data in files.items():
@@ -122,8 +124,10 @@ if __name__ == '__main__':
     group.add_argument('--keymaster-info', type=Path, help='Project info HAL and pinned AOSP VNDK libraries')
     parser.add_argument('--usb-guard', type=Path, help='Source-built M1 watchdog/ADB guardian')
     parser.add_argument('--graphics', type=Path, help='Fully verified source-built M3 graphics payload')
+    parser.add_argument('--wifi-overlay', type=Path, help='Reviewed mainline supplicant RRO, opt-in')
     args = parser.parse_args()
     if args.usb_guard and not args.keymaster_info: parser.error('--usb-guard requires --keymaster-info')
     if args.graphics and not (args.keymaster_info and args.usb_guard):
         parser.error('--graphics requires --keymaster-info and --usb-guard')
-    print(build(args.output, args.keymaster_reference, args.keymaster_info, args.usb_guard, args.graphics))
+    if args.wifi_overlay and not args.graphics: parser.error('--wifi-overlay requires --graphics')
+    print(build(args.output, args.keymaster_reference, args.keymaster_info, args.usb_guard, args.graphics, args.wifi_overlay))
