@@ -72,14 +72,15 @@ HAL, scheduling and sustained-performance acceptance remain open. Trial 96
 fails WLAN/ADB retention; trial 97 isolates successful startup with the same
 kernel and no WLAN DT. November 27 trial 99 with GPIO20 initial-low enumerates
 QCA6390 and retains GSI ADB; missing amss.bin blocks MHI/firmware startup.
-Trial 100 with pinned boot firmware has passed 26 offline checks and is not
-flashed. Verify MHI/QMI board identity before board data and scan/connection.
-The optional source Wi-Fi supplicant RRO now has a checked vendor composition
-path; it remains uninstalled and separate from trial 100. Vendor rebuilds must
-retain WLAN firmware, accepted display/GPU/input settings and the test seeds.
-The user retains low-battery GSI and requests computer-side preparation only;
-the last gauge read is 10%. ADB later disappears without a host reboot or flash;
-screen state is requested. Restore ADB and recheck live capacity before a trial.
+Trial 100 passes 26 offline checks, is flashed boot-only at 28% live capacity,
+and reaches QMI target/firmware response. Missing board data is now the observed
+stop; `board_id=0xff` may be the driver's default and is not a qualified board
+identity. No WLAN netdev exists yet. The phone is retained on GSI after 195.609
+seconds of same-boot ADB checks; final capacity is 31%. Next review the saved
+same-handset F.20 board ELF, test its firmware acceptance, then validate a native
+WLAN interface and scan/connection. The source Wi-Fi supplicant RRO has a checked
+vendor composition path but remains uninstalled. Vendor rebuilds must retain
+WLAN firmware, accepted display/GPU/input settings and the test seeds.
 Stock sensor and modem
 inventory is a prerequisite, not a claim of GSI functionality. No repeated
 cold-start/watchdog qualification. Keep one recovery set and one candidate;

@@ -29,6 +29,38 @@ def kernel_discovery(events):
                     r'wlan-digital-regulators: smps2: devm_regulator_register\(\) failed', events)))
 
 
+def firmware_discovery(events):
+    """Separate MHI setup from a real QMI reply and unqualified board identity."""
+    targets = []
+    for values in re.findall(r'ath11k_pci [^\n]+: chip_id (0x[0-9a-f]+) '
+            r'chip_family (0x[0-9a-f]+) board_id (0x[0-9a-f]+) soc_id (0x[0-9a-f]+)', events, re.I):
+        row = dict(zip(('chip_id', 'chip_family', 'board_id', 'soc_id'),
+                       (int(value, 16) for value in values)))
+        # ath11k assigns 0xff when board_info_valid is absent. The normal log
+        # does not emit the validity bit; an explicit 0xff response is also
+        # possible. Do not label this value as a proven board/calibration ID.
+        row['board_id_may_be_default'] = row['board_id'] == 0xff
+        if row not in targets:
+            targets.append(row)
+    versions = []
+    for version, timestamp, build_id in re.findall(
+            r'ath11k_pci [^\n]+: fw_version (0x[0-9a-f]+) '
+            r'fw_build_timestamp ([^\n]+?) fw_build_id([^\n]*)', events, re.I):
+        row = dict(version=version.lower(), timestamp=timestamp.strip(), build_id=build_id.strip())
+        if row not in versions:
+            versions.append(row)
+    return dict(
+        mhi_setup_reported=bool(re.search(r'mhi \S+: Power on setup success', events)),
+        qmi_target_response_observed=bool(targets), target_info=targets, firmware_versions=versions,
+        amss_missing=bool(re.search(r'Direct firmware load for ath11k/QCA6390/hw2.0/amss\.bin failed with error -2\b', events)),
+        board_data_missing=bool(re.search(r'ath11k_pci [^\n]+: (?:qmi failed to fetch board file|failed to load board data file): -2\b', events)),
+        mhi_start_errors=sorted(set(int(code) for code in re.findall(
+            r'ath11k_pci [^\n]+: failed to (?:power up|start) mhi: (-?\d+)', events))),
+        regulatory_db_missing=bool(re.search(r'Direct firmware load for regulatory\.db failed with error -2\b', events)),
+        board_compatibility_verified=False,
+        scope='Observed boot messages only; QMI response is not board-data, WLAN interface or RF acceptance')
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--adb', default='adb')
@@ -85,6 +117,7 @@ def main():
     result = dict(boot_id=expected, same_boot=True, enforcing=True,
                   **discovery(captures['pci'], captures['network']),
                   kernel_discovery=kernel_discovery(events),
+                  firmware_discovery=firmware_discovery(events),
                   files=hashes, kernel_log_sha256={name: hashlib.sha256(path.read_bytes()).hexdigest()
                                                  for name, path in logs.items()},
                   scan='NOT RUN', association='NOT RUN', dhcp='NOT RUN', traffic='NOT RUN',
