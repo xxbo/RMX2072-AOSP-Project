@@ -113,7 +113,7 @@ def main():
             checks[a.stage+'_service_added'] = '/bin/hw/android.hardware.'+a.stage+'-service.rmx2072' in added
     if a.stage == 'wifi-native':
         from stage_m3_graphics import compose
-        from stage_m3_wifi_vendor import CONFIG_FILES
+        from stage_m3_wifi_vendor import CONFIG_FILES, PROBE
         from stage_m3_wifi_firmware import ramdisk_manifest, verify_ramdisk_firmware
         files, source = compose(current/'info-input', current/'rmx-m1-guard',
                                 current/'graphics', wifi_vendor=current/'wifi')
@@ -124,7 +124,7 @@ def main():
         before = read(a.baseline/'ramdisk-manifest.json')
         allowed_rd = {'trial-id', 'vendor.verity-root'}
         checks.update(
-            only_selected_hal_files_added=set(added) == (set(extra['files']) | set(CONFIG_FILES))-set(old_files['files']),
+            only_selected_hal_files_added=set(added) == (set(extra['files']) | set(CONFIG_FILES) | {PROBE})-set(old_files['files']),
             exact_composed_vendor=actual == vendor['files'],
             exact_source_provenance=source == graphics['graphics_source'],
             no_mainline_rro='/overlay/RmxWifiOverlay.apk' not in files and not source.get('wifi_android'),

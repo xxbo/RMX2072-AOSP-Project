@@ -93,6 +93,10 @@ Trial 103 removes that failed RRO and retains Enforcing GSI/ADB for 194.516 s;
 no supplicant process/crash remains, native wlan0 stays present. Source vendor
 AIDL integration and strict policy compilation are prepared; its GitHub build,
 actual ELF acceptance and enable/scan/connection remain pending.
+A scan-only trial in the same boot creates STA_SCAN and finds 2.4/5 GHz bands,
+but interface UP returns EADDRNOTAVAIL (99) and the scan returns ENETDOWN (100).
+Address validity is still unknown: shell read ioctls are denied. The next
+vendor candidate includes a fixed read-only probe in the Wi-Fi domain.
 
 
 The dated entries below preserve earlier decisions and are not the latest

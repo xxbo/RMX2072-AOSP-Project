@@ -1,7 +1,7 @@
 {
   "date": "2026-11-27",
   "trial": "ufs-host-g3-gsi17-firststage-ufs-103",
-  "result": "PASS_FAILED_RRO_REMOVAL_AND_RETAINED_GSI__WIFI_NOT_ACCEPTED",
+  "result": "PASS_FAILED_RRO_REMOVAL__SCAN_BLOCKED_INTERFACE_DOWN",
   "boot_id": "262e1a05-4114-4f0f-af28-e9117c91a3b7",
   "recipe_commit": "ee460fc912a620a9cbae991b3f15a70f03de1887",
   "boot_sha256": "f6b95dc34122c4abd5b7a9ce4aa812db3a836808db2f682193ea3409af26c7d4",
@@ -91,7 +91,7 @@
     "crash_buffer_bytes": 0,
     "wificond_registered": true,
     "vendor_supplicant_registered": false,
-    "scan": "NOT RUN",
+    "scan": "ATTEMPTED: EADDRNOTAVAIL on interface UP, then ENETDOWN",
     "association": "NOT RUN",
     "dhcp": "NOT RUN",
     "traffic": "NOT RUN"
@@ -180,5 +180,55 @@
     "traffic": "NOT RUN",
     "scope": "Discovery only; no RF enable, credentials or network configuration changes"
   },
-  "runner_commit": "ee460fc912a620a9cbae991b3f15a70f03de1887"
+  "runner_commit": "ee460fc912a620a9cbae991b3f15a70f03de1887",
+  "scan_only_test": {
+    "boot_id": "262e1a05-4114-4f0f-af28-e9117c91a3b7",
+    "scan_only_iface_created": true,
+    "bands_discovered_ghz": [
+      2.4,
+      5
+    ],
+    "interface_up": false,
+    "interface_up_errno": 99,
+    "interface_up_error": "EADDRNOTAVAIL",
+    "scan_request_nl80211_errno": 100,
+    "scan_request_error": "ENETDOWN",
+    "scan_result_count": 0,
+    "supplicant_started": false,
+    "hardware_address_validity": "UNKNOWN: shell SIOCGIFHWADDR is denied with errno 13; sysfs also denied",
+    "readonly_probe": {
+      "source_sha256": "ddea94cdae3f8f8ed78ccbc830daa9571f4f9242f65180aa62936d46b7e10385",
+      "binary_sha256": "856db355bbcd425d035f14b7805797e2fa61e14d12894cab85d74e194db83121",
+      "compiler": "G:\\devProgram\\Android\\SDK\\ndk\\28.2.13676358\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android35-clang.cmd",
+      "target": "aarch64-linux-android35",
+      "scope": "Only SIOCGIFINDEX/SIOCGIFFLAGS/SIOCGIFHWADDR; no identifiers emitted or network writes"
+    },
+    "scan_setting_restored": true,
+    "connection_attempted": false,
+    "scope": "No source HAL installed or address modified; native interface setup exists but actual scan fails before RF results",
+    "private_records": {
+      "checks/hardware-2026-11-27/trial103-scan-only/battery-after.json": "47b150b4fc01fb68284032c2512bbebce798509eb34753f01b18335453ad94b9",
+      "checks/hardware-2026-11-27/trial103-scan-only/enable-scan-only.json": "0f54b82d537a2195aaf1b602e1e1940138c5a728d736e77db3771c6dc8cf5a00",
+      "checks/hardware-2026-11-27/trial103-scan-only/identity-after.json": "543c991835110506f43ae2d9279c53cf3d24aa3978e4b7eac76a6cafff32b0fd",
+      "checks/hardware-2026-11-27/trial103-scan-only/identity-before.json": "11130c1eb50ce519283c251849d4e8a49c41a028303f30061c80e9b5b9a0ffb8",
+      "checks/hardware-2026-11-27/trial103-scan-only/identity-ready.json": "9f18facafa7735132527123bbb192e809cc714f382cef5cf138c5ec603643b0d",
+      "checks/hardware-2026-11-27/trial103-scan-only/ifconfig.json": "5a343bb45b754903aae137cb413bc982fd006723d7966bfe9c02cb9beaa08d69",
+      "checks/hardware-2026-11-27/trial103-scan-only/logcat.json": "b52e08deecda2ce8624720a668b44bb07d274dd7937ba7a2044801b9138b86c1",
+      "checks/hardware-2026-11-27/trial103-scan-only/netd.json": "5d7e7f23377ee8415b4ee7b212ed00e8be86474bbede386dc46a6da8295a5b03",
+      "checks/hardware-2026-11-27/trial103-scan-only/netdev-address.json": "1d2f48b904260963c3cbab2c751f609e67df1a867a318aaac895d07c03661696",
+      "checks/hardware-2026-11-27/trial103-scan-only/phy.json": "487aebea8392c728e8c065b295ed6bf2fbca1fd7fd7f05ba4b37030cf9254516",
+      "checks/hardware-2026-11-27/trial103-scan-only/process.json": "b9deb8d77554f3c94b8bd618bb40d94b2bd3e133193c6e868fa419c3ed393bee",
+      "checks/hardware-2026-11-27/trial103-scan-only/readonly-probe.json": "a9dfeb3fa5e263b3e508ad2b50cb087063ed42b15be8c0c0e2d4e43c65681306",
+      "checks/hardware-2026-11-27/trial103-scan-only/restore-scan-setting.json": "d59ce14e77c875323d2985e7cc7a99b13d45acc80089ded505b9f62310147b55",
+      "checks/hardware-2026-11-27/trial103-scan-only/restored-state.json": "b7741de82c5baf0278da4b692a0474a697b743d7b8315fd223c9ce27756d3498",
+      "checks/hardware-2026-11-27/trial103-scan-only/scan-after.json": "9c331b19596a1f08765fb0a276727551b7c05263968cb5cd40e48220d05cb659",
+      "checks/hardware-2026-11-27/trial103-scan-only/scan-before.json": "dea89ee49667498b1fe6db9e423081e583211ab9a1fcb9b752c346686048522e",
+      "checks/hardware-2026-11-27/trial103-scan-only/scan-request.json": "359bea9592197c2186b278b1dfd9b8512e933f98ec73f610378a27f89ae91bb1",
+      "checks/hardware-2026-11-27/trial103-scan-only/screen-timeout.json": "53b860e321144cfb525ecbc92e1ab4a3a0bd68c7bc089f4340ae0c25080999b0",
+      "checks/hardware-2026-11-27/trial103-scan-only/status-after.json": "3e9b36ed8c0ee4372ea25fe8f3aa51ae0ce7eab3cc49293c49d01a37bd867878",
+      "checks/hardware-2026-11-27/trial103-scan-only/status-ready.json": "df73a53b692a8f2d2695f781d8cdef58f46bf429db1e77253f86e2b5e04c90f0",
+      "checks/hardware-2026-11-27/trial103-scan-only/wifi-before.json": "560035fd59f138e685775331c41d265c0f21028cea48c11ad8141924354603d8",
+      "checks/hardware-2026-11-27/trial103-scan-only/wifi-dump.json": "10388581ecd05dbf6b529292243b282d5515211d40f01368fe5350be6aa64907"
+    }
+  }
 }

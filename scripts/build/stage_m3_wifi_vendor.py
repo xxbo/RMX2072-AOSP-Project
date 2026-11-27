@@ -1,10 +1,12 @@
 """Explicit source vendor supplicant integration; no mainline RRO or RF claims."""
 import json
 import re
+import struct
 import xml.etree.ElementTree as ET
 from stage_m3_graphics import ROOT, SOURCE, merge_native_hal_payload, sha
 
 PIN = ROOT/'build/m3-wifi-source.json'
+PROBE = '/bin/hw/rmx-wifi-state'
 
 
 CONFIG_FILES = {
@@ -43,6 +45,7 @@ def add_wifi_vendor(files, directory):
     check_supplicant_manifest(incoming['/etc/vintf/manifest/android.hardware.wifi.supplicant.xml'])
     labels = [
         '/vendor/bin/hw/wpa_supplicant u:object_r:rmx_wpa_exec:s0',
+        '/vendor/bin/hw/rmx-wifi-state u:object_r:rmx_wpa_exec:s0',
         '/vendor/etc/wifi(/.*)? u:object_r:vendor_configs_file:s0',
         '/data/vendor/wifi/wpa(/.*)? u:object_r:wpa_data_file:s0',
         '/data/vendor_ce/[0-9]+/wifi/wpa(/.*)? u:object_r:wpa_user_data_file:s0',
@@ -51,6 +54,18 @@ def add_wifi_vendor(files, directory):
         if name.startswith('/lib64/') and name not in files:
             labels.append(re.escape('/vendor'+name)+' u:object_r:same_process_hal_file:s0')
     integration = {}
+    probe_dir = directory.parent/'wifi-probe'
+    probe_build = json.loads((probe_dir/'build.json').read_text())
+    probe = (probe_dir/'rmx-wifi-state').read_bytes()
+    probe_source = (ROOT/'scripts/device_audit/wifi_netdev_state.c').read_bytes().replace(b'\r\n', b'\n')
+    if (sha(probe_source) != probe_build['source_sha256'] or sha(probe) != probe_build['binary_sha256']
+            or probe[:6] != b'\x7fELF\x02\x01' or len(probe) < 64
+            or struct.unpack_from('<H', probe, 18)[0] != 183):
+        raise ValueError('Rebuild the read-only ARM64 network probe from current source')
+    if PROBE in staged and staged[PROBE] != probe:
+        raise ValueError('Network probe would replace different vendor content')
+    staged[PROBE] = probe
+    integration['netdev_probe'] = probe_build
     for target, name in CONFIG_FILES.items():
         data = (SOURCE/name).read_bytes().replace(b'\r\n', b'\n')
         if target in staged and staged[target] != data:
